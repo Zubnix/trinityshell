@@ -1,0 +1,154 @@
+/*
+ * This file is part of Fusion-X11.
+ * 
+ * Fusion-X11 is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * Fusion-X11 is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * Fusion-X11. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.fusion.x11.icccm;
+
+import org.fusion.x11.core.XAtom;
+import org.fusion.x11.core.XDisplay;
+import org.fusion.x11.core.XWindow;
+import org.fusion.x11.core.event.XSelectionClearNotifyEvent;
+import org.fusion.x11.core.event.XSelectionRequestEvent;
+import org.hydrogen.eventsystem.EventHandler;
+
+//TODO documentation
+/**
+ * 
+ * @author Erik De Rijcke
+ * @since 1.0
+ */
+public final class SelectionManager {
+
+	private final XWindow icccmSelectionOwner;
+	private final IcccmAtoms icccmAtoms;
+	private final XDisplay display;
+
+	SelectionManager(final IcccmAtoms icccmAtoms) {
+		this.display = icccmAtoms.getDisplay();
+		this.icccmAtoms = icccmAtoms;
+		// check if the icccm selection of the screen is available.
+		checkSelection();
+
+		// initialize the actual selection owner window
+		this.icccmSelectionOwner = getDisplay().getXCoreInterface()
+				.createNewWindow(getDisplay());
+
+		setSelection();
+
+		listenForSelectionEvents();
+	}
+
+	// TODO when losing the selection, dont listen for events anymore on the
+	// display and close the selection owner window.
+
+	// TODO selection clear
+
+	private void listenForSelectionEvents() {
+
+		// TODO don't depend directly on Xcb events, split in seperate classes
+		getDisplay().addEventHandler(
+				new EventHandler<XSelectionClearNotifyEvent>() {
+					@Override
+					public void handleEvent(
+							final XSelectionClearNotifyEvent event) {
+						// TODO handle someone else taking away our screen
+						// selection.
+					}
+				}, XSelectionClearNotifyEvent.TYPE);
+
+		// not needed unless we request selection
+		// conversions ourself
+		// getDisplay().addEventHandler(
+		// new EventHandler<XcbSelectionNotifyEvent>() {
+		// @Override
+		// public void handleEvent(final XcbSelectionNotifyEvent event) {
+		//
+		// }
+		// }, XcbSelectionNotifyEvent.TYPE);
+
+		getDisplay().addEventHandler(
+				new EventHandler<XSelectionRequestEvent>() {
+					@Override
+					public void handleEvent(final XSelectionRequestEvent event) {
+						handleSelectionRequest(event);
+					}
+				}, XSelectionRequestEvent.TYPE);
+	}
+
+	private void handleSelectionRequest(
+			final XSelectionRequestEvent selectionRequestEvent) {
+
+		final XWindow selectionOwner = selectionRequestEvent.getEventSource();
+		final XWindow requestingClient = selectionRequestEvent.getRequestor();
+		final XAtom requestedSelectionAtom = selectionRequestEvent
+				.getSelection();
+		final XAtom targetAtom = selectionRequestEvent.getTarget();
+
+		// TODO we want to handle more selection conversion requests. Refactor
+		// to properly handle this.
+
+		final boolean correctSelectionOwner = (selectionOwner == getIcccmSelectionOwner());
+		final boolean correctSelectionAtom = (requestedSelectionAtom == getIcccmAtoms()
+				.getScreenSelectionAtom(0));
+		final Version version = getIcccmAtoms().getVersion();
+		final boolean correctTargetType = (targetAtom == version);
+
+		if (correctSelectionOwner && correctSelectionAtom && correctTargetType) {
+			requestingClient.setPropertyInstance(version, new VersionInstance(
+					getDisplay(), Icccm.MAJOR, Icccm.MINOR));
+		}
+	}
+
+	private void setSelection() {
+		// Set the icccm selection owner for screen. How to determine screen
+		// number? For now default to 0.
+		final XAtom wmS0 = getIcccmAtoms().getScreenSelectionAtom(0);
+		getDisplay().getXCoreInterface().setSelectionOwner(wmS0,
+				getIcccmSelectionOwner());
+	}
+
+	private void checkSelection() {
+		// TODO how to determine screen number? default to 0 for now
+		final XAtom selectionAtom = getIcccmAtoms()
+				.getScreenSelectionAtom(0);
+		final XWindow owner = getDisplay().getXCoreInterface()
+				.getSelectionOwner(selectionAtom);
+		if (owner == getDisplay().getNoneWindow()) {
+			// ok
+		} else {
+			// TODO we should be able to use the result of the selection
+			// ownership
+			// to determin if we can manage the display+screen. To do this we
+			// need
+			// to refactor ManagedDisplay in the hyperdrive library so it does
+			// not
+			// automatically listens for events. If the selection is not
+			// available
+			// throw an exception so the hyperdrive library can decide what to
+			// do.
+		}
+	}
+
+	public XDisplay getDisplay() {
+		return this.display;
+	}
+
+	public IcccmAtoms getIcccmAtoms() {
+		return this.icccmAtoms;
+	}
+
+	public XWindow getIcccmSelectionOwner() {
+		return this.icccmSelectionOwner;
+	}
+}

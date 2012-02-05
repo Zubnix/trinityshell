@@ -1,0 +1,46 @@
+#summary What is needed to get started with TNT WM in the eclipse ide.
+
+==Requirements==
+TNT WM primary developing and testing environment is Linux with the X display server. Other environments and display servers are not yet implemented.
+
+Because of a bug in the sun java compiler you are recommended to use the eclipse compiler, or preferably the eclipse ide. (Other ide's were not tested.)
+
+Other requirements are *maven* for building the project, *XCB* c library with development headers to talk to the X display server, *gcc* compiler with (gnu) *make* to compile native C code and a java6 compatible *jdk*
+
+Since XCB is modular library, the following modules are required:
+ * xcb
+ * xcb-composite
+ * xcb-damage
+ * xcb-render
+ * xcb-util
+ * xcb-keysyms
+ * xcb-sync
+ * xcb-xfixes
+ * xcb-shape
+
+== Launching a Test run ==
+
+To take TNT WM for a test drive, you are recommended to use a nested X display server like *Xephyr* and let TNT WM manage this nested display server.
+
+To let TNT WM manage a nested display server, you first launch Xephyr.
+
+{{{
+Xephyr -ac :1
+}}}
+
+This will launch Xephyr that will listen on display `:1`.
+To let TNT WM connect to display `:1`, you have to set the `DISPLAY` environment variable to `:1`. This can be done in the eclipse launch configuratin of TNT WM.
+
+A test launch class of TNT WM is located in the Hypercube-groovy project and is called Go.java.
+
+== Ubuntu ==
+
+You can install all required packages with a single command in a terminal:
+
+{{{
+sudo apt-get install gcc make libxcb-composite0-dev libxcb-damage0-dev 
+libxcb-render0-dev libxcb-util0-dev libxcb-keysyms1-dev libxcb-sync0-dev 
+libxcb-xfixes0-dev libxcb-shape0-dev libxcb1-dev openjdk-7-jdk xserver-xephyr
+}}}
+
+Maven is not listed because it comes bundled with the latest eclipse release.

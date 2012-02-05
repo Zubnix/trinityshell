@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>hyperdrive-core</artifactId>
+	<name>hyperdrive-core</name>
+	<parent>
+		<artifactId>hyperdrive</artifactId>
+		<groupId>org.trinity.hyperdrive</groupId>
+		<version>0.0.1</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<properties>
+		<jbehave-version>3.5.4</jbehave-version>
+	</properties>
+
+	<dependencies>
+		<!-- START TEST DEP -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.0-rc1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jbehave</groupId>
+			<artifactId>jbehave-core</artifactId>
+			<version>${jbehave-version}</version>
+		</dependency>
+		<!-- END TEST DEP -->
+
+		<dependency>
+			<groupId>org.trinity.hydrogen</groupId>
+			<artifactId>hydrogen</artifactId>
+			<version>0.0.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<!-- <build> <plugins> <plugin> <groupId>org.jbehave</groupId> <artifactId>jbehave-maven-plugin</artifactId> 
+		<version>${jbehave-version}</version> <executions> <execution> <id>run-stories-as-embeddables</id> 
+		<phase>integration-test</phase> <configuration> <includes> <include>**/*Scenarios.java</include> 
+		</includes> <ignoreFailureInStories>true</ignoreFailureInStories> <ignoreFailureInView>false</ignoreFailureInView> 
+		</configuration> <goals> <goal>run-stories-as-embeddables</goal> </goals> 
+		</execution> </executions> </plugin> <plugin> <groupId>org.apache.maven.plugins</groupId> 
+		<artifactId>maven-dependency-plugin</artifactId> <executions> <execution> 
+		<id>unpack-jbehave-site-resources</id> <phase>generate-resources</phase> 
+		<goals> <goal>unpack</goal> </goals> <configuration> <overwriteReleases>false</overwriteReleases> 
+		<overwriteSnapshots>true</overwriteSnapshots> <artifactItems> <artifactItem> 
+		<groupId>org.jbehave.site</groupId> <artifactId>jbehave-site-resources</artifactId> 
+		<version>${jbehave-version}</version> <type>zip</type> <outputDirectory> 
+		${project.build.directory}/jbehave/view</outputDirectory> </artifactItem> 
+		</artifactItems> </configuration> </execution> <execution> <id>unpack-jbehave-reports-resources</id> 
+		<phase>generate-resources</phase> <goals> <goal>unpack</goal> </goals> <configuration> 
+		<overwriteReleases>false</overwriteReleases> <overwriteSnapshots>true</overwriteSnapshots> 
+		<artifactItems> <artifactItem> <groupId>org.jbehave</groupId> <artifactId>jbehave-core</artifactId> 
+		<version>${jbehave-version}</version> <outputDirectory>${project.build.directory}/jbehave/view</outputDirectory> 
+		<includes>**\/*.css,**\/*.ftl,**\/*.js</includes> </artifactItem> </artifactItems> 
+		</configuration> </execution> </executions> </plugin> </plugins> </build> -->
+</project>
+

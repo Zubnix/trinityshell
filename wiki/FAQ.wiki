@@ -1,0 +1,9 @@
+#summary Frequently asked questions.
+
+= FAQ =
+  * ===Q: I can't build a jar!===
+A: Note that TNTWM (ewm) only builds on Linux for now. Next check if all requirements are met.
+
+You will need the following external tools and libraries: gcc, make, maven, xcb, xcb-keysyms, xcb-util, xcb-damage, xcb-composite, xcb-render, xcb-sync, xcb-shape, xcb-xfixes. Make sure you have the development version of the xcb library and that xcb is at least at version 3.8.0.
+
+There is also a nasty Sun java compiler bug which can make the mvn build fail.  http://stackoverflow.com/questions/314572/bug-in-eclipse-compiler-or-in-javac

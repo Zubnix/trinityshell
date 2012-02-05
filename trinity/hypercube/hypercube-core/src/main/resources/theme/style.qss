@@ -1,0 +1,110 @@
+#DragButton, #Label, #ClientContainer {
+	border-radius: 2px;
+/*	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, 
+		stop: 0 #fafafa, 
+		stop: 0.1 #eeeeee,
+		stop: 0.9 #d1d1d1, 
+		stop: 1 #c1c1c1); */
+	background: #e0e0e0;
+	border: 1px solid #707070;
+	padding: 3px;
+}
+
+#ClientManager {
+	border-bottom: 1px solid #808080;
+	background: #e0e0e0;
+}
+
+#ClientManagerLabel {
+	/* background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, 
+		stop: 0 #fafafa, 
+		stop: 0.1 #eeeeee,
+		stop: 0.9 #d1d1d1, 
+		stop: 1 #c1c1c1); */
+	background: #e0e0e0;
+	padding: 3px;
+}
+
+#ClientManagerLabel[active=true] {
+	border-bottom: 3px solid #81BEF7;
+}
+
+#CloseButton {
+	margin: 2px;
+	border-radius: 3px;
+	border: 1px solid #707070;
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, 
+		stop: 0 #f6f7fa, 
+		stop: 0.40 #e9eadf, 
+		stop: 0.5 #ff0000, 
+		stop: 0.60 #e9eadf, 
+		stop: 1 #dadbde);
+}
+
+#HideButton {
+	margin: 2px;
+	border-radius: 3px;
+	border: 1px solid #707070;
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, 
+		stop: 0 #f6f7fa, 
+		stop: 0.40 #e9eadf, 
+		stop: 0.5 #ff7000, 
+		stop: 0.60 #e9eadf, 
+		stop: 1 #dadbde);
+}
+
+#ResizeButton {
+	margin: 2px;
+	border-radius: 3px;
+	border: 1px solid #707070;
+	background-color: qlineargradient(x1: 1, y1: 0, x2: 0, y2: 1, 
+		stop: 0 #f6f7fa, 
+		stop: 0.40 #e9eadf, 
+		stop: 0.5 #00ff00, 
+		stop: 0.60 #e9eadf, 
+		stop: 1 #dadbde);
+}
+
+#MaximizeButton {
+	margin: 2px;
+	border-radius: 3px;
+	border: 1px solid #707070;
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, 
+		stop: 0 #f6f7fa, 
+		stop: 0.40 #e9eadf, 
+		stop: 0.5 #ff7000, 
+		stop: 0.60 #e9eadf, 
+		stop: 1 #dadbde);
+}
+
+#VirtualRoot {
+	background-image: url("assets/logo.png");
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+#KeyDrivenMenu {
+	border-top: 1px solid #808080;
+	background-color: #e0e0e0;
+}
+
+#KeyDrivenMenu[active="true"] {
+	border-top: 3px solid #ff4000;
+}
+
+#KeyDrivenMenu-choices {
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 11px;
+}
+
+#KeyDrivenMenu-input {
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+#selection{
+	background:orange;
+}
