@@ -192,7 +192,7 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 			final XID xid = new XID(window.getDisplayResourceHandle()
 					.getDisplay(), XResourceHandle.valueOf(windowIDs[i]));
 			xWindows[i] = this.xDisplayPlatform.getResourcesRegistry()
-					.getClientXWindow(xid, false);
+					.getClientXWindow(xid);
 		}
 
 		return xWindows;
@@ -223,7 +223,7 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 		final XID xid = new XID(display, XResourceHandle.valueOf(windowID));
 
 		final XWindow returnXWindow = this.xDisplayPlatform
-				.getResourcesRegistry().getClientXWindow(xid, false);
+				.getResourcesRegistry().getClientXWindow(xid);
 
 		return returnXWindow;
 
@@ -765,8 +765,7 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 				.getDisplayPlatform()
 				.getResourcesRegistry()
 				.getClientXWindow(
-						new XID(display, XResourceHandle.valueOf(inputWindowId)),
-						false);
+						new XID(display, XResourceHandle.valueOf(inputWindowId)));
 
 		return inputWindow;
 	}
@@ -791,8 +790,7 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 				.getDisplayPlatform()
 				.getResourcesRegistry()
 				.getClientXWindow(
-						new XID(display, XResourceHandle.valueOf(windowId)),
-						false);
+						new XID(display, XResourceHandle.valueOf(windowId)));
 		return newWindow;
 	}
 
@@ -823,8 +821,7 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 				.getDisplayPlatform()
 				.getResourcesRegistry()
 				.getClientXWindow(
-						new XID(display, XResourceHandle.valueOf(ownerWindowId)),
-						false);
+						new XID(display, XResourceHandle.valueOf(ownerWindowId)));
 
 		return ownerWindow;
 	}

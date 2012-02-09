@@ -22,9 +22,20 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import org.hydrogen.displayinterface.Display;
+import org.hydrogen.displayinterface.EventPropagator;
 import org.hydrogen.displayinterface.PlatformRenderArea;
 import org.hydrogen.displayinterface.PlatformRenderAreaAttributes;
+import org.hydrogen.displayinterface.event.ButtonNotifyEvent;
+import org.hydrogen.displayinterface.event.ConfigureRequestEvent;
+import org.hydrogen.displayinterface.event.DestroyNotifyEvent;
+import org.hydrogen.displayinterface.event.DisplayEvent;
 import org.hydrogen.displayinterface.event.DisplayEventSource;
+import org.hydrogen.displayinterface.event.FocusNotifyEvent;
+import org.hydrogen.displayinterface.event.KeyNotifyEvent;
+import org.hydrogen.displayinterface.event.MapRequestEvent;
+import org.hydrogen.displayinterface.event.MouseEnterLeaveNotifyEvent;
+import org.hydrogen.displayinterface.event.PropertyChangedNotifyEvent;
+import org.hydrogen.displayinterface.event.UnmappedNotifyEvent;
 import org.hydrogen.eventsystem.EventBus;
 import org.hydrogen.paintinterface.PaintCall;
 import org.hydrogen.paintinterface.PainterFactory;
@@ -154,6 +165,10 @@ public class ManagedDisplay extends EventBus {
 	 * 
 	 */
 	public void startEventDispatcher() {
+		// TODO this is more an X specific thing, create a more platform
+		// neutral mechanism/interface.
+		getRealRootRenderArea().getPlatformRenderArea().propagateEvent(
+				EventPropagator.REDIRECT_CHILD_WINDOW_GEOMTRY_CHANGES);
 		this.managedDisplayEventExecutor.execute(getEventDispatcher());
 	}
 

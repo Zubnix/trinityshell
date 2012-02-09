@@ -76,7 +76,7 @@ public class XPropertyXAtomWindows extends
 			final XID xid = new XID(getDisplay(),
 					XResourceHandle.valueOf(windowId));
 			final XWindow window = getDisplay().getDisplayPlatform()
-					.getResourcesRegistry().getClientXWindow(xid, true);
+					.getResourcesRegistry().getClientXWindow(xid);
 			windows[i] = window;
 		}
 

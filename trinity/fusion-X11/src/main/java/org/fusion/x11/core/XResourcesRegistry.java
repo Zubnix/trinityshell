@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hydrogen.displayinterface.PlatformRenderAreaType;
 import org.hydrogen.eventsystem.EventBus;
 
 /**
@@ -132,8 +131,7 @@ public final class XResourcesRegistry extends EventBus {
 	 * @param xid
 	 * @return
 	 */
-	public XWindow getClientXWindow(final XID xid,
-			final boolean handleProtocolProperties) {
+	public XWindow getClientXWindow(final XID xid) {
 		XWindow xWindow;
 		if (containsKey(xid)) {
 			final XResource xResource = get(xid);
@@ -145,17 +143,6 @@ public final class XResourcesRegistry extends EventBus {
 			}
 		} else {
 			xWindow = new XWindow(xid);
-			if (handleProtocolProperties) {
-				final boolean overrideRedirect = xWindow
-						.getPlatformRenderAreaAttributes().isOverrideRedirect();
-				if (!overrideRedirect) {
-					xWindow.setPlatformRenderAreaType(PlatformRenderAreaType.CLIENT_RENDER_AREA);
-				}
-				// TODO is this ok?
-				// fireEvent(new XResourceEvent(XResourceEvent.NEW_CLIENT,
-				// xWindow));
-
-			}
 		}
 		return xWindow;
 	}

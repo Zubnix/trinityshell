@@ -16,16 +16,12 @@
 package org.fusion.x11.core;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.hydrogen.displayinterface.Atom;
 import org.hydrogen.displayinterface.EventPropagator;
 import org.hydrogen.displayinterface.PlatformRenderArea;
 import org.hydrogen.displayinterface.PlatformRenderAreaAttributes;
-import org.hydrogen.displayinterface.PlatformRenderAreaRelation;
-import org.hydrogen.displayinterface.PlatformRenderAreaType;
 import org.hydrogen.displayinterface.Property;
 import org.hydrogen.displayinterface.PropertyInstance;
 import org.hydrogen.displayinterface.event.ClientMessageEvent;
@@ -58,12 +54,8 @@ public final class XWindow extends XResource implements PlatformRenderArea,
 	private final Map<Atom, Boolean> propertyValidityCache;
 	private final Map<Property<? extends PropertyInstance>, PropertyInstance> cachedPropertyReplies;
 
-	private PlatformRenderAreaType platformRenderAreaType;
-	private final Set<XWindowRelation> relations;
-
-	private final XWindowPreferences preferences;
-
-	// private final IcccmProtocolDelegate icccmProtocolDelegate;
+	// private PlatformRenderAreaType platformRenderAreaType;
+	// private final Set<XWindowRelation> relations;
 
 	/**
 	 * Create a new <code>XWindow</code> identified by the given
@@ -76,31 +68,10 @@ public final class XWindow extends XResource implements PlatformRenderArea,
 	 */
 	XWindow(final XID xid) {
 		super(xid);
-		this.preferences = new XWindowPreferences();
-		this.relations = new HashSet<XWindowRelation>();
-		setPlatformRenderAreaType(PlatformRenderAreaType.UNKNOWN_RENDER_AREA);
 		this.xCoreInterface = xid.getDisplay().getXCoreInterface();
 
 		this.cachedPropertyReplies = new HashMap<Property<? extends PropertyInstance>, PropertyInstance>();
 		this.propertyValidityCache = new HashMap<Atom, Boolean>();
-	}
-
-	@Override
-	public PlatformRenderAreaType getPlatformRenderAreaType() {
-		return this.platformRenderAreaType;
-	}
-
-	/**
-	 * The given <code>PlatformRenderAreaType</code> will identify this
-	 * <code>XWindow</code> purpose.
-	 * 
-	 * @param platformRenderAreaType
-	 *            The <code>PlatformRenderAreaType</code> for this
-	 *            <code>XWindow</code>
-	 */
-	public void setPlatformRenderAreaType(
-			final PlatformRenderAreaType platformRenderAreaType) {
-		this.platformRenderAreaType = platformRenderAreaType;
 	}
 
 	@Override
@@ -246,7 +217,7 @@ public final class XWindow extends XResource implements PlatformRenderArea,
 		getXCoreInterface().moveResizeWindow(this, x, y, width, height);
 	}
 
-	@Override
+	// @Override
 	public void overrideRedirect(final boolean override) {
 		getXCoreInterface().overrideRedirectWindow(this, override);
 	}
@@ -301,33 +272,6 @@ public final class XWindow extends XResource implements PlatformRenderArea,
 	@Override
 	public void sendMessage(final ClientMessageEvent clientMessageEvent) {
 		getXCoreInterface().sendClientMessage(this, clientMessageEvent);
-	}
-
-	/**
-	 * Adds a <code>XWindow</code> that has a certain relation to this
-	 * <code>XWindow</code>. For example the added <code>XWindow</code> can be a
-	 * popup on behalve of this <code>XWindow</code>.
-	 * <p>
-	 * A call to <code>getPlatformRenderAreaType</code> might give a hint as how
-	 * the <code>XWindow</code>s are related.
-	 * 
-	 * @param relation
-	 *            The <code>XWindow</code> that has a relation to this
-	 *            <code>XWindow</code>.
-	 */
-	public void addXWindowRelation(final XWindowRelation relation) {
-		this.relations.add(relation);
-	}
-
-	@Override
-	public PlatformRenderAreaRelation[] getPlatformRenderAreaRelations() {
-		return this.relations
-				.toArray(new XWindowRelation[this.relations.size()]);
-	}
-
-	@Override
-	public XWindowPreferences getPreferences() {
-		return this.preferences;
 	}
 
 	@Override

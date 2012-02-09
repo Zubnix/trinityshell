@@ -51,7 +51,7 @@ public final class _NetCloseWindowMessage extends EwmhClientMessageEvent {
 		final XID xid = new XID(display, XResourceHandle.valueOf(Long
 				.valueOf(xWindowId.longValue())));
 		this.clientToClose = display.getDisplayPlatform()
-				.getResourcesRegistry().getClientXWindow(xid, true);
+				.getResourcesRegistry().getClientXWindow(xid);
 	}
 
 	/**

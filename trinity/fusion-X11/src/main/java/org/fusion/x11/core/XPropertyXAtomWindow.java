@@ -71,7 +71,7 @@ public class XPropertyXAtomWindow extends
 						: propertyDataContainer.readUnsignedInt());
 		final XID xid = new XID(getDisplay(), XResourceHandle.valueOf(windowId));
 		final XWindow window = getDisplay().getDisplayPlatform()
-				.getResourcesRegistry().getClientXWindow(xid, true);
+				.getResourcesRegistry().getClientXWindow(xid);
 		final XPropertyInstanceXWindow reply = new XPropertyInstanceXWindow(
 				getDisplay(), window);
 		return reply;

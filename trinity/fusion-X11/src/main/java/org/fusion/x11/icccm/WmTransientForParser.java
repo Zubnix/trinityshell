@@ -13,9 +13,11 @@
  * You should have received a copy of the GNU General Public License along with
  * Fusion-X11. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fusion.x11.core;
 
-import org.hydrogen.displayinterface.PlatformRenderAreaPreferences;
+package org.fusion.x11.icccm;
+
+import org.fusion.x11.core.XPropertyInstanceXWindow;
+import org.fusion.x11.core.XWindow;
 
 // TODO documentation
 /**
@@ -23,28 +25,13 @@ import org.hydrogen.displayinterface.PlatformRenderAreaPreferences;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class XWindowPreferences implements PlatformRenderAreaPreferences {
-	private final XWindowSizePlacePreferences sizePreferences;
-	private final XWindowInputPreferences inputPreferences;
+public abstract class WmTransientForParser {
 
-	// private final GravityEffect winGravity;
-
-	/**
-	 * 
-	 */
-	protected XWindowPreferences() {
-		this.sizePreferences = new XWindowSizePlacePreferences();
-		this.inputPreferences = new XWindowInputPreferences();
-		// this.winGravity = new GravityEffect();
+	public void parseWmTransientFor(final XPropertyInstanceXWindow propertyReply) {
+		final XWindow transientForWindow = propertyReply
+				.getPlatformRenderArea();
+		handleParsedValues(transientForWindow);
 	}
 
-	@Override
-	public XWindowSizePlacePreferences getSizePlacePreferences() {
-		return this.sizePreferences;
-	}
-
-	@Override
-	public XWindowInputPreferences getInputPreferences() {
-		return this.inputPreferences;
-	}
+	public abstract void handleParsedValues(XWindow transientFor);
 }

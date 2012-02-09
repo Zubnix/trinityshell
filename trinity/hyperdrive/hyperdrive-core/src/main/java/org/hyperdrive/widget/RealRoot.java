@@ -15,7 +15,6 @@
  */
 package org.hyperdrive.widget;
 
-import org.hydrogen.displayinterface.EventPropagator;
 import org.hydrogen.displayinterface.PlatformRenderArea;
 import org.hyperdrive.core.ManagedDisplay;
 import org.hyperdrive.geo.GeoManagerDirect;
@@ -78,11 +77,6 @@ public final class RealRoot extends Widget {
 			final PlatformRenderArea platformRenderArea) {
 		super.setPlatformRenderArea(platformRenderArea);
 		syncGeoToPlatformRenderAreaGeo();
-
-		// TODO this is more an X specific thing, create a more platform
-		// neutral mechanism/interface.
-		platformRenderArea
-				.propagateEvent(EventPropagator.REDIRECT_CHILD_WINDOW_GEOMTRY_CHANGES);
 	}
 
 	@Override

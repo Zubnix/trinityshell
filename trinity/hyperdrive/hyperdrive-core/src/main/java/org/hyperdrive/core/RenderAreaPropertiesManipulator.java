@@ -15,6 +15,7 @@
  */
 package org.hyperdrive.core;
 
+import org.apache.log4j.Logger;
 import org.hydrogen.displayinterface.Property;
 import org.hydrogen.displayinterface.PropertyInstance;
 
@@ -25,6 +26,10 @@ import org.hydrogen.displayinterface.PropertyInstance;
  * @since 1.0
  */
 public class RenderAreaPropertiesManipulator {
+
+	private static final Logger LOGGER = Logger
+			.getLogger(RenderAreaPropertiesManipulator.class);
+	private static final String PROPERTY_NOT_FOUND_ERROR_MSG = "No property with name %s is known.";
 
 	private final AbstractRenderArea renderArea;
 
@@ -47,7 +52,8 @@ public class RenderAreaPropertiesManipulator {
 	/**
 	 * 
 	 * @param propertyName
-	 * @return
+	 * @return An instance of the given property name, null if the property is
+	 *         not known.
 	 */
 	public <T extends PropertyInstance> T getPropertyValue(
 			final String propertyName) {
@@ -55,11 +61,17 @@ public class RenderAreaPropertiesManipulator {
 		final Property<T> property = (Property<T>) getRenderArea()
 				.getManagedDisplay().getDisplay().getDisplayAtoms()
 				.getAtomByName(propertyName);
-		T propertyInstance = null;
-		propertyInstance = getRenderArea().getPlatformRenderArea()
-				.getPropertyInstance(property);
-
-		return propertyInstance;
+		if (property != null) {
+			final T propertyInstance = getRenderArea().getPlatformRenderArea()
+					.getPropertyInstance(property);
+			return propertyInstance;
+		} else {
+			RenderAreaPropertiesManipulator.LOGGER
+					.error(String
+							.format(RenderAreaPropertiesManipulator.PROPERTY_NOT_FOUND_ERROR_MSG,
+									propertyName));
+			return null;
+		}
 	}
 
 	/**

@@ -18,7 +18,6 @@ package org.fusion.x11.icccm;
 import org.fusion.x11.core.XAtom;
 import org.fusion.x11.core.XPropertyInstanceXAtoms;
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.displayinterface.InputPreferences.InputPreference;
 
 // TODO documentation
 /**
@@ -27,42 +26,32 @@ import org.hydrogen.displayinterface.InputPreferences.InputPreference;
  * @since 1.0
  */
 final class InputPreferenceHandler {
-	/**
-	 * 
-	 * @param window
-	 * @param wmHintsInstance
-	 * @param wmProtocolsReply
-	 */
-	void handleInputPreference(final XWindow window,
-	                           final WmHintsInstance wmHintsInstance,
-	                           final XPropertyInstanceXAtoms wmProtocolsReply) {
+
+	InputPreference parseInputPreference(final XWindow window,
+			final WmHintsInstance wmHintsInstance,
+			final XPropertyInstanceXAtoms wmProtocolsReply) {
+
+		InputPreference inputEnum = null;
 		final int hintFlags = wmHintsInstance.getFlags();
 		if ((hintFlags & 1) != 0) {
 			if (wmHintsInstance.getInput() != 0) {
 				for (final XAtom xAtom : wmProtocolsReply.getAtoms()) {
 					if (xAtom.getAtomName().equals("WM_TAKE_FOCUS")) {
-						window.getPreferences()
-						                .getInputPreferences()
-						                .setInputPreference(InputPreference.LOCAL_INPUT);
+						inputEnum = InputPreference.LOCAL_INPUT;
 						break;
 					}
-					window.getPreferences()
-					                .getInputPreferences()
-					                .setInputPreference(InputPreference.PASSIVE_INPUT);
+					inputEnum = InputPreference.PASSIVE_INPUT;
 				}
 			} else {
 				for (final XAtom xAtom : wmProtocolsReply.getAtoms()) {
 					if (xAtom.getAtomName().equals("WM_TAKE_FOCUS")) {
-						window.getPreferences()
-						                .getInputPreferences()
-						                .setInputPreference(InputPreference.GLOBAL_INPUT);
+						inputEnum = InputPreference.GLOBAL_INPUT;
 						break;
 					}
-					window.getPreferences()
-					                .getInputPreferences()
-					                .setInputPreference(InputPreference.NO_INPUT);
+					inputEnum = InputPreference.NO_INPUT;
 				}
 			}
 		}
+		return inputEnum;
 	}
 }

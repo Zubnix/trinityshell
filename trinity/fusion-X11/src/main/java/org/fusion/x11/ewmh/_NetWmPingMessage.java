@@ -56,8 +56,7 @@ public final class _NetWmPingMessage extends EwmhClientMessageEvent {
 				.getDisplayPlatform()
 				.getResourcesRegistry()
 				.getClientXWindow(
-						new XID(display, XResourceHandle.valueOf(windowId)),
-						true);
+						new XID(display, XResourceHandle.valueOf(windowId)));
 	}
 
 	/**

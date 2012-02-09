@@ -16,21 +16,15 @@
 
 package org.fusion.x11.icccm;
 
-import org.fusion.x11.core.XWindow;
-import org.hydrogen.displayinterface.event.BaseConfigureRequestEvent;
-
 // TODO documentation
 /**
  * 
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class WmNormalHintsManager implements
-		IcccmPropertyManager<WmSizeHintsInstance> {
+public abstract class WmNormalHintsParser {
 
-	@Override
-	public void manageIcccmProperty(final XWindow window,
-			final WmSizeHintsInstance sizeHintsReply) {
+	public void parseWmSizeHints(final WmSizeHintsInstance sizeHintsReply) {
 
 		final long normalHintFlags = sizeHintsReply.getFlags();
 		int valueMask = 0;
@@ -38,6 +32,12 @@ public class WmNormalHintsManager implements
 		short y = 0;
 		int width = 0;
 		int height = 0;
+		int minWidth = 0;
+		int minHeight = 0;
+		int maxWidth = 0;
+		int maxHeight = 0;
+		int widthIncrement = 0;
+		int heightIncrement = 0;
 		// USPosition 1 User-specified x, y
 		// USSize 2 User-specified width, height
 		// PPosition 4 Program-specified position
@@ -88,40 +88,18 @@ public class WmNormalHintsManager implements
 			// WM_NORMAL_HINTS property. The Window Manager MAY decorate such
 			// windows differently.
 
-			final int minWidth = sizeHintsReply.getMinWidth();
-			final int minHeight = sizeHintsReply.getMinHeight();
-			if (minWidth > 0) {
-				window.getPreferences().getSizePlacePreferences()
-						.setMinWidth(minWidth);
-			}
-			if (minHeight > 0) {
-				window.getPreferences().getSizePlacePreferences()
-						.setMinHeight(minHeight);
-			}
+			minWidth = sizeHintsReply.getMinWidth();
+			minHeight = sizeHintsReply.getMinHeight();
+
 		}
 		if ((normalHintFlags & 32) != 0) {
-			final int maxWidth = sizeHintsReply.getMaxWidth();
-			final int maxHeight = sizeHintsReply.getMaxHeight();
-			if (maxWidth > 0) {
-				window.getPreferences().getSizePlacePreferences()
-						.setMaxWidth(maxWidth);
-			}
-			if (maxHeight > 0) {
-				window.getPreferences().getSizePlacePreferences()
-						.setMaxHeight(maxHeight);
-			}
+			maxWidth = sizeHintsReply.getMaxWidth();
+			maxHeight = sizeHintsReply.getMaxHeight();
+
 		}
 		if ((normalHintFlags & 64) != 0) {
-			final int incWidth = sizeHintsReply.getWidthInc();
-			final int incHeight = sizeHintsReply.getHeightInc();
-			if (incWidth > 0) {
-				window.getPreferences().getSizePlacePreferences()
-						.setWidthInc(incWidth);
-			}
-			if (incHeight > 0) {
-				window.getPreferences().getSizePlacePreferences()
-						.setHeightInc(incHeight);
-			}
+			widthIncrement = sizeHintsReply.getWidthInc();
+			heightIncrement = sizeHintsReply.getHeightInc();
 		}
 		// if ((normalHintFlags & 128) != 0) {
 		// // not interested
@@ -156,22 +134,13 @@ public class WmNormalHintsManager implements
 			// height with an active flag).
 			// We need to check for these bogus values and decide whether or not
 			// to honor them.
-			final boolean configureWidth = ((valueMask & 4) != 0)
-					&& (width == 0);
-			final boolean configureHeigt = ((valueMask & 8) != 0)
-					&& (height == 0);
 
-			final BaseConfigureRequestEvent configureRequest = new BaseConfigureRequestEvent(
-					window, false, false, configureWidth, configureHeigt, x, y,
-					width, height);
-
-			// add a configure request event to the event queue
-			window.getDisplayResourceHandle().getDisplay()
-					.addEventToMasterQueue(configureRequest);
-
+			handleParsedValues(x, y, width, height, minWidth, minHeight,
+					maxWidth, maxHeight, widthIncrement, heightIncrement);
 		}
-		// window.fireEvent(new BasePlatformRenderAreaEvent(
-		// BasePlatformRenderAreaEvent.GEO_PREFERENCES_UPDATE_TYPE, window));
-
 	}
+
+	public abstract void handleParsedValues(int x, int y, int width,
+			int height, int minWidth, int minHeight, int maxWidth,
+			int maxHeight, int widthIncrement, int heightIncrement);
 }

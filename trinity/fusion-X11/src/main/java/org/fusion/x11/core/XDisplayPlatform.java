@@ -24,7 +24,6 @@ import org.hydrogen.displayinterface.Display;
 import org.hydrogen.displayinterface.DisplayPlatform;
 import org.hydrogen.displayinterface.EventProducer;
 import org.hydrogen.displayinterface.EventProducerFactory;
-import org.hydrogen.displayinterface.PlatformRenderAreaType;
 import org.hydrogen.displayinterface.ResourceHandle;
 import org.hydrogen.eventsystem.Type;
 import org.hydrogen.paintinterface.PainterFactoryProvider;
@@ -124,9 +123,7 @@ public class XDisplayPlatform implements DisplayPlatform {
 
 		final XID xid = new XID((XDisplay) display, (XResourceHandle) windowID);
 		final XWindow returnPlatformRenderArea = getResourcesRegistry()
-				.getClientXWindow(xid, false);
-		returnPlatformRenderArea
-				.setPlatformRenderAreaType(PlatformRenderAreaType.INTERFACE_RENDER_AREA);
+				.getClientXWindow(xid);
 
 		return returnPlatformRenderArea;
 	}

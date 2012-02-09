@@ -24,8 +24,10 @@ import org.hydrogen.displayinterface.event.DisplayEvent;
 import org.hydrogen.displayinterface.event.PropertyChangedNotifyEvent;
 import org.hydrogen.eventsystem.EventHandler;
 import org.hyperdrive.geo.GeoTransformableRectangle;
+import org.hyperdrive.geo.GeoTransformation;
 import org.hyperdrive.widget.Widget;
 
+// TODO documentation
 // TODO redesign/evaluate input manager integration/method delegation.
 /**
  * An <code>AbstractRenderArea</code> provides a basic abstract implementation
@@ -57,6 +59,8 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	public static final int DEFAULT_MIN_HEIGHT = 4;
 	public static final int DEFAULT_MAX_WIDTH = 32768;
 	public static final int DEFAULT_MAX_HEIGHT = 32768;
+	public static final int DEFAULT_WIDTH_INC = 1;
+	public static final int DEFAULT_HEIGHT_INC = 1;
 
 	private ManagedDisplay managedDisplay;
 	private PlatformRenderArea platformRenderArea;
@@ -69,6 +73,9 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 
 	private int maxWidth;
 	private int maxHeight;
+
+	private int widthIncrement;
+	private int heightIncrement;
 
 	/**
 	 * Create new <code>AbstractRenderArea</code>
@@ -99,6 +106,8 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 		setMinHeight(AbstractRenderArea.DEFAULT_MIN_HEIGHT);
 		setMaxWidth(AbstractRenderArea.DEFAULT_MAX_WIDTH);
 		setMaxHeight(AbstractRenderArea.DEFAULT_MAX_HEIGHT);
+		setWidthIncrement(AbstractRenderArea.DEFAULT_WIDTH_INC);
+		setHeightIncrement(AbstractRenderArea.DEFAULT_HEIGHT_INC);
 	}
 
 	public abstract void giveInputFocus();
@@ -264,6 +273,42 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 */
 	protected void unregister() {
 		getManagedDisplay().unregisterEventBus(this);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getWidthIncrement() {
+		return this.widthIncrement;
+	}
+
+	/**
+	 * 
+	 * @param widthIncrement
+	 */
+	public void setWidthIncrement(final int widthIncrement) {
+		if (widthIncrement > 0) {
+			this.widthIncrement = widthIncrement;
+		}
+	}
+
+	/**
+	 * 
+	 * @param heightIncrement
+	 */
+	public void setHeightIncrement(final int heightIncrement) {
+		if (heightIncrement > 0) {
+			this.heightIncrement = heightIncrement;
+		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getHeightIncrement() {
+		return this.heightIncrement;
 	}
 
 	/**
@@ -450,5 +495,36 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 		setVisibility(getPlatformRenderArea().getPlatformRenderAreaAttributes()
 				.isViewable());
 		doUpdateVisibility(false);
+	}
+
+	@Override
+	public GeoTransformation toGeoTransformation() {
+		final GeoTransformation geoTransformation = super.toGeoTransformation();
+		// we only want our size to increase with the preferred increment value
+		// of the underlying platform render area. We check the generated
+		// geoTransformation and create a new one with correct increment values
+		// if needed.
+
+		// make sure that delta of old & new size is a multiple of he
+		// desired increment.
+		final int deltaWidth = geoTransformation.getDeltaWidth();
+		final int newDeltaWidth = (deltaWidth / getWidthIncrement())
+				* getWidthIncrement();
+		final int deltaHeight = geoTransformation.getDeltaHeight();
+		final int newDeltaHeight = (deltaHeight / getHeightIncrement())
+				* getHeightIncrement();
+
+		final int newWidth = geoTransformation.getWidth0() + newDeltaWidth;
+		final int newHeight = geoTransformation.getHeight0() + newDeltaHeight;
+
+		final int width1 = normalizedWidth(newWidth);
+		final int height1 = normalizedHeight(newHeight);
+
+		return new GeoTransformation(geoTransformation.getX0(),
+				geoTransformation.getY0(), geoTransformation.getWidth0(),
+				geoTransformation.getHeight0(), geoTransformation.isVisible0(),
+				geoTransformation.getParent0(), geoTransformation.getX1(),
+				geoTransformation.getY1(), width1, height1,
+				geoTransformation.isVisible1(), geoTransformation.getParent1());
 	}
 }

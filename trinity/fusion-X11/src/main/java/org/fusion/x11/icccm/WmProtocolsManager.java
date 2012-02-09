@@ -24,8 +24,7 @@ import org.fusion.x11.core.XWindow;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class WmProtocolsManager implements
-		IcccmPropertyManager<XPropertyInstanceXAtoms> {
+public abstract class WmProtocolsManager {
 
 	private final InputPreferenceHandler inputPreferenceHandler;
 
@@ -39,13 +38,15 @@ public class WmProtocolsManager implements
 		this.icccmAtoms = icccmAtoms;
 	}
 
-	@Override
-	public void manageIcccmProperty(final XWindow window,
+	public void parseWmProtocols(final XWindow window,
 			final XPropertyInstanceXAtoms wmProtocolsReply) {
 		final WmHints wmHints = this.icccmAtoms.getWmHints();
 		final WmHintsInstance wmHintsInstance = window
 				.getPropertyInstance(wmHints);
-		this.inputPreferenceHandler.handleInputPreference(window,
-				wmHintsInstance, wmProtocolsReply);
+		final InputPreference input = this.inputPreferenceHandler
+				.parseInputPreference(window, wmHintsInstance, wmProtocolsReply);
+		handleParsedValues(input);
 	}
+
+	public abstract void handleParsedValues(InputPreference input);
 }

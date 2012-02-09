@@ -37,16 +37,9 @@ public final class SelectionManager {
 	SelectionManager(final IcccmAtoms icccmAtoms) {
 		this.display = icccmAtoms.getDisplay();
 		this.icccmAtoms = icccmAtoms;
-		// check if the icccm selection of the screen is available.
-		checkSelection();
-
 		// initialize the actual selection owner window
 		this.icccmSelectionOwner = getDisplay().getXCoreInterface()
 				.createNewWindow(getDisplay());
-
-		setSelection();
-
-		listenForSelectionEvents();
 	}
 
 	// TODO when losing the selection, dont listen for events anymore on the
@@ -110,34 +103,21 @@ public final class SelectionManager {
 		}
 	}
 
-	private void setSelection() {
+	public boolean isScreenSelectionAvailable() {
+		// TODO how to determine screen number? default to 0 for now
+		final XAtom selectionAtom = getIcccmAtoms().getScreenSelectionAtom(0);
+		final XWindow owner = getDisplay().getXCoreInterface()
+				.getSelectionOwner(selectionAtom);
+		return owner == getDisplay().getNoneWindow();
+	}
+
+	public void initScreenSelection() {
 		// Set the icccm selection owner for screen. How to determine screen
 		// number? For now default to 0.
 		final XAtom wmS0 = getIcccmAtoms().getScreenSelectionAtom(0);
 		getDisplay().getXCoreInterface().setSelectionOwner(wmS0,
 				getIcccmSelectionOwner());
-	}
-
-	private void checkSelection() {
-		// TODO how to determine screen number? default to 0 for now
-		final XAtom selectionAtom = getIcccmAtoms()
-				.getScreenSelectionAtom(0);
-		final XWindow owner = getDisplay().getXCoreInterface()
-				.getSelectionOwner(selectionAtom);
-		if (owner == getDisplay().getNoneWindow()) {
-			// ok
-		} else {
-			// TODO we should be able to use the result of the selection
-			// ownership
-			// to determin if we can manage the display+screen. To do this we
-			// need
-			// to refactor ManagedDisplay in the hyperdrive library so it does
-			// not
-			// automatically listens for events. If the selection is not
-			// available
-			// throw an exception so the hyperdrive library can decide what to
-			// do.
-		}
+		listenForSelectionEvents();
 	}
 
 	public XDisplay getDisplay() {

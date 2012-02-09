@@ -37,8 +37,10 @@ import org.hydrogen.displayinterface.input.Momentum
 import org.hydrogen.eventsystem.EventBus;
 import org.hydrogen.eventsystem.EventHandler
 import org.hydrogen.paintinterface.HierarchicalArea;
+
 import org.hypercube.LogicLoadable
 import org.hypercube.hyperwidget.ClientContainer
+
 import org.hyperdrive.core.ClientEvent;
 import org.hyperdrive.core.ManagedDisplay
 import org.hyperdrive.core.RenderAreaPropertiesManipulator;
@@ -54,20 +56,6 @@ import org.hyperdrive.widget.DragButton
 import org.hyperdrive.widget.KeyDrivenAppLauncher
 import org.hyperdrive.widget.MaximizeButton;
 import org.hyperdrive.widget.ResizeButton
-
-import org.fusion.x11.core.XPropertyInstanceCardinal;
-import org.fusion.x11.core.XPropertyInstanceCardinals;
-import org.fusion.x11.core.XPropertyInstanceXAtoms;
-import org.fusion.x11.core.XPropertyInstanceXWindow;
-import org.fusion.x11.core.XPropertyInstanceXWindows;
-import org.fusion.x11.core.XPropertyXAtomSingleText;
-import org.fusion.x11.core.XPropertyXAtomWindows;
-import org.fusion.x11.core.XWindow;
-import org.fusion.x11.ewmh._NetDesktopViewPortInstance;
-import org.fusion.x11.ewmh._NetDesktopViewPortInstance.DesktopViewPortCoordinate;
-import org.fusion.x11.ewmh._NetShowingDesktopInstance;
-import org.fusion.x11.ewmh._NetWorkAreaInstance;
-import org.fusion.x11.ewmh._NetWorkAreaInstance.WorkAreaGeometry;
 
 //TODO better documentation
 /**
@@ -107,11 +95,9 @@ class HypercubeLogic implements LogicLoadable{
 
 	//This is called after initialization is done.
 	void postInit(ManagedDisplay display) {
+
 		//get a reference to the (virtual) virtRoot window
 		virtRoot = display.getDefaultVirtualRootRenderArea()
-
-		//X11 specific ewmh protocol properties for root window
-		initEwmhRealRootProperties(display)
 
 		//initialize the keybindings
 		initKeyBindings(display)
@@ -174,12 +160,6 @@ class HypercubeLogic implements LogicLoadable{
 		}
 	}
 
-	//TODO move this to an ewmh manager
-	//keep track of created clients, in order they were created. For X11 specific ewmh protocol.
-	def clientListCreated = []
-	//TODO move this to an ewmh manager
-	//keep track of client stacking, in order they are stacked. For x11 specific ewmh protocol.
-	def clientListStacking = []
 
 	//What happens when a new client appears is defined here.
 	def handleNewClientEvent(ClientEvent newClientEvent){
@@ -342,14 +322,7 @@ class HypercubeLogic implements LogicLoadable{
 
 		//raise the client and give it the input focus
 		client.requestRaise()
-		client.giveInputFocus();
-
-		//add client to client list
-		clientListCreated << client
-		clientListStacking << client
-
-		//X11 specific ewmh protocol properties for client
-		initEwmhClientProperties(client)
+		client.giveInputFocus()
 	}
 
 	//called when the mouse cursor leaves a client
@@ -359,7 +332,7 @@ class HypercubeLogic implements LogicLoadable{
 		}else{
 			//release mouse grab
 			client.getPlatformRenderArea()
-					.stopMouseInputCatching();
+					.stopMouseInputCatching()
 		}
 	}
 
@@ -368,11 +341,11 @@ class HypercubeLogic implements LogicLoadable{
 		if(client.hasInputFocus()){
 			//release mouse grab
 			client.getPlatformRenderArea()
-					.stopMouseInputCatching();
+					.stopMouseInputCatching()
 		}else{
 			//grab mouse for this client,
 			client.getPlatformRenderArea()
-					.catchAllMouseInput();
+					.catchAllMouseInput()
 		}
 	}
 
@@ -382,11 +355,9 @@ class HypercubeLogic implements LogicLoadable{
 			clientContainer.requestRaise()
 			client.giveInputFocus()
 
-			//X11 specific ewmh protocol properties for client raise
-			handleEwmhClientRaise(client)
 		}
 		client.getPlatformRenderArea()
-				.stopMouseInputCatching();
+				.stopMouseInputCatching()
 	}
 
 	def handleClientRaise(event, clientContainer){
@@ -418,80 +389,5 @@ class HypercubeLogic implements LogicLoadable{
 
 	def handleClientDestroyedEvent(event, clientContainer){
 		clientContainer.doDestroy()
-	}
-
-	def handleEwmhClientRaise(client){
-		//TODO move this an ewmh manager
-		def display = virtRoot.getManagedDisplay()
-		def realRoot = display.getRealRootRenderArea()
-		def nativeDisplay = display.getDisplay()
-		def realRootPropertiesManipulator = new RenderAreaPropertiesManipulator(realRoot)
-		clientListStacking -= client
-		clientListStacking << client
-		def platformClientListArray = new XWindow[clientListStacking.size]
-		clientListStacking.eachWithIndex{ it, i -> platformClientListArray[i] = it.getPlatformRenderArea() }
-		realRootPropertiesManipulator.setPropertyValue("_NET_CLIENT_LIST_STACKING", new XPropertyInstanceXWindows(nativeDisplay,platformClientListArray))
-	}
-
-	def initEwmhClientProperties(client){
-		//TODO move this an ewmh manager
-		def display = virtRoot.getManagedDisplay()
-		def realRoot = display.getRealRootRenderArea()
-		def nativeDisplay = display.getDisplay()
-
-		def realRootPropertiesManipulator = new RenderAreaPropertiesManipulator(realRoot)
-		def platformClientListArray = new XWindow[clientListCreated.size]
-		clientListCreated.eachWithIndex{ it, i -> platformClientListArray[i] = it.getPlatformRenderArea() }
-		realRootPropertiesManipulator.setPropertyValue("_NET_CLIENT_LIST", new XPropertyInstanceXWindows(nativeDisplay,platformClientListArray))
-		realRootPropertiesManipulator.setPropertyValue("_NET_ACTIVE_WINDOW", new XPropertyInstanceXWindow(nativeDisplay,client.getPlatformRenderArea()))
-
-		def clientPropertiesManipulator = new RenderAreaPropertiesManipulator(client)
-		clientPropertiesManipulator.setPropertyValue("_NET_FRAME_EXTENTS", new XPropertyInstanceCardinals(nativeDisplay,0,20,0,20))
-	}
-
-	def initEwmhRealRootProperties(display){
-		//***start set 'static' ewmh virtRoot properties***
-		//TODO move this an ewmh manager
-
-		//TODO In future releases, automatically update these properties at runtime
-		def realRoot = display.getRealRootRenderArea()
-		def nativeDisplay = display.getDisplay()
-
-		//		Root Window Properties (and Related Messages)
-		//		_NET_SUPPORTED
-		//		_NET_CLIENT_LIST v
-		//		_NET_CLIENT_LIST_STACKING v
-		//		_NET_NUMBER_OF_DESKTOPS v
-		//		_NET_DESKTOP_GEOMETRY v
-		//		_NET_DESKTOP_VIEWPORT v
-		//		_NET_CURRENT_DESKTOP v
-		//		_NET_DESKTOP_NAMES v
-		//		_NET_ACTIVE_WINDOW v
-		//		_NET_WORKAREA v
-		//		_NET_SUPPORTING_WM_CHECK v
-		//		_NET_VIRTUAL_ROOTS v
-		//		_NET_DESKTOP_LAYOUT
-		//		_NET_SHOWING_DESKTOP v
-
-		def realRootPropertyManipulator = new RenderAreaPropertiesManipulator(realRoot)
-		realRootPropertyManipulator.setPropertyValue("_NET_NUMBER_OF_DESKTOPS", new XPropertyInstanceCardinal(nativeDisplay,1))
-		//For now we don't resize the virtual virtRoot. In future release this property should automatically be updated.
-		realRootPropertyManipulator.setPropertyValue("_NET_DESKTOP_GEOMETRY", new XPropertyInstanceCardinals(nativeDisplay,virtRoot.getWidth(),virtRoot.getHeight()))
-		realRootPropertyManipulator.setPropertyValue("_NET_CURRENT_DESKTOP", new XPropertyInstanceCardinal(nativeDisplay,0))
-		realRootPropertyManipulator.setPropertyValue("_NET_VIRTUAL_ROOTS", new XPropertyInstanceXWindows(nativeDisplay,virtRoot.getPlatformRenderArea()))
-		realRootPropertyManipulator.setPropertyValue("_NET_SHOWING_DESKTOP", new _NetShowingDesktopInstance(nativeDisplay,false))
-		realRootPropertyManipulator.setPropertyValue("_NET_SUPPORTING_WM_CHECK", new XPropertyInstanceXWindow(nativeDisplay,virtRoot.getPlatformRenderArea()))
-		def virtRootPropertyManipulator = new RenderAreaPropertiesManipulator(virtRoot)
-		virtRootPropertyManipulator.setPropertyValue("_NET_SUPPORTING_WM_CHECK", new XPropertyInstanceXWindow(nativeDisplay,virtRoot.getPlatformRenderArea()))
-		virtRootPropertyManipulator.setPropertyValue("_NET_WM_NAME", new PropertyInstanceText(nativeDisplay,"UTF8_STRING","TNT WM"))
-		realRootPropertyManipulator.setPropertyValue("_NET_DESKTOP_NAMES", new PropertyInstanceTexts(nativeDisplay,"UTF8_STRING","VD0"))
-		//In future releases, update automatically.
-		realRootPropertyManipulator.setPropertyValue("_NET_WORKAREA", new _NetWorkAreaInstance(nativeDisplay,new WorkAreaGeometry(0,0,virtRoot.getWidth(),virtRoot.getHeight()-40)))
-		realRootPropertyManipulator.setPropertyValue("_NET_DESKTOP_VIEWPORT", new _NetDesktopViewPortInstance(nativeDisplay,new DesktopViewPortCoordinate(0,0)))
-		//Note that _NET_CLIENT_LIST, _NET_CLIENT_LIST_STACKING and _NET_ACTIVE_WINDOW are set dynamically when a client is added or a client's state changes.
-
-		virtRootPropertyManipulator.setPropertyValue("_NET_WM_WINDOW_TYPE", new XPropertyInstanceXAtoms(nativeDisplay,"_NET_WM_WINDOW_TYPE_DESKTOP"))
-
-		//***end set 'static' ewmh virtRoot properties***
 	}
 }

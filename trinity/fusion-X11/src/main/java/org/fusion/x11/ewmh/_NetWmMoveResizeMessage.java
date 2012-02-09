@@ -59,7 +59,7 @@ public final class _NetWmMoveResizeMessage extends EwmhClientMessageEvent
 				.getResourcesRegistry()
 				.getClientXWindow(
 						new XID(display, XResourceHandle.valueOf(Long
-								.valueOf(windowId.longValue()))), true);
+								.valueOf(windowId.longValue()))));
 		final int source = intDataContainer.readDataBlock().intValue();
 
 		this.sourceIndication = SourceIndication.values()[source];

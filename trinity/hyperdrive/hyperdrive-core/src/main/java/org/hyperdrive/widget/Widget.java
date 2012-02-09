@@ -215,7 +215,7 @@ public class Widget extends AbstractRenderArea implements Paintable,
 		// is not mistaken as a client window. This should normally be done
 		// by the paint-back when creating the widget 'visual'. Enabling it
 		// here is thus more some kind of a safety precaution.
-		platformRenderArea.overrideRedirect(true);
+		// platformRenderArea.overrideRedirect(true);
 		super.setPlatformRenderArea(platformRenderArea);
 	}
 

@@ -21,7 +21,6 @@ import org.hydrogen.displayinterface.event.ConfigureRequestEvent;
 import org.hydrogen.displayinterface.event.MapRequestEvent;
 import org.hydrogen.displayinterface.event.UnmappedNotifyEvent;
 import org.hydrogen.eventsystem.EventHandler;
-import org.hyperdrive.geo.GeoTransformation;
 
 // TODO documentation
 /**
@@ -185,99 +184,6 @@ public final class ClientWindow extends AbstractRenderArea {
 	}
 
 	/**
-	 * 
-	 * @return
-	 */
-	public int getWidthInc() {
-		return getPlatformRenderArea().getPreferences()
-				.getSizePlacePreferences().getWidthInc();
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public int getHeightInc() {
-		return getPlatformRenderArea().getPreferences()
-				.getSizePlacePreferences().getHeightInc();
-	}
-
-	private int calculateLowerBound(final int stored, final int clientPrefered,
-			final int defaultStored) {
-
-		final int bound;
-
-		if ((stored == defaultStored) && (clientPrefered > defaultStored)) {
-			// the client has set a prefered min and it is not overriden
-			// by a stored min.
-			bound = clientPrefered;
-		} else {
-			// either a stored min has been set or the client prefered min is
-			// smaller than the default min
-			bound = stored;
-		}
-
-		return bound;
-	}
-
-	private int calculateUpperBound(final int stored, final int clientPrefered,
-			final int defaultStored) {
-		final int bound;
-
-		if ((stored == defaultStored) && (clientPrefered < defaultStored)) {
-			// the client has set a prefered min and it is not overriden
-			// by a stored min.
-			bound = clientPrefered;
-		} else {
-			// either a stored min has been set or the client prefered min is
-			// smaller than the default min
-			bound = stored;
-		}
-
-		return bound;
-	}
-
-	@Override
-	public int getMinHeight() {
-		final int clientPrefered = getPlatformRenderArea().getPreferences()
-				.getSizePlacePreferences().getMinHeight();
-		final int stored = super.getMinHeight();
-
-		return calculateLowerBound(stored, clientPrefered,
-				AbstractRenderArea.DEFAULT_MIN_HEIGHT);
-	}
-
-	@Override
-	public int getMinWidth() {
-		final int clientPrefered = getPlatformRenderArea().getPreferences()
-				.getSizePlacePreferences().getMinWidth();
-		final int stored = super.getMinWidth();
-
-		return calculateLowerBound(stored, clientPrefered,
-				AbstractRenderArea.DEFAULT_MIN_WIDTH);
-	}
-
-	@Override
-	public int getMaxHeight() {
-		final int clientPrefered = getPlatformRenderArea().getPreferences()
-				.getSizePlacePreferences().getMaxHeight();
-		final int stored = super.getMaxHeight();
-
-		return calculateUpperBound(stored, clientPrefered,
-				AbstractRenderArea.DEFAULT_MAX_HEIGHT);
-	}
-
-	@Override
-	public int getMaxWidth() {
-		final int clientPrefered = getPlatformRenderArea().getPreferences()
-				.getSizePlacePreferences().getMaxWidth();
-		final int stored = super.getMaxWidth();
-
-		return calculateUpperBound(stored, clientPrefered,
-				AbstractRenderArea.DEFAULT_MAX_WIDTH);
-	}
-
-	/**
 	 * Send a request to the program that created the wrapped
 	 * <code>PlatformRenderArea</code> to gracefully destroy the respective
 	 * <code>PlatformRenderArea</code>.
@@ -286,36 +192,6 @@ public final class ClientWindow extends AbstractRenderArea {
 	 */
 	public void requestDestroy() {
 		getPlatformRenderArea().requestDestroy();
-	}
-
-	@Override
-	public GeoTransformation toGeoTransformation() {
-		final GeoTransformation geoTransformation = super.toGeoTransformation();
-		// we only want our size to increase with the preferred increment value
-		// of the underlying platform render area. We check the generated
-		// geoTransformation and create a new one with correct increment values
-		// if needed.
-
-		// make sure that delta of old & new size is a multiple of he
-		// desired increment.
-		final int deltaWidth = geoTransformation.getDeltaWidth();
-		final int newDeltaWidth = (deltaWidth / getWidthInc()) * getWidthInc();
-		final int deltaHeight = geoTransformation.getDeltaHeight();
-		final int newDeltaHeight = (deltaHeight / getHeightInc())
-				* getHeightInc();
-
-		final int newWidth = geoTransformation.getWidth0() + newDeltaWidth;
-		final int newHeight = geoTransformation.getHeight0() + newDeltaHeight;
-
-		final int width1 = normalizedWidth(newWidth);
-		final int height1 = normalizedHeight(newHeight);
-
-		return new GeoTransformation(geoTransformation.getX0(),
-				geoTransformation.getY0(), geoTransformation.getWidth0(),
-				geoTransformation.getHeight0(), geoTransformation.isVisible0(),
-				geoTransformation.getParent0(), geoTransformation.getX1(),
-				geoTransformation.getY1(), width1, height1,
-				geoTransformation.isVisible1(), geoTransformation.getParent1());
 	}
 
 	@Override

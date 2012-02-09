@@ -18,11 +18,6 @@ package org.fusion.x11.icccm;
 
 import org.fusion.x11.core.XPropertyInstanceXAtoms;
 import org.fusion.x11.core.XWindow;
-import org.fusion.x11.core.XWindowRelation;
-import org.fusion.x11.core.event.XMapRequest;
-import org.fusion.x11.core.event.XUnmapNotify;
-import org.hydrogen.displayinterface.PlatformRenderAreaType;
- 
 
 // TODO documentation
 /**
@@ -30,8 +25,7 @@ import org.hydrogen.displayinterface.PlatformRenderAreaType;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class WmHintsManager implements
-		IcccmPropertyManager<WmHintsInstance> {
+public abstract class WmHintsParser {
 
 	private final InputPreferenceHandler inputPreferenceHandler;
 	private final IcccmAtoms icccmAtoms;
@@ -39,15 +33,13 @@ public class WmHintsManager implements
 	/**
 	 * 
 	 */
-	public WmHintsManager(IcccmAtoms icccmAtoms) {
+	public WmHintsParser(final IcccmAtoms icccmAtoms) {
 		this.inputPreferenceHandler = new InputPreferenceHandler();
 		this.icccmAtoms = icccmAtoms;
 	}
 
-	@Override
-	public void manageIcccmProperty(final XWindow window,
-			final WmHintsInstance wmHintsInstance)
-			   {
+	public void parseWmHints(final XWindow window,
+			final WmHintsInstance wmHintsInstance) {
 		final int hintFlags = wmHintsInstance.getFlags();
 
 		// InputHint 1 input
@@ -63,50 +55,25 @@ public class WmHintsManager implements
 		final XPropertyInstanceXAtoms wmProtocolsReply = window
 				.getPropertyInstance(this.icccmAtoms.getWmProtocols());
 
-		this.inputPreferenceHandler.handleInputPreference(window,
-				wmHintsInstance, wmProtocolsReply);
+		final InputPreference input = this.inputPreferenceHandler
+				.parseInputPreference(window, wmHintsInstance, wmProtocolsReply);
 
+		WmStateEnum state = null;
+		XWindow iconWindow = null;
+		int iconX = 0;
+		int iconY = 0;
 		if ((hintFlags & 2) != 0) {
-			final WmStateEnum initialStateEnum = wmHintsInstance
-					.getInitialState();
-			switch (initialStateEnum) {
-			case NormalState: {
-				final XMapRequest mapRequest = new XMapRequest(window);
-				window.getDisplayResourceHandle().getDisplay()
-						.addEventToMasterQueue(mapRequest);
-				break;
-			}
-			case IconicState: {
-
-				final XUnmapNotify unmapNotify = new XUnmapNotify(window);
-				window.getDisplayResourceHandle().getDisplay()
-						.addEventToMasterQueue(unmapNotify);
-				break;
-			}
-			case WithdrawnState: {
-				final XUnmapNotify unmapNotify = new XUnmapNotify(window);
-				window.getDisplayResourceHandle().getDisplay()
-						.addEventToMasterQueue(unmapNotify);
-				break;
-			}
-			default:
-				break;
-			}
+			state = wmHintsInstance.getInitialState();
 		}
 		// if ((hintFlags & 4) != 0) {
 		// // TODO iconpixmaphint
 		// }
 		if ((hintFlags & 8) != 0) {
-			wmHintsInstance.getIconWindow().setPlatformRenderAreaType(
-					PlatformRenderAreaType.ICON_RENDER_AREA);
-			window.addXWindowRelation(new XWindowRelation(wmHintsInstance
-					.getIconWindow()));
+			iconWindow = wmHintsInstance.getIconWindow();
 		}
 		if ((hintFlags & 16) != 0) {
-			final int iconX = wmHintsInstance.getIconX();
-			final int iconY = wmHintsInstance.getIconY();
-			window.getPreferences().getSizePlacePreferences().setIconX(iconX);
-			window.getPreferences().getSizePlacePreferences().setIconY(iconY);
+			iconX = wmHintsInstance.getIconX();
+			iconY = wmHintsInstance.getIconY();
 		}
 		// if ((hintFlags & 32) != 0) {
 		// // TODO iconmaskhint
@@ -123,5 +90,9 @@ public class WmHintsManager implements
 		// TODO further handling + construct map request and place
 		// it on display's main event queue.
 
+		handleParsedValues(state, input, iconWindow, iconX, iconY);
 	}
+
+	public abstract void handleParsedValues(WmStateEnum state,
+			InputPreference input, XWindow iconWindow, int iconX, int iconY);
 }

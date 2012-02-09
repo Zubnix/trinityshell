@@ -127,7 +127,7 @@ final class XcbEventParser {
 		final XID xid = new XID(display, XResourceHandle.valueOf(Long
 				.valueOf(windowID)));
 		final XWindow returnXWindow = display.getDisplayPlatform()
-				.getResourcesRegistry().getClientXWindow(xid, true);
+				.getResourcesRegistry().getClientXWindow(xid);
 		return returnXWindow;
 	}
 
@@ -333,8 +333,8 @@ final class XcbEventParser {
 		final KeyboardInput input = new KeyboardInput(Momentum.STARTED, key,
 				inputModifiers);
 
-		final XKeyEvent xcbKeyPress = new XKeyEvent(
-				KeyNotifyEvent.KEY_PRESSED, event, input);
+		final XKeyEvent xcbKeyPress = new XKeyEvent(KeyNotifyEvent.KEY_PRESSED,
+				event, input);
 
 		return xcbKeyPress;
 	}
@@ -345,8 +345,8 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	private XKeyEvent parseXcbKeyRelease(
-			final NativeBufferHelper eventStruct, final XDisplay display) {
+	private XKeyEvent parseXcbKeyRelease(final NativeBufferHelper eventStruct,
+			final XDisplay display) {
 
 		final int detail = eventStruct.readSignedByte();
 		eventStruct.readSignedShort();
@@ -454,8 +454,7 @@ final class XcbEventParser {
 
 		final XWindow window = readXWindow(display, eventWindow);
 
-		final XDestroyNotify returnXcbDestroyNotify = new XDestroyNotify(
-				window);
+		final XDestroyNotify returnXcbDestroyNotify = new XDestroyNotify(window);
 		return returnXcbDestroyNotify;
 	}
 
@@ -740,8 +739,7 @@ final class XcbEventParser {
 		this.parseMap.put(Integer.valueOf(XProtocolConstants.KEY_PRESS),
 				new XcbEventParserHelper() {
 					@Override
-					XKeyEvent parseEvent(
-							final NativeBufferHelper eventStruct,
+					XKeyEvent parseEvent(final NativeBufferHelper eventStruct,
 							final XDisplay display) {
 						return parseXcbKeyPress(eventStruct, display);
 					}
@@ -750,8 +748,7 @@ final class XcbEventParser {
 		this.parseMap.put(Integer.valueOf(XProtocolConstants.KEY_RELEASE),
 				new XcbEventParserHelper() {
 					@Override
-					XKeyEvent parseEvent(
-							final NativeBufferHelper eventStruct,
+					XKeyEvent parseEvent(final NativeBufferHelper eventStruct,
 							final XDisplay display) {
 						return parseXcbKeyRelease(eventStruct, display);
 					}

@@ -26,7 +26,6 @@ import org.fusion.x11.core.XResourceHandle;
 import org.fusion.x11.core.XWindow;
 import org.fusion.x11.error.NotYetImplementedError;
 import org.hydrogen.displayinterface.PlatformRenderArea;
- 
 
 // TODO documentation
 /**
@@ -50,8 +49,7 @@ public final class WmHints extends XPropertyXAtom<WmHintsInstance> {
 	public WmHintsInstance getPropertyInstance(
 			final PlatformRenderArea platformRenderArea,
 			final XPropertyInstanceInfo propertyInstanceInfo,
-			final FlexDataContainer propertyDataContainer)
-			   {
+			final FlexDataContainer propertyDataContainer) {
 		// contents of buffer:
 		// /** Marks which fields in this structure are defined */
 		// int32_t flags;
@@ -88,19 +86,18 @@ public final class WmHints extends XPropertyXAtom<WmHintsInstance> {
 				break;
 			}
 		}
-		final XID iconPixmapXid = new XID(this.getDisplay(),
+		final XID iconPixmapXid = new XID(getDisplay(),
 				XResourceHandle.valueOf(Long.valueOf(iconPixmapId)));
-		final XID iconPixmapMaskXid = new XID(this.getDisplay(),
+		final XID iconPixmapMaskXid = new XID(getDisplay(),
 				XResourceHandle.valueOf(Long.valueOf(iconPixmapMaskId)));
-		final XWindow iconWindow = this
-				.getDisplay()
+		final XWindow iconWindow = getDisplay()
 				.getDisplayPlatform()
 				.getResourcesRegistry()
 				.getClientXWindow(
-						new XID(this.getDisplay(), XResourceHandle.valueOf(Long
-								.valueOf(iconWindowId))), false);
+						new XID(getDisplay(), XResourceHandle.valueOf(Long
+								.valueOf(iconWindowId))));
 
-		return new WmHintsInstance(this.getDisplay(), flags, input,
+		return new WmHintsInstance(getDisplay(), flags, input,
 				initialStateEnum, iconPixmapXid, iconWindow, iconX, iconY,
 				iconPixmapMaskXid, null);
 	}
@@ -108,8 +105,7 @@ public final class WmHints extends XPropertyXAtom<WmHintsInstance> {
 	@Override
 	public void setPropertyInstance(
 			final PlatformRenderArea platformRenderArea,
-			final WmHintsInstance propertyInstance)
-			   {
+			final WmHintsInstance propertyInstance) {
 		throw new NotYetImplementedError("Not implemented");
 	}
 }

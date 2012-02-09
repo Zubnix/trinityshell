@@ -32,9 +32,7 @@ import org.hydrogen.displayinterface.input.Key;
  * @since 1.0
  */
 public interface PlatformRenderArea extends DisplayResource, Area,
-		AreaManipulator<PlatformRenderArea>, DisplayEventSource
-// ,EventHandlerManager
-{
+		AreaManipulator<PlatformRenderArea>, DisplayEventSource {
 
 	/**
 	 * Returns all child <code>PlatformRenderArea</code>s where this
@@ -43,22 +41,6 @@ public interface PlatformRenderArea extends DisplayResource, Area,
 	 * @return An array of child <code>PlatformRenderArea</code>s.
 	 */
 	PlatformRenderArea[] getChildren();
-
-	/**
-	 * 
-	 * @return
-	 */
-	PlatformRenderAreaType getPlatformRenderAreaType();
-
-	/**
-	 * Override any <code>EventPropagation</code>s set on this
-	 * <code>PlatformRenderArea</code> so these <code>EventPropagation</code>s
-	 * are ignored.
-	 * 
-	 * @param override
-	 *            True if override should be enabled. False if not.
-	 */
-	void overrideRedirect(boolean override);
 
 	/**
 	 * Select which <code>DisplayEvent</code> types this
@@ -99,22 +81,10 @@ public interface PlatformRenderArea extends DisplayResource, Area,
 
 	/**
 	 * 
-	 * @return
-	 */
-	PlatformRenderAreaRelation[] getPlatformRenderAreaRelations();
-
-	/**
-	 * 
 	 * @param clientMessageEvent
 	 * 
 	 */
 	void sendMessage(ClientMessageEvent clientMessageEvent);
-
-	/**
-	 * 
-	 * @return
-	 */
-	PlatformRenderAreaPreferences getPreferences();
 
 	/**
 	 * 

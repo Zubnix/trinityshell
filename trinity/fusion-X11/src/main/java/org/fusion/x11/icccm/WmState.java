@@ -73,7 +73,7 @@ public final class WmState extends XPropertyXAtom<WmStateInstance> {
 				.getResourcesRegistry()
 				.getClientXWindow(
 						new XID(getDisplay(), XResourceHandle.valueOf(Long
-								.valueOf(iconWindowId))), false);
+								.valueOf(iconWindowId))));
 
 		final WmStateInstance reply = new WmStateInstance(getDisplay(),
 				wmState, iconWindow);
