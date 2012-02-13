@@ -57,7 +57,8 @@ public final class XcbCoreNativeCalls {
 		@Override
 		protected boolean nativeCallImpl() {
 			return XCoreNative.nativeRemoveFromSaveSet(getDisplayPeer()
-					.longValue(), getArgs()[0].longValue());
+					.longValue(), getArgs()[0].longValue(),
+					getNativeBufferHelper().getBuffer());
 		}
 	}
 
@@ -84,7 +85,8 @@ public final class XcbCoreNativeCalls {
 		@Override
 		protected boolean nativeCallImpl() {
 			return XCoreNative.nativeAddToSaveSet(getDisplayPeer().longValue(),
-					getArgs()[0].longValue());
+					getArgs()[0].longValue(), getNativeBufferHelper()
+							.getBuffer());
 		}
 	}
 
@@ -182,7 +184,7 @@ public final class XcbCoreNativeCalls {
 		@Override
 		protected boolean nativeCallImpl() {
 			return XCoreNative.nativeCreateNewWindow(getDisplayPeer()
-					.longValue());
+					.longValue(), getNativeBufferHelper().getBuffer());
 		}
 	}
 

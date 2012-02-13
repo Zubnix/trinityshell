@@ -502,9 +502,9 @@ public final class XCoreNative {
 	 * @param displayAddress
 	 * @return
 	 */
-	public static native boolean nativeCreateNewWindow(long displayAddress);
+	public static native boolean nativeCreateNewWindow(long displayAddress,
+			ByteBuffer buffer);
 
-	// TODO implement native side
 	/**
 	 * 
 	 * @param displayAddress
@@ -512,9 +512,8 @@ public final class XCoreNative {
 	 * @return
 	 */
 	public static native boolean nativeAddToSaveSet(long displayAddress,
-			long windowId);
+			long windowId, ByteBuffer buffer);
 
-	// TODO implement native side
 	/**
 	 * 
 	 * @param displayAddress
@@ -522,7 +521,7 @@ public final class XCoreNative {
 	 * @return
 	 */
 	public static native boolean nativeRemoveFromSaveSet(long displayAddress,
-			long windowId);
+			long windowId, ByteBuffer buffer);
 
 	/**
 	 * An <code>XCoreNative</code> can not be instantiated. Calling this will

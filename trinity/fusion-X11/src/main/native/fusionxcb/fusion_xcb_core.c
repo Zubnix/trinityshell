@@ -1076,7 +1076,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeGetSelectionOwner(JNIEnv *env,
 		return (jboolean) 1;
 	}
 
-	memcpy(resultBuffer, reply->owner, sizeof(xcb_window_t));
+	memcpy(resultBuffer, &reply->owner, sizeof(xcb_window_t));
 
 	return (jboolean) 0;
 }
@@ -1093,14 +1093,11 @@ Java_org_fusion_x11_core_XCoreNative_nativeCreateNewWindow(JNIEnv *env,
 	uint32_t id = xcb_generate_id((xcb_connection_t*) display);
 	int16_t x = 0;
 	int16_t y = 0;
-	uint16_t width = 1;
-	uint16_t height = 1;
+	uint16_t width = 5;
+	uint16_t height = 5;
 	uint16_t borderWidth = 0;
 
-	/* Get the first screen */
-	const xcb_setup_t *setup = xcb_get_setup(display);
-	xcb_screen_iterator_t iter = xcb_setup_roots_iterator(setup);
-	xcb_screen_t *screen = iter.data;
+	xcb_screen_t *screen = screen_of_display((xcb_connection_t*) display, 0);
 
 	xcb_void_cookie_t void_cookie = xcb_create_window_checked(
 			(xcb_connection_t*) display, XCB_COPY_FROM_PARENT, id, screen->root,
