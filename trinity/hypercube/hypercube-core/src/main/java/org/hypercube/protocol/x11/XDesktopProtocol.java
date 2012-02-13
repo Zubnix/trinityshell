@@ -6,7 +6,6 @@ import java.util.Map;
 import org.fusion.x11.core.IntDataContainer;
 import org.fusion.x11.core.XAtom;
 import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XID;
 import org.fusion.x11.core.XPropertyInstanceXAtoms;
 import org.fusion.x11.core.XPropertyXAtom;
 import org.fusion.x11.core.XPropertyXAtomAtoms;
@@ -35,7 +34,7 @@ import org.hyperdrive.core.RenderAreaPropertiesManipulator;
 import org.hyperdrive.core.RenderAreaPropertyChangedEvent;
 import org.hyperdrive.geo.GeoEvent;
 
-public class XDesktopProtocol extends AbstractDesktopProtocol {
+public final class XDesktopProtocol extends AbstractDesktopProtocol {
 
 	private abstract class PropertyListener<P extends PropertyInstance, T extends XPropertyXAtom<P>>
 			implements EventHandler<RenderAreaPropertyChangedEvent<T>> {
@@ -64,7 +63,8 @@ public class XDesktopProtocol extends AbstractDesktopProtocol {
 		@Override
 		void handlePropertyInstance(final ClientWindow client,
 				final WmHintsInstance propertyInstance) {
-			handleWmHint(client, propertyInstance);
+			XDesktopProtocol.this.wmHintsInterpreter.handleWmHint(client,
+					propertyInstance);
 		}
 	}
 
@@ -74,7 +74,8 @@ public class XDesktopProtocol extends AbstractDesktopProtocol {
 		@Override
 		void handlePropertyInstance(final ClientWindow client,
 				final WmSizeHintsInstance propertyInstance) {
-			handleWmNormalHints(client, propertyInstance);
+			XDesktopProtocol.this.wmNormalHintsInterpreter.handleWmNormalHints(
+					client, propertyInstance);
 		}
 	}
 
@@ -84,7 +85,8 @@ public class XDesktopProtocol extends AbstractDesktopProtocol {
 		@Override
 		void handlePropertyInstance(final ClientWindow client,
 				final PropertyInstanceText propertyInstance) {
-			handleWmName(client, propertyInstance);
+			XDesktopProtocol.this.wmNameInterpreter.handleWmName(client,
+					propertyInstance);
 		}
 	}
 
@@ -93,7 +95,8 @@ public class XDesktopProtocol extends AbstractDesktopProtocol {
 		@Override
 		void handlePropertyInstance(final ClientWindow client,
 				final PropertyInstanceTexts propertyInstance) {
-			handleWmClass(client, propertyInstance);
+			XDesktopProtocol.this.wmClassInterpreter.handleWmClass(client,
+					propertyInstance);
 		}
 	}
 
@@ -111,10 +114,15 @@ public class XDesktopProtocol extends AbstractDesktopProtocol {
 	private final Icccm icccm;
 	private final InputPreferenceParser inputPreferenceParser;
 
-	// private final ManagedDisplay managedDisplay;
 	private final XDisplay display;
 
+	private final WmNormalHintsInterpreter wmNormalHintsInterpreter;
+	private final WmHintsInterpreter wmHintsInterpreter;
+	private final WmNameInterpreter wmNameInterpreter;
+	private final WmClassInterpreter wmClassInterpreter;
+
 	private final Map<ClientWindow, RenderAreaPropertiesManipulator> clientPropertiesManipulators;
+	static final String EMPTY_STRING = "";
 
 	public XDesktopProtocol(final ManagedDisplay managedDisplay) {
 		this.inputPreferenceParser = new InputPreferenceParser();
@@ -123,6 +131,12 @@ public class XDesktopProtocol extends AbstractDesktopProtocol {
 		this.display = (XDisplay) managedDisplay.getDisplay();
 
 		this.icccm = new Icccm(this.display);
+
+		this.wmNormalHintsInterpreter = new WmNormalHintsInterpreter(this);
+		this.wmHintsInterpreter = new WmHintsInterpreter(this);
+		this.wmNameInterpreter = new WmNameInterpreter(this);
+		this.wmClassInterpreter = new WmClassInterpreter(this);
+
 		if (this.icccm.getSelectionManager().isScreenSelectionAvailable()) {
 			this.icccm.getSelectionManager().initScreenSelection();
 		} else {
@@ -146,7 +160,6 @@ public class XDesktopProtocol extends AbstractDesktopProtocol {
 
 	@Override
 	public boolean requestDelete(final ClientWindow client) {
-
 		final XPropertyInstanceXAtoms wmProtocolsInstance = this.clientPropertiesManipulators
 				.get(client)
 				.getPropertyValue(IcccmAtoms.WM_PROTOCOLS_ATOM_NAME);
@@ -283,176 +296,6 @@ public class XDesktopProtocol extends AbstractDesktopProtocol {
 						.TYPE(IcccmAtoms.WM_CLASS_ATOM_NAME));
 		client.addEventHandler(new ClientVisibilityListener(),
 				GeoEvent.VISIBILITY);
-	}
-
-	protected void handleWmHint(final ClientWindow client,
-			final WmHintsInstance instance) {
-
-		final long input = instance.getInput();
-		final WmStateEnum initialState = instance.getInitialState();
-		final XID pixmapid = instance.getIconPixmap();
-		final XWindow iconWindow = instance.getIconWindow();
-		final int iconX = instance.getIconX();
-		final int iconY = instance.getIconY();
-		final XID iconMask = instance.getIconMask();
-		final XWindow windowGroupLeader = instance.getWindowGroup();
-
-		final int hintFlags = instance.getFlags();
-		if ((hintFlags & 1) != 0) {
-			// InputHint 1 input
-
-		}
-		if ((hintFlags & 2) != 0) {
-			// StateHint 2 initial_state
-
-		}
-		if ((hintFlags & 4) != 0) {
-			// IconPixmapHint 4 icon_pixmap
-
-		}
-		if ((hintFlags & 8) != 0) {
-			// IconWindowHint 8 icon_window
-
-		}
-		if ((hintFlags & 16) != 0) {
-			// IconPositionHint 16 icon_x & icon_y
-
-		}
-		if ((hintFlags & 32) != 0) {
-			// IconMaskHint 32 icon_mask
-
-		}
-		if ((hintFlags & 64) != 0) {
-			// WindowGroupHint 64 window_group
-
-		}
-		if ((hintFlags & 128) != 0) {
-			// MessageHint 128 (this bit is obsolete)
-
-		}
-		if ((hintFlags & 256) != 0) {
-			// UrgencyHint 256 urgency
-
-		}
-
-		// TODO update geometry preferences' visibility
-		// TODO update Icon preferences
-		// TODO update urgent notify
-
-	}
-
-	protected void handleWmNormalHints(final ClientWindow client,
-			final WmSizeHintsInstance propertyInstance) {
-
-		// USPosition 1 User-specified x, y
-		// USSize 2 User-specified width, height
-		// PPosition 4 Program-specified position
-		// PSize 8 Program-specified size
-		// PMinSize 16 Program-specified minimum size
-		// PMaxSize 32 Program-specified maximum size
-		// PResizeInc 64 Program-specified resize increments
-		// PAspect 128 Program-specified min and max aspect ratios
-		// PBaseSize 256 Program-specified base size
-		// PWinGravity 512 Program-specified window gravity
-
-		final int x = propertyInstance.getX();
-		final int y = propertyInstance.getY();
-		final int width = propertyInstance.getWidth();
-		final int height = propertyInstance.getHeight();
-		final int minWidth = propertyInstance.getMinWidth();
-		final int minHeight = propertyInstance.getMinHeight();
-		final int maxWidth = propertyInstance.getMaxWidth();
-		final int maxHeight = propertyInstance.getMaxHeight();
-		final int widthInc = propertyInstance.getWidthInc();
-		final int heightInc = propertyInstance.getHeightInc();
-
-		// parse flags:
-		final long normalHintFlags = propertyInstance.getFlags();
-		final boolean userSpecifiedPos = (normalHintFlags & 1) != 0;
-		final boolean userSpecifiedSize = (normalHintFlags & 2) != 0;
-		final boolean programPosition = (normalHintFlags & 4) != 0;
-		final boolean programSize = (normalHintFlags & 8) != 0;
-		final boolean programMinSize = (normalHintFlags & 16) != 0;
-		final boolean programMaxSize = (normalHintFlags & 32) != 0;
-		final boolean programResizeIncrements = (normalHintFlags & 64) != 0;
-		final boolean programAspectRatios = (normalHintFlags & 128) != 0;
-		final boolean programBaseSize = (normalHintFlags & 256) != 0;
-		final boolean programResizeGravity = (normalHintFlags & 512) != 0;
-
-		// interpret values:
-		if (userSpecifiedPos) {
-			// USPosition 1 User-specified x, y
-		}
-		if (userSpecifiedSize) {
-			// USSize 2 User-specified width, height
-		}
-		if (programPosition) {
-			// PPosition 4 Program-specified position
-
-		}
-		if (programSize) {
-			// PSize 8 Program-specified size
-		}
-		if (programMinSize) {
-			// PMinSize 16 Program-specified minimum size
-
-		}
-		if (programMaxSize) {
-			// PMaxSize 32 Program-specified maximum size
-
-			// From EWMH:
-			// Windows can indicate that they are non-resizable by setting
-			// minheight = maxheight and minwidth = maxwidth in the ICCCM
-			// WM_NORMAL_HINTS property. The Window Manager MAY decorate such
-			// windows differently.
-
-		}
-		if (programMinSize && programMaxSize && (minWidth == maxWidth)
-				&& (minHeight == maxHeight)) {
-			// From EWMH:
-			// Windows can indicate that they are non-resizable by setting
-			// minheight = maxheight and minwidth = maxwidth in the ICCCM
-			// WM_NORMAL_HINTS property. The Window Manager MAY decorate such
-			// windows differently.
-
-		}
-
-		if (programResizeIncrements) {
-			// PResizeInc 64 Program-specified resize increments
-
-		}
-		if (programAspectRatios) {
-			// PAspect 128 Program-specified min and max aspect ratios
-
-		}
-		if (programBaseSize) {
-			// PBaseSize 256 Program-specified base size
-
-		}
-		if (programResizeGravity) {
-			// PWinGravity 512 Program-specified window gravity
-
-			// Window Managers MUST honor the win_gravity field of
-			// WM_NORMAL_HINTS for both MapRequest and ConfigureRequest events
-			// (ICCCM Version 2.0, §4.1.2.3 and §4.1.5)
-
-		}
-
-		// TODO update geometry preferences
-	}
-
-	protected void handleWmName(final ClientWindow client,
-			final PropertyInstanceText propertyInstance) {
-		// TODO Update client description
-
-	}
-
-	protected void handleWmClass(final ClientWindow client,
-			final PropertyInstanceTexts propertyInstance) {
-		final String classInstanceName = propertyInstance.getTexts()[0];
-		final String className = propertyInstance.getTexts()[1];
-		// TODO Update client description
-
 	}
 
 }

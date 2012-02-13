@@ -1,9 +1,8 @@
 package org.hypercube.protocol;
 
-import org.hydrogen.eventsystem.EventHandlerManager;
 import org.hyperdrive.core.ClientWindow;
 
-public interface DesktopProtocol extends EventHandlerManager {
+public interface DesktopProtocol {
 
 	void registerClient(ClientWindow client);
 
@@ -21,9 +20,9 @@ public interface DesktopProtocol extends EventHandlerManager {
 	 */
 	boolean requestDelete(ClientWindow client);
 
-	<T extends ProtocolEventType<? extends ProtocolEventArguments>> ProtocolEvent<? extends T> query(
+	<A extends ProtocolEventArguments, T extends ProtocolEventType<A>> ProtocolEvent<A> query(
 			ClientWindow client, T eventType);
 
-	<T extends ProtocolEventType<? extends ProtocolEventArguments>> void updateProtocolEvent(
-			ClientWindow client, ProtocolEvent<? extends T> protocolEvent);
+	<A extends ProtocolEventArguments, T extends ProtocolEventType<A>> void updateProtocolEvent(
+			ClientWindow client, ProtocolEvent<A> protocolEvent);
 }

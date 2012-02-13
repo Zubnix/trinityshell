@@ -7,7 +7,7 @@ public class ProtocolEvent<T extends ProtocolEventArguments> implements
 
 	public static final ProtocolEventType<GeometryPreferences> GEO_PREF = new ProtocolEventType<GeometryPreferences>();
 	public static final ProtocolEventType<IconPreferences> ICON_PREF = new ProtocolEventType<IconPreferences>();
-	public static final ProtocolEventType<DescriptionNotify> DESCRIPTION_NOTIFY = new ProtocolEventType<DescriptionNotify>();
+	public static final ProtocolEventType<ClientWindowDescriptionNotify> DESCRIPTION_NOTIFY = new ProtocolEventType<ClientWindowDescriptionNotify>();
 	public static final ProtocolEventType<PopupNotify> POPUP_NOTIFY = new ProtocolEventType<PopupNotify>();
 	public static final ProtocolEventType<UrgentNotify> URGENT_NOTIFY = new ProtocolEventType<UrgentNotify>();
 

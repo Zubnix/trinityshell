@@ -1,0 +1,35 @@
+SHELL = /bin/sh
+CC = cc
+TARGETDIR = ../../resources/META-INF/lib
+
+#if java home is not set (debian) find java home by searching for javac.
+ifndef JAVA_HOME
+	JAVA_HOME := $(shell readlink -f /usr/bin/javac | sed "s:/bin/javac::")
+endif
+	
+
+#The LIBNAME_ARCH and MARCH variable should be set by the makefile that includes this makefile.
+
+LIBNAME = libfusionxcb_$(LIBNAME_ARCH).so
+
+vpath %.c $(LIBSRCDIR)
+JAVA_INCLUDE_DIR = $(JAVA_HOME)/include
+JNI = $(JAVA_INCLUDE_DIR)
+JNI_LINUX = $(JAVA_INCLUDE_DIR)/linux
+
+CFLAGS = -march=$(MARCH) -O2 -fPIC -c -g -Wall -I$(JNI) -I$(JNI_LINUX) -fno-stack-protector
+LFLAGS = -lxcb -lxcb-keysyms -lxcb-util -lxcb-damage -lxcb-composite -lxcb-render -lxcb-sync -lxcb-shape -lxcb-xfixes
+
+objects = fusion_xcb_core.o fusion_xcb_extension.o
+
+all : $(objects)
+	$(CC) -shared -Wl,-soname,$(LIBNAME) -o $(TARGETDIR)/$(LIBNAME) $(objects) $(LFLAGS)
+
+fusion_xcb_core.o : fusion_xcb_core.c
+	$(CC) $(CFLAGS) $< -o $@
+	
+fusion_xcb_extension.o : fusion_xcb_extension.c
+	$(CC) $(CFLAGS) $< -o $@
+	
+clean:
+	rm -rf *.o

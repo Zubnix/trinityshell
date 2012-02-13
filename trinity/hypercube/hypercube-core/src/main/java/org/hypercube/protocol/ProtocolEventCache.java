@@ -13,15 +13,17 @@ public class ProtocolEventCache {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends ProtocolEventType<? extends ProtocolEventArguments>> ProtocolEvent<? extends T> query(
+	public <A extends ProtocolEventArguments, T extends ProtocolEventType<A>> ProtocolEvent<A> query(
 			final ClientWindow client, final T eventType) {
-
-		return (ProtocolEvent<? extends T>) this.clientEventCache.get(client)
-				.get(eventType);
+		if (!this.clientEventCache.containsKey(client)) {
+			return null;
+		}
+		return (ProtocolEvent<A>) this.clientEventCache.get(client).get(
+				eventType);
 	}
 
-	public <T extends ProtocolEventType<? extends ProtocolEventArguments>> void upateCache(
-			final ClientWindow client, final ProtocolEvent<? extends T> event) {
+	public <A extends ProtocolEventArguments, T extends ProtocolEventType<A>> void updateCache(
+			final ClientWindow client, final ProtocolEvent<A> event) {
 
 		final Map<ProtocolEventType<?>, ProtocolEvent<?>> protocolEvents;
 		if (this.clientEventCache.containsKey(client)) {
@@ -32,9 +34,9 @@ public class ProtocolEventCache {
 		updateProtocolEvent(protocolEvents, event, event.getType());
 	}
 
-	protected <T extends ProtocolEventType<? extends ProtocolEventArguments>> void updateProtocolEvent(
+	protected <A extends ProtocolEventArguments, T extends ProtocolEventType<A>> void updateProtocolEvent(
 			final Map<ProtocolEventType<?>, ProtocolEvent<?>> protocolEvents,
-			final ProtocolEvent<? extends T> event, final T eventType) {
+			final ProtocolEvent<A> event, final T eventType) {
 
 		protocolEvents.put(eventType, event);
 	}

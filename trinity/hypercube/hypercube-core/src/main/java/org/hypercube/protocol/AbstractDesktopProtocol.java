@@ -1,10 +1,8 @@
 package org.hypercube.protocol;
 
-import org.hydrogen.eventsystem.EventBus;
 import org.hyperdrive.core.ClientWindow;
 
-public abstract class AbstractDesktopProtocol extends EventBus implements
-		DesktopProtocol {
+public abstract class AbstractDesktopProtocol implements DesktopProtocol {
 
 	private final ProtocolEventCache protocolEventCache;
 
@@ -13,17 +11,15 @@ public abstract class AbstractDesktopProtocol extends EventBus implements
 	}
 
 	@Override
-	public <T extends ProtocolEventType<? extends ProtocolEventArguments>> ProtocolEvent<? extends T> query(
+	public <A extends ProtocolEventArguments, T extends ProtocolEventType<A>> ProtocolEvent<A> query(
 			final ClientWindow client, final T eventType) {
 		return this.protocolEventCache.query(client, eventType);
 	}
 
 	@Override
-	public <T extends ProtocolEventType<? extends ProtocolEventArguments>> void updateProtocolEvent(
-			final ClientWindow client,
-			final ProtocolEvent<? extends T> protocolEvent) {
-		this.protocolEventCache.upateCache(client, protocolEvent);
-		fireEvent(protocolEvent);
+	public <A extends ProtocolEventArguments, T extends ProtocolEventType<A>> void updateProtocolEvent(
+			final ClientWindow client, final ProtocolEvent<A> protocolEvent) {
+		this.protocolEventCache.updateCache(client, protocolEvent);
+		client.fireEvent(protocolEvent);
 	}
-
 }

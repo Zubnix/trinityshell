@@ -1,0 +1,161 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>trinity</artifactId>
+		<groupId>org.trinity.root</groupId>
+		<version>0.0.1</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.trinity.fusion</groupId>
+	<artifactId>fusion-X11</artifactId>
+	<name>Fusion-X11</name>
+	<profiles>
+		<profile>
+			<id>unix_i386</id>
+			<activation>
+				<os>
+					<family>unix</family>
+					<arch>i386</arch>
+				</os>
+			</activation>
+			<properties>
+				<project.makefile>Makefile.unix.i386</project.makefile>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>unix_x86_64</id>
+			<activation>
+				<os>
+					<family>unix</family>
+					<arch>amd64</arch>
+				</os>
+			</activation>
+			<properties>
+				<project.makefile>Makefile.unix.x86_64</project.makefile>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>mac_x86_64</id>
+			<activation>
+				<os>
+					<family>mac</family>
+					<arch>amd64</arch>
+				</os>
+			</activation>
+			<properties>
+				<project.makefile>Makefile.mac.x86_64</project.makefile>
+			</properties>
+		</profile>
+	</profiles>
+
+	<repositories>
+		<repository>
+			<id>mx-opensource</id>
+			<name>MX Telecom Opensource Release Repository</name>
+			<url>http://opensource.mxtelecom.com/maven/repo/</url>
+		</repository>
+	</repositories>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>build-native</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<property name="native.classpath" refid="maven.compile.classpath" />
+								<echo file="${project.build.directory}/compile-classpath"
+									message="${native.classpath}" />
+								<exec dir="src/main/native/fusionxcb" executable="make"
+									failonerror="true">
+									<arg value="-f" />
+									<arg value="${project.makefile}" />
+								</exec>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-antrun-plugin
+										</artifactId>
+										<versionRange>
+											[1.3,)
+										</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>com.wapmx.native</groupId>
+			<artifactId>mx-native-loader</artifactId>
+			<version>1.7</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.hyperdrive</groupId>
+			<artifactId>hyperdrive-core</artifactId>
+			<version>0.0.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	<properties>
+		<maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.executable>javac</maven.compiler.executable>
+	</properties>
+</project>
+
