@@ -183,17 +183,6 @@ public final class ClientWindow extends AbstractRenderArea {
 				EventPropagator.NOTIFY_CHANGED_WINDOW_FOCUS);
 	}
 
-	/**
-	 * Send a request to the program that created the wrapped
-	 * <code>PlatformRenderArea</code> to gracefully destroy the respective
-	 * <code>PlatformRenderArea</code>.
-	 * 
-	 * 
-	 */
-	public void requestDestroy() {
-		getPlatformRenderArea().requestDestroy();
-	}
-
 	@Override
 	public void giveInputFocus() {
 		getPlatformRenderArea().setInputFocus();

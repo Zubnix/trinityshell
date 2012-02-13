@@ -55,6 +55,9 @@ public class XDisplay extends BaseEventProducingDisplay {
 
 	private final XCoreAtoms xCoreAtoms;
 
+	private int lastServerTime;
+	private final int currentServerTime;
+
 	/**
 	 * 
 	 * @param displayName
@@ -69,6 +72,9 @@ public class XDisplay extends BaseEventProducingDisplay {
 			final XCoreInterface xCoreInterface) {
 		super(xDisplayPlatform, displayName, screenNr);
 		{
+			this.currentServerTime = 0;
+			setLastServerTime(getCurrentServerTime());
+
 			this.nativePeer = nativePeer;
 
 			this.xCoreInterface = xCoreInterface;
@@ -218,5 +224,17 @@ public class XDisplay extends BaseEventProducingDisplay {
 	 */
 	public XCoreAtoms getxCoreAtoms() {
 		return this.xCoreAtoms;
+	}
+
+	public int getCurrentServerTime() {
+		return this.currentServerTime;
+	}
+
+	public int getLastServerTime() {
+		return this.lastServerTime;
+	}
+
+	public void setLastServerTime(final int lastServerTime) {
+		this.lastServerTime = lastServerTime;
 	}
 }

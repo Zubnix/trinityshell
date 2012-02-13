@@ -17,7 +17,6 @@ package org.hyperdrive.widget;
 
 import org.hydrogen.displayinterface.input.MouseInput;
 import org.hyperdrive.core.AbstractRenderArea;
-import org.hyperdrive.core.ClientWindow;
 
 /**
  * A <code>CloseButton</code> can terminate another
@@ -48,12 +47,7 @@ public class CloseButton extends Button {
 	 */
 	public void closeWindow() {
 		final AbstractRenderArea abstractRenderArea = getTargetRenderArea();
-
-		if (abstractRenderArea instanceof ClientWindow) {
-			((ClientWindow) abstractRenderArea).requestDestroy();
-		} else if (abstractRenderArea instanceof Widget) {
-			((Widget) abstractRenderArea).doDestroy();
-		}
+		abstractRenderArea.doDestroy();
 	}
 
 	/**

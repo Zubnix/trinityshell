@@ -13,29 +13,30 @@
  * You should have received a copy of the GNU General Public License along with
  * Fusion-X11. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fusion.x11.icccm;
+package org.hypercube.protocol.x11;
 
 import org.fusion.x11.core.XAtom;
 import org.fusion.x11.core.XPropertyInstanceXAtoms;
 import org.fusion.x11.core.XWindow;
+import org.fusion.x11.icccm.WmHintsInstance;
 
-// TODO documentation
+//TODO
 /**
  * 
  * @author Erik De Rijcke
  * @since 1.0
  */
-final class InputPreferenceHandler {
+final class InputPreferenceParser {
 
 	InputPreference parseInputPreference(final XWindow window,
 			final WmHintsInstance wmHintsInstance,
-			final XPropertyInstanceXAtoms wmProtocolsReply) {
+			final XPropertyInstanceXAtoms wmProtocolsInstance) {
 
 		InputPreference inputEnum = null;
 		final int hintFlags = wmHintsInstance.getFlags();
 		if ((hintFlags & 1) != 0) {
 			if (wmHintsInstance.getInput() != 0) {
-				for (final XAtom xAtom : wmProtocolsReply.getAtoms()) {
+				for (final XAtom xAtom : wmProtocolsInstance.getAtoms()) {
 					if (xAtom.getAtomName().equals("WM_TAKE_FOCUS")) {
 						inputEnum = InputPreference.LOCAL_INPUT;
 						break;
@@ -43,7 +44,7 @@ final class InputPreferenceHandler {
 					inputEnum = InputPreference.PASSIVE_INPUT;
 				}
 			} else {
-				for (final XAtom xAtom : wmProtocolsReply.getAtoms()) {
+				for (final XAtom xAtom : wmProtocolsInstance.getAtoms()) {
 					if (xAtom.getAtomName().equals("WM_TAKE_FOCUS")) {
 						inputEnum = InputPreference.GLOBAL_INPUT;
 						break;

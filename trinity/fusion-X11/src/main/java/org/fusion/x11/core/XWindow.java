@@ -54,9 +54,6 @@ public final class XWindow extends XResource implements PlatformRenderArea,
 	private final Map<Atom, Boolean> propertyValidityCache;
 	private final Map<Property<? extends PropertyInstance>, PropertyInstance> cachedPropertyReplies;
 
-	// private PlatformRenderAreaType platformRenderAreaType;
-	// private final Set<XWindowRelation> relations;
-
 	/**
 	 * Create a new <code>XWindow</code> identified by the given
 	 * <code>XID</code>. The given <code>XID</code> uniquely identifies the
@@ -182,30 +179,6 @@ public final class XWindow extends XResource implements PlatformRenderArea,
 		// getDisplayResourceHandle().getDisplay().getNoneWindow());
 	}
 
-	// /**
-	// * ICCCM property.
-	// * <p>
-	// * Set the WM State on this <code>XWindow</code> so the client that
-	// created
-	// * this <code>XWindow</code> is aware in what state this
-	// * <code>XWindow</code> is in.
-	// *
-	// * @param wmState
-	// * @param iconXWindow
-	// * @
-	// */
-	// public void setWmState(final WmStateEnum wmState,
-	// final XWindow iconXWindow)
-	// {
-	//
-	// final XDisplay display = getDisplayResourceHandle().getDisplay();
-	//
-	// setPropertyInstance(display.getProperties().WM_STATE,
-	// new WmStateInstance(display,
-	// wmState,
-	// iconXWindow));
-	// }
-
 	@Override
 	public void move(final int x, final int y) {
 		getXCoreInterface().moveWindow(this, x, y);
@@ -253,11 +226,6 @@ public final class XWindow extends XResource implements PlatformRenderArea,
 	}
 
 	@Override
-	public void requestDestroy() {
-		getXCoreInterface().requestDestroyWindow(this);
-	}
-
-	@Override
 	public void resize(final int width, final int height) {
 		getXCoreInterface().resizeWindow(this, width, height);
 	}
@@ -265,8 +233,6 @@ public final class XWindow extends XResource implements PlatformRenderArea,
 	@Override
 	public void hide() {
 		getXCoreInterface().unmapWindow(this);
-		// setWmState(WmStateEnum.WithdrawnState,
-		// getDisplayResourceHandle().getDisplay().getNoneWindow());
 	}
 
 	@Override
@@ -322,5 +288,13 @@ public final class XWindow extends XResource implements PlatformRenderArea,
 	@Override
 	public void stopMouseInputCatching() {
 		getXCoreInterface().ungrabMouse(this);
+	}
+
+	public void addToSaveSet() {
+		getXCoreInterface().addToSaveSet(this);
+	}
+
+	public void removeFromSaveSet() {
+		getXCoreInterface().removeFromSaveSet(this);
 	}
 }

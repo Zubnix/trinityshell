@@ -23,7 +23,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeGetInputFocus(JNIEnv *, jclass,
  */
 JNIEXPORT jboolean JNICALL
 Java_org_fusion_x11_core_XCoreNative_nativeUngrabKeyboard(JNIEnv *, jclass,
-		jlong, jobject);
+		jlong, jint, jobject);
 
 /*
  * Class:     org_fusion_x11_core_XCoreNative
@@ -32,7 +32,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeUngrabKeyboard(JNIEnv *, jclass,
  */
 JNIEXPORT jboolean JNICALL
 Java_org_fusion_x11_core_XCoreNative_nativeUngrabMouse(JNIEnv *, jclass, jlong,
-		jobject);
+		jint, jobject);
 
 /*
  * Class:     org_fusion_x11_core_XCoreNative
@@ -41,7 +41,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeUngrabMouse(JNIEnv *, jclass, jlong,
  */
 JNIEXPORT jboolean JNICALL
 Java_org_fusion_x11_core_XCoreNative_nativeGrabMouse(JNIEnv *, jclass, jlong,
-		jlong, jobject);
+		jlong, jint, jobject);
 
 /*
  * Class:     org_fusion_x11_core_XCoreNative
@@ -50,7 +50,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeGrabMouse(JNIEnv *, jclass, jlong,
  */
 JNIEXPORT jboolean JNICALL
 Java_org_fusion_x11_core_XCoreNative_nativeGrabKeyboard(JNIEnv *, jclass, jlong,
-		jlong, jobject);
+		jlong, jint, jobject);
 
 /*
  * Class:     org_fusion_x11_core_XCoreNative
@@ -167,7 +167,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeGetWindowAttributes(JNIEnv *, jclass,
  */
 JNIEXPORT jboolean JNICALL
 Java_org_fusion_x11_core_XCoreNative_nativeGiveFocus(JNIEnv *, jclass, jlong,
-		jlong, jobject);
+		jlong, jint, jobject);
 
 /*
  * Class:     org_fusion_x11_core_XCoreNative
@@ -372,7 +372,7 @@ JNIEXPORT jboolean JNICALL Java_org_fusion_x11_core_XCoreNative_nativeUngrabButt
  * Signature: (JJJLjava/nio/ByteBuffer;)Z
  */
 JNIEXPORT jboolean JNICALL Java_org_fusion_x11_core_XCoreNative_nativeSetSelectionOwner(
-		JNIEnv *, jclass, jlong, jlong, jlong, jobject);
+		JNIEnv *, jclass, jlong, jlong, jlong, jint, jobject);
 
 /*
  * Class:     org_fusion_x11_core_XCoreNative

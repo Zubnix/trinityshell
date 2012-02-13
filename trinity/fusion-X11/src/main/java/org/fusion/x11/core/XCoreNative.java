@@ -43,40 +43,44 @@ public final class XCoreNative {
 	/**
 	 * 
 	 * @param displayAddress
+	 * @param time
 	 * @param buffer
 	 * @return
 	 */
 	public static native boolean nativeUngrabKeyboard(long displayAddress,
-			ByteBuffer buffer);
+			int time, ByteBuffer buffer);
 
 	/**
 	 * 
 	 * @param displayAddress
+	 * @param time
 	 * @param buffer
 	 * @return
 	 */
 	public static native boolean nativeUngrabMouse(long displayAddress,
-			ByteBuffer buffer);
+			int time, ByteBuffer buffer);
 
 	/**
 	 * 
 	 * @param displayAddress
 	 * @param windowId
+	 * @param time
 	 * @param buffer
 	 * @return
 	 */
 	public static native boolean nativeGrabMouse(long displayAddress,
-			long windowId, ByteBuffer buffer);
+			long windowId, int time, ByteBuffer buffer);
 
 	/**
 	 * 
 	 * @param displayAddress
 	 * @param windowId
+	 * @param time
 	 * @param buffer
 	 * @return
 	 */
 	public static native boolean nativeGrabKeyboard(long displayAddress,
-			long windowId, ByteBuffer buffer);
+			long windowId, int time, ByteBuffer buffer);
 
 	/**
 	 * 
@@ -201,11 +205,12 @@ public final class XCoreNative {
 	 * 
 	 * @param displayAddress
 	 * @param windowID
+	 * @param time
 	 * @param buffer
 	 * @return
 	 */
 	public static native boolean nativeGiveFocus(long displayAddress,
-			long windowID, ByteBuffer buffer);
+			long windowID, int time, ByteBuffer buffer);
 
 	/**
 	 * 
@@ -474,11 +479,13 @@ public final class XCoreNative {
 	 * @param displayAddress
 	 * @param selectionAtomId
 	 * @param ownerWindowId
+	 * @param time
 	 * @param buffer
 	 * @return
 	 */
 	public static native boolean nativeSetSelectionOwner(long displayAddress,
-			long selectionAtomId, long ownerWindowId, ByteBuffer buffer);
+			long selectionAtomId, long ownerWindowId, int time,
+			ByteBuffer buffer);
 
 	/**
 	 * 
@@ -496,6 +503,26 @@ public final class XCoreNative {
 	 * @return
 	 */
 	public static native boolean nativeCreateNewWindow(long displayAddress);
+
+	// TODO implement native side
+	/**
+	 * 
+	 * @param displayAddress
+	 * @param windowId
+	 * @return
+	 */
+	public static native boolean nativeAddToSaveSet(long displayAddress,
+			long windowId);
+
+	// TODO implement native side
+	/**
+	 * 
+	 * @param displayAddress
+	 * @param windowId
+	 * @return
+	 */
+	public static native boolean nativeRemoveFromSaveSet(long displayAddress,
+			long windowId);
 
 	/**
 	 * An <code>XCoreNative</code> can not be instantiated. Calling this will

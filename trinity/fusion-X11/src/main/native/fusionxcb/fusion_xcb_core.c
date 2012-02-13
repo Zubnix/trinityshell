@@ -56,9 +56,10 @@ Java_org_fusion_x11_core_XCoreNative_nativeGetInputFocus(JNIEnv *env,
  */
 JNIEXPORT jboolean JNICALL
 Java_org_fusion_x11_core_XCoreNative_nativeUngrabKeyboard(JNIEnv *env,
-		jclass class, jlong display, jobject buffer) {
+		jclass class, jlong display, jint time, jobject buffer) {
+
 	xcb_void_cookie_t void_cookie = xcb_ungrab_keyboard(
-			(xcb_connection_t*) display, XCB_CURRENT_TIME);
+			(xcb_connection_t*) display, (xcb_timestamp_t) time);
 	void* resultBuffer = (*env)->GetDirectBufferAddress(env, buffer);
 	xcb_generic_error_t* error = xcb_request_check((xcb_connection_t*) display,
 			void_cookie);
@@ -76,11 +77,13 @@ Java_org_fusion_x11_core_XCoreNative_nativeUngrabKeyboard(JNIEnv *env,
  * Method:    nativeUngrabMouse
  * Signature: (J[BLjava/nio/ByteBuffer;)Z
  */
-JNIEXPORT jboolean JNICALL
+JNIEXPORT jboolean
+JNICALL
 Java_org_fusion_x11_core_XCoreNative_nativeUngrabMouse(JNIEnv *env,
-		jclass class, jlong display, jobject buffer) {
+		jclass class, jlong display, jint time, jobject buffer) {
+
 	xcb_void_cookie_t void_cookie = xcb_ungrab_pointer_checked(
-			(xcb_connection_t*) display, XCB_CURRENT_TIME);
+			(xcb_connection_t*) display, (xcb_timestamp_t) time);
 	void* resultBuffer = (*env)->GetDirectBufferAddress(env, buffer);
 	xcb_generic_error_t* error = xcb_request_check((xcb_connection_t*) display,
 			void_cookie);
@@ -100,9 +103,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeUngrabMouse(JNIEnv *env,
  */
 JNIEXPORT jboolean JNICALL
 Java_org_fusion_x11_core_XCoreNative_nativeGrabMouse(JNIEnv *env, jclass class,
-		jlong display, jlong windowId, jobject buffer) {
-
-	//, PointerMotionMask, PointerMotionHintMask, Button1MotionMask, Button2MotionMask, Button3MotionMask, Button4MotionMask, Button5MotionMask, ButtonMotionMask
+		jlong display, jlong windowId, jint time, jobject buffer) {
 
 	xcb_grab_pointer_cookie_t grab_pointer_cookie = xcb_grab_pointer(
 			(xcb_connection_t*) display,
@@ -111,7 +112,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeGrabMouse(JNIEnv *env, jclass class,
 			XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE
 					| XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
 			XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, XCB_WINDOW_NONE,
-			XCB_CURSOR_NONE, XCB_CURRENT_TIME);
+			XCB_CURSOR_NONE, (xcb_timestamp_t) time);
 
 	char* resultBuffer = (char*) (*env)->GetDirectBufferAddress(env, buffer);
 	xcb_generic_error_t* error;
@@ -134,10 +135,11 @@ Java_org_fusion_x11_core_XCoreNative_nativeGrabMouse(JNIEnv *env, jclass class,
  */
 JNIEXPORT jboolean JNICALL
 Java_org_fusion_x11_core_XCoreNative_nativeGrabKeyboard(JNIEnv *env,
-		jclass class, jlong display, jlong windowId, jobject buffer) {
+		jclass class, jlong display, jlong windowId, jint time, jobject buffer) {
+
 	xcb_grab_keyboard_cookie_t grab_keyboard_cookie = xcb_grab_keyboard(
 			(xcb_connection_t*) display, 0, (xcb_window_t) windowId,
-			XCB_CURRENT_TIME, XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
+			(xcb_timestamp_t) time, XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
 
 	char* resultBuffer = (char*) (*env)->GetDirectBufferAddress(env, buffer);
 
@@ -393,7 +395,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeFlush(JNIEnv *env, jclass class,
 		jlong display, jobject buffer) {
 	int flush_stat = xcb_flush((xcb_connection_t*) display);
 	if (flush_stat <= 0) {
-		//TODO write error to buffer
+//TODO write error to buffer
 		return (jboolean) 1;
 	}
 
@@ -468,8 +470,8 @@ Java_org_fusion_x11_core_XCoreNative_nativeGetNextEvent(JNIEnv *env,
 
 	//TODO check for error event.
 	if (ev == NULL) {
-		//TODO write error to buffer
-		//		char* resultBuffer = initResultHandling(env, &buffer);
+//TODO write error to buffer
+//		char* resultBuffer = initResultHandling(env, &buffer);
 		return (jboolean) 1;
 	}
 
@@ -487,6 +489,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeGetNextEvent(JNIEnv *env,
 JNIEXPORT jboolean JNICALL
 Java_org_fusion_x11_core_XCoreNative_nativeGetPointerInfo(JNIEnv *env,
 		jclass class, jlong display, jobject buffer) {
+	//TODO pass screen nr as well
 	xcb_screen_t *screen = screen_of_display((xcb_connection_t*) display, 0);
 	if (screen == NULL) {
 		return (jboolean) 1;
@@ -563,10 +566,11 @@ Java_org_fusion_x11_core_XCoreNative_nativeGetWindowAttributes(JNIEnv *env,
  */
 JNIEXPORT jboolean JNICALL
 Java_org_fusion_x11_core_XCoreNative_nativeGiveFocus(JNIEnv *env, jclass class,
-		jlong display, jlong window, jobject buffer) {
+		jlong display, jlong window, jint time, jobject buffer) {
+
 	xcb_void_cookie_t void_cookie = xcb_set_input_focus_checked(
 			(xcb_connection_t*) display, XCB_INPUT_FOCUS_POINTER_ROOT,
-			(xcb_window_t) window, XCB_CURRENT_TIME);
+			(xcb_window_t) window, (xcb_timestamp_t) time);
 	void* resultBuffer = (*env)->GetDirectBufferAddress(env, buffer);
 	xcb_generic_error_t* error = xcb_request_check((xcb_connection_t*) display,
 			void_cookie);
@@ -693,11 +697,11 @@ Java_org_fusion_x11_core_XCoreNative_nativeOpenDisplay(JNIEnv *env,
 	xcb_connection_t *connection = xcb_connect(nativeDisplayName, 0);
 
 	if (connection == NULL) {
-		//TODO write error to buffer
+//TODO write error to buffer
 		return (jboolean) 1;
 	}
 	if (xcb_connection_has_error(connection)) {
-		//TODO write error to buffer
+//TODO write error to buffer
 		return (jboolean) 1;
 	}
 
@@ -820,6 +824,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeResize(JNIEnv *env, jclass class,
 	//compensate for the border in X. Compensating when retrieving a window's size is done in the java code.
 	uint32_t values[] = { (uint32_t) width - (2 * geom->border_width),
 			(uint32_t) height - (2 * geom->border_width) };
+
 	xcb_void_cookie_t void_cookie = xcb_configure_window_checked(
 			(xcb_connection_t*) display, (xcb_window_t) window,
 			XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);
@@ -1029,12 +1034,14 @@ Java_org_fusion_x11_core_XCoreNative_nativeUngrabButton(JNIEnv *env,
  * Method:    nativeSetSelectionOwner
  * Signature: (JJJLjava/nio/ByteBuffer;)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_fusion_x11_core_XCoreNative_nativeSetSelectionOwner(
-		JNIEnv *env, jclass class, jlong display, jlong selectionAtom,
-		jlong owner, jobject buffer) {
+JNIEXPORT jboolean JNICALL
+Java_org_fusion_x11_core_XCoreNative_nativeSetSelectionOwner(JNIEnv *env,
+		jclass class, jlong display, jlong selectionAtom, jlong owner,
+		jint time, jobject buffer) {
+
 	xcb_void_cookie_t void_cookie = xcb_set_selection_owner_checked(
 			(xcb_connection_t*) display, (xcb_window_t) owner,
-			(xcb_atom_t) selectionAtom, XCB_TIME_CURRENT_TIME);
+			(xcb_atom_t) selectionAtom, (xcb_timestamp_t) time);
 	void* resultBuffer = (*env)->GetDirectBufferAddress(env, buffer);
 
 	xcb_generic_error_t* error = xcb_request_check((xcb_connection_t*) display,
@@ -1052,9 +1059,9 @@ JNIEXPORT jboolean JNICALL Java_org_fusion_x11_core_XCoreNative_nativeSetSelecti
  * Method:    nativeGetSelectionOwner
  * Signature: (JJLjava/nio/ByteBuffer;)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_fusion_x11_core_XCoreNative_nativeGetSelectionOwner(
-		JNIEnv *env, jclass class, jlong display, jlong selectionAtom,
-		jobject buffer) {
+JNIEXPORT jboolean JNICALL
+Java_org_fusion_x11_core_XCoreNative_nativeGetSelectionOwner(JNIEnv *env,
+		jclass class, jlong display, jlong selectionAtom, jobject buffer) {
 
 	xcb_get_selection_owner_cookie_t cookie = xcb_get_selection_owner(
 			(xcb_connection_t*) display, (xcb_atom_t) selectionAtom);
@@ -1079,8 +1086,9 @@ JNIEXPORT jboolean JNICALL Java_org_fusion_x11_core_XCoreNative_nativeGetSelecti
  * Method:    nativeCreateNewWindow
  * Signature: (JLjava/nio/ByteBuffer;)Z
  */
-JNIEXPORT jboolean JNICALL Java_org_fusion_x11_core_XCoreNative_nativeCreateNewWindow(
-		JNIEnv *env, jclass class, jlong display, jobject buffer) {
+JNIEXPORT jboolean JNICALL
+Java_org_fusion_x11_core_XCoreNative_nativeCreateNewWindow(JNIEnv *env,
+		jclass class, jlong display, jobject buffer) {
 
 	uint32_t id = xcb_generate_id((xcb_connection_t*) display);
 	int16_t x = 0;
@@ -1111,5 +1119,51 @@ JNIEXPORT jboolean JNICALL Java_org_fusion_x11_core_XCoreNative_nativeCreateNewW
 
 	memcpy(resultBuffer, &id, sizeof(uint32_t));
 
+	return (jboolean) 0;
+}
+
+/*
+ * Class:     org_fusion_x11_core_XCoreNative
+ * Method:    nativeAddToSaveSet
+ * Signature: (JJLjava/nio/ByteBuffer;)Z
+ */
+JNIEXPORT jboolean JNICALL
+Java_org_fusion_x11_core_XCoreNative_nativeAddToSaveSet(JNIEnv *env,
+		jclass class, jlong display, jlong windowId, jobject buffer) {
+	xcb_void_cookie_t void_cookie = xcb_change_save_set_checked(
+			(xcb_connection_t*) display, XCB_SET_MODE_INSERT,
+			(xcb_window_t) windowId);
+	void* resultBuffer = (*env)->GetDirectBufferAddress(env, buffer);
+
+	xcb_generic_error_t* error = xcb_request_check((xcb_connection_t*) display,
+			void_cookie);
+
+	if (error) {
+		writeError(error);
+		return (jboolean) 1;
+	}
+	return (jboolean) 0;
+}
+
+/*
+ * Class:     org_fusion_x11_core_XCoreNative
+ * Method:    nativeRemoveFromSaveSet
+ * Signature: (JJLjava/nio/ByteBuffer;)Z
+ */
+JNIEXPORT jboolean JNICALL
+Java_org_fusion_x11_core_XCoreNative_nativeRemoveFromSaveSet(JNIEnv *env,
+		jclass class, jlong display, jlong windowId, jobject buffer) {
+	xcb_void_cookie_t void_cookie = xcb_change_save_set_checked(
+			(xcb_connection_t*) display, XCB_SET_MODE_DELETE,
+			(xcb_window_t) windowId);
+	void* resultBuffer = (*env)->GetDirectBufferAddress(env, buffer);
+
+	xcb_generic_error_t* error = xcb_request_check((xcb_connection_t*) display,
+			void_cookie);
+
+	if (error) {
+		writeError(error);
+		return (jboolean) 1;
+	}
 	return (jboolean) 0;
 }

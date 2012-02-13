@@ -73,6 +73,7 @@ public final class WmHintsInstance extends BasePropertyInstance {
 		// xcb_pixmap_t icon_mask;
 		// /* Identifier of related window group */
 		// xcb_window_t window_group;
+
 		this.flags = flags;
 		this.input = input;
 		this.initialState = initialState;

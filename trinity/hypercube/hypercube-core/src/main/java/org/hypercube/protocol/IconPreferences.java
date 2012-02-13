@@ -1,6 +1,6 @@
 package org.hypercube.protocol;
 
-public class IconPreferences {
+public class IconPreferences implements ProtocolEventArguments {
 	private final byte[] iconData;
 	private final int iconWidth;
 	private final int iconHeight;

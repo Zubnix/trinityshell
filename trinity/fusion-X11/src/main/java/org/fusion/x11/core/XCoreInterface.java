@@ -41,14 +41,14 @@ import org.hydrogen.displayinterface.input.Key;
  */
 public interface XCoreInterface {
 
-	/**
-	 * Send a client message to the given <code>XWindow</code> asking it to
-	 * terminate gracefully. This call does not guarantee that the
-	 * <code>XWindow</code> will be terminated.
-	 * 
-	 * @param window
-	 */
-	void requestDestroyWindow(XWindow window);
+	// /**
+	// * Send a client message to the given <code>XWindow</code> asking it to
+	// * terminate gracefully. This call does not guarantee that the
+	// * <code>XWindow</code> will be terminated.
+	// *
+	// * @param window
+	// */
+	// void requestDestroyWindow(XWindow window);
 
 	/**
 	 * Destroy the native X11 window, represented by the given
@@ -577,5 +577,17 @@ public interface XCoreInterface {
 	 * @return
 	 */
 	XWindow getSelectionOwner(XAtom selectionAtom);
+
+	/**
+	 * 
+	 * @param xWindow
+	 */
+	void addToSaveSet(XWindow xWindow);
+
+	/**
+	 * 
+	 * @param xWindow
+	 */
+	void removeFromSaveSet(XWindow xWindow);
 
 }

@@ -74,12 +74,6 @@ public interface PlatformRenderArea extends DisplayResource, Area,
 	PlatformRenderAreaAttributes getPlatformRenderAreaAttributes();
 
 	/**
-	 * Send a request to the program owning this <code>PlatformRenderArea</code>
-	 * to terminate this <code>PlatformRenderArea</code>.
-	 */
-	void requestDestroy();
-
-	/**
 	 * 
 	 * @param clientMessageEvent
 	 * 

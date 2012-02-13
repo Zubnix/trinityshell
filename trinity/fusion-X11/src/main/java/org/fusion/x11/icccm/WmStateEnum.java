@@ -26,15 +26,18 @@ public enum WmStateEnum {
 	/**
 	 * 
 	 */
+	// ordinal = 1 = native value
 	WithdrawnState,
 
 	/**
 	 * 
 	 */
+	// ordinal = 2 = native value
 	NormalState,
 
 	/**
 	 * 
 	 */
+	// ordinal = 3 = native value
 	IconicState;
 }

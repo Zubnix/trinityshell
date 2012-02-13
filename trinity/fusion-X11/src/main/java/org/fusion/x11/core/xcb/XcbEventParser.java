@@ -164,7 +164,8 @@ final class XcbEventParser {
 
 		eventStruct.readUnsignedByte();
 		eventStruct.readUnsignedShort();
-		eventStruct.readSignedInt();
+		final int timestamp = eventStruct.readSignedInt();
+		display.setLastServerTime(timestamp);
 		eventStruct.readUnsignedInt();
 		final long eventWindowId = eventStruct.readUnsignedInt();
 		eventStruct.enableWrite();
@@ -206,7 +207,8 @@ final class XcbEventParser {
 
 		eventStruct.readUnsignedByte();
 		eventStruct.readUnsignedShort();
-		eventStruct.readSignedInt();
+		final int timestamp = eventStruct.readSignedInt();
+		display.setLastServerTime(timestamp);
 		eventStruct.readUnsignedInt();
 		final long eventWindowId = eventStruct.readUnsignedInt();
 		eventStruct.enableWrite();
@@ -243,7 +245,8 @@ final class XcbEventParser {
 		// uint8_t pad0
 		final int detail = eventStruct.readSignedByte();
 		eventStruct.readSignedShort();
-		eventStruct.readSignedInt();
+		final int timestamp = eventStruct.readSignedInt();
+		display.setLastServerTime(timestamp);
 		eventStruct.readSignedInt();
 		final long eventWindowId = eventStruct.readUnsignedInt();
 		eventStruct.readSignedInt();
@@ -277,9 +280,24 @@ final class XcbEventParser {
 			final NativeBufferHelper eventStruct, final XDisplay display)
 
 	{
+		// Contents of native buffer:
+		// xcb_button_t detail
+		// uint16_t sequence
+		// xcb_timestamp_t time
+		// xcb_window_t root
+		// xcb_window_t event
+		// xcb_window_t child
+		// int16_t root_x
+		// int16_t root_y
+		// int16_t event_x
+		// int16_t event_y
+		// uint16_t state
+		// uint8_t same_screen
+		// uint8_t pad0
 		final int detail = eventStruct.readSignedByte();
 		eventStruct.readSignedShort();
-		eventStruct.readSignedInt();
+		final int timestamp = eventStruct.readSignedInt();
+		display.setLastServerTime(timestamp);
 		eventStruct.readSignedInt();
 		final long eventWindowId = eventStruct.readSignedInt();
 		eventStruct.readSignedInt();
@@ -311,10 +329,24 @@ final class XcbEventParser {
 	 */
 	private XKeyEvent parseXcbKeyPress(final NativeBufferHelper eventStruct,
 			final XDisplay display) {
-
+		// contents of native buffer:
+		// xcb_keycode_t detail; /**< */
+		// uint16_t sequence; /**< */
+		// xcb_timestamp_t time; /**< */
+		// xcb_window_t root; /**< */
+		// xcb_window_t event; /**< */
+		// xcb_window_t child; /**< */
+		// int16_t root_x; /**< */
+		// int16_t root_y; /**< */
+		// int16_t event_x; /**< */
+		// int16_t event_y; /**< */
+		// uint16_t state; /**< */
+		// uint8_t same_screen; /**< */
+		// uint8_t pad0; /**< */
 		final int detail = eventStruct.readSignedByte();
 		eventStruct.readSignedShort();
-		eventStruct.readSignedInt();
+		final int timestamp = eventStruct.readSignedInt();
+		display.setLastServerTime(timestamp);
 		eventStruct.readSignedInt();
 		final long eventWindowId = eventStruct.readSignedInt();
 		eventStruct.readSignedInt();
@@ -347,10 +379,24 @@ final class XcbEventParser {
 	 */
 	private XKeyEvent parseXcbKeyRelease(final NativeBufferHelper eventStruct,
 			final XDisplay display) {
-
+		// contents of native buffer:
+		// xcb_keycode_t detail; /**< */
+		// uint16_t sequence; /**< */
+		// xcb_timestamp_t time; /**< */
+		// xcb_window_t root; /**< */
+		// xcb_window_t event; /**< */
+		// xcb_window_t child; /**< */
+		// int16_t root_x; /**< */
+		// int16_t root_y; /**< */
+		// int16_t event_x; /**< */
+		// int16_t event_y; /**< */
+		// uint16_t state; /**< */
+		// uint8_t same_screen; /**< */
+		// uint8_t pad0; /**< */
 		final int detail = eventStruct.readSignedByte();
 		eventStruct.readSignedShort();
-		eventStruct.readSignedInt();
+		final int timestamp = eventStruct.readSignedInt();
+		display.setLastServerTime(timestamp);
 		eventStruct.readSignedInt();
 		final long eventWindowId = eventStruct.readSignedInt();
 		eventStruct.readSignedInt();
@@ -382,17 +428,17 @@ final class XcbEventParser {
 	private XConfigureRequest parseXcbConfigureRequest(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// Contents of native buffer:
-		// uint8_t stack_mode
-		// uint16_t sequence
-		// xcb_window_t parent
-		// xcb_window_t window
-		// xcb_window_t sibling
-		// int16_t x
-		// int16_t y
-		// uint16_t width
-		// uint16_t height
-		// uint16_t border_width
-		// uint16_t value_mask
+		// uint8_t stack_mode; /**< */
+		// uint16_t sequence; /**< */
+		// xcb_window_t parent; /**< */
+		// xcb_window_t window; /**< */
+		// xcb_window_t sibling; /**< */
+		// int16_t x; /**< */
+		// int16_t y; /**< */
+		// uint16_t width; /**< */
+		// uint16_t height; /**< */
+		// uint16_t border_width; /**< */
+		// uint16_t value_mask; /**< */
 		eventStruct.readUnsignedByte();// uint8_t stack_mode
 		eventStruct.readUnsignedShort();// uint16_t sequence
 		eventStruct.readUnsignedInt();// xcb_window_t parent
@@ -426,6 +472,11 @@ final class XcbEventParser {
 	 */
 	private XMapRequest parseXcbMapRequest(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
+		// contents of native buffer:
+		// uint8_t pad0; /**< */
+		// uint16_t sequence; /**< */
+		// xcb_window_t parent; /**< */
+		// xcb_window_t window; /**< */
 		eventStruct.readUnsignedByte();
 		eventStruct.readSignedShort();
 		eventStruct.readUnsignedInt();
@@ -446,6 +497,11 @@ final class XcbEventParser {
 	 */
 	private XDestroyNotify parseXcbDestroyNotify(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
+		// contents of native buffer:
+		// uint8_t pad0; /**< */
+		// uint16_t sequence; /**< */
+		// xcb_window_t event; /**< */
+		// xcb_window_t window; /**< */
 		eventStruct.readUnsignedByte();
 		eventStruct.readUnsignedShort();
 		eventStruct.readUnsignedInt();
@@ -476,16 +532,12 @@ final class XcbEventParser {
 		// uint8_t state
 		// uint8_t pad1[3]
 
-		// eventStruct
-		// .readUnsignedByte();
-		// final short pad =
 		eventStruct.readUnsignedByte();
-		// final int sequence =
 		eventStruct.readUnsignedShort();
 		final long windowId = eventStruct.readUnsignedInt();
 		final long atomId = eventStruct.readUnsignedInt();
-		// final long time =
-		eventStruct.readUnsignedInt();
+		final int time = eventStruct.readSignedInt();
+		display.setLastServerTime(time);
 		final int state = eventStruct.readUnsignedByte();
 		eventStruct.enableWrite();
 
@@ -511,11 +563,12 @@ final class XcbEventParser {
 	private XClientMessageEvent parseXcbClientMessage(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// Contents of native buffer:
-		// uint8_t format
-		// uint16_t sequence
-		// xcb_window_t window
-		// xcb_atom_t type
-		// xcb_client_message_data_t data
+		// uint8_t response_type; /**< */
+		// uint8_t format; /**< */
+		// uint16_t sequence; /**< */
+		// xcb_window_t window; /**< */
+		// xcb_atom_t type; /**< */
+		// xcb_client_message_data_t data; /**< */
 
 		final int format = eventStruct.readUnsignedByte();
 		eventStruct.readUnsignedShort();
@@ -568,7 +621,7 @@ final class XcbEventParser {
 		// xcb_window_t event
 		// xcb_window_t window
 		// uint8_t from_configure
-		// eventStruct.readUnsignedByte();
+
 		eventStruct.readUnsignedByte();
 		eventStruct.readUnsignedShort();
 
@@ -591,6 +644,7 @@ final class XcbEventParser {
 
 	private XFocusInNotifyEvent parseXcbFocusInNotify(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
+		// contents of native buffer:
 		// uint8_t detail; /**< */
 		// uint16_t sequence; /**< */
 		// xcb_window_t event; /**< */
@@ -608,6 +662,7 @@ final class XcbEventParser {
 
 	private XFocusOutNotifyEvent parseXcbFocusOutNotify(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
+		// contents of native buffer:
 		// uint8_t detail; /**< */
 		// uint16_t sequence; /**< */
 		// xcb_window_t event; /**< */
@@ -625,6 +680,7 @@ final class XcbEventParser {
 
 	private XSelectionRequestEvent parseXcbSelectionRequest(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
+		// contents of native buffer:
 		// uint8_t pad0; /**< */
 		// uint16_t sequence; /**< */
 		// xcb_timestamp_t time; /**< */
@@ -636,7 +692,8 @@ final class XcbEventParser {
 
 		eventStruct.readUnsignedByte();
 		eventStruct.readUnsignedShort();
-		eventStruct.readUnsignedInt();
+		final int time = eventStruct.readSignedInt();
+		display.setLastServerTime(time);
 
 		final long ownerWindowId = eventStruct.readUnsignedInt();
 		final XWindow owner = readXWindow(display, ownerWindowId);
@@ -657,6 +714,7 @@ final class XcbEventParser {
 
 	private XSelectionNotifyEvent parseXcbSelectionNotify(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
+		// contents of native buffer:
 		// uint8_t pad0; /**< */
 		// uint16_t sequence; /**< */
 		// xcb_timestamp_t time; /**< */
@@ -667,7 +725,8 @@ final class XcbEventParser {
 
 		eventStruct.readUnsignedByte();
 		eventStruct.readUnsignedShort();
-		eventStruct.readUnsignedInt();
+		final int time = eventStruct.readSignedInt();
+		display.setLastServerTime(time);
 		final long requestorWindowId = eventStruct.readUnsignedInt();
 		final XWindow requestor = readXWindow(display, requestorWindowId);
 		final long selectionAtomId = eventStruct.readUnsignedInt();
@@ -685,6 +744,7 @@ final class XcbEventParser {
 
 	private XSelectionClearNotifyEvent parseXcbSelectionClear(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
+		// contents of native buffer:
 		// uint8_t pad0; /**< */
 		// uint16_t sequence; /**< */
 		// xcb_timestamp_t time; /**< */
@@ -693,7 +753,8 @@ final class XcbEventParser {
 
 		eventStruct.readUnsignedByte();
 		eventStruct.readUnsignedShort();
-		eventStruct.readUnsignedInt();
+		final int time = eventStruct.readSignedInt();
+		display.setLastServerTime(time);
 		final long ownerWindowId = eventStruct.readUnsignedInt();
 		final XWindow owner = readXWindow(display, ownerWindowId);
 		final long selectionAtomId = eventStruct.readUnsignedInt();

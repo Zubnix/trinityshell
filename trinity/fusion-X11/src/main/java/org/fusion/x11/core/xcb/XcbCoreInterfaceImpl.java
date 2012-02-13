@@ -21,19 +21,16 @@ import java.nio.ByteBuffer;
 import org.apache.log4j.Logger;
 import org.fusion.x11.core.DataContainer;
 import org.fusion.x11.core.FlexDataContainer;
-import org.fusion.x11.core.IntDataContainer;
 import org.fusion.x11.core.XAtom;
 import org.fusion.x11.core.XCoreInterface;
 import org.fusion.x11.core.XDisplay;
 import org.fusion.x11.core.XDisplayPlatform;
 import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XPropertyXAtomAtoms;
 import org.fusion.x11.core.XProtocolConstants;
 import org.fusion.x11.core.XResourceHandle;
 import org.fusion.x11.core.XWindow;
 import org.fusion.x11.core.XWindowAttributes;
 import org.fusion.x11.core.XWindowGeometry;
-import org.fusion.x11.core.event.XClientMessageEvent;
 import org.fusion.x11.core.extension.XExtensions;
 import org.fusion.x11.core.input.XKeySymbol;
 import org.fusion.x11.core.input.XKeyboard;
@@ -160,14 +157,15 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 
 	@Override
 	public void focusWindow(final XWindow window) {
-		final Long displayAddress = window.getDisplayResourceHandle()
-				.getDisplay().getNativePeer();
+		final XDisplay display = window.getDisplayResourceHandle().getDisplay();
+		final Long displayAddress = display.getNativePeer();
 		final Long winId = window.getDisplayResourceHandle()
 				.getResourceHandle().getNativeHandle();
+		final Integer time = Integer.valueOf(display.getLastServerTime());
 
 		this.xNativeCaller.doNativeCall(
 				this.xcbCoreNativeCalls.getCallFocusWindow(), displayAddress,
-				winId);
+				winId, time);
 
 	}
 
@@ -495,42 +493,6 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 	}
 
 	@Override
-	public void requestDestroyWindow(final XWindow window) {
-
-		final XAtom wmDeleteWindow = window.getDisplayResourceHandle()
-				.getDisplay().getDisplayAtoms()
-				.getAtomByName("WM_DELETE_WINDOW");
-		final XPropertyXAtomAtoms wmProtocols = (XPropertyXAtomAtoms) window
-				.getDisplayResourceHandle().getDisplay().getDisplayAtoms()
-				.getAtomByName("WM_PROTOCOLS");
-
-		boolean wmDelete = false;
-		if (wmDeleteWindow != null) {
-			for (final XAtom xAtom : window.getPropertyInstance(wmProtocols)
-					.getAtoms()) {
-				wmDelete = xAtom.equals(wmDeleteWindow);
-				if (wmDelete) {
-					break;
-				}
-			}
-		}
-
-		if (wmDelete) {
-			final IntDataContainer intDataContainer = new IntDataContainer(2);
-			intDataContainer.writeDataBlock(Integer.valueOf(wmDeleteWindow
-					.getAtomId().intValue()));
-			intDataContainer.writeDataBlock(Integer
-					.valueOf((int) XProtocolConstants.CURRENT_TIME));
-
-			final XClientMessageEvent deleteWindowRequest = new XClientMessageEvent(
-					window, wmProtocols, intDataContainer);
-			sendClientMessage(window, deleteWindowRequest);
-		} else {
-			window.destroy();
-		}
-	}
-
-	@Override
 	public long getXKeySymbol(final long keySymsPeer, final Key key,
 			final int keyColumn) {
 
@@ -709,49 +671,55 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 
 	@Override
 	public void grabKeyboard(final XWindow window) {
-
-		final Long displayAddress = window.getDisplayResourceHandle()
-				.getDisplay().getNativePeer();
+		final XDisplay display = window.getDisplayResourceHandle().getDisplay();
+		final Long displayAddress = display.getNativePeer();
 		final Long windowId = window.getDisplayResourceHandle()
 				.getResourceHandle().getNativeHandle();
+		final Integer time = Integer.valueOf(display.getLastServerTime());
 
 		this.xNativeCaller.doNativeCall(
 				this.xcbCoreNativeCalls.getCallGrabKeyboard(), displayAddress,
-				windowId);
+				windowId, time);
 
 	}
 
 	@Override
 	public void grabMouse(final XWindow window) {
-		final Long displayAddress = window.getDisplayResourceHandle()
-				.getDisplay().getNativePeer();
+		final XDisplay display = window.getDisplayResourceHandle().getDisplay();
+		final Long displayAddress = display.getNativePeer();
 		final Long windowId = window.getDisplayResourceHandle()
 				.getResourceHandle().getNativeHandle();
+		final Integer time = Integer.valueOf(display.getLastServerTime());
 
 		this.xNativeCaller.doNativeCall(
 				this.xcbCoreNativeCalls.getCallGrabMouse(), displayAddress,
-				windowId);
+				windowId, time);
 
 	}
 
+	// TODO change argument to XDisplay
 	@Override
 	public void ungrabKeybard(final XWindow window) {
-		final Long displayAddress = window.getDisplayResourceHandle()
-				.getDisplay().getNativePeer();
+		final XDisplay display = window.getDisplayResourceHandle().getDisplay();
+		final Long displayAddress = display.getNativePeer();
+		final Integer time = Integer.valueOf(display.getLastServerTime());
 
-		this.xNativeCaller
-				.doNativeCall(this.xcbCoreNativeCalls.getCallUngrabKeyboard(),
-						displayAddress);
+		this.xNativeCaller.doNativeCall(
+				this.xcbCoreNativeCalls.getCallUngrabKeyboard(),
+				displayAddress, time);
 
 	}
 
+	// TODO change argument to XDisplay
 	@Override
 	public void ungrabMouse(final XWindow window) {
-		final Long displayAddress = window.getDisplayResourceHandle()
-				.getDisplay().getNativePeer();
+		final XDisplay display = window.getDisplayResourceHandle().getDisplay();
+		final Long displayAddress = display.getNativePeer();
+		final Integer time = Integer.valueOf(display.getLastServerTime());
 
 		this.xNativeCaller.doNativeCall(
-				this.xcbCoreNativeCalls.getCallUngrabMouse(), displayAddress);
+				this.xcbCoreNativeCalls.getCallUngrabMouse(), displayAddress,
+				time);
 
 	}
 
@@ -796,15 +764,17 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 
 	@Override
 	public void setSelectionOwner(final XAtom selectionAtom, final XWindow owner) {
-		final Long displayAddress = owner.getDisplayResourceHandle()
-				.getDisplay().getNativePeer();
+
+		final XDisplay display = owner.getDisplayResourceHandle().getDisplay();
+		final Long displayAddress = display.getNativePeer();
 		final Long selectionAtomId = selectionAtom.getAtomId();
 		final Long windowId = owner.getDisplayResourceHandle()
 				.getResourceHandle().getNativeHandle();
+		final Integer time = Integer.valueOf(display.getLastServerTime());
 
 		this.xNativeCaller.doNativeCall(
 				this.xcbCoreNativeCalls.getCallSetSelectionOwner(),
-				displayAddress, selectionAtomId, windowId);
+				displayAddress, selectionAtomId, windowId, time);
 	}
 
 	@Override
@@ -813,6 +783,7 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 
 		final Long displayAddress = display.getNativePeer();
 		final Long atomId = selectionAtom.getAtomId();
+
 		final Long ownerWindowId = this.xNativeCaller.doNativeCall(
 				this.xcbCoreNativeCalls.getCallSelectionOwner(),
 				displayAddress, atomId);
@@ -824,5 +795,29 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 						new XID(display, XResourceHandle.valueOf(ownerWindowId)));
 
 		return ownerWindow;
+	}
+
+	@Override
+	public void addToSaveSet(final XWindow window) {
+		final XDisplay display = window.getDisplayResourceHandle().getDisplay();
+		final Long displayAddress = display.getNativePeer();
+		final Long windowId = window.getDisplayResourceHandle()
+				.getResourceHandle().getNativeHandle();
+
+		this.xNativeCaller.doNativeCall(
+				this.xcbCoreNativeCalls.getCallAddToSaveSet(), displayAddress,
+				windowId);
+	}
+
+	@Override
+	public void removeFromSaveSet(final XWindow window) {
+		final XDisplay display = window.getDisplayResourceHandle().getDisplay();
+		final Long displayAddress = display.getNativePeer();
+		final Long windowId = window.getDisplayResourceHandle()
+				.getResourceHandle().getNativeHandle();
+
+		this.xNativeCaller.doNativeCall(
+				this.xcbCoreNativeCalls.getCallRemoveFromSaveSet(),
+				displayAddress, windowId);
 	}
 }

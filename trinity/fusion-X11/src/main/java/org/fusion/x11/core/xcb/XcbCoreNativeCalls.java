@@ -34,6 +34,60 @@ import org.fusion.x11.nativeHelpers.XNativeCall;
  */
 public final class XcbCoreNativeCalls {
 
+	public RemoveFromSaveSet getCallRemoveFromSaveSet() {
+		return this.removeFromSaveSet;
+	}
+
+	private final RemoveFromSaveSet removeFromSaveSet;
+
+	/**
+	 * args: (Long) window id
+	 * <p>
+	 * return: (Void) null
+	 * 
+	 * @author Erik De Rijcke
+	 * @since 1.0
+	 * 
+	 */
+	public static final class RemoveFromSaveSet extends
+			XNativeCall<Void, Long, Long> {
+		private RemoveFromSaveSet() {
+		}
+
+		@Override
+		protected boolean nativeCallImpl() {
+			return XCoreNative.nativeRemoveFromSaveSet(getDisplayPeer()
+					.longValue(), getArgs()[0].longValue());
+		}
+	}
+
+	public AddToSaveSet getCallAddToSaveSet() {
+		return this.addToSaveSet;
+	}
+
+	private final AddToSaveSet addToSaveSet;
+
+	/**
+	 * args: (Long) window id
+	 * <p>
+	 * return: (Void) null
+	 * 
+	 * @author Erik De Rijcke
+	 * @since 1.0
+	 * 
+	 */
+	public static final class AddToSaveSet extends
+			XNativeCall<Void, Long, Long> {
+		private AddToSaveSet() {
+		}
+
+		@Override
+		protected boolean nativeCallImpl() {
+			return XCoreNative.nativeAddToSaveSet(getDisplayPeer().longValue(),
+					getArgs()[0].longValue());
+		}
+	}
+
 	/**
 	 * 
 	 * @return
@@ -45,7 +99,7 @@ public final class XcbCoreNativeCalls {
 	private final SetSelectionOwner setSelectionOwner;
 
 	/**
-	 * args: (Long) atom id, (Long) window id
+	 * args: (Long) atom id, (Long) window id, (Integer) time
 	 * <p>
 	 * return: (Void) null
 	 * 
@@ -54,7 +108,7 @@ public final class XcbCoreNativeCalls {
 	 * 
 	 */
 	public static final class SetSelectionOwner extends
-			XNativeCall<Void, Long, Long> {
+			XNativeCall<Void, Long, Number> {
 		private SetSelectionOwner() {
 		}
 
@@ -62,7 +116,8 @@ public final class XcbCoreNativeCalls {
 		protected boolean nativeCallImpl() {
 			return XCoreNative.nativeSetSelectionOwner(getDisplayPeer()
 					.longValue(), getArgs()[0].longValue(), getArgs()[1]
-					.longValue(), getNativeBufferHelper().getBuffer());
+					.longValue(), getArgs()[2].intValue(),
+					getNativeBufferHelper().getBuffer());
 		}
 	}
 
@@ -528,7 +583,7 @@ public final class XcbCoreNativeCalls {
 	private final FocusWindow focusWindow;
 
 	/**
-	 * args: (Long) window id
+	 * args: (Long) window id, (Integer) time
 	 * <p>
 	 * return: (Void) null
 	 * 
@@ -536,7 +591,8 @@ public final class XcbCoreNativeCalls {
 	 * @since 1.0
 	 * 
 	 */
-	public static final class FocusWindow extends XNativeCall<Void, Long, Long> {
+	public static final class FocusWindow extends
+			XNativeCall<Void, Long, Number> {
 		private FocusWindow() {
 		}
 
@@ -544,7 +600,8 @@ public final class XcbCoreNativeCalls {
 		public boolean nativeCallImpl() {
 			final boolean returnboolean = XCoreNative.nativeGiveFocus(
 					getDisplayPeer().longValue(), getArgs()[0].longValue(),
-					getNativeBufferHelper().getBuffer());
+					getArgs()[1].intValue(), getNativeBufferHelper()
+							.getBuffer());
 			return returnboolean;
 		}
 	}
@@ -1325,9 +1382,8 @@ public final class XcbCoreNativeCalls {
 	}
 
 	/**
-	 * args: (Long) windowId
 	 * 
-	 * ret: void
+	 * @return
 	 */
 	public GrabKeyboard getCallGrabKeyboard() {
 		return this.grabKeyboard;
@@ -1336,28 +1392,30 @@ public final class XcbCoreNativeCalls {
 	private final GrabKeyboard grabKeyboard;
 
 	/**
+	 * args: (Long) windowId, (Integer) time
+	 * <p>
+	 * ret: (Void) null
 	 * 
 	 * @author Erik De Rijcke
 	 * @since 1.0
 	 * 
 	 */
 	public static final class GrabKeyboard extends
-			XNativeCall<Void, Long, Long> {
+			XNativeCall<Void, Long, Number> {
 		private GrabKeyboard() {
 		}
 
 		@Override
 		protected boolean nativeCallImpl() {
 			return XCoreNative.nativeGrabKeyboard(getDisplayPeer().longValue(),
-					getArgs()[0].longValue(), getNativeBufferHelper()
-							.getBuffer());
+					getArgs()[0].longValue(), getArgs()[1].intValue(),
+					getNativeBufferHelper().getBuffer());
 		}
 	}
 
 	/**
-	 * args: (Long) windowId
 	 * 
-	 * ret: void
+	 * @return
 	 */
 	public GrabMouse getCallGrabMouse() {
 		return this.grabMouse;
@@ -1366,20 +1424,23 @@ public final class XcbCoreNativeCalls {
 	private final GrabMouse grabMouse;
 
 	/**
+	 * args: (Long) windowId, (Integer) time
+	 * <p>
+	 * ret: (Void) null
 	 * 
 	 * @author Erik De Rijcke
 	 * @since 1.0
 	 * 
 	 */
-	public static final class GrabMouse extends XNativeCall<Void, Long, Long> {
+	public static final class GrabMouse extends XNativeCall<Void, Long, Number> {
 		private GrabMouse() {
 		}
 
 		@Override
 		protected boolean nativeCallImpl() {
 			return XCoreNative.nativeGrabMouse(getDisplayPeer().longValue(),
-					getArgs()[0].longValue(), getNativeBufferHelper()
-							.getBuffer());
+					getArgs()[0].longValue(), getArgs()[1].intValue(),
+					getNativeBufferHelper().getBuffer());
 		}
 	}
 
@@ -1394,7 +1455,7 @@ public final class XcbCoreNativeCalls {
 	private final UngrabKeyboard ungrabKeyboard;
 
 	/**
-	 * args: (Void) NONE
+	 * args: (Integer) time
 	 * 
 	 * ret: (Void) null
 	 * 
@@ -1403,14 +1464,15 @@ public final class XcbCoreNativeCalls {
 	 * 
 	 */
 	public static final class UngrabKeyboard extends
-			XNativeCall<Void, Long, Void> {
+			XNativeCall<Void, Long, Integer> {
 		private UngrabKeyboard() {
 		}
 
 		@Override
 		protected boolean nativeCallImpl() {
 			return XCoreNative.nativeUngrabKeyboard(getDisplayPeer()
-					.longValue(), getNativeBufferHelper().getBuffer());
+					.longValue(), getArgs()[0].intValue(),
+					getNativeBufferHelper().getBuffer());
 		}
 	}
 
@@ -1425,7 +1487,7 @@ public final class XcbCoreNativeCalls {
 	private final UngrabMouse ungrabMouse;
 
 	/**
-	 * args: (Void) NONE
+	 * args: (Integer) time
 	 * <p>
 	 * ret: (Void) null
 	 * 
@@ -1433,14 +1495,16 @@ public final class XcbCoreNativeCalls {
 	 * @since 1.0
 	 * 
 	 */
-	public static final class UngrabMouse extends XNativeCall<Void, Long, Void> {
+	public static final class UngrabMouse extends
+			XNativeCall<Void, Long, Integer> {
 		private UngrabMouse() {
 		}
 
 		@Override
 		protected boolean nativeCallImpl() {
 			return XCoreNative.nativeUngrabMouse(getDisplayPeer().longValue(),
-					getNativeBufferHelper().getBuffer());
+					getArgs()[0].intValue(), getNativeBufferHelper()
+							.getBuffer());
 		}
 	}
 
@@ -1525,6 +1589,8 @@ public final class XcbCoreNativeCalls {
 	 * <code>XNativeCall</code>s.
 	 */
 	public XcbCoreNativeCalls() {
+		this.removeFromSaveSet = new RemoveFromSaveSet();
+		this.addToSaveSet = new AddToSaveSet();
 		this.setSelectionOwner = new SetSelectionOwner();
 		this.getSelectionOwner = new GetSelectionOwner();
 		this.createNewWindow = new CreateNewWindow();
@@ -1566,4 +1632,5 @@ public final class XcbCoreNativeCalls {
 		this.ungrabKey = new UngrabKey();
 		this.ungrabButton = new UngrabButton();
 	}
+
 }
