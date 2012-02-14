@@ -15,13 +15,12 @@
  */
 package org.hyperdrive.widget;
 
-import org.hydrogen.displayinterface.Property;
-import org.hydrogen.displayinterface.PropertyInstanceText;
 import org.hydrogen.eventsystem.EventHandler;
 import org.hydrogen.paintinterface.PaintCall;
 import org.hyperdrive.core.ClientWindow;
-import org.hyperdrive.core.RenderAreaPropertiesManipulator;
-import org.hyperdrive.core.RenderAreaPropertyChangedEvent;
+import org.hyperdrive.protocol.ClientWindowDescriptionNotify;
+import org.hyperdrive.protocol.DesktopProtocol;
+import org.hyperdrive.protocol.ProtocolEvent;
 
 // TODO documentation
 /**
@@ -35,8 +34,6 @@ import org.hyperdrive.core.RenderAreaPropertyChangedEvent;
  */
 public class ClientNameLabel extends Widget {
 
-	private RenderAreaPropertiesManipulator propertyDelegate;
-
 	/**
 	 * 
 	 * @author Erik De Rijcke
@@ -48,15 +45,16 @@ public class ClientNameLabel extends Widget {
 	}
 
 	private ClientWindow targetWindow;
+	private final DesktopProtocol desktopProtocol;
 	private String namePropertyName;
 
 	/**
 	 * 
 	 * @param namePropertyName
 	 */
-	public ClientNameLabel(final String namePropertyName) {
+	public ClientNameLabel(final DesktopProtocol desktopProtocol) {
 		super();
-		setNamePropertyName(namePropertyName);
+		this.desktopProtocol = desktopProtocol;
 	}
 
 	/**
@@ -95,32 +93,31 @@ public class ClientNameLabel extends Widget {
 			// TODO remove listener from previous window
 		}
 		this.targetWindow = targetWindow;
-		this.propertyDelegate = new RenderAreaPropertiesManipulator(
-				targetWindow);
 
 		targetWindow
 				.addEventHandler(
-						new EventHandler<RenderAreaPropertyChangedEvent<Property<PropertyInstanceText>>>() {
+						new EventHandler<ProtocolEvent<ClientWindowDescriptionNotify>>() {
 							@Override
 							public void handleEvent(
-									final RenderAreaPropertyChangedEvent<Property<PropertyInstanceText>> event) {
-								updateNameLabel();
+									final ProtocolEvent<ClientWindowDescriptionNotify> event) {
+								final String name = event.getEventArguments()
+										.getName();
+								updateNameLabel(name);
 							}
-						}, RenderAreaPropertyChangedEvent
-								.TYPE(this.namePropertyName));
+						}, ProtocolEvent.DESCRIPTION_NOTIFY);
 
 		// TODO automatically call painter when we call a method of the view?
-		updateNameLabel();
+		final String clientName = this.desktopProtocol
+				.query(getTargetWindow(), ProtocolEvent.DESCRIPTION_NOTIFY)
+				.getEventArguments().getName();
+		updateNameLabel(clientName);
 	}
 
 	/**
 	 * 
 	 * 
 	 */
-	protected void updateNameLabel() {
-		final String name = this.propertyDelegate
-				.<PropertyInstanceText> getPropertyValue(this.namePropertyName)
-				.getText();
+	protected void updateNameLabel(final String name) {
 		getPainter().paint(getView().onNameUpdate(name));
 	}
 

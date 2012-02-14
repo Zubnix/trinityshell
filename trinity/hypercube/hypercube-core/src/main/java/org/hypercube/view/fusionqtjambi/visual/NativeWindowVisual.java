@@ -13,36 +13,35 @@
  * You should have received a copy of the GNU General Public License along with
  * Hypercube. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.hypercube.startup;
+package org.hypercube.view.fusionqtjambi.visual;
 
-import java.net.URISyntaxException;
-
-import org.fusion.qt.x11.QFusionDisplayConfiguration;
-import org.hypercube.Hypercube;
-import org.hypercube.hyperlogic.GroovyLogicLoaderFactory;
-import org.hypercube.view.fusionqtjambi.QFusionViewFactoryImpl;
-
-import com.martiansoftware.jsap.JSAPException;
+import com.trolltech.qt.core.Qt.WidgetAttribute;
+import com.trolltech.qt.gui.QWidget;
 
 // TODO documentation
 /**
  * 
- * @author Erik De Rijcke, Ryan Schmitt
+ * @author Erik De Rijcke
  * @since 1.0
  */
-public class Go {
+public class NativeWindowVisual extends QWidget implements StyledVisual {
+
+	private static final String NAME = "NativeWindow";
+
 	/**
 	 * 
-	 * @param args
+	 * @param parent
 	 */
-	public static void main(final String[] args) throws JSAPException,
-			InstantiationException, IllegalAccessException,
-			ClassNotFoundException, URISyntaxException {
-
-		// TODO fix uncaught exceptions
-
-		new Hypercube(new GroovyLogicLoaderFactory(),
-				new QFusionDisplayConfiguration(),
-				new QFusionViewFactoryImpl(), args);
+	public NativeWindowVisual(final QWidget parent) {
+		super(parent);
+		this.setAttribute(WidgetAttribute.WA_NativeWindow,
+		                  true);
+		this.setObjectName(this.getStyleName());
 	}
+
+	@Override
+	public String getStyleName() {
+		return NativeWindowVisual.NAME;
+	}
+
 }

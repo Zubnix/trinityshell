@@ -13,35 +13,33 @@
  * You should have received a copy of the GNU General Public License along with
  * Hypercube. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.hypercube.hyperwidget;
+package org.hypercube.view.fusionqtjambi.visual;
 
-import org.hypercube.view.fusionqtjambi.ClientContainerViewImpl;
-import org.hyperdrive.widget.View;
-import org.hyperdrive.widget.ViewFactory;
-import org.hyperdrive.widget.Widget;
+import com.trolltech.qt.gui.QLabel;
+import com.trolltech.qt.gui.QWidget;
 
-// TODO documentation
-// TODO find a cleaner and easier way to bind a view to a widget
+//TODO documentation
 /**
  * 
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ClientContainer extends Widget {
+public class MaximizeButtonVisual extends QLabel implements StyledVisual {
 
-	public ClientContainer() {
-		super();
+	public static final String NAME = "MaximizeButton";
+
+	/**
+	 * 
+	 * @param parentVisual
+	 */
+	public MaximizeButtonVisual(final QWidget parentVisual) {
+		super(parentVisual);
+		setObjectName(getStyleName());
 	}
-
-	private final boolean registered = false;
 
 	@Override
-	protected View initView(final ViewFactory<?> viewFactory) {
-		if (!this.registered) {
-			getManagedDisplay().getWidgetViewFactory().registerCustomView(this,
-					ClientContainerViewImpl.class);
-		}
-
-		return viewFactory.newCustomView(this);
+	public String getStyleName() {
+		return MaximizeButtonVisual.NAME;
 	}
+
 }

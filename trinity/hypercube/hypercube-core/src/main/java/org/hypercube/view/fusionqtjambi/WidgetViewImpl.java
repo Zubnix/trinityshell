@@ -13,35 +13,25 @@
  * You should have received a copy of the GNU General Public License along with
  * Hypercube. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.hypercube.hyperwidget;
+package org.hypercube.view.fusionqtjambi;
 
-import org.hypercube.view.fusionqtjambi.ClientContainerViewImpl;
-import org.hyperdrive.widget.View;
-import org.hyperdrive.widget.ViewFactory;
-import org.hyperdrive.widget.Widget;
+import org.hydrogen.paintinterface.Paintable;
+import org.hypercube.view.fusionqtjambi.visual.BaseVisual;
+
+import com.trolltech.qt.gui.QWidget;
 
 // TODO documentation
-// TODO find a cleaner and easier way to bind a view to a widget
 /**
  * 
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ClientContainer extends Widget {
-
-	public ClientContainer() {
-		super();
-	}
-
-	private final boolean registered = false;
+public class WidgetViewImpl extends QFusionViewImpl {
 
 	@Override
-	protected View initView(final ViewFactory<?> viewFactory) {
-		if (!this.registered) {
-			getManagedDisplay().getWidgetViewFactory().registerCustomView(this,
-					ClientContainerViewImpl.class);
-		}
-
-		return viewFactory.newCustomView(this);
+	protected QWidget initVisual(final QWidget parentVisual,
+			final Paintable paintable, final Object... args) {
+		return new BaseVisual(parentVisual);
 	}
+
 }

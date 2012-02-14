@@ -13,35 +13,24 @@
  * You should have received a copy of the GNU General Public License along with
  * Hypercube. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.hypercube.hyperwidget;
+package org.hypercube.protocol.fusionx11;
 
-import org.hypercube.view.fusionqtjambi.ClientContainerViewImpl;
-import org.hyperdrive.widget.View;
-import org.hyperdrive.widget.ViewFactory;
-import org.hyperdrive.widget.Widget;
+import org.hyperdrive.core.ManagedDisplay;
+import org.hyperdrive.protocol.DesktopProtocol;
+import org.hyperdrive.protocol.DesktopProtocolFactory;
 
-// TODO documentation
-// TODO find a cleaner and easier way to bind a view to a widget
+//TODO documentation
 /**
  * 
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ClientContainer extends Widget {
-
-	public ClientContainer() {
-		super();
-	}
-
-	private final boolean registered = false;
+public class XDesktopProtocolFactory implements DesktopProtocolFactory {
 
 	@Override
-	protected View initView(final ViewFactory<?> viewFactory) {
-		if (!this.registered) {
-			getManagedDisplay().getWidgetViewFactory().registerCustomView(this,
-					ClientContainerViewImpl.class);
-		}
-
-		return viewFactory.newCustomView(this);
+	public DesktopProtocol newDesktopProtocol(
+			final ManagedDisplay managedDisplay) {
+		return new XDesktopProtocol(managedDisplay);
 	}
+
 }

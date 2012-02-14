@@ -27,6 +27,7 @@ import org.hyperdrive.core.ClientWindow;
 import org.hyperdrive.geo.GeoEvent;
 import org.hyperdrive.geo.GeoManagerLine;
 import org.hyperdrive.geo.GeoManagerLine.LineProperty;
+import org.hyperdrive.protocol.DesktopProtocol;
 
 // TODO documentation
 // TODO implement as pager?
@@ -60,8 +61,8 @@ public class ClientManager extends Widget {
 		 * 
 		 * @param namePropertyName
 		 */
-		public ClientManagerLabel(final String namePropertyName) {
-			super(namePropertyName);
+		public ClientManagerLabel(final DesktopProtocol desktopProtocol) {
+			super(desktopProtocol);
 			this.eventHandler = new EventHandler<ButtonNotifyEvent>() {
 				@Override
 				public void handleEvent(final ButtonNotifyEvent event) {
@@ -122,17 +123,18 @@ public class ClientManager extends Widget {
 	private final GeoManagerLine geoManagerLine;
 	private String namePropertyName;
 	private final List<ClientManagerLabel> clientNameLabels;
+	private final DesktopProtocol desktopProtocol;
 
 	/**
 	 * 
 	 * @param namePropertyName
 	 */
-	public ClientManager(final String namePropertyName) {
-		super();
+	public ClientManager(final DesktopProtocol desktopProtocol) {
+		this.desktopProtocol = desktopProtocol;
 		this.clientNameLabels = new LinkedList<ClientManagerLabel>();
 		this.geoManagerLine = new GeoManagerLine(this, true, false);
 		setGeoManager(this.geoManagerLine);
-		setNamePropertyName(namePropertyName);
+		setNamePropertyName(this.namePropertyName);
 	}
 
 	/**
@@ -163,7 +165,8 @@ public class ClientManager extends Widget {
 	 */
 	protected ClientManagerLabel newClientNameLabel(final ClientWindow client) {
 		final ClientManagerLabel clientManagerLabel = new ClientManagerLabel(
-				this.namePropertyName);
+				this.desktopProtocol);
+		clientManagerLabel.setTargetWindow(client);
 		return clientManagerLabel;
 	}
 
@@ -198,6 +201,7 @@ public class ClientManager extends Widget {
 		this.geoManagerLine.addManagedChild(clientManagerLabel,
 				new LineProperty(100));
 
+		// update view when a client is destroyed
 		client.addEventHandler(new EventHandler<GeoEvent>() {
 			@Override
 			public void handleEvent(final GeoEvent event) {
@@ -208,6 +212,7 @@ public class ClientManager extends Widget {
 		}, GeoEvent.DESTROYED);
 		this.clientNameLabels.add(clientManagerLabel);
 
+		// update view when a client gets the focus
 		client.addEventHandler(new EventHandler<FocusNotifyEvent>() {
 			@Override
 			public void handleEvent(final FocusNotifyEvent event) {

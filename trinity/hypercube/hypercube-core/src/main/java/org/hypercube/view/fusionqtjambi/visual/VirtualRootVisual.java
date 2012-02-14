@@ -13,36 +13,35 @@
  * You should have received a copy of the GNU General Public License along with
  * Hypercube. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.hypercube.startup;
+package org.hypercube.view.fusionqtjambi.visual;
 
-import java.net.URISyntaxException;
-
-import org.fusion.qt.x11.QFusionDisplayConfiguration;
-import org.hypercube.Hypercube;
-import org.hypercube.hyperlogic.GroovyLogicLoaderFactory;
-import org.hypercube.view.fusionqtjambi.QFusionViewFactoryImpl;
-
-import com.martiansoftware.jsap.JSAPException;
+import com.trolltech.qt.core.Qt.FocusPolicy;
+import com.trolltech.qt.gui.QLabel;
+import com.trolltech.qt.gui.QWidget;
 
 // TODO documentation
 /**
  * 
- * @author Erik De Rijcke, Ryan Schmitt
+ * @author Erik De Rijcke
  * @since 1.0
  */
-public class Go {
+public class VirtualRootVisual extends QLabel implements StyledVisual {
+
+	private static final String NAME = "VirtualRoot";
+
 	/**
 	 * 
-	 * @param args
+	 * @param parentVisual
 	 */
-	public static void main(final String[] args) throws JSAPException,
-			InstantiationException, IllegalAccessException,
-			ClassNotFoundException, URISyntaxException {
+	public VirtualRootVisual(final QWidget parentVisual) {
+		super(parentVisual);
+		this.setFocus();
+		this.setFocusPolicy(FocusPolicy.StrongFocus);
+		this.setObjectName(this.getStyleName());
+	}
 
-		// TODO fix uncaught exceptions
-
-		new Hypercube(new GroovyLogicLoaderFactory(),
-				new QFusionDisplayConfiguration(),
-				new QFusionViewFactoryImpl(), args);
+	@Override
+	public String getStyleName() {
+		return VirtualRootVisual.NAME;
 	}
 }

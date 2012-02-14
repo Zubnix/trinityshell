@@ -13,36 +13,18 @@
  * You should have received a copy of the GNU General Public License along with
  * Hypercube. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.hypercube.startup;
-
-import java.net.URISyntaxException;
-
-import org.fusion.qt.x11.QFusionDisplayConfiguration;
-import org.hypercube.Hypercube;
-import org.hypercube.hyperlogic.GroovyLogicLoaderFactory;
-import org.hypercube.view.fusionqtjambi.QFusionViewFactoryImpl;
-
-import com.martiansoftware.jsap.JSAPException;
+package org.hypercube.view.fusionqtjambi.visual;
 
 // TODO documentation
 /**
  * 
- * @author Erik De Rijcke, Ryan Schmitt
+ * @author Erik De Rijcke
  * @since 1.0
  */
-public class Go {
+public interface StyledVisual {
 	/**
 	 * 
-	 * @param args
+	 * @return
 	 */
-	public static void main(final String[] args) throws JSAPException,
-			InstantiationException, IllegalAccessException,
-			ClassNotFoundException, URISyntaxException {
-
-		// TODO fix uncaught exceptions
-
-		new Hypercube(new GroovyLogicLoaderFactory(),
-				new QFusionDisplayConfiguration(),
-				new QFusionViewFactoryImpl(), args);
-	}
+	String getStyleName();
 }

@@ -39,7 +39,7 @@ public class GroovyLogicLoader implements LogicLoader {
 	private static final String LOGIC_FILENAME = "HypercubeLogic.groovy";
 	private static final String DEFAULT_LOGIC_DIR = "/usr/share/hypercube";
 	private static final String USER_CONFIG_DIR = ".config/hypercube";
-	private static final String BUILDIN_CLASSPATH = "org.hypercube.groovy.HypercubeLogic";
+	private static final String BUILDIN_CLASSPATH = "HypercubeLogic";
 
 	private GroovyObject hypercubeLogic;
 
@@ -51,7 +51,7 @@ public class GroovyLogicLoader implements LogicLoader {
 	 * 
 	 */
 	public GroovyLogicLoader(final String customLogicPath) {
-		this.init(customLogicPath);
+		init(customLogicPath);
 	}
 
 	/**
