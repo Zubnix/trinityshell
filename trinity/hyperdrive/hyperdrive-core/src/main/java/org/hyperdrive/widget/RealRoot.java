@@ -15,6 +15,9 @@
  */
 package org.hyperdrive.widget;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.hydrogen.displayinterface.PlatformRenderArea;
 import org.hyperdrive.core.ManagedDisplay;
 import org.hyperdrive.geo.GeoManagerDirect;
@@ -37,14 +40,24 @@ import org.hyperdrive.geo.GeoManagerDirect;
  */
 public final class RealRoot extends Widget {
 
-	public static final String VIEW_KEY = "REAL_ROOT_VIEW";
+	private static final Map<ManagedDisplay, RealRoot> rootsForDisplay = new HashMap<ManagedDisplay, RealRoot>();
+
+	public static RealRoot get(final ManagedDisplay managedDisplay) {
+		if (RealRoot.rootsForDisplay.containsKey(managedDisplay)) {
+			return RealRoot.rootsForDisplay.get(managedDisplay);
+		} else {
+			final RealRoot root = new RealRoot(managedDisplay);
+			RealRoot.rootsForDisplay.put(managedDisplay, root);
+			return root;
+		}
+	}
 
 	/**
 	 * 
 	 * @param managedDisplay
 	 * 
 	 */
-	public RealRoot(final ManagedDisplay managedDisplay) {
+	protected RealRoot(final ManagedDisplay managedDisplay) {
 		super();
 		setGeoManager(new GeoManagerDirect());
 		setManagedDisplay(managedDisplay);

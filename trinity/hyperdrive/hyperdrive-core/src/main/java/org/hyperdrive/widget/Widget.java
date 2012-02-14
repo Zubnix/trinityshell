@@ -128,11 +128,6 @@ public class Widget extends AbstractRenderArea implements Paintable,
 		renderAreaId = getPainter().initPaintPeer(indirectParent,
 				getPaintCallOnCreate());
 
-		// if (renderAreaId <= 0) {
-		// throw new HyperdriveException(new WidgetInitializationException(
-		// this, String.format("Invalid render area id: %d",
-		// renderAreaId)));
-		// }
 		PlatformRenderArea renderArea = null;
 
 		renderArea = getManagedDisplay()
@@ -216,6 +211,9 @@ public class Widget extends AbstractRenderArea implements Paintable,
 		// by the paint-back when creating the widget 'visual'. Enabling it
 		// here is thus more some kind of a safety precaution.
 		// platformRenderArea.overrideRedirect(true);
+
+		// platformRenderArea
+		// .propagateEvent(EventPropagator.REDIRECT_CHILD_WINDOW_GEOMTRY_CHANGES);
 		super.setPlatformRenderArea(platformRenderArea);
 	}
 

@@ -43,7 +43,6 @@ import org.hyperdrive.input.ManagedKeyboard;
 import org.hyperdrive.input.ManagedMouse;
 import org.hyperdrive.widget.RealRoot;
 import org.hyperdrive.widget.ViewFactory;
-import org.hyperdrive.widget.VirtualRoot;
 
 // TODO documentation
 /**
@@ -92,8 +91,6 @@ public class ManagedDisplay extends EventBus {
 	private final ManagedMouse managedMouse;
 	private final ManagedKeyboard managedKeyboard;
 	private final PainterFactory painterFactory;
-	private final RealRoot realRoot;
-	private final VirtualRoot defaultVirtualRoot;
 	private final Map<DisplayEventSource, LinkedHashSet<EventBus>> eventConductorMap;
 	private final Map<EventBus, DisplayEventSource> reverseEventConductorMap;
 	private final Executor managedDisplayEventExecutor;
@@ -140,15 +137,6 @@ public class ManagedDisplay extends EventBus {
 					.newSingleThreadExecutor();
 		}
 		{
-			this.realRoot = new RealRoot(this);
-		}
-		{
-			this.defaultVirtualRoot = new VirtualRoot(getRealRootRenderArea());
-			this.defaultVirtualRoot.setVisibility(true);
-			this.defaultVirtualRoot.requestVisibilityChange();
-			this.defaultVirtualRoot.activate();
-		}
-		{
 			this.managedMouse = new ManagedMouse(this);
 			this.managedKeyboard = new ManagedKeyboard(this);
 		}
@@ -167,8 +155,10 @@ public class ManagedDisplay extends EventBus {
 	public void startEventDispatcher() {
 		// TODO this is more an X specific thing, create a more platform
 		// neutral mechanism/interface.
-		getRealRootRenderArea().getPlatformRenderArea().propagateEvent(
-				EventPropagator.REDIRECT_CHILD_WINDOW_GEOMTRY_CHANGES);
+		RealRoot.get(this)
+				.getPlatformRenderArea()
+				.propagateEvent(
+						EventPropagator.REDIRECT_CHILD_WINDOW_GEOMTRY_CHANGES);
 		this.managedDisplayEventExecutor.execute(getEventDispatcher());
 	}
 
@@ -185,7 +175,7 @@ public class ManagedDisplay extends EventBus {
 	 *  
 	 */
 	public void manageUnmanagedClientWindows() {
-		final PlatformRenderArea[] children = getRealRootRenderArea()
+		final PlatformRenderArea[] children = RealRoot.get(this)
 				.getPlatformRenderArea().getChildren();
 		for (final PlatformRenderArea clientRenderArea : children) {
 			final PlatformRenderAreaAttributes attributes = clientRenderArea
@@ -207,20 +197,6 @@ public class ManagedDisplay extends EventBus {
 	 */
 	public ViewFactory<? extends PaintCall<?, ?>> getWidgetViewFactory() {
 		return this.viewFactory;
-	}
-
-	/**
-	 * The default <code>VirtualRoot</code> of this <code>ManagedDisplay</code>.
-	 * <p>
-	 * A <code>VirtualRoot</code> is a <code>BaseWidget</code> subclass that is
-	 * used as a fake root for <code>ClientWindow</code>s. This means that every
-	 * <code>ClientWindow</code> has the default <code>VirtualRoot</code> as
-	 * it's initial parent.
-	 * 
-	 * @return The default {@link _NetVirtualRoots}.
-	 */
-	public VirtualRoot getDefaultVirtualRootRenderArea() {
-		return this.defaultVirtualRoot;
 	}
 
 	/**
@@ -257,18 +233,6 @@ public class ManagedDisplay extends EventBus {
 	 */
 	public PainterFactory getPainterFactory() {
 		return this.painterFactory;
-	}
-
-	/**
-	 * The <code>RealRoot</code> of this <code>ManagedDisplay</code>
-	 * <p>
-	 * A <code>RealRoot</code> is a <code>BaseWidget</code> subclass that is
-	 * backed by the real native root window.
-	 * 
-	 * @return The {@link RealRoot}.
-	 */
-	public RealRoot getRealRootRenderArea() {
-		return this.realRoot;
 	}
 
 	/**

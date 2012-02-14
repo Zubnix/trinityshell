@@ -22,38 +22,22 @@
 //you might want to check out: http://groovy.codehaus.org/Documentation //
 //**********************************************************************//
 
-import org.hydrogen.config.DisplayConfiguration
-import org.hydrogen.displayinterface.PlatformRenderArea
-import org.hydrogen.displayinterface.PropertyInstanceNumbers
-import org.hydrogen.displayinterface.PropertyInstanceText
-import org.hydrogen.displayinterface.PropertyInstanceTexts
-import org.hydrogen.displayinterface.event.ButtonNotifyEvent
-import org.hydrogen.displayinterface.event.MouseEnterLeaveNotifyEvent
-import org.hydrogen.displayinterface.input.Keyboard
+import org.hydrogen.config.*
+import org.hydrogen.displayinterface.*
+import org.hydrogen.displayinterface.event.*
+import org.hydrogen.displayinterface.input.*
 import org.hydrogen.displayinterface.input.Keyboard.ModifierName
-import org.hydrogen.displayinterface.input.Momentum
-import org.hydrogen.eventsystem.EventBus
-import org.hydrogen.eventsystem.EventHandler
-import org.hydrogen.paintinterface.HierarchicalArea
+import org.hydrogen.eventsystem.*
+import org.hydrogen.paintinterface.*
 
-import org.hypercube.LogicLoadable
-import org.hypercube.hyperwidget.ClientContainer
+import org.hypercube.*
+import org.hypercube.hyperwidget.*
+import org.hypercube.protocol.fusionx11.*
 
-import org.hyperdrive.core.ClientEvent
-import org.hyperdrive.core.ManagedDisplay
-import org.hyperdrive.core.RenderAreaPropertiesManipulator
-import org.hyperdrive.geo.GeoEvent
-import org.hyperdrive.geo.GeoManagerLine
-import org.hyperdrive.geo.GeoManagerLine.LineProperty
-import org.hyperdrive.input.KeyBinding
-import org.hyperdrive.widget.ClientManager
-import org.hyperdrive.widget.ClientNameLabel
-import org.hyperdrive.widget.CloseButton
-import org.hyperdrive.widget.HideButton
-import org.hyperdrive.widget.DragButton
-import org.hyperdrive.widget.KeyDrivenAppLauncher
-import org.hyperdrive.widget.MaximizeButton
-import org.hyperdrive.widget.ResizeButton
+import org.hyperdrive.core.*
+import org.hyperdrive.geo.*
+import org.hyperdrive.input.*
+import org.hyperdrive.widget.*
 
 //TODO better documentation
 /**
@@ -91,11 +75,17 @@ class HypercubeLogic implements LogicLoadable{
 	//bottom bar
 	def appLauncher
 
+	def desktopProtocol
+
 	//This is called after initialization is done.
 	void postInit(ManagedDisplay display) {
 
+		desktopProtocol = new XDesktopProtocol(display)
+
 		//get a reference to the (virtual) virtRoot window
-		virtRoot = display.getDefaultVirtualRootRenderArea()
+		virtRoot = new VirtualRoot(RealRoot.get(display))
+		virtRoot.setVisibility true
+		virtRoot.requestVisibilityChange()
 
 		//initialize the keybindings
 		initKeyBindings(display)
@@ -106,7 +96,7 @@ class HypercubeLogic implements LogicLoadable{
 
 		//create a simple taskbar
 		//X11 specific client name property
-		clientManager = new ClientManager("WM_NAME")
+		clientManager = new ClientManager(desktopProtocol)
 		clientManager.setParent virtRoot
 		clientManager.setHeight 20
 		clientManager.setWidth virtRoot.getWidth()
@@ -161,6 +151,11 @@ class HypercubeLogic implements LogicLoadable{
 
 	//What happens when a new client appears is defined here.
 	def handleNewClientEvent(ClientEvent newClientEvent){
+
+		def client = newClientEvent.getRenderArea()
+
+		desktopProtocol.registerClient client
+
 		//Create a container.
 		//This widget will contain the new client window and other widgets required to resize,
 		//close and move the client window.
@@ -188,7 +183,7 @@ class HypercubeLogic implements LogicLoadable{
 		geoManagerContainer.addManagedChild dragButton, new LineProperty(0)
 
 		//Create a new close button and attach it to the client container.
-		def closeButton = new CloseButton()
+		def closeButton = new CloseButton(desktopProtocol)
 		closeButton.setWidth 20
 		closeButton.setHeight 20
 		closeButton.setParent dragButton
@@ -206,7 +201,7 @@ class HypercubeLogic implements LogicLoadable{
 		minimizeButton.requestVisibilityChange()
 
 		//reparent the client window to our newly created client container.
-		def client = newClientEvent.getRenderArea()
+
 		client.setParent clientContainer
 		client.requestReparent()
 		client.setVisibility true
@@ -238,7 +233,7 @@ class HypercubeLogic implements LogicLoadable{
 
 		//add a client name label to the container.
 		//X11 specific client name
-		def clientNameLabel = new ClientNameLabel("WM_NAME")
+		def clientNameLabel = new ClientNameLabel(desktopProtocol)
 		clientNameLabel.setParent clientContainer
 		clientNameLabel.requestReparent()
 		clientNameLabel.setHeight 20
@@ -319,8 +314,13 @@ class HypercubeLogic implements LogicLoadable{
 		client.addEventHandler mouseLeaveHandler,  MouseEnterLeaveNotifyEvent.LEAVE_TYPE
 
 		//raise the client and give it the input focus
-		client.requestRaise()
-		client.giveInputFocus()
+
+		//TODO Raising and focus offering should be done after the client is mapped.
+		//This can be done with a mapnotify callback handler => register an eventhandler
+		//with the client that listens for mapnotifies.
+
+		//client.requestRaise()
+		//	desktopProtocol.offerInput client
 	}
 
 	//called when the mouse cursor leaves a client

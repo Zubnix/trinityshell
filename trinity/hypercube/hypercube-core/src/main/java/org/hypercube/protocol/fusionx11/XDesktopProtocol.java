@@ -18,6 +18,7 @@ package org.hypercube.protocol.fusionx11;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.fusion.x11.core.IntDataContainer;
 import org.fusion.x11.core.XAtom;
 import org.fusion.x11.core.XDisplay;
@@ -56,6 +57,11 @@ import org.hyperdrive.protocol.AbstractDesktopProtocol;
  * @since 1.0
  */
 public final class XDesktopProtocol extends AbstractDesktopProtocol {
+
+	private static final Logger LOGGER = Logger
+			.getLogger(XDesktopProtocol.class);
+
+	private static final String ERROR_PROP_MANIP_NOT_FOUND = "Properties manipulator for client %s not found. Did you register the client with the protocol?";
 
 	private abstract class PropertyListener<P extends PropertyInstance, T extends XPropertyXAtom<P>>
 			implements EventHandler<RenderAreaPropertyChangedEvent<T>> {
@@ -228,6 +234,11 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 
 		final RenderAreaPropertiesManipulator propertiesManipulator = this.clientPropertiesManipulators
 				.get(client);
+		if (propertiesManipulator == null) {
+			XDesktopProtocol.LOGGER.error(String.format(
+					XDesktopProtocol.ERROR_PROP_MANIP_NOT_FOUND, client));
+		}
+
 		final WmHintsInstance wmHintsInstance = propertiesManipulator
 				.getPropertyValue(IcccmAtoms.WM_HINTS_ATOM_NAME);
 		final XPropertyInstanceXAtoms wmProtocolsInstance = propertiesManipulator

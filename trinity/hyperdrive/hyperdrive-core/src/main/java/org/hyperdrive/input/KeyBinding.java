@@ -24,10 +24,12 @@ import org.hydrogen.displayinterface.event.KeyNotifyEvent;
 import org.hydrogen.displayinterface.input.InputModifiers;
 import org.hydrogen.displayinterface.input.Key;
 import org.hydrogen.displayinterface.input.Keyboard.ModifierName;
+import org.hydrogen.displayinterface.input.Keyboard.SpecialKeyName;
 import org.hydrogen.displayinterface.input.Modifier;
 import org.hydrogen.displayinterface.input.Momentum;
 import org.hydrogen.eventsystem.EventHandler;
 import org.hyperdrive.core.ManagedDisplay;
+import org.hyperdrive.widget.RealRoot;
 
 // TODO documentation
 /**
@@ -143,7 +145,7 @@ public abstract class KeyBinding {
 
 		for (final Key validKey : validKeys) {
 			// install a keygrab
-			getManagedDisplay().getRealRootRenderArea().getPlatformRenderArea()
+			RealRoot.get(getManagedDisplay()).getPlatformRenderArea()
 					.catchKeyboardInput(validKey, inputModifiers);
 
 			getManagedDisplay().addEventHandler(

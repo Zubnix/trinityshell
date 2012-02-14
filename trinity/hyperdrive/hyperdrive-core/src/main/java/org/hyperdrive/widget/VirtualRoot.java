@@ -30,14 +30,11 @@ import org.hyperdrive.geo.GeoManagerDirect;
  */
 public final class VirtualRoot extends Widget {
 
-	public static final String VIEW_KEY = "VIRTUAL_ROOT_VIEW";
-
 	/**
 	 * 
 	 * @param realRoot
 	 */
 	public VirtualRoot(final RealRoot realRoot) {
-		super();
 		setParent(realRoot);
 		setRelativeX(realRoot.getRelativeX());
 		setRelativeY(realRoot.getRelativeY());

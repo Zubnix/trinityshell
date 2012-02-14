@@ -17,6 +17,8 @@ package org.hyperdrive.widget;
 
 import org.hydrogen.displayinterface.input.MouseInput;
 import org.hyperdrive.core.AbstractRenderArea;
+import org.hyperdrive.core.ClientWindow;
+import org.hyperdrive.protocol.DesktopProtocol;
 
 /**
  * A <code>CloseButton</code> can terminate another
@@ -38,7 +40,12 @@ import org.hyperdrive.core.AbstractRenderArea;
  * @since 1.0
  */
 public class CloseButton extends Button {
-	private AbstractRenderArea targetRenderArea;
+	private ClientWindow clientWindow;
+	private final DesktopProtocol desktopProtocol;
+
+	public CloseButton(final DesktopProtocol desktopProtocol) {
+		this.desktopProtocol = desktopProtocol;
+	}
 
 	/**
 	 * Request that the destroy process of the target
@@ -46,8 +53,7 @@ public class CloseButton extends Button {
 	 * 
 	 */
 	public void closeWindow() {
-		final AbstractRenderArea abstractRenderArea = getTargetRenderArea();
-		abstractRenderArea.doDestroy();
+		this.desktopProtocol.requestDelete(getTargetRenderArea());
 	}
 
 	/**
@@ -59,8 +65,8 @@ public class CloseButton extends Button {
 	 * 
 	 * @return
 	 */
-	public AbstractRenderArea getTargetRenderArea() {
-		return this.targetRenderArea;
+	public ClientWindow getTargetRenderArea() {
+		return this.clientWindow;
 	}
 
 	/**
@@ -73,8 +79,8 @@ public class CloseButton extends Button {
 	 * @param targetRenderArea
 	 *            A {@link AbstractRenderArea}.
 	 */
-	public void setTargetRenderArea(final AbstractRenderArea targetRenderArea) {
-		this.targetRenderArea = targetRenderArea;
+	public void setTargetRenderArea(final ClientWindow targetRenderArea) {
+		this.clientWindow = targetRenderArea;
 	}
 
 	@Override

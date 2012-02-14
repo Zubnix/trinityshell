@@ -45,7 +45,8 @@ public final class IcccmAtoms {
 	private static final String VERSION_ATOM_NAME = "VERSION";
 
 	public static final String getScreenSelectionAtomName(final int screenNumber) {
-		return String.format(IcccmAtoms.SCREEN_SELECTION_ATOM_NAME, screenNumber);
+		return String.format(IcccmAtoms.SCREEN_SELECTION_ATOM_NAME,
+				screenNumber);
 	}
 
 	private final XPropertyXAtomSingleText wmName;
@@ -144,7 +145,8 @@ public final class IcccmAtoms {
 	 * @return
 	 */
 	public XAtom getScreenSelectionAtom(final int screenNumber) {
-		final String atomName = IcccmAtoms.getScreenSelectionAtomName(screenNumber);
+		final String atomName = IcccmAtoms
+				.getScreenSelectionAtomName(screenNumber);
 		final Integer screen = Integer.valueOf(screenNumber);
 
 		XAtom selectionAtom;
@@ -153,6 +155,8 @@ public final class IcccmAtoms {
 		} else {
 			selectionAtom = getAtomRegistry().register(
 					new XAtom(getDisplay(), atomName));
+			this.windowManagerSelectionAtoms.put(Integer.valueOf(screenNumber),
+					selectionAtom);
 		}
 		return selectionAtom;
 	}

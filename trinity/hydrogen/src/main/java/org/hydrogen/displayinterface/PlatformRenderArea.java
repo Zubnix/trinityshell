@@ -152,4 +152,6 @@ public interface PlatformRenderArea extends DisplayResource, Area,
 	 */
 	<T extends PropertyInstance> void setPropertyInstance(
 			final Property<T> property, T propertyInstance);
+
+	void overrideRedirect(boolean b);
 }

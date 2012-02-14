@@ -46,31 +46,14 @@ public class ClientNameLabel extends Widget {
 
 	private ClientWindow targetWindow;
 	private final DesktopProtocol desktopProtocol;
-	private String namePropertyName;
 
 	/**
 	 * 
 	 * @param namePropertyName
 	 */
 	public ClientNameLabel(final DesktopProtocol desktopProtocol) {
-		super();
+
 		this.desktopProtocol = desktopProtocol;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String getNamePropertyName() {
-		return this.namePropertyName;
-	}
-
-	/**
-	 * 
-	 * @param namePropertyName
-	 */
-	public void setNamePropertyName(final String namePropertyName) {
-		this.namePropertyName = namePropertyName;
 	}
 
 	@Override
@@ -107,10 +90,12 @@ public class ClientNameLabel extends Widget {
 						}, ProtocolEvent.DESCRIPTION_NOTIFY);
 
 		// TODO automatically call painter when we call a method of the view?
-		final String clientName = this.desktopProtocol
-				.query(getTargetWindow(), ProtocolEvent.DESCRIPTION_NOTIFY)
-				.getEventArguments().getName();
-		updateNameLabel(clientName);
+		final ProtocolEvent<ClientWindowDescriptionNotify> description = this.desktopProtocol
+				.query(getTargetWindow(), ProtocolEvent.DESCRIPTION_NOTIFY);
+		if (description != null) {
+			final String clientName = description.getEventArguments().getName();
+			updateNameLabel(clientName);
+		}
 	}
 
 	/**

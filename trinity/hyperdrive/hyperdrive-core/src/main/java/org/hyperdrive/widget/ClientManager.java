@@ -26,7 +26,7 @@ import org.hydrogen.paintinterface.PaintCall;
 import org.hyperdrive.core.ClientWindow;
 import org.hyperdrive.geo.GeoEvent;
 import org.hyperdrive.geo.GeoManagerLine;
-import org.hyperdrive.geo.GeoManagerLine.LineProperty;
+import org.hyperdrive.geo.LineProperty;
 import org.hyperdrive.protocol.DesktopProtocol;
 
 // TODO documentation

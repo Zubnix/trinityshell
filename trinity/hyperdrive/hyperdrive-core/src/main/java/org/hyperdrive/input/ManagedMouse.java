@@ -20,6 +20,7 @@ import org.hydrogen.displayinterface.input.Mouse;
 import org.hydrogen.paintinterface.Paintable;
 import org.hydrogen.paintinterface.Painter;
 import org.hyperdrive.core.ManagedDisplay;
+import org.hyperdrive.widget.RealRoot;
 
 /**
  * A <code>ManagedMouse</code> represents a mouse pointer from a
@@ -139,13 +140,13 @@ public class ManagedMouse extends GrabableInputDevice implements Paintable {
 
 	@Override
 	protected void doEffectiveGrab() {
-		getManagedDisplay().getRealRootRenderArea().getPlatformRenderArea()
+		RealRoot.get(getManagedDisplay()).getPlatformRenderArea()
 				.catchAllMouseInput();
 	}
 
 	@Override
 	protected void doEffectiveRelease() {
-		getManagedDisplay().getRealRootRenderArea().getPlatformRenderArea()
+		RealRoot.get(getManagedDisplay()).getPlatformRenderArea()
 				.stopMouseInputCatching();
 	}
 }

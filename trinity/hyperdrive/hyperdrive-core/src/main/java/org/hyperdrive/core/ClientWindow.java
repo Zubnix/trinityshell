@@ -21,6 +21,7 @@ import org.hydrogen.displayinterface.event.ConfigureRequestEvent;
 import org.hydrogen.displayinterface.event.MapRequestEvent;
 import org.hydrogen.displayinterface.event.UnmappedNotifyEvent;
 import org.hydrogen.eventsystem.EventHandler;
+import org.hyperdrive.widget.RealRoot;
 
 // TODO documentation
 /**
@@ -57,7 +58,7 @@ public final class ClientWindow extends AbstractRenderArea {
 
 		this.renderAreaGeoExecutor = new RenderAreaGeoExecutor(this);
 		// TODO real root or fake root?
-		setParent(managedDisplay.getRealRootRenderArea());
+		setParent(RealRoot.get(getManagedDisplay()));
 		this.doUpdateParentValue(false);
 		initEventHandlers();
 
