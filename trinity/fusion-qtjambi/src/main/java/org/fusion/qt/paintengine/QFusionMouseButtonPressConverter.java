@@ -36,7 +36,7 @@ import com.trolltech.qt.gui.QMouseEvent;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class QFusionMouseButtonPressConverter implements
+public final class QFusionMouseButtonPressConverter implements
 		QFusionEventConverter<QMouseEvent> {
 
 	@Override
@@ -59,7 +59,7 @@ public class QFusionMouseButtonPressConverter implements
 		final MouseInput mouseInput = new MouseInput(Momentum.STARTED, button,
 				inputModifiers, rootX, rootY, eventX, eventY);
 
-		return new BaseButtonNotifyEvent(ButtonNotifyEvent.PRESSED_TYPE,
+		return new BaseButtonNotifyEvent(ButtonNotifyEvent.TYPE_PRESSED,
 				source, mouseInput);
 	}
 }

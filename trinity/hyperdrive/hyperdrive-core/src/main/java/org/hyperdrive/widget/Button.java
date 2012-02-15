@@ -62,7 +62,7 @@ public class Button extends Widget {
 						getView().mouseButtonPressed(event.getInput()));
 				Button.this.onMouseButtonPressed(event.getInput());
 			}
-		}, ButtonNotifyEvent.PRESSED_TYPE);
+		}, ButtonNotifyEvent.TYPE_PRESSED);
 
 		getManagedDisplay().addEventHandler(
 				new EventHandler<ButtonNotifyEvent>() {
@@ -73,7 +73,7 @@ public class Button extends Widget {
 										event.getInput()));
 						Button.this.onMouseButtonReleased(event.getInput());
 					}
-				}, ButtonNotifyEvent.RELEASED_TYPE);
+				}, ButtonNotifyEvent.TYPE_RELEASED);
 	}
 
 	@Override

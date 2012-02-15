@@ -36,7 +36,7 @@ import com.trolltech.qt.gui.QKeyEvent;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class QFusionKeyPressConverter implements
+public final class QFusionKeyPressConverter implements
 		QFusionEventConverter<QKeyEvent> {
 
 	@Override
@@ -60,6 +60,7 @@ public class QFusionKeyPressConverter implements
 		final KeyboardInput input = new KeyboardInput(Momentum.STARTED, key,
 				inputModifiers);
 
-		return new BaseKeyNotifyEvent(KeyNotifyEvent.KEY_PRESSED, source, input);
+		return new BaseKeyNotifyEvent(KeyNotifyEvent.TYPE_PRESSED, source,
+				input);
 	}
 }

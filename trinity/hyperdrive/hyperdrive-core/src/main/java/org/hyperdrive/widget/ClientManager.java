@@ -93,7 +93,7 @@ public class ClientManager extends Widget {
 		 * 
 		 */
 		protected void manageClient() {
-			addEventHandler(this.eventHandler, ButtonNotifyEvent.PRESSED_TYPE);
+			addEventHandler(this.eventHandler, ButtonNotifyEvent.TYPE_PRESSED);
 		}
 
 		@Override
@@ -218,6 +218,6 @@ public class ClientManager extends Widget {
 			public void handleEvent(final FocusNotifyEvent event) {
 				updateClientManagerLabelVisual(clientManagerLabel);
 			}
-		}, FocusNotifyEvent.IN_TYPE);
+		}, FocusNotifyEvent.TYPE_GAIN);
 	}
 }

@@ -183,7 +183,7 @@ public abstract class KeyDrivenMenu extends Widget {
 									KeyDrivenMenu.this.activeChoice));
 				}
 			}
-		}, KeyNotifyEvent.KEY_PRESSED);
+		}, KeyNotifyEvent.TYPE_PRESSED);
 	}
 
 	/**

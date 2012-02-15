@@ -22,12 +22,15 @@ import org.apache.log4j.Logger;
 import org.hydrogen.displayinterface.Display;
 import org.hydrogen.displayinterface.PlatformRenderArea;
 import org.hydrogen.displayinterface.event.ButtonNotifyEvent;
+import org.hydrogen.displayinterface.event.ConfigureNotifyEvent;
 import org.hydrogen.displayinterface.event.ConfigureRequestEvent;
 import org.hydrogen.displayinterface.event.DestroyNotifyEvent;
 import org.hydrogen.displayinterface.event.DisplayEvent;
 import org.hydrogen.displayinterface.event.DisplayEventSource;
+import org.hydrogen.displayinterface.event.DisplayEventType;
 import org.hydrogen.displayinterface.event.FocusNotifyEvent;
 import org.hydrogen.displayinterface.event.KeyNotifyEvent;
+import org.hydrogen.displayinterface.event.MapNotifyEvent;
 import org.hydrogen.displayinterface.event.MapRequestEvent;
 import org.hydrogen.displayinterface.event.MouseEnterLeaveNotifyEvent;
 import org.hydrogen.displayinterface.event.PropertyChangedNotifyEvent;
@@ -36,6 +39,7 @@ import org.hydrogen.eventsystem.Event;
 import org.hydrogen.eventsystem.EventBus;
 import org.hydrogen.eventsystem.EventHandler;
 import org.hydrogen.eventsystem.Type;
+import org.hydrogen.eventsystem.TypedEventHandler;
 
 /**
  * An <code>EventDispatcher</code> fetches and dispatches
@@ -56,6 +60,44 @@ import org.hydrogen.eventsystem.Type;
  * @since 1.0
  */
 public final class EventDispatcher implements Runnable {
+
+	private interface DisplayEventHandler<T extends DisplayEvent> extends
+			TypedEventHandler<DisplayEventType, T> {
+	}
+
+	private final class ConfigureRequestHandler implements
+			DisplayEventHandler<ConfigureRequestEvent> {
+		@Override
+		public void handleEvent(final ConfigureRequestEvent event) {
+			handleConfigureRequestEvent(event);
+		}
+
+		@Override
+		public DisplayEventType getType() {
+			return ConfigureRequestEvent.TYPE;
+		}
+	}
+
+	private final class MapRequestEventHandler implements
+			DisplayEventHandler<MapRequestEvent> {
+		@Override
+		public void handleEvent(final MapRequestEvent event) {
+			handleMapRequestEvent(event);
+		}
+
+		@Override
+		public DisplayEventType getType() {
+			return MapRequestEvent.TYPE;
+		}
+	}
+
+	private final class DefaultDisplayEventHandler implements
+			EventHandler<DisplayEvent> {
+		@Override
+		public void handleEvent(final DisplayEvent event) {
+			doDefaultEventHandlingForDisplayEvent(event);
+		}
+	}
 
 	private static final Logger LOGGER = Logger
 			.getLogger(EventDispatcher.class);
@@ -78,139 +120,35 @@ public final class EventDispatcher implements Runnable {
 	}
 
 	private void initEventManagers() {
-		getManagedDisplay().addEventHandler(
-				new EventHandler<ConfigureRequestEvent>() {
-					@Override
-					public void handleEvent(final ConfigureRequestEvent event) {
-						EventDispatcher.this.handleConfigureRequestEvent(event);
-					}
-				}, ConfigureRequestEvent.TYPE);
-		getManagedDisplay().addEventHandler(
-				new EventHandler<MapRequestEvent>() {
-					@Override
-					public void handleEvent(final MapRequestEvent event) {
-						EventDispatcher.this.handleMapRequestEvent(event);
-					}
-				}, MapRequestEvent.TYPE);
-		getManagedDisplay().addEventHandler(
-				new EventHandler<ButtonNotifyEvent>() {
-					@Override
-					public void handleEvent(final ButtonNotifyEvent event) {
-						EventDispatcher.this.handleButtonPressed(event);
-					}
-				}, ButtonNotifyEvent.PRESSED_TYPE);
-		getManagedDisplay().addEventHandler(
-				new EventHandler<ButtonNotifyEvent>() {
-					@Override
-					public void handleEvent(final ButtonNotifyEvent event) {
-						EventDispatcher.this.handleButtonReleased(event);
-					}
-				}, ButtonNotifyEvent.RELEASED_TYPE);
-		getManagedDisplay().addEventHandler(new EventHandler<KeyNotifyEvent>() {
-			@Override
-			public void handleEvent(final KeyNotifyEvent event) {
-				EventDispatcher.this.handleKeyPressed(event);
-			}
-		}, KeyNotifyEvent.KEY_PRESSED);
-		getManagedDisplay().addEventHandler(new EventHandler<KeyNotifyEvent>() {
-			@Override
-			public void handleEvent(final KeyNotifyEvent event) {
-				EventDispatcher.this.handleKeyReleased(event);
-			}
-		}, KeyNotifyEvent.KEY_RELEASED);
-		getManagedDisplay().addEventHandler(
-				new EventHandler<DestroyNotifyEvent>() {
-					@Override
-					public void handleEvent(final DestroyNotifyEvent event) {
-						EventDispatcher.this.handleDestroyed(event);
-					}
-				}, DestroyNotifyEvent.TYPE);
-		getManagedDisplay().addEventHandler(
-				new EventHandler<UnmappedNotifyEvent>() {
-					@Override
-					public void handleEvent(final UnmappedNotifyEvent event) {
-						EventDispatcher.this.handleUnmapNotify(event);
-					}
-				}, UnmappedNotifyEvent.TYPE);
-		getManagedDisplay().addEventHandler(
-				new EventHandler<MouseEnterLeaveNotifyEvent>() {
-					@Override
-					public void handleEvent(
-							final MouseEnterLeaveNotifyEvent event) {
-						EventDispatcher.this.handleMouseEnterNotify(event);
-					}
-				}, MouseEnterLeaveNotifyEvent.ENTER_TYPE);
-		getManagedDisplay().addEventHandler(
-				new EventHandler<MouseEnterLeaveNotifyEvent>() {
-					@Override
-					public void handleEvent(
-							final MouseEnterLeaveNotifyEvent event) {
-						EventDispatcher.this.handleMouseLeaveNotify(event);
-					}
-				}, MouseEnterLeaveNotifyEvent.LEAVE_TYPE);
-		getManagedDisplay().addEventHandler(
-				new EventHandler<PropertyChangedNotifyEvent>() {
-					@Override
-					public void handleEvent(
-							final PropertyChangedNotifyEvent event) {
-						handlePropertyChangedNotify(event);
-					}
-				}, PropertyChangedNotifyEvent.TYPE);
-		getManagedDisplay().addEventHandler(
-				new EventHandler<FocusNotifyEvent>() {
-					@Override
-					public void handleEvent(final FocusNotifyEvent event) {
-						handleFocusNotify(event);
-					}
-				}, FocusNotifyEvent.IN_TYPE);
-		getManagedDisplay().addEventHandler(
-				new EventHandler<FocusNotifyEvent>() {
-					@Override
-					public void handleEvent(final FocusNotifyEvent event) {
-						handleFocusNotify(event);
-					}
-				}, FocusNotifyEvent.OUT_TYPE);
-	}
-
-	private void handleFocusNotify(final FocusNotifyEvent event) {
-		doDefaultEventHandlingForDisplayEvent(event);
-	}
-
-	private void handlePropertyChangedNotify(
-			final PropertyChangedNotifyEvent event) {
-		doDefaultEventHandlingForDisplayEvent(event);
-	}
-
-	private void handleMouseLeaveNotify(final MouseEnterLeaveNotifyEvent event) {
-		doDefaultEventHandlingForDisplayEvent(event);
-	}
-
-	private void handleMouseEnterNotify(final MouseEnterLeaveNotifyEvent event) {
-		doDefaultEventHandlingForDisplayEvent(event);
-	}
-
-	private void handleUnmapNotify(final UnmappedNotifyEvent event) {
-		doDefaultEventHandlingForDisplayEvent(event);
-	}
-
-	private void handleDestroyed(final DestroyNotifyEvent event) {
-		doDefaultEventHandlingForDisplayEvent(event);
-	}
-
-	private void handleKeyReleased(final KeyNotifyEvent event) {
-		doDefaultEventHandlingForDisplayEvent(event);
-	}
-
-	private void handleKeyPressed(final KeyNotifyEvent event) {
-		doDefaultEventHandlingForDisplayEvent(event);
-	}
-
-	private void handleButtonReleased(final ButtonNotifyEvent event) {
-		doDefaultEventHandlingForDisplayEvent(event);
-	}
-
-	private void handleButtonPressed(final ButtonNotifyEvent event) {
-		doDefaultEventHandlingForDisplayEvent(event);
+		getManagedDisplay().addTypedEventHandler(new ConfigureRequestHandler());
+		getManagedDisplay().addTypedEventHandler(new MapRequestEventHandler());
+		final DefaultDisplayEventHandler defaultDisplayEventHandler = new DefaultDisplayEventHandler();
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				ButtonNotifyEvent.TYPE_PRESSED);
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				ButtonNotifyEvent.TYPE_RELEASED);
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				KeyNotifyEvent.TYPE_PRESSED);
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				KeyNotifyEvent.TYPE_RELEASED);
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				DestroyNotifyEvent.TYPE);
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				UnmappedNotifyEvent.TYPE);
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				MouseEnterLeaveNotifyEvent.TYPE_ENTER);
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				MouseEnterLeaveNotifyEvent.TYPE_LEAVE);
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				PropertyChangedNotifyEvent.TYPE);
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				FocusNotifyEvent.TYPE_GAIN);
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				FocusNotifyEvent.TYPE_LOST);
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				MapNotifyEvent.TYPE);
+		getManagedDisplay().addEventHandler(defaultDisplayEventHandler,
+				ConfigureNotifyEvent.TYPE);
 	}
 
 	private void handleMapRequestEvent(final MapRequestEvent event) {
@@ -245,7 +183,7 @@ public final class EventDispatcher implements Runnable {
 
 	@Override
 	public void run() {
-		LOGGER.info(THREADSTART_LOGMESSAGE);
+		EventDispatcher.LOGGER.info(EventDispatcher.THREADSTART_LOGMESSAGE);
 
 		if (this.running) {
 			return;
@@ -263,7 +201,7 @@ public final class EventDispatcher implements Runnable {
 			}
 		}
 
-		LOGGER.info(THREADSTOP_LOGMESSAGE);
+		EventDispatcher.LOGGER.info(EventDispatcher.THREADSTOP_LOGMESSAGE);
 	}
 
 	/**
@@ -283,7 +221,8 @@ public final class EventDispatcher implements Runnable {
 
 		if (displayEvent != null) {
 
-			LOGGER.debug(String.format(DISPLAYEVENT_LOGMESSAGE, displayEvent,
+			EventDispatcher.LOGGER.debug(String.format(
+					EventDispatcher.DISPLAYEVENT_LOGMESSAGE, displayEvent,
 					getManagedDisplay()));
 
 			getManagedDisplay().fireEvent(displayEvent);

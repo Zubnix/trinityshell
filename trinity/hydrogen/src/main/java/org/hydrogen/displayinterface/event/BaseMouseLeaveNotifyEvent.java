@@ -32,6 +32,6 @@ public class BaseMouseLeaveNotifyEvent extends BaseDisplayEvent implements
 	 * @param eventSource
 	 */
 	public BaseMouseLeaveNotifyEvent(final DisplayEventSource eventSource) {
-		super(MouseEnterLeaveNotifyEvent.LEAVE_TYPE, eventSource);
+		super(MouseEnterLeaveNotifyEvent.TYPE_LEAVE, eventSource);
 	}
 }

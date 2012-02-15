@@ -31,7 +31,7 @@ import com.trolltech.qt.core.QEvent;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class QFusionMouseLeaveEventConverter implements
+public final class QFusionMouseLeaveEventConverter implements
 		QFusionEventConverter<QEvent> {
 
 	@Override

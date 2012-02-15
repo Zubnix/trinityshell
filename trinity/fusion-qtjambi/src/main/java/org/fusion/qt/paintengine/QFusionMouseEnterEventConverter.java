@@ -32,7 +32,7 @@ import com.trolltech.qt.core.QEvent;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class QFusionMouseEnterEventConverter implements
+public final class QFusionMouseEnterEventConverter implements
 		QFusionEventConverter<QEvent> {
 
 	@Override

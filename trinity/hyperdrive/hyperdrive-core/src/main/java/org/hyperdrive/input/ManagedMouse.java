@@ -46,8 +46,8 @@ public class ManagedMouse extends GrabableInputDevice implements Paintable {
 	 *            <code>ManagedDisplay</code> has an illegal state.
 	 */
 	public ManagedMouse(final ManagedDisplay managedDisplay) {
-		super(managedDisplay, KeyNotifyEvent.KEY_PRESSED,
-				KeyNotifyEvent.KEY_RELEASED);
+		super(managedDisplay, KeyNotifyEvent.TYPE_PRESSED,
+				KeyNotifyEvent.TYPE_RELEASED);
 		this.mouse = getManagedDisplay().getDisplay().getMouse();
 	}
 

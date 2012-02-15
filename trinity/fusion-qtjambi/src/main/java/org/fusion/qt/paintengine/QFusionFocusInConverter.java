@@ -31,7 +31,7 @@ import com.trolltech.qt.gui.QFocusEvent;
  * @since 1.0
  * 
  */
-public class QFusionFocusInConverter implements
+public final class QFusionFocusInConverter implements
 		QFusionEventConverter<QFocusEvent> {
 	@Override
 	public FocusNotifyEvent sinkEvent(final DisplayEventSource eventSource,

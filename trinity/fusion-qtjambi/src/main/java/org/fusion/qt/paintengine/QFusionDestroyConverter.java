@@ -32,7 +32,8 @@ import com.trolltech.qt.core.QEvent;
  * @since 1.0
  * 
  */
-public class QFusionDestroyConverter implements QFusionEventConverter<QEvent> {
+public final class QFusionDestroyConverter implements
+		QFusionEventConverter<QEvent> {
 
 	@Override
 	public DestroyNotifyEvent sinkEvent(final DisplayEventSource eventSource,

@@ -35,7 +35,7 @@ import com.trolltech.qt.gui.QKeyEvent;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class QFusionKeyReleaseConverter implements
+public final class QFusionKeyReleaseConverter implements
 		QFusionEventConverter<QKeyEvent> {
 
 	@Override
@@ -55,7 +55,7 @@ public class QFusionKeyReleaseConverter implements
 		final KeyboardInput input = new KeyboardInput(Momentum.STOPPED, key,
 				inputModifiers);
 
-		return new BaseKeyNotifyEvent(KeyNotifyEvent.KEY_RELEASED, source,
+		return new BaseKeyNotifyEvent(KeyNotifyEvent.TYPE_RELEASED, source,
 				input);
 	}
 }

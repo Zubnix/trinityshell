@@ -29,10 +29,10 @@ public interface FocusNotifyEvent extends DisplayEvent {
 	/**
 	 * 
 	 */
-	DisplayEventType IN_TYPE = new DisplayEventType();
+	DisplayEventType TYPE_GAIN = new DisplayEventType();
 
 	/**
 	 * 
 	 */
-	DisplayEventType OUT_TYPE = new DisplayEventType();
+	DisplayEventType TYPE_LOST = new DisplayEventType();
 }

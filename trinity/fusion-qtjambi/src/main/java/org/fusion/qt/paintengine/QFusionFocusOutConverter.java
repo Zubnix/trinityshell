@@ -32,7 +32,7 @@ import com.trolltech.qt.gui.QFocusEvent;
  * @since 1.0
  * 
  */
-public class QFusionFocusOutConverter implements
+public final class QFusionFocusOutConverter implements
 		QFusionEventConverter<QFocusEvent> {
 
 	@Override

@@ -178,8 +178,8 @@ public abstract class KeyBinding {
 							}
 						}
 					},
-					getMomentum() == Momentum.STARTED ? KeyNotifyEvent.KEY_PRESSED
-							: KeyNotifyEvent.KEY_RELEASED, 0);
+					getMomentum() == Momentum.STARTED ? KeyNotifyEvent.TYPE_PRESSED
+							: KeyNotifyEvent.TYPE_RELEASED, 0);
 
 		}
 	}

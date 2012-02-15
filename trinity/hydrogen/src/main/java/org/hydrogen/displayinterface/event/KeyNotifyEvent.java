@@ -31,10 +31,10 @@ public interface KeyNotifyEvent extends InputNotifyEvent<KeyboardInput> {
 	/**
 	 * 
 	 */
-	DisplayEventType KEY_PRESSED = new DisplayEventType();
+	DisplayEventType TYPE_PRESSED = new DisplayEventType();
 
 	/**
 	 * 
 	 */
-	DisplayEventType KEY_RELEASED = new DisplayEventType();
+	DisplayEventType TYPE_RELEASED = new DisplayEventType();
 }

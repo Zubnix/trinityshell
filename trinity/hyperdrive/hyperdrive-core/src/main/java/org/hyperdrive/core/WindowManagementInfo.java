@@ -129,14 +129,14 @@ public class WindowManagementInfo implements WindowManagementInfoListener {
 				setClientWindowHasFocus(clientWindow);
 				onClientWindowGainFocus(clientWindow);
 			}
-		}, FocusNotifyEvent.IN_TYPE);
+		}, FocusNotifyEvent.TYPE_GAIN);
 		clientWindow.addEventHandler(new EventHandler<FocusNotifyEvent>() {
 			@Override
 			public void handleEvent(final FocusNotifyEvent event) {
 				setClientWindowHasFocus(null);
 				onClientWindowLostFocus(clientWindow);
 			}
-		}, FocusNotifyEvent.OUT_TYPE);
+		}, FocusNotifyEvent.TYPE_LOST);
 
 		// TODO when a parent of the client is raised we do not get an event...
 		// =>

@@ -524,7 +524,7 @@ final class XcbEventParser {
 				inputModifiers, rootX, rootY, eventX, eventY);
 
 		final XButtonEvent returnXcbButtonPress = new XButtonEvent(
-				ButtonNotifyEvent.PRESSED_TYPE, event, mouseInput);
+				ButtonNotifyEvent.TYPE_PRESSED, event, mouseInput);
 
 		return returnXcbButtonPress;
 	}
@@ -576,7 +576,7 @@ final class XcbEventParser {
 				inputModifiers, rootX, rootY, eventX, eventY);
 
 		final XButtonEvent returnXcbButtonRelease = new XButtonEvent(
-				ButtonNotifyEvent.RELEASED_TYPE, event, mouseInput);
+				ButtonNotifyEvent.TYPE_RELEASED, event, mouseInput);
 
 		return returnXcbButtonRelease;
 	}
@@ -626,7 +626,7 @@ final class XcbEventParser {
 		final KeyboardInput input = new KeyboardInput(Momentum.STARTED, key,
 				inputModifiers);
 
-		final XKeyEvent xcbKeyPress = new XKeyEvent(KeyNotifyEvent.KEY_PRESSED,
+		final XKeyEvent xcbKeyPress = new XKeyEvent(KeyNotifyEvent.TYPE_PRESSED,
 				event, input);
 
 		return xcbKeyPress;
@@ -677,7 +677,7 @@ final class XcbEventParser {
 				inputModifiers);
 
 		final XKeyEvent xcbKeyRelease = new XKeyEvent(
-				KeyNotifyEvent.KEY_RELEASED, event, input);
+				KeyNotifyEvent.TYPE_RELEASED, event, input);
 		return xcbKeyRelease;
 	}
 

@@ -33,6 +33,6 @@ public class BaseFocusInNotifyEvent extends BaseDisplayEvent implements
 	 * @param eventSource
 	 */
 	public BaseFocusInNotifyEvent(final DisplayEventSource eventSource) {
-		super(FocusNotifyEvent.IN_TYPE, eventSource);
+		super(FocusNotifyEvent.TYPE_GAIN, eventSource);
 	}
 }

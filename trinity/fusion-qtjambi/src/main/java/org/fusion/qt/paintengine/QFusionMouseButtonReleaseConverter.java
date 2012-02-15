@@ -36,7 +36,7 @@ import com.trolltech.qt.gui.QMouseEvent;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class QFusionMouseButtonReleaseConverter implements
+public final class QFusionMouseButtonReleaseConverter implements
 		QFusionEventConverter<QMouseEvent> {
 
 	@Override
@@ -59,7 +59,7 @@ public class QFusionMouseButtonReleaseConverter implements
 		final MouseInput mouseInput = new MouseInput(Momentum.STOPPED, button,
 				inputModifiers, rootX, rootY, eventX, eventY);
 
-		return new BaseButtonNotifyEvent(ButtonNotifyEvent.RELEASED_TYPE,
+		return new BaseButtonNotifyEvent(ButtonNotifyEvent.TYPE_RELEASED,
 				source, mouseInput);
 	}
 }

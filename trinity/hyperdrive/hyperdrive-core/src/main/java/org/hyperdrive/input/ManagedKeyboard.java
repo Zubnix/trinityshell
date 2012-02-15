@@ -34,8 +34,8 @@ public class ManagedKeyboard extends GrabableInputDevice {
 	 * @param managedDisplay
 	 */
 	public ManagedKeyboard(final ManagedDisplay managedDisplay) {
-		super(managedDisplay, KeyNotifyEvent.KEY_PRESSED,
-				KeyNotifyEvent.KEY_RELEASED);
+		super(managedDisplay, KeyNotifyEvent.TYPE_PRESSED,
+				KeyNotifyEvent.TYPE_RELEASED);
 		this.keyboard = getManagedDisplay().getDisplay().getKeyBoard();
 	}
 

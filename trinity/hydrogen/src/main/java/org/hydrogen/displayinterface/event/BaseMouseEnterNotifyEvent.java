@@ -32,6 +32,6 @@ public class BaseMouseEnterNotifyEvent extends BaseDisplayEvent implements
 	 * @param eventSource
 	 */
 	public BaseMouseEnterNotifyEvent(final DisplayEventSource eventSource) {
-		super(MouseEnterLeaveNotifyEvent.ENTER_TYPE, eventSource);
+		super(MouseEnterLeaveNotifyEvent.TYPE_ENTER, eventSource);
 	}
 }
