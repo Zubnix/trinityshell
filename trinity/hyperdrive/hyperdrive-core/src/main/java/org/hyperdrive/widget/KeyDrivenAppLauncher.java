@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.hydrogen.displayinterface.input.Keyboard.SpecialKeyName;
+import org.hydrogen.displayinterface.input.SpecialKeyName;
 
 // TODO documentation
 /**

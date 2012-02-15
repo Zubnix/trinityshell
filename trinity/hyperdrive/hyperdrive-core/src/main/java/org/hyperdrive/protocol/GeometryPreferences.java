@@ -21,7 +21,9 @@ package org.hyperdrive.protocol;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class GeometryPreferences implements ProtocolEventArguments {
+public class GeometryPreferences implements ProtocolEvent {
+	public static final ProtocolEventType TYPE = new ProtocolEventType();
+
 	private final int x;
 	private final int y;
 	private final int width;
@@ -99,5 +101,10 @@ public class GeometryPreferences implements ProtocolEventArguments {
 
 	public int getHeightInc() {
 		return this.heightInc;
+	}
+
+	@Override
+	public ProtocolEventType getType() {
+		return GeometryPreferences.TYPE;
 	}
 }

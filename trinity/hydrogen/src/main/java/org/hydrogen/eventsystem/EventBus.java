@@ -140,4 +140,16 @@ public class EventBus implements EventHandlerManager, EventManager {
 	public Map<Type, List<EventHandler>> getEventHandlerSwitch() {
 		return this.eventHandlerSwitch;
 	}
+
+	@Override
+	public <T extends Type> void addTypedEventHandler(
+			final TypedEventHandler<T, ? extends Event<T>> typedEventHandler) {
+		addEventHandler(typedEventHandler, typedEventHandler.getType());
+	}
+
+	@Override
+	public <T extends Type> void removeTypedEventHandler(
+			final TypedEventHandler<T, ? extends Event<T>> typedEventHandler) {
+		removeEventHandler(typedEventHandler, typedEventHandler.getType());
+	}
 }

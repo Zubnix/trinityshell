@@ -32,7 +32,7 @@ public interface PropertyChangedNotifyEvent extends DisplayEvent {
 	/**
 	 * 
 	 */
-	static final DisplayEventType TYPE = new DisplayEventType();
+	DisplayEventType TYPE = new DisplayEventType();
 
 	/**
 	 * 

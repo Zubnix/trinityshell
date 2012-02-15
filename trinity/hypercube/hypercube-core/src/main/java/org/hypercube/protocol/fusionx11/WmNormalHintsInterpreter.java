@@ -18,7 +18,6 @@ package org.hypercube.protocol.fusionx11;
 import org.fusion.x11.icccm.WmSizeHintsInstance;
 import org.hyperdrive.core.ClientWindow;
 import org.hyperdrive.protocol.GeometryPreferences;
-import org.hyperdrive.protocol.ProtocolEvent;
 
 //TODO documentation
 /**
@@ -38,8 +37,8 @@ final class WmNormalHintsInterpreter {
 			final WmSizeHintsInstance propertyInstance) {
 
 		// query current geo preferences
-		final ProtocolEvent<GeometryPreferences> geometryPreferences = this.xDesktopProtocol
-				.query(client, ProtocolEvent.GEO_PREFERENCES);
+		final GeometryPreferences geometryPreferences = (GeometryPreferences) this.xDesktopProtocol
+				.query(client, GeometryPreferences.TYPE);
 
 		// read old preferences, if no previous ones were defined we fall back
 		// to sane defaults
@@ -68,8 +67,7 @@ final class WmNormalHintsInterpreter {
 			oldHeightInc = client.getHeightIncrement();
 			oldVisibible = client.isVisible();
 		} else {
-			final GeometryPreferences geoPreferences = geometryPreferences
-					.getEventArguments();
+			final GeometryPreferences geoPreferences = geometryPreferences;
 			oldX = geoPreferences.getX();
 			oldY = geoPreferences.getY();
 			oldWidth = geoPreferences.getWidth();
@@ -203,9 +201,6 @@ final class WmNormalHintsInterpreter {
 				newMaxWidth, newMaxHeight, newWidthInc, newHeightInc,
 				oldVisibible, newResizable);
 
-		final ProtocolEvent<GeometryPreferences> protocolEvent = new ProtocolEvent<GeometryPreferences>(
-				ProtocolEvent.GEO_PREFERENCES, newGeoPreferences);
-
-		this.xDesktopProtocol.updateProtocolEvent(client, protocolEvent);
+		this.xDesktopProtocol.updateProtocolEvent(client, newGeoPreferences);
 	}
 }

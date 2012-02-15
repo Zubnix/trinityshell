@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hydrogen.displayinterface.event.KeyNotifyEvent;
-import org.hydrogen.displayinterface.input.Keyboard.SpecialKeyName;
+import org.hydrogen.displayinterface.input.SpecialKeyName;
 import org.hydrogen.eventsystem.EventHandler;
 import org.hydrogen.paintinterface.PaintCall;
 import org.hyperdrive.core.ManagedDisplay;

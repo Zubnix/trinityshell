@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hydrogen.displayinterface.event.KeyNotifyEvent;
-import org.hydrogen.displayinterface.input.Keyboard.ModifierName;
-import org.hydrogen.displayinterface.input.Keyboard.SpecialKeyName;
+import org.hydrogen.displayinterface.input.InputModifierName;
+import org.hydrogen.displayinterface.input.SpecialKeyName;
 import org.hyperdrive.core.ManagedDisplay;
 
 // TODO documentation
@@ -74,8 +74,8 @@ public abstract class KeyInputStringBuilder {
 						}
 					});
 		}
-		for (final ModifierName modifierName : ModifierName.values()) {
-			getSpecialBuildActions().put(modifierName.name(),
+		for (final InputModifierName inputModifierName : InputModifierName.values()) {
+			getSpecialBuildActions().put(inputModifierName.name(),
 					new StringMutatorOnInput() {
 						@Override
 						public void mutate(final StringBuffer stringBuffer,

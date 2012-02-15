@@ -30,9 +30,9 @@ public interface ButtonNotifyEvent extends InputNotifyEvent<MouseInput> {
 	/**
 	 * 
 	 */
-	public static final DisplayEventType PRESSED_TYPE = new DisplayEventType();
+	DisplayEventType PRESSED_TYPE = new DisplayEventType();
 	/**
 	 * 
 	 */
-	public static final DisplayEventType RELEASED_TYPE = new DisplayEventType();
+	DisplayEventType RELEASED_TYPE = new DisplayEventType();
 }

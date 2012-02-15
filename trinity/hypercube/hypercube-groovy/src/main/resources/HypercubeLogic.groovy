@@ -26,7 +26,6 @@ import org.hydrogen.config.*
 import org.hydrogen.displayinterface.*
 import org.hydrogen.displayinterface.event.*
 import org.hydrogen.displayinterface.input.*
-import org.hydrogen.displayinterface.input.Keyboard.ModifierName
 import org.hydrogen.eventsystem.*
 import org.hydrogen.paintinterface.*
 
@@ -70,7 +69,7 @@ class HypercubeLogic implements LogicLoadable{
 	def clientManager
 
 	//background 'desktop'widget
-	def virtRoot
+	def root
 
 	//bottom bar
 	def appLauncher
@@ -82,10 +81,8 @@ class HypercubeLogic implements LogicLoadable{
 
 		desktopProtocol = new XDesktopProtocol(display)
 
-		//get a reference to the (virtual) virtRoot window
-		virtRoot = new VirtualRoot(RealRoot.get(display))
-		virtRoot.setVisibility true
-		virtRoot.requestVisibilityChange()
+		//get a reference to the root window
+		root = RealRoot.get(display)
 
 		//initialize the keybindings
 		initKeyBindings(display)
@@ -97,9 +94,9 @@ class HypercubeLogic implements LogicLoadable{
 		//create a simple taskbar
 		//X11 specific client name property
 		clientManager = new ClientManager(desktopProtocol)
-		clientManager.setParent virtRoot
+		clientManager.setParent root
 		clientManager.setHeight 20
-		clientManager.setWidth virtRoot.getWidth()
+		clientManager.setWidth root.getWidth()
 		clientManager.setRelativeX 0
 		clientManager.setRelativeY 0
 		clientManager.setVisibility true
@@ -109,11 +106,11 @@ class HypercubeLogic implements LogicLoadable{
 
 		//create an app launcher, much like dmenu.
 		appLauncher = new KeyDrivenAppLauncher()
-		appLauncher.setParent virtRoot
+		appLauncher.setParent root
 		appLauncher.setHeight 20
-		appLauncher.setWidth virtRoot.getWidth()
+		appLauncher.setWidth root.getWidth()
 		appLauncher.setRelativeX 0
-		appLauncher.setRelativeY virtRoot.getHeight() - 20
+		appLauncher.setRelativeY root.getHeight() - 20
 		appLauncher.setVisibility true
 		appLauncher.requestReparent()
 		appLauncher.requestMoveResize()
@@ -133,14 +130,14 @@ class HypercubeLogic implements LogicLoadable{
 	//Keybindings are defined here.
 	def initKeyBindings(ManagedDisplay display){
 		//MOD_1 is the alt key.
-		new KeyBinding( display, Momentum.STARTED, "e", [ModifierName.MOD_1]){
+		new KeyBinding( display, Momentum.STARTED, "e", [InputModifierName.MOD_1]){
 			void action(){
 				//launch xterm
 				terminal.execute()
 			}
 		}
 
-		new KeyBinding( display, Momentum.STARTED, "w", [ModifierName.MOD_1]){
+		new KeyBinding( display, Momentum.STARTED, "w", [InputModifierName.MOD_1]){
 			void action(){
 				//launch dmenu like menu for launching an application
 				appLauncher.startKeyListening()
@@ -163,7 +160,7 @@ class HypercubeLogic implements LogicLoadable{
 		clientContainer.setRelativeY 20
 		clientContainer.setRelativeX 0
 		clientContainer.requestMove()
-		clientContainer.setParent virtRoot
+		clientContainer.setParent root
 		clientContainer.requestReparent()
 		clientContainer.setVisibility true
 		clientContainer.requestVisibilityChange()
@@ -275,11 +272,11 @@ class HypercubeLogic implements LogicLoadable{
 					}
 
 					int getWidth() {
-						return virtRoot.getWidth()
+						return root.getWidth()
 					}
 
 					int getHeight() {
-						return virtRoot.getHeight() - ( clientManager.getHeight() + appLauncher.getHeight() )
+						return root.getHeight() - ( clientManager.getHeight() + appLauncher.getHeight() )
 					}
 				})
 		geoManagerNameLabel.addManagedChild maximizeButton, new LineProperty(0)
@@ -351,7 +348,7 @@ class HypercubeLogic implements LogicLoadable{
 	def requestRaiseAndInput(event, clientContainer, client){
 		if (event.getInput() .getMomentum() == Momentum.STARTED) {
 			clientContainer.requestRaise()
-			client.giveInputFocus()
+			desktopProtocol.offerInput client
 
 		}
 		client.getPlatformRenderArea()

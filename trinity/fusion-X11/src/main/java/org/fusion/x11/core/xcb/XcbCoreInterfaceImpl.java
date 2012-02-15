@@ -56,13 +56,12 @@ import org.hydrogen.displayinterface.input.Key;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class XcbCoreInterfaceImpl implements XCoreInterface {
+public final class XcbCoreInterfaceImpl implements XCoreInterface {
 
 	private static final Logger logger = Logger
 			.getLogger(XcbCoreInterfaceImpl.class);
 	private static final String NATIVE_LIB_NOT_FOUND_LOGMESSAGE = "Native library not found.";
 
-	private final XcbEventParser eventParser;
 	private final XcbCoreNativeCalls xcbCoreNativeCalls;
 	private final XNativeCaller xNativeCaller;
 	private final XDisplayPlatform xDisplayPlatform;
@@ -86,8 +85,6 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 		this.xDisplayPlatform = xDisplayPlatform;
 		this.xcbCoreNativeCalls = new XcbCoreNativeCalls();
 		this.xNativeCaller = new XNativeCaller(new XcbNativeErrorHandler());
-		// this.icccmInterface = new XcbIcccmInterfaceImpl(this.xNativeCaller);
-		this.eventParser = new XcbEventParser(xDisplayPlatform);
 	}
 
 	@Override
@@ -283,10 +280,8 @@ public class XcbCoreInterfaceImpl implements XCoreInterface {
 	 */
 	private DisplayEvent makeEvent(final NativeBufferHelper eventStruct,
 			final XDisplay display) {
-
-		final DisplayEvent returnXcbEvent = this.eventParser.parseEvent(
+		final DisplayEvent returnXcbEvent = XcbEventParser.parseEvent(
 				eventStruct, display);
-
 		return returnXcbEvent;
 	}
 

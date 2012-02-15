@@ -30,5 +30,5 @@ public interface StackingNotifyEvent extends DisplayEvent {
 	/**
 	 * 
 	 */
-	static final DisplayEventType TYPE = new DisplayEventType();
+	DisplayEventType TYPE = new DisplayEventType();
 }

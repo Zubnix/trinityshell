@@ -18,7 +18,6 @@ package org.hypercube.protocol.fusionx11;
 import org.hydrogen.displayinterface.PropertyInstanceText;
 import org.hyperdrive.core.ClientWindow;
 import org.hyperdrive.protocol.ClientWindowDescriptionNotify;
-import org.hyperdrive.protocol.ProtocolEvent;
 
 //TODO documentation
 /**
@@ -36,25 +35,22 @@ final class WmNameInterpreter {
 	void handleWmName(final ClientWindow client,
 			final PropertyInstanceText propertyInstance) {
 
-		final ProtocolEvent<ClientWindowDescriptionNotify> clientWindowDescriptionNotify = this.xDesktopProtocol
-				.query(client, ProtocolEvent.DESCRIPTION_NOTIFY);
+		final ClientWindowDescriptionNotify clientWindowDescriptionNotify = (ClientWindowDescriptionNotify) this.xDesktopProtocol
+				.query(client, ClientWindowDescriptionNotify.TYPE);
 
 		final String oldDescription;
 
 		if (clientWindowDescriptionNotify == null) {
 			oldDescription = XDesktopProtocol.EMPTY_STRING;
 		} else {
-			final ClientWindowDescriptionNotify windowDescriptionNotify = clientWindowDescriptionNotify
-					.getEventArguments();
-			oldDescription = windowDescriptionNotify.getDescription();
+			oldDescription = clientWindowDescriptionNotify.getDescription();
 		}
 
 		final String newName = propertyInstance.getText();
 		final ClientWindowDescriptionNotify newWindowDescriptionNotify = new ClientWindowDescriptionNotify(
 				newName, oldDescription);
-		final ProtocolEvent<ClientWindowDescriptionNotify> protocolEvent = new ProtocolEvent<ClientWindowDescriptionNotify>(
-				ProtocolEvent.DESCRIPTION_NOTIFY, newWindowDescriptionNotify);
 
-		this.xDesktopProtocol.updateProtocolEvent(client, protocolEvent);
+		this.xDesktopProtocol.updateProtocolEvent(client,
+				newWindowDescriptionNotify);
 	}
 }

@@ -24,6 +24,7 @@ import org.fusion.x11.core.input.XKeyboard;
 import org.fusion.x11.core.input.XModifier;
 import org.fusion.x11.core.xcb.XcbCoreInterfaceImpl;
 import org.fusion.x11.core.xcb.error.UnknownKeyException;
+import org.hydrogen.displayinterface.input.InputModifierName;
 import org.hydrogen.displayinterface.input.InputModifiers;
 import org.hydrogen.displayinterface.input.Key;
 
@@ -38,7 +39,7 @@ public class XcbKeyboard implements XKeyboard {
 	private final XDisplay display;
 
 	private final Map<String, Key[]> keyCache;
-	private final Map<ModifierName, XModifier> modifiers;
+	private final Map<InputModifierName, XModifier> modifiers;
 
 	private final XcbKeySymbolRegistry keySymbolRegistry;
 
@@ -52,7 +53,7 @@ public class XcbKeyboard implements XKeyboard {
 		this.keyCache = new HashMap<String, Key[]>();
 
 		// fill map with keyname<->modifier
-		this.modifiers = new HashMap<ModifierName, XModifier>();
+		this.modifiers = new HashMap<InputModifierName, XModifier>();
 		for (final XModifier xModifier : XModifier.values()) {
 			this.modifiers.put(xModifier.getModifierName(), xModifier);
 		}
@@ -85,7 +86,7 @@ public class XcbKeyboard implements XKeyboard {
 	}
 
 	@Override
-	public XModifier modifier(final ModifierName modifierKeyName) {
+	public XModifier modifier(final InputModifierName modifierKeyName) {
 		return this.modifiers.get(modifierKeyName);
 	}
 
@@ -101,9 +102,9 @@ public class XcbKeyboard implements XKeyboard {
 	}
 
 	@Override
-	public InputModifiers modifiers(final ModifierName... modifierKeyNames) {
+	public InputModifiers modifiers(final InputModifierName... modifierKeyNames) {
 		final InputModifiers inputModifiers = new InputModifiers();
-		for (final ModifierName modifierKeyName : modifierKeyNames) {
+		for (final InputModifierName modifierKeyName : modifierKeyNames) {
 			inputModifiers.setModifiers(modifier(modifierKeyName));
 		}
 		return inputModifiers;

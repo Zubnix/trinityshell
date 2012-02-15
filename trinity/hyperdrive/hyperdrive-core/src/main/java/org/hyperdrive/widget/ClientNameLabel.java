@@ -20,7 +20,6 @@ import org.hydrogen.paintinterface.PaintCall;
 import org.hyperdrive.core.ClientWindow;
 import org.hyperdrive.protocol.ClientWindowDescriptionNotify;
 import org.hyperdrive.protocol.DesktopProtocol;
-import org.hyperdrive.protocol.ProtocolEvent;
 
 // TODO documentation
 /**
@@ -77,23 +76,21 @@ public class ClientNameLabel extends Widget {
 		}
 		this.targetWindow = targetWindow;
 
-		targetWindow
-				.addEventHandler(
-						new EventHandler<ProtocolEvent<ClientWindowDescriptionNotify>>() {
-							@Override
-							public void handleEvent(
-									final ProtocolEvent<ClientWindowDescriptionNotify> event) {
-								final String name = event.getEventArguments()
-										.getName();
-								updateNameLabel(name);
-							}
-						}, ProtocolEvent.DESCRIPTION_NOTIFY);
+		targetWindow.addEventHandler(
+				new EventHandler<ClientWindowDescriptionNotify>() {
+					@Override
+					public void handleEvent(
+							final ClientWindowDescriptionNotify event) {
+						final String name = event.getName();
+						updateNameLabel(name);
+					}
+				}, ClientWindowDescriptionNotify.TYPE);
 
 		// TODO automatically call painter when we call a method of the view?
-		final ProtocolEvent<ClientWindowDescriptionNotify> description = this.desktopProtocol
-				.query(getTargetWindow(), ProtocolEvent.DESCRIPTION_NOTIFY);
+		final ClientWindowDescriptionNotify description = (ClientWindowDescriptionNotify) this.desktopProtocol
+				.query(getTargetWindow(), ClientWindowDescriptionNotify.TYPE);
 		if (description != null) {
-			final String clientName = description.getEventArguments().getName();
+			final String clientName = description.getName();
 			updateNameLabel(clientName);
 		}
 	}

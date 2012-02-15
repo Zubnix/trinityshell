@@ -23,7 +23,10 @@ import org.hyperdrive.core.ClientWindow;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class PopupNotify implements ProtocolEventArguments {
+public class PopupNotify implements ProtocolEvent {
+
+	public static final ProtocolEventType TYPE = new ProtocolEventType();
+
 	private final ClientWindow transientForClient;
 
 	public PopupNotify(final ClientWindow transientForClient) {
@@ -32,5 +35,10 @@ public class PopupNotify implements ProtocolEventArguments {
 
 	public ClientWindow getTransientForClient() {
 		return this.transientForClient;
+	}
+
+	@Override
+	public ProtocolEventType getType() {
+		return PopupNotify.TYPE;
 	}
 }

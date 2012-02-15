@@ -28,90 +28,87 @@ package org.hydrogen.displayinterface.event;
 public class BaseConfigureRequestEvent extends BaseDisplayEvent implements
 		ConfigureRequestEvent {
 
-	private final boolean configureX;
-	private final boolean configureY;
-	private final boolean configureHeight;
-	private final boolean configureWidth;
-	private final int configureValueX;
-	private final int configureValueY;
-	private final int configureValueHeight;
-	private final int configureValueWidth;
+	private final boolean xSet;
+	private final boolean ySet;
+	private final boolean heightSet;
+	private final boolean widthSet;
+	private final int x;
+	private final int y;
+	private final int height;
+	private final int width;
 
 	/**
 	 * 
 	 * @param eventSource
-	 * @param configureX
-	 * @param configureY
-	 * @param configureHeight
-	 * @param configureWidth
-	 * @param configureValueX
-	 * @param configureValueY
-	 * @param configureValueWidth
-	 * @param configureValueHeight
+	 * @param xSet
+	 * @param ySet
+	 * @param heightSet
+	 * @param widthSet
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
 	 */
 	public BaseConfigureRequestEvent(final DisplayEventSource eventSource,
-			final boolean configureX, final boolean configureY,
-			final boolean configureHeight, final boolean configureWidth,
-			final int configureValueX, final int configureValueY,
-			final int configureValueWidth, final int configureValueHeight) {
+			final boolean xSet, final boolean ySet, final boolean heightSet,
+			final boolean widthSet, final int x, final int y, final int width,
+			final int height) {
 		super(ConfigureRequestEvent.TYPE, eventSource);
-		this.configureX = configureX;
-		this.configureY = configureY;
-		this.configureWidth = configureWidth;
-		this.configureHeight = configureHeight;
-		this.configureValueX = configureValueX;
-		this.configureValueY = configureValueY;
-		this.configureValueWidth = configureValueWidth;
-		this.configureValueHeight = configureValueHeight;
+		this.xSet = xSet;
+		this.ySet = ySet;
+		this.widthSet = widthSet;
+		this.heightSet = heightSet;
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 	}
 
 	@Override
-	public boolean configureHeight() {
-		return this.configureHeight;
+	public boolean isHeightSet() {
+		return this.heightSet;
 	}
 
 	@Override
-	public int configureValueHeight() {
-		return this.configureValueHeight;
+	public int getHeight() {
+		return this.height;
 	}
 
 	@Override
-	public int configureValueWidth() {
-		return this.configureValueWidth;
+	public int getWidth() {
+		return this.width;
 	}
 
 	@Override
-	public int configureValueX() {
-		return this.configureValueX;
+	public int getX() {
+		return this.x;
 	}
 
 	@Override
-	public int configureValueY() {
-		return this.configureValueY;
+	public int getY() {
+		return this.y;
 	}
 
 	@Override
-	public boolean configureWidth() {
-		return this.configureWidth;
+	public boolean isWidthSet() {
+		return this.widthSet;
 	}
 
 	@Override
-	public boolean configureX() {
-		return this.configureX;
+	public boolean isXSet() {
+		return this.xSet;
 	}
 
 	@Override
-	public boolean configureY() {
-		return this.configureY;
+	public boolean isYSet() {
+		return this.ySet;
 	}
 
 	@Override
 	public String toString() {
 		return String.format(
 				"%s\tDetails: %d+%d : %dx%d - Enabled?: %s+%s : %s+%s",
-				super.toString(), this.configureValueX, this.configureValueY,
-				this.configureValueWidth, this.configureValueHeight,
-				this.configureX, this.configureY, this.configureWidth,
-				this.configureHeight);
+				super.toString(), this.x, this.y, this.width, this.height,
+				this.xSet, this.ySet, this.widthSet, this.heightSet);
 	}
 }

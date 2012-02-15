@@ -21,12 +21,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.hydrogen.displayinterface.event.KeyNotifyEvent;
+import org.hydrogen.displayinterface.input.InputModifierName;
 import org.hydrogen.displayinterface.input.InputModifiers;
 import org.hydrogen.displayinterface.input.Key;
-import org.hydrogen.displayinterface.input.Keyboard.ModifierName;
-import org.hydrogen.displayinterface.input.Keyboard.SpecialKeyName;
 import org.hydrogen.displayinterface.input.Modifier;
 import org.hydrogen.displayinterface.input.Momentum;
+import org.hydrogen.displayinterface.input.SpecialKeyName;
 import org.hydrogen.eventsystem.EventHandler;
 import org.hyperdrive.core.ManagedDisplay;
 import org.hyperdrive.widget.RealRoot;
@@ -38,7 +38,7 @@ import org.hyperdrive.widget.RealRoot;
  * <code>Key</code> names are the same as the unmodified character they produce
  * when pressed. A list of special <code>Key</code> names can be found in
  * {@link SpecialKeyName} . A list of <code>Modifier</code>s can be found in
- * {@link ModifierName}.
+ * {@link InputModifierName}.
  * 
  * @author Erik De Rijcke
  * @since 1.0
@@ -48,14 +48,14 @@ public abstract class KeyBinding {
 	// Modifiers who's state should be ignored when checking for a key
 	// binding.
 	// TODO capslock, scrolllock, ...
-	private static final ModifierName[] IGNORED_MODIFIERS = new ModifierName[] {
-			ModifierName.MOD_LOCK, ModifierName.MOD_2 };
+	private static final InputModifierName[] IGNORED_MODIFIERS = new InputModifierName[] {
+			InputModifierName.MOD_LOCK, InputModifierName.MOD_2 };
 
 	// TODO release keybinding function
 
 	private final ManagedDisplay managedDisplay;
 	private final String keyName;
-	private final ModifierName[] modKeyNames;
+	private final InputModifierName[] modKeyNames;
 	private final Momentum momentum;
 
 	/**
@@ -69,7 +69,7 @@ public abstract class KeyBinding {
 	 */
 	public KeyBinding(final ManagedDisplay display, final Momentum momentum,
 			final String keyName, final boolean ignoreOftenUsedModifiers,
-			final ModifierName... modKeyNames) {
+			final InputModifierName... modKeyNames) {
 		this.managedDisplay = display;
 		this.keyName = keyName;
 		this.modKeyNames = modKeyNames;
@@ -87,7 +87,7 @@ public abstract class KeyBinding {
 	 * 
 	 */
 	public KeyBinding(final ManagedDisplay display, final Momentum momentum,
-			final String keyName, final ModifierName... modKeyNames) {
+			final String keyName, final InputModifierName... modKeyNames) {
 		this(display, momentum, keyName, true, modKeyNames);
 	}
 
@@ -100,9 +100,9 @@ public abstract class KeyBinding {
 	 * 
 	 */
 	public KeyBinding(final ManagedDisplay display, final Momentum momentum,
-			final String keyName, final List<ModifierName> modKeyNames) {
+			final String keyName, final List<InputModifierName> modKeyNames) {
 		this(display, momentum, keyName, modKeyNames
-				.toArray(new ModifierName[modKeyNames.size()]));
+				.toArray(new InputModifierName[modKeyNames.size()]));
 	}
 
 	/**
@@ -128,7 +128,7 @@ public abstract class KeyBinding {
 			// This will only install an extra keybinding on an invidual
 			// item from the IGNORED_MODIFIERS array.
 			// TODO full permutation
-			for (final ModifierName ignoredModifier : KeyBinding.IGNORED_MODIFIERS) {
+			for (final InputModifierName ignoredModifier : KeyBinding.IGNORED_MODIFIERS) {
 				final Modifier modifier = this.managedDisplay.getDisplay()
 						.getKeyBoard().modifier(ignoredModifier);
 
@@ -204,7 +204,7 @@ public abstract class KeyBinding {
 	 * 
 	 * @return
 	 */
-	public ModifierName[] getModKeyNames() {
+	public InputModifierName[] getModKeyNames() {
 		// return a copy so manipulation of the returned instance can take
 		// place without interfering with the source.
 		return Arrays.copyOf(this.modKeyNames, this.modKeyNames.length);

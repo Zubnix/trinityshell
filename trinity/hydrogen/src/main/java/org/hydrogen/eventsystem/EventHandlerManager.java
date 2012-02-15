@@ -30,13 +30,27 @@ public interface EventHandlerManager {
 	 * @param eventHandler
 	 * @param type
 	 */
-	<T extends Type> void addEventHandler(EventHandler<? extends Event<T>> eventHandler,
-	                                      T type);
+	<T extends Type> void addEventHandler(
+			EventHandler<? extends Event<T>> eventHandler, T type);
+
+	/**
+	 * 
+	 * @param typedEventHandler
+	 */
+	<T extends Type> void addTypedEventHandler(
+			TypedEventHandler<T, ? extends Event<T>> typedEventHandler);
 
 	/**
 	 * 
 	 * @param eventHandler
 	 */
-	<T extends Type> void removeEventHandler(EventHandler<? extends Event<T>> eventHandler,
-	                                         T type);
+	<T extends Type> void removeEventHandler(
+			EventHandler<? extends Event<T>> eventHandler, T type);
+
+	/**
+	 * 
+	 * @param typedEventHandler
+	 */
+	<T extends Type> void removeTypedEventHandler(
+			TypedEventHandler<T, ? extends Event<T>> typedEventHandler);
 }

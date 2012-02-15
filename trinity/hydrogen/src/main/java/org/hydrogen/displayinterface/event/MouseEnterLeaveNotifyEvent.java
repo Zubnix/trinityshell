@@ -28,10 +28,10 @@ public interface MouseEnterLeaveNotifyEvent extends DisplayEvent {
 	/**
 	 * 
 	 */
-	static final DisplayEventType ENTER_TYPE = new DisplayEventType();
+	DisplayEventType ENTER_TYPE = new DisplayEventType();
 
 	/**
 	 * 
 	 */
-	static final DisplayEventType LEAVE_TYPE = new DisplayEventType();
+	DisplayEventType LEAVE_TYPE = new DisplayEventType();
 }

@@ -23,29 +23,5 @@ import org.hydrogen.eventsystem.Event;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ProtocolEvent<T extends ProtocolEventArguments> implements
-		Event<ProtocolEventType<T>> {
-
-	public static final ProtocolEventType<GeometryPreferences> GEO_PREFERENCES = new ProtocolEventType<GeometryPreferences>();
-	public static final ProtocolEventType<IconPreferences> ICON_PREFERENCES = new ProtocolEventType<IconPreferences>();
-	public static final ProtocolEventType<ClientWindowDescriptionNotify> DESCRIPTION_NOTIFY = new ProtocolEventType<ClientWindowDescriptionNotify>();
-	public static final ProtocolEventType<PopupNotify> POPUP_NOTIFY = new ProtocolEventType<PopupNotify>();
-	public static final ProtocolEventType<UrgentNotify> URGENT_NOTIFY = new ProtocolEventType<UrgentNotify>();
-
-	private final ProtocolEventType<T> type;
-	private final T eventArguments;
-
-	public ProtocolEvent(final ProtocolEventType<T> type, final T eventArguments) {
-		this.type = type;
-		this.eventArguments = eventArguments;
-	}
-
-	@Override
-	public ProtocolEventType<T> getType() {
-		return this.type;
-	}
-
-	public T getEventArguments() {
-		return this.eventArguments;
-	}
+public interface ProtocolEvent extends Event<ProtocolEventType> {
 }

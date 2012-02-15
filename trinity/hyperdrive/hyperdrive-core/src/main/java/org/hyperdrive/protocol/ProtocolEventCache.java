@@ -27,37 +27,34 @@ import org.hyperdrive.core.ClientWindow;
  * @since 1.0
  */
 public class ProtocolEventCache {
-	private final Map<ClientWindow, Map<ProtocolEventType<?>, ProtocolEvent<?>>> clientEventCache;
+	private final Map<ClientWindow, Map<ProtocolEventType, ProtocolEvent>> clientEventCache;
 
 	public ProtocolEventCache() {
-		this.clientEventCache = new HashMap<ClientWindow, Map<ProtocolEventType<?>, ProtocolEvent<?>>>();
+		this.clientEventCache = new HashMap<ClientWindow, Map<ProtocolEventType, ProtocolEvent>>();
 	}
 
-	@SuppressWarnings("unchecked")
-	public <A extends ProtocolEventArguments, T extends ProtocolEventType<A>> ProtocolEvent<A> query(
-			final ClientWindow client, final T eventType) {
+	public ProtocolEvent query(final ClientWindow client,
+			final ProtocolEventType eventType) {
 		if (!this.clientEventCache.containsKey(client)) {
 			return null;
 		}
-		return (ProtocolEvent<A>) this.clientEventCache.get(client).get(
-				eventType);
+		return this.clientEventCache.get(client).get(eventType);
 	}
 
-	public <A extends ProtocolEventArguments, T extends ProtocolEventType<A>> void updateCache(
-			final ClientWindow client, final ProtocolEvent<A> event) {
+	public void updateCache(final ClientWindow client, final ProtocolEvent event) {
 
-		final Map<ProtocolEventType<?>, ProtocolEvent<?>> protocolEvents;
+		final Map<ProtocolEventType, ProtocolEvent> protocolEvents;
 		if (this.clientEventCache.containsKey(client)) {
 			protocolEvents = this.clientEventCache.get(client);
 		} else {
-			protocolEvents = new HashMap<ProtocolEventType<?>, ProtocolEvent<?>>();
+			protocolEvents = new HashMap<ProtocolEventType, ProtocolEvent>();
 		}
 		updateProtocolEvent(protocolEvents, event, event.getType());
 	}
 
-	protected <A extends ProtocolEventArguments, T extends ProtocolEventType<A>> void updateProtocolEvent(
-			final Map<ProtocolEventType<?>, ProtocolEvent<?>> protocolEvents,
-			final ProtocolEvent<A> event, final T eventType) {
+	protected void updateProtocolEvent(
+			final Map<ProtocolEventType, ProtocolEvent> protocolEvents,
+			final ProtocolEvent event, final ProtocolEventType eventType) {
 
 		protocolEvents.put(eventType, event);
 	}

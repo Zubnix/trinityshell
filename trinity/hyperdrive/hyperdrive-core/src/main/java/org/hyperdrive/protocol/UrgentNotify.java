@@ -21,7 +21,10 @@ package org.hyperdrive.protocol;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class UrgentNotify implements ProtocolEventArguments {
+public class UrgentNotify implements ProtocolEvent {
+
+	public static final ProtocolEventType TYPE = new ProtocolEventType();
+
 	private final boolean urgent;
 
 	public UrgentNotify(final boolean urgent) {
@@ -30,5 +33,10 @@ public class UrgentNotify implements ProtocolEventArguments {
 
 	public boolean isUrgent() {
 		return this.urgent;
+	}
+
+	@Override
+	public ProtocolEventType getType() {
+		return UrgentNotify.TYPE;
 	}
 }

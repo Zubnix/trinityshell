@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core.input;
 
-import org.hydrogen.displayinterface.input.Keyboard.ModifierName;
+import org.hydrogen.displayinterface.input.InputModifierName;
 import org.hydrogen.displayinterface.input.Modifier;
 
 // TODO documentation
@@ -25,21 +25,21 @@ import org.hydrogen.displayinterface.input.Modifier;
  * @since 1.0
  */
 public enum XModifier implements Modifier {
-	SHIFT_MODIFIER(1, ModifierName.MOD_SHIFT), LOCK_MODIFIER(2,
-			ModifierName.MOD_LOCK), CTRL_MODIFIER(4, ModifierName.MOD_CTRL), MOD1_MODIFIER(
-			8, ModifierName.MOD_1), MOD2_MODIFIER(16, ModifierName.MOD_2), MOD3_MODIFIER(
-			32, ModifierName.MOD_3), MOD4_MODIFIER(64, ModifierName.MOD_4), MOD5_MODIFIER(
-			128, ModifierName.MOD_5), ANY_MODIFIER(32768, ModifierName.MOD_ANY);
+	SHIFT_MODIFIER(1, InputModifierName.MOD_SHIFT), LOCK_MODIFIER(2,
+			InputModifierName.MOD_LOCK), CTRL_MODIFIER(4, InputModifierName.MOD_CTRL), MOD1_MODIFIER(
+			8, InputModifierName.MOD_1), MOD2_MODIFIER(16, InputModifierName.MOD_2), MOD3_MODIFIER(
+			32, InputModifierName.MOD_3), MOD4_MODIFIER(64, InputModifierName.MOD_4), MOD5_MODIFIER(
+			128, InputModifierName.MOD_5), ANY_MODIFIER(32768, InputModifierName.MOD_ANY);
 
 	private final int maskValue;
-	private final ModifierName name;
+	private final InputModifierName name;
 
 	/**
 	 * 
 	 * @param maskValue
 	 * @param name
 	 */
-	private XModifier(final int maskValue, final ModifierName name) {
+	private XModifier(final int maskValue, final InputModifierName name) {
 		this.maskValue = maskValue;
 		this.name = name;
 	}
@@ -50,7 +50,7 @@ public enum XModifier implements Modifier {
 	}
 
 	@Override
-	public ModifierName getModifierName() {
+	public InputModifierName getModifierName() {
 		return this.name;
 	}
 }

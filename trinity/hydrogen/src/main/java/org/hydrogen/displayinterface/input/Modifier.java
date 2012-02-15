@@ -15,7 +15,6 @@
  */
 package org.hydrogen.displayinterface.input;
 
-import org.hydrogen.displayinterface.input.Keyboard.ModifierName;
 
 // TODO documentation
 /**
@@ -35,5 +34,5 @@ public interface Modifier {
 	 * 
 	 * @return
 	 */
-	ModifierName getModifierName();
+	InputModifierName getModifierName();
 }

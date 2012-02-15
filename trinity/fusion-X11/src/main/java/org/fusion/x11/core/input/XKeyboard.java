@@ -15,6 +15,7 @@
  */
 package org.fusion.x11.core.input;
 
+import org.hydrogen.displayinterface.input.InputModifierName;
 import org.hydrogen.displayinterface.input.Keyboard;
 
 // TODO documentation
@@ -25,6 +26,6 @@ import org.hydrogen.displayinterface.input.Keyboard;
  */
 public interface XKeyboard extends Keyboard {
 	@Override
-	XModifier modifier(ModifierName modifierName);
+	XModifier modifier(InputModifierName inputModifierName);
 
 }

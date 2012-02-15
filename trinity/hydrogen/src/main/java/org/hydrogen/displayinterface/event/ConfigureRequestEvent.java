@@ -27,7 +27,7 @@ package org.hydrogen.displayinterface.event;
  * @since 1.0
  */
 public interface ConfigureRequestEvent extends DisplayEvent {
-	static final DisplayEventType TYPE = new DisplayEventType();
+	DisplayEventType TYPE = new DisplayEventType();
 
 	/**
 	 * Indicates if the height of the <code>PlatformRenderArea</code> should be
@@ -35,7 +35,7 @@ public interface ConfigureRequestEvent extends DisplayEvent {
 	 * 
 	 * @return True if the height should be configured, false if not.
 	 */
-	boolean configureHeight();
+	boolean isHeightSet();
 
 	/**
 	 * The desired height of the <code>PlatformRenderArea</code> that emitted
@@ -43,7 +43,7 @@ public interface ConfigureRequestEvent extends DisplayEvent {
 	 * 
 	 * @return the desired height.
 	 */
-	int configureValueHeight();
+	int getHeight();
 
 	/**
 	 * The desired width of the <code>PlatformRenderArea</code> that emitted
@@ -51,7 +51,7 @@ public interface ConfigureRequestEvent extends DisplayEvent {
 	 * 
 	 * @return the desired width.
 	 */
-	int configureValueWidth();
+	int getWidth();
 
 	/**
 	 * The desired X coordinate of the <code>PlatformRenderArea</code> that
@@ -59,7 +59,7 @@ public interface ConfigureRequestEvent extends DisplayEvent {
 	 * 
 	 * @return the desired X coordinate.
 	 */
-	int configureValueX();
+	int getX();
 
 	/**
 	 * The desired Y coordinate of the <code>PlatformRenderArea</code> that
@@ -67,7 +67,7 @@ public interface ConfigureRequestEvent extends DisplayEvent {
 	 * 
 	 * @return the desired Y coordinate.
 	 */
-	int configureValueY();
+	int getY();
 
 	/**
 	 * Indicates if the width of the <code>PlatformRenderArea</code> should be
@@ -75,7 +75,7 @@ public interface ConfigureRequestEvent extends DisplayEvent {
 	 * 
 	 * @return
 	 */
-	boolean configureWidth();
+	boolean isWidthSet();
 
 	/**
 	 * Indicates if the X coordinate of the <code>PlatformRenderArea</code>
@@ -83,7 +83,7 @@ public interface ConfigureRequestEvent extends DisplayEvent {
 	 * 
 	 * @return True if the X coordinate should be configured, false if not.
 	 */
-	boolean configureX();
+	boolean isXSet();
 
 	/**
 	 * Indicates if the Y coordinate of the <code>PlatformRenderArea</code>
@@ -91,5 +91,5 @@ public interface ConfigureRequestEvent extends DisplayEvent {
 	 * 
 	 * @return True if the Y coordinate should be configured, false if not.
 	 */
-	boolean configureY();
+	boolean isYSet();
 }

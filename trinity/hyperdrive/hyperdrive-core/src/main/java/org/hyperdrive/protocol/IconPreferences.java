@@ -21,7 +21,10 @@ package org.hyperdrive.protocol;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class IconPreferences implements ProtocolEventArguments {
+public class IconPreferences implements ProtocolEvent {
+
+	public static final ProtocolEventType TYPE = new ProtocolEventType();
+
 	private final byte[] iconData;
 	private final int iconWidth;
 	private final int iconHeight;
@@ -43,5 +46,10 @@ public class IconPreferences implements ProtocolEventArguments {
 
 	public int getIconHeight() {
 		return this.iconHeight;
+	}
+
+	@Override
+	public ProtocolEventType getType() {
+		return IconPreferences.TYPE;
 	}
 }

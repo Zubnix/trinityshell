@@ -25,41 +25,6 @@ public interface Keyboard {
 
 	/**
 	 * 
-	 * @author Erik De Rijcke
-	 * @since 1.0
-	 */
-	public static enum ModifierName {
-		// TODO merge with specialkeyname?
-
-		/**
-		 * shift key
-		 */
-		MOD_SHIFT, MOD_LOCK, MOD_CTRL,
-		/**
-		 * Alt
-		 */
-		MOD_1,
-		/**
-		 * numlock
-		 */
-		MOD_2, MOD_3,
-		/**
-		 * Meta key (windows, cmd, ..)
-		 */
-		MOD_4, MOD_5, MOD_ANY;
-	}
-
-	/**
-	 * 
-	 * @author Erik De Rijcke
-	 * @since 1.0
-	 */
-	public static enum SpecialKeyName {
-		ESCAPE, ENTER, BACKSPACE, TAB, LEFT, RIGHT, UP, DOWN;
-	}
-
-	/**
-	 * 
 	 * @param key
 	 * @param inputModifiers
 	 * @return
@@ -80,12 +45,12 @@ public interface Keyboard {
 	 * @param modifierKeyName
 	 * @return
 	 */
-	Modifier modifier(ModifierName modifierKeyName);
+	Modifier modifier(InputModifierName modifierKeyName);
 
 	/**
 	 * 
 	 * @param modifierKeyNames
 	 * @return
 	 */
-	InputModifiers modifiers(ModifierName... modifierKeyNames);
+	InputModifiers modifiers(InputModifierName... modifierKeyNames);
 }

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hydrogen.eventsystem.EventBus;
-import org.hydrogen.eventsystem.EventHandler;
+import org.hydrogen.eventsystem.TypedEventHandler;
 import org.hydrogen.paintinterface.HierarchicalArea;
 
 //TODO Let geo events travel downwards to children to notify them that one of their parents has changed
@@ -59,6 +59,106 @@ import org.hydrogen.paintinterface.HierarchicalArea;
 public abstract class GeoTransformableRectangle extends EventBus implements
 		HierarchicalArea, GeoTransformable {
 
+	private final class LowerRequestHandler implements GeoEventHandler {
+		@Override
+		public void handleEvent(final GeoEvent event) {
+			handleLowerEvent(event);
+		}
+
+		@Override
+		public GeoOperation getType() {
+			return GeoEvent.LOWER_REQUEST;
+		}
+	}
+
+	private final class RaiseRequestHandler implements GeoEventHandler {
+		@Override
+		public void handleEvent(final GeoEvent event) {
+			handleRaiseEvent(event);
+		}
+
+		@Override
+		public GeoOperation getType() {
+			return GeoEvent.RAISE_REQUEST;
+		}
+	}
+
+	private final class MoveRequestHandler implements GeoEventHandler {
+		@Override
+		public void handleEvent(final GeoEvent event) {
+			handleMoveEvent(event);
+		}
+
+		@Override
+		public GeoOperation getType() {
+			return GeoEvent.MOVE_REQUEST;
+		}
+	}
+
+	private final class ResizeRequestHandler implements GeoEventHandler {
+		@Override
+		public void handleEvent(final GeoEvent event) {
+			handleResizeEvent(event);
+		}
+
+		@Override
+		public GeoOperation getType() {
+			return GeoEvent.RESIZE_REQUEST;
+		}
+	}
+
+	private final class MoveResizeRequestHandler implements GeoEventHandler {
+		@Override
+		public void handleEvent(final GeoEvent event) {
+			handleMoveResizeEvent(event);
+
+		}
+
+		@Override
+		public GeoOperation getType() {
+			return GeoEvent.MOVE_RESIZE_REQUEST;
+		}
+	}
+
+	private final class VisibilityRequestHandler implements GeoEventHandler {
+		@Override
+		public void handleEvent(final GeoEvent event) {
+			handleVisibilityEvent(event);
+
+		}
+
+		@Override
+		public GeoOperation getType() {
+			return GeoEvent.VISIBILITY_REQUEST;
+		}
+	}
+
+	private final class ReparentRequestHandler implements GeoEventHandler {
+		@Override
+		public void handleEvent(final GeoEvent event) {
+			handleOwnReparentEvent(event);
+		}
+
+		@Override
+		public GeoOperation getType() {
+			return GeoEvent.REPARENT_REQUEST;
+		}
+	}
+
+	private final class GeoEventFromParentHandler implements
+			TypedEventHandler<GeoOperation, GeoEventFromParent> {
+		@Override
+		public void handleEvent(final GeoEventFromParent event) {
+			handleGeoEventFromParent(event);
+
+		}
+
+		@Override
+		public GeoOperation getType() {
+			return GeoEventFromParent.TYPE;
+		}
+	}
+
 	private int relativeX;
 	private int desiredRelativeX;
 
@@ -87,64 +187,15 @@ public abstract class GeoTransformableRectangle extends EventBus implements
 	public GeoTransformableRectangle() {
 		this.children = new ArrayList<GeoTransformableRectangle>();
 
-		// start init geo request handlers -->
-		this.addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				GeoTransformableRectangle.this.handleLowerEvent(event);
-			}
-		}, GeoEvent.LOWER_REQUEST);
+		addTypedEventHandler(new LowerRequestHandler());
+		addTypedEventHandler(new RaiseRequestHandler());
+		addTypedEventHandler(new MoveRequestHandler());
+		addTypedEventHandler(new ResizeRequestHandler());
+		addTypedEventHandler(new MoveResizeRequestHandler());
+		addTypedEventHandler(new VisibilityRequestHandler());
+		addTypedEventHandler(new ReparentRequestHandler());
 
-		this.addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				GeoTransformableRectangle.this.handleRaiseEvent(event);
-			}
-		}, GeoEvent.RAISE_REQUEST);
-
-		this.addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				GeoTransformableRectangle.this.handleMoveEvent(event);
-			}
-		}, GeoEvent.MOVE_REQUEST);
-
-		this.addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				GeoTransformableRectangle.this.handleResizeEvent(event);
-			}
-		}, GeoEvent.RESIZE_REQUEST);
-
-		this.addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				GeoTransformableRectangle.this.handleMoveResizeEvent(event);
-			}
-		}, GeoEvent.MOVE_RESIZE_REQUEST);
-
-		this.addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				GeoTransformableRectangle.this.handleVisibilityEvent(event);
-			}
-		}, GeoEvent.VISIBILITY_REQUEST);
-
-		this.addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				GeoTransformableRectangle.this.handleOwnReparentEvent(event);
-			}
-		}, GeoEvent.REPARENT_REQUEST);
-
-		// <-- end init geo request handlers
-
-		this.addEventHandler(new EventHandler<GeoEventFromParent>() {
-			@Override
-			public void handleEvent(final GeoEventFromParent event) {
-				handleGeoEventFromParent(event);
-			}
-		}, GeoEventFromParent.TYPE);
+		addTypedEventHandler(new GeoEventFromParentHandler());
 	}
 
 	@Override

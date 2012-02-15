@@ -25,5 +25,14 @@ package org.hydrogen.displayinterface.event;
  * 
  */
 public interface ConfigureNotifyEvent extends DisplayEvent {
-	// TODO more getters?
+
+	DisplayEventType TYPE = new DisplayEventType();
+
+	int getX();
+
+	int getY();
+
+	int getWidth();
+
+	int getHeight();
 }

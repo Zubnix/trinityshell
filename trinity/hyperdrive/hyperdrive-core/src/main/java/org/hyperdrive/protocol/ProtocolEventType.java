@@ -23,7 +23,6 @@ import org.hydrogen.eventsystem.Type;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ProtocolEventType<T extends ProtocolEventArguments> implements
-		Type {
+public class ProtocolEventType implements Type {
 
 }

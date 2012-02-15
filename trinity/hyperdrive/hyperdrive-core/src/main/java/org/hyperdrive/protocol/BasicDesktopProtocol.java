@@ -45,15 +45,15 @@ public class BasicDesktopProtocol implements DesktopProtocol {
 	}
 
 	@Override
-	public <A extends ProtocolEventArguments, T extends ProtocolEventType<A>> ProtocolEvent<A> query(
-			final ClientWindow client, final T eventType) {
+	public ProtocolEvent query(final ClientWindow client,
+			final ProtocolEventType eventType) {
 		// do nothing
 		return null;
 	}
 
 	@Override
-	public <A extends ProtocolEventArguments, T extends ProtocolEventType<A>> void updateProtocolEvent(
-			final ClientWindow client, final ProtocolEvent<A> protocolEvent) {
+	public void updateProtocolEvent(final ClientWindow client,
+			final ProtocolEvent protocolEvent) {
 		// do nothing
 	}
 

@@ -149,17 +149,17 @@ public final class ClientWindow extends AbstractRenderArea {
 	 * 
 	 */
 	protected void handleConfigureRequest(final ConfigureRequestEvent event) {
-		if (event.configureX()) {
-			setRelativeX(event.configureValueX());
+		if (event.isXSet()) {
+			setRelativeX(event.getX());
 		}
-		if (event.configureY()) {
-			setRelativeY(event.configureValueY());
+		if (event.isYSet()) {
+			setRelativeY(event.getY());
 		}
-		if (event.configureWidth()) {
-			setWidth(event.configureValueWidth());
+		if (event.isWidthSet()) {
+			setWidth(event.getWidth());
 		}
-		if (event.configureHeight()) {
-			setHeight(event.configureValueHeight());
+		if (event.isHeightSet()) {
+			setHeight(event.getHeight());
 		}
 		requestMoveResize();
 	}

@@ -32,14 +32,14 @@ public abstract class AbstractDesktopProtocol implements DesktopProtocol {
 	}
 
 	@Override
-	public <A extends ProtocolEventArguments, T extends ProtocolEventType<A>> ProtocolEvent<A> query(
-			final ClientWindow client, final T eventType) {
+	public ProtocolEvent query(final ClientWindow client,
+			final ProtocolEventType eventType) {
 		return this.protocolEventCache.query(client, eventType);
 	}
 
 	@Override
-	public <A extends ProtocolEventArguments, T extends ProtocolEventType<A>> void updateProtocolEvent(
-			final ClientWindow client, final ProtocolEvent<A> protocolEvent) {
+	public void updateProtocolEvent(final ClientWindow client,
+			final ProtocolEvent protocolEvent) {
 		this.protocolEventCache.updateCache(client, protocolEvent);
 		client.fireEvent(protocolEvent);
 	}

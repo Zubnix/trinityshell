@@ -154,7 +154,7 @@ public class ManagedDisplay extends EventBus {
 	 */
 	public void startEventDispatcher() {
 		// TODO this is more an X specific thing, create a more platform
-		// neutral mechanism/interface.
+		// neutral mechanism/interface and hide any reference to RealRoot.
 		RealRoot.get(this)
 				.getPlatformRenderArea()
 				.propagateEvent(

@@ -26,5 +26,5 @@ public interface DestroyNotifyEvent extends DisplayEvent {
 	/**
 	 * 
 	 */
-	static final DisplayEventType TYPE = new DisplayEventType();
+	DisplayEventType TYPE = new DisplayEventType();
 }

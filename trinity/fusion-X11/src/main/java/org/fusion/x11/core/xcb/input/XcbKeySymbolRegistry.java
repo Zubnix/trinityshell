@@ -24,10 +24,10 @@ import org.fusion.x11.core.input.XKeySymbol;
 import org.fusion.x11.core.input.XKeySymbolRegistry;
 import org.fusion.x11.core.input.XModifier;
 import org.fusion.x11.core.xcb.XcbCoreNative;
+import org.hydrogen.displayinterface.input.InputModifierName;
 import org.hydrogen.displayinterface.input.InputModifiers;
 import org.hydrogen.displayinterface.input.Key;
-import org.hydrogen.displayinterface.input.Keyboard.ModifierName;
-import org.hydrogen.displayinterface.input.Keyboard.SpecialKeyName;
+import org.hydrogen.displayinterface.input.SpecialKeyName;
  
 
 // TODO This is becoming a bit of a mess, rewrite?
@@ -88,16 +88,16 @@ public class XcbKeySymbolRegistry implements XKeySymbolRegistry {
 			// #define XK_Shift_L 0xFFE1 /* Left shift */
 			// #define XK_Shift_R 0xFFE2 /* Right shift */
 			// #define XK_Control_L 0xFFE3 /* Left control */
-			new XcbKeySymbol(0xFFE3, ModifierName.MOD_CTRL.name(), this);
+			new XcbKeySymbol(0xFFE3, InputModifierName.MOD_CTRL.name(), this);
 			// #define XK_Control_R 0xFFE4 /* Right control */
 			// #define XK_Caps_Lock 0xFFE5 /* Caps lock */
 			// #define XK_Shift_Lock 0xFFE6 /* Shift lock */
 			//
 			// #define XK_Meta_L 0xFFE7 /* Left meta */
-			new XcbKeySymbol(0xFFE7, ModifierName.MOD_4.name(), this);
+			new XcbKeySymbol(0xFFE7, InputModifierName.MOD_4.name(), this);
 			// #define XK_Meta_R 0xFFE8 /* Right meta */
 			// #define XK_Alt_L 0xFFE9 /* Left alt */
-			new XcbKeySymbol(0xFFE9, ModifierName.MOD_1.name(), this);
+			new XcbKeySymbol(0xFFE9, InputModifierName.MOD_1.name(), this);
 			// #define XK_Alt_R 0xFFEA /* Right alt */
 			// #define XK_Super_L 0xFFEB /* Left super */
 			// #define XK_Super_R 0xFFEC /* Right super */

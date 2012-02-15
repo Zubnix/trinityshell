@@ -25,7 +25,6 @@ import org.fusion.x11.core.IntDataContainer;
 import org.fusion.x11.core.ShortDataContainer;
 import org.fusion.x11.core.XAtom;
 import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XDisplayPlatform;
 import org.fusion.x11.core.XID;
 import org.fusion.x11.core.XPropertyXAtom;
 import org.fusion.x11.core.XProtocolConstants;
@@ -33,11 +32,13 @@ import org.fusion.x11.core.XResourceHandle;
 import org.fusion.x11.core.XWindow;
 import org.fusion.x11.core.event.XButtonEvent;
 import org.fusion.x11.core.event.XClientMessageEvent;
+import org.fusion.x11.core.event.XConfigureNotify;
 import org.fusion.x11.core.event.XConfigureRequest;
 import org.fusion.x11.core.event.XDestroyNotify;
 import org.fusion.x11.core.event.XFocusInNotifyEvent;
 import org.fusion.x11.core.event.XFocusOutNotifyEvent;
 import org.fusion.x11.core.event.XKeyEvent;
+import org.fusion.x11.core.event.XMapNotify;
 import org.fusion.x11.core.event.XMapRequest;
 import org.fusion.x11.core.event.XMouseEnterNotify;
 import org.fusion.x11.core.event.XMouseLeaveNotify;
@@ -83,7 +84,7 @@ final class XcbEventParser {
 	 * @since 1.0
 	 */
 
-	private abstract class XcbEventParserHelper {
+	private static abstract class XcbEventParserHelper {
 
 		/**
 		 * Parse an <code>XcbEvent</code> from the given
@@ -99,16 +100,217 @@ final class XcbEventParser {
 
 	}
 
-	private final Map<Integer, XcbEventParserHelper> parseMap;
-
-	/**
-	 * 
-	 * @param displayPlatform
-	 */
-	public XcbEventParser(final XDisplayPlatform displayPlatform) {
-		this.parseMap = new HashMap<Integer, XcbEventParserHelper>();
-		bindParserHelpers(displayPlatform);
+	private static final class UnmapNotifyParser extends XcbEventParserHelper {
+		@Override
+		XUnmapNotify parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbUnmapNotify(eventStruct, display);
+		}
 	}
+
+	private static final UnmapNotifyParser UNMAP_NOTIFY_PARSER = new UnmapNotifyParser();
+
+	private static final class ButtonPressNotifyParser extends
+			XcbEventParserHelper {
+		@Override
+		XButtonEvent parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbButtonPress(eventStruct, display);
+		}
+	}
+
+	private static final ButtonPressNotifyParser BUTTON_PRESS_NOTIFY_PARSER = new ButtonPressNotifyParser();
+
+	private static final class ButtonReleaseNotifyParser extends
+			XcbEventParserHelper {
+		@Override
+		XButtonEvent parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbButtonRelease(eventStruct, display);
+		}
+	}
+
+	private static final ButtonReleaseNotifyParser BUTTON_RELEASE_NOTIFY_PARSER = new ButtonReleaseNotifyParser();
+
+	private static final class KeyPressNotifyParser extends
+			XcbEventParserHelper {
+		@Override
+		XKeyEvent parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbKeyPress(eventStruct, display);
+		}
+	}
+
+	private static final KeyPressNotifyParser KEY_PRESS_NOTIFY_PARSER = new KeyPressNotifyParser();
+
+	private static final class KeyReleaseNotifyParser extends
+			XcbEventParserHelper {
+		@Override
+		XKeyEvent parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbKeyRelease(eventStruct, display);
+		}
+	}
+
+	private static final KeyReleaseNotifyParser KEY_RELEASE_NOTIFY_PARSER = new KeyReleaseNotifyParser();
+
+	private static final class ConfigureRequestParser extends
+			XcbEventParserHelper {
+		@Override
+		XConfigureRequest parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser
+					.parseXcbConfigureRequest(eventStruct, display);
+		}
+	}
+
+	private static final ConfigureRequestParser CONFIGURE_REQUEST_PARSER = new ConfigureRequestParser();
+
+	private static final class MapRequestParser extends XcbEventParserHelper {
+		@Override
+		XMapRequest parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbMapRequest(eventStruct, display);
+		}
+	}
+
+	private static final MapRequestParser MAP_REQUEST_PARSER = new MapRequestParser();
+
+	private static final class DestroyNotifyParser extends XcbEventParserHelper {
+		@Override
+		XDestroyNotify parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbDestroyNotify(eventStruct, display);
+		}
+	}
+
+	private static final DestroyNotifyParser DESTROY_NOTIFY_PARSER = new DestroyNotifyParser();
+
+	private static final class PropertyNotifyParser extends
+			XcbEventParserHelper {
+		@Override
+		XPropertyNotify parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbPropertyNotify(eventStruct, display);
+		}
+	}
+
+	private static final PropertyNotifyParser PROPERTY_NOTIFY_PARSER = new PropertyNotifyParser();
+
+	private static final class ClientMessageParser extends XcbEventParserHelper {
+		@Override
+		XClientMessageEvent parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbClientMessage(eventStruct, display);
+		}
+	}
+
+	private static final ClientMessageParser CLIENT_MESSAGE_PARSER = new ClientMessageParser();
+
+	private static final class MouseEnterNotifyParser extends
+			XcbEventParserHelper {
+		@Override
+		DisplayEvent parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser
+					.parseXcbMouseEnterNotify(eventStruct, display);
+		}
+	}
+
+	private static final MouseEnterNotifyParser MOUSE_ENTER_NOTIFY_PARSER = new MouseEnterNotifyParser();
+
+	private static final class MouseLeaveNotifyParser extends
+			XcbEventParserHelper {
+		@Override
+		DisplayEvent parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser
+					.parseXcbMouseLeaveNotify(eventStruct, display);
+		}
+	}
+
+	private static final MouseLeaveNotifyParser MOUSE_LEAVE_NOTIFY_PARSER = new MouseLeaveNotifyParser();
+
+	private static final class FocusInNotifyParser extends XcbEventParserHelper {
+		@Override
+		DisplayEvent parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbFocusInNotify(eventStruct, display);
+		}
+	}
+
+	private static final FocusInNotifyParser FOCUS_IN_NOTIFY_PARSER = new FocusInNotifyParser();
+
+	private static final class FocusOutNotifyParser extends
+			XcbEventParserHelper {
+		@Override
+		DisplayEvent parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbFocusOutNotify(eventStruct, display);
+		}
+	}
+
+	private static final FocusOutNotifyParser FOCUS_OUT_NOTIFY_PARSER = new FocusOutNotifyParser();
+
+	private static final class SelectionRequestParser extends
+			XcbEventParserHelper {
+		@Override
+		XSelectionRequestEvent parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser
+					.parseXcbSelectionRequest(eventStruct, display);
+		}
+	}
+
+	private static final SelectionRequestParser SELECTION_REQUEST_PARSER = new SelectionRequestParser();
+
+	private static final class SelectionNotifyParser extends
+			XcbEventParserHelper {
+		@Override
+		XSelectionNotifyEvent parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbSelectionNotify(eventStruct, display);
+		}
+	}
+
+	private static final SelectionNotifyParser SELECTION_NOTIFY_PARSER = new SelectionNotifyParser();
+
+	private static final class SelectionClearParser extends
+			XcbEventParserHelper {
+		@Override
+		XSelectionClearNotifyEvent parseEvent(
+				final NativeBufferHelper eventStruct, final XDisplay display) {
+			return XcbEventParser.parseXcbSelectionClear(eventStruct, display);
+		}
+	}
+
+	private static final SelectionClearParser SELECTION_CLEAR_PARSER = new SelectionClearParser();
+
+	private static final class ConfigureNotifyParser extends
+			XcbEventParserHelper {
+		@Override
+		XConfigureNotify parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbConfigureNotify(eventStruct, display);
+		}
+	}
+
+	private static final ConfigureNotifyParser CONFIGURE_NOTIFY_PARSER = new ConfigureNotifyParser();
+
+	private static final class MapNotifyParser extends XcbEventParserHelper {
+		@Override
+		XMapNotify parseEvent(final NativeBufferHelper eventStruct,
+				final XDisplay display) {
+			return XcbEventParser.parseXcbMapNotify(eventStruct, display);
+		}
+	}
+
+	private static final MapNotifyParser MAP_NOTIFY_PARSER = new MapNotifyParser();
+
+	private XcbEventParser() {
+	}
+
+	private static final Map<Integer, XcbEventParserHelper> PARSERS_MAP = new HashMap<Integer, XcbEventParser.XcbEventParserHelper>();
 
 	/**
 	 * General parse method to convert a given window id on on a given
@@ -123,7 +325,8 @@ final class XcbEventParser {
 	 * @return An {@link XWindow}. @ Thrown when no an invalid window id is
 	 *         given or the given <code>XDisplay</code> has an illegal state.
 	 */
-	private XWindow readXWindow(final XDisplay display, final long windowID) {
+	private static XWindow readXWindow(final XDisplay display,
+			final long windowID) {
 		final XID xid = new XID(display, XResourceHandle.valueOf(Long
 				.valueOf(windowID)));
 		final XWindow returnXWindow = display.getDisplayPlatform()
@@ -131,8 +334,61 @@ final class XcbEventParser {
 		return returnXWindow;
 	}
 
-	private XAtom readXAtom(final XDisplay display, final long atomId) {
+	private static XAtom readXAtom(final XDisplay display, final long atomId) {
 		return display.getDisplayAtoms().getById(Long.valueOf(atomId));
+	}
+
+	private static XConfigureNotify parseXcbConfigureNotify(
+			final NativeBufferHelper eventStruct, final XDisplay display) {
+		// Contents of native buffer;
+		// uint8_t pad0; /**< */
+		// uint16_t sequence; /**< */
+		// xcb_window_t event; /**< */
+		// xcb_window_t window; /**< */
+		// xcb_window_t above_sibling; /**< */
+		// int16_t x; /**< */
+		// int16_t y; /**< */
+		// uint16_t width; /**< */
+		// uint16_t height; /**< */
+		// uint16_t border_width; /**< */
+		// uint8_t override_redirect; /**< */
+		// uint8_t pad1; /**< */
+
+		eventStruct.readSignedByte();
+		eventStruct.readSignedShort();
+		eventStruct.readUnsignedInt();
+		final long windowId = eventStruct.readUnsignedInt();
+		final XWindow window = XcbEventParser.readXWindow(display, windowId);
+		eventStruct.readUnsignedInt();
+		final int x = eventStruct.readUnsignedShort();
+		final int y = eventStruct.readUnsignedShort();
+		final int width = (int) eventStruct.readUnsignedInt();
+		final int height = (int) eventStruct.readUnsignedInt();
+
+		final XConfigureNotify configureNotify = new XConfigureNotify(window,
+				x, y, width, height);
+		return configureNotify;
+	}
+
+	private static XMapNotify parseXcbMapNotify(
+			final NativeBufferHelper eventStruct, final XDisplay display) {
+		// Contents of native buffer:
+		// uint8_t pad0; /**< */
+		// uint16_t sequence; /**< */
+		// xcb_window_t event; /**< */
+		// xcb_window_t window; /**< */
+		// uint8_t override_redirect; /**< */
+		// uint8_t pad1[3]; /**< */
+
+		eventStruct.readSignedByte();
+		eventStruct.readSignedShort();
+		eventStruct.readUnsignedInt();
+		final long windowId = eventStruct.readUnsignedInt();
+		final XWindow window = XcbEventParser.readXWindow(display, windowId);
+		eventStruct.readUnsignedInt();
+
+		final XMapNotify mapNotify = new XMapNotify(window);
+		return mapNotify;
 	}
 
 	/**
@@ -141,7 +397,7 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	private XMouseLeaveNotify parseXcbMouseLeaveNotify(
+	private static XMouseLeaveNotify parseXcbMouseLeaveNotify(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// Contents of native buffer:
 		// uint8_t detail;
@@ -170,7 +426,8 @@ final class XcbEventParser {
 		final long eventWindowId = eventStruct.readUnsignedInt();
 		eventStruct.enableWrite();
 
-		final XWindow event = readXWindow(display, eventWindowId);
+		final XWindow event = XcbEventParser
+				.readXWindow(display, eventWindowId);
 
 		final XMouseLeaveNotify returnXcbMouseLeaveNotify = new XMouseLeaveNotify(
 				event);
@@ -184,7 +441,7 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	private XMouseEnterNotify parseXcbMouseEnterNotify(
+	private static XMouseEnterNotify parseXcbMouseEnterNotify(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// Contents of native buffer:
 		// uint8_t detail;
@@ -213,7 +470,8 @@ final class XcbEventParser {
 		final long eventWindowId = eventStruct.readUnsignedInt();
 		eventStruct.enableWrite();
 
-		final XWindow event = readXWindow(display, eventWindowId);
+		final XWindow event = XcbEventParser
+				.readXWindow(display, eventWindowId);
 
 		final XMouseEnterNotify returnXcbMouseEnterNotify = new XMouseEnterNotify(
 				event);
@@ -227,7 +485,7 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	private XButtonEvent parseXcbButtonPress(
+	private static XButtonEvent parseXcbButtonPress(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// Contents of native buffer:
 		// xcb_button_t detail
@@ -257,7 +515,8 @@ final class XcbEventParser {
 		final int state = eventStruct.readUnsignedShort();
 		eventStruct.enableWrite();
 
-		final XWindow event = readXWindow(display, eventWindowId);
+		final XWindow event = XcbEventParser
+				.readXWindow(display, eventWindowId);
 
 		final Button button = new Button(Integer.valueOf(detail));
 		final InputModifiers inputModifiers = new InputModifiers(state);
@@ -276,7 +535,7 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	private XButtonEvent parseXcbButtonRelease(
+	private static XButtonEvent parseXcbButtonRelease(
 			final NativeBufferHelper eventStruct, final XDisplay display)
 
 	{
@@ -308,7 +567,8 @@ final class XcbEventParser {
 		final int state = eventStruct.readUnsignedShort();
 		eventStruct.enableWrite();
 
-		final XWindow event = readXWindow(display, eventWindowId);
+		final XWindow event = XcbEventParser
+				.readXWindow(display, eventWindowId);
 
 		final Button button = new Button(Integer.valueOf(detail));
 		final InputModifiers inputModifiers = new InputModifiers(state);
@@ -327,8 +587,8 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	private XKeyEvent parseXcbKeyPress(final NativeBufferHelper eventStruct,
-			final XDisplay display) {
+	private static XKeyEvent parseXcbKeyPress(
+			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// contents of native buffer:
 		// xcb_keycode_t detail; /**< */
 		// uint16_t sequence; /**< */
@@ -357,7 +617,8 @@ final class XcbEventParser {
 		final int state = eventStruct.readUnsignedShort();
 		eventStruct.enableWrite();
 
-		final XWindow event = readXWindow(display, eventWindowId);
+		final XWindow event = XcbEventParser
+				.readXWindow(display, eventWindowId);
 
 		final Key key = new Key(detail);
 		final InputModifiers inputModifiers = new InputModifiers(state);
@@ -377,8 +638,8 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	private XKeyEvent parseXcbKeyRelease(final NativeBufferHelper eventStruct,
-			final XDisplay display) {
+	private static XKeyEvent parseXcbKeyRelease(
+			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// contents of native buffer:
 		// xcb_keycode_t detail; /**< */
 		// uint16_t sequence; /**< */
@@ -407,7 +668,8 @@ final class XcbEventParser {
 		final int state = eventStruct.readUnsignedShort();
 		eventStruct.enableWrite();
 
-		final XWindow event = readXWindow(display, eventWindowId);
+		final XWindow event = XcbEventParser
+				.readXWindow(display, eventWindowId);
 
 		final Key key = new Key(detail);
 		final InputModifiers inputModifiers = new InputModifiers(state);
@@ -425,7 +687,7 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	private XConfigureRequest parseXcbConfigureRequest(
+	private static XConfigureRequest parseXcbConfigureRequest(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// Contents of native buffer:
 		// uint8_t stack_mode; /**< */
@@ -455,7 +717,7 @@ final class XcbEventParser {
 																// value_mask
 		eventStruct.enableWrite();
 
-		final XWindow window = readXWindow(display, eventWindow);
+		final XWindow window = XcbEventParser.readXWindow(display, eventWindow);
 
 		final XConfigureRequest returnXcbConfigureRequest = new XConfigureRequest(
 				window, x, y, width + borderWidth, height + borderWidth,
@@ -470,7 +732,7 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	private XMapRequest parseXcbMapRequest(
+	private static XMapRequest parseXcbMapRequest(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// contents of native buffer:
 		// uint8_t pad0; /**< */
@@ -483,7 +745,7 @@ final class XcbEventParser {
 		final long windowId = eventStruct.readSignedInt();
 		eventStruct.enableWrite();
 
-		final XWindow window = readXWindow(display, windowId);
+		final XWindow window = XcbEventParser.readXWindow(display, windowId);
 
 		final XMapRequest returnXcbMapRequest = new XMapRequest(window);
 		return returnXcbMapRequest;
@@ -495,7 +757,7 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	private XDestroyNotify parseXcbDestroyNotify(
+	private static XDestroyNotify parseXcbDestroyNotify(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// contents of native buffer:
 		// uint8_t pad0; /**< */
@@ -508,7 +770,7 @@ final class XcbEventParser {
 		final long eventWindow = eventStruct.readUnsignedInt();
 		eventStruct.enableWrite();
 
-		final XWindow window = readXWindow(display, eventWindow);
+		final XWindow window = XcbEventParser.readXWindow(display, eventWindow);
 
 		final XDestroyNotify returnXcbDestroyNotify = new XDestroyNotify(window);
 		return returnXcbDestroyNotify;
@@ -521,7 +783,7 @@ final class XcbEventParser {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private XPropertyNotify parseXcbPropertyNotify(
+	private static XPropertyNotify parseXcbPropertyNotify(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// Contents of native buffer:
 		// uint8_t pad0
@@ -541,9 +803,10 @@ final class XcbEventParser {
 		final int state = eventStruct.readUnsignedByte();
 		eventStruct.enableWrite();
 
-		final XWindow eventWindow = readXWindow(display, windowId);
+		final XWindow eventWindow = XcbEventParser.readXWindow(display,
+				windowId);
 
-		final XAtom atom = readXAtom(display, atomId);
+		final XAtom atom = XcbEventParser.readXAtom(display, atomId);
 
 		if (atom instanceof XPropertyXAtom<?>) {
 			return new XPropertyNotify(eventWindow,
@@ -560,7 +823,7 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	private XClientMessageEvent parseXcbClientMessage(
+	private static XClientMessageEvent parseXcbClientMessage(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// Contents of native buffer:
 		// uint8_t response_type; /**< */
@@ -598,9 +861,9 @@ final class XcbEventParser {
 		}
 		eventStruct.enableWrite();
 
-		final XWindow eventWindow = readXWindow(display, window);
+		final XWindow eventWindow = XcbEventParser.readXWindow(display, window);
 
-		final XAtom messageAtom = readXAtom(display, type);
+		final XAtom messageAtom = XcbEventParser.readXAtom(display, type);
 
 		clientMessage = new XClientMessageEvent(eventWindow, messageAtom,
 				dataContainer);
@@ -613,7 +876,7 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	private XUnmapNotify parseXcbUnmapNotify(
+	private static XUnmapNotify parseXcbUnmapNotify(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// Contents of native buffer:
 		// uint8_t pad0
@@ -635,14 +898,15 @@ final class XcbEventParser {
 			return null;
 		}
 
-		final XWindow unmappedWindow = readXWindow(display, unmappedWindowId);
+		final XWindow unmappedWindow = XcbEventParser.readXWindow(display,
+				unmappedWindowId);
 
 		final XUnmapNotify unmapNotify = new XUnmapNotify(unmappedWindow);
 
 		return unmapNotify;
 	}
 
-	private XFocusInNotifyEvent parseXcbFocusInNotify(
+	private static XFocusInNotifyEvent parseXcbFocusInNotify(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// contents of native buffer:
 		// uint8_t detail; /**< */
@@ -654,13 +918,14 @@ final class XcbEventParser {
 		eventStruct.readUnsignedByte();
 		eventStruct.readUnsignedShort();
 		final long focusInWindowId = eventStruct.readUnsignedInt();
-		final XWindow focusInWindow = readXWindow(display, focusInWindowId);
+		final XWindow focusInWindow = XcbEventParser.readXWindow(display,
+				focusInWindowId);
 		final XFocusInNotifyEvent focusInNotifyEvent = new XFocusInNotifyEvent(
 				focusInWindow);
 		return focusInNotifyEvent;
 	}
 
-	private XFocusOutNotifyEvent parseXcbFocusOutNotify(
+	private static XFocusOutNotifyEvent parseXcbFocusOutNotify(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// contents of native buffer:
 		// uint8_t detail; /**< */
@@ -672,13 +937,14 @@ final class XcbEventParser {
 		eventStruct.readUnsignedByte();
 		eventStruct.readUnsignedShort();
 		final long focusInWindowId = eventStruct.readUnsignedInt();
-		final XWindow focusOutWindow = readXWindow(display, focusInWindowId);
+		final XWindow focusOutWindow = XcbEventParser.readXWindow(display,
+				focusInWindowId);
 		final XFocusOutNotifyEvent focusOutNotifyEvent = new XFocusOutNotifyEvent(
 				focusOutWindow);
 		return focusOutNotifyEvent;
 	}
 
-	private XSelectionRequestEvent parseXcbSelectionRequest(
+	private static XSelectionRequestEvent parseXcbSelectionRequest(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// contents of native buffer:
 		// uint8_t pad0; /**< */
@@ -696,15 +962,20 @@ final class XcbEventParser {
 		display.setLastServerTime(time);
 
 		final long ownerWindowId = eventStruct.readUnsignedInt();
-		final XWindow owner = readXWindow(display, ownerWindowId);
+		final XWindow owner = XcbEventParser
+				.readXWindow(display, ownerWindowId);
 		final long requestorWindowId = eventStruct.readUnsignedInt();
-		final XWindow requestor = readXWindow(display, requestorWindowId);
+		final XWindow requestor = XcbEventParser.readXWindow(display,
+				requestorWindowId);
 		final long selectionAtomId = eventStruct.readUnsignedInt();
-		final XAtom selectionAtom = readXAtom(display, selectionAtomId);
+		final XAtom selectionAtom = XcbEventParser.readXAtom(display,
+				selectionAtomId);
 		final long targetAtomId = eventStruct.readUnsignedInt();
-		final XAtom targetAtom = readXAtom(display, targetAtomId);
+		final XAtom targetAtom = XcbEventParser
+				.readXAtom(display, targetAtomId);
 		final long propertyAtomId = eventStruct.readUnsignedInt();
-		final XAtom propertyAtom = readXAtom(display, propertyAtomId);
+		final XAtom propertyAtom = XcbEventParser.readXAtom(display,
+				propertyAtomId);
 
 		final XSelectionRequestEvent selectionRequestEvent = new XSelectionRequestEvent(
 				owner, requestor, selectionAtom, targetAtom, propertyAtom);
@@ -712,7 +983,7 @@ final class XcbEventParser {
 		return selectionRequestEvent;
 	}
 
-	private XSelectionNotifyEvent parseXcbSelectionNotify(
+	private static XSelectionNotifyEvent parseXcbSelectionNotify(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// contents of native buffer:
 		// uint8_t pad0; /**< */
@@ -728,13 +999,17 @@ final class XcbEventParser {
 		final int time = eventStruct.readSignedInt();
 		display.setLastServerTime(time);
 		final long requestorWindowId = eventStruct.readUnsignedInt();
-		final XWindow requestor = readXWindow(display, requestorWindowId);
+		final XWindow requestor = XcbEventParser.readXWindow(display,
+				requestorWindowId);
 		final long selectionAtomId = eventStruct.readUnsignedInt();
-		final XAtom selectionAtom = readXAtom(display, selectionAtomId);
+		final XAtom selectionAtom = XcbEventParser.readXAtom(display,
+				selectionAtomId);
 		final long targetAtomId = eventStruct.readUnsignedInt();
-		final XAtom targetAtom = readXAtom(display, targetAtomId);
+		final XAtom targetAtom = XcbEventParser
+				.readXAtom(display, targetAtomId);
 		final long propertyAtomId = eventStruct.readUnsignedInt();
-		final XAtom propertyAtom = readXAtom(display, propertyAtomId);
+		final XAtom propertyAtom = XcbEventParser.readXAtom(display,
+				propertyAtomId);
 
 		final XSelectionNotifyEvent selectionNotifyEvent = new XSelectionNotifyEvent(
 				requestor, selectionAtom, targetAtom, propertyAtom);
@@ -742,7 +1017,7 @@ final class XcbEventParser {
 		return selectionNotifyEvent;
 	}
 
-	private XSelectionClearNotifyEvent parseXcbSelectionClear(
+	private static XSelectionClearNotifyEvent parseXcbSelectionClear(
 			final NativeBufferHelper eventStruct, final XDisplay display) {
 		// contents of native buffer:
 		// uint8_t pad0; /**< */
@@ -756,9 +1031,11 @@ final class XcbEventParser {
 		final int time = eventStruct.readSignedInt();
 		display.setLastServerTime(time);
 		final long ownerWindowId = eventStruct.readUnsignedInt();
-		final XWindow owner = readXWindow(display, ownerWindowId);
+		final XWindow owner = XcbEventParser
+				.readXWindow(display, ownerWindowId);
 		final long selectionAtomId = eventStruct.readUnsignedInt();
-		final XAtom selectionAtom = readXAtom(display, selectionAtomId);
+		final XAtom selectionAtom = XcbEventParser.readXAtom(display,
+				selectionAtomId);
 
 		final XSelectionClearNotifyEvent selectionClearNotifyEvent = new XSelectionClearNotifyEvent(
 				owner, selectionAtom);
@@ -766,170 +1043,64 @@ final class XcbEventParser {
 		return selectionClearNotifyEvent;
 	}
 
-	private void bindParserHelpers(final XDisplayPlatform xDisplayPlatform) {
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.UNMAP_NOTIFY),
-				new XcbEventParserHelper() {
-					@Override
-					XUnmapNotify parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbUnmapNotify(eventStruct, display);
-					}
-				});
-
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.BUTTON_PRESS),
-				new XcbEventParserHelper() {
-					@Override
-					XButtonEvent parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbButtonPress(eventStruct, display);
-					}
-				});
-
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.BUTTON_RELEASE),
-				new XcbEventParserHelper() {
-					@Override
-					XButtonEvent parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbButtonRelease(eventStruct, display);
-					}
-				});
-
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.KEY_PRESS),
-				new XcbEventParserHelper() {
-					@Override
-					XKeyEvent parseEvent(final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbKeyPress(eventStruct, display);
-					}
-				});
-
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.KEY_RELEASE),
-				new XcbEventParserHelper() {
-					@Override
-					XKeyEvent parseEvent(final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbKeyRelease(eventStruct, display);
-					}
-				});
-
-		this.parseMap.put(
+	static {
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.UNMAP_NOTIFY),
+				XcbEventParser.UNMAP_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.BUTTON_PRESS),
+				XcbEventParser.BUTTON_PRESS_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.BUTTON_RELEASE),
+				XcbEventParser.BUTTON_RELEASE_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.KEY_PRESS),
+				XcbEventParser.KEY_PRESS_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.KEY_RELEASE),
+				XcbEventParser.KEY_RELEASE_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
 				Integer.valueOf(XProtocolConstants.CONFIGURE_REQUEST),
-				new XcbEventParserHelper() {
-					@Override
-					XConfigureRequest parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbConfigureRequest(eventStruct, display);
-					}
-				});
-
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.MAP_REQUEST),
-				new XcbEventParserHelper() {
-					@Override
-					XMapRequest parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbMapRequest(eventStruct, display);
-					}
-				});
-
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.DESTROY_NOTIFY),
-				new XcbEventParserHelper() {
-					@Override
-					XDestroyNotify parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbDestroyNotify(eventStruct, display);
-					}
-				});
-
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.PROPERTY_NOTIFY),
-				new XcbEventParserHelper() {
-					@Override
-					XPropertyNotify parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbPropertyNotify(eventStruct, display);
-					}
-				});
-
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.CLIENT_MESSAGE),
-				new XcbEventParserHelper() {
-					@Override
-					XClientMessageEvent parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbClientMessage(eventStruct, display);
-					}
-				});
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.ENTER_NOTIFY),
-				new XcbEventParserHelper() {
-					@Override
-					DisplayEvent parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbMouseEnterNotify(eventStruct, display);
-					}
-				});
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.LEAVE_NOTIFY),
-				new XcbEventParserHelper() {
-					@Override
-					DisplayEvent parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbMouseLeaveNotify(eventStruct, display);
-					}
-				});
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.FOCUS_IN),
-				new XcbEventParserHelper() {
-
-					@Override
-					DisplayEvent parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbFocusInNotify(eventStruct, display);
-					}
-				});
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.FOCUS_OUT),
-				new XcbEventParserHelper() {
-					@Override
-					DisplayEvent parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbFocusOutNotify(eventStruct, display);
-					}
-				});
-		this.parseMap.put(
+				XcbEventParser.CONFIGURE_REQUEST_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.MAP_REQUEST),
+				XcbEventParser.MAP_REQUEST_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.DESTROY_NOTIFY),
+				XcbEventParser.DESTROY_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.PROPERTY_NOTIFY),
+				XcbEventParser.PROPERTY_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.CLIENT_MESSAGE),
+				XcbEventParser.CLIENT_MESSAGE_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.ENTER_NOTIFY),
+				XcbEventParser.MOUSE_ENTER_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.LEAVE_NOTIFY),
+				XcbEventParser.MOUSE_LEAVE_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.FOCUS_IN),
+				XcbEventParser.FOCUS_IN_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.FOCUS_OUT),
+				XcbEventParser.FOCUS_OUT_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
 				Integer.valueOf(XProtocolConstants.SELECTION_REQUEST),
-				new XcbEventParserHelper() {
-					@Override
-					DisplayEvent parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbSelectionRequest(eventStruct, display);
-					}
-				});
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.SELECTION_NOTIFY),
-				new XcbEventParserHelper() {
-					@Override
-					DisplayEvent parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbSelectionNotify(eventStruct, display);
-					}
-				});
-		this.parseMap.put(Integer.valueOf(XProtocolConstants.SELECTION_CLEAR),
-				new XcbEventParserHelper() {
-					@Override
-					DisplayEvent parseEvent(
-							final NativeBufferHelper eventStruct,
-							final XDisplay display) {
-						return parseXcbSelectionClear(eventStruct, display);
-					}
-				});
+				XcbEventParser.SELECTION_REQUEST_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.SELECTION_NOTIFY),
+				XcbEventParser.SELECTION_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.SELECTION_CLEAR),
+				XcbEventParser.SELECTION_CLEAR_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.MAP_NOTIFY),
+				XcbEventParser.MAP_NOTIFY_PARSER);
+		XcbEventParser.PARSERS_MAP.put(
+				Integer.valueOf(XProtocolConstants.CONFIGURE_NOTIFY),
+				XcbEventParser.CONFIGURE_NOTIFY_PARSER);
 	}
 
 	/**
@@ -938,12 +1109,12 @@ final class XcbEventParser {
 	 * @param display
 	 * @return
 	 */
-	DisplayEvent parseEvent(final NativeBufferHelper eventStruct,
+	static DisplayEvent parseEvent(final NativeBufferHelper eventStruct,
 			final XDisplay display) {
 
-		final int eventCode = readEventCode(eventStruct);
+		final int eventCode = XcbEventParser.readEventCode(eventStruct);
 
-		final XcbEventParserHelper xcbEventParserHelper = this.parseMap
+		final XcbEventParserHelper xcbEventParserHelper = XcbEventParser.PARSERS_MAP
 				.get(Integer.valueOf(eventCode));
 
 		DisplayEvent returnXcbEvent;
@@ -975,7 +1146,8 @@ final class XcbEventParser {
 	 * @param nativeBufferHelper
 	 * @return an event type code.
 	 */
-	private short readEventCode(final NativeBufferHelper nativeBufferHelper) {
+	private static short readEventCode(
+			final NativeBufferHelper nativeBufferHelper) {
 		final long eventCodeByte = nativeBufferHelper.readUnsignedByte();
 		final short eventCode = (short) (eventCodeByte & ~0x80);
 		return eventCode;

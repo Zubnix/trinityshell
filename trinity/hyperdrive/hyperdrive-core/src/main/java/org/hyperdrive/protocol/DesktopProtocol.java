@@ -41,9 +41,7 @@ public interface DesktopProtocol {
 	 */
 	boolean requestDelete(ClientWindow client);
 
-	<A extends ProtocolEventArguments, T extends ProtocolEventType<A>> ProtocolEvent<A> query(
-			ClientWindow client, T eventType);
+	ProtocolEvent query(ClientWindow client, ProtocolEventType eventType);
 
-	<A extends ProtocolEventArguments, T extends ProtocolEventType<A>> void updateProtocolEvent(
-			ClientWindow client, ProtocolEvent<A> protocolEvent);
+	void updateProtocolEvent(ClientWindow client, ProtocolEvent protocolEvent);
 }
