@@ -17,7 +17,7 @@ package org.hypercube.protocol.fusionx11;
 
 import org.fusion.x11.icccm.WmSizeHintsInstance;
 import org.hyperdrive.core.ClientWindow;
-import org.hyperdrive.protocol.GeometryPreferences;
+import org.hyperdrive.protocol.ClientPreferedGeometry;
 
 //TODO documentation
 /**
@@ -37,8 +37,8 @@ final class WmNormalHintsInterpreter {
 			final WmSizeHintsInstance propertyInstance) {
 
 		// query current geo preferences
-		final GeometryPreferences geometryPreferences = (GeometryPreferences) this.xDesktopProtocol
-				.query(client, GeometryPreferences.TYPE);
+		final ClientPreferedGeometry clientPreferedGeometry = (ClientPreferedGeometry) this.xDesktopProtocol
+				.query(client, ClientPreferedGeometry.TYPE);
 
 		// read old preferences, if no previous ones were defined we fall back
 		// to sane defaults
@@ -54,7 +54,7 @@ final class WmNormalHintsInterpreter {
 		final int oldHeightInc;
 		final boolean oldVisibible;
 
-		if (geometryPreferences == null) {
+		if (clientPreferedGeometry == null) {
 			oldX = client.getRelativeX();
 			oldY = client.getRelativeY();
 			oldWidth = client.getWidth();
@@ -67,7 +67,7 @@ final class WmNormalHintsInterpreter {
 			oldHeightInc = client.getHeightIncrement();
 			oldVisibible = client.isVisible();
 		} else {
-			final GeometryPreferences geoPreferences = geometryPreferences;
+			final ClientPreferedGeometry geoPreferences = clientPreferedGeometry;
 			oldX = geoPreferences.getX();
 			oldY = geoPreferences.getY();
 			oldWidth = geoPreferences.getWidth();
@@ -196,7 +196,7 @@ final class WmNormalHintsInterpreter {
 
 		// TODO programAspectRatios, programBaseSize, programResizeGravity
 
-		final GeometryPreferences newGeoPreferences = new GeometryPreferences(
+		final ClientPreferedGeometry newGeoPreferences = new ClientPreferedGeometry(
 				newX, newY, newWidth, newHeight, newMinWidth, newMinHeight,
 				newMaxWidth, newMaxHeight, newWidthInc, newHeightInc,
 				oldVisibible, newResizable);

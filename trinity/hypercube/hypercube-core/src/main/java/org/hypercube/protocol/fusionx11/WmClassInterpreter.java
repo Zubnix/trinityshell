@@ -17,6 +17,7 @@ package org.hypercube.protocol.fusionx11;
 
 import org.hydrogen.displayinterface.PropertyInstanceTexts;
 import org.hyperdrive.core.ClientWindow;
+import org.hyperdrive.protocol.ClientSoftwareDescription;
 
 //TODO documentation
 /**
@@ -28,15 +29,51 @@ final class WmClassInterpreter {
 
 	private final XDesktopProtocol xDesktopProtocol;
 
-	public WmClassInterpreter(final XDesktopProtocol xDesktopProtocol) {
+	WmClassInterpreter(final XDesktopProtocol xDesktopProtocol) {
 		this.xDesktopProtocol = xDesktopProtocol;
 	}
 
 	void handleWmClass(final ClientWindow client,
 			final PropertyInstanceTexts propertyInstance) {
-		final String classInstanceName = propertyInstance.getTexts()[0];
+
+		final String instanceName = propertyInstance.getTexts()[0];
 		final String className = propertyInstance.getTexts()[1];
 		// TODO Update client description
 
+		final ClientSoftwareDescription softwareDescriptionNotify = (ClientSoftwareDescription) this.xDesktopProtocol
+				.query(client, ClientSoftwareDescription.TYPE);
+
+		if (softwareDescriptionNotify == null) {
+			final ClientSoftwareDescription newSoftwareDescriptionNotify = new ClientSoftwareDescription(
+					className, instanceName);
+
+			this.xDesktopProtocol.updateProtocolEvent(client,
+					newSoftwareDescriptionNotify);
+			return;
+		}
+
+		final String oldClassName = softwareDescriptionNotify.getClassName();
+		final String oldInstanceName = softwareDescriptionNotify
+				.getClientInstanceName();
+
+		final String newClassName;
+		if (oldClassName.equals(className)) {
+			newClassName = oldClassName;
+		} else {
+			newClassName = className;
+		}
+
+		final String newInstanceName;
+		if (oldInstanceName.equals(instanceName)) {
+			newInstanceName = oldInstanceName;
+		} else {
+			newInstanceName = instanceName;
+		}
+
+		final ClientSoftwareDescription newSoftwareDescriptionNotify = new ClientSoftwareDescription(
+				newClassName, newInstanceName);
+
+		this.xDesktopProtocol.updateProtocolEvent(client,
+				newSoftwareDescriptionNotify);
 	}
 }

@@ -19,8 +19,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.fusion.x11.nativeHelpers.FusionNativeLibLoader;
-import org.hydrogen.utils.ClasspathResourceLoader;
-import org.hydrogen.utils.ProcessMonitor;
+import org.hydrogen.testutils.ClasspathResourceLoader;
+import org.hydrogen.testutils.ProcessMonitor;
 
 /**
  * Test framework code. Currently unused.

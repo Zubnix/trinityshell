@@ -21,14 +21,14 @@ package org.hyperdrive.protocol;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ClientSoftwareDescriptionNotify implements ProtocolEvent {
+public class ClientSoftwareDescription implements ProtocolEvent {
 
 	public static final ProtocolEventType TYPE = new ProtocolEventType();
 
 	private final String className;
 	private final String clientInstanceName;
 
-	public ClientSoftwareDescriptionNotify(final String className,
+	public ClientSoftwareDescription(final String className,
 			final String clientInstanceName) {
 		this.className = className;
 		this.clientInstanceName = clientInstanceName;
@@ -44,6 +44,6 @@ public class ClientSoftwareDescriptionNotify implements ProtocolEvent {
 
 	@Override
 	public ProtocolEventType getType() {
-		return ClientSoftwareDescriptionNotify.TYPE;
+		return ClientSoftwareDescription.TYPE;
 	}
 }

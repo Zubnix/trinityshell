@@ -42,7 +42,10 @@ import org.hydrogen.displayinterface.PlatformRenderArea;
 import org.hydrogen.displayinterface.PropertyInstance;
 import org.hydrogen.displayinterface.PropertyInstanceText;
 import org.hydrogen.displayinterface.PropertyInstanceTexts;
+import org.hydrogen.displayinterface.event.DisplayEventType;
+import org.hydrogen.displayinterface.event.PropertyChangedNotifyEvent;
 import org.hydrogen.eventsystem.EventHandler;
+import org.hydrogen.eventsystem.TypedEventHandler;
 import org.hyperdrive.core.ClientWindow;
 import org.hyperdrive.core.ManagedDisplay;
 import org.hyperdrive.core.RenderAreaPropertiesManipulator;
@@ -138,6 +141,19 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 		}
 	}
 
+	private final class AllPropertiesListener implements
+			TypedEventHandler<DisplayEventType, PropertyChangedNotifyEvent> {
+		@Override
+		public void handleEvent(final PropertyChangedNotifyEvent event) {
+			handleIncomingProperty(event);
+		}
+
+		@Override
+		public DisplayEventType getType() {
+			return PropertyChangedNotifyEvent.TYPE;
+		}
+	}
+
 	private final Icccm icccm;
 	private final InputPreferenceParser inputPreferenceParser;
 
@@ -149,12 +165,17 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 	private final WmClassInterpreter wmClassInterpreter;
 
 	private final Map<ClientWindow, RenderAreaPropertiesManipulator> clientPropertiesManipulators;
+
 	static final String EMPTY_STRING = "";
 
 	public XDesktopProtocol(final ManagedDisplay managedDisplay) {
 		this.inputPreferenceParser = new InputPreferenceParser();
 		this.clientPropertiesManipulators = new HashMap<ClientWindow, RenderAreaPropertiesManipulator>();
-		// this.managedDisplay = managedDisplay;
+
+		// We want to store protocol events of clients before they are
+		// registered.
+		managedDisplay.addTypedEventHandler(new AllPropertiesListener());
+
 		this.display = (XDisplay) managedDisplay.getDisplay();
 
 		this.icccm = new Icccm(this.display);
@@ -175,13 +196,18 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 		}
 	}
 
+	protected void handleIncomingProperty(final PropertyChangedNotifyEvent event) {
+		// TODO Auto-generated method stub
+
+	}
+
 	@Override
 	public void registerClient(final ClientWindow client) {
 		final RenderAreaPropertiesManipulator propertiesManipulator = new RenderAreaPropertiesManipulator(
 				client);
 
 		this.clientPropertiesManipulators.put(client, propertiesManipulator);
-		readProtocolProperties(client);
+		readProtocolProperties(client, propertiesManipulator);
 		installListeners(client);
 	}
 
@@ -303,9 +329,26 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 				new WmStateInstance(this.display, state, iconWindow));
 	}
 
-	protected void readProtocolProperties(final ClientWindow client) {
-		// TODO update all protocol events for the client so they can be queried
+	protected void readProtocolProperties(final ClientWindow client,
+			final RenderAreaPropertiesManipulator propertiesManipulator) {
+
+		final WmHintsInstance wmHintsInstance = propertiesManipulator
+				.getPropertyValue(IcccmAtoms.WM_HINTS_ATOM_NAME);
+		final WmSizeHintsInstance wmSizeHintsInstance = propertiesManipulator
+				.getPropertyValue(IcccmAtoms.WM_NORMAL_HINTS_ATOM_NAME);
+		final PropertyInstanceText wmNameInstance = propertiesManipulator
+				.getPropertyValue(IcccmAtoms.WM_NAME_ATOM_NAME);
+		final PropertyInstanceTexts wmClassInstance = propertiesManipulator
+				.getPropertyValue(IcccmAtoms.WM_CLASS_ATOM_NAME);
+
+		// update all protocol events for the client so they can be queried
 		// in the future
+
+		this.wmHintsInterpreter.handleWmHint(client, wmHintsInstance);
+		this.wmNormalHintsInterpreter.handleWmNormalHints(client,
+				wmSizeHintsInstance);
+		this.wmNameInterpreter.handleWmName(client, wmNameInstance);
+		// TODO wm_class
 	}
 
 	protected void addClientToSaveSet(final ClientWindow client) {

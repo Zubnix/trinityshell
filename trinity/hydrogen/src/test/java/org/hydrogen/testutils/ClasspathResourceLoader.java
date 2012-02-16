@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with
  * HyperDrive. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.hydrogen.utils;
+package org.hydrogen.testutils;
 
 import java.io.File;
 import java.io.FileOutputStream;

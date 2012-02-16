@@ -21,30 +21,35 @@ package org.hyperdrive.protocol;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ClientWindowDescriptionNotify implements ProtocolEvent {
+public class ClientIcon implements ProtocolEvent {
 
 	public static final ProtocolEventType TYPE = new ProtocolEventType();
 
-	private final String name;
-	private final String description;
+	private final byte[] iconData;
+	private final int iconWidth;
+	private final int iconHeight;
 
-	public ClientWindowDescriptionNotify(final String name,
-			final String description) {
-		this.description = description;
-		this.name = name;
+	public ClientIcon(final byte[] iconDate, final int iconWidth,
+			final int iconHeight) {
+		this.iconData = iconDate;
+		this.iconWidth = iconWidth;
+		this.iconHeight = iconHeight;
 	}
 
-	public String getDescription() {
-		return this.description;
+	public byte[] getIconData() {
+		return this.iconData;
 	}
 
-	public String getName() {
-		return this.name;
+	public int getIconWidth() {
+		return this.iconWidth;
+	}
+
+	public int getIconHeight() {
+		return this.iconHeight;
 	}
 
 	@Override
 	public ProtocolEventType getType() {
-		return ClientWindowDescriptionNotify.TYPE;
+		return ClientIcon.TYPE;
 	}
-
 }

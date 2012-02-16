@@ -36,6 +36,7 @@ import org.hypercube.protocol.fusionx11.*
 import org.hyperdrive.core.*
 import org.hyperdrive.geo.*
 import org.hyperdrive.input.*
+import org.hyperdrive.protocol.*
 import org.hyperdrive.widget.*
 
 //TODO better documentation
@@ -152,6 +153,11 @@ class HypercubeLogic implements LogicLoadable{
 		def client = newClientEvent.getRenderArea()
 
 		desktopProtocol.registerClient client
+
+		def geoPrefEvent = desktopProtocol.query client, ClientPreferedGeometry.TYPE
+		handleClientGeoPreference geoPrefEvent, client
+		def clientGeoPrefListener = { event -> handleClientGeoPreference event, client } as EventHandler
+		client.addEventHandler clientGeoPrefListener, ClientPreferedGeometry.TYPE
 
 		//Create a container.
 		//This widget will contain the new client window and other widgets required to resize,
@@ -283,12 +289,12 @@ class HypercubeLogic implements LogicLoadable{
 
 		//add a raise & inputrequestor handler to the dragbar and resize button on mouse button pressed.
 		def raiseHandler = { event -> requestRaiseAndInput event, clientContainer, client } as EventHandler
-		dragButton.addEventHandler raiseHandler, ButtonNotifyEvent.PRESSED_TYPE, 0
-		resizeButton.addEventHandler raiseHandler, ButtonNotifyEvent.PRESSED_TYPE, 0
+		dragButton.addEventHandler raiseHandler, ButtonNotifyEvent.TYPE_PRESSED, 0
+		resizeButton.addEventHandler raiseHandler, ButtonNotifyEvent.TYPE_PRESSED, 0
 		//add raise handler to client on mouse button press.
 		//When the mouse is grabbed for the client,
 		//the raise handler will be activated.
-		client.addEventHandler raiseHandler, ButtonNotifyEvent.PRESSED_TYPE, 0
+		client.addEventHandler raiseHandler, ButtonNotifyEvent.TYPE_PRESSED, 0
 
 		//assign the control widgets their targets
 		dragButton.setTargetRenderArea clientContainer
@@ -306,9 +312,9 @@ class HypercubeLogic implements LogicLoadable{
 
 		//install a mouse enter/leave tracker on the client.
 		def mouseEnterHandler = { event -> handleMouseEnter event, clientContainer, client } as EventHandler
-		client.addEventHandler mouseEnterHandler, MouseEnterLeaveNotifyEvent.ENTER_TYPE
+		client.addEventHandler mouseEnterHandler, MouseEnterLeaveNotifyEvent.TYPE_ENTER
 		def mouseLeaveHandler = { event -> handleMouseLeave event, clientContainer, client } as EventHandler
-		client.addEventHandler mouseLeaveHandler,  MouseEnterLeaveNotifyEvent.LEAVE_TYPE
+		client.addEventHandler mouseLeaveHandler,  MouseEnterLeaveNotifyEvent.TYPE_LEAVE
 
 		//raise the client and give it the input focus
 
@@ -384,5 +390,37 @@ class HypercubeLogic implements LogicLoadable{
 
 	def handleClientDestroyedEvent(event, clientContainer){
 		clientContainer.doDestroy()
+	}
+
+	def handleClientGeoPreference(geoPrefEvent, client){
+		if(geoPrefEvent != null){
+			def x = geoPrefEvent.getX()
+			def y = geoPrefEvent.getY()
+			def width = geoPrefEvent.getWidth()
+			def height = geoPrefEvent.getHeight()
+			def visible = geoPrefEvent.isVisible()
+			def resizable = geoPrefEvent.isResizable()
+
+			def minWidth = geoPrefEvent.getMinWidth()
+			def minHeight = geoPrefEvent.getMinHeight()
+			def maxWidth = geoPrefEvent.getMaxWidth()
+			def maxHeight = geoPrefEvent.getMaxHeight()
+			def widthInc = geoPrefEvent.getWidthInc()
+			def heightInc = geoPrefEvent.getHeightInc()
+
+			client.setRelativeX x
+			client.setRelativeY y
+			client.setWidth width
+			client.setHeight height
+			client.setResizable resizable
+			client.setVisibility visible
+
+			client.setMinWidth minWidth
+			client.setMinHeight minHeight
+			client.setMaxWidth maxWidth
+			client.setMaxHeight maxHeight
+			client.setWidthIncrement widthInc
+			client.setHeightIncrement heightInc
+		}
 	}
 }

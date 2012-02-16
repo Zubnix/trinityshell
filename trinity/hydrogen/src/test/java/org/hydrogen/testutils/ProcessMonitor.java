@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Hydrogen. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.hydrogen.utils;
+package org.hydrogen.testutils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -33,20 +33,20 @@ import java.util.concurrent.Executors;
  */
 public class ProcessMonitor {
 	private final BufferedOutputStream processStdIn;
-	private final BufferedReader       processStdOut;
-	private final BufferedReader       processErr;
-	private final Process              monitoredProcess;
+	private final BufferedReader processStdOut;
+	private final BufferedReader processErr;
+	private final Process monitoredProcess;
 
-	private final ExecutorService      processStdOutService;
-	private final ExecutorService      processErrService;
-	private final ExecutorService      processStoppedService;
+	private final ExecutorService processStdOutService;
+	private final ExecutorService processErrService;
+	private final ExecutorService processStoppedService;
 
-	private boolean                    redirectStdOut;
-	private boolean                    redirectErr;
+	private boolean redirectStdOut;
+	private boolean redirectErr;
 
-	private volatile boolean           monitoring;
-	private volatile boolean           processStopped;
-	private volatile int               processExitValue;
+	private volatile boolean monitoring;
+	private volatile boolean processStopped;
+	private volatile int processExitValue;
 
 	/**
 	 * 
@@ -55,12 +55,14 @@ public class ProcessMonitor {
 	public ProcessMonitor(final Process monitoredProcess) {
 		this.monitoredProcess = monitoredProcess;
 
-		this.processStdIn = new BufferedOutputStream(this.monitoredProcess
-		                .getOutputStream());
-		this.processStdOut = new BufferedReader(new InputStreamReader(new BufferedInputStream(this.monitoredProcess
-		                .getInputStream())));
-		this.processErr = new BufferedReader(new InputStreamReader(new BufferedInputStream(this.monitoredProcess
-		                .getErrorStream())));
+		this.processStdIn = new BufferedOutputStream(
+				this.monitoredProcess.getOutputStream());
+		this.processStdOut = new BufferedReader(
+				new InputStreamReader(new BufferedInputStream(
+						this.monitoredProcess.getInputStream())));
+		this.processErr = new BufferedReader(
+				new InputStreamReader(new BufferedInputStream(
+						this.monitoredProcess.getErrorStream())));
 
 		this.processStdOutService = Executors.newSingleThreadExecutor();
 		this.processErrService = Executors.newSingleThreadExecutor();
@@ -77,11 +79,9 @@ public class ProcessMonitor {
 	 * @see {@link ProcessMonitor#redirect(boolean, boolean)}
 	 */
 	public ProcessMonitor(final Process monitoredProcess,
-	                      final boolean redirectStdOut,
-	                      final boolean redirectErr) {
+			final boolean redirectStdOut, final boolean redirectErr) {
 		this(monitoredProcess);
-		redirect(redirectStdOut,
-		         redirectErr);
+		redirect(redirectStdOut, redirectErr);
 	}
 
 	/**
@@ -153,8 +153,7 @@ public class ProcessMonitor {
 	 * @param redirectErr
 	 *            redirect the program's error output stream.
 	 */
-	public void redirect(final boolean redirectStdOut,
-	                     final boolean redirectErr) {
+	public void redirect(final boolean redirectStdOut, final boolean redirectErr) {
 		this.redirectStdOut = redirectStdOut;
 		this.redirectErr = redirectErr;
 	}
@@ -166,13 +165,13 @@ public class ProcessMonitor {
 		this.processErrService.submit(new Runnable() {
 			@Override
 			public void run() {
-				Thread.currentThread().setName(String
-				                .format("%s err reader.",
-				                        ProcessMonitor.class.getSimpleName()));
+				Thread.currentThread().setName(
+						String.format("%s err reader.",
+								ProcessMonitor.class.getSimpleName()));
 				try {
 					String line;
 					while (((line = getProcessErr().readLine()) != null)
-					                && isMonitoring()) {
+							&& isMonitoring()) {
 						if (ProcessMonitor.this.redirectErr) {
 							System.err.println(line);
 						}
@@ -204,12 +203,12 @@ public class ProcessMonitor {
 		this.processStoppedService.submit(new Runnable() {
 			@Override
 			public void run() {
-				Thread.currentThread().setName(String
-				                .format("%s wait for.",
-				                        ProcessMonitor.class.getSimpleName()));
+				Thread.currentThread().setName(
+						String.format("%s wait for.",
+								ProcessMonitor.class.getSimpleName()));
 				try {
 					ProcessMonitor.this.processExitValue = ProcessMonitor.this.monitoredProcess
-					                .waitFor();
+							.waitFor();
 					ProcessMonitor.this.monitoring = false;
 				} catch (final InterruptedException e) {
 					ProcessMonitor.this.processStopped = true;
@@ -226,13 +225,13 @@ public class ProcessMonitor {
 		this.processStdOutService.submit(new Runnable() {
 			@Override
 			public void run() {
-				Thread.currentThread().setName(String
-				                .format("%s stdOut reader.",
-				                        ProcessMonitor.class.getSimpleName()));
+				Thread.currentThread().setName(
+						String.format("%s stdOut reader.",
+								ProcessMonitor.class.getSimpleName()));
 				try {
 					String line;
 					while (((line = getProcessStdOut().readLine()) != null)
-					                && isMonitoring()) {
+							&& isMonitoring()) {
 						if (ProcessMonitor.this.redirectStdOut) {
 							System.out.println(line);
 						}

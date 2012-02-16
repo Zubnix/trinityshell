@@ -21,35 +21,30 @@ package org.hyperdrive.protocol;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class IconPreferences implements ProtocolEvent {
+public class ClientWindowDescription implements ProtocolEvent {
 
 	public static final ProtocolEventType TYPE = new ProtocolEventType();
 
-	private final byte[] iconData;
-	private final int iconWidth;
-	private final int iconHeight;
+	private final String name;
+	private final String description;
 
-	public IconPreferences(final byte[] iconDate, final int iconWidth,
-			final int iconHeight) {
-		this.iconData = iconDate;
-		this.iconWidth = iconWidth;
-		this.iconHeight = iconHeight;
+	public ClientWindowDescription(final String name,
+			final String description) {
+		this.description = description;
+		this.name = name;
 	}
 
-	public byte[] getIconData() {
-		return this.iconData;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public int getIconWidth() {
-		return this.iconWidth;
-	}
-
-	public int getIconHeight() {
-		return this.iconHeight;
+	public String getName() {
+		return this.name;
 	}
 
 	@Override
 	public ProtocolEventType getType() {
-		return IconPreferences.TYPE;
+		return ClientWindowDescription.TYPE;
 	}
+
 }

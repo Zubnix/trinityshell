@@ -20,9 +20,9 @@ import org.fusion.x11.core.XWindow;
 import org.fusion.x11.icccm.WmHintsInstance;
 import org.fusion.x11.icccm.WmStateEnum;
 import org.hyperdrive.core.ClientWindow;
-import org.hyperdrive.protocol.GeometryPreferences;
-import org.hyperdrive.protocol.IconPreferences;
-import org.hyperdrive.protocol.UrgentNotify;
+import org.hyperdrive.protocol.ClientPreferedGeometry;
+import org.hyperdrive.protocol.ClientIcon;
+import org.hyperdrive.protocol.ClientIsUrgent;
 
 //TODO documentation
 /**
@@ -40,10 +40,10 @@ final class WmHintsInterpreter {
 
 	void handleWmHint(final ClientWindow client, final WmHintsInstance instance) {
 
-		final IconPreferences iconEvent = (IconPreferences) this.xDesktopProtocol
-				.query(client, IconPreferences.TYPE);
-		final GeometryPreferences geoEvent = (GeometryPreferences) this.xDesktopProtocol
-				.query(client, GeometryPreferences.TYPE);
+		final ClientIcon iconEvent = (ClientIcon) this.xDesktopProtocol
+				.query(client, ClientIcon.TYPE);
+		final ClientPreferedGeometry geoEvent = (ClientPreferedGeometry) this.xDesktopProtocol
+				.query(client, ClientPreferedGeometry.TYPE);
 
 		final long input = instance.getInput();
 		final WmStateEnum initialState = instance.getInitialState();
@@ -88,9 +88,9 @@ final class WmHintsInterpreter {
 
 		}
 
-		final UrgentNotify urgentNotify = new UrgentNotify(
+		final ClientIsUrgent clientIsUrgent = new ClientIsUrgent(
 				(hintFlags & 256) != 0);
-		this.xDesktopProtocol.updateProtocolEvent(client, urgentNotify);
+		this.xDesktopProtocol.updateProtocolEvent(client, clientIsUrgent);
 
 		// TODO update geometry preferences' visibility
 		// TODO update Icon preferences

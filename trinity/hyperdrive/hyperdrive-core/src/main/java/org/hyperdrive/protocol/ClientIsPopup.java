@@ -15,35 +15,30 @@
  */
 package org.hyperdrive.protocol;
 
+import org.hyperdrive.core.ClientWindow;
+
 //TODO documentation
 /**
  * 
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ClientSystemDescriptionNotify implements ProtocolEvent {
+public class ClientIsPopup implements ProtocolEvent {
 
 	public static final ProtocolEventType TYPE = new ProtocolEventType();
 
-	private final String systemDescription;
-	private final String processId;
+	private final ClientWindow popupFor;
 
-	public ClientSystemDescriptionNotify(final String systemdescription,
-			final String processId) {
-		this.systemDescription = systemdescription;
-		this.processId = processId;
-	}
-
-	public String getProcessId() {
-		return this.processId;
-	}
-
-	public String getSystemDescription() {
-		return this.systemDescription;
+	public ClientIsPopup(final ClientWindow popupFor) {
+		this.popupFor = popupFor;
 	}
 
 	@Override
 	public ProtocolEventType getType() {
-		return ClientSystemDescriptionNotify.TYPE;
+		return ClientIsPopup.TYPE;
+	}
+
+	public ClientWindow getPopupFor() {
+		return this.popupFor;
 	}
 }

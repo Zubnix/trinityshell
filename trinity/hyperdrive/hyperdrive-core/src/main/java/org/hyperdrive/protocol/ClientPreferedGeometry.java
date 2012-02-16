@@ -21,7 +21,7 @@ package org.hyperdrive.protocol;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class GeometryPreferences implements ProtocolEvent {
+public class ClientPreferedGeometry implements ProtocolEvent {
 	public static final ProtocolEventType TYPE = new ProtocolEventType();
 
 	private final int x;
@@ -37,7 +37,7 @@ public class GeometryPreferences implements ProtocolEvent {
 	private final boolean visible;
 	private final boolean resizable;
 
-	public GeometryPreferences(final int x, final int y, final int width,
+	public ClientPreferedGeometry(final int x, final int y, final int width,
 			final int height, final int minWidth, final int minHeight,
 			final int maxWidth, final int maxHeight, final int widthInc,
 			final int heightInc, final boolean visible, final boolean resizable) {
@@ -105,6 +105,6 @@ public class GeometryPreferences implements ProtocolEvent {
 
 	@Override
 	public ProtocolEventType getType() {
-		return GeometryPreferences.TYPE;
+		return ClientPreferedGeometry.TYPE;
 	}
 }
