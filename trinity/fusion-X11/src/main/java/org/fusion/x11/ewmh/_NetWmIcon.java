@@ -36,15 +36,13 @@ import org.hydrogen.displayinterface.PlatformRenderArea;
 public final class _NetWmIcon extends XPropertyXAtom<_NetWmIconInstance> {
 	// CARDINAL[][2+n]/32
 
-	private static final String ATOM_NAME = "_NET_WM_ICON";
-
 	/**
 	 * 
 	 * @param display
 	 * 
 	 */
 	public _NetWmIcon(final XDisplay display) {
-		super(display, _NetWmIcon.ATOM_NAME);
+		super(display, EwmhAtoms.NET_WM_ICON_ATOM_NAME);
 	}
 
 	@Override
@@ -57,12 +55,14 @@ public final class _NetWmIcon extends XPropertyXAtom<_NetWmIconInstance> {
 		for (final WmIcon wmIcon : wmIcons) {
 			final int width = wmIcon.getWidth();
 			final int height = wmIcon.getHeight();
-			final int[] pixels = wmIcon.getArgbPixels();
+			final byte[] pixels = wmIcon.getArgbPixels();
 			intData.add(Integer.valueOf(width));
 			intData.add(Integer.valueOf(height));
-			for (final int pixel : pixels) {
+
+			for (final byte pixel : pixels) {
 				intData.add(Integer.valueOf(pixel));
 			}
+
 		}
 		final IntDataContainer rawDataContainer = new IntDataContainer(
 				intData.size());
@@ -91,12 +91,9 @@ public final class _NetWmIcon extends XPropertyXAtom<_NetWmIconInstance> {
 			// each pixel is an int and thus consists of 4 bytes.
 			read += 8 + (nroPixels * 4);
 
-			final int[] pixels = new int[nroPixels];
-			propertyDataContainer.getBuffer().asIntBuffer().get(pixels);
-			// advance the position
-			propertyDataContainer.getBuffer().position(
-					propertyDataContainer.getBuffer().position()
-							+ (nroPixels * 4));
+			final byte[] pixels = new byte[nroPixels * 4];
+			propertyDataContainer.getBuffer().get(pixels);
+
 			final WmIcon icon = new WmIcon(width, height, pixels);
 			icons.add(icon);
 		}

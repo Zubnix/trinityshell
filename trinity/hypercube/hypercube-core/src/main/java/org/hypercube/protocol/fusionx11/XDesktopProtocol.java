@@ -30,6 +30,9 @@ import org.fusion.x11.core.XPropertyXAtomSingleText;
 import org.fusion.x11.core.XProtocolConstants;
 import org.fusion.x11.core.XWindow;
 import org.fusion.x11.core.event.XClientMessageEvent;
+import org.fusion.x11.ewmh.EwmhAtoms;
+import org.fusion.x11.ewmh._NetWmIcon;
+import org.fusion.x11.ewmh._NetWmIconInstance;
 import org.fusion.x11.icccm.Icccm;
 import org.fusion.x11.icccm.IcccmAtoms;
 import org.fusion.x11.icccm.WmHints;
@@ -42,10 +45,7 @@ import org.hydrogen.displayinterface.PlatformRenderArea;
 import org.hydrogen.displayinterface.PropertyInstance;
 import org.hydrogen.displayinterface.PropertyInstanceText;
 import org.hydrogen.displayinterface.PropertyInstanceTexts;
-import org.hydrogen.displayinterface.event.DisplayEventType;
-import org.hydrogen.displayinterface.event.PropertyChangedNotifyEvent;
 import org.hydrogen.eventsystem.EventHandler;
-import org.hydrogen.eventsystem.TypedEventHandler;
 import org.hyperdrive.core.ClientWindow;
 import org.hyperdrive.core.ManagedDisplay;
 import org.hyperdrive.core.RenderAreaPropertiesManipulator;
@@ -141,16 +141,13 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 		}
 	}
 
-	private final class AllPropertiesListener implements
-			TypedEventHandler<DisplayEventType, PropertyChangedNotifyEvent> {
+	private final class NetWmIconListener extends
+			PropertyListener<_NetWmIconInstance, _NetWmIcon> {
 		@Override
-		public void handleEvent(final PropertyChangedNotifyEvent event) {
-			handleIncomingProperty(event);
-		}
-
-		@Override
-		public DisplayEventType getType() {
-			return PropertyChangedNotifyEvent.TYPE;
+		void handlePropertyInstance(final ClientWindow client,
+				final _NetWmIconInstance propertyInstance) {
+			XDesktopProtocol.this.netWmIconInterpreter.handleWmIcon(client,
+					propertyInstance);
 		}
 	}
 
@@ -159,10 +156,14 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 
 	private final XDisplay display;
 
+	// icccm
 	private final WmNormalHintsInterpreter wmNormalHintsInterpreter;
 	private final WmHintsInterpreter wmHintsInterpreter;
 	private final WmNameInterpreter wmNameInterpreter;
 	private final WmClassInterpreter wmClassInterpreter;
+
+	// ewmh
+	private final NetWmIconInterpreter netWmIconInterpreter;
 
 	private final Map<ClientWindow, RenderAreaPropertiesManipulator> clientPropertiesManipulators;
 
@@ -172,10 +173,6 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 		this.inputPreferenceParser = new InputPreferenceParser();
 		this.clientPropertiesManipulators = new HashMap<ClientWindow, RenderAreaPropertiesManipulator>();
 
-		// We want to store protocol events of clients before they are
-		// registered.
-		managedDisplay.addTypedEventHandler(new AllPropertiesListener());
-
 		this.display = (XDisplay) managedDisplay.getDisplay();
 
 		this.icccm = new Icccm(this.display);
@@ -184,6 +181,8 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 		this.wmHintsInterpreter = new WmHintsInterpreter(this);
 		this.wmNameInterpreter = new WmNameInterpreter(this);
 		this.wmClassInterpreter = new WmClassInterpreter(this);
+
+		this.netWmIconInterpreter = new NetWmIconInterpreter(this);
 
 		if (this.icccm.getSelectionManager().isScreenSelectionAvailable()) {
 			this.icccm.getSelectionManager().initScreenSelection();
@@ -196,19 +195,14 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 		}
 	}
 
-	protected void handleIncomingProperty(final PropertyChangedNotifyEvent event) {
-		// TODO Auto-generated method stub
-
-	}
-
 	@Override
 	public void registerClient(final ClientWindow client) {
 		final RenderAreaPropertiesManipulator propertiesManipulator = new RenderAreaPropertiesManipulator(
 				client);
-
 		this.clientPropertiesManipulators.put(client, propertiesManipulator);
 		readProtocolProperties(client, propertiesManipulator);
 		installListeners(client);
+		((XWindow) client.getPlatformRenderArea()).addToSaveSet();
 	}
 
 	@Override
@@ -340,6 +334,8 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 				.getPropertyValue(IcccmAtoms.WM_NAME_ATOM_NAME);
 		final PropertyInstanceTexts wmClassInstance = propertiesManipulator
 				.getPropertyValue(IcccmAtoms.WM_CLASS_ATOM_NAME);
+		final _NetWmIconInstance wmIconInstance = propertiesManipulator
+				.getPropertyValue(EwmhAtoms.NET_WM_ICON_ATOM_NAME);
 
 		// update all protocol events for the client so they can be queried
 		// in the future
@@ -348,6 +344,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 		this.wmNormalHintsInterpreter.handleWmNormalHints(client,
 				wmSizeHintsInstance);
 		this.wmNameInterpreter.handleWmName(client, wmNameInstance);
+		this.netWmIconInterpreter.handleWmIcon(client, wmIconInstance);
 		// TODO wm_class
 	}
 
@@ -371,6 +368,8 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 						.TYPE(IcccmAtoms.WM_CLASS_ATOM_NAME));
 		client.addEventHandler(new ClientVisibilityListener(),
 				GeoEvent.VISIBILITY);
+		client.addEventHandler(new NetWmIconListener(),
+				RenderAreaPropertyChangedEvent
+						.TYPE(EwmhAtoms.NET_WM_ICON_ATOM_NAME));
 	}
-
 }

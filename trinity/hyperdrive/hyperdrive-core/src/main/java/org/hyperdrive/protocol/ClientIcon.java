@@ -22,18 +22,24 @@ package org.hyperdrive.protocol;
  * @since 1.0
  */
 public class ClientIcon implements ProtocolEvent {
+	public enum IconFormat {
+		ARGB
+	}
 
 	public static final ProtocolEventType TYPE = new ProtocolEventType();
 
+	private final IconFormat format;
 	private final byte[] iconData;
 	private final int iconWidth;
 	private final int iconHeight;
 
 	public ClientIcon(final byte[] iconDate, final int iconWidth,
-			final int iconHeight) {
+			final int iconHeight, final IconFormat format) {
 		this.iconData = iconDate;
 		this.iconWidth = iconWidth;
 		this.iconHeight = iconHeight;
+		this.format = format;
+
 	}
 
 	public byte[] getIconData() {
@@ -46,6 +52,10 @@ public class ClientIcon implements ProtocolEvent {
 
 	public int getIconHeight() {
 		return this.iconHeight;
+	}
+
+	public IconFormat getFormat() {
+		return this.format;
 	}
 
 	@Override

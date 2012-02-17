@@ -35,7 +35,7 @@ public final class _NetWmIconInstance extends BasePropertyInstance {
 	 */
 	public static final class WmIcon {
 		private final int width, height;
-		private final int[] argbPixels;
+		private final byte[] argbPixels;
 
 		/**
 		 * 
@@ -43,7 +43,7 @@ public final class _NetWmIconInstance extends BasePropertyInstance {
 		 * @param height
 		 * @param argbPixels
 		 */
-		WmIcon(final int width, final int height, final int[] argbPixels) {
+		WmIcon(final int width, final int height, final byte[] argbPixels) {
 			this.width = width;
 			this.height = height;
 			this.argbPixels = Arrays.copyOf(argbPixels, argbPixels.length);
@@ -69,10 +69,10 @@ public final class _NetWmIconInstance extends BasePropertyInstance {
 		 * 
 		 * @return
 		 */
-		public int[] getArgbPixels() {
+		public byte[] getArgbPixels() {
 			// return a copy so manipulation of the returned instance can take
 			// place without interfering with the source.
-			return Arrays.copyOf(argbPixels, argbPixels.length);
+			return Arrays.copyOf(this.argbPixels, this.argbPixels.length);
 		}
 	}
 

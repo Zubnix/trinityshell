@@ -56,7 +56,9 @@ public class ClientManagerLabelViewImpl extends ClientNameLabelViewImpl
 			@Override
 			public Void call(final ClientManagerLabelVisual paintPeer,
 					final Paintable paintable) {
-				paintPeer.deactivate();
+				if (paintPeer != null) {
+					paintPeer.deactivate();
+				}
 				return null;
 			}
 		};

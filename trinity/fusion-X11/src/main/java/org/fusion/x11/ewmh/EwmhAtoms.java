@@ -41,6 +41,7 @@ public final class EwmhAtoms {
 	public static final String NET_REQUEST_FRAME_EXTENTS_ATOM_NAME = "_NET_REQUEST_FRAME_EXTENTS";
 	public static final String NET_WM_NAME_ATOM_NAME = "_NET_WM_NAME";
 	public static final String NET_WM_VISIBLE_NAME_ATOM_NAME = "_NET_WM_VISIBLE_NAME";
+	public static final String NET_WM_ICON_ATOM_NAME = "_NET_WM_ICON";
 	public static final String NET_WM_ICON_NAME_ATOM_NAME = "_NET_WM_ICON_NAME";
 	public static final String NET_WM_VISIBLE_ICON_NAME_ATOM_NAME = "_NET_WM_VISIBLE_ICON_NAME";
 	public static final String NET_WM_DESKTOP_ATOM_NAME = "_NET_WM_DESKTOP";
@@ -178,34 +179,34 @@ public final class EwmhAtoms {
 		// ****EWMH ATOMS****//
 		// Root Window DisplayAtoms (and Related Messages)
 		this.netSupported = atomRegistry.register(new XPropertyXAtomAtoms(
-				display, NET_SUPPORTED_ATOM_NAME));
+				display, EwmhAtoms.NET_SUPPORTED_ATOM_NAME));
 		this.netClientList = atomRegistry.register(new XPropertyXAtomWindows(
-				display, NET_CLIENT_LIST_ATOM_NAME));
+				display, EwmhAtoms.NET_CLIENT_LIST_ATOM_NAME));
 		this.netClientListStacking = atomRegistry
 				.register(new XPropertyXAtomWindows(display,
-						NET_CLIENT_LIST_STACKING_ATOM_NAME));
+						EwmhAtoms.NET_CLIENT_LIST_STACKING_ATOM_NAME));
 		this.netNumberOfDesktops = atomRegistry
 				.register(new XPropertyXAtomCardinal(display,
-						NET_NUMBER_OF_DESKTOPS_ATOM_NAME));
+						EwmhAtoms.NET_NUMBER_OF_DESKTOPS_ATOM_NAME));
 		this.netDesktopGeometry = atomRegistry
 				.register(new XPropertyXAtomCardinals(display,
-						NET_DESKTOP_GEOMETRY_ATOM_NAME, 2));
+						EwmhAtoms.NET_DESKTOP_GEOMETRY_ATOM_NAME, 2));
 		this.netDesktopViewport = atomRegistry
 				.register(new _NetDesktopViewPort(display));
 		this.netCurrentDesktop = atomRegistry
 				.register(new XPropertyXAtomCardinal(display,
-						NET_CURRENT_DESKTOP_ATOM_NAME));
+						EwmhAtoms.NET_CURRENT_DESKTOP_ATOM_NAME));
 		this.netDesktopNames = atomRegistry
 				.register(new XPropertyXAtomMultiText(display,
-						NET_DESKTOP_NAMES_ATOM_NAME));
+						EwmhAtoms.NET_DESKTOP_NAMES_ATOM_NAME));
 		this.netActiveWindow = atomRegistry.register(new XPropertyXAtomWindow(
-				display, NET_ACTIVE_WINDOW_ATOM_NAME));
+				display, EwmhAtoms.NET_ACTIVE_WINDOW_ATOM_NAME));
 		this.netWorkarea = atomRegistry.register(new _NetWorkArea(display));
 		this.netSupportingWmCheck = atomRegistry
 				.register(new XPropertyXAtomWindow(display,
-						NET_SUPPORTING_WM_CHECK_ATOM_NAME));
+						EwmhAtoms.NET_SUPPORTING_WM_CHECK_ATOM_NAME));
 		this.netVirtualRoots = atomRegistry.register(new XPropertyXAtomWindows(
-				display, NET_VIRTUAL_ROOTS_ATOM_NAME));
+				display, EwmhAtoms.NET_VIRTUAL_ROOTS_ATOM_NAME));
 		this.netDesktopLayout = atomRegistry.register(new _NetDesktopLayout(
 				display));
 		this.netShowingDesktop = atomRegistry.register(new _NetShowingDesktop(
@@ -213,133 +214,133 @@ public final class EwmhAtoms {
 
 		// Other Root Window Messages
 		this.netCloseWindow = atomRegistry.register(new XAtom(display,
-				NET_CLOSE_WINDOW_ATOM_NAME));
+				EwmhAtoms.NET_CLOSE_WINDOW_ATOM_NAME));
 		this.netMoveresizeWindow = atomRegistry.register(new XAtom(display,
-				NET_MOVERESIZE_WINDOW_ATOM_NAME));
+				EwmhAtoms.NET_MOVERESIZE_WINDOW_ATOM_NAME));
 		this.netWmMoveresize = atomRegistry.register(new XAtom(display,
-				NET_WM_MOVERESIZE_ATOM_NAME));
+				EwmhAtoms.NET_WM_MOVERESIZE_ATOM_NAME));
 		this.netRestackWindow = atomRegistry.register(new XAtom(display,
-				NET_RESTACK_WINDOW_ATOM_NAME));
+				EwmhAtoms.NET_RESTACK_WINDOW_ATOM_NAME));
 		this.netRequestFrameExtents = atomRegistry.register(new XAtom(display,
-				NET_REQUEST_FRAME_EXTENTS_ATOM_NAME));
+				EwmhAtoms.NET_REQUEST_FRAME_EXTENTS_ATOM_NAME));
 
 		// Application Window DisplayAtoms
 		this.netWmName = atomRegistry.register(new XPropertyXAtomSingleText(
-				display, NET_WM_NAME_ATOM_NAME));
+				display, EwmhAtoms.NET_WM_NAME_ATOM_NAME));
 		this.netWmVisibleName = atomRegistry
 				.register(new XPropertyXAtomSingleText(display,
-						NET_WM_VISIBLE_NAME_ATOM_NAME));
+						EwmhAtoms.NET_WM_VISIBLE_NAME_ATOM_NAME));
 		this.netWmIconName = atomRegistry
 				.register(new XPropertyXAtomSingleText(display,
-						NET_WM_ICON_NAME_ATOM_NAME));
+						EwmhAtoms.NET_WM_ICON_NAME_ATOM_NAME));
 		this.netWmVisibleIconName = atomRegistry
 				.register(new XPropertyXAtomSingleText(display,
-						NET_WM_VISIBLE_ICON_NAME_ATOM_NAME));
+						EwmhAtoms.NET_WM_VISIBLE_ICON_NAME_ATOM_NAME));
 		this.netWmDesktop = atomRegistry.register(new XPropertyXAtomCardinal(
-				display, NET_WM_DESKTOP_ATOM_NAME));
+				display, EwmhAtoms.NET_WM_DESKTOP_ATOM_NAME));
 		this.netWmWindowType = atomRegistry.register(new XPropertyXAtomAtoms(
-				display, NET_WM_WINDOW_TYPE_ATOM_NAME));
+				display, EwmhAtoms.NET_WM_WINDOW_TYPE_ATOM_NAME));
 		this.netWmWindowTypeDesktop = atomRegistry.register(new XAtom(display,
-				NET_WM_WINDOW_TYPE_DESKTOP_ATOM_NAME));
+				EwmhAtoms.NET_WM_WINDOW_TYPE_DESKTOP_ATOM_NAME));
 		this.netWmWindowTypeDock = atomRegistry.register(new XAtom(display,
-				NET_WM_WINDOW_TYPE_DOCK_ATOM_NAME));
+				EwmhAtoms.NET_WM_WINDOW_TYPE_DOCK_ATOM_NAME));
 		this.netWmWindowTypeToolbar = atomRegistry.register(new XAtom(display,
-				NET_WM_WINDOW_TYPE_TOOLBAR_ATOM_NAME));
+				EwmhAtoms.NET_WM_WINDOW_TYPE_TOOLBAR_ATOM_NAME));
 		this.netWmWindowTypeMenu = atomRegistry.register(new XAtom(display,
-				NET_WM_WINDOW_TYPE_MENU_ATOM_NAME));
+				EwmhAtoms.NET_WM_WINDOW_TYPE_MENU_ATOM_NAME));
 		this.netWmWindowTypeUtility = atomRegistry.register(new XAtom(display,
-				NET_WM_WINDOW_TYPE_UTILITY_ATOM_NAME));
+				EwmhAtoms.NET_WM_WINDOW_TYPE_UTILITY_ATOM_NAME));
 		this.netWmWindowTypeSplash = atomRegistry.register(new XAtom(display,
-				NET_WM_WINDOW_TYPE_SPLASH_ATOM_NAME));
+				EwmhAtoms.NET_WM_WINDOW_TYPE_SPLASH_ATOM_NAME));
 		this.netWmWindowTypeDialog = atomRegistry.register(new XAtom(display,
-				NET_WM_WINDOW_TYPE_DIALOG_ATOM_NAME));
+				EwmhAtoms.NET_WM_WINDOW_TYPE_DIALOG_ATOM_NAME));
 		this.netWmWindowTypeNormal = atomRegistry.register(new XAtom(display,
-				NET_WM_WINDOW_TYPE_NORMAL_ATOM_NAME));
+				EwmhAtoms.NET_WM_WINDOW_TYPE_NORMAL_ATOM_NAME));
 		this.netWmState = atomRegistry.register(new XPropertyXAtomAtoms(
-				display, NET_WM_STATE_ATOM_NAME));
+				display, EwmhAtoms.NET_WM_STATE_ATOM_NAME));
 		this.netWmStateModel = atomRegistry.register(new XAtom(display,
-				NET_WM_STATE_MODEL_ATOM_NAME));
+				EwmhAtoms.NET_WM_STATE_MODEL_ATOM_NAME));
 		this.netWmStateSticky = atomRegistry.register(new XAtom(display,
-				NET_WM_STATE_STICKY_ATOM_NAME));
+				EwmhAtoms.NET_WM_STATE_STICKY_ATOM_NAME));
 		this.netWmStateMaximizedVert = atomRegistry.register(new XAtom(display,
-				NET_WM_STATE_MAXIMIZED_VERT_ATOM_NAME));
+				EwmhAtoms.NET_WM_STATE_MAXIMIZED_VERT_ATOM_NAME));
 		this.netWmStateMaximizedHorz = atomRegistry.register(new XAtom(display,
-				NET_WM_STATE_MAXIMIZED_HORZ_ATOM_NAME));
+				EwmhAtoms.NET_WM_STATE_MAXIMIZED_HORZ_ATOM_NAME));
 		this.netWmStateShaded = atomRegistry.register(new XAtom(display,
-				NET_WM_STATE_SHADED_ATOM_NAME));
+				EwmhAtoms.NET_WM_STATE_SHADED_ATOM_NAME));
 		this.netWmStateSkipTaskbar = atomRegistry.register(new XAtom(display,
-				NET_WM_STATE_SKIP_TASKBAR_ATOM_NAME));
+				EwmhAtoms.NET_WM_STATE_SKIP_TASKBAR_ATOM_NAME));
 		this.netWmStateSkipPager = atomRegistry.register(new XAtom(display,
-				NET_WM_STATE_SKIP_PAGER_ATOM_NAME));
+				EwmhAtoms.NET_WM_STATE_SKIP_PAGER_ATOM_NAME));
 		this.netWmStateHidden = atomRegistry.register(new XAtom(display,
-				NET_WM_STATE_HIDDEN_ATOM_NAME));
+				EwmhAtoms.NET_WM_STATE_HIDDEN_ATOM_NAME));
 		this.netWmStateFullscreen = atomRegistry.register(new XAtom(display,
-				NET_WM_STATE_FULLSCREEN_ATOM_NAME));
+				EwmhAtoms.NET_WM_STATE_FULLSCREEN_ATOM_NAME));
 		this.netWmStateAbove = atomRegistry.register(new XAtom(display,
-				NET_WM_STATE_ABOVE_ATOM_NAME));
+				EwmhAtoms.NET_WM_STATE_ABOVE_ATOM_NAME));
 		this.netWmStateBelow = atomRegistry.register(new XAtom(display,
-				NET_WM_STATE_BELOW_ATOM_NAME));
+				EwmhAtoms.NET_WM_STATE_BELOW_ATOM_NAME));
 		this.netWmStateDemandsAttention = atomRegistry.register(new XAtom(
-				display, NET_WM_STATE_DEMANDS_ATTENTION_ATOM_NAME));
+				display, EwmhAtoms.NET_WM_STATE_DEMANDS_ATTENTION_ATOM_NAME));
 		this.netWmAllowedActions = atomRegistry
 				.register(new XPropertyXAtomAtoms(display,
-						NET_WM_ALLOWED_ACTIONS_ATOM_NAME));
+						EwmhAtoms.NET_WM_ALLOWED_ACTIONS_ATOM_NAME));
 		this.netWmActionMove = atomRegistry.register(new XAtom(display,
-				NET_WM_ACTION_MOVE_ATOM_NAME));
+				EwmhAtoms.NET_WM_ACTION_MOVE_ATOM_NAME));
 		this.netWmActionResize = atomRegistry.register(new XAtom(display,
-				NET_WM_ACTION_RESIZE_ATOM_NAME));
+				EwmhAtoms.NET_WM_ACTION_RESIZE_ATOM_NAME));
 		this.netWmActionMinimize = atomRegistry.register(new XAtom(display,
-				NET_WM_ACTION_MINIMIZE_ATOM_NAME));
+				EwmhAtoms.NET_WM_ACTION_MINIMIZE_ATOM_NAME));
 		this.netWmActionShade = atomRegistry.register(new XAtom(display,
-				NET_WM_ACTION_SHADE_ATOM_NAME));
+				EwmhAtoms.NET_WM_ACTION_SHADE_ATOM_NAME));
 		this.netWmActionSticky = atomRegistry.register(new XAtom(display,
-				NET_WM_ACTION_STICK_ATOM_NAME));
+				EwmhAtoms.NET_WM_ACTION_STICK_ATOM_NAME));
 		this.netWmActionMaximizeHorz = atomRegistry.register(new XAtom(display,
-				NET_WM_ACTION_MAXIMIZE_HORZ_ATOM_NAME));
+				EwmhAtoms.NET_WM_ACTION_MAXIMIZE_HORZ_ATOM_NAME));
 		this.netWmActionMaximizeVert = atomRegistry.register(new XAtom(display,
-				NET_WM_ACTION_MAXIMIZE_VERT_ATOM_NAME));
+				EwmhAtoms.NET_WM_ACTION_MAXIMIZE_VERT_ATOM_NAME));
 		this.netWmActionFullscreen = atomRegistry.register(new XAtom(display,
-				NET_WM_ACTION_FULLSCREEN_ATOM_NAME));
+				EwmhAtoms.NET_WM_ACTION_FULLSCREEN_ATOM_NAME));
 		this.netWmActionChangeDesktop = atomRegistry.register(new XAtom(
-				display, NET_WM_ACTION_CHANGE_DESKTOP_ATOM_NAME));
+				display, EwmhAtoms.NET_WM_ACTION_CHANGE_DESKTOP_ATOM_NAME));
 		this.netWmActionClose = atomRegistry.register(new XAtom(display,
-				NET_WM_ACTION_CLOSE_ATOM_NAME));
+				EwmhAtoms.NET_WM_ACTION_CLOSE_ATOM_NAME));
 		this.netWmStrut = atomRegistry.register(new XPropertyXAtomCardinals(
-				display, NET_WM_STRUT_ATOM_NAME, 4));
+				display, EwmhAtoms.NET_WM_STRUT_ATOM_NAME, 4));
 		this.netWmStrutPartial = atomRegistry
 				.register(new XPropertyXAtomCardinals(display,
-						NET_WM_STRUT_PARTIAL_ATOM_NAME, 12));
+						EwmhAtoms.NET_WM_STRUT_PARTIAL_ATOM_NAME, 12));
 		this.netWmIconGeometry = atomRegistry
 				.register(new XPropertyXAtomCardinals(display,
-						NET_WM_ICON_GEOMETRY_ATOM_NAME, 4));
+						EwmhAtoms.NET_WM_ICON_GEOMETRY_ATOM_NAME, 4));
 		this.netWmIcon = atomRegistry.register(new _NetWmIcon(display));
 		this.netWmPid = atomRegistry.register(new XPropertyXAtomCardinal(
-				display, NET_WM_PID_ATOM_NAME));
+				display, EwmhAtoms.NET_WM_PID_ATOM_NAME));
 		this.netWmHandledIcons = atomRegistry.register(new _NetWmHandledIcons(
 				display));
 		this.netWmUserTime = atomRegistry.register(new XPropertyXAtomCardinal(
-				display, NET_WM_USER_TIME_ATOM_NAME));
+				display, EwmhAtoms.NET_WM_USER_TIME_ATOM_NAME));
 		this.netWmUserTimeWindow = atomRegistry
 				.register(new XPropertyXAtomWindow(display,
-						NET_WM_USER_TIME_WINDOW_ATOM_NAME));
+						EwmhAtoms.NET_WM_USER_TIME_WINDOW_ATOM_NAME));
 		this.netFrameExtents = atomRegistry
 				.register(new XPropertyXAtomCardinals(display,
-						NET_FRAME_EXTENTS_ATOM_NAME, 4));
+						EwmhAtoms.NET_FRAME_EXTENTS_ATOM_NAME, 4));
 
 		// Window Manager Protocols
 		this.netWmPing = atomRegistry.register(new XAtom(display,
-				NET_WM_PING_ATOM_NAME));
+				EwmhAtoms.NET_WM_PING_ATOM_NAME));
 		this.netWmSyncRequest = atomRegistry.register(new XAtom(display,
-				NET_WM_SYNC_REQUEST_ATOM_NAME));
+				EwmhAtoms.NET_WM_SYNC_REQUEST_ATOM_NAME));
 		this.netWmSyncRequestCounter = atomRegistry
 				.register(new _NetWmSyncRequestCounter(display));
 		this.netWmFullscreenMonitors = atomRegistry
 				.register(new XPropertyXAtomCardinals(display,
-						NET_WM_FULLSCREEN_MONITORS_ATOM_NAME, 4));
+						EwmhAtoms.NET_WM_FULLSCREEN_MONITORS_ATOM_NAME, 4));
 
 		// Other DisplayAtoms
 		this.netWmFullPlacement = atomRegistry.register(new XAtom(display,
-				NET_WM_FULL_PLACEMENT_ATOM_NAME));
+				EwmhAtoms.NET_WM_FULL_PLACEMENT_ATOM_NAME));
 		// TODO more
 
 		// ******************//

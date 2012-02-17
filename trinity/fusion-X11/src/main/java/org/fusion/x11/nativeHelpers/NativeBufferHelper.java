@@ -32,7 +32,7 @@ import org.fusion.x11.core.FlexDataContainer;
  * @since 1.0
  */
 public final class NativeBufferHelper extends FlexDataContainer {
-	private static final int MAX_ARGUMENTS_BYTE_SIZE = 512;
+	private static final int MAX_ARGUMENTS_BYTE_SIZE = 16384;
 
 	private final Thread owningThread;
 
@@ -57,23 +57,23 @@ public final class NativeBufferHelper extends FlexDataContainer {
 		super(ByteBuffer
 				.allocateDirect(NativeBufferHelper.MAX_ARGUMENTS_BYTE_SIZE));
 		this.owningThread = Thread.currentThread();
-		this.setByteSize(DEFAULT_NATIVE_BYTE_SIZE);
-		this.setShortSize(DEFAULT_NATIVE_SHORT_SIZE);
-		this.setIntSize(DEFAULT_NATIVE_INT_SIZE);
-		this.setLongSize(DEFAULT_NATIVE_LONG_SIZE);
-		this.enableWrite();
+		setByteSize(NativeBufferHelper.DEFAULT_NATIVE_BYTE_SIZE);
+		setShortSize(NativeBufferHelper.DEFAULT_NATIVE_SHORT_SIZE);
+		setIntSize(NativeBufferHelper.DEFAULT_NATIVE_INT_SIZE);
+		setLongSize(NativeBufferHelper.DEFAULT_NATIVE_LONG_SIZE);
+		enableWrite();
 	}
 
 	/**
 	 * 
 	 */
-	private void checkThead() {
+	private void checkThread() {
 		if (!Thread.currentThread().equals(this.owningThread)) {
 			throw new Error(
 					String.format(
 							"The current thread %s is not the owner thread: %s of object %s",
 							Thread.currentThread(), this.owningThread,
-							this.toString()));
+							toString()));
 		}
 	}
 
@@ -82,7 +82,7 @@ public final class NativeBufferHelper extends FlexDataContainer {
 	 * @return
 	 */
 	public boolean isWriteEnabled() {
-		this.checkThead();
+		checkThread();
 		return this.doneReading;
 	}
 
@@ -91,7 +91,7 @@ public final class NativeBufferHelper extends FlexDataContainer {
 	 * @param doneReading
 	 */
 	void setDoneReading(final boolean doneReading) {
-		this.checkThead();
+		checkThread();
 		this.doneReading = doneReading;
 	}
 
@@ -99,7 +99,7 @@ public final class NativeBufferHelper extends FlexDataContainer {
 	 * 
 	 */
 	public void enableWrite() {
-		this.setDoneReading(true);
+		setDoneReading(true);
 	}
 
 	/**
@@ -108,14 +108,14 @@ public final class NativeBufferHelper extends FlexDataContainer {
 	 */
 	@Override
 	public ByteBuffer getBuffer() {
-		this.checkThead();
+		checkThread();
 		return super.getBuffer();
 	}
 
 	@Override
 	public byte[] getAllData() {
 		final byte[] allData = new byte[NativeBufferHelper.MAX_ARGUMENTS_BYTE_SIZE];
-		this.getBuffer().get(allData);
+		getBuffer().get(allData);
 		return allData;
 	}
 
