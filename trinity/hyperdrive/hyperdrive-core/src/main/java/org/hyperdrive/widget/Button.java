@@ -18,7 +18,6 @@ package org.hyperdrive.widget;
 import org.hydrogen.displayinterface.event.ButtonNotifyEvent;
 import org.hydrogen.displayinterface.input.MouseInput;
 import org.hydrogen.eventsystem.EventHandler;
-import org.hydrogen.paintinterface.PaintCall;
 
 //TODO documentation
 /**
@@ -36,20 +35,26 @@ public class Button extends Widget {
 	 * @since 1.0
 	 * 
 	 */
-	public static interface ButtonView extends View {
+	@ViewDefinition
+	public interface View extends Widget.View {
 		/**
 		 * 
 		 * @param input
 		 * @return
 		 */
-		PaintCall<?, ?> mouseButtonPressed(MouseInput input);
+		PaintInstruction<Void> mouseButtonPressed(MouseInput input);
 
 		/**
 		 * 
 		 * @param input
 		 * @return
 		 */
-		PaintCall<?, ?> mouseButtonReleased(MouseInput input);
+		PaintInstruction<Void> mouseButtonReleased(MouseInput input);
+	}
+
+	@Override
+	public Button.View getView() {
+		return (View) super.getView();
 	}
 
 	@Override
@@ -58,8 +63,7 @@ public class Button extends Widget {
 		this.addEventHandler(new EventHandler<ButtonNotifyEvent>() {
 			@Override
 			public void handleEvent(final ButtonNotifyEvent event) {
-				getPainter().paint(
-						getView().mouseButtonPressed(event.getInput()));
+				getView().mouseButtonPressed(event.getInput());
 				Button.this.onMouseButtonPressed(event.getInput());
 			}
 		}, ButtonNotifyEvent.TYPE_PRESSED);
@@ -68,17 +72,10 @@ public class Button extends Widget {
 				new EventHandler<ButtonNotifyEvent>() {
 					@Override
 					public void handleEvent(final ButtonNotifyEvent event) {
-						getPainter()
-								.paint(getView().mouseButtonReleased(
-										event.getInput()));
+						getView().mouseButtonReleased(event.getInput());
 						Button.this.onMouseButtonReleased(event.getInput());
 					}
 				}, ButtonNotifyEvent.TYPE_RELEASED);
-	}
-
-	@Override
-	public ButtonView getView() {
-		return (ButtonView) super.getView();
 	}
 
 	/**
@@ -86,7 +83,6 @@ public class Button extends Widget {
 	 * @param input
 	 */
 	public void onMouseButtonPressed(final MouseInput input) {
-
 	}
 
 	/**
@@ -94,6 +90,5 @@ public class Button extends Widget {
 	 * @param input
 	 */
 	public void onMouseButtonReleased(final MouseInput input) {
-
 	}
 }

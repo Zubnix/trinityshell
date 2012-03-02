@@ -30,6 +30,11 @@ import org.hyperdrive.geo.GeoManagerDirect;
  */
 public final class VirtualRoot extends Widget {
 
+	@ViewDefinition
+	public interface View extends Widget.View {
+
+	}
+
 	/**
 	 * 
 	 * @param realRoot
@@ -43,11 +48,6 @@ public final class VirtualRoot extends Widget {
 		setGeoManager(new GeoManagerDirect());
 		requestReparent();
 		requestMoveResize();
-	}
-
-	@Override
-	protected View initView(final ViewFactory<?> viewFactory) {
-		return viewFactory.newVirtualRootView();
 	}
 
 	/**

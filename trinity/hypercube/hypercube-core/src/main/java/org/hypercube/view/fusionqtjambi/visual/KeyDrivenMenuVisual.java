@@ -20,6 +20,7 @@ import java.util.List;
 import com.trolltech.qt.core.Qt.FocusPolicy;
 import com.trolltech.qt.core.Qt.TextFormat;
 import com.trolltech.qt.core.Qt.TextInteractionFlag;
+import com.trolltech.qt.core.Qt.WindowType;
 import com.trolltech.qt.gui.QFrame;
 import com.trolltech.qt.gui.QLabel;
 import com.trolltech.qt.gui.QResizeEvent;
@@ -31,7 +32,7 @@ import com.trolltech.qt.gui.QWidget;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class KeyDrivenMenuVisual extends QFrame implements StyledVisual {
+public class KeyDrivenMenuVisual extends QFrame {
 
 	private static final String NAME = "KeyDrivenMenu";
 	private static final String DESIRED_CHOICE_MARKUP = "<span style=\"background-color: orange;\">%s</span>";
@@ -47,10 +48,11 @@ public class KeyDrivenMenuVisual extends QFrame implements StyledVisual {
 	/**
 	 * 
 	 */
-	public KeyDrivenMenuVisual() {
-		this.setFocusPolicy(FocusPolicy.NoFocus);
-		this.setLineWidth(1);
-		this.setObjectName(this.getStyleName());
+	public KeyDrivenMenuVisual(final QWidget parentPaintPeer) {
+		super(parentPaintPeer, WindowType.X11BypassWindowManagerHint);
+		setFocusPolicy(FocusPolicy.NoFocus);
+		setLineWidth(1);
+		setObjectName(getStyleName());
 
 		this.input = new QLabel(this);
 		this.input.setObjectName(KeyDrivenMenuVisual.INPUT_LABEL_NAME);
@@ -86,15 +88,6 @@ public class KeyDrivenMenuVisual extends QFrame implements StyledVisual {
 
 	/**
 	 * 
-	 * @param parentPaintPeer
-	 */
-	public KeyDrivenMenuVisual(final QWidget parentPaintPeer) {
-		this();
-		this.setParent(parentPaintPeer);
-	}
-
-	/**
-	 * 
 	 */
 	public void clearVisual() {
 		this.input.clear();
@@ -110,9 +103,6 @@ public class KeyDrivenMenuVisual extends QFrame implements StyledVisual {
 	public void updateVisual(final String input,
 			final List<String> possibleValues, final int activeValue) {
 
-		// final String desiredChoiceMarker = String
-		// .format(KeyDrivenMenuVisual.desiredChoiceMarkup,
-		// desiredChoice);
 		if (input.isEmpty()) {
 			this.input.setText(KeyDrivenMenuVisual.EMPTY_LIST_MESSAGE);
 			this.choices.clear();
@@ -121,13 +111,8 @@ public class KeyDrivenMenuVisual extends QFrame implements StyledVisual {
 		} else {
 			this.input.setText(input);
 
-			// final String firstPossibleValue = possibleValues.get(0);
-			// desiredChoice = firstPossibleValue.replace(desiredChoice,
-			// desiredChoiceMarker);
-
 			final StringBuffer possibleValuesConcatinator = new StringBuffer(
 					100);
-			// possibleValuesConcatinator.append(desiredChoice);
 			int i = 0;
 			for (final String possibleValue : possibleValues) {
 				if (i == activeValue) {
@@ -144,7 +129,6 @@ public class KeyDrivenMenuVisual extends QFrame implements StyledVisual {
 		}
 	}
 
-	@Override
 	public String getStyleName() {
 		return KeyDrivenMenuVisual.NAME;
 	}
@@ -153,23 +137,23 @@ public class KeyDrivenMenuVisual extends QFrame implements StyledVisual {
 	 * 
 	 */
 	private void forceStyleUpdate() {
-		this.style().unpolish(this);
-		this.style().polish(this);
+		style().unpolish(this);
+		style().polish(this);
 	}
 
 	/**
 	 * 
 	 */
 	public void activate() {
-		this.setProperty("active", true);
-		this.forceStyleUpdate();
+		setProperty("active", true);
+		forceStyleUpdate();
 	}
 
 	/**
 	 * 
 	 */
 	public void deactivate() {
-		this.setProperty("active", false);
-		this.forceStyleUpdate();
+		setProperty("active", false);
+		forceStyleUpdate();
 	}
 }

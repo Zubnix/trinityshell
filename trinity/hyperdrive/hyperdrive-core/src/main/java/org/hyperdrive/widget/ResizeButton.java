@@ -26,16 +26,13 @@ import org.hydrogen.displayinterface.input.MouseInput;
  */
 public class ResizeButton extends DragButton {
 
+	@ViewDefinition
+	public interface View extends Button.View {
+
+	}
+
 	private int desiredWidth;
 	private int desiredHeight;
-
-	/**
-	 * 
-	 * 
-	 */
-	public ResizeButton() {
-		super();
-	}
 
 	@Override
 	public void startDrag(final MouseInput input) {
@@ -56,10 +53,5 @@ public class ResizeButton extends DragButton {
 		// _NET_WM_SYNC_REQUEST. implement this delay in the fusion-x11 package.
 
 		getTargetRenderArea().requestResize();
-	}
-
-	@Override
-	protected View initView(final ViewFactory<?> viewFactory) {
-		return viewFactory.newResizeButtonView();
 	}
 }

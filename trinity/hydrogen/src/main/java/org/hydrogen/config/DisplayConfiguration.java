@@ -57,4 +57,16 @@ public interface DisplayConfiguration {
 	 *         <code>DisplayConfiguration</code>.
 	 */
 	Map<String, String> getBackEndProperties();
+
+	/**
+	 * Add a {@link Runnable} that will be executed before a
+	 * {@link DisplayPlatform} is initialized. This can be used to do initialize
+	 * resource that are needed before any <code>DisplayPlatform</code> is
+	 * created.
+	 * 
+	 * @param configPerform
+	 */
+	void addConfigPerform(Runnable configPerform);
+
+	Runnable[] getConfigPerforms();
 }

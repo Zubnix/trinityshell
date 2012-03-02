@@ -15,6 +15,7 @@
  */
 package org.hydrogen.displayinterface;
 
+//TODO documentation
 /**
  * A <code>PlatformRenderAreaGeometry</code> contains the native geometric
  * information from a <code>PlatformRenderArea</code> at the time of it's
@@ -46,7 +47,7 @@ public interface PlatformRenderAreaGeometry {
 	 * 
 	 * @return The horizontal coordinate the <code>PlatformRenderArea</code>.
 	 */
-	int getX();
+	int getRelativeX();
 
 	/**
 	 * The Y coordinate of the <code>PlatformRenderArea</code> in pixels.
@@ -55,5 +56,5 @@ public interface PlatformRenderAreaGeometry {
 	 * 
 	 * @return The vertical coordinate the <code>PlatformRenderArea</code>.
 	 */
-	int getY();
+	int getRelativeY();
 }

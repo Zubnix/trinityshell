@@ -20,7 +20,6 @@ import java.net.URISyntaxException;
 import org.fusion.qt.x11.QFusionDisplayConfiguration;
 import org.hypercube.Hypercube;
 import org.hypercube.hyperlogic.GroovyLogicLoaderFactory;
-import org.hypercube.view.fusionqtjambi.QFusionViewFactoryImpl;
 
 import com.martiansoftware.jsap.JSAPException;
 
@@ -42,7 +41,6 @@ public class Go {
 		// TODO fix uncaught exceptions
 
 		new Hypercube(new GroovyLogicLoaderFactory(),
-				new QFusionDisplayConfiguration(),
-				new QFusionViewFactoryImpl(), args);
+				new QFusionDisplayConfiguration(), args);
 	}
 }

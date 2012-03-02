@@ -15,6 +15,7 @@
  */
 package org.hydrogen.paintinterface;
 
+//TODO documentation
 /**
  * A <code>PaintCall</code> wraps calls to a paint toolkit and as such is
  * executed by the paint back-end thread.It implements a paint back-end specific
@@ -27,30 +28,24 @@ package org.hydrogen.paintinterface;
  * @author Erik De Rijcke
  * @since 1.0
  * 
- * 
- * @param <P>
- *            The paint peer type as used by the paint toolkit.
  * @param <R>
  *            An optional return type.
+ * @param <P>
+ *            The paint peer type as used by the paint toolkit.
  */
-public interface PaintCall<P, R> {
+public interface PaintCall<R, P> {
 	/**
 	 * Implements a custom paint back-end operation for the provided
 	 * <code>Paintable</code>. This method will be called by the paint back-end
 	 * thread.
 	 * 
-	 * @param paintPeer
-	 *            Gives access to the underlying paint back-end through a paint
-	 *            toolkit specific object that represents the given
-	 *            <code>Paintable</code>.
-	 * @param paintable
-	 *            The {@link Paintable} on who's behalve the paint call takes
-	 *            place.
+	 * @param
+	 * 
 	 * 
 	 * @return The return object depends on the paint back-end implementation.
 	 *         This can be a modified or entirely new paint peer in case the
 	 *         given paintpeer needs to be replaced. Mostly however it should
 	 *         return null.
 	 */
-	R call(P paintPeer, Paintable paintable);
+	R call(PaintContext<P> paintContext);
 }

@@ -37,7 +37,7 @@ public class XResourceHandle implements ResourceHandle {
 	 * 
 	 * @param handle
 	 */
-	private XResourceHandle(final Long handle) {
+	public XResourceHandle(final Long handle) {
 		this.handle = handle;
 		final Long handleValue = Long.valueOf(handle);
 		XResourceHandle.VALUES.put(handleValue, this);

@@ -40,6 +40,12 @@ import org.hyperdrive.protocol.DesktopProtocol;
  * @since 1.0
  */
 public class CloseButton extends Button {
+
+	@ViewDefinition
+	public interface View extends Button.View {
+
+	}
+
 	private ClientWindow clientWindow;
 	private final DesktopProtocol desktopProtocol;
 
@@ -86,10 +92,5 @@ public class CloseButton extends Button {
 	@Override
 	public void onMouseButtonPressed(final MouseInput input) {
 		closeWindow();
-	}
-
-	@Override
-	protected View initView(final ViewFactory<?> viewFactory) {
-		return viewFactory.newCloseButtonView();
 	}
 }

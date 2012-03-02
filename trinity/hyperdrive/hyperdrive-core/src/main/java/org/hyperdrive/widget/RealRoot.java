@@ -40,6 +40,11 @@ import org.hyperdrive.geo.GeoManagerDirect;
  */
 public final class RealRoot extends Widget {
 
+	@ViewDefinition
+	public interface View extends Widget.View {
+
+	}
+
 	private static final Map<ManagedDisplay, RealRoot> rootsForDisplay = new HashMap<ManagedDisplay, RealRoot>();
 
 	public static RealRoot get(final ManagedDisplay managedDisplay) {
@@ -90,10 +95,5 @@ public final class RealRoot extends Widget {
 			final PlatformRenderArea platformRenderArea) {
 		super.setPlatformRenderArea(platformRenderArea);
 		syncGeoToPlatformRenderAreaGeo();
-	}
-
-	@Override
-	protected View initView(final ViewFactory<?> viewFactory) {
-		return viewFactory.newRealRootView();
 	}
 }

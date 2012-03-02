@@ -15,8 +15,9 @@
  */
 package org.hydrogen.paintinterface;
 
+import java.util.concurrent.Future;
+
 import org.hydrogen.displayinterface.AreaManipulator;
-import org.hydrogen.displayinterface.ResourceHandle;
 
 /**
  * 
@@ -36,9 +37,7 @@ import org.hydrogen.displayinterface.ResourceHandle;
  */
 public interface Painter extends AreaManipulator<Paintable> {
 
-	// TODO instead of a long we should use a more general 'native resource
-	// handle' object. The same type should be returned in
-	// DisplayResourceHandle.getResourceHandle()
+	// TODO recycle javadoc on website's documentation
 	/**
 	 * Create a new paint peer and get to the native render area id of this
 	 * paint peer. This id is a handle to the native render area where the
@@ -74,8 +73,8 @@ public interface Painter extends AreaManipulator<Paintable> {
 	 * @return the id of the underlying native render area. This id can be used
 	 *         to get a reference to a native render area.
 	 */
-	ResourceHandle initPaintPeer(Paintable parentPaintable,
-			PaintCall<?, ?> paintCall);
+	// ResourceHandle initPaintPeer(Paintable parentPaintable,
+	// PaintCall<?, ?> paintCall);
 
 	/**
 	 * Execute the given <code>PaintCall</code>. The <code>PaintCall</code> is
@@ -93,7 +92,7 @@ public interface Painter extends AreaManipulator<Paintable> {
 	 *            A <code>PaintCall</code> implementation that will be passed to
 	 *            the underlying paint back-end for execution.
 	 */
-	void paint(PaintCall<?, ?> paintCall);
+	<T> Future<T> paint(PaintCall<T, ?> paintCall);
 
 	// TODO Should calls that relate to the paintable's input be implemented by
 	// the painter or should a seperate input manipulator be used?

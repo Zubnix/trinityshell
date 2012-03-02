@@ -30,6 +30,7 @@ import org.hydrogen.eventsystem.*
 import org.hydrogen.paintinterface.*
 
 import org.hypercube.*
+import org.hypercube.configuration.*
 import org.hypercube.hyperwidget.*
 import org.hypercube.protocol.fusionx11.*
 
@@ -51,6 +52,8 @@ class HypercubeLogic implements LogicLoadable{
 
 	//First function that is called upon startup, before any initialization is done.
 	void preInit(DisplayConfiguration configuration) {
+		configuration.addConfigPerform(new ViewBindingsConfigPerform())
+
 		//--------------------------------------------//
 		//---QFusion (Qt) specific properties---------//
 		//---These are fed to the Qt Jambi back-end---//

@@ -16,12 +16,12 @@
 package org.hyperdrive.widget;
 
 import org.hydrogen.eventsystem.EventHandler;
-import org.hydrogen.paintinterface.PaintCall;
 import org.hyperdrive.core.ClientWindow;
 import org.hyperdrive.protocol.ClientWindowDescription;
 import org.hyperdrive.protocol.DesktopProtocol;
 
 // TODO documentation
+//TODO split into label & client name label
 /**
  * 
  * A <code>ClientNameLabel</code> shows a text property from a
@@ -31,16 +31,11 @@ import org.hyperdrive.protocol.DesktopProtocol;
  * @since 1.0
  * 
  */
-public class ClientNameLabel extends Widget {
+public class ClientNameLabel extends Label {
 
-	/**
-	 * 
-	 * @author Erik De Rijcke
-	 * @since 1.0
-	 * 
-	 */
-	public static interface ClientNameLabelView extends View {
-		PaintCall<?, ?> onNameUpdate(String name, Object... args);
+	@ViewDefinition
+	public interface View extends Label.View {
+
 	}
 
 	private ClientWindow targetWindow;
@@ -51,18 +46,7 @@ public class ClientNameLabel extends Widget {
 	 * @param namePropertyName
 	 */
 	public ClientNameLabel(final DesktopProtocol desktopProtocol) {
-
 		this.desktopProtocol = desktopProtocol;
-	}
-
-	@Override
-	protected ClientNameLabelView initView(final ViewFactory<?> viewFactory) {
-		return viewFactory.newClientNameLabelView();
-	}
-
-	@Override
-	public ClientNameLabelView getView() {
-		return (ClientNameLabelView) super.getView();
 	}
 
 	/**
@@ -79,14 +63,12 @@ public class ClientNameLabel extends Widget {
 		targetWindow.addEventHandler(
 				new EventHandler<ClientWindowDescription>() {
 					@Override
-					public void handleEvent(
-							final ClientWindowDescription event) {
+					public void handleEvent(final ClientWindowDescription event) {
 						final String name = event.getName();
 						updateNameLabel(name);
 					}
 				}, ClientWindowDescription.TYPE);
 
-		// TODO automatically call painter when we call a method of the view?
 		final ClientWindowDescription description = (ClientWindowDescription) this.desktopProtocol
 				.query(getTargetWindow(), ClientWindowDescription.TYPE);
 		if (description != null) {
@@ -100,7 +82,7 @@ public class ClientNameLabel extends Widget {
 	 * 
 	 */
 	protected void updateNameLabel(final String name) {
-		getPainter().paint(getView().onNameUpdate(name));
+		getView().onTextUpdate(name);
 	}
 
 	/**

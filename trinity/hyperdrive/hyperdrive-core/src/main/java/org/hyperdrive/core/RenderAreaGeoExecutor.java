@@ -156,6 +156,11 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 			return directRelativeX;
 		}
 		final int newAbsX = directParent.getAbsoluteX() + directRelativeX;
+
+		// FIXME we need to compensate for when the parentRenderArea has an
+		// offset to it's actual platform renderarea. yRelativeToTypedArea
+		// should be increased with this offset. A render area can have an
+		// offset when it does not own (=match) it's platform render area.
 		final int xRelativeToTypedArea = newAbsX
 				- parentRenderArea.getAbsoluteX();
 
@@ -206,6 +211,11 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 			return directRelativeY;
 		}
 		final int newAbsY = directParent.getAbsoluteY() + directRelativeY;
+
+		// FIXME we need to compensate for when the parentRenderArea has an
+		// offset to it's actual platform renderarea. yRelativeToTypedArea
+		// should be increased with this offset. A render area can have an
+		// offset when it does not own (=match) it's platform render area.
 		final int yRelativeToTypedArea = newAbsY
 				- parentRenderArea.getAbsoluteY();
 
@@ -260,7 +270,7 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 
 		if (newParentInitialized && !currentRenderAreaInitialized) {
 			// parent is ready but we are not. we initialize ourself with
-			// our ready parent.
+			// our ready parent as argument.
 			initialize(newParent, currentRenderArea);
 		} else if (newParentInitialized && currentRenderAreaInitialized) {
 			// we are ready and our new parent is ready. we start the

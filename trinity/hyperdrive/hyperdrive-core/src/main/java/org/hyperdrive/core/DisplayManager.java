@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.hydrogen.config.DisplayConfiguration;
-import org.hydrogen.paintinterface.PaintCall;
-import org.hyperdrive.widget.ViewFactory;
 
 /**
  * A <code>DisplayManager</code> gives access to the underlying native
@@ -116,14 +114,12 @@ public final class DisplayManager {
 	 * @return A new {@link ManagedDisplay}.
 	 */
 	public ManagedDisplay getNewManagedDisplay(
-			final DisplayConfiguration displayConfiguration,
-			final ViewFactory<? extends PaintCall<?, ?>> widgetViewFactory) {
+			final DisplayConfiguration displayConfiguration) {
 
 		ManagedDisplay managedDisplay;
 		final String displayName = checkDisplayConfiguration(displayConfiguration);
 		managedDisplay = new ManagedDisplay(displayConfiguration
-				.initNewDisplayPlatform().newDisplay(displayName),
-				widgetViewFactory);
+				.initNewDisplayPlatform().newDisplay(displayName));
 
 		this.managedDisplayMap.put(displayName, managedDisplay);
 

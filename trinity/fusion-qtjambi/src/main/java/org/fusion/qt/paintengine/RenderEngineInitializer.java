@@ -93,10 +93,12 @@ public final class RenderEngineInitializer implements Runnable {
 		}
 
 		if (this.renderEngine == null) {
-			RenderEngineTimeOutError ex = new RenderEngineTimeOutError(
+			final RenderEngineTimeOutError ex = new RenderEngineTimeOutError(
 					RenderEngineInitializer.INIT_TIMEOUT, TimeUnit.SECONDS);
 
-			LOGGER.fatal(RENDERENGINE_TIMEOUT_LOGMESSAGE, ex);
+			RenderEngineInitializer.LOGGER
+					.fatal(RenderEngineInitializer.RENDERENGINE_TIMEOUT_LOGMESSAGE,
+							ex);
 
 			throw ex;
 		}
@@ -149,14 +151,18 @@ public final class RenderEngineInitializer implements Runnable {
 			final int exitCode = QApplication.exec();
 
 			if (exitCode != 0) {
-				RenderEngineQuitError ex = new RenderEngineQuitError(exitCode);
+				final RenderEngineQuitError ex = new RenderEngineQuitError(
+						exitCode);
 
-				LOGGER.fatal(RENDERENGINE_NONZERO_EXIT_LOGMESSAGE, ex);
+				RenderEngineInitializer.LOGGER
+						.fatal(RenderEngineInitializer.RENDERENGINE_NONZERO_EXIT_LOGMESSAGE,
+								ex);
 
 				throw ex;
 			}
 		} catch (final Throwable e) {
-			LOGGER.fatal(RENDERENGINE_CRASH_LOGMESSAGE, e);
+			RenderEngineInitializer.LOGGER.fatal(
+					RenderEngineInitializer.RENDERENGINE_CRASH_LOGMESSAGE, e);
 			System.exit(1);
 		}
 	}

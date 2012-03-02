@@ -21,7 +21,6 @@ import java.util.List;
 import org.hydrogen.displayinterface.event.KeyNotifyEvent;
 import org.hydrogen.displayinterface.input.SpecialKeyName;
 import org.hydrogen.eventsystem.EventHandler;
-import org.hydrogen.paintinterface.PaintCall;
 import org.hyperdrive.core.ManagedDisplay;
 import org.hyperdrive.input.KeyInputStringBuilder;
 
@@ -44,15 +43,16 @@ public abstract class KeyDrivenMenu extends Widget {
 	 * @since 1.0
 	 * 
 	 */
-	public static interface KeyDrivenMenuView extends View {
-		PaintCall<?, ?> clear();
+	@ViewDefinition
+	public interface View extends Widget.View {
+		PaintInstruction<Void> clear();
 
-		PaintCall<?, ?> update(String input, List<String> possibleValues,
-				int activeValue);
+		PaintInstruction<Void> update(String input,
+				List<String> possibleValues, int activeValue);
 
-		PaintCall<?, ?> activate();
+		PaintInstruction<Void> activate();
 
-		PaintCall<?, ?> deactivate();
+		PaintInstruction<Void> deactivate();
 	}
 
 	private final KeyInputStringBuilder keyInputStringBuilder;
@@ -137,12 +137,10 @@ public abstract class KeyDrivenMenu extends Widget {
 								.getStringBuffer().append(desired);
 
 						// update view
-						KeyDrivenMenu.this.getPainter().paint(
-								KeyDrivenMenu.this.getView().update(
-										desired,
-										KeyDrivenMenu.this
-												.getCurrentFilteredChoices(),
-										KeyDrivenMenu.this.activeChoice));
+
+						KeyDrivenMenu.this.getView().update(desired,
+								KeyDrivenMenu.this.getCurrentFilteredChoices(),
+								KeyDrivenMenu.this.activeChoice);
 					}
 				} else if (keyName.equals(SpecialKeyName.RIGHT.name())) {
 					// righ arrow key
@@ -158,12 +156,9 @@ public abstract class KeyDrivenMenu extends Widget {
 								.getStringBuffer().append(desired);
 
 						// update view
-						KeyDrivenMenu.this.getPainter().paint(
-								KeyDrivenMenu.this.getView().update(
-										desired,
-										KeyDrivenMenu.this
-												.getCurrentFilteredChoices(),
-										KeyDrivenMenu.this.activeChoice));
+						KeyDrivenMenu.this.getView().update(desired,
+								KeyDrivenMenu.this.getCurrentFilteredChoices(),
+								KeyDrivenMenu.this.activeChoice);
 					}
 				} else {
 					// other key
@@ -175,12 +170,10 @@ public abstract class KeyDrivenMenu extends Widget {
 					KeyDrivenMenu.this.updatePossibleChoices(desired);
 
 					// update view
-					KeyDrivenMenu.this.getPainter().paint(
-							KeyDrivenMenu.this.getView().update(
-									desired,
-									KeyDrivenMenu.this
-											.getCurrentFilteredChoices(),
-									KeyDrivenMenu.this.activeChoice));
+
+					KeyDrivenMenu.this.getView().update(desired,
+							KeyDrivenMenu.this.getCurrentFilteredChoices(),
+							KeyDrivenMenu.this.activeChoice);
 				}
 			}
 		}, KeyNotifyEvent.TYPE_PRESSED);
@@ -226,7 +219,7 @@ public abstract class KeyDrivenMenu extends Widget {
 		// clear buffer
 		this.keyInputStringBuilder.clearBuffer();
 		// clear view
-		getPainter().paint(getView().clear());
+		getView().clear();
 	}
 
 	/**
@@ -258,13 +251,8 @@ public abstract class KeyDrivenMenu extends Widget {
 	}
 
 	@Override
-	protected View initView(final ViewFactory<?> viewFactory) {
-		return viewFactory.newKeyDrivenMenuView();
-	}
-
-	@Override
-	public KeyDrivenMenuView getView() {
-		return (KeyDrivenMenuView) super.getView();
+	public View getView() {
+		return (View) super.getView();
 	}
 
 	/**
@@ -274,8 +262,7 @@ public abstract class KeyDrivenMenu extends Widget {
 	public void startKeyListening() {
 		getManagedDisplay().getManagedKeyboard().grab(this);
 
-		getPainter().paint(getView().activate());
-
+		getView().activate();
 	}
 
 	/**
@@ -284,6 +271,6 @@ public abstract class KeyDrivenMenu extends Widget {
 	 */
 	public void stopKeyListening() {
 		getManagedDisplay().getManagedKeyboard().release();
-		getPainter().paint(getView().deactivate());
+		getView().deactivate();
 	}
 }

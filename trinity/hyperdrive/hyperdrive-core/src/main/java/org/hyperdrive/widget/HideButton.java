@@ -34,6 +34,11 @@ import org.hyperdrive.geo.GeoTransformableRectangle;
  */
 public class HideButton extends Button {
 
+	@ViewDefinition
+	public interface View extends Button.View {
+
+	}
+
 	private GeoTransformableRectangle targetRenderArea;
 
 	@Override
@@ -58,11 +63,6 @@ public class HideButton extends Button {
 	 */
 	public GeoTransformableRectangle getTargetRenderArea() {
 		return this.targetRenderArea;
-	}
-
-	@Override
-	protected View initView(final ViewFactory<?> viewFactory) {
-		return viewFactory.newHideButtonView();
 	}
 
 	/**

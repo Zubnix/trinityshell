@@ -23,7 +23,6 @@ import org.fusion.qt.x11.QFusionDisplayConfiguration;
 import org.hydrogen.config.DisplayConfiguration;
 import org.hyperdrive.core.DisplayManager;
 import org.hyperdrive.core.ManagedDisplay;
-import org.hyperdrive.widget.ViewFactory;
 
 import com.martiansoftware.jsap.JSAPException;
 
@@ -88,14 +87,14 @@ public class Hypercube {
 
 	public Hypercube(final LogicLoaderFactory logicLoaderFactory,
 			final DisplayConfiguration displayConfiguration,
-			final ViewFactory<?> viewFactory, final String[] arguments)
-			throws JSAPException, InstantiationException,
-			IllegalAccessException, ClassNotFoundException, URISyntaxException {
+			final String[] arguments) throws JSAPException,
+			InstantiationException, IllegalAccessException,
+			ClassNotFoundException, URISyntaxException {
 
 		this.logicLoaderFactory = logicLoaderFactory;
 
 		this.argumentParser = new ArgumentParser(arguments);
-		startLocal(displayConfiguration, viewFactory);
+		startLocal(displayConfiguration);
 	}
 
 	/**
@@ -114,8 +113,7 @@ public class Hypercube {
 	 */
 	public static Hypercube getInstanceFromClassNames(
 			final String displayConfigurationClassName,
-			final String logicLoaderFactoryClassName,
-			final String viewFactoryClassName, final String[] arguments)
+			final String logicLoaderFactoryClassName, final String[] arguments)
 			throws JSAPException, InstantiationException,
 			IllegalAccessException, ClassNotFoundException, URISyntaxException {
 
@@ -123,10 +121,8 @@ public class Hypercube {
 				displayConfigurationClassName).newInstance();
 		final DisplayConfiguration dc = (DisplayConfiguration) Class.forName(
 				displayConfigurationClassName).newInstance();
-		final ViewFactory<?> vf = (ViewFactory<?>) Class.forName(
-				viewFactoryClassName).newInstance();
 
-		final Hypercube hc = new Hypercube(llf, dc, vf, arguments);
+		final Hypercube hc = new Hypercube(llf, dc, arguments);
 
 		return hc;
 	}
@@ -138,9 +134,8 @@ public class Hypercube {
 		// object instances
 		final DisplayConfiguration displayConfiguration = (DisplayConfiguration) Class
 				.forName(displayConfigurationClassName).newInstance();
-		final ViewFactory<?> viewFactory = (ViewFactory<?>) Class.forName(
-				viewFactoryClassName).newInstance();
-		startLocal(displayConfiguration, viewFactory);
+
+		startLocal(displayConfiguration);
 	}
 
 	/**
@@ -155,8 +150,8 @@ public class Hypercube {
 	 * @throws URISyntaxException
 	 * 
 	 */
-	private void startLocal(final DisplayConfiguration dc,
-			final ViewFactory<?> viewFactory) throws URISyntaxException {
+	private void startLocal(final DisplayConfiguration dc)
+			throws URISyntaxException {
 
 		final LogicLoader logicLoader = this.logicLoaderFactory
 				.newLogicLoader();
@@ -182,7 +177,7 @@ public class Hypercube {
 		logicLoader.preInit(dc);
 
 		final ManagedDisplay managedDisplay = DisplayManager.instance()
-				.getNewManagedDisplay(dc, viewFactory);
+				.getNewManagedDisplay(dc);
 
 		logicLoader.postInit(managedDisplay);
 	}

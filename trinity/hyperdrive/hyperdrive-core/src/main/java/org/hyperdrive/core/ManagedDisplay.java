@@ -37,12 +37,10 @@ import org.hydrogen.displayinterface.event.MouseEnterLeaveNotifyEvent;
 import org.hydrogen.displayinterface.event.PropertyChangedNotifyEvent;
 import org.hydrogen.displayinterface.event.UnmappedNotifyEvent;
 import org.hydrogen.eventsystem.EventBus;
-import org.hydrogen.paintinterface.PaintCall;
 import org.hydrogen.paintinterface.PainterFactory;
 import org.hyperdrive.input.ManagedKeyboard;
 import org.hyperdrive.input.ManagedMouse;
 import org.hyperdrive.widget.RealRoot;
-import org.hyperdrive.widget.ViewFactory;
 
 // TODO documentation
 /**
@@ -96,8 +94,6 @@ public class ManagedDisplay extends EventBus {
 	private final Executor managedDisplayEventExecutor;
 	private final WindowManagementInfo windowManagementInfo;
 
-	private final ViewFactory<? extends PaintCall<?, ?>> viewFactory;
-
 	/**
 	 * Wrap the given native <code>Display</code> implementation with the given
 	 * <code>ViewFactory</code> implementation.
@@ -118,13 +114,9 @@ public class ManagedDisplay extends EventBus {
 	 *            A <code>ViewFactory</code> implementation.
 	 * 
 	 */
-	public ManagedDisplay(final Display display,
-			final ViewFactory<? extends PaintCall<?, ?>> widgetViewFactory) {
+	public ManagedDisplay(final Display display) {
 		{
 			this.windowManagementInfo = new WindowManagementInfo(this);
-		}
-		{
-			this.viewFactory = widgetViewFactory;
 		}
 		{
 			this.painterFactory = display.getPainterFactory();
@@ -189,14 +181,6 @@ public class ManagedDisplay extends EventBus {
 				client.syncGeoToPlatformRenderAreaGeo();
 			}
 		}
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public ViewFactory<? extends PaintCall<?, ?>> getWidgetViewFactory() {
-		return this.viewFactory;
 	}
 
 	/**

@@ -18,20 +18,19 @@ package org.fusion.qt.paintengine;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import org.apache.log4j.Logger;
-import org.fusion.qt.painter.QFusionPaintCallBack;
+import org.fusion.qt.painter.QFusionPaintCall;
 import org.fusion.qt.painter.QFusionPainter;
-import org.fusion.qt.painter.QFusionPainter.ReturnValueWrapper;
 import org.hydrogen.displayinterface.Display;
-import org.hydrogen.displayinterface.event.DisplayEventSource;
 import org.hydrogen.paintinterface.Paintable;
 
 import com.trolltech.qt.core.QCoreApplication;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QObject;
-import com.trolltech.qt.core.Qt.WidgetAttribute;
-import com.trolltech.qt.core.Qt.WindowType;
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
@@ -71,7 +70,6 @@ public class QFusionRenderEngine extends QApplication {
 	protected QFusionRenderEngine(final Display display,
 			final String[] backEndProperties) {
 		super(backEndProperties);
-
 		// FIXME we are using a dynamic display instance in a static variable.
 		// Not good!
 		QFusionRenderEngine.THREADLOCAL_EVENT_PRODUCER = new ThreadLocal<QFusionEventProducer>() {
@@ -99,70 +97,6 @@ public class QFusionRenderEngine extends QApplication {
 		return QFusionRenderEngine.THREADLOCAL_EVENT_PRODUCER.get();
 	}
 
-	public static final String CREATE_RENDER_AREA_SLOTNAME = "createPaintArea("
-			+ Paintable.class.getCanonicalName() + ","
-			+ Paintable.class.getCanonicalName() + ","
-			+ QFusionPaintCallBack.class.getCanonicalName() + ","
-			+ "org.fusion.qt.painter.QFusionPainter$ReturnValueWrapper)";
-
-	/**
-	 * 
-	 * @param parentPaintable
-	 * @param paintable
-	 * @param paintCall
-	 * @param returnValueWrapper
-	 * @throws HydrogenPaintInterfaceException
-	 */
-	protected void createPaintArea(final Paintable parentPaintable,
-			final Paintable paintable,
-			final QFusionPaintCallBack<QWidget, ? extends QWidget> paintCall,
-			final ReturnValueWrapper<Long> returnValueWrapper) {
-
-		final QWidget qWidget = paintCall.call(
-				getQWidgetMap().get(parentPaintable), paintable);
-		QCoreApplication.processEvents();
-
-		final long winId = qWidget.effectiveWinId();
-
-		// Settign this flag before asking for the effective win id, changes the
-		// returned id (qt bug?)
-		qWidget.setWindowFlags(WindowType.X11BypassWindowManagerHint);
-		qWidget.setAttribute(WidgetAttribute.WA_DeleteOnClose, true);
-		qWidget.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors, true);
-
-		qWidget.setVisible(paintable.isVisible());
-
-		getQWidgetMap().put(paintable, qWidget);
-
-		qWidget.installEventFilter(this);
-		if (paintable instanceof DisplayEventSource) {
-			new QFusionInputEventFilter((DisplayEventSource) paintable, qWidget);
-		}
-
-		returnValueWrapper.setReturnValue(Long.valueOf(winId));
-	}
-
-	public static final String DESTROY_SLOTNAME = "destroy("
-			+ Paintable.class.getCanonicalName() + ")";
-
-	/**
-	 * Destroy the visual representation of the given <code>Paintable</code>.
-	 * The given <code>QFusionPainter</code> is the source object that called
-	 * this method.
-	 * 
-	 * @param qFusionPainter
-	 *            A {@link QFusionPainter}.
-	 * @param paintable
-	 *            A {@link Paintable}.
-	 * @see {@link QFusionPainter#destroy(Paintable)}.
-	 */
-	protected void destroy(final Paintable paintable) {
-		final QWidget renderEntityWidget = getQWidgetMap().remove(paintable);
-		if (renderEntityWidget != null) {
-			renderEntityWidget.close();
-		}
-	}
-
 	@Override
 	public boolean eventFilter(final QObject widget, final QEvent event) {
 		if (widget.isWidgetType()) {
@@ -184,110 +118,6 @@ public class QFusionRenderEngine extends QApplication {
 		return this.qWidgetMap;
 	}
 
-	@Override
-	public int hashCode() {
-		throw new UnsupportedOperationException();
-	}
-
-	public static final String HIDE_SLOTNAME = "hide("
-			+ Paintable.class.getCanonicalName() + ")";
-
-	/**
-	 * Hide the visual representation of the given <code>Paintable</code>. The
-	 * given <code>QFusionPainter</code> is the source object that called this
-	 * method.
-	 * 
-	 * @param qFusionPainter
-	 *            A {@link QFusionPainter}.
-	 * @param paintable
-	 *            A {@link Paintable}.
-	 * @see {@link QFusionPainter#hide(Paintable)}.
-	 */
-	protected void hide(final Paintable paintable) {
-		final QWidget widget = getQWidgetMap().get(paintable);
-		if (widget != null) {
-			widget.hide();
-		}
-	}
-
-	public static final String LOWER_SLOTNAME = "lower("
-			+ Paintable.class.getCanonicalName() + ")";
-
-	/**
-	 * Lower the visual representation of the given <code>Paintable</code>. The
-	 * given <code>QFusionPainter</code> is the source object that called this
-	 * method.
-	 * 
-	 * @param qFusionPainter
-	 *            A {@link QFusionPainter}.
-	 * @param paintable
-	 *            A {@link Paintable}.
-	 * @see {@link QFusionPainter#lower(Paintable)}.
-	 */
-	@SuppressWarnings("unused")
-	private void lower(final Paintable paintable) {
-		final QWidget widget = getQWidgetMap().get(paintable);
-		if (widget != null) {
-			widget.lower();
-		}
-	}
-
-	public static final String MOVE_SLOTNAME = "move("
-			+ Paintable.class.getCanonicalName() + ","
-			+ Integer.class.getCanonicalName() + ","
-			+ Integer.class.getCanonicalName() + ")";
-
-	/**
-	 * Move the visual representation of the given <code>Paintable</code>. The
-	 * given <code>QFusionPainter</code> is the source object that called this
-	 * method.
-	 * 
-	 * @param qFusionPainter
-	 *            A {@link QFusionPainter}.
-	 * @param paintable
-	 *            A {@link Paintable}.
-	 * @see {@link QFusionPainter#move(Paintable)}.
-	 */
-	protected void move(final Paintable paintable, final Integer x,
-			final Integer y) {
-		final QWidget qWidget = getQWidgetMap().get(paintable);
-		if (qWidget != null) {
-			qWidget.move(x.intValue(), y.intValue());
-		}
-	}
-
-	public static final String MOVE_RESIZE_SLOTNAME = "moveResize("
-			+ Paintable.class.getCanonicalName() + ","
-			+ Integer.class.getCanonicalName() + ","
-			+ Integer.class.getCanonicalName() + ","
-			+ Integer.class.getCanonicalName() + ","
-			+ Integer.class.getCanonicalName() + ")";
-
-	/**
-	 * Move and resize the visual representation of the given
-	 * <code>Paintable</code>. The given <code>QFusionPainter</code> is the
-	 * source object that called this method.
-	 * 
-	 * @param qFusionPainter
-	 *            A {@link QFusionPainter}.
-	 * @param paintable
-	 *            A {@link Paintable}.
-	 * @see {@link QFusionPainter#moveResize(Paintable)}.
-	 */
-	protected void moveResize(final Paintable paintable, final Integer x,
-			final Integer y, final Integer width, final Integer height) {
-
-		final QWidget qWidget = getQWidgetMap().get(paintable);
-		if (qWidget != null) {
-			qWidget.setGeometry(x.intValue(), y.intValue(), width.intValue(),
-					height.intValue());
-		}
-	}
-
-	public static final String PAINT_SLOTNAME = "paint("
-			+ Paintable.class.getCanonicalName() + ","
-			+ QFusionPaintCallBack.class.getCanonicalName() + ")";
-
 	/**
 	 * Paint the visual representation of the given <code>Paintable</code>. The
 	 * given <code>QFusionPainter</code> is the source object that called this
@@ -297,133 +127,31 @@ public class QFusionRenderEngine extends QApplication {
 	 *            A {@link QFusionPainter}.
 	 * @param paintable
 	 *            A {@link Paintable}.
-	 * @see {@link QFusionPainter#paint(Paintable)}.
+	 * @see {@link QFusionPainter#paintAsync(Paintable)}.
 	 */
-	protected void paint(final Paintable paintable,
-			final QFusionPaintCallBack<QWidget, ?> paintCall) {
+	public <R, P extends QWidget> Future<R> invoke(final Paintable paintable,
+			final QFusionPaintCall<R, P> paintCall) {
 		if (paintCall != null) {
-			paintCall.call(getQWidgetMap().get(paintable), paintable);
+			final FutureTask<R> futureTask = new FutureTask<R>(
+					new Callable<R>() {
+						@Override
+						public R call() throws Exception {
+							@SuppressWarnings("unchecked")
+							final P paintPeer = (P) getQWidgetMap().get(
+									paintable);
+							final QFusionPaintContext<P> paintContext = new QFusionPaintContext<P>(
+									QFusionRenderEngine.this, paintable,
+									paintPeer, getQWidgetMap());
+							return paintCall.call(paintContext);
+						}
+					});
+			QCoreApplication.invokeLater(futureTask);
+			return futureTask;
 		} else {
-			LOGGER.warn(String.format(NULLPAINTCALL_WARN_LOGMESSAGE, paintable));
-		}
-	}
-
-	public static final String RAISE_SLOTNAME = "raise("
-			+ Paintable.class.getCanonicalName() + ")";
-
-	/**
-	 * Raise the visual representation of the given <code>Paintable</code>. The
-	 * given <code>QFusionPainter</code> is the source object that called this
-	 * method.
-	 * 
-	 * @param qFusionPainter
-	 *            A {@link QFusionPainter}.
-	 * @param paintable
-	 *            A {@link Paintable}. @ Thrown when an error occurs while
-	 *            destroying the visual representation of the given
-	 *            <code>Paintable</code>.
-	 * @see {@link QFusionPainter#raise(Paintable)}.
-	 */
-	protected void raise(final Paintable paintable) {
-		final QWidget widget = getQWidgetMap().get(paintable);
-		if (widget != null) {
-			widget.raise();
-		}
-	}
-
-	public static final String RESIZE_SLOTNAME = "resize("
-			+ Paintable.class.getCanonicalName() + ","
-			+ Integer.class.getCanonicalName() + ","
-			+ Integer.class.getCanonicalName() + ")";
-
-	/**
-	 * Resize the visual representation of the given <code>Paintable</code>. The
-	 * given <code>QFusionPainter</code> is the source object that called this
-	 * method.
-	 * 
-	 * @param qFusionPainter
-	 *            A {@link QFusionPainter}.
-	 * @param paintable
-	 *            A {@link Paintable}. @ Thrown when an error occurs while
-	 *            destroying the visual representation of the given
-	 *            <code>Paintable</code>.
-	 * @see {@link QFusionPainter#resize(Paintable)}.
-	 */
-	protected void resize(final Paintable paintable, final Integer width,
-			final Integer height) {
-
-		final QWidget qWidget = getQWidgetMap().get(paintable);
-		if (qWidget != null) {
-			qWidget.resize(width.intValue(), height.intValue());
-
-		}
-	}
-
-	/**
-	 * 
-	 */
-	public static final String SHOW_SLOTNAME = "show("
-			+ Paintable.class.getCanonicalName() + ")";
-
-	/**
-	 * Show the visual representation of the given <code>Paintable</code>. The
-	 * given <code>QFusionPainter</code> is the source object that called this
-	 * method.
-	 * 
-	 * @param qFusionPainter
-	 *            A {@link QFusionPainter}.
-	 * @param paintable
-	 *            A {@link Paintable}. @ Thrown when an error occurs while
-	 *            destroying the visual representation of the given
-	 *            <code>Paintable</code>.
-	 * @see {@link QFusionPainter#show(Paintable)}.
-	 */
-	protected void show(final Paintable paintable) {
-		final QWidget qWidget = getQWidgetMap().get(paintable);
-		if (qWidget != null) {
-			qWidget.show();
-		}
-	}
-
-	/**
-	 * 
-	 */
-	public static final String SET_PARENT_SLOTNAME = "setParent("
-			+ Paintable.class.getCanonicalName() + ","
-			+ Paintable.class.getCanonicalName() + ","
-			+ Integer.class.getCanonicalName() + ","
-			+ Integer.class.getCanonicalName() + ")";
-
-	/**
-	 * 
-	 * @param paintable
-	 * @param newParent
-	 * @param x
-	 * @param y
-	 */
-	protected void setParent(final Paintable paintable,
-			final Paintable newParent, final Integer x, final Integer y) {
-		final QWidget widget = getQWidgetMap().get(paintable);
-		final QWidget parentWidget = getQWidgetMap().get(newParent);
-		if ((widget != null) && (parentWidget != null)) {
-			widget.setParent(parentWidget);
-		}
-	}
-
-	/**
-	 * 
-	 */
-	public static final String SET_INPUTFOCUS_SLOTNAME = "setInputFocus( "
-			+ Paintable.class.getCanonicalName() + ")";
-
-	/**
-	 * 
-	 * @param paintable
-	 */
-	protected void setInputFocus(final Paintable paintable) {
-		final QWidget widget = getQWidgetMap().get(paintable);
-		if (widget != null) {
-			widget.setFocus();
+			QFusionRenderEngine.LOGGER.warn(String.format(
+					QFusionRenderEngine.NULLPAINTCALL_WARN_LOGMESSAGE,
+					paintable));
+			return null;
 		}
 	}
 }

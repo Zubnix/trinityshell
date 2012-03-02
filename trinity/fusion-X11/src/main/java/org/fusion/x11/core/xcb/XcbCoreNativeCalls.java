@@ -544,6 +544,7 @@ public final class XcbCoreNativeCalls {
 			// uint16_t height; /**< */
 			// uint16_t border_width; /**< */
 			// uint8_t pad0[2]; /**< */
+
 			final NativeBufferHelper nativeBufferHelper = getNativeBufferHelper();
 			// final short responseType =
 			nativeBufferHelper.readUnsignedByte();

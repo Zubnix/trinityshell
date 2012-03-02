@@ -15,9 +15,12 @@
  */
 package org.hydrogen.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.hydrogen.displayinterface.Display;
 import org.hydrogen.displayinterface.DisplayPlatform;
 
 /**
@@ -33,18 +36,30 @@ import org.hydrogen.displayinterface.DisplayPlatform;
 public abstract class BaseDisplayConfiguration implements DisplayConfiguration {
 
 	private Map<String, String> backEndProperties;
+	private final List<Runnable> configPerforms;
 
 	/**
 	 * Create a new <code>BaseDisplayConfiguration</code> without any
 	 * properties.
 	 */
 	public BaseDisplayConfiguration() {
+		this.configPerforms = new ArrayList<Runnable>();
 		setBackEndProperties(new HashMap<String, String>());
 	}
 
 	@Override
 	public Map<String, String> getBackEndProperties() {
 		return this.backEndProperties;
+	}
+
+	@Override
+	public void addConfigPerform(final Runnable configPerform) {
+		this.configPerforms.add(configPerform);
+	}
+
+	@Override
+	public Runnable[] getConfigPerforms() {
+		return this.configPerforms.toArray(new Runnable[] {});
 	}
 
 	/**

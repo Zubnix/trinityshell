@@ -27,7 +27,7 @@ import org.hydrogen.displayinterface.PlatformRenderAreaGeometry;
  * @since 1.0
  */
 public final class XWindowGeometry implements PlatformRenderAreaGeometry {
-	private final int x, y, width, height, borderWidth;
+	private final int relativeX, relativeY, width, height, borderWidth;
 
 	/**
 	 * 
@@ -37,10 +37,10 @@ public final class XWindowGeometry implements PlatformRenderAreaGeometry {
 	 * @param height
 	 * @param borderWidth
 	 */
-	public XWindowGeometry(final int x, final int y, final int width,
-			final int height, final int borderWidth) {
-		this.x = x;
-		this.y = y;
+	public XWindowGeometry(final int relativeX, final int relativeY,
+			final int width, final int height, final int borderWidth) {
+		this.relativeX = relativeX;
+		this.relativeY = relativeY;
 		this.width = width;
 		this.height = height;
 		this.borderWidth = borderWidth;
@@ -56,21 +56,21 @@ public final class XWindowGeometry implements PlatformRenderAreaGeometry {
 		return this.width;
 	}
 
-	@Override
-	public int getX() {
-		return this.x;
-	}
-
-	@Override
-	public int getY() {
-		return this.y;
-	}
-
 	/**
 	 * 
 	 * @return
 	 */
 	public int getBorderWidth() {
 		return this.borderWidth;
+	}
+
+	@Override
+	public int getRelativeY() {
+		return this.relativeY;
+	}
+
+	@Override
+	public int getRelativeX() {
+		return this.relativeX;
 	}
 }

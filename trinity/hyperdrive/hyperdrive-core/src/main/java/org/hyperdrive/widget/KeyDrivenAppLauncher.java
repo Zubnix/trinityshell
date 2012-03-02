@@ -35,11 +35,9 @@ import org.hydrogen.displayinterface.input.SpecialKeyName;
  */
 public class KeyDrivenAppLauncher extends KeyDrivenMenu {
 
-	/**
-	 * 
-	 */
-	public KeyDrivenAppLauncher() {
-		super();
+	@ViewDefinition
+	public interface View extends KeyDrivenMenu.View {
+
 	}
 
 	private static final String PATH = "PATH";

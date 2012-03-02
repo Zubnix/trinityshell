@@ -28,7 +28,7 @@ import com.trolltech.qt.gui.QWidget;
  * @since 1.0
  * @see {@link PaintCall}
  */
-public interface QFusionPaintCallBack<P extends QWidget, R> extends
-		PaintCall<P, R> {
+public interface QFusionPaintCall<R, P extends QWidget> extends
+		PaintCall<R, P> {
 
 }

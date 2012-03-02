@@ -36,6 +36,11 @@ import org.hyperdrive.input.ManagedMouse;
  */
 public class DragButton extends Button {
 
+	@ViewDefinition
+	public interface View extends Button.View {
+
+	}
+
 	private volatile boolean started;
 	private GeoTransformableRectangle targetRenderArea;
 	private int x0;
@@ -202,10 +207,5 @@ public class DragButton extends Button {
 	@Override
 	public void onMouseButtonPressed(final MouseInput input) {
 		startDrag(input);
-	}
-
-	@Override
-	protected View initView(final ViewFactory<?> viewFactory) {
-		return viewFactory.newDragButtonView();
 	}
 }

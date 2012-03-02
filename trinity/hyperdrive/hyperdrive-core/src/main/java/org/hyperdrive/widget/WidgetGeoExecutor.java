@@ -87,8 +87,8 @@ public class WidgetGeoExecutor extends RenderAreaGeoExecutor {
 		// initialize the area with the closest typed parent.
 		if (area instanceof Widget) {
 			final Widget widget = (Widget) area;
-			final Widget parentWidget = findClosestSameTypeArea(parent);
-			widget.init(parentWidget);
+			final Widget closestParentWidget = findClosestSameTypeArea(parent);
+			widget.init(closestParentWidget);
 		}
 	}
 

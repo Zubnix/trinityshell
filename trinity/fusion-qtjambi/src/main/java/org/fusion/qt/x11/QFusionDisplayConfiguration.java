@@ -37,20 +37,25 @@ public class QFusionDisplayConfiguration extends BaseDisplayConfiguration {
 	 * Default is "raster".
 	 */
 	public static final String GRAPHICS_SYSTEM = "qfusion.graphicssystem";
-	public static final String DISPLAY         = "qfusion.display";
-	public static final String STYLE_SHEET     = "qfusion.stylesheet";
+	public static final String DISPLAY = "qfusion.display";
+	public static final String STYLE_SHEET = "qfusion.stylesheet";
 
 	/**
      *
      */
 	public QFusionDisplayConfiguration() {
 		getBackEndProperties().put(QFusionDisplayConfiguration.GRAPHICS_SYSTEM,
-		                           "raster");
+				"raster");
 	}
 
 	@Override
 	public DisplayPlatform initNewDisplayPlatform() {
+		for (final Runnable configPerform : getConfigPerforms()) {
+			configPerform.run();
+		}
 		return new QFusionDisplayPlatform(getBackEndProperties(),
-		                                  new XcbCoreInterfaceProvider());
+				new XcbCoreInterfaceProvider());
+
 	}
+
 }

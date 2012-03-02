@@ -485,8 +485,8 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	public void syncGeoToPlatformRenderAreaGeo() {
 		final PlatformRenderAreaGeometry wg = getPlatformRenderArea()
 				.getPlatformRenderAreaGeometry();
-		setRelativeX(wg.getX());
-		setRelativeY(wg.getY());
+		setRelativeX(wg.getRelativeX());
+		setRelativeY(wg.getRelativeY());
 
 		setWidth(wg.getWidth());
 		setHeight(wg.getHeight());

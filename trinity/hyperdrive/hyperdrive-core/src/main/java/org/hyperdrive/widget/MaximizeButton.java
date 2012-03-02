@@ -26,6 +26,12 @@ import org.hyperdrive.geo.GeoTransformableRectangle;
  * 
  */
 public class MaximizeButton extends Button {
+
+	@ViewDefinition
+	public interface View extends Button.View {
+
+	}
+
 	// TODO define a generic rectangle interface
 	public static interface MaximizeArea {
 		int getAbsoluteX();
@@ -132,10 +138,5 @@ public class MaximizeButton extends Button {
 	@Override
 	public void onMouseButtonPressed(final MouseInput input) {
 		maximize();
-	}
-
-	@Override
-	protected View initView(final ViewFactory<?> viewFactory) {
-		return viewFactory.newMaximizeButtonView();
 	}
 }

@@ -15,9 +15,7 @@
  */
 package org.hypercube.hyperwidget;
 
-import org.hypercube.view.fusionqtjambi.ClientContainerViewImpl;
-import org.hyperdrive.widget.View;
-import org.hyperdrive.widget.ViewFactory;
+import org.hyperdrive.widget.ViewDefinition;
 import org.hyperdrive.widget.Widget;
 
 // TODO documentation
@@ -29,19 +27,8 @@ import org.hyperdrive.widget.Widget;
  */
 public class ClientContainer extends Widget {
 
-	public ClientContainer() {
-		super();
-	}
+	@ViewDefinition
+	public interface View extends Widget.View {
 
-	private final boolean registered = false;
-
-	@Override
-	protected View initView(final ViewFactory<?> viewFactory) {
-		if (!this.registered) {
-			getManagedDisplay().getWidgetViewFactory().registerCustomView(this,
-					ClientContainerViewImpl.class);
-		}
-
-		return viewFactory.newCustomView(this);
 	}
 }

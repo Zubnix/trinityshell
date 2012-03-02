@@ -15,6 +15,9 @@
  */
 package org.hyperdrive.widget;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 import org.hydrogen.displayinterface.PlatformRenderArea;
 import org.hydrogen.displayinterface.ResourceHandle;
 import org.hydrogen.displayinterface.event.DisplayEventSource;
@@ -40,8 +43,8 @@ import org.hyperdrive.geo.HasGeoManager;
  * the <code>Widget</code> and in turn returns a {@link PaintCall}. This
  * <code>PaintCall</code> is then fed to the <code>Widget</code>'s
  * <code>Painter</code>. A <code>View</code> is defined by the
- * {@link ViewFactory} implementation that was given as a parameter at startup
- * to the {@link ManagedDisplay}.
+ * {@link ViewClassFactory} implementation that was given as a parameter at
+ * startup to the {@link ManagedDisplay}.
  * <p>
  * A <code>Widget</code> is lazily initialized. This means that it is fully
  * initialized by the paint back-end when the <code>Widget</code> is assigned to
@@ -70,8 +73,26 @@ import org.hyperdrive.geo.HasGeoManager;
 public class Widget extends AbstractRenderArea implements Paintable,
 		DisplayEventSource, HasGeoManager {
 
+	@ViewDefinition
+	public interface View {
+
+		/**
+		 * 
+		 * @param args
+		 *            First arg is of type {@link Widget} and is the closest
+		 *            {@link Paintable} parent of the <code>Paintable</code>
+		 *            that needs to be created.
+		 * @return
+		 */
+		PaintInstruction<ResourceHandle> doCreate(Paintable paintableParent,
+				Object... args);
+	}
+
+	private final View view = ViewBinder.createView(this,
+			getViewDefinitionClass());
+
 	private Painter painter;
-	private View view;
+
 	private final WidgetGeoExecutor geoExecutor;
 	private GeoManager geoManager;
 
@@ -83,6 +104,41 @@ public class Widget extends AbstractRenderArea implements Paintable,
 	 */
 	public Widget() {
 		this.geoExecutor = new WidgetGeoExecutor(this);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected Class<? extends View> getViewDefinitionClass() {
+		// this code will probably not work when different classloaders are
+		// used.
+
+		final Class<? extends Widget> widgetClass = getClass();
+		final Class<?>[] declaredClasses = widgetClass.getClasses();
+
+		Class<? extends View> viewClass = null;
+
+		// find only the view interface defined by this widget, if none is
+		// defined, fall back to the superclass view.
+		for (final Class<?> declaredClass : declaredClasses) {
+			if ((declaredClass.getAnnotation(ViewDefinition.class) != null)
+					&& Widget.View.class.isAssignableFrom(declaredClass)
+					&& (widgetClass == declaredClass.getDeclaringClass())) {
+				viewClass = (Class<? extends View>) declaredClass;
+				break;
+			} else if ((declaredClass.getAnnotation(ViewDefinition.class) != null)
+					&& Widget.View.class.isAssignableFrom(declaredClass)) {
+				viewClass = (Class<? extends View>) declaredClass;
+			}
+		}
+
+		if (viewClass == null) {
+			// TODO log error. Paintable does not have a viewdefinition!
+		}
+
+		return viewClass;
+	}
+
+	public View getView() {
+		return this.view;
 	}
 
 	/**
@@ -105,72 +161,52 @@ public class Widget extends AbstractRenderArea implements Paintable,
 	protected void setManagedDisplay(final ManagedDisplay managedDisplay) {
 		super.setManagedDisplay(managedDisplay);
 		managedDisplay.registerEventBus(this, this);
-		this.view = initView(managedDisplay.getWidgetViewFactory());
-
 	}
 
 	/**
-	 * Initialize the <code>Widget</code> with the closest parent
+	 * Initialize the <code>Widget</code> with the closest paintable parent
 	 * <code>Widget</code>. The parent <code>Widget</code> can either be a
 	 * direct or indirect parent of this <code>Widget</code>.
 	 * 
-	 * @param indirectParent
-	 *            The <code>Widget</code>s closes parent <code>Widget</code>. @
+	 * @param paintableParent
+	 *            The <code>Widget</code>s closest parent <code>Widget</code>.
+	 *            This is needed if a <code>Widget</code> needs to be directly
+	 *            initialized with data from its paintable parent at the paint
+	 *            back-end level.
 	 */
-	protected void init(final Widget indirectParent) {
-		if (indirectParent != null) {
-			setManagedDisplay(indirectParent.getManagedDisplay());
+	protected void init(final Widget paintableParent) {
 
+		// we use the paintableParent to determine the managed display.
+		if (paintableParent != null) {
+			setManagedDisplay(paintableParent.getManagedDisplay());
 		}
 
-		ResourceHandle renderAreaId;
-
-		renderAreaId = getPainter().initPaintPeer(indirectParent,
-				getPaintCallOnCreate());
+		// we pass the paintable parent to the back-end which can choose to do
+		// with it as it pleases.
+		final Future<ResourceHandle> renderAreaId = getView().doCreate(
+				paintableParent).getPaintResult();
 
 		PlatformRenderArea renderArea = null;
-
-		renderArea = getManagedDisplay()
-				.getDisplay()
-				.getDisplayPlatform()
-				.findPaintablePlatformRenderAreaFromId(
-						getManagedDisplay().getDisplay(), renderAreaId);
+		try {
+			renderArea = getManagedDisplay()
+					.getDisplay()
+					.getDisplayPlatform()
+					.findPaintablePlatformRenderAreaFromId(
+							getManagedDisplay().getDisplay(),
+							renderAreaId.get());
+		} catch (final InterruptedException e) {
+			// TODO log widget creation interrupt error.
+			e.printStackTrace();
+		} catch (final ExecutionException e) {
+			// TODO log widget creation exception error.
+			e.printStackTrace();
+		}
 
 		setPlatformRenderArea(renderArea);
 
 		getManagedDisplay().fireEvent(
 				new WidgetEvent<Widget>(WidgetEvent.WIDGET_INITIALIZED, this));
 
-	}
-
-	/**
-	 * Construct a <code>View</code> object as defined by the given
-	 * <code>ViewFactory</code>. The returned <code>View</code> determines this
-	 * <code>Widget</code>s visual representation.
-	 * 
-	 * @param viewFactory
-	 * @return
-	 */
-	protected View initView(final ViewFactory<?> viewFactory) {
-		return viewFactory.newBaseView();
-	}
-
-	/**
-	 * Short for <code>getView().onCreate()</code>.
-	 * 
-	 * @return
-	 */
-	protected PaintCall<?, ?> getPaintCallOnCreate() {
-		return getView().onCreate();
-	}
-
-	/**
-	 * Short for <code>getView().onDestroy()</code>.
-	 * 
-	 * @return
-	 */
-	protected PaintCall<?, ?> getPaintCallOnDestroy() {
-		return getView().onDestroy();
 	}
 
 	@Override
@@ -231,16 +267,9 @@ public class Widget extends AbstractRenderArea implements Paintable,
 		}
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public View getView() {
-		return this.view;
-	}
-
 	@Override
 	public void giveInputFocus() {
 		getPainter().setInputFocus();
 	}
+
 }

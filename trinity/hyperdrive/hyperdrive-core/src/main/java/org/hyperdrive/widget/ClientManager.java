@@ -22,7 +22,6 @@ import org.hydrogen.displayinterface.event.ButtonNotifyEvent;
 import org.hydrogen.displayinterface.event.FocusNotifyEvent;
 import org.hydrogen.displayinterface.input.Momentum;
 import org.hydrogen.eventsystem.EventHandler;
-import org.hydrogen.paintinterface.PaintCall;
 import org.hyperdrive.core.ClientWindow;
 import org.hyperdrive.geo.GeoEvent;
 import org.hyperdrive.geo.GeoManagerLine;
@@ -40,6 +39,11 @@ import org.hyperdrive.protocol.DesktopProtocol;
  */
 public class ClientManager extends Widget {
 
+	@ViewDefinition
+	public interface View extends Widget.View {
+
+	}
+
 	// TODO documentation
 	/**
 	 * 
@@ -48,11 +52,17 @@ public class ClientManager extends Widget {
 	 * 
 	 */
 	public static class ClientManagerLabel extends ClientNameLabel {
-		public static interface ClientManagerLabelView extends
-				ClientNameLabelView {
-			PaintCall<?, ?> onClientGainFocus();
 
-			PaintCall<?, ?> onClientLostFocus();
+		@ViewDefinition
+		public interface View extends ClientNameLabel.View {
+			PaintInstruction<Void> onClientGainFocus();
+
+			PaintInstruction<Void> onClientLostFocus();
+		}
+
+		@Override
+		public View getView() {
+			return (View) super.getView();
 		}
 
 		private final EventHandler<ButtonNotifyEvent> eventHandler;
@@ -95,29 +105,6 @@ public class ClientManager extends Widget {
 		protected void manageClient() {
 			addEventHandler(this.eventHandler, ButtonNotifyEvent.TYPE_PRESSED);
 		}
-
-		@Override
-		public ClientManagerLabelView getView() {
-			return (ClientManagerLabelView) super.getView();
-		}
-
-		@Override
-		protected ClientManagerLabelView initView(
-				final ViewFactory<?> viewFactory) {
-			return viewFactory.newClientManagerLabelView();
-		}
-
-	}
-
-	// TODO documentation
-	/**
-	 * 
-	 * @author Erik De Rijcke
-	 * @since 1.0
-	 * 
-	 */
-	public static interface ClientManagerView extends View {
-		// TODO more calls that reflect the clientmanger's state
 	}
 
 	private final GeoManagerLine geoManagerLine;
@@ -153,11 +140,6 @@ public class ClientManager extends Widget {
 		return this.namePropertyName;
 	}
 
-	@Override
-	protected ClientManagerView initView(final ViewFactory<?> viewFactory) {
-		return viewFactory.newClientManagerView();
-	}
-
 	/**
 	 * 
 	 * @param client
@@ -178,13 +160,11 @@ public class ClientManager extends Widget {
 			final ClientManagerLabel clientManagerLabel) {
 		// deactivate all
 		for (final ClientManagerLabel otherClientManagerLabel : this.clientNameLabels) {
-			otherClientManagerLabel.getPainter().paint(
-					otherClientManagerLabel.getView().onClientLostFocus());
+			otherClientManagerLabel.getView().onClientLostFocus();
 		}
 
 		// activate given label
-		clientManagerLabel.getPainter().paint(
-				clientManagerLabel.getView().onClientGainFocus());
+		clientManagerLabel.getView().onClientGainFocus();
 	}
 
 	/**
