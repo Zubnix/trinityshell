@@ -42,6 +42,7 @@ import org.fusion.x11.core.xcb.input.XcbKeyboard;
 import org.fusion.x11.nativeHelpers.FusionNativeLibLoader;
 import org.fusion.x11.nativeHelpers.NativeBufferHelper;
 import org.fusion.x11.nativeHelpers.XNativeCaller;
+import org.hydrogen.displayinterface.Coordinates;
 import org.hydrogen.displayinterface.EventPropagator;
 import org.hydrogen.displayinterface.event.ClientMessageEvent;
 import org.hydrogen.displayinterface.event.DisplayEvent;
@@ -814,5 +815,23 @@ public final class XcbCoreInterfaceImpl implements XCoreInterface {
 		this.xNativeCaller.doNativeCall(
 				this.xcbCoreNativeCalls.getCallRemoveFromSaveSet(),
 				displayAddress, windowId);
+	}
+
+	@Override
+	public Coordinates translateCoordinates(final XWindow window,
+			final XWindow source, final int sourceX, final int sourceY) {
+		final XDisplay display = window.getDisplayResourceHandle().getDisplay();
+		final Long displayAddress = display.getNativePeer();
+		final Long windowId = window.getDisplayResourceHandle()
+				.getResourceHandle().getNativeHandle();
+		final Long sourceWindowId = source.getDisplayResourceHandle()
+				.getResourceHandle().getNativeHandle();
+		final Integer sourceXCoordinate = Integer.valueOf(sourceX);
+		final Integer sourceYCoordinate = Integer.valueOf(sourceY);
+
+		return this.xNativeCaller.doNativeCall(
+				this.xcbCoreNativeCalls.getCallTranslateCoordinates(),
+				displayAddress, windowId, sourceWindowId, sourceXCoordinate,
+				sourceYCoordinate);
 	}
 }

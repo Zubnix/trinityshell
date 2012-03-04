@@ -16,14 +16,17 @@
  */
 package org.fusion.qt.painter;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.fusion.qt.paintengine.QFusionRenderEngine;
+import org.hydrogen.displayinterface.Coordinates;
 import org.hydrogen.paintinterface.PaintCall;
 import org.hydrogen.paintinterface.PaintContext;
 import org.hydrogen.paintinterface.Paintable;
 import org.hydrogen.paintinterface.Painter;
 
+import com.trolltech.qt.core.QPoint;
 import com.trolltech.qt.gui.QWidget;
 
 /**
@@ -154,8 +157,7 @@ public class QFusionPainter implements Painter {
 		return this.qFusionRenderEngine;
 	}
 
-	private <T> Future<T> doBackendWork(
-			final QFusionPaintCall<T, ?> backendWork) {
+	private <T> Future<T> doBackendWork(final QFusionPaintCall<T, ?> backendWork) {
 		return getQtRenderEngine().invoke(getPaintable(), backendWork);
 	}
 
@@ -260,5 +262,37 @@ public class QFusionPainter implements Painter {
 	@Override
 	public <T> Future<T> paint(final PaintCall<T, ?> paintCall) {
 		return doBackendWork((QFusionPaintCall<T, ? extends QWidget>) paintCall);
+	}
+
+	@Override
+	public Coordinates translateCoordinates(final Paintable source,
+			final int sourceX, final int sourceY) {
+		final Future<Coordinates> task = doBackendWork(new QFusionPaintCall<Coordinates, QWidget>() {
+			@Override
+			public Coordinates call(final PaintContext<QWidget> paintContext) {
+				final QWidget sourcePaintPeer = (QWidget) paintContext
+						.queryPaintPeer(source);
+				final QWidget targetPaintPeer = paintContext.getPaintPeer();
+
+				final QPoint translatedPoint = sourcePaintPeer.mapTo(
+						targetPaintPeer, new QPoint(sourceX, sourceY));
+				final Coordinates coordinates = new Coordinates(
+						translatedPoint.x(), translatedPoint.y());
+				return coordinates;
+
+			}
+		});
+
+		Coordinates result = null;
+		try {
+			result = task.get();
+		} catch (final InterruptedException e) {
+			// TODO throw exception+log
+			e.printStackTrace();
+		} catch (final ExecutionException e) {
+			// TODO throw exception+log
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

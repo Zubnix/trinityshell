@@ -31,6 +31,10 @@ import java.nio.ByteBuffer;
  */
 public final class XCoreNative {
 
+	public static native boolean nativeTranslateCoordinates(
+			long displayAddress, long windowId, long sourceWindowId,
+			int sourceX, int sourceY, ByteBuffer buffer);
+
 	/**
 	 * 
 	 * @param displayAddress

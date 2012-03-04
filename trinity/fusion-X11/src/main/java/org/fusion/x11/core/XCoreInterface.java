@@ -19,6 +19,7 @@ import org.fusion.x11.core.extension.XExtensions;
 import org.fusion.x11.core.input.XKeySymbol;
 import org.fusion.x11.core.input.XKeyboard;
 import org.fusion.x11.core.input.XMouse;
+import org.hydrogen.displayinterface.Coordinates;
 import org.hydrogen.displayinterface.EventPropagator;
 import org.hydrogen.displayinterface.event.ClientMessageEvent;
 import org.hydrogen.displayinterface.event.DisplayEvent;
@@ -589,5 +590,16 @@ public interface XCoreInterface {
 	 * @param xWindow
 	 */
 	void removeFromSaveSet(XWindow xWindow);
+
+	/**
+	 * 
+	 * @param xWindow
+	 * @param source
+	 * @param sourceX
+	 * @param sourceY
+	 * @return
+	 */
+	Coordinates translateCoordinates(XWindow xWindow, XWindow source,
+			int sourceX, int sourceY);
 
 }

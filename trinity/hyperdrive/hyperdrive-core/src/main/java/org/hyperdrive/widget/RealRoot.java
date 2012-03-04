@@ -70,7 +70,7 @@ public final class RealRoot extends Widget {
 		setVisibility(true);
 		requestVisibilityChange();
 		syncGeoToPlatformRenderAreaGeo();
-		requestMoveResize();
+		// requestMoveResize();
 	}
 
 	@Override

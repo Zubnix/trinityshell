@@ -25,7 +25,7 @@ package org.hydrogen.displayinterface;
  * @since 1.0
  * 
  */
-public interface AreaManipulator<PARENTTYPE extends Area> {
+public interface AreaManipulator<AREATYPE extends Area> {
 
 	/**
 	 * Destroy the <code>Area</code>. A destroyed <code>Area</code> is no longer
@@ -107,7 +107,7 @@ public interface AreaManipulator<PARENTTYPE extends Area> {
 	 * @param y
 	 *            The new Y coordinate in pixels.
 	 */
-	void setParent(PARENTTYPE parent, int x, int y);
+	void setParent(AREATYPE parent, int x, int y);
 
 	/**
 	 * Change the size of the <code>Area</code> to the given width and height.
@@ -124,4 +124,6 @@ public interface AreaManipulator<PARENTTYPE extends Area> {
 	 * 
 	 */
 	void hide();
+
+	Coordinates translateCoordinates(AREATYPE source, int sourceX, int sourceY);
 }

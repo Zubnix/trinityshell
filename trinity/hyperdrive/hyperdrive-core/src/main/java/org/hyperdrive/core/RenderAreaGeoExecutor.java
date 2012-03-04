@@ -17,10 +17,12 @@ package org.hyperdrive.core;
 
 import org.hydrogen.displayinterface.Area;
 import org.hydrogen.displayinterface.AreaManipulator;
+import org.hydrogen.displayinterface.Coordinates;
 import org.hydrogen.displayinterface.EventPropagator;
 import org.hyperdrive.geo.GeoExecutor;
 import org.hyperdrive.geo.GeoTransformableRectangle;
 import org.hyperdrive.geo.GeoTransformation;
+import org.hyperdrive.widget.RealRoot;
 
 // TODO documentation
 /**
@@ -82,25 +84,14 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 			final int newY = relativeY;
 			final GeoTransformableRectangle currentParent = getManipulatedArea()
 					.toGeoTransformation().getParent0();
-			final int newRelativeX = calculateXRelativeToTypedArea(
-					currentParent, newX);
-			final int newRelativeY = calculateYRelativeToTypedArea(
-					currentParent, newY);
+			final Coordinates newRelativePosition = calculatePositionRelativeToTypedArea(
+					currentParent, newX, newY);
+
+			final int newRelativeX = newRelativePosition.getX();
+			final int newRelativeY = newRelativePosition.getY();
 			this.getAreaManipulator().move(newRelativeX, newRelativeY);
 		}
-		updateChildrenPosition();
-	}
-
-	/**
-	 * 
-	 * 
-	 */
-	protected void updateChildrenPosition() {
-		for (final GeoTransformableRectangle child : getManipulatedArea()
-				.getChildren()) {
-			child.getGeoExecutor().updatePlace(child.getRelativeX(),
-					child.getRelativeY());
-		}
+		// updateChildrenPosition();
 	}
 
 	@Override
@@ -121,16 +112,19 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 			final int newHeight = height;
 			final GeoTransformableRectangle currentParent = getManipulatedArea()
 					.toGeoTransformation().getParent0();
-			final int newRelativeX = calculateXRelativeToTypedArea(
-					currentParent, newX);
-			final int newRelativeY = calculateYRelativeToTypedArea(
-					currentParent, newY);
+
+			final Coordinates newRelativePosition = calculatePositionRelativeToTypedArea(
+					currentParent, newX, newY);
+
+			final int newRelativeX = newRelativePosition.getX();
+			final int newRelativeY = newRelativePosition.getY();
+
 			final AreaManipulator<Area> areaManipulator = this
 					.getAreaManipulator();
 			areaManipulator.moveResize(newRelativeX, newRelativeY, newWidth,
 					newHeight);
 		}
-		updateChildrenPosition();
+		// updateChildrenPosition();
 	}
 
 	@Override
@@ -140,86 +134,33 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 		}
 	}
 
-	/**
-	 * 
-	 * @param directParent
-	 * @param directRelativeX
-	 * @return
-	 */
-	private int calculateXRelativeToTypedArea(
+	protected Coordinates calculatePositionRelativeToTypedArea(
 			final GeoTransformableRectangle directParent,
-			final int directRelativeX) {
+			final int directRelativeX, final int directRelativeY) {
 
-		final AbstractRenderArea parentRenderArea = findRenderAreaWithUniqueAreaManipulator(findClosestSameTypeArea(directParent));
+		final AbstractRenderArea parentRenderArea = findClosestSameTypeArea(directParent);
 
 		if (parentRenderArea == null) {
-			return directRelativeX;
+			return new Coordinates(directRelativeX, directRelativeY);
 		}
+
 		final int newAbsX = directParent.getAbsoluteX() + directRelativeX;
-
-		// FIXME we need to compensate for when the parentRenderArea has an
-		// offset to it's actual platform renderarea. yRelativeToTypedArea
-		// should be increased with this offset. A render area can have an
-		// offset when it does not own (=match) it's platform render area.
-		final int xRelativeToTypedArea = newAbsX
-				- parentRenderArea.getAbsoluteX();
-
-		return xRelativeToTypedArea;
-	}
-
-	/**
-	 * 
-	 * @param abstractRenderArea
-	 * @return
-	 */
-	protected AbstractRenderArea findRenderAreaWithUniqueAreaManipulator(
-			final AbstractRenderArea abstractRenderArea) {
-		// we must find the topmost (in tree hierarchy) render area with an area
-		// manipulator that is different of it's parent render area.
-
-		final GeoTransformableRectangle parent = abstractRenderArea.getParent();
-
-		// endless recursion safety
-		if (parent == abstractRenderArea) {
-			return abstractRenderArea;
-		}
-
-		final AbstractRenderArea parentRenderArea = findClosestSameTypeArea(parent);
-
-		final AreaManipulator<? extends Area> areaManipulator = this
-				.getAreaManipulator(abstractRenderArea);
-		final AreaManipulator<? extends Area> parentAreaManipulator = this
-				.getAreaManipulator(parentRenderArea);
-		if (areaManipulator == parentAreaManipulator) {
-			return findRenderAreaWithUniqueAreaManipulator(parentRenderArea);
-		} else {
-			return abstractRenderArea;
-		}
-	}
-
-	/**
-	 * 
-	 * @param directParent
-	 * @param directRelativeY
-	 * @return
-	 */
-	private int calculateYRelativeToTypedArea(
-			final GeoTransformableRectangle directParent,
-			final int directRelativeY) {
-		final AbstractRenderArea parentRenderArea = findRenderAreaWithUniqueAreaManipulator(findClosestSameTypeArea(directParent));
-		if (parentRenderArea == null) {
-			return directRelativeY;
-		}
 		final int newAbsY = directParent.getAbsoluteY() + directRelativeY;
 
-		// FIXME we need to compensate for when the parentRenderArea has an
-		// offset to it's actual platform renderarea. yRelativeToTypedArea
-		// should be increased with this offset. A render area can have an
-		// offset when it does not own (=match) it's platform render area.
-		final int yRelativeToTypedArea = newAbsY
-				- parentRenderArea.getAbsoluteY();
+		// TODO remove realroot dependency
+		final Coordinates absCorParent = getAreaManipulator(
+				RealRoot.get(getManipulatedArea().getManagedDisplay()))
+				.translateCoordinates(getAreaPeer(parentRenderArea), 0, 0);
 
-		return yRelativeToTypedArea;
+		final int newRelX = newAbsX - absCorParent.getX();
+		final int newRelY = newAbsY - absCorParent.getY();
+
+		final Coordinates corRelativeToTypedParent = new Coordinates(newRelX,
+				newRelY);
+
+		return corRelativeToTypedParent;
+
+		// return null;
 	}
 
 	/**
@@ -249,6 +190,8 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 	}
 
 	/**
+	 * Perform any required operations on the parent before the manipulated
+	 * render area is reparented.
 	 * 
 	 * @param newParentRenderArea
 	 * 
@@ -284,14 +227,15 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 				throw new IllegalArgumentException(
 						"Can not reparent to a child of self.");
 			} else {
+				final Coordinates newRelativePosition = calculatePositionRelativeToTypedArea(
+						newParent, newX, newY);
 
-				final int nativeNewRelX = calculateXRelativeToTypedArea(
-						newParent, newX);
-				final int nativeNewRelY = calculateYRelativeToTypedArea(
-						newParent, newY);
+				final int newRelativeX = newRelativePosition.getX();
+				final int newRelativeY = newRelativePosition.getY();
+
 				preProcesNewSameTypeParent(newParentRenderArea);
-				reparent(getAreaPeer(newParentRenderArea), nativeNewRelX,
-						nativeNewRelY);
+				reparent(getAreaPeer(newParentRenderArea), newRelativeX,
+						newRelativeY);
 			}
 		} else if (currentRenderAreaInitialized && !newParentInitialized) {
 			// we are ready but our new parent isn't. we hide ourself.
@@ -315,14 +259,17 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 	}
 
 	/**
+	 * Find the the closest parent in the area tree hierarchy that matches the
+	 * type of {@link RenderAreaGeoExecutor#getManipulatedArea()}, starting from
+	 * the given square.
 	 * 
 	 * @param square
-	 * @return
+	 *            The {@link GeoTransformableRectangle} to start searching from
+	 *            upwards in the tree hierarchy.
+	 * @return The closest parent with type {@link AbstractRenderArea}.
 	 */
 	protected AbstractRenderArea findClosestSameTypeArea(
 			final GeoTransformableRectangle square) {
-		// FIXME this method must return a render area who's geometry matches
-		// the native window it represents.
 
 		// find the closest ancestor that is of type AbstractRenderArea
 		if (square instanceof AbstractRenderArea) {

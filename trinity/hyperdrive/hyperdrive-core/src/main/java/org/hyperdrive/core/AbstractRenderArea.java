@@ -501,11 +501,9 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	public GeoTransformation toGeoTransformation() {
 		final GeoTransformation geoTransformation = super.toGeoTransformation();
 		// we only want our size to increase with the preferred increment value
-		// of the underlying platform render area. We check the generated
-		// geoTransformation and create a new one with correct increment values
-		// if needed.
+		// of the underlying platform render area.
 
-		// make sure that delta of old & new size is a multiple of he
+		// we make sure that delta of old & new size is a multiple of he
 		// desired increment.
 		final int deltaWidth = geoTransformation.getDeltaWidth();
 		final int newDeltaWidth = (deltaWidth / getWidthIncrement())

@@ -9,6 +9,15 @@ extern "C" {
 
 /*
  * Class:     org_fusion_x11_core_XCoreNative
+ * Method:    nativeTranslateCoordinates
+ * Signature: (JJJII[BLjava/nio/ByteBuffer;)Z
+ */
+JNIEXPORT jboolean JNICALL
+Java_org_fusion_x11_core_XCoreNative_nativeTranslateCoordinates(JNIEnv *,
+		jclass, jlong, jlong, jlong, jint, jint, jobject);
+
+/*
+ * Class:     org_fusion_x11_core_XCoreNative
  * Method:    nativeGetInputFocus
  * Signature: (J[BLjava/nio/ByteBuffer;)Z
  */

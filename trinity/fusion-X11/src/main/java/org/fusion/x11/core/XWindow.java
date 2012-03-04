@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hydrogen.displayinterface.Atom;
+import org.hydrogen.displayinterface.Coordinates;
 import org.hydrogen.displayinterface.EventPropagator;
 import org.hydrogen.displayinterface.PlatformRenderArea;
 import org.hydrogen.displayinterface.PlatformRenderAreaAttributes;
@@ -296,5 +297,13 @@ public final class XWindow extends XResource implements PlatformRenderArea,
 
 	public void removeFromSaveSet() {
 		getXCoreInterface().removeFromSaveSet(this);
+	}
+
+	@Override
+	public Coordinates translateCoordinates(final PlatformRenderArea source,
+			final int sourceX, final int sourceY) {
+		final Coordinates coordinates = getXCoreInterface()
+				.translateCoordinates(this, (XWindow) source, sourceX, sourceY);
+		return coordinates;
 	}
 }

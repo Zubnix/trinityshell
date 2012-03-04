@@ -22,6 +22,7 @@ import org.fusion.x11.core.XWindowAttributes;
 import org.fusion.x11.core.XWindowGeometry;
 import org.fusion.x11.nativeHelpers.NativeBufferHelper;
 import org.fusion.x11.nativeHelpers.XNativeCall;
+import org.hydrogen.displayinterface.Coordinates;
 
 /**
  * An <code>XcbCoreNativeCalls</code> statically groups all native calls that
@@ -33,6 +34,34 @@ import org.fusion.x11.nativeHelpers.XNativeCall;
  * @since 1.0
  */
 public final class XcbCoreNativeCalls {
+
+	public XNativeCall<Coordinates, Long, Number> getCallTranslateCoordinates() {
+		return this.translateCoordinates;
+	}
+
+	private final TranslateCoordinates translateCoordinates;
+
+	public static final class TranslateCoordinates extends
+			XNativeCall<Coordinates, Long, Number> {
+		private TranslateCoordinates() {
+		}
+
+		@Override
+		public Coordinates getResult() {
+			final int destX = getNativeBufferHelper().readUnsignedShort();
+			final int destY = getNativeBufferHelper().readUnsignedShort();
+			final Coordinates xCoordinates = new Coordinates(destX, destY);
+			return xCoordinates;
+		}
+
+		@Override
+		protected boolean nativeCallImpl() {
+			return XCoreNative.nativeTranslateCoordinates(getDisplayPeer()
+					.longValue(), getArgs()[0].longValue(), getArgs()[1]
+					.longValue(), getArgs()[2].intValue(), getArgs()[3]
+					.intValue(), getNativeBufferHelper().getBuffer());
+		}
+	}
 
 	public RemoveFromSaveSet getCallRemoveFromSaveSet() {
 		return this.removeFromSaveSet;
@@ -1593,6 +1622,7 @@ public final class XcbCoreNativeCalls {
 	 * <code>XNativeCall</code>s.
 	 */
 	public XcbCoreNativeCalls() {
+		this.translateCoordinates = new TranslateCoordinates();
 		this.removeFromSaveSet = new RemoveFromSaveSet();
 		this.addToSaveSet = new AddToSaveSet();
 		this.setSelectionOwner = new SetSelectionOwner();
@@ -1636,5 +1666,4 @@ public final class XcbCoreNativeCalls {
 		this.ungrabKey = new UngrabKey();
 		this.ungrabButton = new UngrabButton();
 	}
-
 }

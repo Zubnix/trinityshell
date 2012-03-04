@@ -24,6 +24,39 @@ xcb_screen_t *screen_of_display(xcb_connection_t *c, int screen) {
 
 /*
  * Class:     org_fusion_x11_core_XCoreNative
+ * Method:    nativeTranslateCoordinates
+ * Signature: (JJJII[BLjava/nio/ByteBuffer;)Z
+ */
+JNIEXPORT jboolean JNICALL
+Java_org_fusion_x11_core_XCoreNative_nativeTranslateCoordinates(JNIEnv *env,
+		jclass class, jlong display, jlong window, jlong sourceWindow,
+		jint sourceX, jint sourceY, jobject buffer) {
+	xcb_translate_coordinates_cookie_t cookie = xcb_translate_coordinates(
+			(xcb_connection_t*) display, (xcb_window_t) sourceWindow,
+			(xcb_window_t) window, (int16_t) sourceX, (int16_t) sourceY);
+
+	void* resultBuffer = (*env)->GetDirectBufferAddress(env, buffer);
+	xcb_generic_error_t* error;
+
+	xcb_translate_coordinates_reply_t* reply = xcb_translate_coordinates_reply(
+			(xcb_connection_t*) display, cookie, error);
+
+	if (error) {
+		writeError(error);
+		return (jboolean) 1;
+	}
+
+	uint16_t destX = reply->dst_x;
+	uint16_t destY = reply->dst_y;
+
+	resultBuffer = mempcpy(resultBuffer, &destX, sizeof(uint16_t));
+	memcpy(resultBuffer, &destY, sizeof(uint16_t));
+
+	return (jboolean) 0;
+}
+
+/*
+ * Class:     org_fusion_x11_core_XCoreNative
  * Method:    nativeGetInputFocus
  * Signature: (J[BLjava/nio/ByteBuffer;)Z
  */
@@ -106,9 +139,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeGrabMouse(JNIEnv *env, jclass class,
 		jlong display, jlong windowId, jint time, jobject buffer) {
 
 	xcb_grab_pointer_cookie_t grab_pointer_cookie = xcb_grab_pointer(
-			(xcb_connection_t*) display,
-			0,
-			(xcb_window_t) windowId,
+			(xcb_connection_t*) display, 0, (xcb_window_t) windowId,
 			XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE
 					| XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
 			XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, XCB_WINDOW_NONE,
@@ -672,8 +703,7 @@ Java_org_fusion_x11_core_XCoreNative_nativeMoveResize(JNIEnv *env, jclass class,
 			- (2 * geom->border_width), (uint32_t) height
 			- (2 * geom->border_width) };
 	xcb_void_cookie_t void_cookie = xcb_configure_window_checked(
-			(xcb_connection_t*) display,
-			(xcb_window_t) window,
+			(xcb_connection_t*) display, (xcb_window_t) window,
 			XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH
 					| XCB_CONFIG_WINDOW_HEIGHT, values);
 	error = xcb_request_check((xcb_connection_t*) display, void_cookie);

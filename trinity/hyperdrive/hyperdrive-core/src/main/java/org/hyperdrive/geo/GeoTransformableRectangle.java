@@ -471,7 +471,19 @@ public abstract class GeoTransformableRectangle extends EventBus implements
 			execUpdatePlaceValue();
 		}
 		flushPlaceValues();
+		updateChildrenPosition();
 		fireGeoEvent(GeoEvent.MOVE);
+	}
+
+	/**
+	 * 
+	 * 
+	 */
+	protected void updateChildrenPosition() {
+		for (final GeoTransformableRectangle child : getChildren()) {
+			child.getGeoExecutor().updatePlace(child.getRelativeX(),
+					child.getRelativeY());
+		}
 	}
 
 	/**
@@ -570,6 +582,7 @@ public abstract class GeoTransformableRectangle extends EventBus implements
 			execUpdateSizePlaceValue();
 		}
 		flushSizePlaceValues();
+		updateChildrenPosition();
 		fireGeoEvent(GeoEvent.MOVE_RESIZE);
 	}
 
