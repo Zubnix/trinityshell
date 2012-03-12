@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core;
 
-import org.hydrogen.displayinterface.PropertyInstanceAtoms;
+import org.hydrogen.display.PropertyInstanceAtoms;
 
 // TODO documentation
 /**

@@ -16,8 +16,9 @@
 package org.hyperdrive.core;
 
 import org.apache.log4j.Logger;
-import org.hydrogen.displayinterface.Property;
-import org.hydrogen.displayinterface.PropertyInstance;
+import org.hydrogen.api.display.Property;
+import org.hydrogen.api.display.PropertyInstance;
+import org.hyperdrive.api.core.RenderArea;
 
 //TODO documentation
 /**
@@ -31,13 +32,13 @@ public class RenderAreaPropertiesManipulator {
 			.getLogger(RenderAreaPropertiesManipulator.class);
 	private static final String PROPERTY_NOT_FOUND_ERROR_MSG = "No property with name %s is known.";
 
-	private final AbstractRenderArea renderArea;
+	private final RenderArea renderArea;
 
 	/**
 	 * 
 	 * @param renderArea
 	 */
-	public RenderAreaPropertiesManipulator(final AbstractRenderArea renderArea) {
+	public RenderAreaPropertiesManipulator(final RenderArea renderArea) {
 		this.renderArea = renderArea;
 	}
 
@@ -45,7 +46,7 @@ public class RenderAreaPropertiesManipulator {
 	 * 
 	 * @return
 	 */
-	public AbstractRenderArea getRenderArea() {
+	public RenderArea getRenderArea() {
 		return this.renderArea;
 	}
 

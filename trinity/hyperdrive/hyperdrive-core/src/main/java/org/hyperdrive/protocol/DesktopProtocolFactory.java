@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.protocol;
 
-import org.hyperdrive.core.ManagedDisplay;
+import org.hyperdrive.api.core.ManagedDisplay;
 
 //TODO documentation
 /**

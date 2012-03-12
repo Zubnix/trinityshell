@@ -26,10 +26,10 @@ import org.hyperdrive.core.RenderAreaEventType;
  * 
  * @param <W>
  */
-public class WidgetEvent<R extends Widget> extends
+public class WidgetEvent<R extends BaseWidget> extends
 		RenderAreaEvent<R, RenderAreaEventType<R>> {
 
-	public static final RenderAreaEventType<Widget> WIDGET_INITIALIZED = new RenderAreaEventType<Widget>();
+	public static final RenderAreaEventType<BaseWidget> WIDGET_INITIALIZED = new RenderAreaEventType<BaseWidget>();
 
 	/**
 	 * 

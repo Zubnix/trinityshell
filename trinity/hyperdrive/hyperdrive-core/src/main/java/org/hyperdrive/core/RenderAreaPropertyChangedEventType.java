@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.core;
 
-import org.hydrogen.displayinterface.event.DisplayEventType;
+import org.hydrogen.api.event.Type;
 
 //TODO documentation
 /**
@@ -23,7 +23,7 @@ import org.hydrogen.displayinterface.event.DisplayEventType;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class RenderAreaPropertyChangedEventType extends DisplayEventType {
+public class RenderAreaPropertyChangedEventType implements Type {
 
 	private final String propertyName;
 

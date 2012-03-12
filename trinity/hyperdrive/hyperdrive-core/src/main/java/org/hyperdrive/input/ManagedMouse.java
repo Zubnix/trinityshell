@@ -15,12 +15,9 @@
  */
 package org.hyperdrive.input;
 
-import org.hydrogen.displayinterface.event.KeyNotifyEvent;
-import org.hydrogen.displayinterface.input.Mouse;
-import org.hydrogen.paintinterface.Paintable;
-import org.hydrogen.paintinterface.Painter;
-import org.hyperdrive.core.ManagedDisplay;
-import org.hyperdrive.widget.RealRoot;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.api.display.input.Mouse;
+import org.hyperdrive.api.core.ManagedDisplay;
 
 /**
  * A <code>ManagedMouse</code> represents a mouse pointer from a
@@ -30,7 +27,7 @@ import org.hyperdrive.widget.RealRoot;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ManagedMouse extends GrabableInputDevice implements Paintable {
+public class ManagedMouse extends GrabableInputDevice {
 
 	private final Mouse mouse;
 
@@ -46,12 +43,11 @@ public class ManagedMouse extends GrabableInputDevice implements Paintable {
 	 *            <code>ManagedDisplay</code> has an illegal state.
 	 */
 	public ManagedMouse(final ManagedDisplay managedDisplay) {
-		super(managedDisplay, KeyNotifyEvent.TYPE_PRESSED,
-				KeyNotifyEvent.TYPE_RELEASED);
+		super(managedDisplay, DisplayEventType.BUTTON_PRESSED,
+				DisplayEventType.BUTTON_RELEASED);
 		this.mouse = getManagedDisplay().getDisplay().getMouse();
 	}
 
-	@Override
 	public int getAbsoluteX() {
 
 		final int returnint = this.mouse.getRootX();
@@ -59,54 +55,9 @@ public class ManagedMouse extends GrabableInputDevice implements Paintable {
 		return returnint;
 	}
 
-	@Override
 	public int getAbsoluteY() {
 		final int returnint = this.mouse.getRootY();
 		return returnint;
-	}
-
-	/**
-	 * The vertical size of this <code>ManagedMouse</code>.
-	 * 
-	 * @return The height of this <code>ManagedMouse</code> in pixels.
-	 */
-	@Override
-	public int getHeight() {
-		return 10;
-	}
-
-	@Override
-	public Painter getPainter() {
-		// TODO implement mouse painter for toolkit specific operations
-		throw new Error("not yet implemented");
-	}
-
-	@Override
-	public Paintable getParent() {
-		// TODO the paintable where the mouse is hovering over
-		throw new Error("not yet implemented");
-	}
-
-	@Override
-	public int getRelativeX() {
-		// TODO relative to the window where the mouse is hovering over.
-		throw new Error("not yet implemented");
-	}
-
-	@Override
-	public int getRelativeY() {
-		// TODO relative to the window where the mouse is hovering over.
-		throw new Error("not yet implemented");
-	}
-
-	/**
-	 * The horizontal size of this <code>ManagedMouse</code>.
-	 * 
-	 * @return The width of this <code>ManagedMouse</code> in pixels.
-	 */
-	@Override
-	public int getWidth() {
-		return 5;
 	}
 
 	/**
@@ -120,33 +71,14 @@ public class ManagedMouse extends GrabableInputDevice implements Paintable {
 	}
 
 	@Override
-	public boolean isVisible() {
-		return true;
-	}
-
-	@Override
-	public Paintable getParentPaintable() {
-		// TODO return the overlay window?
-		throw new Error("not yet implemented");
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public Mouse getMouse() {
-		return this.mouse;
-	}
-
-	@Override
 	protected void doEffectiveGrab() {
-		RealRoot.get(getManagedDisplay()).getPlatformRenderArea()
+		getManagedDisplay().getRoot().getPlatformRenderArea()
 				.catchAllMouseInput();
 	}
 
 	@Override
 	protected void doEffectiveRelease() {
-		RealRoot.get(getManagedDisplay()).getPlatformRenderArea()
+		getManagedDisplay().getRoot().getPlatformRenderArea()
 				.stopMouseInputCatching();
 	}
 }

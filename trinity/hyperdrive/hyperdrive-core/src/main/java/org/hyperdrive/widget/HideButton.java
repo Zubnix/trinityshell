@@ -15,8 +15,10 @@
  */
 package org.hyperdrive.widget;
 
-import org.hydrogen.displayinterface.input.MouseInput;
-import org.hyperdrive.geo.GeoTransformableRectangle;
+import org.hydrogen.api.display.input.MouseInput;
+import org.hydrogen.display.input.BaseMouseInput;
+import org.hyperdrive.api.geo.GeoTransformableRectangle;
+import org.hyperdrive.api.widget.ViewDefinition;
 
 // TODO create abstract push button class
 /**
@@ -26,13 +28,13 @@ import org.hyperdrive.geo.GeoTransformableRectangle;
  * {@link HideButton#setTargetRenderArea(GeoTransformableRectangle)}. A hide is
  * initiated when a (any) mouse button is pressed on the <code>HideButton</code>
  * . This behaviour can be changed by overriding the
- * {@link HideButton#onMouseInput(MouseInput)} method.
+ * {@link HideButton#onMouseInput(BaseMouseInput)} method.
  * 
  * @author Erik De Rijcke
  * @since 1.0
  * 
  */
-public class HideButton extends Button {
+public class HideButton extends BaseButton {
 
 	@ViewDefinition
 	public interface View extends Button.View {

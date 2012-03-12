@@ -17,9 +17,9 @@ package org.hyperdrive.core;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.hydrogen.config.DisplayConfiguration;
+import org.hydrogen.api.config.DisplayConfiguration;
+import org.hyperdrive.api.core.ManagedDisplay;
 
 /**
  * A <code>DisplayManager</code> gives access to the underlying native
@@ -75,7 +75,7 @@ public final class DisplayManager {
 	 *            A {@link DisplayConfiguration}.
 	 * @return The display name of the given <code>DisplayConfiguration</code>.
 	 */
-	public String checkDisplayConfiguration(
+	private String checkDisplayConfiguration(
 			final DisplayConfiguration displayConfiguration) {
 
 		final String displayName = displayConfiguration.getBackEndProperties()
@@ -86,20 +86,6 @@ public final class DisplayManager {
 					"DisplayAddress: %s already in use.", displayName));
 		}
 		return displayName;
-	}
-
-	/**
-	 * Gets the <code>ManagedDisplay</code> bound to it's native display name.
-	 * 
-	 * @param displayName
-	 *            The native display name
-	 * @return The {@link ManagedDisplay} bound to the given native display
-	 *         name.
-	 */
-	public ManagedDisplay getExistingManagedDisplay(final String displayName) {
-		final ManagedDisplay returnManagedDisplay = this.managedDisplayMap
-				.get(displayName);
-		return returnManagedDisplay;
 	}
 
 	/**
@@ -118,25 +104,11 @@ public final class DisplayManager {
 
 		ManagedDisplay managedDisplay;
 		final String displayName = checkDisplayConfiguration(displayConfiguration);
-		managedDisplay = new ManagedDisplay(displayConfiguration
+		managedDisplay = new BaseManagedDisplay(displayConfiguration
 				.initNewDisplayPlatform().newDisplay(displayName));
 
 		this.managedDisplayMap.put(displayName, managedDisplay);
 
 		return managedDisplay;
-	}
-
-	/**
-	 * Shut down this <code>DisplayManager</code>. This will also shut down all
-	 * 
-	 * <code>ManagedDisplay</codes> that were created by this <code>DisplayManager</code>
-	 * .
-	 */
-	public void shutDown() {
-		for (final Entry<String, ManagedDisplay> displayEntry : this.managedDisplayMap
-				.entrySet()) {
-			displayEntry.getValue().shutDown();
-		}
-		this.managedDisplayMap.clear();
 	}
 }

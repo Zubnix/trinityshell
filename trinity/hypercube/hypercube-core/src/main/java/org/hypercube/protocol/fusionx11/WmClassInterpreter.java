@@ -15,8 +15,8 @@
  */
 package org.hypercube.protocol.fusionx11;
 
-import org.hydrogen.displayinterface.PropertyInstanceTexts;
-import org.hyperdrive.core.ClientWindow;
+import org.hydrogen.display.PropertyInstanceTexts;
+import org.hyperdrive.api.core.RenderArea;
 import org.hyperdrive.protocol.ClientSoftwareDescription;
 
 //TODO documentation
@@ -33,7 +33,7 @@ final class WmClassInterpreter {
 		this.xDesktopProtocol = xDesktopProtocol;
 	}
 
-	void handleWmClass(final ClientWindow client,
+	void handleWmClass(final RenderArea client,
 			final PropertyInstanceTexts propertyInstance) {
 
 		final String instanceName = propertyInstance.getTexts()[0];

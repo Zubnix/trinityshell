@@ -15,6 +15,9 @@
  */
 package org.hyperdrive.geo;
 
+import org.hyperdrive.api.geo.GeoManager;
+import org.hyperdrive.api.geo.HasGeoManager;
+
 // TODO documentation
 /**
  * A <code>GeoVirtRectangle</code> is a 'virtual', invisible rectangle with a
@@ -31,8 +34,8 @@ package org.hyperdrive.geo;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class GeoVirtRectangle extends GeoTransformableRectangle implements
-		HasGeoManager {
+public class GeoVirtRectangle extends AbstractGeoTransformableRectangle
+		implements HasGeoManager {
 	private final GeoVirtGeoExecutor geoExecutor;
 	private GeoManager geoManager;
 

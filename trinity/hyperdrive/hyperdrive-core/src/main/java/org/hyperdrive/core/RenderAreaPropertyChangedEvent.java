@@ -18,9 +18,10 @@ package org.hyperdrive.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hydrogen.displayinterface.Property;
-import org.hydrogen.displayinterface.PropertyInstance;
-import org.hydrogen.eventsystem.Event;
+import org.hydrogen.api.display.Property;
+import org.hydrogen.api.display.PropertyInstance;
+import org.hydrogen.api.event.Event;
+import org.hyperdrive.api.core.RenderArea;
 
 //TODO create seperate abstract renderareaevent super class
 //TODO documentation
@@ -34,7 +35,7 @@ public class RenderAreaPropertyChangedEvent<T extends Property<? extends Propert
 
 	private final T changedProperty;
 	private final boolean propertyDeleted;
-	private final AbstractRenderArea renderArea;
+	private final RenderArea renderArea;
 	private final RenderAreaPropertyChangedEventType type;
 	private static final Map<String, RenderAreaPropertyChangedEventType> TYPES_MAP = new HashMap<String, RenderAreaPropertyChangedEventType>();
 
@@ -44,7 +45,7 @@ public class RenderAreaPropertyChangedEvent<T extends Property<? extends Propert
 	 * @param propertyDeleted
 	 * @param changedProperty
 	 */
-	public RenderAreaPropertyChangedEvent(final AbstractRenderArea renderArea,
+	public RenderAreaPropertyChangedEvent(final RenderArea renderArea,
 			final boolean propertyDeleted, final T changedProperty) {
 		this.renderArea = renderArea;
 		this.type = RenderAreaPropertyChangedEvent.TYPE(changedProperty
@@ -57,7 +58,7 @@ public class RenderAreaPropertyChangedEvent<T extends Property<? extends Propert
 	 * 
 	 * @return
 	 */
-	public AbstractRenderArea getRenderArea() {
+	public RenderArea getRenderArea() {
 		return this.renderArea;
 	}
 

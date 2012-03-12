@@ -16,7 +16,7 @@
 package org.hypercube.protocol.fusionx11;
 
 import org.fusion.x11.icccm.WmSizeHintsInstance;
-import org.hyperdrive.core.ClientWindow;
+import org.hyperdrive.api.core.RenderArea;
 import org.hyperdrive.protocol.ClientPreferedGeometry;
 
 //TODO documentation
@@ -33,7 +33,7 @@ final class WmNormalHintsInterpreter {
 		this.xDesktopProtocol = xDesktopProtocol;
 	}
 
-	void handleWmNormalHints(final ClientWindow client,
+	void handleWmNormalHints(final RenderArea client,
 			final WmSizeHintsInstance propertyInstance) {
 
 		// query current geo preferences
@@ -55,8 +55,8 @@ final class WmNormalHintsInterpreter {
 		final boolean oldVisibible;
 
 		if (clientPreferedGeometry == null) {
-			oldX = client.getRelativeX();
-			oldY = client.getRelativeY();
+			oldX = client.getX();
+			oldY = client.getY();
 			oldWidth = client.getWidth();
 			oldHeight = client.getHeight();
 			oldMinWidth = client.getMinWidth();

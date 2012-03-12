@@ -17,8 +17,8 @@
 package org.fusion.qt.x11;
 
 import org.fusion.x11.core.xcb.XcbCoreInterfaceProvider;
+import org.hydrogen.api.display.DisplayPlatform;
 import org.hydrogen.config.BaseDisplayConfiguration;
-import org.hydrogen.displayinterface.DisplayPlatform;
 
 /**
  * A <code>QFusionDisplayConfiguration</code> defines the configuration needed

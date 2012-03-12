@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core;
 
-import org.hydrogen.displayinterface.PlatformRenderAreaAttributes;
+import org.hydrogen.api.display.PlatformRenderAreaAttributes;
 
 /**
  * An <code>XWindowAttributes</code> groups a number of native X window related

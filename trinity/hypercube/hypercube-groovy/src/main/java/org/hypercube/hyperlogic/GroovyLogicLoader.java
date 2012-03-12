@@ -19,10 +19,10 @@ import groovy.lang.GroovyObject;
 
 import java.io.File;
 
-import org.hydrogen.config.DisplayConfiguration;
+import org.hydrogen.api.config.DisplayConfiguration;
 import org.hypercube.LogicLoader;
 import org.hypercube.hyperlogic.GroovyScriptLoader.ScriptDefinition;
-import org.hyperdrive.core.ManagedDisplay;
+import org.hyperdrive.api.core.ManagedDisplay;
 
 // TODO documentation
 /**

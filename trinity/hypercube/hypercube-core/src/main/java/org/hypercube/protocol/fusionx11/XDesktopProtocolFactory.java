@@ -15,7 +15,7 @@
  */
 package org.hypercube.protocol.fusionx11;
 
-import org.hyperdrive.core.ManagedDisplay;
+import org.hyperdrive.api.core.ManagedDisplay;
 import org.hyperdrive.protocol.DesktopProtocol;
 import org.hyperdrive.protocol.DesktopProtocolFactory;
 

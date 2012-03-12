@@ -15,10 +15,10 @@
  */
 package org.hyperdrive.input;
 
-import org.hydrogen.displayinterface.event.KeyNotifyEvent;
-import org.hydrogen.displayinterface.input.Keyboard;
-import org.hyperdrive.core.ManagedDisplay;
-import org.hyperdrive.widget.RealRoot;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.api.display.event.KeyNotifyEvent;
+import org.hydrogen.api.display.input.Keyboard;
+import org.hyperdrive.api.core.ManagedDisplay;
 
 // TODO documentation
 /**
@@ -34,8 +34,8 @@ public class ManagedKeyboard extends GrabableInputDevice {
 	 * @param managedDisplay
 	 */
 	public ManagedKeyboard(final ManagedDisplay managedDisplay) {
-		super(managedDisplay, KeyNotifyEvent.TYPE_PRESSED,
-				KeyNotifyEvent.TYPE_RELEASED);
+		super(managedDisplay, DisplayEventType.KEY_PRESSED,
+				DisplayEventType.KEY_RELEASED);
 		this.keyboard = getManagedDisplay().getDisplay().getKeyBoard();
 	}
 
@@ -54,13 +54,13 @@ public class ManagedKeyboard extends GrabableInputDevice {
 
 	@Override
 	protected void doEffectiveGrab() {
-		RealRoot.get(getManagedDisplay()).getPlatformRenderArea()
+		getManagedDisplay().getRoot().getPlatformRenderArea()
 				.catchAllKeyboardInput();
 	}
 
 	@Override
 	protected void doEffectiveRelease() {
-		RealRoot.get(getManagedDisplay()).getPlatformRenderArea()
+		getManagedDisplay().getRoot().getPlatformRenderArea()
 				.stopKeyboardInputCatching();
 	}
 }

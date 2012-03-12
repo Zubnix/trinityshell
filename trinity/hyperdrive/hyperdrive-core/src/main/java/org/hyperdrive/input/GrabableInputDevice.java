@@ -15,11 +15,11 @@
  */
 package org.hyperdrive.input;
 
-import org.hydrogen.eventsystem.Event;
-import org.hydrogen.eventsystem.EventBus;
-import org.hydrogen.eventsystem.EventHandler;
-import org.hydrogen.eventsystem.Type;
-import org.hyperdrive.core.ManagedDisplay;
+import org.hydrogen.api.event.Event;
+import org.hydrogen.api.event.EventHandler;
+import org.hydrogen.api.event.Type;
+import org.hydrogen.event.EventBus;
+import org.hyperdrive.api.core.ManagedDisplay;
 
 // TODO documentation
 /**

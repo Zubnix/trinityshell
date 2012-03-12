@@ -24,10 +24,10 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.fusion.qt.error.DisplayNotSetError;
 import org.fusion.x11.core.XDisplay;
-import org.hydrogen.displayinterface.Display;
-import org.hydrogen.displayinterface.EventProducer;
-import org.hydrogen.displayinterface.event.DisplayEvent;
-import org.hydrogen.displayinterface.event.DisplayEventSource;
+import org.hydrogen.api.display.Display;
+import org.hydrogen.api.display.EventProducer;
+import org.hydrogen.api.display.event.DisplayEvent;
+import org.hydrogen.api.display.event.DisplayEventSource;
 
 import com.trolltech.qt.core.QEvent;
 

@@ -15,8 +15,9 @@
  */
 package org.hyperdrive.widget;
 
-import org.hydrogen.displayinterface.input.MouseInput;
-import org.hyperdrive.geo.GeoTransformableRectangle;
+import org.hydrogen.api.display.input.MouseInput;
+import org.hyperdrive.api.geo.GeoTransformableRectangle;
+import org.hyperdrive.api.widget.ViewDefinition;
 
 // TODO create push button superclass
 /**
@@ -25,7 +26,7 @@ import org.hyperdrive.geo.GeoTransformableRectangle;
  * @since 1.0
  * 
  */
-public class MaximizeButton extends Button {
+public class MaximizeButton extends BaseButton {
 
 	@ViewDefinition
 	public interface View extends Button.View {
@@ -98,8 +99,8 @@ public class MaximizeButton extends Button {
 	 */
 	public void maximize() {
 		if (this.maximized) {
-			getTargetRenderArea().setRelativeX(this.oldRelX);
-			getTargetRenderArea().setRelativeY(this.oldRelY);
+			getTargetRenderArea().setX(this.oldRelX);
+			getTargetRenderArea().setY(this.oldRelY);
 			getTargetRenderArea().setWidth(this.oldWidth);
 			getTargetRenderArea().setHeight(this.oldHeight);
 
@@ -112,8 +113,8 @@ public class MaximizeButton extends Button {
 
 			final int currentAbsX = getTargetRenderArea().getAbsoluteX();
 			final int currentabsY = getTargetRenderArea().getAbsoluteY();
-			final int currentRelX = getTargetRenderArea().getRelativeX();
-			final int currentRelY = getTargetRenderArea().getRelativeY();
+			final int currentRelX = getTargetRenderArea().getX();
+			final int currentRelY = getTargetRenderArea().getY();
 
 			this.oldRelX = currentRelX;
 			this.oldRelY = currentRelY;
@@ -125,8 +126,8 @@ public class MaximizeButton extends Button {
 			final int newRelX = currentRelX + deltaX;
 			final int newRelY = currentRelY + deltaY;
 
-			getTargetRenderArea().setRelativeX(newRelX);
-			getTargetRenderArea().setRelativeY(newRelY);
+			getTargetRenderArea().setX(newRelX);
+			getTargetRenderArea().setY(newRelY);
 			getTargetRenderArea().setWidth(newWidth);
 			getTargetRenderArea().setHeight(newHeight);
 

@@ -15,8 +15,9 @@
  */
 package org.hyperdrive.widget;
 
-import org.hydrogen.displayinterface.input.MouseInput;
-import org.hyperdrive.geo.GeoTransformableRectangle;
+import org.hydrogen.api.display.input.MouseInput;
+import org.hyperdrive.api.geo.GeoTransformableRectangle;
+import org.hyperdrive.api.widget.ViewDefinition;
 import org.hyperdrive.input.ManagedMouse;
 
 // TODO create abstract push button class
@@ -34,7 +35,7 @@ import org.hyperdrive.input.ManagedMouse;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class DragButton extends Button {
+public class DragButton extends BaseButton {
 
 	@ViewDefinition
 	public interface View extends Button.View {
@@ -150,10 +151,8 @@ public class DragButton extends Button {
 	 *            <code>AbstractRenderArea</code> has an illegal state.
 	 */
 	protected void mutate(final int deltaX, final int deltaY) {
-		getTargetRenderArea().setRelativeX(
-				getTargetRenderArea().getRelativeX() + deltaX);
-		getTargetRenderArea().setRelativeY(
-				getTargetRenderArea().getRelativeY() + deltaY);
+		getTargetRenderArea().setX(getTargetRenderArea().getX() + deltaX);
+		getTargetRenderArea().setY(getTargetRenderArea().getY() + deltaY);
 		getTargetRenderArea().requestMove();
 	}
 

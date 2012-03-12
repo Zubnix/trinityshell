@@ -2,7 +2,7 @@ package org.hypercube.protocol.fusionx11;
 
 import org.fusion.x11.ewmh._NetWmIconInstance;
 import org.fusion.x11.ewmh._NetWmIconInstance.WmIcon;
-import org.hyperdrive.core.ClientWindow;
+import org.hyperdrive.api.core.RenderArea;
 import org.hyperdrive.protocol.ClientIcon;
 import org.hyperdrive.protocol.ClientIcon.IconFormat;
 
@@ -14,7 +14,7 @@ final class NetWmIconInterpreter {
 		this.xDesktopProtocol = xDesktopProtocol;
 	}
 
-	void handleWmIcon(final ClientWindow client,
+	void handleWmIcon(final RenderArea client,
 			final _NetWmIconInstance wmIconInstance) {
 		final WmIcon[] icons = wmIconInstance.getWmIcons();
 		if (icons.length == 0) {

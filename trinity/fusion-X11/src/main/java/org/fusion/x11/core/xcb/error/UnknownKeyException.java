@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.core.xcb.error;
 
-import org.hydrogen.displayinterface.input.InputModifiers;
-import org.hydrogen.displayinterface.input.Key;
+import org.hydrogen.api.display.input.InputModifiers;
+import org.hydrogen.api.display.input.Key;
 
 //TODO documentation
 /**
@@ -36,12 +36,13 @@ public class UnknownKeyException extends RuntimeException {
 
 	/**
 	 * 
-	 * @param key
-	 * @param inputModifiers
+	 * @param baseKey
+	 * @param baseInputModifiers
 	 */
-	public UnknownKeyException(final Key key,
-			final InputModifiers inputModifiers) {
-		super(String.format(UnknownKeyException.MESSAGE, key.getKeyCode(),
-				Integer.toBinaryString(inputModifiers.getInputModifiersMask())));
+	public UnknownKeyException(final Key baseKey,
+			final InputModifiers baseInputModifiers) {
+		super(String.format(UnknownKeyException.MESSAGE, baseKey.getKeyCode(),
+				Integer.toBinaryString(baseInputModifiers
+						.getInputModifiersMask())));
 	}
 }

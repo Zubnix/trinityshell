@@ -16,7 +16,7 @@
 package org.fusion.x11.core.event;
 
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.displayinterface.event.BaseMouseLeaveNotifyEvent;
+import org.hydrogen.display.event.BaseMouseLeaveNotifyEvent;
 
 // TODO documentation
 /**

@@ -15,8 +15,8 @@
  */
 package org.hypercube.hyperwidget;
 
-import org.hyperdrive.widget.ViewDefinition;
-import org.hyperdrive.widget.Widget;
+import org.hyperdrive.api.widget.ViewDefinition;
+import org.hyperdrive.widget.BaseWidget;
 
 // TODO documentation
 // TODO find a cleaner and easier way to bind a view to a widget
@@ -25,10 +25,10 @@ import org.hyperdrive.widget.Widget;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ClientContainer extends Widget {
+public class ClientContainer extends BaseWidget {
 
 	@ViewDefinition
-	public interface View extends Widget.View {
+	public interface View extends BaseWidget.View {
 
 	}
 }

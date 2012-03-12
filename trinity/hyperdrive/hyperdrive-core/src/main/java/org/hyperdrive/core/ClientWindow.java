@@ -15,13 +15,14 @@
  */
 package org.hyperdrive.core;
 
-import org.hydrogen.displayinterface.EventPropagator;
-import org.hydrogen.displayinterface.PlatformRenderArea;
-import org.hydrogen.displayinterface.event.ConfigureRequestEvent;
-import org.hydrogen.displayinterface.event.MapRequestEvent;
-import org.hydrogen.displayinterface.event.UnmappedNotifyEvent;
-import org.hydrogen.eventsystem.EventHandler;
-import org.hyperdrive.widget.RealRoot;
+import org.hydrogen.api.display.PlatformRenderArea;
+import org.hydrogen.api.display.event.ConfigureRequestEvent;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.api.display.event.MapRequestEvent;
+import org.hydrogen.api.display.event.UnmappedNotifyEvent;
+import org.hydrogen.api.event.EventHandler;
+import org.hydrogen.display.EventPropagator;
+import org.hyperdrive.api.core.ManagedDisplay;
 
 // TODO documentation
 /**
@@ -35,7 +36,7 @@ import org.hyperdrive.widget.RealRoot;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public final class ClientWindow extends AbstractRenderArea {
+final class ClientWindow extends AbstractRenderArea {
 
 	private final RenderAreaGeoExecutor renderAreaGeoExecutor;
 
@@ -50,21 +51,15 @@ public final class ClientWindow extends AbstractRenderArea {
 	 *            The foreign {@link PlatformRenderArea}.
 	 * 
 	 */
-	public ClientWindow(final ManagedDisplay managedDisplay,
+	ClientWindow(final ManagedDisplay managedDisplay,
 			final PlatformRenderArea clientWindow) {
 		super(managedDisplay, clientWindow);
 
-		getManagedDisplay().registerEventBus(clientWindow, this);
-
 		this.renderAreaGeoExecutor = new RenderAreaGeoExecutor(this);
 		// TODO real root or fake root?
-		setParent(RealRoot.get(getManagedDisplay()));
+		setParent(getManagedDisplay().getRoot());
 		this.doUpdateParentValue(false);
 		initEventHandlers();
-
-		getManagedDisplay().fireEvent(
-				new ClientEvent(ClientEvent.CLIENT_INITIALIZED, this));
-
 	}
 
 	/**
@@ -88,7 +83,7 @@ public final class ClientWindow extends AbstractRenderArea {
 				ClientWindow.this.handleMapRequest(event);
 
 			}
-		}, MapRequestEvent.TYPE);
+		}, DisplayEventType.MAP_REQUEST);
 		this.addEventHandler(new EventHandler<ConfigureRequestEvent>() {
 			@Override
 			public void handleEvent(final ConfigureRequestEvent event) {
@@ -96,27 +91,14 @@ public final class ClientWindow extends AbstractRenderArea {
 				ClientWindow.this.handleConfigureRequest(event);
 
 			}
-		}, ConfigureRequestEvent.TYPE);
+		}, DisplayEventType.CONFIGURE_REQUEST);
 
 		this.addEventHandler(new EventHandler<UnmappedNotifyEvent>() {
 			@Override
 			public void handleEvent(final UnmappedNotifyEvent event) {
 				ClientWindow.this.handleUnmapNotify(event);
 			}
-		}, UnmappedNotifyEvent.TYPE);
-	}
-
-	// TODO implement through input interface? (set on abstractrenderarea &
-	// also implement in widget?)
-	/**
-	 * 
-	 * @return
-	 * 
-	 */
-	public boolean hasInputFocus() {
-		return getManagedDisplay().getDisplay().getInputFocus()
-				.getDisplayResourceHandle().getResourceHandle() == getPlatformRenderArea()
-				.getDisplayResourceHandle().getResourceHandle();
+		}, DisplayEventType.UNMAP_NOTIFY);
 	}
 
 	/**
@@ -150,10 +132,10 @@ public final class ClientWindow extends AbstractRenderArea {
 	 */
 	protected void handleConfigureRequest(final ConfigureRequestEvent event) {
 		if (event.isXSet()) {
-			setRelativeX(event.getX());
+			setX(event.getX());
 		}
 		if (event.isYSet()) {
-			setRelativeY(event.getY());
+			setY(event.getY());
 		}
 		if (event.isWidthSet()) {
 			setWidth(event.getWidth());
@@ -182,11 +164,5 @@ public final class ClientWindow extends AbstractRenderArea {
 				EventPropagator.NOTIFY_MOUSE_ENTER,
 				EventPropagator.NOTIFY_MOUSE_LEAVE,
 				EventPropagator.NOTIFY_CHANGED_WINDOW_FOCUS);
-	}
-
-	@Override
-	public void giveInputFocus() {
-		getPlatformRenderArea().setInputFocus();
-
 	}
 }

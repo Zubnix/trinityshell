@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.protocol;
 
-import org.hyperdrive.core.ClientWindow;
+import org.hyperdrive.api.core.RenderArea;
 
 //TODO documentation
 /**
@@ -27,9 +27,9 @@ public class ClientIsPopup implements ProtocolEvent {
 
 	public static final ProtocolEventType TYPE = new ProtocolEventType();
 
-	private final ClientWindow popupFor;
+	private final RenderArea popupFor;
 
-	public ClientIsPopup(final ClientWindow popupFor) {
+	public ClientIsPopup(final RenderArea popupFor) {
 		this.popupFor = popupFor;
 	}
 
@@ -38,7 +38,7 @@ public class ClientIsPopup implements ProtocolEvent {
 		return ClientIsPopup.TYPE;
 	}
 
-	public ClientWindow getPopupFor() {
+	public RenderArea getPopupFor() {
 		return this.popupFor;
 	}
 }

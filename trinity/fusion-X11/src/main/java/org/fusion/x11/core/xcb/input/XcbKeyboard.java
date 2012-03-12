@@ -15,7 +15,9 @@
  */
 package org.fusion.x11.core.xcb.input;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.fusion.x11.core.XDisplay;
@@ -24,9 +26,11 @@ import org.fusion.x11.core.input.XKeyboard;
 import org.fusion.x11.core.input.XModifier;
 import org.fusion.x11.core.xcb.XcbCoreInterfaceImpl;
 import org.fusion.x11.core.xcb.error.UnknownKeyException;
-import org.hydrogen.displayinterface.input.InputModifierName;
-import org.hydrogen.displayinterface.input.InputModifiers;
-import org.hydrogen.displayinterface.input.Key;
+import org.hydrogen.api.display.input.InputModifierName;
+import org.hydrogen.api.display.input.InputModifiers;
+import org.hydrogen.api.display.input.Key;
+import org.hydrogen.api.display.input.Modifier;
+import org.hydrogen.display.input.BaseInputModifiers;
 
 // TODO documentation
 /**
@@ -91,22 +95,27 @@ public class XcbKeyboard implements XKeyboard {
 	}
 
 	@Override
-	public String keyName(final Key key, final InputModifiers inputModifiers) {
-		final XcbKeySymbol keySymbol = this.keySymbolRegistry.getKeySymbol(key,
-				inputModifiers);
+	public String keyName(final Key baseKey,
+			final InputModifiers baseInputModifiers) {
+		final XcbKeySymbol keySymbol = this.keySymbolRegistry.getKeySymbol(
+				baseKey, baseInputModifiers);
 		if (keySymbol == null) {
 			// TODO keys without a predefined symbol (modifiers keys)
-			throw new UnknownKeyException(key, inputModifiers);
+			throw new UnknownKeyException(baseKey, baseInputModifiers);
 		}
 		return keySymbol.stringValue();
 	}
 
 	@Override
 	public InputModifiers modifiers(final InputModifierName... modifierKeyNames) {
-		final InputModifiers inputModifiers = new InputModifiers();
+		final List<Modifier> modifiers = new ArrayList<Modifier>(
+				modifierKeyNames.length);
 		for (final InputModifierName modifierKeyName : modifierKeyNames) {
-			inputModifiers.setModifiers(modifier(modifierKeyName));
+			modifiers.add(modifier(modifierKeyName));
 		}
-		return inputModifiers;
+		final InputModifiers baseInputModifiers = new BaseInputModifiers(
+				modifiers.toArray(new Modifier[] {}));
+
+		return baseInputModifiers;
 	}
 }

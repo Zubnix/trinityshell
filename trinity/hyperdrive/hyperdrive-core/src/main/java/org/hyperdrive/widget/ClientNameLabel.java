@@ -15,8 +15,9 @@
  */
 package org.hyperdrive.widget;
 
-import org.hydrogen.eventsystem.EventHandler;
-import org.hyperdrive.core.ClientWindow;
+import org.hydrogen.api.event.EventHandler;
+import org.hyperdrive.api.core.RenderArea;
+import org.hyperdrive.api.widget.ViewDefinition;
 import org.hyperdrive.protocol.ClientWindowDescription;
 import org.hyperdrive.protocol.DesktopProtocol;
 
@@ -38,7 +39,7 @@ public class ClientNameLabel extends Label {
 
 	}
 
-	private ClientWindow targetWindow;
+	private RenderArea targetWindow;
 	private final DesktopProtocol desktopProtocol;
 
 	/**
@@ -54,7 +55,7 @@ public class ClientNameLabel extends Label {
 	 * @param targetWindow
 	 * 
 	 */
-	public void setTargetWindow(final ClientWindow targetWindow) {
+	public void setTargetWindow(final RenderArea targetWindow) {
 		if (this.targetWindow != null) {
 			// TODO remove listener from previous window
 		}
@@ -89,7 +90,7 @@ public class ClientNameLabel extends Label {
 	 * 
 	 * @return
 	 */
-	public ClientWindow getTargetWindow() {
+	public RenderArea getTargetWindow() {
 		return this.targetWindow;
 	}
 }

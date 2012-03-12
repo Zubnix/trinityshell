@@ -17,7 +17,7 @@ package org.fusion.x11.core.event;
 
 import org.fusion.x11.core.XProtocolConstants;
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.displayinterface.event.BaseConfigureRequestEvent;
+import org.hydrogen.display.event.BaseConfigureRequestEvent;
 
 // TODO documentation
 /**

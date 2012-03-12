@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.protocol;
 
-import org.hyperdrive.core.ClientWindow;
+import org.hyperdrive.api.core.RenderArea;
 
 //TODO documentation
 /**
@@ -32,15 +32,17 @@ public abstract class AbstractDesktopProtocol implements DesktopProtocol {
 	}
 
 	@Override
-	public ProtocolEvent query(final ClientWindow client,
+	public ProtocolEvent query(final RenderArea client,
 			final ProtocolEventType eventType) {
 		return this.protocolEventCache.query(client, eventType);
 	}
 
 	@Override
-	public void updateProtocolEvent(final ClientWindow client,
+	public void updateProtocolEvent(final RenderArea client,
 			final ProtocolEvent protocolEvent) {
 		this.protocolEventCache.updateCache(client, protocolEvent);
+		// TODO client should listen to the protocol, protocol should fire the
+		// event.
 		client.fireEvent(protocolEvent);
 	}
 }

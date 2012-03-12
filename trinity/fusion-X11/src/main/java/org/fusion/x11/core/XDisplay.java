@@ -21,12 +21,11 @@ import org.fusion.x11.core.extension.XExtensions;
 import org.fusion.x11.core.input.XKeyboard;
 import org.fusion.x11.core.input.XMouse;
 import org.fusion.x11.ewmh.Ewmh;
-import org.hydrogen.displayinterface.BaseEventProducingDisplay;
-import org.hydrogen.displayinterface.PropertyInstance;
-import org.hydrogen.displayinterface.event.DestroyNotifyEvent;
-import org.hydrogen.displayinterface.event.DisplayEvent;
-import org.hydrogen.displayinterface.event.PropertyChangedNotifyEvent;
-import org.hydrogen.eventsystem.EventHandler;
+import org.hydrogen.api.display.PropertyInstance;
+import org.hydrogen.api.display.event.DisplayEvent;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.api.event.EventHandler;
+import org.hydrogen.display.BaseEventProducingDisplay;
 
 // TODO documentation
 /**
@@ -107,7 +106,7 @@ public class XDisplay extends BaseEventProducingDisplay {
 				final XPropertyXAtom<? extends PropertyInstance> property = event.getChangedProperty();
 				window.invalidateProperty(property);
 			}
-		}, PropertyChangedNotifyEvent.TYPE);
+		}, DisplayEventType.PROPERTY_CHANGED);
 		addEventHandler(new EventHandler<XDestroyNotify>() {
 			@Override
 			public void handleEvent(final XDestroyNotify event) {
@@ -116,7 +115,7 @@ public class XDisplay extends BaseEventProducingDisplay {
 						.getDisplayPlatform().getResourcesRegistry()
 						.unregister(window.getDisplayResourceHandle());
 			}
-		}, DestroyNotifyEvent.TYPE);
+		}, DisplayEventType.DESTROY_NOTIFY);
 	}
 
 	/**

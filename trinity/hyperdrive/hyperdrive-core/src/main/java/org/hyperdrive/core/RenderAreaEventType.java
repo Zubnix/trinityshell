@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.core;
 
-import org.hydrogen.eventsystem.Type;
+import org.hydrogen.api.event.Type;
 
 //TODO documentation
 /**

@@ -15,17 +15,22 @@
  */
 package org.hyperdrive.core;
 
-import org.hydrogen.displayinterface.PlatformRenderArea;
-import org.hydrogen.displayinterface.PlatformRenderAreaGeometry;
-import org.hydrogen.displayinterface.Property;
-import org.hydrogen.displayinterface.PropertyInstance;
-import org.hydrogen.displayinterface.event.DestroyNotifyEvent;
-import org.hydrogen.displayinterface.event.DisplayEvent;
-import org.hydrogen.displayinterface.event.PropertyChangedNotifyEvent;
-import org.hydrogen.eventsystem.EventHandler;
-import org.hyperdrive.geo.GeoTransformableRectangle;
-import org.hyperdrive.geo.GeoTransformation;
-import org.hyperdrive.widget.Widget;
+import org.hydrogen.api.display.PlatformRenderArea;
+import org.hydrogen.api.display.PlatformRenderAreaGeometry;
+import org.hydrogen.api.display.Property;
+import org.hydrogen.api.display.PropertyInstance;
+import org.hydrogen.api.display.event.DestroyNotifyEvent;
+import org.hydrogen.api.display.event.DisplayEvent;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.api.display.event.PropertyChangedNotifyEvent;
+import org.hydrogen.api.event.EventHandler;
+import org.hyperdrive.api.core.ManagedDisplay;
+import org.hyperdrive.api.core.RenderArea;
+import org.hyperdrive.api.geo.GeoTransformableRectangle;
+import org.hyperdrive.api.geo.GeoTransformation;
+import org.hyperdrive.geo.AbstractGeoTransformableRectangle;
+import org.hyperdrive.geo.BaseGeoTransformation;
+import org.hyperdrive.widget.BaseWidget;
 
 // TODO documentation
 // TODO redesign/evaluate input manager integration/method delegation.
@@ -38,7 +43,7 @@ import org.hyperdrive.widget.Widget;
  * <p>
  * Classes that wish to concretely represent an on-screen area should extend
  * from <code>AbstractRenderArea</code>. The most important existing ones being
- * {@link ClientWindow} and {@link Widget}.
+ * {@link ClientWindow} and {@link BaseWidget}.
  * <p>
  * <code>AbstractRenderArea</code> emits {@link DisplayEvent}s that it receives
  * from the {@link ManagedDisplay} it lives on.
@@ -49,9 +54,10 @@ import org.hyperdrive.widget.Widget;
  * @see GeoTransformableRectangle
  * @see ManagedDisplay
  * @see ClientWindow
- * @see Widget
+ * @see BaseWidget
  */
-public abstract class AbstractRenderArea extends GeoTransformableRectangle {
+public abstract class AbstractRenderArea extends
+		AbstractGeoTransformableRectangle implements RenderArea {
 
 	public static final boolean DEFAULT_IS_RESIZABLE = true;
 	public static final boolean DEFAULT_IS_MOVABLE = true;
@@ -110,7 +116,26 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 		setHeightIncrement(AbstractRenderArea.DEFAULT_HEIGHT_INC);
 	}
 
-	public abstract void giveInputFocus();
+	@Override
+	public void setInputFocus() {
+		// TODO delegate to input handler
+		getPlatformRenderArea().setInputFocus();
+	}
+
+	// TODO implement through input interface? (set on abstractrenderarea &
+	// also implement in widget?)
+	/**
+	 * 
+	 * @return
+	 * 
+	 */
+	@Override
+	public boolean hasInputFocus() {
+		// TODO delegate to input handler
+		return getManagedDisplay().getDisplay().getInputFocus()
+				.getDisplayResourceHandle().getResourceHandle() == getPlatformRenderArea()
+				.getDisplayResourceHandle().getResourceHandle();
+	}
 
 	/**
 	 * Create new <code>AbstractRenderArea</code> that will live on the given
@@ -145,6 +170,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * @param minHeight
 	 *            The desired minimum height in pixels.
 	 */
+	@Override
 	public void setMinHeight(final int minHeight) {
 		this.minHeight = minHeight;
 	}
@@ -157,6 +183,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * @param minWidth
 	 *            The desired minimum width in pixels.
 	 */
+	@Override
 	public void setMinWidth(final int minWidth) {
 		this.minWidth = minWidth;
 	}
@@ -166,6 +193,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * @return The minimum width in pixels.
 	 * @see AbstractRenderArea#setMinWidth(int)
 	 */
+	@Override
 	public int getMinWidth() {
 		return this.minWidth;
 	}
@@ -175,6 +203,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * @return The minimum height in pixels.
 	 * @see AbstractRenderArea#setMinHeight(int)
 	 */
+	@Override
 	public int getMinHeight() {
 		return this.minHeight;
 	}
@@ -187,6 +216,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * @param maxWidth
 	 *            The desired maxium width in pixels.
 	 */
+	@Override
 	public void setMaxWidth(final int maxWidth) {
 		this.maxWidth = maxWidth;
 	}
@@ -199,6 +229,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * @param maxHeight
 	 *            The desired maximum height in pixels.
 	 */
+	@Override
 	public void setMaxHeight(final int maxHeight) {
 		this.maxHeight = maxHeight;
 	}
@@ -207,6 +238,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * @see AbstractRenderArea#setMaxHeight(int)
 	 * @return The maximum height in pixels.
 	 */
+	@Override
 	public int getMaxHeight() {
 		return this.maxHeight;
 	}
@@ -215,6 +247,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * @see AbstractRenderArea#setMaxWidth(int)
 	 * @return the maximum width in pixels.
 	 */
+	@Override
 	public int getMaxWidth() {
 		return this.maxWidth;
 	}
@@ -236,7 +269,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 			public void handleEvent(final DestroyNotifyEvent event) {
 				AbstractRenderArea.this.handleDestroyNotify(event);
 			}
-		}, DestroyNotifyEvent.TYPE);
+		}, DisplayEventType.DESTROY_NOTIFY);
 
 		addEventHandler(new EventHandler<PropertyChangedNotifyEvent>() {
 			@Override
@@ -246,7 +279,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 						event.getChangedProperty());
 				fireEvent(renderAreaPropertyChangedEvent);
 			}
-		}, PropertyChangedNotifyEvent.TYPE);
+		}, DisplayEventType.PROPERTY_CHANGED);
 	}
 
 	/**
@@ -258,27 +291,29 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 		if (!isDestroyed()) {
 			doDestroy(false);
 		}
-		unregister();
+		// unregister();
 	}
 
-	/**
-	 * Remove this <code>AbstractRenderArea</code> from the list of
-	 * <code>AbstractRenderArea</code>s that are known by the
-	 * <code>ManagedDisplay</code>.
-	 * <p>
-	 * A <code>ManagedDisplay</code> keeps track of
-	 * <code>AbstractRenderarea</code>s so it can deliver {@link DisplayEvent}s
-	 * to it. Unregistering this object means that it will no longer receive
-	 * these <code>Event</code>s.
-	 */
-	protected void unregister() {
-		getManagedDisplay().unregisterEventBus(this);
-	}
+	// /**
+	// * Remove this <code>AbstractRenderArea</code> from the list of
+	// * <code>AbstractRenderArea</code>s that are known by the
+	// * <code>ManagedDisplay</code>.
+	// * <p>
+	// * A <code>ManagedDisplay</code> keeps track of
+	// * <code>AbstractRenderarea</code>s so it can deliver {@link
+	// DisplayEvent}s
+	// * to it. Unregistering this object means that it will no longer receive
+	// * these <code>Event</code>s.
+	// */
+	// protected void unregister() {
+	// getManagedDisplay().removeDisplayEventManager(manager);
+	// }
 
 	/**
 	 * 
 	 * @return
 	 */
+	@Override
 	public int getWidthIncrement() {
 		return this.widthIncrement;
 	}
@@ -287,6 +322,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * 
 	 * @param widthIncrement
 	 */
+	@Override
 	public void setWidthIncrement(final int widthIncrement) {
 		if (widthIncrement > 0) {
 			this.widthIncrement = widthIncrement;
@@ -297,6 +333,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * 
 	 * @param heightIncrement
 	 */
+	@Override
 	public void setHeightIncrement(final int heightIncrement) {
 		if (heightIncrement > 0) {
 			this.heightIncrement = heightIncrement;
@@ -307,6 +344,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * 
 	 * @return
 	 */
+	@Override
 	public int getHeightIncrement() {
 		return this.heightIncrement;
 	}
@@ -327,6 +365,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * 
 	 * @return A {@link ManagedDisplay}.
 	 */
+	@Override
 	public ManagedDisplay getManagedDisplay() {
 		return this.managedDisplay;
 	}
@@ -353,6 +392,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * 
 	 * @return A {@link PlatformRenderArea}.
 	 */
+	@Override
 	public PlatformRenderArea getPlatformRenderArea() {
 		return this.platformRenderArea;
 	}
@@ -368,6 +408,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * @see GeoTransformableRectangle#requestMoveResize()
 	 * @see AbstractRenderArea#isResizable()
 	 */
+	@Override
 	public boolean isMovable() {
 		return this.movable;
 	}
@@ -383,6 +424,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * @see GeoTransformableRectangle#requestResize()
 	 * @see AbstractRenderArea#isMovable()
 	 */
+	@Override
 	public boolean isResizable() {
 		return this.resizable;
 	}
@@ -395,6 +437,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * 
 	 * @see AbstractRenderArea#isMovable()
 	 */
+	@Override
 	public void setMovable(final boolean movable) {
 		this.movable = movable;
 	}
@@ -407,6 +450,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * 
 	 * @see AbstractRenderArea#isResizable()
 	 */
+	@Override
 	public void setResizable(final boolean isResizable) {
 		this.resizable = isResizable;
 	}
@@ -467,8 +511,8 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	@Override
 	public String toString() {
 		return String.format("AbstractRenderArea <%s>: %d+%d : %dx%d",
-				getPlatformRenderArea(), getRelativeX(), getRelativeX(),
-				getWidth(), getHeight());
+				getPlatformRenderArea(), getX(), getX(), getWidth(),
+				getHeight());
 	}
 
 	/**
@@ -482,11 +526,12 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 	 * behavior.
 	 * 
 	 */
+	@Override
 	public void syncGeoToPlatformRenderAreaGeo() {
 		final PlatformRenderAreaGeometry wg = getPlatformRenderArea()
 				.getPlatformRenderAreaGeometry();
-		setRelativeX(wg.getRelativeX());
-		setRelativeY(wg.getRelativeY());
+		setX(wg.getRelativeX());
+		setY(wg.getRelativeY());
 
 		setWidth(wg.getWidth());
 		setHeight(wg.getHeight());
@@ -518,7 +563,7 @@ public abstract class AbstractRenderArea extends GeoTransformableRectangle {
 		final int width1 = normalizedWidth(newWidth);
 		final int height1 = normalizedHeight(newHeight);
 
-		return new GeoTransformation(geoTransformation.getX0(),
+		return new BaseGeoTransformation(geoTransformation.getX0(),
 				geoTransformation.getY0(), geoTransformation.getWidth0(),
 				geoTransformation.getHeight0(), geoTransformation.isVisible0(),
 				geoTransformation.getParent0(), geoTransformation.getX1(),

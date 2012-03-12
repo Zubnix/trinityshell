@@ -20,8 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hydrogen.displayinterface.Display;
-import org.hydrogen.displayinterface.DisplayPlatform;
+import org.hydrogen.api.config.DisplayConfiguration;
+import org.hydrogen.api.display.Display;
+import org.hydrogen.api.display.DisplayPlatform;
 
 /**
  * A <code>BaseDisplayConfiguration</code> is a

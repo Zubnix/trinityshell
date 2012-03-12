@@ -1,7 +1,7 @@
 package org.fusion.x11.core.extension;
 
 import org.fusion.x11.core.XID;
-import org.hydrogen.displayinterface.DisplayResource;
+import org.hydrogen.api.display.DisplayResource;
 
 //currently unused
 //TODO documentation

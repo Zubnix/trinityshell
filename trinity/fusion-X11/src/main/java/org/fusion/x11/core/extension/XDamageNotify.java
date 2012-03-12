@@ -2,8 +2,8 @@ package org.fusion.x11.core.extension;
 
 import org.fusion.x11.core.XDrawable;
 import org.fusion.x11.core.XRectangle;
-import org.hydrogen.displayinterface.event.DisplayEvent;
-import org.hydrogen.displayinterface.event.DisplayEventType;
+import org.hydrogen.api.display.event.DisplayEvent;
+import org.hydrogen.api.display.event.DisplayEventType;
 
 //currently unused
 //TODO documentation

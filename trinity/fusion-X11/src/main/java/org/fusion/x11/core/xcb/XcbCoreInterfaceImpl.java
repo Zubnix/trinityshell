@@ -42,13 +42,14 @@ import org.fusion.x11.core.xcb.input.XcbKeyboard;
 import org.fusion.x11.nativeHelpers.FusionNativeLibLoader;
 import org.fusion.x11.nativeHelpers.NativeBufferHelper;
 import org.fusion.x11.nativeHelpers.XNativeCaller;
-import org.hydrogen.displayinterface.Coordinates;
-import org.hydrogen.displayinterface.EventPropagator;
-import org.hydrogen.displayinterface.event.ClientMessageEvent;
-import org.hydrogen.displayinterface.event.DisplayEvent;
-import org.hydrogen.displayinterface.input.Button;
-import org.hydrogen.displayinterface.input.InputModifiers;
-import org.hydrogen.displayinterface.input.Key;
+import org.hydrogen.api.display.event.ClientMessageEvent;
+import org.hydrogen.api.display.event.DisplayEvent;
+import org.hydrogen.api.display.input.Button;
+import org.hydrogen.api.display.input.InputModifiers;
+import org.hydrogen.api.display.input.Key;
+import org.hydrogen.api.geometry.Coordinates;
+import org.hydrogen.display.EventPropagator;
+import org.hydrogen.display.input.BaseKey;
 
 /**
  * An <code>XcbCoreInterfaceImpl</code> provides access to the native X back-end
@@ -489,14 +490,15 @@ public final class XcbCoreInterfaceImpl implements XCoreInterface {
 	}
 
 	@Override
-	public long getXKeySymbol(final long keySymsPeer, final Key key,
+	public long getXKeySymbol(final long keySymsPeer, final Key baseKey,
 			final int keyColumn) {
 
 		final Long keySymbol = this.xNativeCaller.doNativeCall(
 				this.xcbCoreNativeCalls.getCallGetKeySym(),
 				// no display peer needed
 				null, Long.valueOf(keySymsPeer),
-				Integer.valueOf(key.getKeyCode()), Integer.valueOf(keyColumn));
+				Integer.valueOf(baseKey.getKeyCode()),
+				Integer.valueOf(keyColumn));
 		return keySymbol.longValue();
 
 	}
@@ -507,15 +509,16 @@ public final class XcbCoreInterfaceImpl implements XCoreInterface {
 	}
 
 	@Override
-	public Key[] getXKeyCodes(final long keySymsPeer, final XKeySymbol keySymbol) {
+	public BaseKey[] getXKeyCodes(final long keySymsPeer,
+			final XKeySymbol keySymbol) {
 
 		final Integer[] keyCodes = this.xNativeCaller.doNativeCall(
 				this.xcbCoreNativeCalls.getCallGetKeyCodes(), null,
 				Long.valueOf(keySymsPeer),
 				Long.valueOf(keySymbol.getSymbolCode()));
-		final Key[] keys = new Key[keyCodes.length];
+		final BaseKey[] keys = new BaseKey[keyCodes.length];
 		for (int i = 0; i < keyCodes.length; i++) {
-			keys[i] = new Key(keyCodes[i]);
+			keys[i] = new BaseKey(keyCodes[i]);
 		}
 		return keys;
 
@@ -556,14 +559,14 @@ public final class XcbCoreInterfaceImpl implements XCoreInterface {
 	}
 
 	@Override
-	public void ungrabKey(final XWindow window, final Key key,
-			final InputModifiers inputModifiers) {
+	public void ungrabKey(final XWindow window, final Key baseKey,
+			final InputModifiers baseInputModifiers) {
 		final Long displayPeer = window.getDisplayResourceHandle().getDisplay()
 				.getNativePeer();
 		final Long windowId = window.getDisplayResourceHandle()
 				.getResourceHandle().getNativeHandle();
-		final Integer keyCode = key.getKeyCode();
-		final Integer inputModifiersMask = Integer.valueOf(inputModifiers
+		final Integer keyCode = baseKey.getKeyCode();
+		final Integer inputModifiersMask = Integer.valueOf(baseInputModifiers
 				.getInputModifiersMask());
 
 		this.xNativeCaller.doNativeCall(

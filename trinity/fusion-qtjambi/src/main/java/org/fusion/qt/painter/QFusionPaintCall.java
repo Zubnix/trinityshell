@@ -16,7 +16,7 @@
  */
 package org.fusion.qt.painter;
 
-import org.hydrogen.paintinterface.PaintCall;
+import org.hydrogen.api.paint.PaintCall;
 
 import com.trolltech.qt.gui.QWidget;
 

@@ -24,6 +24,6 @@
  * @author Erik De Rijcke
  * @since 1.0
  * 
- * @see org.hyperdrive.widget.Widget
+ * @see org.hyperdrive.api.widget.Widget
  */
 package org.hyperdrive.widget;

@@ -20,13 +20,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.hydrogen.displayinterface.Display;
-import org.hydrogen.displayinterface.DisplayPlatform;
-import org.hydrogen.displayinterface.EventProducer;
-import org.hydrogen.displayinterface.EventProducerFactory;
-import org.hydrogen.displayinterface.ResourceHandle;
-import org.hydrogen.eventsystem.Type;
-import org.hydrogen.paintinterface.PainterFactoryProvider;
+import org.hydrogen.api.display.Display;
+import org.hydrogen.api.display.DisplayPlatform;
+import org.hydrogen.api.display.EventProducer;
+import org.hydrogen.api.display.EventProducerFactory;
+import org.hydrogen.api.display.ResourceHandle;
+import org.hydrogen.api.event.Type;
+import org.hydrogen.api.paint.PainterFactoryProvider;
 
 // TODO split painting & window management function providers into separate
 // objects that way we can have completely seperate painting & window management

@@ -25,7 +25,7 @@ import org.fusion.x11.core.XDisplay;
 import org.fusion.x11.core.XPropertyInstanceInfo;
 import org.fusion.x11.core.XPropertyXAtom;
 import org.fusion.x11.ewmh._NetWmIconInstance.WmIcon;
-import org.hydrogen.displayinterface.PlatformRenderArea;
+import org.hydrogen.api.display.PlatformRenderArea;
 
 // TODO documentation
 /**

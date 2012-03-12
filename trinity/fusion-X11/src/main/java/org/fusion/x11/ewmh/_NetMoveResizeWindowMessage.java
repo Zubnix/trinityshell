@@ -17,7 +17,7 @@ package org.fusion.x11.ewmh;
 
 import org.fusion.x11.core.IntDataContainer;
 import org.fusion.x11.core.XGravity;
-import org.hydrogen.displayinterface.event.ClientMessageEvent;
+import org.hydrogen.api.display.event.ClientMessageEvent;
 
 //TODO documentation
 /**

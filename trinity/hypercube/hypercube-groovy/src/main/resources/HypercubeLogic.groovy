@@ -22,6 +22,14 @@
 //you might want to check out: http://groovy.codehaus.org/Documentation //
 //**********************************************************************//
 
+import org.hydrogen.api.config.*
+import org.hydrogen.api.display.*
+import org.hydrogen.api.display.event.*
+import org.hydrogen.api.display.input.*
+import org.hydrogen.api.error.*
+import org.hydrogen.api.paint.*
+import org.hydrogen.api.event.*
+
 import org.hydrogen.config.*
 import org.hydrogen.displayinterface.*
 import org.hydrogen.displayinterface.event.*
@@ -34,6 +42,7 @@ import org.hypercube.configuration.*
 import org.hypercube.hyperwidget.*
 import org.hypercube.protocol.fusionx11.*
 
+import org.hyperdrive.api.*
 import org.hyperdrive.core.*
 import org.hyperdrive.geo.*
 import org.hyperdrive.input.*

@@ -16,7 +16,7 @@
 package org.fusion.x11.ewmh;
 
 import org.fusion.x11.core.XDisplay;
-import org.hydrogen.displayinterface.BasePropertyInstance;
+import org.hydrogen.display.BasePropertyInstance;
 
 // TODO documentation
 /**

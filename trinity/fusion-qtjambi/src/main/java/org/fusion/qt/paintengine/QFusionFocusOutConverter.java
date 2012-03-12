@@ -16,9 +16,9 @@
  */
 package org.fusion.qt.paintengine;
 
-import org.hydrogen.displayinterface.event.BaseFocusOutNotifyEvent;
-import org.hydrogen.displayinterface.event.DisplayEventSource;
-import org.hydrogen.displayinterface.event.FocusNotifyEvent;
+import org.hydrogen.api.display.event.DisplayEventSource;
+import org.hydrogen.api.display.event.FocusNotifyEvent;
+import org.hydrogen.display.event.BaseFocusOutNotifyEvent;
 
 import com.trolltech.qt.gui.QFocusEvent;
 

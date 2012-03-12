@@ -19,9 +19,9 @@ package org.fusion.x11.core;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-import org.hydrogen.displayinterface.Atom;
-import org.hydrogen.displayinterface.PlatformRenderArea;
-import org.hydrogen.displayinterface.PropertyInstance;
+import org.hydrogen.api.display.Atom;
+import org.hydrogen.api.display.PlatformRenderArea;
+import org.hydrogen.api.display.PropertyInstance;
 
 // TODO documentation
 /**

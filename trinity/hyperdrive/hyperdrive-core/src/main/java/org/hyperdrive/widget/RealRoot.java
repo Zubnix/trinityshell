@@ -15,11 +15,9 @@
  */
 package org.hyperdrive.widget;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.hydrogen.displayinterface.PlatformRenderArea;
-import org.hyperdrive.core.ManagedDisplay;
+import org.hydrogen.api.display.PlatformRenderArea;
+import org.hyperdrive.api.core.ManagedDisplay;
+import org.hyperdrive.api.widget.ViewDefinition;
 import org.hyperdrive.geo.GeoManagerDirect;
 
 // TODO documentation
@@ -38,23 +36,11 @@ import org.hyperdrive.geo.GeoManagerDirect;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public final class RealRoot extends Widget {
+public final class RealRoot extends BaseWidget {
 
 	@ViewDefinition
-	public interface View extends Widget.View {
+	public interface View extends BaseWidget.View {
 
-	}
-
-	private static final Map<ManagedDisplay, RealRoot> rootsForDisplay = new HashMap<ManagedDisplay, RealRoot>();
-
-	public static RealRoot get(final ManagedDisplay managedDisplay) {
-		if (RealRoot.rootsForDisplay.containsKey(managedDisplay)) {
-			return RealRoot.rootsForDisplay.get(managedDisplay);
-		} else {
-			final RealRoot root = new RealRoot(managedDisplay);
-			RealRoot.rootsForDisplay.put(managedDisplay, root);
-			return root;
-		}
 	}
 
 	/**
@@ -62,7 +48,7 @@ public final class RealRoot extends Widget {
 	 * @param managedDisplay
 	 * 
 	 */
-	protected RealRoot(final ManagedDisplay managedDisplay) {
+	public RealRoot(final ManagedDisplay managedDisplay) {
 		super();
 		setGeoManager(new GeoManagerDirect());
 		setManagedDisplay(managedDisplay);
@@ -75,13 +61,13 @@ public final class RealRoot extends Widget {
 
 	@Override
 	public int getAbsoluteX() {
-		final int returnint = getRelativeX();
+		final int returnint = getX();
 		return returnint;
 	}
 
 	@Override
 	public int getAbsoluteY() {
-		final int returnint = getRelativeY();
+		final int returnint = getY();
 		return returnint;
 	}
 

@@ -15,17 +15,18 @@
  */
 package org.hyperdrive.widget;
 
-import org.hydrogen.displayinterface.Area;
-import org.hydrogen.displayinterface.AreaManipulator;
-import org.hydrogen.displayinterface.PlatformRenderArea;
-import org.hyperdrive.core.AbstractRenderArea;
+import org.hydrogen.api.display.Area;
+import org.hydrogen.api.display.AreaManipulator;
+import org.hydrogen.api.display.PlatformRenderArea;
+import org.hyperdrive.api.core.RenderArea;
+import org.hyperdrive.api.geo.GeoExecutor;
+import org.hyperdrive.api.geo.GeoTransformableRectangle;
 import org.hyperdrive.core.RenderAreaGeoExecutor;
-import org.hyperdrive.geo.GeoTransformableRectangle;
 
 // TODO documentation
 /**
  * A <code>WidgetGeoExecutor</code> is a delegate class for directly
- * manipulating a {@link Widget}'s geometry. A <code>Widget</code> will ask it's
+ * manipulating a {@link BaseWidget}'s geometry. A <code>Widget</code> will ask it's
  * <code>WidgetGeoExecutor</code> to directly perform the requested geometric
  * change.
  * 
@@ -37,10 +38,10 @@ public class WidgetGeoExecutor extends RenderAreaGeoExecutor {
 
 	/**
 	 * 
-	 * @param widget
+	 * @param baseWidget
 	 */
-	public WidgetGeoExecutor(final Widget widget) {
-		super(widget);
+	public WidgetGeoExecutor(final BaseWidget baseWidget) {
+		super(baseWidget);
 	}
 
 	@Override
@@ -51,33 +52,33 @@ public class WidgetGeoExecutor extends RenderAreaGeoExecutor {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected <T extends Area> AreaManipulator<T> getAreaManipulator(
-			final AbstractRenderArea abstractRenderArea) {
+			final RenderArea renderArea) {
 		AreaManipulator<T> manip = null;
-		manip = (AreaManipulator<T>) ((Widget) abstractRenderArea).getPainter();
+		manip = (AreaManipulator<T>) ((BaseWidget) renderArea).getPainter();
 		return manip;
 	}
 
 	@Override
-	protected Widget findClosestSameTypeArea(
+	protected BaseWidget findClosestSameTypeArea(
 			final GeoTransformableRectangle square) {
 		if (square == null) {
 			return null;
 		}
-		if (square instanceof Widget) {
-			return (Widget) square;
+		if (square instanceof BaseWidget) {
+			return (BaseWidget) square;
 		} else {
 			return findClosestSameTypeArea(square.getParent());
 		}
 	}
 
 	@Override
-	protected Area getAreaPeer(final AbstractRenderArea abstractRenderArea) {
-		return abstractRenderArea;
+	protected Area getAreaPeer(final RenderArea renderArea) {
+		return renderArea;
 	}
 
 	@Override
-	public Widget getManipulatedArea() {
-		return (Widget) super.getManipulatedArea();
+	public BaseWidget getManipulatedArea() {
+		return (BaseWidget) super.getManipulatedArea();
 	}
 
 	@Override
@@ -85,38 +86,38 @@ public class WidgetGeoExecutor extends RenderAreaGeoExecutor {
 			final GeoTransformableRectangle parent,
 			final GeoTransformableRectangle area) {
 		// initialize the area with the closest typed parent.
-		if (area instanceof Widget) {
-			final Widget widget = (Widget) area;
-			final Widget closestParentWidget = findClosestSameTypeArea(parent);
-			widget.init(closestParentWidget);
+		if (area instanceof BaseWidget) {
+			final BaseWidget baseWidget = (BaseWidget) area;
+			final BaseWidget closestParentWidget = findClosestSameTypeArea(parent);
+			baseWidget.init(closestParentWidget);
 		}
 	}
 
 	@Override
 	protected void preProcesNewSameTypeParent(
-			final AbstractRenderArea newParentRenderArea) {
+			final RenderArea newParentRenderArea) {
 		// we don't want any processing done on our new same type parent.
 	}
 
 	@Override
 	public void updateParent(final GeoTransformableRectangle parent) {
-		final Widget widget = getManipulatedArea();
+		final BaseWidget baseWidget = getManipulatedArea();
 		// reparent the widget
 		super.updateParent(parent);
 
 		// If the old parent is null, we don't need to update the platform
 		// render area.
 		if (getManipulatedArea().toGeoTransformation().getParent0() != null) {
-			final PlatformRenderArea parentPlatformRenderArea = widget
+			final PlatformRenderArea parentPlatformRenderArea = baseWidget
 					.getParentPaintable().getPlatformRenderArea();
-			final PlatformRenderArea platformRenderArea = widget
+			final PlatformRenderArea platformRenderArea = baseWidget
 					.getPlatformRenderArea();
 
 			if (parentPlatformRenderArea.equals(platformRenderArea)) {
 				// we need to update the widget's platform render area
-				final PlatformRenderArea newParentPlatformRenderArea = widget
+				final PlatformRenderArea newParentPlatformRenderArea = baseWidget
 						.getParentPaintable().getPlatformRenderArea();
-				widget.setPlatformRenderArea(newParentPlatformRenderArea);
+				baseWidget.setPlatformRenderArea(newParentPlatformRenderArea);
 			}
 		}
 	}

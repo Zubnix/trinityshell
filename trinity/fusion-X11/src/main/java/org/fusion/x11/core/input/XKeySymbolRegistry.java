@@ -17,8 +17,8 @@
 package org.fusion.x11.core.input;
 
 import org.fusion.x11.core.xcb.input.XcbKeySymbol;
-import org.hydrogen.displayinterface.input.InputModifiers;
-import org.hydrogen.displayinterface.input.Key;
+import org.hydrogen.api.display.input.InputModifiers;
+import org.hydrogen.api.display.input.Key;
 
 // TODO documentation
 /**
@@ -30,11 +30,11 @@ public interface XKeySymbolRegistry {
 
 	/**
 	 * 
-	 * @param key
-	 * @param inputModifiers
+	 * @param baseKey
+	 * @param baseInputModifiers
 	 * @return
 	 */
-	XcbKeySymbol getKeySymbol(Key key, InputModifiers inputModifiers);
+	XcbKeySymbol getKeySymbol(Key baseKey, InputModifiers baseInputModifiers);
 
 	/**
 	 * 

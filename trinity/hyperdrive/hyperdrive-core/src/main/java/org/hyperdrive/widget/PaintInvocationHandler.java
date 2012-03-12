@@ -4,8 +4,10 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.concurrent.Future;
 
-import org.hydrogen.paintinterface.PaintCall;
-import org.hydrogen.paintinterface.Paintable;
+import org.hydrogen.api.paint.PaintCall;
+import org.hydrogen.api.paint.Paintable;
+import org.hyperdrive.api.widget.PaintInstruction;
+import org.hyperdrive.api.widget.Widget;
 
 //TODO documentation
 /**

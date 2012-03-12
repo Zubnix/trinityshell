@@ -16,9 +16,9 @@
 package org.fusion.x11.core.event;
 
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.displayinterface.event.BaseButtonNotifyEvent;
-import org.hydrogen.displayinterface.event.DisplayEventType;
-import org.hydrogen.displayinterface.input.MouseInput;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.api.display.input.MouseInput;
+import org.hydrogen.display.event.BaseButtonNotifyEvent;
 
 // TODO documentation
 /**
@@ -35,11 +35,8 @@ public class XButtonEvent extends BaseButtonNotifyEvent {
 	 * @param input
 	 */
 	public XButtonEvent(final DisplayEventType eventType,
-	                      final XWindow eventSource,
-	                      final MouseInput input) {
-		super(eventType,
-		      eventSource,
-		      input);
+			final XWindow eventSource, final MouseInput input) {
+		super(eventType, eventSource, input);
 	}
 
 	@Override

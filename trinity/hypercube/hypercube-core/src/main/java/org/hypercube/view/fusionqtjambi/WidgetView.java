@@ -2,18 +2,20 @@ package org.hypercube.view.fusionqtjambi;
 
 import org.fusion.qt.painter.QFusionPaintCall;
 import org.fusion.x11.core.XResourceHandle;
-import org.hydrogen.displayinterface.ResourceHandle;
-import org.hydrogen.paintinterface.PaintContext;
-import org.hydrogen.paintinterface.Paintable;
-import org.hyperdrive.widget.PaintInstruction;
-import org.hyperdrive.widget.Widget;
+import org.hydrogen.api.display.ResourceHandle;
+import org.hydrogen.api.paint.PaintContext;
+import org.hydrogen.api.paint.Paintable;
+import org.hydrogen.api.paint.PaintableRef;
+import org.hydrogen.paint.BasePaintableRef;
+import org.hyperdrive.api.widget.PaintInstruction;
+import org.hyperdrive.widget.BaseWidget;
 
 import com.trolltech.qt.core.Qt.WidgetAttribute;
 import com.trolltech.qt.core.Qt.WindowType;
 import com.trolltech.qt.gui.QFrame;
 import com.trolltech.qt.gui.QWidget;
 
-public class WidgetView implements Widget.View {
+public class WidgetView implements BaseWidget.View {
 
 	@Override
 	public PaintInstruction<ResourceHandle> doCreate(
@@ -23,8 +25,12 @@ public class WidgetView implements Widget.View {
 					@Override
 					public ResourceHandle call(
 							final PaintContext<QWidget> paintContext) {
+						// TODO use factory to get paintableRef.
+						final PaintableRef parentPaintableRef = new BasePaintableRef(
+								parentPaintable);
+
 						final QWidget parentPaintPeer = (QWidget) paintContext
-								.queryPaintPeer(parentPaintable);
+								.queryPaintPeer(parentPaintableRef);
 						final QWidget paintPeer = createPaintPeer(paintContext,
 								parentPaintPeer);
 						return preperatePaintPeer(paintContext, paintPeer);
@@ -51,8 +57,9 @@ public class WidgetView implements Widget.View {
 		newPaintPeer.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
 				true);
 
-		final Paintable paintable = paintContext.getPaintable();
+		final PaintableRef paintable = paintContext.getPaintableRef();
 
+		// TODO visibility from arg
 		newPaintPeer.setVisible(paintable.isVisible());
 		paintContext.bindPaintPeer(paintable, newPaintPeer);
 

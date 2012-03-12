@@ -20,11 +20,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.fusion.qt.paintengine.QFusionRenderEngine;
-import org.hydrogen.displayinterface.Coordinates;
-import org.hydrogen.paintinterface.PaintCall;
-import org.hydrogen.paintinterface.PaintContext;
-import org.hydrogen.paintinterface.Paintable;
-import org.hydrogen.paintinterface.Painter;
+import org.hydrogen.api.geometry.Coordinates;
+import org.hydrogen.api.paint.PaintCall;
+import org.hydrogen.api.paint.PaintContext;
+import org.hydrogen.api.paint.Paintable;
+import org.hydrogen.api.paint.PaintableRef;
+import org.hydrogen.api.paint.Painter;
+import org.hydrogen.geometry.BaseCoordinates;
+import org.hydrogen.paint.BasePaintableRef;
 
 import com.trolltech.qt.core.QPoint;
 import com.trolltech.qt.gui.QWidget;
@@ -214,8 +217,10 @@ public class QFusionPainter implements Painter {
 		doBackendWork(new QFusionPaintCall<Void, QWidget>() {
 			@Override
 			public Void call(final PaintContext<QWidget> paintContext) {
+				final PaintableRef parentPaintableRef = new BasePaintableRef(
+						parent);
 				final QWidget parentPaintpeer = (QWidget) paintContext
-						.queryPaintPeer(parent);
+						.queryPaintPeer(parentPaintableRef);
 				paintContext.getPaintPeer().setParent(parentPaintpeer);
 				return null;
 			}
@@ -270,13 +275,16 @@ public class QFusionPainter implements Painter {
 		final Future<Coordinates> task = doBackendWork(new QFusionPaintCall<Coordinates, QWidget>() {
 			@Override
 			public Coordinates call(final PaintContext<QWidget> paintContext) {
+				final PaintableRef sourcePaintableRef = new BasePaintableRef(
+						source);
+
 				final QWidget sourcePaintPeer = (QWidget) paintContext
-						.queryPaintPeer(source);
+						.queryPaintPeer(sourcePaintableRef);
 				final QWidget targetPaintPeer = paintContext.getPaintPeer();
 
 				final QPoint translatedPoint = sourcePaintPeer.mapTo(
 						targetPaintPeer, new QPoint(sourceX, sourceY));
-				final Coordinates coordinates = new Coordinates(
+				final Coordinates coordinates = new BaseCoordinates(
 						translatedPoint.x(), translatedPoint.y());
 				return coordinates;
 

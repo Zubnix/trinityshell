@@ -19,7 +19,7 @@ import org.fusion.x11.core.XDrawable;
 import org.fusion.x11.core.XRectangle;
 import org.fusion.x11.core.extension.XDamage;
 import org.fusion.x11.core.extension.XDamageNotify;
-import org.hydrogen.displayinterface.event.BaseDisplayEvent;
+import org.hydrogen.display.event.BaseDisplayEvent;
 
 // currently unused
 public class XcbXDamageNotify extends BaseDisplayEvent implements XDamageNotify {

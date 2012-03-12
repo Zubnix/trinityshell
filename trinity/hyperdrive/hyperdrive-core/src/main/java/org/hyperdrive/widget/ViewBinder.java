@@ -5,8 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.hydrogen.paintinterface.Paintable;
-import org.hyperdrive.widget.Widget.View;
+import org.hydrogen.api.paint.Paintable;
+import org.hyperdrive.api.widget.Widget;
+import org.hyperdrive.api.widget.Widget.View;
 
 //TODO documentation
 /**

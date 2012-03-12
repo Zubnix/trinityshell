@@ -24,11 +24,10 @@ import org.fusion.x11.core.input.XKeySymbol;
 import org.fusion.x11.core.input.XKeySymbolRegistry;
 import org.fusion.x11.core.input.XModifier;
 import org.fusion.x11.core.xcb.XcbCoreNative;
-import org.hydrogen.displayinterface.input.InputModifierName;
-import org.hydrogen.displayinterface.input.InputModifiers;
-import org.hydrogen.displayinterface.input.Key;
-import org.hydrogen.displayinterface.input.SpecialKeyName;
- 
+import org.hydrogen.api.display.input.InputModifierName;
+import org.hydrogen.api.display.input.InputModifiers;
+import org.hydrogen.api.display.input.Key;
+import org.hydrogen.api.display.input.SpecialKeyName;
 
 // TODO This is becoming a bit of a mess, rewrite?
 // TODO documentation
@@ -332,13 +331,12 @@ public class XcbKeySymbolRegistry implements XKeySymbolRegistry {
 	}
 
 	@Override
-	public XcbKeySymbol getKeySymbol(final Key key,
-			final InputModifiers inputModifiers)
-			   {
+	public XcbKeySymbol getKeySymbol(final Key baseKey,
+			final InputModifiers baseInputModifiers) {
 
-		final Integer xKeyCode = Integer.valueOf(key.getKeyCode());
+		final Integer xKeyCode = Integer.valueOf(baseKey.getKeyCode());
 
-		final Integer xModifiersMask = Integer.valueOf(inputModifiers
+		final Integer xModifiersMask = Integer.valueOf(baseInputModifiers
 				.getInputModifiersMask());
 
 		final Map<Integer, XcbKeySymbol> keySymbolCombos;
@@ -352,7 +350,7 @@ public class XcbKeySymbolRegistry implements XKeySymbolRegistry {
 				// The key symbol combo map is not filled yet with data. We fill
 				// it with correct values.
 				final XcbKeySymbol keySymbol = updateKeySymbolColumns(
-						keySymbolCombos, key, xModifiersMask);
+						keySymbolCombos, baseKey, xModifiersMask);
 				return keySymbol;
 			}
 			// We retrieve the correct key symbol from the key symbol
@@ -365,24 +363,22 @@ public class XcbKeySymbolRegistry implements XKeySymbolRegistry {
 			// values.
 			keySymbolCombos = new HashMap<Integer, XcbKeySymbol>();
 			final XcbKeySymbol keySymbol = updateKeySymbolColumns(
-					keySymbolCombos, key, xModifiersMask);
+					keySymbolCombos, baseKey, xModifiersMask);
 			this.xresolvedKeySymbolsCach.put(xKeyCode, keySymbolCombos);
 			return keySymbol;
 		}
 	}
 
 	private XcbKeySymbol updateKeySymbolColumns(
-			final Map<Integer, XcbKeySymbol> keySymbolCombos, final Key key,
-			final Integer modifiersMask)
-			   {
-		final long keysymbolCode = getKeysymbolCode(key, modifiersMask);
+			final Map<Integer, XcbKeySymbol> keySymbolCombos,
+			final Key baseKey, final Integer modifiersMask) {
+		final long keysymbolCode = getKeysymbolCode(baseKey, modifiersMask);
 		final XcbKeySymbol keySymbol = this.getKeysymbol(keysymbolCode);
 		keySymbolCombos.put(modifiersMask, keySymbol);
 		return keySymbol;
 	}
 
-	private long getKeysymbolCode(final Key key, final Integer modifiers)
-			   {
+	private long getKeysymbolCode(final Key baseKey, final Integer modifiers) {
 		// TODO get keysymbol code from keycode and modifiers from native call
 
 		long k0, k1;
@@ -395,14 +391,14 @@ public class XcbKeySymbolRegistry implements XKeySymbolRegistry {
 		 */
 		if ((modifiers & XModifier.MOD5_MODIFIER.getModifierMask()) != 0) {
 			k0 = this.xCoreInterface.getXKeySymbol(this.nativeXKeySymbolsPeer,
-					key, 4);
+					baseKey, 4);
 			k1 = this.xCoreInterface.getXKeySymbol(this.nativeXKeySymbolsPeer,
-					key, 5);
+					baseKey, 5);
 		} else {
 			k0 = this.xCoreInterface.getXKeySymbol(this.nativeXKeySymbolsPeer,
-					key, 0);
+					baseKey, 0);
 			k1 = this.xCoreInterface.getXKeySymbol(this.nativeXKeySymbolsPeer,
-					key, 1);
+					baseKey, 1);
 		}
 
 		/* If the second column does not exists use the first one. */
@@ -538,8 +534,7 @@ public class XcbKeySymbolRegistry implements XKeySymbolRegistry {
 	}
 
 	@Override
-	public Key[] getKeys(final XKeySymbol keySymbol)
-			   {
+	public Key[] getKeys(final XKeySymbol keySymbol) {
 		return this.xCoreInterface.getXKeyCodes(this.nativeXKeySymbolsPeer,
 				keySymbol);
 	}

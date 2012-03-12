@@ -20,20 +20,22 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.hydrogen.displayinterface.event.KeyNotifyEvent;
-import org.hydrogen.displayinterface.input.InputModifierName;
-import org.hydrogen.displayinterface.input.InputModifiers;
-import org.hydrogen.displayinterface.input.Key;
-import org.hydrogen.displayinterface.input.Modifier;
-import org.hydrogen.displayinterface.input.Momentum;
-import org.hydrogen.displayinterface.input.SpecialKeyName;
-import org.hydrogen.eventsystem.EventHandler;
-import org.hyperdrive.core.ManagedDisplay;
-import org.hyperdrive.widget.RealRoot;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.api.display.event.KeyNotifyEvent;
+import org.hydrogen.api.display.input.InputModifierName;
+import org.hydrogen.api.display.input.InputModifiers;
+import org.hydrogen.api.display.input.Key;
+import org.hydrogen.api.display.input.Modifier;
+import org.hydrogen.api.display.input.Momentum;
+import org.hydrogen.api.display.input.SpecialKeyName;
+import org.hydrogen.api.event.EventHandler;
+import org.hydrogen.display.input.BaseInputModifiers;
+import org.hydrogen.display.input.BaseKey;
+import org.hyperdrive.api.core.ManagedDisplay;
 
 // TODO documentation
 /**
- * A <code>KeyBinding</code> binds a {@link Key} with an optional
+ * A <code>KeyBinding</code> binds a {@link BaseKey} with an optional
  * {@link Modifier} to an action. A <code>Key</code> is identified by it's name.
  * <code>Key</code> names are the same as the unmodified character they produce
  * when pressed. A list of special <code>Key</code> names can be found in
@@ -119,7 +121,7 @@ public abstract class KeyBinding {
 
 		final List<InputModifiers> validInputModifiersCombinations = new LinkedList<InputModifiers>();
 
-		final InputModifiers inputModifiers = getModKeyNames().length == 0 ? new InputModifiers()
+		final InputModifiers baseInputModifiers = getModKeyNames().length == 0 ? new BaseInputModifiers()
 				: this.managedDisplay.getDisplay().getKeyBoard()
 						.modifiers(getModKeyNames());
 		if (ignoreOftenUsedModifiers) {
@@ -132,36 +134,36 @@ public abstract class KeyBinding {
 				final Modifier modifier = this.managedDisplay.getDisplay()
 						.getKeyBoard().modifier(ignoredModifier);
 
-				final int modifierMaskWithExtraModifier = inputModifiers
+				final int modifierMaskWithExtraModifier = baseInputModifiers
 						.getInputModifiersMask() & modifier.getModifierMask();
-				final InputModifiers inputModifiersWithExtraModifier = new InputModifiers(
+				final BaseInputModifiers inputModifiersWithExtraModifier = new BaseInputModifiers(
 						modifierMaskWithExtraModifier);
 				validInputModifiersCombinations
 						.add(inputModifiersWithExtraModifier);
 			}
 
 		}
-		validInputModifiersCombinations.add(inputModifiers);
+		validInputModifiersCombinations.add(baseInputModifiers);
 
 		for (final Key validKey : validKeys) {
 			// install a keygrab
-			RealRoot.get(getManagedDisplay()).getPlatformRenderArea()
-					.catchKeyboardInput(validKey, inputModifiers);
+			getManagedDisplay().getRoot().getPlatformRenderArea()
+					.catchKeyboardInput(validKey, baseInputModifiers);
 
 			getManagedDisplay().addEventHandler(
 					new EventHandler<KeyNotifyEvent>() {
 						@Override
 						public void handleEvent(final KeyNotifyEvent event) {
 
-							final short eventKeyCode = event.getInput()
-									.getKey().getKeyCode().shortValue();
-							final short validKeyCode = validKey.getKeyCode()
-									.shortValue();
+							final short eventKeyCode = (short) event.getInput()
+									.getKey().getKeyCode();
+							final short validKeyCode = (short) validKey
+									.getKeyCode();
 							final boolean gotValidKey = eventKeyCode == validKeyCode;
 
 							final int eventModifiersMask = event.getInput()
 									.getModifiers().getInputModifiersMask();
-							final int validEventModifiersMask = inputModifiers
+							final int validEventModifiersMask = baseInputModifiers
 									.getInputModifiersMask();
 
 							final boolean gotValidModifiers = eventModifiersMask == validEventModifiersMask;
@@ -178,8 +180,8 @@ public abstract class KeyBinding {
 							}
 						}
 					},
-					getMomentum() == Momentum.STARTED ? KeyNotifyEvent.TYPE_PRESSED
-							: KeyNotifyEvent.TYPE_RELEASED, 0);
+					getMomentum() == Momentum.STARTED ? DisplayEventType.KEY_PRESSED
+							: DisplayEventType.KEY_RELEASED, 0);
 
 		}
 	}

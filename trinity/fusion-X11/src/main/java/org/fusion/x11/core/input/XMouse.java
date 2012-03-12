@@ -17,7 +17,7 @@ package org.fusion.x11.core.input;
 
 import org.fusion.x11.core.XCoreInterface;
 import org.fusion.x11.core.XDisplay;
-import org.hydrogen.displayinterface.input.Mouse;
+import org.hydrogen.api.display.input.Mouse;
 
 /**
  * An <code>XMouse</code> represents an X mouse pointer on an X display server.

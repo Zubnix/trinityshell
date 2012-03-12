@@ -20,7 +20,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hydrogen.eventsystem.EventHandler;
+import org.hyperdrive.api.geo.GeoEvent;
+import org.hyperdrive.api.geo.GeoEventHandler;
+import org.hyperdrive.api.geo.GeoOperation;
+import org.hyperdrive.api.geo.GeoTransformableRectangle;
+import org.hyperdrive.api.geo.GeoTransformation;
 
 // TODO documentation
 /**
@@ -90,14 +94,20 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 	 * @param child
 	 */
 	protected void listenForChildReparent(final GeoTransformableRectangle child) {
-		child.addEventHandler(new EventHandler<GeoEvent>() {
+		child.addGeoEventHandler(new GeoEventHandler() {
 			@Override
 			public void handleEvent(final GeoEvent event) {
 				final GeoTransformableRectangle square = event
-						.getTransformableSquare();
+						.getGeoTransformableRectangle();
 				removeManagedChild(square);
 			}
-		}, GeoEvent.REPARENT);
+
+			@Override
+			public GeoOperation getType() {
+				return GeoOperation.REPARENT;
+			}
+
+		});
 	}
 
 	/**
@@ -153,8 +163,8 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 			final GeoTransformation transformation) {
 		if (this.children.contains(geoTransformable)
 				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new GeoEvent(GeoEvent.REPARENT_REQUEST, geoTransformable,
-					transformation));
+			fireEvent(new BaseGeoEvent(GeoOperation.REPARENT_REQUEST,
+					geoTransformable, transformation));
 		} else {
 			super.onChangeParentRequest(geoTransformable, transformation);
 		}
@@ -166,7 +176,7 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 			final GeoTransformation transformation) {
 		if (this.children.contains(geoTransformable)
 				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new GeoEvent(GeoEvent.VISIBILITY_REQUEST,
+			fireEvent(new BaseGeoEvent(GeoOperation.VISIBILITY_REQUEST,
 					geoTransformable, transformation));
 		} else {
 			super.onChangeVisibilityRequest(geoTransformable, transformation);
@@ -179,8 +189,8 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 			final GeoTransformation transformation) {
 		if (this.children.contains(geoTransformable)
 				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new GeoEvent(GeoEvent.LOWER_REQUEST, geoTransformable,
-					transformation));
+			fireEvent(new BaseGeoEvent(GeoOperation.LOWER_REQUEST,
+					geoTransformable, transformation));
 
 		} else {
 			super.onLowerRequest(geoTransformable, transformation);
@@ -192,8 +202,8 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 			final GeoTransformation transformation) {
 		if (this.children.contains(geoTransformable)
 				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new GeoEvent(GeoEvent.MOVE_REQUEST, geoTransformable,
-					transformation));
+			fireEvent(new BaseGeoEvent(GeoOperation.MOVE_REQUEST,
+					geoTransformable, transformation));
 		} else {
 			super.onMoveRequest(geoTransformable, transformation);
 		}
@@ -205,7 +215,7 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 			final GeoTransformation transformation) {
 		if (this.children.contains(geoTransformable)
 				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new GeoEvent(GeoEvent.MOVE_RESIZE_REQUEST,
+			fireEvent(new BaseGeoEvent(GeoOperation.MOVE_RESIZE_REQUEST,
 					geoTransformable, transformation));
 		} else {
 			super.onMoveResizeRequest(geoTransformable, transformation);
@@ -218,8 +228,8 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 			final GeoTransformation transformation) {
 		if (this.children.contains(geoTransformable)
 				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new GeoEvent(GeoEvent.RAISE_REQUEST, geoTransformable,
-					transformation));
+			fireEvent(new BaseGeoEvent(GeoOperation.RAISE_REQUEST,
+					geoTransformable, transformation));
 		} else {
 			super.onRaiseRequest(geoTransformable, transformation);
 		}
@@ -231,8 +241,8 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 			final GeoTransformation transformation) {
 		if (this.children.contains(geoTransformable)
 				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new GeoEvent(GeoEvent.RESIZE_REQUEST, geoTransformable,
-					transformation));
+			fireEvent(new BaseGeoEvent(GeoOperation.RESIZE_REQUEST,
+					geoTransformable, transformation));
 		} else {
 			super.onResizeRequest(geoTransformable, transformation);
 		}

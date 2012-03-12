@@ -25,8 +25,10 @@ import java.util.concurrent.FutureTask;
 import org.apache.log4j.Logger;
 import org.fusion.qt.painter.QFusionPaintCall;
 import org.fusion.qt.painter.QFusionPainter;
-import org.hydrogen.displayinterface.Display;
-import org.hydrogen.paintinterface.Paintable;
+import org.hydrogen.api.display.Display;
+import org.hydrogen.api.paint.Paintable;
+import org.hydrogen.api.paint.PaintableRef;
+import org.hydrogen.paint.BasePaintableRef;
 
 import com.trolltech.qt.core.QCoreApplication;
 import com.trolltech.qt.core.QEvent;
@@ -58,7 +60,7 @@ public class QFusionRenderEngine extends QApplication {
 			.getLogger(QFusionRenderEngine.class);
 	private static final String NULLPAINTCALL_WARN_LOGMESSAGE = "Received null PaintCall for Paintable: %s";
 
-	public Map<Paintable, QWidget> qWidgetMap;
+	public Map<PaintableRef, QWidget> qWidgetMap;
 
 	private static ThreadLocal<QFusionEventProducer> THREADLOCAL_EVENT_PRODUCER;
 
@@ -80,7 +82,7 @@ public class QFusionRenderEngine extends QApplication {
 				return promotor;
 			}
 		};
-		this.qWidgetMap = new HashMap<Paintable, QWidget>();
+		this.qWidgetMap = new HashMap<PaintableRef, QWidget>();
 	}
 
 	/**
@@ -102,20 +104,10 @@ public class QFusionRenderEngine extends QApplication {
 		if (widget.isWidgetType()) {
 			if (event.type().equals(QEvent.Type.Destroy)) {
 				// TODO check if this actually works.
-				getQWidgetMap().values().remove(widget);
+				this.qWidgetMap.values().remove(widget);
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * A <code>Map</code> linking a <code>Paintable</code> with it's
-	 * <code>QWidget</code> paint peer.
-	 * 
-	 * @return A <code>Map</code>.
-	 */
-	protected Map<Paintable, QWidget> getQWidgetMap() {
-		return this.qWidgetMap;
 	}
 
 	/**
@@ -132,16 +124,18 @@ public class QFusionRenderEngine extends QApplication {
 	public <R, P extends QWidget> Future<R> invoke(final Paintable paintable,
 			final QFusionPaintCall<R, P> paintCall) {
 		if (paintCall != null) {
+			final PaintableRef paintableRef = new BasePaintableRef(paintable);
 			final FutureTask<R> futureTask = new FutureTask<R>(
 					new Callable<R>() {
 						@Override
 						public R call() throws Exception {
 							@SuppressWarnings("unchecked")
-							final P paintPeer = (P) getQWidgetMap().get(
-									paintable);
+							final P paintPeer = (P) QFusionRenderEngine.this.qWidgetMap
+									.get(paintableRef);
 							final QFusionPaintContext<P> paintContext = new QFusionPaintContext<P>(
-									QFusionRenderEngine.this, paintable,
-									paintPeer, getQWidgetMap());
+									QFusionRenderEngine.this, paintableRef,
+									paintPeer,
+									QFusionRenderEngine.this.qWidgetMap);
 							return paintCall.call(paintContext);
 						}
 					});

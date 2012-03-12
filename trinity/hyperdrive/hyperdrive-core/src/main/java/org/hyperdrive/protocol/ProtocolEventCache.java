@@ -18,7 +18,7 @@ package org.hyperdrive.protocol;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hyperdrive.core.ClientWindow;
+import org.hyperdrive.api.core.RenderArea;
 
 //TODO documentation
 /**
@@ -27,13 +27,13 @@ import org.hyperdrive.core.ClientWindow;
  * @since 1.0
  */
 public class ProtocolEventCache {
-	private final Map<ClientWindow, Map<ProtocolEventType, ProtocolEvent>> clientEventCache;
+	private final Map<RenderArea, Map<ProtocolEventType, ProtocolEvent>> clientEventCache;
 
 	public ProtocolEventCache() {
-		this.clientEventCache = new HashMap<ClientWindow, Map<ProtocolEventType, ProtocolEvent>>();
+		this.clientEventCache = new HashMap<RenderArea, Map<ProtocolEventType, ProtocolEvent>>();
 	}
 
-	public ProtocolEvent query(final ClientWindow client,
+	public ProtocolEvent query(final RenderArea client,
 			final ProtocolEventType eventType) {
 		if (!this.clientEventCache.containsKey(client)) {
 			return null;
@@ -41,7 +41,7 @@ public class ProtocolEventCache {
 		return this.clientEventCache.get(client).get(eventType);
 	}
 
-	public void updateCache(final ClientWindow client, final ProtocolEvent event) {
+	public void updateCache(final RenderArea client, final ProtocolEvent event) {
 
 		final Map<ProtocolEventType, ProtocolEvent> protocolEvents;
 		if (this.clientEventCache.containsKey(client)) {

@@ -18,13 +18,14 @@ package org.hyperdrive.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hydrogen.displayinterface.event.FocusNotifyEvent;
-import org.hydrogen.eventsystem.EventHandler;
-import org.hyperdrive.geo.GeoEvent;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.api.display.event.FocusNotifyEvent;
+import org.hydrogen.api.event.EventHandler;
+import org.hyperdrive.api.core.ManagedDisplay;
+import org.hyperdrive.api.geo.GeoEvent;
+import org.hyperdrive.api.geo.GeoOperation;
 import org.hyperdrive.widget.VirtualRoot;
 import org.hyperdrive.widget.VirtualRootEvent;
-import org.hyperdrive.widget.Widget;
-import org.hyperdrive.widget.WidgetEvent;
 
 //TODO documentation
 /**
@@ -81,24 +82,28 @@ public class WindowManagementInfo implements WindowManagementInfoListener {
 	 * @param managedDisplay
 	 */
 	protected void initDisplayListeners(final ManagedDisplay managedDisplay) {
-		managedDisplay.addEventHandler(new EventHandler<ClientEvent>() {
-			@Override
-			public void handleEvent(final ClientEvent event) {
-				final ClientWindow client = event.getRenderArea();
-				initClientListeners(client);
-			}
-		}, ClientEvent.CLIENT_INITIALIZED);
-		managedDisplay.addEventHandler(new EventHandler<WidgetEvent<Widget>>() {
-
-			@Override
-			public void handleEvent(final WidgetEvent<Widget> event) {
-				final Widget widget = event.getRenderArea();
-				if (widget instanceof VirtualRoot) {
-					final VirtualRoot virtualRoot = (VirtualRoot) widget;
-					initVirtualRootListeners(virtualRoot);
-				}
-			}
-		}, WidgetEvent.WIDGET_INITIALIZED);
+		// TODO
+		// managedDisplay.addEventHandler(new EventHandler<ClientEvent>() {
+		// @Override
+		// public void handleEvent(final ClientEvent event) {
+		// final ClientWindow client = event.getRenderArea();
+		// initClientListeners(client);
+		// }
+		// }, ClientEvent.CLIENT_INITIALIZED);
+		//
+		// // TODO remove widget dependency
+		// managedDisplay.addEventHandler(new
+		// EventHandler<WidgetEvent<Widget>>() {
+		//
+		// @Override
+		// public void handleEvent(final WidgetEvent<Widget> event) {
+		// final Widget widget = event.getRenderArea();
+		// if (widget instanceof VirtualRoot) {
+		// final VirtualRoot virtualRoot = (VirtualRoot) widget;
+		// initVirtualRootListeners(virtualRoot);
+		// }
+		// }
+		// }, WidgetEvent.WIDGET_INITIALIZED);
 
 	}
 
@@ -120,7 +125,7 @@ public class WindowManagementInfo implements WindowManagementInfoListener {
 				WindowManagementInfo.this.clientWindows.remove(clientWindow);
 				onClientWindowDestroyed(clientWindow);
 			}
-		}, GeoEvent.DESTROYED);
+		}, GeoOperation.DESTROYED);
 
 		clientWindow.addEventHandler(new EventHandler<FocusNotifyEvent>() {
 
@@ -129,14 +134,14 @@ public class WindowManagementInfo implements WindowManagementInfoListener {
 				setClientWindowHasFocus(clientWindow);
 				onClientWindowGainFocus(clientWindow);
 			}
-		}, FocusNotifyEvent.TYPE_GAIN);
+		}, DisplayEventType.FOCUS_GAIN_NOTIFY);
 		clientWindow.addEventHandler(new EventHandler<FocusNotifyEvent>() {
 			@Override
 			public void handleEvent(final FocusNotifyEvent event) {
 				setClientWindowHasFocus(null);
 				onClientWindowLostFocus(clientWindow);
 			}
-		}, FocusNotifyEvent.TYPE_LOST);
+		}, DisplayEventType.FOCUS_LOST_NOTIFY);
 
 		// TODO when a parent of the client is raised we do not get an event...
 		// =>
@@ -150,7 +155,7 @@ public class WindowManagementInfo implements WindowManagementInfoListener {
 						.add(clientWindow);
 				onClientWindowRaise(clientWindow);
 			}
-		}, GeoEvent.RAISE);
+		}, GeoOperation.RAISE);
 		clientWindow.addEventHandler(new EventHandler<GeoEvent>() {
 
 			@Override
@@ -161,7 +166,7 @@ public class WindowManagementInfo implements WindowManagementInfoListener {
 						clientWindow);
 				onClientWindowLower(clientWindow);
 			}
-		}, GeoEvent.LOWER);
+		}, GeoOperation.LOWER);
 	}
 
 	/**
@@ -191,7 +196,7 @@ public class WindowManagementInfo implements WindowManagementInfoListener {
 				WindowManagementInfo.this.virtualRoots.remove(virtualRoot);
 				onVirtualRootDestroyed(virtualRoot);
 			}
-		}, GeoEvent.DESTROYED);
+		}, GeoOperation.DESTROYED);
 
 		// TODO listen for virtual root state changes: rearangement(?)
 	}

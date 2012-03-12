@@ -15,6 +15,10 @@
  */
 package org.hyperdrive.geo;
 
+import org.hyperdrive.api.geo.GeoExecutor;
+import org.hyperdrive.api.geo.GeoTransformableRectangle;
+import org.hyperdrive.api.geo.GeoTransformation;
+
 // TODO documentation
 /**
  * A <code>GeoVirtGeoExecutor</code> executes the actual geometry changes for a
@@ -75,8 +79,8 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 		final GeoTransformableRectangle[] children = getVirtSquare()
 				.getChildren();
 		for (final GeoTransformableRectangle child : children) {
-			final int oldRelX = child.getRelativeX();
-			final int oldRelY = child.getRelativeY();
+			final int oldRelX = child.getX();
+			final int oldRelY = child.getY();
 
 			final int newRelX = oldRelX + deltaX;
 			final int newRelY = oldRelY + deltaY;

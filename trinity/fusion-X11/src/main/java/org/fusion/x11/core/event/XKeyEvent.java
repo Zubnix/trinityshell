@@ -16,10 +16,10 @@
 package org.fusion.x11.core.event;
 
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.displayinterface.PlatformRenderArea;
-import org.hydrogen.displayinterface.event.BaseKeyNotifyEvent;
-import org.hydrogen.displayinterface.event.DisplayEventType;
-import org.hydrogen.displayinterface.input.KeyboardInput;
+import org.hydrogen.api.display.PlatformRenderArea;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.display.event.BaseKeyNotifyEvent;
+import org.hydrogen.display.input.BaseKeyboardInput;
 
 // TODO documentation
 /**
@@ -37,7 +37,7 @@ public class XKeyEvent extends BaseKeyNotifyEvent {
 	 */
 	public XKeyEvent(final DisplayEventType eventType,
 	                   final PlatformRenderArea eventSource,
-	                   final KeyboardInput input) {
+	                   final BaseKeyboardInput input) {
 		super(eventType,
 		      eventSource,
 		      input);

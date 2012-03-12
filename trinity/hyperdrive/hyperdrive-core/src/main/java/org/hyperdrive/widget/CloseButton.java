@@ -15,9 +15,10 @@
  */
 package org.hyperdrive.widget;
 
-import org.hydrogen.displayinterface.input.MouseInput;
+import org.hydrogen.api.display.input.MouseInput;
+import org.hyperdrive.api.core.RenderArea;
+import org.hyperdrive.api.widget.ViewDefinition;
 import org.hyperdrive.core.AbstractRenderArea;
-import org.hyperdrive.core.ClientWindow;
 import org.hyperdrive.protocol.DesktopProtocol;
 
 /**
@@ -39,14 +40,14 @@ import org.hyperdrive.protocol.DesktopProtocol;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class CloseButton extends Button {
+public class CloseButton extends BaseButton {
 
 	@ViewDefinition
 	public interface View extends Button.View {
 
 	}
 
-	private ClientWindow clientWindow;
+	private RenderArea clientWindow;
 	private final DesktopProtocol desktopProtocol;
 
 	public CloseButton(final DesktopProtocol desktopProtocol) {
@@ -71,7 +72,7 @@ public class CloseButton extends Button {
 	 * 
 	 * @return
 	 */
-	public ClientWindow getTargetRenderArea() {
+	public RenderArea getTargetRenderArea() {
 		return this.clientWindow;
 	}
 
@@ -85,7 +86,7 @@ public class CloseButton extends Button {
 	 * @param targetRenderArea
 	 *            A {@link AbstractRenderArea}.
 	 */
-	public void setTargetRenderArea(final ClientWindow targetRenderArea) {
+	public void setTargetRenderArea(final RenderArea targetRenderArea) {
 		this.clientWindow = targetRenderArea;
 	}
 

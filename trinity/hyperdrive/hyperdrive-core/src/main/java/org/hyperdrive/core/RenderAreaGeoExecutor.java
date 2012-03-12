@@ -15,33 +15,34 @@
  */
 package org.hyperdrive.core;
 
-import org.hydrogen.displayinterface.Area;
-import org.hydrogen.displayinterface.AreaManipulator;
-import org.hydrogen.displayinterface.Coordinates;
-import org.hydrogen.displayinterface.EventPropagator;
-import org.hyperdrive.geo.GeoExecutor;
-import org.hyperdrive.geo.GeoTransformableRectangle;
-import org.hyperdrive.geo.GeoTransformation;
-import org.hyperdrive.widget.RealRoot;
+import org.hydrogen.api.display.Area;
+import org.hydrogen.api.display.AreaManipulator;
+import org.hydrogen.api.geometry.Coordinates;
+import org.hydrogen.display.EventPropagator;
+import org.hydrogen.geometry.BaseCoordinates;
+import org.hyperdrive.api.core.RenderArea;
+import org.hyperdrive.api.geo.GeoExecutor;
+import org.hyperdrive.api.geo.GeoTransformableRectangle;
+import org.hyperdrive.api.geo.GeoTransformation;
 
 // TODO documentation
 /**
  * A <code>RenderAreaGeoExecutor</code> is a delegate class for directly
- * manipulating an {@link AbstractRenderArea} subclass' geometry.
+ * manipulating a {@link RenderArea}'s geometry.
  * 
  * @author Erik De Rijcke
  * @since 1.0
  * @see GeoExecutor
  */
 public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
-	private final AbstractRenderArea abstractRenderArea;
+	private final RenderArea renderArea;
 
 	/**
 	 * 
-	 * @param abstractRenderArea
+	 * @param renderArea
 	 */
-	public RenderAreaGeoExecutor(final AbstractRenderArea abstractRenderArea) {
-		this.abstractRenderArea = abstractRenderArea;
+	public RenderAreaGeoExecutor(final RenderArea renderArea) {
+		this.renderArea = renderArea;
 	}
 
 	@Override
@@ -51,29 +52,28 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 
 	@SuppressWarnings("unchecked")
 	protected <T extends Area> AreaManipulator<T> getAreaManipulator(
-			final AbstractRenderArea abstractRenderArea) {
-		return (AreaManipulator<T>) abstractRenderArea.getPlatformRenderArea();
+			final RenderArea renderArea) {
+		return (AreaManipulator<T>) renderArea.getPlatformRenderArea();
 	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public AbstractRenderArea getManipulatedArea() {
-		return this.abstractRenderArea;
+	public RenderArea getManipulatedArea() {
+		return this.renderArea;
 	}
 
 	/**
 	 * 
-	 * @param abstractRenderArea
+	 * @param renderArea
 	 * @return
 	 */
-	protected boolean isAreaInitialized(
-			final AbstractRenderArea abstractRenderArea) {
-		if (abstractRenderArea == null) {
+	protected boolean isAreaInitialized(final RenderArea renderArea) {
+		if (renderArea == null) {
 			return false;
 		}
-		final boolean initialized = (abstractRenderArea.getPlatformRenderArea() != null);
+		final boolean initialized = (renderArea.getPlatformRenderArea() != null);
 		return initialized;
 	}
 
@@ -134,14 +134,14 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 		}
 	}
 
-	protected Coordinates calculatePositionRelativeToTypedArea(
+	protected org.hydrogen.api.geometry.Coordinates calculatePositionRelativeToTypedArea(
 			final GeoTransformableRectangle directParent,
 			final int directRelativeX, final int directRelativeY) {
 
-		final AbstractRenderArea parentRenderArea = findClosestSameTypeArea(directParent);
+		final RenderArea parentRenderArea = findClosestSameTypeArea(directParent);
 
 		if (parentRenderArea == null) {
-			return new Coordinates(directRelativeX, directRelativeY);
+			return new BaseCoordinates(directRelativeX, directRelativeY);
 		}
 
 		final int newAbsX = directParent.getAbsoluteX() + directRelativeX;
@@ -149,14 +149,14 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 
 		// TODO remove realroot dependency
 		final Coordinates absCorParent = getAreaManipulator(
-				RealRoot.get(getManipulatedArea().getManagedDisplay()))
+				getManipulatedArea().getManagedDisplay().getRoot())
 				.translateCoordinates(getAreaPeer(parentRenderArea), 0, 0);
 
 		final int newRelX = newAbsX - absCorParent.getX();
 		final int newRelY = newAbsY - absCorParent.getY();
 
-		final Coordinates corRelativeToTypedParent = new Coordinates(newRelX,
-				newRelY);
+		final Coordinates corRelativeToTypedParent = new BaseCoordinates(
+				newRelX, newRelY);
 
 		return corRelativeToTypedParent;
 
@@ -171,7 +171,7 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 	private void initialize(final GeoTransformableRectangle parent,
 			final GeoTransformableRectangle area) {
 		initializeGeoTransformableSquare(parent, area);
-		for (final GeoTransformableRectangle child : this.abstractRenderArea
+		for (final GeoTransformableRectangle child : this.renderArea
 				.getChildren()) {
 			initialize(area, child);
 		}
@@ -197,16 +197,16 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 	 * 
 	 */
 	protected void preProcesNewSameTypeParent(
-			final AbstractRenderArea newParentRenderArea) {
+			final RenderArea newParentRenderArea) {
 		newParentRenderArea.getPlatformRenderArea().propagateEvent(
 				EventPropagator.REDIRECT_CHILD_WINDOW_GEOMTRY_CHANGES);
 	}
 
 	@Override
 	public void updateParent(final GeoTransformableRectangle parent) {
-		final AbstractRenderArea currentRenderArea = getManipulatedArea();
+		final RenderArea currentRenderArea = getManipulatedArea();
 		final GeoTransformableRectangle newParent = parent;
-		final AbstractRenderArea newParentRenderArea = findClosestSameTypeArea(newParent);
+		final RenderArea newParentRenderArea = findClosestSameTypeArea(newParent);
 
 		final boolean newParentInitialized = isAreaInitialized(newParentRenderArea);
 		final boolean currentRenderAreaInitialized = isAreaInitialized(currentRenderArea);
@@ -220,8 +220,8 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 			// procedure to change to our new ready parent.
 
 			// call back-end to reparent current manipulated area
-			final int newX = getManipulatedArea().getRelativeX();
-			final int newY = getManipulatedArea().getRelativeY();
+			final int newX = getManipulatedArea().getX();
+			final int newY = getManipulatedArea().getY();
 
 			if (currentRenderArea.equals(newParentRenderArea)) {
 				throw new IllegalArgumentException(
@@ -251,11 +251,11 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 
 	/**
 	 * 
-	 * @param abstractRenderArea
+	 * @param renderArea
 	 * @return
 	 */
-	protected Area getAreaPeer(final AbstractRenderArea abstractRenderArea) {
-		return abstractRenderArea.getPlatformRenderArea();
+	protected Area getAreaPeer(final RenderArea renderArea) {
+		return renderArea.getPlatformRenderArea();
 	}
 
 	/**
@@ -266,15 +266,15 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 	 * @param square
 	 *            The {@link GeoTransformableRectangle} to start searching from
 	 *            upwards in the tree hierarchy.
-	 * @return The closest parent with type {@link AbstractRenderArea}.
+	 * @return The closest parent with type {@link RenderArea}.
 	 */
-	protected AbstractRenderArea findClosestSameTypeArea(
+	protected RenderArea findClosestSameTypeArea(
 			final GeoTransformableRectangle square) {
 
-		// find the closest ancestor that is of type AbstractRenderArea
-		if (square instanceof AbstractRenderArea) {
+		// find the closest ancestor that is of type RenderArea
+		if (square instanceof RenderArea) {
 
-			return ((AbstractRenderArea) square);
+			return ((RenderArea) square);
 
 		} else {
 			final GeoTransformation transformation = square

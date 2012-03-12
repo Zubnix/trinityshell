@@ -16,13 +16,14 @@
  */
 package org.fusion.qt.paintengine;
 
-import org.hydrogen.displayinterface.event.BaseKeyNotifyEvent;
-import org.hydrogen.displayinterface.event.DisplayEventSource;
-import org.hydrogen.displayinterface.event.KeyNotifyEvent;
-import org.hydrogen.displayinterface.input.InputModifiers;
-import org.hydrogen.displayinterface.input.Key;
-import org.hydrogen.displayinterface.input.KeyboardInput;
-import org.hydrogen.displayinterface.input.Momentum;
+import org.hydrogen.api.display.event.DisplayEventSource;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.api.display.event.KeyNotifyEvent;
+import org.hydrogen.api.display.input.Momentum;
+import org.hydrogen.display.event.BaseKeyNotifyEvent;
+import org.hydrogen.display.input.BaseInputModifiers;
+import org.hydrogen.display.input.BaseKey;
+import org.hydrogen.display.input.BaseKeyboardInput;
 
 import com.trolltech.qt.gui.QKeyEvent;
 
@@ -55,12 +56,13 @@ public final class QFusionKeyPressConverter implements
 		// TODO translate modifiers bitstring to separate modifier keycodes
 		final int state = keyEvent.nativeModifiers();
 
-		final Key key = new Key(Integer.valueOf(detail));
-		final InputModifiers inputModifiers = new InputModifiers(state);
-		final KeyboardInput input = new KeyboardInput(Momentum.STARTED, key,
-				inputModifiers);
+		final BaseKey baseKey = new BaseKey(Integer.valueOf(detail));
+		final BaseInputModifiers baseInputModifiers = new BaseInputModifiers(
+				state);
+		final BaseKeyboardInput input = new BaseKeyboardInput(Momentum.STARTED,
+				baseKey, baseInputModifiers);
 
-		return new BaseKeyNotifyEvent(KeyNotifyEvent.TYPE_PRESSED, source,
+		return new BaseKeyNotifyEvent(DisplayEventType.KEY_PRESSED, source,
 				input);
 	}
 }

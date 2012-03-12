@@ -15,6 +15,7 @@
  */
 package org.hyperdrive.widget;
 
+import org.hyperdrive.api.widget.ViewDefinition;
 import org.hyperdrive.geo.GeoManagerDirect;
 
 //TODO documentation
@@ -28,10 +29,10 @@ import org.hyperdrive.geo.GeoManagerDirect;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public final class VirtualRoot extends Widget {
+public final class VirtualRoot extends BaseWidget {
 
 	@ViewDefinition
-	public interface View extends Widget.View {
+	public interface View extends BaseWidget.View {
 
 	}
 
@@ -41,8 +42,8 @@ public final class VirtualRoot extends Widget {
 	 */
 	public VirtualRoot(final RealRoot realRoot) {
 		setParent(realRoot);
-		setRelativeX(realRoot.getRelativeX());
-		setRelativeY(realRoot.getRelativeY());
+		setX(realRoot.getX());
+		setY(realRoot.getY());
 		setWidth(realRoot.getWidth());
 		setHeight(realRoot.getHeight());
 		setGeoManager(new GeoManagerDirect());

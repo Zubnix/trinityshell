@@ -2,7 +2,7 @@ package org.hyperdrive.widget;
 
 import java.util.concurrent.Future;
 
-import org.hydrogen.paintinterface.PaintCall;
+import org.hydrogen.api.paint.PaintCall;
 
 //TODO documentation
 /**

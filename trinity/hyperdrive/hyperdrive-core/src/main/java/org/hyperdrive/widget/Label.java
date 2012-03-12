@@ -1,5 +1,9 @@
 package org.hyperdrive.widget;
 
+import org.hyperdrive.api.widget.PaintInstruction;
+import org.hyperdrive.api.widget.ViewDefinition;
+
+
 //TODO documentation
 /**
  * 
@@ -7,7 +11,7 @@ package org.hyperdrive.widget;
  * @since 1.0
  * 
  */
-public class Label extends Widget {
+public class Label extends BaseWidget {
 
 	/**
 	 * 
@@ -16,7 +20,7 @@ public class Label extends Widget {
 	 * 
 	 */
 	@ViewDefinition
-	public interface View extends Widget.View {
+	public interface View extends BaseWidget.View {
 		PaintInstruction<Void> onTextUpdate(String name, Object... args);
 	}
 

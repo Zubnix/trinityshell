@@ -15,9 +15,9 @@
  */
 package org.hyperdrive.core;
 
-import org.hydrogen.displayinterface.Area;
-import org.hydrogen.displayinterface.AreaManipulator;
-import org.hyperdrive.geo.GeoExecutor;
+import org.hydrogen.api.display.Area;
+import org.hydrogen.api.display.AreaManipulator;
+import org.hyperdrive.api.geo.GeoExecutor;
 
 // TODO documentation
 /**

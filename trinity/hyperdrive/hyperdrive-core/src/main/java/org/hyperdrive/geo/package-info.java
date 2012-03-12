@@ -21,7 +21,7 @@
  * on these child requests or, in turn, delegate them further up to their
  * respective parent. When a change is executed, the rectangle that will undergo 
  * the change will delegate this change to its
- * {@link org.hyperdrive.geo.GeoExecutor}.
+ * {@link org.hyperdrive.api.geo.GeoExecutor}.
  * <p>
  * A typical geometry change goes in the form of:
  * <ol>
@@ -32,7 +32,7 @@
  * </ol>
  * <p>
  * The change approval authority is usually a
- * {@link org.hyperdrive.geo.GeoManager}. A <code>GeoManager</code> implements a
+ * {@link org.hyperdrive.api.geo.GeoManager}. A <code>GeoManager</code> implements a
  * layout and decides whether or not the child request is valid or not. A
  * <code>GeoManager</code> can also decide to transform the geometry request and
  * execute the request in its mutated form.
@@ -69,7 +69,7 @@
  * <code>GeoExecutor</code>. The most notable examples being
  * {@link org.hyperdrive.core.ClientWindow} +
  * {@link org.hyperdrive.core.RenderAreaGeoExecutor} and
- * {@link org.hyperdrive.widget.Widget} +
+ * {@link org.hyperdrive.api.widget.Widget} +
  * {@link org.hyperdrive.widget.WidgetGeoExecutor}
  * 
  * @author Erik De Rijcke

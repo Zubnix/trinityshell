@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core;
 
-import org.hydrogen.eventsystem.Type;
+import org.hydrogen.api.event.Type;
 
 /**
  * 

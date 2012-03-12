@@ -15,8 +15,8 @@
  */
 package org.hypercube;
 
-import org.hydrogen.config.DisplayConfiguration;
-import org.hyperdrive.core.ManagedDisplay;
+import org.hydrogen.api.config.DisplayConfiguration;
+import org.hyperdrive.api.core.ManagedDisplay;
 
 /**
  * A <code>LogicLoadable</code> defines a number of methods that a behavioral

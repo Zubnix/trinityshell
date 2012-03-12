@@ -19,13 +19,13 @@ import org.fusion.x11.core.extension.XExtensions;
 import org.fusion.x11.core.input.XKeySymbol;
 import org.fusion.x11.core.input.XKeyboard;
 import org.fusion.x11.core.input.XMouse;
-import org.hydrogen.displayinterface.Coordinates;
-import org.hydrogen.displayinterface.EventPropagator;
-import org.hydrogen.displayinterface.event.ClientMessageEvent;
-import org.hydrogen.displayinterface.event.DisplayEvent;
-import org.hydrogen.displayinterface.input.Button;
-import org.hydrogen.displayinterface.input.InputModifiers;
-import org.hydrogen.displayinterface.input.Key;
+import org.hydrogen.api.display.event.ClientMessageEvent;
+import org.hydrogen.api.display.event.DisplayEvent;
+import org.hydrogen.api.display.input.Button;
+import org.hydrogen.api.display.input.InputModifiers;
+import org.hydrogen.api.display.input.Key;
+import org.hydrogen.api.geometry.Coordinates;
+import org.hydrogen.display.EventPropagator;
 
 // TODO documentation
 /**

@@ -18,17 +18,19 @@ package org.fusion.x11.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hydrogen.displayinterface.Atom;
-import org.hydrogen.displayinterface.Coordinates;
-import org.hydrogen.displayinterface.EventPropagator;
-import org.hydrogen.displayinterface.PlatformRenderArea;
-import org.hydrogen.displayinterface.PlatformRenderAreaAttributes;
-import org.hydrogen.displayinterface.Property;
-import org.hydrogen.displayinterface.PropertyInstance;
-import org.hydrogen.displayinterface.event.ClientMessageEvent;
-import org.hydrogen.displayinterface.input.Button;
-import org.hydrogen.displayinterface.input.InputModifiers;
-import org.hydrogen.displayinterface.input.Key;
+import org.hydrogen.api.display.Atom;
+import org.hydrogen.api.display.PlatformRenderArea;
+import org.hydrogen.api.display.PlatformRenderAreaAttributes;
+import org.hydrogen.api.display.Property;
+import org.hydrogen.api.display.PropertyInstance;
+import org.hydrogen.api.display.event.ClientMessageEvent;
+import org.hydrogen.api.display.input.InputModifiers;
+import org.hydrogen.api.display.input.Key;
+import org.hydrogen.api.geometry.Coordinates;
+import org.hydrogen.display.EventPropagator;
+import org.hydrogen.display.input.BaseButton;
+import org.hydrogen.display.input.BaseInputModifiers;
+import org.hydrogen.display.input.BaseKey;
 
 /**
  * An <code>XWindow</code> represents a native X window. This implies that a
@@ -254,20 +256,20 @@ public final class XWindow extends XResource implements PlatformRenderArea,
 	}
 
 	@Override
-	public void catchMouseInput(final Button catchButton,
-			final InputModifiers withModifiers) {
+	public void catchMouseInput(final BaseButton catchButton,
+			final BaseInputModifiers withModifiers) {
 		getXCoreInterface().grabButton(this, catchButton, withModifiers);
 	}
 
 	@Override
-	public void disableKeyboardInputCatching(final Key catchKey,
-			final InputModifiers withModifiers) {
+	public void disableKeyboardInputCatching(final BaseKey catchKey,
+			final BaseInputModifiers withModifiers) {
 		getXCoreInterface().ungrabKey(this, catchKey, withModifiers);
 	}
 
 	@Override
-	public void disableMouseInputCatching(final Button catchButton,
-			final InputModifiers withModifiers) {
+	public void disableMouseInputCatching(final BaseButton catchButton,
+			final BaseInputModifiers withModifiers) {
 		getXCoreInterface().ungrabButton(this, catchButton, withModifiers);
 	}
 

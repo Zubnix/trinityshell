@@ -19,7 +19,7 @@ package org.fusion.x11.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hydrogen.displayinterface.DisplayAtoms;
+import org.hydrogen.api.display.DisplayAtoms;
 
 // TODO documentation
 /**

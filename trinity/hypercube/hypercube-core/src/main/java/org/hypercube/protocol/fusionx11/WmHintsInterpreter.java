@@ -19,10 +19,10 @@ import org.fusion.x11.core.XID;
 import org.fusion.x11.core.XWindow;
 import org.fusion.x11.icccm.WmHintsInstance;
 import org.fusion.x11.icccm.WmStateEnum;
-import org.hyperdrive.core.ClientWindow;
-import org.hyperdrive.protocol.ClientPreferedGeometry;
+import org.hyperdrive.api.core.RenderArea;
 import org.hyperdrive.protocol.ClientIcon;
 import org.hyperdrive.protocol.ClientIsUrgent;
+import org.hyperdrive.protocol.ClientPreferedGeometry;
 
 //TODO documentation
 /**
@@ -38,10 +38,10 @@ final class WmHintsInterpreter {
 		this.xDesktopProtocol = xDesktopProtocol;
 	}
 
-	void handleWmHint(final ClientWindow client, final WmHintsInstance instance) {
+	void handleWmHint(final RenderArea client, final WmHintsInstance instance) {
 
-		final ClientIcon iconEvent = (ClientIcon) this.xDesktopProtocol
-				.query(client, ClientIcon.TYPE);
+		final ClientIcon iconEvent = (ClientIcon) this.xDesktopProtocol.query(
+				client, ClientIcon.TYPE);
 		final ClientPreferedGeometry geoEvent = (ClientPreferedGeometry) this.xDesktopProtocol
 				.query(client, ClientPreferedGeometry.TYPE);
 

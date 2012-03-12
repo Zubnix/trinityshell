@@ -41,16 +41,17 @@ import org.fusion.x11.icccm.WmNormalHints;
 import org.fusion.x11.icccm.WmSizeHintsInstance;
 import org.fusion.x11.icccm.WmStateEnum;
 import org.fusion.x11.icccm.WmStateInstance;
-import org.hydrogen.displayinterface.PlatformRenderArea;
-import org.hydrogen.displayinterface.PropertyInstance;
-import org.hydrogen.displayinterface.PropertyInstanceText;
-import org.hydrogen.displayinterface.PropertyInstanceTexts;
-import org.hydrogen.eventsystem.EventHandler;
-import org.hyperdrive.core.ClientWindow;
-import org.hyperdrive.core.ManagedDisplay;
+import org.hydrogen.api.display.PlatformRenderArea;
+import org.hydrogen.api.display.PropertyInstance;
+import org.hydrogen.api.event.EventHandler;
+import org.hydrogen.display.PropertyInstanceText;
+import org.hydrogen.display.PropertyInstanceTexts;
+import org.hyperdrive.api.core.ManagedDisplay;
+import org.hyperdrive.api.core.RenderArea;
+import org.hyperdrive.api.geo.GeoEvent;
+import org.hyperdrive.api.geo.GeoOperation;
 import org.hyperdrive.core.RenderAreaPropertiesManipulator;
 import org.hyperdrive.core.RenderAreaPropertyChangedEvent;
-import org.hyperdrive.geo.GeoEvent;
 import org.hyperdrive.protocol.AbstractDesktopProtocol;
 
 //TODO documentation
@@ -72,7 +73,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 		@Override
 		public void handleEvent(final RenderAreaPropertyChangedEvent<T> event) {
 
-			final ClientWindow client = (ClientWindow) event.getRenderArea();
+			final RenderArea client = event.getRenderArea();
 			final PlatformRenderArea platformRenderArea = client
 					.getPlatformRenderArea();
 			final T changedProperty = event.getChangedProperty();
@@ -83,7 +84,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 			handlePropertyInstance(client, propertyInstance);
 		}
 
-		abstract void handlePropertyInstance(ClientWindow client,
+		abstract void handlePropertyInstance(RenderArea client,
 				P propertyInstance);
 	}
 
@@ -91,7 +92,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 			PropertyListener<WmHintsInstance, WmHints> {
 
 		@Override
-		void handlePropertyInstance(final ClientWindow client,
+		void handlePropertyInstance(final RenderArea client,
 				final WmHintsInstance propertyInstance) {
 			XDesktopProtocol.this.wmHintsInterpreter.handleWmHint(client,
 					propertyInstance);
@@ -102,7 +103,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 			PropertyListener<WmSizeHintsInstance, WmNormalHints> {
 
 		@Override
-		void handlePropertyInstance(final ClientWindow client,
+		void handlePropertyInstance(final RenderArea client,
 				final WmSizeHintsInstance propertyInstance) {
 			XDesktopProtocol.this.wmNormalHintsInterpreter.handleWmNormalHints(
 					client, propertyInstance);
@@ -113,7 +114,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 			PropertyListener<PropertyInstanceText, XPropertyXAtomSingleText> {
 
 		@Override
-		void handlePropertyInstance(final ClientWindow client,
+		void handlePropertyInstance(final RenderArea client,
 				final PropertyInstanceText propertyInstance) {
 			XDesktopProtocol.this.wmNameInterpreter.handleWmName(client,
 					propertyInstance);
@@ -123,7 +124,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 	private final class WmClassListener extends
 			PropertyListener<PropertyInstanceTexts, XPropertyXAtomMultiText> {
 		@Override
-		void handlePropertyInstance(final ClientWindow client,
+		void handlePropertyInstance(final RenderArea client,
 				final PropertyInstanceTexts propertyInstance) {
 			XDesktopProtocol.this.wmClassInterpreter.handleWmClass(client,
 					propertyInstance);
@@ -134,9 +135,9 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 			EventHandler<GeoEvent> {
 		@Override
 		public void handleEvent(final GeoEvent event) {
-			final ClientWindow client = (ClientWindow) event
-					.getTransformableSquare();
-			final boolean visible = event.getTransformation().isVisible1();
+			final RenderArea client = (RenderArea) event
+					.getGeoTransformableRectangle();
+			final boolean visible = event.getGeoTransformation().isVisible1();
 			updateWmState(client, visible);
 		}
 	}
@@ -144,7 +145,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 	private final class NetWmIconListener extends
 			PropertyListener<_NetWmIconInstance, _NetWmIcon> {
 		@Override
-		void handlePropertyInstance(final ClientWindow client,
+		void handlePropertyInstance(final RenderArea client,
 				final _NetWmIconInstance propertyInstance) {
 			XDesktopProtocol.this.netWmIconInterpreter.handleWmIcon(client,
 					propertyInstance);
@@ -165,13 +166,13 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 	// ewmh
 	private final NetWmIconInterpreter netWmIconInterpreter;
 
-	private final Map<ClientWindow, RenderAreaPropertiesManipulator> clientPropertiesManipulators;
+	private final Map<RenderArea, RenderAreaPropertiesManipulator> clientPropertiesManipulators;
 
 	static final String EMPTY_STRING = "";
 
 	public XDesktopProtocol(final ManagedDisplay managedDisplay) {
 		this.inputPreferenceParser = new InputPreferenceParser();
-		this.clientPropertiesManipulators = new HashMap<ClientWindow, RenderAreaPropertiesManipulator>();
+		this.clientPropertiesManipulators = new HashMap<RenderArea, RenderAreaPropertiesManipulator>();
 
 		this.display = (XDisplay) managedDisplay.getDisplay();
 
@@ -196,7 +197,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 	}
 
 	@Override
-	public void registerClient(final ClientWindow client) {
+	public void registerClient(final RenderArea client) {
 		final RenderAreaPropertiesManipulator propertiesManipulator = new RenderAreaPropertiesManipulator(
 				client);
 		this.clientPropertiesManipulators.put(client, propertiesManipulator);
@@ -206,7 +207,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 	}
 
 	@Override
-	public boolean requestDelete(final ClientWindow client) {
+	public boolean requestDelete(final RenderArea client) {
 		final XPropertyInstanceXAtoms wmProtocolsInstance = this.clientPropertiesManipulators
 				.get(client)
 				.getPropertyValue(IcccmAtoms.WM_PROTOCOLS_ATOM_NAME);
@@ -246,7 +247,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 	}
 
 	@Override
-	public boolean offerInput(final ClientWindow client) {
+	public boolean offerInput(final RenderArea client) {
 		// TODO we might want to grab the display and ungrab it when the focus
 		// is transferred. This way the user is ensured that when he starts
 		// typing after an focus transfer, all the input will be send to the
@@ -299,22 +300,21 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 			break;
 		case LOCAL_INPUT:
 			if (!client.hasInputFocus()) {
-				client.giveInputFocus();
+				client.setInputFocus();
 			}
 			break;
 		case NO_INPUT:
 			// Don't give any input
 			break;
 		case PASSIVE_INPUT:
-			client.giveInputFocus();
+			client.setInputFocus();
 			break;
 		}
 
 		return true;
 	}
 
-	protected void updateWmState(final ClientWindow client,
-			final boolean visible) {
+	protected void updateWmState(final RenderArea client, final boolean visible) {
 		final WmStateEnum state = visible ? WmStateEnum.NormalState
 				: WmStateEnum.WithdrawnState;
 		final XWindow iconWindow = this.display.getNoneWindow();
@@ -323,7 +323,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 				new WmStateInstance(this.display, state, iconWindow));
 	}
 
-	protected void readProtocolProperties(final ClientWindow client,
+	protected void readProtocolProperties(final RenderArea client,
 			final RenderAreaPropertiesManipulator propertiesManipulator) {
 
 		final WmHintsInstance wmHintsInstance = propertiesManipulator
@@ -348,12 +348,12 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 		// TODO wm_class
 	}
 
-	protected void addClientToSaveSet(final ClientWindow client) {
+	protected void addClientToSaveSet(final RenderArea client) {
 		final XWindow window = (XWindow) client.getPlatformRenderArea();
 		window.addToSaveSet();
 	}
 
-	protected void installListeners(final ClientWindow client) {
+	protected void installListeners(final RenderArea client) {
 		client.addEventHandler(new WmHintsListener(),
 				RenderAreaPropertyChangedEvent
 						.TYPE(IcccmAtoms.WM_HINTS_ATOM_NAME));
@@ -367,7 +367,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 				RenderAreaPropertyChangedEvent
 						.TYPE(IcccmAtoms.WM_CLASS_ATOM_NAME));
 		client.addEventHandler(new ClientVisibilityListener(),
-				GeoEvent.VISIBILITY);
+				GeoOperation.VISIBILITY);
 		client.addEventHandler(new NetWmIconListener(),
 				RenderAreaPropertyChangedEvent
 						.TYPE(EwmhAtoms.NET_WM_ICON_ATOM_NAME));

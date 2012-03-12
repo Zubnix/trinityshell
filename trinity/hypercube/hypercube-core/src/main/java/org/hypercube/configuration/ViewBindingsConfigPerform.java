@@ -8,9 +8,9 @@ import org.hypercube.view.fusionqtjambi.KeyDrivenMenuView;
 import org.hypercube.view.fusionqtjambi.LabelView;
 import org.hypercube.view.fusionqtjambi.RealRootView;
 import org.hypercube.view.fusionqtjambi.WidgetView;
-import org.hyperdrive.widget.Button;
-import org.hyperdrive.widget.ClientManager;
-import org.hyperdrive.widget.ClientManager.ClientManagerLabel;
+import org.hyperdrive.widget.BaseButton;
+import org.hyperdrive.widget.BaseClientManager;
+import org.hyperdrive.widget.BaseClientManager.ClientManagerLabel;
 import org.hyperdrive.widget.ClientNameLabel;
 import org.hyperdrive.widget.CloseButton;
 import org.hyperdrive.widget.DragButton;
@@ -23,7 +23,7 @@ import org.hyperdrive.widget.RealRoot;
 import org.hyperdrive.widget.ResizeButton;
 import org.hyperdrive.widget.ViewBinder;
 import org.hyperdrive.widget.VirtualRoot;
-import org.hyperdrive.widget.Widget;
+import org.hyperdrive.widget.BaseWidget;
 
 public class ViewBindingsConfigPerform implements Runnable {
 	@Override
@@ -31,7 +31,7 @@ public class ViewBindingsConfigPerform implements Runnable {
 		ViewBinder.bindView(Button.View.class, ButtonView.class);
 		ViewBinder.bindView(ClientContainer.View.class,
 				ClientContainerView.class);
-		ViewBinder.bindView(ClientManager.View.class, WidgetView.class);
+		ViewBinder.bindView(BaseClientManager.View.class, WidgetView.class);
 		ViewBinder.bindView(ClientManagerLabel.View.class,
 				ClientManagerLabelView.class);
 		ViewBinder.bindView(ClientNameLabel.View.class, LabelView.class);
@@ -46,6 +46,6 @@ public class ViewBindingsConfigPerform implements Runnable {
 		ViewBinder.bindView(RealRoot.View.class, RealRootView.class);
 		ViewBinder.bindView(ResizeButton.View.class, ButtonView.class);
 		ViewBinder.bindView(VirtualRoot.View.class, WidgetView.class);
-		ViewBinder.bindView(Widget.View.class, WidgetView.class);
+		ViewBinder.bindView(BaseWidget.View.class, WidgetView.class);
 	}
 }

@@ -15,7 +15,8 @@
  */
 package org.hyperdrive.widget;
 
-import org.hydrogen.displayinterface.input.MouseInput;
+import org.hydrogen.api.display.input.MouseInput;
+import org.hyperdrive.api.widget.ViewDefinition;
 
 // TODO create super push button class
 // TODO documentation

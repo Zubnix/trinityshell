@@ -15,7 +15,10 @@
  */
 package org.hyperdrive.geo;
 
-import org.hydrogen.eventsystem.EventBus;
+import org.hydrogen.event.EventBus;
+import org.hyperdrive.api.geo.GeoManager;
+import org.hyperdrive.api.geo.GeoTransformableRectangle;
+import org.hyperdrive.api.geo.GeoTransformation;
 
 // TODO documentation
 /**

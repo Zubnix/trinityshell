@@ -18,10 +18,13 @@ package org.hyperdrive.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hydrogen.displayinterface.event.KeyNotifyEvent;
-import org.hydrogen.displayinterface.input.SpecialKeyName;
-import org.hydrogen.eventsystem.EventHandler;
-import org.hyperdrive.core.ManagedDisplay;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.api.display.event.KeyNotifyEvent;
+import org.hydrogen.api.display.input.SpecialKeyName;
+import org.hydrogen.api.event.EventHandler;
+import org.hyperdrive.api.core.ManagedDisplay;
+import org.hyperdrive.api.widget.PaintInstruction;
+import org.hyperdrive.api.widget.ViewDefinition;
 import org.hyperdrive.input.KeyInputStringBuilder;
 
 // TODO documentation
@@ -35,7 +38,7 @@ import org.hyperdrive.input.KeyInputStringBuilder;
  * @since 1.0
  * 
  */
-public abstract class KeyDrivenMenu extends Widget {
+public abstract class KeyDrivenMenu extends BaseWidget {
 
 	/**
 	 * 
@@ -44,7 +47,7 @@ public abstract class KeyDrivenMenu extends Widget {
 	 * 
 	 */
 	@ViewDefinition
-	public interface View extends Widget.View {
+	public interface View extends BaseWidget.View {
 		PaintInstruction<Void> clear();
 
 		PaintInstruction<Void> update(String input,
@@ -176,7 +179,7 @@ public abstract class KeyDrivenMenu extends Widget {
 							KeyDrivenMenu.this.activeChoice);
 				}
 			}
-		}, KeyNotifyEvent.TYPE_PRESSED);
+		}, DisplayEventType.KEY_PRESSED);
 	}
 
 	/**

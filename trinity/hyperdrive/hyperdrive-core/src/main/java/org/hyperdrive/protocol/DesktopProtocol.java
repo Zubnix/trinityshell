@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.protocol;
 
-import org.hyperdrive.core.ClientWindow;
+import org.hyperdrive.api.core.RenderArea;
 
 //TODO documentation
 /**
@@ -25,23 +25,23 @@ import org.hyperdrive.core.ClientWindow;
  */
 public interface DesktopProtocol {
 
-	void registerClient(ClientWindow client);
+	void registerClient(RenderArea client);
 
 	/**
 	 * 
 	 * @param client
 	 * @return true if the underlying protocol implements this call.
 	 */
-	boolean offerInput(ClientWindow client);
+	boolean offerInput(RenderArea client);
 
 	/**
 	 * 
 	 * @param client
 	 * @return true if the underlying protocol implements this call.
 	 */
-	boolean requestDelete(ClientWindow client);
+	boolean requestDelete(RenderArea client);
 
-	ProtocolEvent query(ClientWindow client, ProtocolEventType eventType);
+	ProtocolEvent query(RenderArea client, ProtocolEventType eventType);
 
-	void updateProtocolEvent(ClientWindow client, ProtocolEvent protocolEvent);
+	void updateProtocolEvent(RenderArea client, ProtocolEvent protocolEvent);
 }

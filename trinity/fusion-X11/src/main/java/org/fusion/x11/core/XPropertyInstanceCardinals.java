@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core;
 
-import org.hydrogen.displayinterface.PropertyInstanceNumbers;
+import org.hydrogen.display.PropertyInstanceNumbers;
 
 //TODO documentation
 /**

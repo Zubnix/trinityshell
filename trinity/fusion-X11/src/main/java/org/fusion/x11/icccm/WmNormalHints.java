@@ -23,7 +23,7 @@ import org.fusion.x11.core.XPropertyXAtom;
 import org.fusion.x11.core.XProtocolConstants;
 import org.fusion.x11.core.XWindow;
 import org.fusion.x11.error.NotYetImplementedError;
-import org.hydrogen.displayinterface.PlatformRenderArea;
+import org.hydrogen.api.display.PlatformRenderArea;
  
 
 // TODO documentation

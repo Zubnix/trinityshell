@@ -15,7 +15,11 @@
  */
 package org.hyperdrive.geo;
 
-import org.hydrogen.eventsystem.EventHandler;
+import org.hydrogen.api.event.EventHandler;
+import org.hyperdrive.api.geo.GeoEvent;
+import org.hyperdrive.api.geo.GeoEventHandler;
+import org.hyperdrive.api.geo.GeoOperation;
+import org.hyperdrive.api.geo.GeoTransformableRectangle;
 
 // TODO documentation
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
@@ -79,75 +83,85 @@ public class GeoManagerLine extends GeoManagerWithChildren<LineProperty> {
 		addEventHandler(new EventHandler<GeoEvent>() {
 			@Override
 			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getTransformableSquare();
+				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
 				cancelMoveResize(square);
 			}
-		}, GeoEvent.MOVE_REQUEST);
+		}, GeoOperation.MOVE_REQUEST);
 
 		addEventHandler(new EventHandler<GeoEvent>() {
 			@Override
 			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getTransformableSquare();
+				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
 				cancelMoveResize(square);
 			}
-		}, GeoEvent.RESIZE_REQUEST);
+		}, GeoOperation.RESIZE_REQUEST);
 
 		addEventHandler(new EventHandler<GeoEvent>() {
 			@Override
 			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getTransformableSquare();
+				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
 				cancelMoveResize(square);
 			}
-		}, GeoEvent.MOVE_RESIZE_REQUEST);
+		}, GeoOperation.MOVE_RESIZE_REQUEST);
 
 		addEventHandler(new EventHandler<GeoEvent>() {
 			@Override
 			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getTransformableSquare();
+				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
 
 				square.doUpdateRaise();
 			}
-		}, GeoEvent.RAISE_REQUEST);
+		}, GeoOperation.RAISE_REQUEST);
 
 		addEventHandler(new EventHandler<GeoEvent>() {
 			@Override
 			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getTransformableSquare();
+				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
 
 				square.doUpdateLower();
 			}
-		}, GeoEvent.LOWER_REQUEST);
+		}, GeoOperation.LOWER_REQUEST);
 
 		addEventHandler(new EventHandler<GeoEvent>() {
 			@Override
 			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getTransformableSquare();
+				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
 				square.doUpdateVisibility();
 			}
-		}, GeoEvent.VISIBILITY_REQUEST);
+		}, GeoOperation.VISIBILITY_REQUEST);
 
 		addEventHandler(new EventHandler<GeoEvent>() {
 			@Override
 			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getTransformableSquare();
+				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
 				removeManagedChild(square);
 				square.doUpdateParentValue();
 			}
-		}, GeoEvent.REPARENT_REQUEST);
+		}, GeoOperation.REPARENT_REQUEST);
 
-		getContainer().addEventHandler(new EventHandler<GeoEvent>() {
+		getContainer().addGeoEventHandler(new GeoEventHandler() {
 			@Override
 			public void handleEvent(final GeoEvent event) {
 				layout();
 			}
-		}, GeoEvent.RESIZE);
 
-		getContainer().addEventHandler(new EventHandler<GeoEvent>() {
+			@Override
+			public GeoOperation getType() {
+				return GeoOperation.RESIZE;
+			}
+		});
+
+		getContainer().addGeoEventHandler(new GeoEventHandler() {
 			@Override
 			public void handleEvent(final GeoEvent event) {
 				layout();
 			}
-		}, GeoEvent.MOVE_RESIZE);
+
+			@Override
+			public GeoOperation getType() {
+				return GeoOperation.MOVE_RESIZE;
+			}
+		});
 	}
 
 	/**
@@ -262,9 +276,9 @@ public class GeoManagerLine extends GeoManagerWithChildren<LineProperty> {
 
 				if (this.inverseDirection) {
 					newPlace -= newChildWidth;
-					child.setRelativeX(newPlace);
+					child.setX(newPlace);
 				} else {
-					child.setRelativeX(newPlace);
+					child.setX(newPlace);
 					// calculate next child's position
 					newPlace += newChildWidth;
 				}
@@ -282,9 +296,9 @@ public class GeoManagerLine extends GeoManagerWithChildren<LineProperty> {
 
 				if (this.inverseDirection) {
 					newPlace -= newChildHeight;
-					child.setRelativeY(newPlace);
+					child.setY(newPlace);
 				} else {
-					child.setRelativeY(newPlace);
+					child.setY(newPlace);
 					newPlace += newChildHeight;
 				}
 			}

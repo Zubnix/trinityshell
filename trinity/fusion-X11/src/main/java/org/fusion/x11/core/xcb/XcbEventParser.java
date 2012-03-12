@@ -49,16 +49,15 @@ import org.fusion.x11.core.event.XSelectionRequestEvent;
 import org.fusion.x11.core.event.XUnknownEvent;
 import org.fusion.x11.core.event.XUnmapNotify;
 import org.fusion.x11.nativeHelpers.NativeBufferHelper;
-import org.hydrogen.displayinterface.PropertyInstance;
-import org.hydrogen.displayinterface.event.ButtonNotifyEvent;
-import org.hydrogen.displayinterface.event.DisplayEvent;
-import org.hydrogen.displayinterface.event.KeyNotifyEvent;
-import org.hydrogen.displayinterface.input.Button;
-import org.hydrogen.displayinterface.input.InputModifiers;
-import org.hydrogen.displayinterface.input.Key;
-import org.hydrogen.displayinterface.input.KeyboardInput;
-import org.hydrogen.displayinterface.input.Momentum;
-import org.hydrogen.displayinterface.input.MouseInput;
+import org.hydrogen.api.display.PropertyInstance;
+import org.hydrogen.api.display.event.DisplayEvent;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.api.display.input.Momentum;
+import org.hydrogen.display.input.BaseButton;
+import org.hydrogen.display.input.BaseInputModifiers;
+import org.hydrogen.display.input.BaseKey;
+import org.hydrogen.display.input.BaseKeyboardInput;
+import org.hydrogen.display.input.BaseMouseInput;
 
 // TODO documentation
 /**
@@ -518,13 +517,15 @@ final class XcbEventParser {
 		final XWindow event = XcbEventParser
 				.readXWindow(display, eventWindowId);
 
-		final Button button = new Button(Integer.valueOf(detail));
-		final InputModifiers inputModifiers = new InputModifiers(state);
-		final MouseInput mouseInput = new MouseInput(Momentum.STARTED, button,
-				inputModifiers, rootX, rootY, eventX, eventY);
+		final BaseButton baseButton = new BaseButton(Integer.valueOf(detail));
+		final BaseInputModifiers baseInputModifiers = new BaseInputModifiers(
+				state);
+		final BaseMouseInput baseMouseInput = new BaseMouseInput(
+				Momentum.STARTED, baseButton, baseInputModifiers, rootX, rootY,
+				eventX, eventY);
 
 		final XButtonEvent returnXcbButtonPress = new XButtonEvent(
-				ButtonNotifyEvent.TYPE_PRESSED, event, mouseInput);
+				DisplayEventType.BUTTON_PRESSED, event, baseMouseInput);
 
 		return returnXcbButtonPress;
 	}
@@ -570,13 +571,15 @@ final class XcbEventParser {
 		final XWindow event = XcbEventParser
 				.readXWindow(display, eventWindowId);
 
-		final Button button = new Button(Integer.valueOf(detail));
-		final InputModifiers inputModifiers = new InputModifiers(state);
-		final MouseInput mouseInput = new MouseInput(Momentum.STOPPED, button,
-				inputModifiers, rootX, rootY, eventX, eventY);
+		final BaseButton baseButton = new BaseButton(Integer.valueOf(detail));
+		final BaseInputModifiers baseInputModifiers = new BaseInputModifiers(
+				state);
+		final BaseMouseInput baseMouseInput = new BaseMouseInput(
+				Momentum.STOPPED, baseButton, baseInputModifiers, rootX, rootY,
+				eventX, eventY);
 
 		final XButtonEvent returnXcbButtonRelease = new XButtonEvent(
-				ButtonNotifyEvent.TYPE_RELEASED, event, mouseInput);
+				DisplayEventType.BUTTON_RELEASED, event, baseMouseInput);
 
 		return returnXcbButtonRelease;
 	}
@@ -620,14 +623,15 @@ final class XcbEventParser {
 		final XWindow event = XcbEventParser
 				.readXWindow(display, eventWindowId);
 
-		final Key key = new Key(detail);
-		final InputModifiers inputModifiers = new InputModifiers(state);
+		final BaseKey baseKey = new BaseKey(detail);
+		final BaseInputModifiers baseInputModifiers = new BaseInputModifiers(
+				state);
 
-		final KeyboardInput input = new KeyboardInput(Momentum.STARTED, key,
-				inputModifiers);
+		final BaseKeyboardInput input = new BaseKeyboardInput(Momentum.STARTED,
+				baseKey, baseInputModifiers);
 
-		final XKeyEvent xcbKeyPress = new XKeyEvent(KeyNotifyEvent.TYPE_PRESSED,
-				event, input);
+		final XKeyEvent xcbKeyPress = new XKeyEvent(
+				DisplayEventType.KEY_PRESSED, event, input);
 
 		return xcbKeyPress;
 	}
@@ -671,13 +675,14 @@ final class XcbEventParser {
 		final XWindow event = XcbEventParser
 				.readXWindow(display, eventWindowId);
 
-		final Key key = new Key(detail);
-		final InputModifiers inputModifiers = new InputModifiers(state);
-		final KeyboardInput input = new KeyboardInput(Momentum.STOPPED, key,
-				inputModifiers);
+		final BaseKey baseKey = new BaseKey(detail);
+		final BaseInputModifiers baseInputModifiers = new BaseInputModifiers(
+				state);
+		final BaseKeyboardInput input = new BaseKeyboardInput(Momentum.STOPPED,
+				baseKey, baseInputModifiers);
 
 		final XKeyEvent xcbKeyRelease = new XKeyEvent(
-				KeyNotifyEvent.TYPE_RELEASED, event, input);
+				DisplayEventType.KEY_RELEASED, event, input);
 		return xcbKeyRelease;
 	}
 

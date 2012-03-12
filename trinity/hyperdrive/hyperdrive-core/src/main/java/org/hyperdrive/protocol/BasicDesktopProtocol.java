@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.protocol;
 
-import org.hyperdrive.core.ClientWindow;
+import org.hyperdrive.api.core.RenderArea;
 
 /**
  * The most simple implementation of a <code>DesktopProtocol</code>. It simply
@@ -28,31 +28,31 @@ import org.hyperdrive.core.ClientWindow;
 public class BasicDesktopProtocol implements DesktopProtocol {
 
 	@Override
-	public void registerClient(final ClientWindow client) {
+	public void registerClient(final RenderArea client) {
 		// do nothig
 	}
 
 	@Override
-	public boolean offerInput(final ClientWindow client) {
-		client.giveInputFocus();
+	public boolean offerInput(final RenderArea client) {
+		client.setInputFocus();
 		return true;
 	}
 
 	@Override
-	public boolean requestDelete(final ClientWindow client) {
+	public boolean requestDelete(final RenderArea client) {
 		client.doDestroy();
 		return true;
 	}
 
 	@Override
-	public ProtocolEvent query(final ClientWindow client,
+	public ProtocolEvent query(final RenderArea client,
 			final ProtocolEventType eventType) {
 		// do nothing
 		return null;
 	}
 
 	@Override
-	public void updateProtocolEvent(final ClientWindow client,
+	public void updateProtocolEvent(final RenderArea client,
 			final ProtocolEvent protocolEvent) {
 		// do nothing
 	}

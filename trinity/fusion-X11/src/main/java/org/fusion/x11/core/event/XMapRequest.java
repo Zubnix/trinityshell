@@ -16,7 +16,7 @@
 package org.fusion.x11.core.event;
 
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.displayinterface.event.BaseMapRequestEvent;
+import org.hydrogen.display.event.BaseMapRequestEvent;
 
 // TODO documentation
 /**

@@ -1,10 +1,10 @@
 package org.hypercube.view.fusionqtjambi;
 
 import org.fusion.qt.painter.QFusionPaintCall;
-import org.hydrogen.displayinterface.input.MouseInput;
-import org.hydrogen.paintinterface.PaintContext;
-import org.hyperdrive.widget.Button;
-import org.hyperdrive.widget.PaintInstruction;
+import org.hydrogen.api.display.input.MouseInput;
+import org.hydrogen.api.paint.PaintContext;
+import org.hyperdrive.api.widget.PaintInstruction;
+import org.hyperdrive.widget.BaseButton;
 
 import com.trolltech.qt.gui.QWidget;
 

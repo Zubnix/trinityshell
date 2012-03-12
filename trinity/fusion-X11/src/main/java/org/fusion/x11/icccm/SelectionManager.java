@@ -20,7 +20,7 @@ import org.fusion.x11.core.XDisplay;
 import org.fusion.x11.core.XWindow;
 import org.fusion.x11.core.event.XSelectionClearNotifyEvent;
 import org.fusion.x11.core.event.XSelectionRequestEvent;
-import org.hydrogen.eventsystem.EventHandler;
+import org.hydrogen.api.event.EventHandler;
 
 //TODO documentation
 /**

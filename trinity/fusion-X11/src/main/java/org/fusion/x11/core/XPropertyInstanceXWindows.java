@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core;
 
-import org.hydrogen.displayinterface.PropertyInstancePlatformRenderAreas;
+import org.hydrogen.display.PropertyInstancePlatformRenderAreas;
 
 // TODO documentation
 /**

@@ -16,13 +16,14 @@
  */
 package org.fusion.qt.paintengine;
 
-import org.hydrogen.displayinterface.event.BaseButtonNotifyEvent;
-import org.hydrogen.displayinterface.event.ButtonNotifyEvent;
-import org.hydrogen.displayinterface.event.DisplayEventSource;
-import org.hydrogen.displayinterface.input.Button;
-import org.hydrogen.displayinterface.input.InputModifiers;
-import org.hydrogen.displayinterface.input.Momentum;
-import org.hydrogen.displayinterface.input.MouseInput;
+import org.hydrogen.api.display.event.ButtonNotifyEvent;
+import org.hydrogen.api.display.event.DisplayEventSource;
+import org.hydrogen.api.display.event.DisplayEventType;
+import org.hydrogen.api.display.input.Momentum;
+import org.hydrogen.display.event.BaseButtonNotifyEvent;
+import org.hydrogen.display.input.BaseButton;
+import org.hydrogen.display.input.BaseInputModifiers;
+import org.hydrogen.display.input.BaseMouseInput;
 
 import com.trolltech.qt.gui.QMouseEvent;
 
@@ -54,12 +55,14 @@ public final class QFusionMouseButtonPressConverter implements
 		final int eventX = qMouseEvent.x();
 		final int eventY = qMouseEvent.y();
 
-		final Button button = new Button(detail);
-		final InputModifiers inputModifiers = new InputModifiers(state);
-		final MouseInput mouseInput = new MouseInput(Momentum.STARTED, button,
-				inputModifiers, rootX, rootY, eventX, eventY);
+		final BaseButton baseButton = new BaseButton(detail);
+		final BaseInputModifiers baseInputModifiers = new BaseInputModifiers(
+				state);
+		final BaseMouseInput baseMouseInput = new BaseMouseInput(
+				Momentum.STARTED, baseButton, baseInputModifiers, rootX, rootY,
+				eventX, eventY);
 
-		return new BaseButtonNotifyEvent(ButtonNotifyEvent.TYPE_PRESSED,
-				source, mouseInput);
+		return new BaseButtonNotifyEvent(DisplayEventType.BUTTON_PRESSED,
+				source, baseMouseInput);
 	}
 }

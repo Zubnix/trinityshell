@@ -22,7 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.hydrogen.displayinterface.input.SpecialKeyName;
+import org.hydrogen.api.display.input.SpecialKeyName;
+import org.hyperdrive.api.widget.ViewDefinition;
 
 // TODO documentation
 /**

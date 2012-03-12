@@ -22,7 +22,8 @@ import org.fusion.x11.core.XWindowAttributes;
 import org.fusion.x11.core.XWindowGeometry;
 import org.fusion.x11.nativeHelpers.NativeBufferHelper;
 import org.fusion.x11.nativeHelpers.XNativeCall;
-import org.hydrogen.displayinterface.Coordinates;
+import org.hydrogen.api.geometry.Coordinates;
+import org.hydrogen.geometry.BaseCoordinates;
 
 /**
  * An <code>XcbCoreNativeCalls</code> statically groups all native calls that
@@ -50,7 +51,7 @@ public final class XcbCoreNativeCalls {
 		public Coordinates getResult() {
 			final int destX = getNativeBufferHelper().readUnsignedShort();
 			final int destY = getNativeBufferHelper().readUnsignedShort();
-			final Coordinates xCoordinates = new Coordinates(destX, destY);
+			final Coordinates xCoordinates = new BaseCoordinates(destX, destY);
 			return xCoordinates;
 		}
 

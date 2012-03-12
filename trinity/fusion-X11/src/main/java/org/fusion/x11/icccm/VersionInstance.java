@@ -16,7 +16,7 @@
 package org.fusion.x11.icccm;
 
 import org.fusion.x11.core.XDisplay;
-import org.hydrogen.displayinterface.PropertyInstanceNumbers;
+import org.hydrogen.display.PropertyInstanceNumbers;
 
 //TODO documentation
 /**

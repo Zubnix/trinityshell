@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.protocol;
 
-import org.hyperdrive.core.ClientWindow;
+import org.hyperdrive.api.core.RenderArea;
 
 //TODO documentation
 /**
@@ -27,13 +27,13 @@ public class PopupNotify implements ProtocolEvent {
 
 	public static final ProtocolEventType TYPE = new ProtocolEventType();
 
-	private final ClientWindow transientForClient;
+	private final RenderArea transientForClient;
 
-	public PopupNotify(final ClientWindow transientForClient) {
+	public PopupNotify(final RenderArea transientForClient) {
 		this.transientForClient = transientForClient;
 	}
 
-	public ClientWindow getTransientForClient() {
+	public RenderArea getTransientForClient() {
 		return this.transientForClient;
 	}
 

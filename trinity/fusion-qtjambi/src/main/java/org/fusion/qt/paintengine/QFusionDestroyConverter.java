@@ -16,9 +16,9 @@
  */
 package org.fusion.qt.paintengine;
 
-import org.hydrogen.displayinterface.event.BaseDestroyNotifyEvent;
-import org.hydrogen.displayinterface.event.DestroyNotifyEvent;
-import org.hydrogen.displayinterface.event.DisplayEventSource;
+import org.hydrogen.api.display.event.DestroyNotifyEvent;
+import org.hydrogen.api.display.event.DisplayEventSource;
+import org.hydrogen.display.event.BaseDestroyNotifyEvent;
 
 import com.trolltech.qt.core.QEvent;
 
