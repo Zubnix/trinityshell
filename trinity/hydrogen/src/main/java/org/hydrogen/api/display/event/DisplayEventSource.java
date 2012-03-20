@@ -16,6 +16,8 @@
 
 package org.hydrogen.api.display.event;
 
+import org.hydrogen.api.event.Type;
+
 // TODO documentation
 /**
  * 
@@ -23,6 +25,6 @@ package org.hydrogen.api.display.event;
  * @since 1.0
  * 
  */
-public interface DisplayEventSource {
+public interface DisplayEventSource extends Type {
 
 }

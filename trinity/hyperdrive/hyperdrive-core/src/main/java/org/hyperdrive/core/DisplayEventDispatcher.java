@@ -16,9 +16,9 @@
 package org.hyperdrive.core;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
@@ -31,9 +31,10 @@ import org.hydrogen.api.display.event.DisplayEventType;
 import org.hydrogen.api.display.event.MapRequestEvent;
 import org.hydrogen.api.event.EventHandler;
 import org.hydrogen.api.event.EventManager;
-import org.hydrogen.api.event.TypeBoundEventHandler;
 import org.hydrogen.event.EventBus;
 import org.hyperdrive.api.core.ManagedDisplay;
+import org.hyperdrive.api.core.event.ClientCreatedHandler;
+import org.hyperdrive.api.core.event.DisplayEventHandler;
 
 /**
  * An <code>EventDispatcher</code> fetches and dispatches
@@ -53,17 +54,14 @@ import org.hyperdrive.api.core.ManagedDisplay;
  * @author Erik De Rijcke
  * @since 1.0
  */
-final class DisplayEventDispatcher extends EventBus implements Runnable {
+final class DisplayEventDispatcher implements Runnable {
+
+	private final EventBus displayEventEmitter = new EventBus();
 
 	// TODO this is basically the same mechanism as used in EventBus. Find a way
 	// to seperate and uniform this mechanism.
 	private final Map<DisplayEventSource, List<WeakReference<EventManager>>> eventManagers;
-
-	// TODO move itf to seperate file and create a version for each display
-	// event handler in core.api
-	private interface DisplayEventHandler<T extends DisplayEvent> extends
-			TypeBoundEventHandler<DisplayEventType, T> {
-	}
+	private final List<ClientCreatedHandler> clientCreatedHandlers;
 
 	private final class ConfigureRequestHandler implements
 			DisplayEventHandler<ConfigureRequestEvent> {
@@ -106,48 +104,49 @@ final class DisplayEventDispatcher extends EventBus implements Runnable {
 	private static final String THREADSTOP_LOGMESSAGE = "Display event dispatching loop terminated.";
 
 	private final Display display;
-	private final BaseManagedDisplay managedDisplay;
+	private final ManagedDisplay managedDisplay;
 	private volatile boolean running;
 
-	DisplayEventDispatcher(final BaseManagedDisplay managedDisplay) {
-		this.eventManagers = new HashMap<DisplayEventSource, List<WeakReference<EventManager>>>();
+	DisplayEventDispatcher(final ManagedDisplay managedDisplay) {
+		this.clientCreatedHandlers = new CopyOnWriteArrayList<ClientCreatedHandler>();
+		// use weakhashmap?
+		this.eventManagers = new WeakHashMap<DisplayEventSource, List<WeakReference<EventManager>>>();
 		this.managedDisplay = managedDisplay;
 		this.display = managedDisplay.getDisplay();
 		initEventManagers();
 	}
 
-	private BaseManagedDisplay getManagedDisplay() {
-		return this.managedDisplay;
-	}
-
 	private void initEventManagers() {
-		addTypedEventHandler(new ConfigureRequestHandler());
-		addTypedEventHandler(new MapRequestEventHandler());
+		this.displayEventEmitter
+				.addTypedEventHandler(new ConfigureRequestHandler());
+		this.displayEventEmitter
+				.addTypedEventHandler(new MapRequestEventHandler());
 		final DefaultDisplayEventHandler defaultDisplayEventHandler = new DefaultDisplayEventHandler();
-		addEventHandler(defaultDisplayEventHandler,
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
 				DisplayEventType.BUTTON_PRESSED);
-		addEventHandler(defaultDisplayEventHandler,
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
 				DisplayEventType.BUTTON_RELEASED);
-		addEventHandler(defaultDisplayEventHandler,
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
 				DisplayEventType.KEY_PRESSED);
-		addEventHandler(defaultDisplayEventHandler,
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
 				DisplayEventType.KEY_RELEASED);
-		addEventHandler(defaultDisplayEventHandler,
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
 				DisplayEventType.DESTROY_NOTIFY);
-		addEventHandler(defaultDisplayEventHandler,
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
 				DisplayEventType.UNMAP_NOTIFY);
-		addEventHandler(defaultDisplayEventHandler,
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
 				DisplayEventType.MOUSE_ENTER);
-		addEventHandler(defaultDisplayEventHandler,
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
 				DisplayEventType.MOUSE_LEAVE);
-		addEventHandler(defaultDisplayEventHandler,
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
 				DisplayEventType.PROPERTY_CHANGED);
-		addEventHandler(defaultDisplayEventHandler,
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
 				DisplayEventType.FOCUS_GAIN_NOTIFY);
-		addEventHandler(defaultDisplayEventHandler,
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
 				DisplayEventType.FOCUS_LOST_NOTIFY);
-		addEventHandler(defaultDisplayEventHandler, DisplayEventType.MAP_NOTIFY);
-		addEventHandler(defaultDisplayEventHandler,
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
+				DisplayEventType.MAP_NOTIFY);
+		this.displayEventEmitter.addEventHandler(defaultDisplayEventHandler,
 				DisplayEventType.CONFIGURE_NOTIFY);
 	}
 
@@ -160,20 +159,26 @@ final class DisplayEventDispatcher extends EventBus implements Runnable {
 	}
 
 	private void createNewClientWhenNoEventManagers(final DisplayEvent event) {
-		final List<WeakReference<EventManager>> eventManagers = this.eventManagers
+		final List<WeakReference<EventManager>> eventManagersByEventSource = this.eventManagers
 				.get(event.getEventSource());
 
 		final DisplayEventSource eventSource = event.getEventSource();
 
-		if (eventManagers.isEmpty()
-				&& (eventSource instanceof PlatformRenderArea)) {
-			// This will create & register the clientwindow if it doesnt exist
-			// yet
-			getManagedDisplay().getClientWindow(
+		if (((eventManagersByEventSource == null) || eventManagersByEventSource
+				.isEmpty()) && (eventSource instanceof PlatformRenderArea)) {
+			final ClientWindow client = new ClientWindow(this.managedDisplay,
 					(PlatformRenderArea) eventSource);
+			notifyClientCreatedHandlers(client);
+			client.fireEvent(event);
+		} else {
+			doDefaultEventHandlingForDisplayEvent(event);
 		}
+	}
 
-		doDefaultEventHandlingForDisplayEvent(event);
+	private void notifyClientCreatedHandlers(final ClientWindow clientWindow) {
+		for (final ClientCreatedHandler clientCreatedHandler : this.clientCreatedHandlers) {
+			clientCreatedHandler.handleCreatedClient(clientWindow);
+		}
 	}
 
 	@Override
@@ -208,7 +213,7 @@ final class DisplayEventDispatcher extends EventBus implements Runnable {
 	 *            True to wait for a new event to become available. False to
 	 *            continue without dispatching an event.
 	 */
-	private void dispatchNextEvent(final boolean block) {
+	void dispatchNextEvent(final boolean block) {
 		if (!block && this.display.isMasterQueueEmpty()) {
 			return;
 		}
@@ -220,9 +225,9 @@ final class DisplayEventDispatcher extends EventBus implements Runnable {
 
 			DisplayEventDispatcher.LOGGER.debug(String.format(
 					DisplayEventDispatcher.DISPLAYEVENT_LOGMESSAGE,
-					displayEvent, getManagedDisplay()));
+					displayEvent, this.managedDisplay));
 
-			fireEvent(displayEvent);
+			this.displayEventEmitter.fireEvent(displayEvent);
 		}
 	}
 
@@ -255,5 +260,24 @@ final class DisplayEventDispatcher extends EventBus implements Runnable {
 			list.add(eventManagerReference);
 			this.eventManagers.put(forSource, list);
 		}
+	}
+
+	void addDisplayEventHandler(
+			final DisplayEventHandler<? extends DisplayEvent> displayEventHandler) {
+		this.displayEventEmitter.addTypedEventHandler(displayEventHandler);
+	}
+
+	void removeDisplayEventHandler(
+			final DisplayEventHandler<? extends DisplayEvent> displayEventHandler) {
+		this.displayEventEmitter.removeTypedEventHandler(displayEventHandler);
+	}
+
+	void addClientCreatedHandler(final ClientCreatedHandler clientCreatedHandler) {
+		this.clientCreatedHandlers.add(clientCreatedHandler);
+	}
+
+	void removeClientCreatedHandler(
+			final ClientCreatedHandler clientCreatedHandler) {
+		this.clientCreatedHandlers.remove(clientCreatedHandler);
 	}
 }

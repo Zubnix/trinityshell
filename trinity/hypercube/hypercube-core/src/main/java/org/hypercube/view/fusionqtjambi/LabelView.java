@@ -3,13 +3,13 @@ package org.hypercube.view.fusionqtjambi;
 import org.fusion.qt.painter.QFusionPaintCall;
 import org.hydrogen.api.paint.PaintContext;
 import org.hyperdrive.api.widget.PaintInstruction;
-import org.hyperdrive.widget.Label;
+import org.hyperdrive.widget.BaseLabel;
 
 import com.trolltech.qt.core.Qt.WindowType;
 import com.trolltech.qt.gui.QLabel;
 import com.trolltech.qt.gui.QWidget;
 
-public class LabelView extends WidgetView implements Label.View {
+public class LabelView extends WidgetView implements BaseLabel.View {
 
 	@Override
 	public PaintInstruction<Void> onTextUpdate(final String name,

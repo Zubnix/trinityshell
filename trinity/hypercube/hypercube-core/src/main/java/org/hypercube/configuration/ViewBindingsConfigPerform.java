@@ -8,21 +8,21 @@ import org.hypercube.view.fusionqtjambi.KeyDrivenMenuView;
 import org.hypercube.view.fusionqtjambi.LabelView;
 import org.hypercube.view.fusionqtjambi.RealRootView;
 import org.hypercube.view.fusionqtjambi.WidgetView;
+import org.hyperdrive.api.widget.ViewBinder;
 import org.hyperdrive.widget.BaseButton;
 import org.hyperdrive.widget.BaseClientManager;
 import org.hyperdrive.widget.BaseClientManager.ClientManagerLabel;
 import org.hyperdrive.widget.ClientNameLabel;
-import org.hyperdrive.widget.CloseButton;
-import org.hyperdrive.widget.DragButton;
-import org.hyperdrive.widget.HideButton;
+import org.hyperdrive.widget.BaseCloseButton;
+import org.hyperdrive.widget.BaseDragButton;
+import org.hyperdrive.widget.BaseHideButton;
 import org.hyperdrive.widget.KeyDrivenAppLauncher;
-import org.hyperdrive.widget.KeyDrivenMenu;
-import org.hyperdrive.widget.Label;
-import org.hyperdrive.widget.MaximizeButton;
-import org.hyperdrive.widget.RealRoot;
+import org.hyperdrive.widget.BaseKeyDrivenMenu;
+import org.hyperdrive.widget.BaseLabel;
+import org.hyperdrive.widget.BaseMaximizeButton;
+import org.hyperdrive.widget.BaseRoot;
 import org.hyperdrive.widget.ResizeButton;
-import org.hyperdrive.widget.ViewBinder;
-import org.hyperdrive.widget.VirtualRoot;
+import org.hyperdrive.widget.BaseVirtualRoot;
 import org.hyperdrive.widget.BaseWidget;
 
 public class ViewBindingsConfigPerform implements Runnable {
@@ -36,15 +36,15 @@ public class ViewBindingsConfigPerform implements Runnable {
 				ClientManagerLabelView.class);
 		ViewBinder.bindView(ClientNameLabel.View.class, LabelView.class);
 		ViewBinder.bindView(CloseButton.View.class, ButtonView.class);
-		ViewBinder.bindView(DragButton.View.class, ButtonView.class);
+		ViewBinder.bindView(BaseDragButton.View.class, ButtonView.class);
 		ViewBinder.bindView(HideButton.View.class, ButtonView.class);
 		ViewBinder.bindView(KeyDrivenAppLauncher.View.class,
 				KeyDrivenMenuView.class);
-		ViewBinder.bindView(KeyDrivenMenu.View.class, KeyDrivenMenuView.class);
-		ViewBinder.bindView(Label.View.class, LabelView.class);
-		ViewBinder.bindView(MaximizeButton.View.class, ButtonView.class);
-		ViewBinder.bindView(RealRoot.View.class, RealRootView.class);
-		ViewBinder.bindView(ResizeButton.View.class, ButtonView.class);
+		ViewBinder.bindView(BaseKeyDrivenMenu.View.class, KeyDrivenMenuView.class);
+		ViewBinder.bindView(BaseLabel.View.class, LabelView.class);
+		ViewBinder.bindView(BaseMaximizeButton.View.class, ButtonView.class);
+		ViewBinder.bindView(BaseRoot.View.class, RealRootView.class);
+		ViewBinder.bindView(BaseResizeButton.View.class, ButtonView.class);
 		ViewBinder.bindView(VirtualRoot.View.class, WidgetView.class);
 		ViewBinder.bindView(BaseWidget.View.class, WidgetView.class);
 	}

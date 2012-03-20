@@ -16,9 +16,10 @@
 package org.hyperdrive.widget;
 
 import org.hydrogen.api.display.event.ButtonNotifyEvent;
-import org.hydrogen.api.display.event.DisplayEventType;
-import org.hydrogen.api.event.EventHandler;
+import org.hyperdrive.api.core.ManagedDisplay;
+import org.hyperdrive.api.core.event.MouseButtonReleasedHandler;
 import org.hyperdrive.api.widget.Button;
+import org.hyperdrive.api.widget.HasView;
 
 //TODO documentation
 /**
@@ -27,6 +28,7 @@ import org.hyperdrive.api.widget.Button;
  * @since 1.0
  * 
  */
+@HasView(Button.View.class)
 public class BaseButton extends BaseWidget implements Button {
 
 	@Override
@@ -35,24 +37,16 @@ public class BaseButton extends BaseWidget implements Button {
 	}
 
 	@Override
-	protected void init(final BaseWidget indirectParent) {
-		super.init(indirectParent);
-		this.addEventHandler(new EventHandler<ButtonNotifyEvent>() {
-			@Override
-			public void handleEvent(final ButtonNotifyEvent event) {
-				getView().mouseButtonPressed(event.getInput());
-				BaseButton.this.onMouseButtonPressed(event.getInput());
-			}
-		}, DisplayEventType.BUTTON_PRESSED);
-
-		// TODO
-		getManagedDisplay().addEventHandler(
-				new EventHandler<ButtonNotifyEvent>() {
+	protected void setManagedDisplay(final ManagedDisplay managedDisplay) {
+		super.setManagedDisplay(managedDisplay);
+		getManagedDisplay().addDisplayEventHandler(
+				new MouseButtonReleasedHandler() {
 					@Override
 					public void handleEvent(final ButtonNotifyEvent event) {
 						getView().mouseButtonReleased(event.getInput());
 						BaseButton.this.onMouseButtonReleased(event.getInput());
+
 					}
-				}, DisplayEventType.BUTTON_RELEASED);
+				});
 	}
 }

@@ -23,23 +23,17 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.hydrogen.api.display.input.SpecialKeyName;
-import org.hyperdrive.api.widget.ViewDefinition;
 
 // TODO documentation
 /**
- * A <code>KeyDrivenAppLauncher</code> is a {@link KeyDrivenMenu} for launching
- * applications.
+ * A <code>KeyDrivenAppLauncher</code> is a {@link BaseKeyDrivenMenu} for
+ * launching applications.
  * 
  * @author Erik De Rijcke
  * @since 1.0
  * 
  */
-public class KeyDrivenAppLauncher extends KeyDrivenMenu {
-
-	@ViewDefinition
-	public interface View extends KeyDrivenMenu.View {
-
-	}
+public class KeyDrivenAppLauncher extends BaseKeyDrivenMenu {
 
 	private static final String PATH = "PATH";
 
@@ -60,7 +54,7 @@ public class KeyDrivenAppLauncher extends KeyDrivenMenu {
 	}
 
 	@Override
-	public List<String> getChoices() {
+	public List<String> getAllChoices() {
 		final List<String> apps = new ArrayList<String>(250);
 		final String pathValue = System.getenv().get(KeyDrivenAppLauncher.PATH);
 		final StringTokenizer pathParser = new StringTokenizer(pathValue, ":");

@@ -134,7 +134,7 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 		}
 	}
 
-	protected org.hydrogen.api.geometry.Coordinates calculatePositionRelativeToTypedArea(
+	protected Coordinates calculatePositionRelativeToTypedArea(
 			final GeoTransformableRectangle directParent,
 			final int directRelativeX, final int directRelativeY) {
 
@@ -147,9 +147,10 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 		final int newAbsX = directParent.getAbsoluteX() + directRelativeX;
 		final int newAbsY = directParent.getAbsoluteY() + directRelativeY;
 
-		// TODO remove realroot dependency
-		final Coordinates absCorParent = getAreaManipulator(
-				getManipulatedArea().getManagedDisplay().getRoot())
+		// TODO remove realroot dependency somehow
+		final RenderArea root = getManipulatedArea().getManagedDisplay()
+				.getRoot();
+		final Coordinates absCorParent = getAreaManipulator(root)
 				.translateCoordinates(getAreaPeer(parentRenderArea), 0, 0);
 
 		final int newRelX = newAbsX - absCorParent.getX();
@@ -159,8 +160,6 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 				newRelX, newRelY);
 
 		return corRelativeToTypedParent;
-
-		// return null;
 	}
 
 	/**

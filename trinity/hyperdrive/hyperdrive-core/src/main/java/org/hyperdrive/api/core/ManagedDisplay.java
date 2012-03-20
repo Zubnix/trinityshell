@@ -1,13 +1,15 @@
 package org.hyperdrive.api.core;
 
 import org.hydrogen.api.display.Display;
-import org.hydrogen.api.display.PlatformRenderArea;
+import org.hydrogen.api.display.event.DisplayEvent;
 import org.hydrogen.api.display.event.DisplayEventSource;
 import org.hydrogen.api.event.EventManager;
 import org.hydrogen.api.paint.PainterFactory;
+import org.hyperdrive.api.core.event.ClientCreatedHandler;
+import org.hyperdrive.api.core.event.DisplayEventHandler;
+import org.hyperdrive.api.input.ManagedKeyboard;
 import org.hyperdrive.api.widget.Widget;
-import org.hyperdrive.input.ManagedKeyboard;
-import org.hyperdrive.input.ManagedMouse;
+import org.hyperdrive.input.BaseManagedMouse;
 
 public interface ManagedDisplay {
 
@@ -15,7 +17,7 @@ public interface ManagedDisplay {
 
 	ManagedKeyboard getManagedKeyboard();
 
-	ManagedMouse getManagedMouse();
+	BaseManagedMouse getManagedMouse();
 
 	PainterFactory getPainterFactory();
 
@@ -25,16 +27,22 @@ public interface ManagedDisplay {
 
 	Widget getRoot();
 
-	RenderArea getClientWindow(PlatformRenderArea platformRenderArea);
+	void addDisplayEventHandler(
+			DisplayEventHandler<? extends DisplayEvent> displayEventHandler);
 
-	void addEventManagerForDisplayEventSource(EventManager manager,
-			DisplayEventSource forSource);
+	void removeDisplayEventHandler(
+			DisplayEventHandler<? extends DisplayEvent> displayEventHandler);
 
-	// this method is not strictly needed if we implement the backing
-	// eventmanager
-	// collection as a weak collection.
-	// void removeDisplayEventManager(EventManager manager);
+	void addDisplayEventManager(EventManager manager,
+			DisplayEventSource forDisplayEventSource);
 
-	// Collection<EventManager> getEventManagersForDisplayEventSource(
-	// DisplayEventSource forSource);
+	// TODO void removeDisplayEventManager(..)?
+
+	void deliverNextDisplayEvent(boolean block);
+
+	void addClientCreatedHandler(ClientCreatedHandler clientCreatedHandler);
+
+	void removeClientCreatedHandler(ClientCreatedHandler clientCreatedHandler);
+
+	// TODO be able to listen for client created events
 }

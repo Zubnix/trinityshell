@@ -50,8 +50,8 @@ import org.hyperdrive.api.core.ManagedDisplay;
 import org.hyperdrive.api.core.RenderArea;
 import org.hyperdrive.api.geo.GeoEvent;
 import org.hyperdrive.api.geo.GeoOperation;
-import org.hyperdrive.core.RenderAreaPropertiesManipulator;
-import org.hyperdrive.core.RenderAreaPropertyChangedEvent;
+import org.hyperdrive.core.BasePropertyManipulator;
+import org.hyperdrive.core.BasePropertyChangedEvent;
 import org.hyperdrive.protocol.AbstractDesktopProtocol;
 
 //TODO documentation
@@ -68,10 +68,10 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 	private static final String ERROR_PROP_MANIP_NOT_FOUND = "Properties manipulator for client %s not found. Did you register the client with the protocol?";
 
 	private abstract class PropertyListener<P extends PropertyInstance, T extends XPropertyXAtom<P>>
-			implements EventHandler<RenderAreaPropertyChangedEvent<T>> {
+			implements EventHandler<BasePropertyChangedEvent<T>> {
 
 		@Override
-		public void handleEvent(final RenderAreaPropertyChangedEvent<T> event) {
+		public void handleEvent(final BasePropertyChangedEvent<T> event) {
 
 			final RenderArea client = event.getRenderArea();
 			final PlatformRenderArea platformRenderArea = client
@@ -166,13 +166,13 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 	// ewmh
 	private final NetWmIconInterpreter netWmIconInterpreter;
 
-	private final Map<RenderArea, RenderAreaPropertiesManipulator> clientPropertiesManipulators;
+	private final Map<RenderArea, BasePropertyManipulator> clientPropertiesManipulators;
 
 	static final String EMPTY_STRING = "";
 
 	public XDesktopProtocol(final ManagedDisplay managedDisplay) {
 		this.inputPreferenceParser = new InputPreferenceParser();
-		this.clientPropertiesManipulators = new HashMap<RenderArea, RenderAreaPropertiesManipulator>();
+		this.clientPropertiesManipulators = new HashMap<RenderArea, BasePropertyManipulator>();
 
 		this.display = (XDisplay) managedDisplay.getDisplay();
 
@@ -198,7 +198,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 
 	@Override
 	public void registerClient(final RenderArea client) {
-		final RenderAreaPropertiesManipulator propertiesManipulator = new RenderAreaPropertiesManipulator(
+		final BasePropertyManipulator propertiesManipulator = new BasePropertyManipulator(
 				client);
 		this.clientPropertiesManipulators.put(client, propertiesManipulator);
 		readProtocolProperties(client, propertiesManipulator);
@@ -253,7 +253,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 		// typing after an focus transfer, all the input will be send to the
 		// correct client.
 
-		final RenderAreaPropertiesManipulator propertiesManipulator = this.clientPropertiesManipulators
+		final BasePropertyManipulator propertiesManipulator = this.clientPropertiesManipulators
 				.get(client);
 		if (propertiesManipulator == null) {
 			XDesktopProtocol.LOGGER.error(String.format(
@@ -324,7 +324,7 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 	}
 
 	protected void readProtocolProperties(final RenderArea client,
-			final RenderAreaPropertiesManipulator propertiesManipulator) {
+			final BasePropertyManipulator propertiesManipulator) {
 
 		final WmHintsInstance wmHintsInstance = propertiesManipulator
 				.getPropertyValue(IcccmAtoms.WM_HINTS_ATOM_NAME);
@@ -355,21 +355,21 @@ public final class XDesktopProtocol extends AbstractDesktopProtocol {
 
 	protected void installListeners(final RenderArea client) {
 		client.addEventHandler(new WmHintsListener(),
-				RenderAreaPropertyChangedEvent
+				BasePropertyChangedEvent
 						.TYPE(IcccmAtoms.WM_HINTS_ATOM_NAME));
 		client.addEventHandler(new WmNormalHintsListener(),
-				RenderAreaPropertyChangedEvent
+				BasePropertyChangedEvent
 						.TYPE(IcccmAtoms.WM_NORMAL_HINTS_ATOM_NAME));
 		client.addEventHandler(new WmNameListener(),
-				RenderAreaPropertyChangedEvent
+				BasePropertyChangedEvent
 						.TYPE(IcccmAtoms.WM_NAME_ATOM_NAME));
 		client.addEventHandler(new WmClassListener(),
-				RenderAreaPropertyChangedEvent
+				BasePropertyChangedEvent
 						.TYPE(IcccmAtoms.WM_CLASS_ATOM_NAME));
 		client.addEventHandler(new ClientVisibilityListener(),
 				GeoOperation.VISIBILITY);
 		client.addEventHandler(new NetWmIconListener(),
-				RenderAreaPropertyChangedEvent
+				BasePropertyChangedEvent
 						.TYPE(EwmhAtoms.NET_WM_ICON_ATOM_NAME));
 	}
 }

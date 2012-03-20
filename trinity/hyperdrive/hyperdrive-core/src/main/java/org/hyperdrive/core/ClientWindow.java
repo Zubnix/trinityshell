@@ -52,11 +52,13 @@ final class ClientWindow extends AbstractRenderArea {
 	 * 
 	 */
 	ClientWindow(final ManagedDisplay managedDisplay,
-			final PlatformRenderArea clientWindow) {
-		super(managedDisplay, clientWindow);
+			final PlatformRenderArea platformRenderArea) {
+		super();
+
+		setManagedDisplay(managedDisplay);
+		setPlatformRenderArea(platformRenderArea);
 
 		this.renderAreaGeoExecutor = new RenderAreaGeoExecutor(this);
-		// TODO real root or fake root?
 		setParent(getManagedDisplay().getRoot());
 		this.doUpdateParentValue(false);
 		initEventHandlers();
@@ -75,11 +77,9 @@ final class ClientWindow extends AbstractRenderArea {
 		// move all event handles to super class render area?
 		super.initEventHandlers();
 		// Display event handlers
-
 		this.addEventHandler(new EventHandler<MapRequestEvent>() {
 			@Override
 			public void handleEvent(final MapRequestEvent event) {
-
 				ClientWindow.this.handleMapRequest(event);
 
 			}

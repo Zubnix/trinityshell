@@ -16,9 +16,9 @@
 package org.hydrogen.event;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.hydrogen.api.event.Event;
@@ -67,8 +67,7 @@ public class EventBus implements EventHandlerManager, EventManager {
 	 * 
 	 */
 	public EventBus() {
-		// TODO we want event handlers to be weak references.
-		this.eventHandlerSwitch = new HashMap<Type, List<WeakReference>>();
+		this.eventHandlerSwitch = new ConcurrentHashMap<Type, List<WeakReference>>();
 	}
 
 	@Override
@@ -116,6 +115,10 @@ public class EventBus implements EventHandlerManager, EventManager {
 			for (final WeakReference weakRef : eventHandlersList) {
 				final EventHandler eventHandler = (EventHandler) weakRef.get();
 				if ((eventHandler == null)) {
+					// instead of an immediate removal, we might want to keep
+					// track of weakrefs that are no longer used and clean them
+					// up all at once, eg. when a certain limit is reached or
+					// during regular intervals.
 					eventHandlersList.remove(weakRef);
 				} else {
 					eventHandler.handleEvent(event);

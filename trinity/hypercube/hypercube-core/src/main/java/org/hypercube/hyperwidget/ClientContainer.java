@@ -15,7 +15,7 @@
  */
 package org.hypercube.hyperwidget;
 
-import org.hyperdrive.api.widget.ViewDefinition;
+import org.hyperdrive.api.widget.HasView;
 import org.hyperdrive.widget.BaseWidget;
 
 // TODO documentation
@@ -27,7 +27,7 @@ import org.hyperdrive.widget.BaseWidget;
  */
 public class ClientContainer extends BaseWidget {
 
-	@ViewDefinition
+	@HasView
 	public interface View extends BaseWidget.View {
 
 	}

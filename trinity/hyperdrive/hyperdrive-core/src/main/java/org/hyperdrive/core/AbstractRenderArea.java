@@ -138,31 +138,6 @@ public abstract class AbstractRenderArea extends
 	}
 
 	/**
-	 * Create new <code>AbstractRenderArea</code> that will live on the given
-	 * <code>ManagedDisplay</code>.
-	 * <p>
-	 * The created <code>AbstractRenderArea</code> will be backed by the given
-	 * <code>PlatformRenderArea</code>.
-	 * <p>
-	 * The given <code>PlatformRenderArea</code>'s <code>Display</code> variable
-	 * must be the same as the given <code>ManagedDisplay</code>'s
-	 * <code>Display</code> variable. Failure to do so will result in unexpected
-	 * behavior.
-	 * 
-	 * @param managedDisplay
-	 *            A {@link ManagedDisplay}.
-	 * @param platformRenderArea
-	 *            A {@link PlatformRenderArea}.
-	 * 
-	 */
-	protected AbstractRenderArea(final ManagedDisplay managedDisplay,
-			final PlatformRenderArea platformRenderArea) {
-		initBasics();
-		setManagedDisplay(managedDisplay);
-		setPlatformRenderArea(platformRenderArea);
-	}
-
-	/**
 	 * Set the minimum height. The minimum height is guaranteed to be respected.
 	 * A smaller height than the minimum height can be requested and executed
 	 * but will result in the minimum height being set.
@@ -264,7 +239,8 @@ public abstract class AbstractRenderArea extends
 	 * </ul>
 	 */
 	protected void initEventHandlers() {
-		this.addEventHandler(new EventHandler<DestroyNotifyEvent>() {
+		// TODO use typed event handlers.
+		addEventHandler(new EventHandler<DestroyNotifyEvent>() {
 			@Override
 			public void handleEvent(final DestroyNotifyEvent event) {
 				AbstractRenderArea.this.handleDestroyNotify(event);
@@ -274,7 +250,7 @@ public abstract class AbstractRenderArea extends
 		addEventHandler(new EventHandler<PropertyChangedNotifyEvent>() {
 			@Override
 			public void handleEvent(final PropertyChangedNotifyEvent event) {
-				final RenderAreaPropertyChangedEvent<Property<? extends PropertyInstance>> renderAreaPropertyChangedEvent = new RenderAreaPropertyChangedEvent<Property<? extends PropertyInstance>>(
+				final BasePropertyChangedEvent<Property<? extends PropertyInstance>> renderAreaPropertyChangedEvent = new BasePropertyChangedEvent<Property<? extends PropertyInstance>>(
 						AbstractRenderArea.this, event.isPropertyDeleted(),
 						event.getChangedProperty());
 				fireEvent(renderAreaPropertyChangedEvent);
@@ -293,21 +269,6 @@ public abstract class AbstractRenderArea extends
 		}
 		// unregister();
 	}
-
-	// /**
-	// * Remove this <code>AbstractRenderArea</code> from the list of
-	// * <code>AbstractRenderArea</code>s that are known by the
-	// * <code>ManagedDisplay</code>.
-	// * <p>
-	// * A <code>ManagedDisplay</code> keeps track of
-	// * <code>AbstractRenderarea</code>s so it can deliver {@link
-	// DisplayEvent}s
-	// * to it. Unregistering this object means that it will no longer receive
-	// * these <code>Event</code>s.
-	// */
-	// protected void unregister() {
-	// getManagedDisplay().removeDisplayEventManager(manager);
-	// }
 
 	/**
 	 * 
@@ -468,6 +429,7 @@ public abstract class AbstractRenderArea extends
 	protected void setPlatformRenderArea(
 			final PlatformRenderArea platformRenderArea) {
 		this.platformRenderArea = platformRenderArea;
+		this.managedDisplay.addDisplayEventManager(this, platformRenderArea);
 	}
 
 	/**

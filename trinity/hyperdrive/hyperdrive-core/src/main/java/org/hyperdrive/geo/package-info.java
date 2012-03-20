@@ -70,7 +70,7 @@
  * {@link org.hyperdrive.core.ClientWindow} +
  * {@link org.hyperdrive.core.RenderAreaGeoExecutor} and
  * {@link org.hyperdrive.api.widget.Widget} +
- * {@link org.hyperdrive.widget.WidgetGeoExecutor}
+ * {@link org.hyperdrive.widget.BaseWidgetGeoExecutor}
  * 
  * @author Erik De Rijcke
  * @since 1.0

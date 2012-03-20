@@ -171,8 +171,7 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 
 		@Override
 		public GeoOperation getType() {
-			// TODO Auto-generated method stub
-			return null;
+			return GeoOperation.CHILD_LEFT;
 		}
 	}
 

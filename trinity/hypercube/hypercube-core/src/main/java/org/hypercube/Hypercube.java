@@ -22,7 +22,7 @@ import java.net.URL;
 import org.fusion.qt.x11.QFusionDisplayConfiguration;
 import org.hydrogen.api.config.DisplayConfiguration;
 import org.hyperdrive.api.core.ManagedDisplay;
-import org.hyperdrive.core.DisplayManager;
+import org.hyperdrive.core.BaseDisplayManager;
 
 import com.martiansoftware.jsap.JSAPException;
 
@@ -176,7 +176,7 @@ public class Hypercube {
 
 		logicLoader.preInit(dc);
 
-		final ManagedDisplay managedDisplay = DisplayManager.instance()
+		final ManagedDisplay managedDisplay = BaseDisplayManager.instance()
 				.getNewManagedDisplay(dc);
 
 		logicLoader.postInit(managedDisplay);

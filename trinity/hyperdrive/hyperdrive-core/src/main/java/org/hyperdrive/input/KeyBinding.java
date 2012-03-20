@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.hydrogen.api.display.event.DisplayEventType;
 import org.hydrogen.api.display.event.KeyNotifyEvent;
 import org.hydrogen.api.display.input.InputModifierName;
 import org.hydrogen.api.display.input.InputModifiers;
@@ -28,10 +27,11 @@ import org.hydrogen.api.display.input.Key;
 import org.hydrogen.api.display.input.Modifier;
 import org.hydrogen.api.display.input.Momentum;
 import org.hydrogen.api.display.input.SpecialKeyName;
-import org.hydrogen.api.event.EventHandler;
 import org.hydrogen.display.input.BaseInputModifiers;
 import org.hydrogen.display.input.BaseKey;
 import org.hyperdrive.api.core.ManagedDisplay;
+import org.hyperdrive.api.core.event.KeyboardKeyPressedHandler;
+import org.hyperdrive.api.core.event.KeyboardKeyReleasedHandler;
 
 // TODO documentation
 /**
@@ -121,7 +121,7 @@ public abstract class KeyBinding {
 
 		final List<InputModifiers> validInputModifiersCombinations = new LinkedList<InputModifiers>();
 
-		final InputModifiers baseInputModifiers = getModKeyNames().length == 0 ? new BaseInputModifiers()
+		final InputModifiers inputModifiers = getModKeyNames().length == 0 ? new BaseInputModifiers()
 				: this.managedDisplay.getDisplay().getKeyBoard()
 						.modifiers(getModKeyNames());
 		if (ignoreOftenUsedModifiers) {
@@ -134,7 +134,7 @@ public abstract class KeyBinding {
 				final Modifier modifier = this.managedDisplay.getDisplay()
 						.getKeyBoard().modifier(ignoredModifier);
 
-				final int modifierMaskWithExtraModifier = baseInputModifiers
+				final int modifierMaskWithExtraModifier = inputModifiers
 						.getInputModifiersMask() & modifier.getModifierMask();
 				final BaseInputModifiers inputModifiersWithExtraModifier = new BaseInputModifiers(
 						modifierMaskWithExtraModifier);
@@ -143,46 +143,66 @@ public abstract class KeyBinding {
 			}
 
 		}
-		validInputModifiersCombinations.add(baseInputModifiers);
+		validInputModifiersCombinations.add(inputModifiers);
 
 		for (final Key validKey : validKeys) {
 			// install a keygrab
 			getManagedDisplay().getRoot().getPlatformRenderArea()
-					.catchKeyboardInput(validKey, baseInputModifiers);
+					.catchKeyboardInput(validKey, inputModifiers);
 
-			getManagedDisplay().addEventHandler(
-					new EventHandler<KeyNotifyEvent>() {
-						@Override
-						public void handleEvent(final KeyNotifyEvent event) {
-
-							final short eventKeyCode = (short) event.getInput()
-									.getKey().getKeyCode();
-							final short validKeyCode = (short) validKey
-									.getKeyCode();
-							final boolean gotValidKey = eventKeyCode == validKeyCode;
-
-							final int eventModifiersMask = event.getInput()
-									.getModifiers().getInputModifiersMask();
-							final int validEventModifiersMask = baseInputModifiers
-									.getInputModifiersMask();
-
-							final boolean gotValidModifiers = eventModifiersMask == validEventModifiersMask;
-
-							final Momentum eventMomentum = event.getInput()
-									.getMomentum();
-							final Momentum validMomentum = KeyBinding.this
-									.getMomentum();
-							final boolean gotValidMomentum = eventMomentum == validMomentum;
-
-							if (gotValidKey && gotValidModifiers
-									&& gotValidMomentum) {
-								KeyBinding.this.action();
+			if (getMomentum() == Momentum.STARTED) {
+				getManagedDisplay().addDisplayEventHandler(
+						new KeyboardKeyPressedHandler() {
+							@Override
+							public void handleEvent(final KeyNotifyEvent event) {
+								validateAction(inputModifiers, validKey, event);
 							}
-						}
-					},
-					getMomentum() == Momentum.STARTED ? DisplayEventType.KEY_PRESSED
-							: DisplayEventType.KEY_RELEASED, 0);
+						});
+			} else {
+				getManagedDisplay().addDisplayEventHandler(
+						new KeyboardKeyReleasedHandler() {
+							@Override
+							public void handleEvent(final KeyNotifyEvent event) {
+								validateAction(inputModifiers, validKey, event);
+							}
+						});
+			}
 
+			// getManagedDisplay()
+			// .addEventHandler(
+			// new EventHandler<KeyNotifyEvent>() {
+			// @Override
+			// public void handleEvent(
+			// final KeyNotifyEvent event) {
+			//
+			// }
+			// },
+			// getMomentum() == Momentum.STARTED ? DisplayEventType.KEY_PRESSED
+			// : DisplayEventType.KEY_RELEASED, 0);
+
+		}
+	}
+
+	private void validateAction(final InputModifiers inputModifiers,
+			final Key validKey, final KeyNotifyEvent event) {
+		final short eventKeyCode = (short) event.getInput().getKey()
+				.getKeyCode();
+		final short validKeyCode = (short) validKey.getKeyCode();
+		final boolean gotValidKey = eventKeyCode == validKeyCode;
+
+		final int eventModifiersMask = event.getInput().getModifiers()
+				.getInputModifiersMask();
+		final int validEventModifiersMask = inputModifiers
+				.getInputModifiersMask();
+
+		final boolean gotValidModifiers = eventModifiersMask == validEventModifiersMask;
+
+		final Momentum eventMomentum = event.getInput().getMomentum();
+		final Momentum validMomentum = KeyBinding.this.getMomentum();
+		final boolean gotValidMomentum = eventMomentum == validMomentum;
+
+		if (gotValidKey && gotValidModifiers && gotValidMomentum) {
+			KeyBinding.this.action();
 		}
 	}
 

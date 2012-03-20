@@ -6,11 +6,11 @@ import org.fusion.qt.painter.QFusionPaintCall;
 import org.hydrogen.api.paint.PaintContext;
 import org.hypercube.view.fusionqtjambi.visual.KeyDrivenMenuVisual;
 import org.hyperdrive.api.widget.PaintInstruction;
-import org.hyperdrive.widget.KeyDrivenMenu;
+import org.hyperdrive.widget.BaseKeyDrivenMenu;
 
 import com.trolltech.qt.gui.QWidget;
 
-public class KeyDrivenMenuView extends WidgetView implements KeyDrivenMenu.View {
+public class KeyDrivenMenuView extends WidgetView implements BaseKeyDrivenMenu.View {
 
 	public static final PaintInstruction<Void> CLEAR_INSTRUCTION = new PaintInstruction<Void>(
 			new QFusionPaintCall<Void, KeyDrivenMenuVisual>() {

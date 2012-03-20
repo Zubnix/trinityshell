@@ -20,14 +20,22 @@ import java.util.concurrent.Future;
 
 import org.hydrogen.api.display.PlatformRenderArea;
 import org.hydrogen.api.display.ResourceHandle;
+import org.hydrogen.api.display.event.ButtonNotifyEvent;
+import org.hydrogen.api.display.event.KeyNotifyEvent;
 import org.hydrogen.api.display.input.KeyboardInput;
 import org.hydrogen.api.display.input.MouseInput;
 import org.hydrogen.api.paint.PaintCall;
 import org.hydrogen.api.paint.Painter;
 import org.hyperdrive.api.core.ManagedDisplay;
+import org.hyperdrive.api.core.event.KeyboardKeyPressedHandler;
+import org.hyperdrive.api.core.event.KeyboardKeyReleasedHandler;
+import org.hyperdrive.api.core.event.MouseButtonPressedHandler;
+import org.hyperdrive.api.core.event.MouseButtonReleasedHandler;
 import org.hyperdrive.api.geo.GeoManager;
 import org.hyperdrive.api.geo.GeoTransformableRectangle;
-import org.hyperdrive.api.widget.ViewDefinition;
+import org.hyperdrive.api.widget.HasView;
+import org.hyperdrive.api.widget.PaintInstruction;
+import org.hyperdrive.api.widget.ViewBinder;
 import org.hyperdrive.api.widget.Widget;
 import org.hyperdrive.core.AbstractRenderArea;
 
@@ -71,14 +79,14 @@ import org.hyperdrive.core.AbstractRenderArea;
  * @since 1.0
  * 
  */
+@HasView(Widget.View.class)
 public class BaseWidget extends AbstractRenderArea implements Widget {
 
-	private final View view = ViewBinder.createView(this,
-			getViewDefinitionClass());
+	private final View view = ViewBinder.createView(this, getViewClass());
 
 	private Painter painter;
 
-	private final WidgetGeoExecutor geoExecutor;
+	private final BaseWidgetGeoExecutor geoExecutor;
 	private GeoManager geoManager;
 
 	/**
@@ -88,38 +96,18 @@ public class BaseWidget extends AbstractRenderArea implements Widget {
 	 * 
 	 */
 	public BaseWidget() {
-		this.geoExecutor = new WidgetGeoExecutor(this);
+		this.geoExecutor = new BaseWidgetGeoExecutor(this);
 	}
 
-	@SuppressWarnings("unchecked")
-	protected Class<? extends View> getViewDefinitionClass() {
-		// this code will probably not work when different classloaders are
-		// used.
-
+	protected Class<? extends View> getViewClass() {
 		final Class<? extends BaseWidget> widgetClass = getClass();
-		final Class<?>[] declaredClasses = widgetClass.getClasses();
+		final HasView hasView = widgetClass.getAnnotation(HasView.class);
 
-		Class<? extends View> viewClass = null;
-
-		// find only the view interface defined by this widget, if none is
-		// defined, fall back to the superclass view.
-		for (final Class<?> declaredClass : declaredClasses) {
-			if ((declaredClass.getAnnotation(ViewDefinition.class) != null)
-					&& BaseWidget.View.class.isAssignableFrom(declaredClass)
-					&& (widgetClass == declaredClass.getDeclaringClass())) {
-				viewClass = (Class<? extends View>) declaredClass;
-				break;
-			} else if ((declaredClass.getAnnotation(ViewDefinition.class) != null)
-					&& BaseWidget.View.class.isAssignableFrom(declaredClass)) {
-				viewClass = (Class<? extends View>) declaredClass;
-			}
-		}
-
-		if (viewClass == null) {
+		if (hasView == null) {
 			// TODO log error. Paintable does not have a viewdefinition!
 		}
 
-		return viewClass;
+		return hasView.value();
 	}
 
 	@Override
@@ -146,8 +134,37 @@ public class BaseWidget extends AbstractRenderArea implements Widget {
 	@Override
 	protected void setManagedDisplay(final ManagedDisplay managedDisplay) {
 		super.setManagedDisplay(managedDisplay);
-		// TODO
-		// managedDisplay.registerEventBus(this, this);
+	}
+
+	@Override
+	protected void initEventHandlers() {
+		super.initEventHandlers();
+
+		addTypedEventHandler(new MouseButtonPressedHandler() {
+			@Override
+			public void handleEvent(final ButtonNotifyEvent event) {
+				onMouseButtonPressed(event.getInput());
+			}
+		});
+		addTypedEventHandler(new MouseButtonReleasedHandler() {
+			@Override
+			public void handleEvent(final ButtonNotifyEvent event) {
+				onMouseButtonReleased(event.getInput());
+			}
+		});
+		addTypedEventHandler(new KeyboardKeyPressedHandler() {
+
+			@Override
+			public void handleEvent(final KeyNotifyEvent event) {
+				onKeyboardPressed(event.getInput());
+			}
+		});
+		addTypedEventHandler(new KeyboardKeyReleasedHandler() {
+			@Override
+			public void handleEvent(final KeyNotifyEvent event) {
+				onKeyboardReleased(event.getInput());
+			}
+		});
 	}
 
 	/**
@@ -162,7 +179,6 @@ public class BaseWidget extends AbstractRenderArea implements Widget {
 	 *            back-end level.
 	 */
 	protected void init(final BaseWidget paintableParent) {
-
 		// we use the paintableParent to determine the managed display.
 		if (paintableParent != null) {
 			setManagedDisplay(paintableParent.getManagedDisplay());
@@ -170,8 +186,10 @@ public class BaseWidget extends AbstractRenderArea implements Widget {
 
 		// we pass the paintable parent to the back-end which can choose to do
 		// with it as it pleases.
-		final Future<ResourceHandle> renderAreaId = getView().doCreate(this,
-				isVisible(), paintableParent).getPaintResult();
+		final PaintInstruction<ResourceHandle> createInstruction = getView()
+				.doCreate(this, isVisible(), paintableParent);
+		final Future<ResourceHandle> futureResourceHandle = createInstruction
+				.getPaintResult();
 
 		PlatformRenderArea renderArea = null;
 		try {
@@ -180,7 +198,7 @@ public class BaseWidget extends AbstractRenderArea implements Widget {
 					.getDisplayPlatform()
 					.findPaintablePlatformRenderAreaFromId(
 							getManagedDisplay().getDisplay(),
-							renderAreaId.get());
+							futureResourceHandle.get());
 		} catch (final InterruptedException e) {
 			// TODO log widget creation interrupt error.
 			e.printStackTrace();
@@ -190,6 +208,7 @@ public class BaseWidget extends AbstractRenderArea implements Widget {
 		}
 
 		setPlatformRenderArea(renderArea);
+		getManagedDisplay().addDisplayEventManager(this, this);
 
 		// TODO
 		// getManagedDisplay().fireEvent(
@@ -214,31 +233,13 @@ public class BaseWidget extends AbstractRenderArea implements Widget {
 	}
 
 	@Override
-	public WidgetGeoExecutor getGeoExecutor() {
+	public BaseWidgetGeoExecutor getGeoExecutor() {
 		return this.geoExecutor;
 	}
 
 	@Override
 	public BaseWidget getParentPaintable() {
 		return findParentPaintable(getParent());
-	}
-
-	@Override
-	protected void setPlatformRenderArea(
-			final PlatformRenderArea platformRenderArea) {
-		// TODO this is more an X specific thing, create a more platform
-		// neutral mechanism/interface...
-
-		// override redirect is enabled so the widget bypasses any event
-		// creation on the native display. This is needed so that the widget
-		// is not mistaken as a client window. This should normally be done
-		// by the paint-back when creating the widget 'visual'. Enabling it
-		// here is thus more some kind of a safety precaution.
-		// platformRenderArea.overrideRedirect(true);
-
-		// platformRenderArea
-		// .propagateEvent(EventPropagator.REDIRECT_CHILD_WINDOW_GEOMTRY_CHANGES);
-		super.setPlatformRenderArea(platformRenderArea);
 	}
 
 	/**
@@ -263,18 +264,29 @@ public class BaseWidget extends AbstractRenderArea implements Widget {
 
 	@Override
 	public void onMouseButtonPressed(final MouseInput input) {
+		// overrideable by subclasses
+
 	}
 
 	@Override
 	public void onMouseButtonReleased(final MouseInput input) {
+		// overrideable by subclasses
 	}
 
 	@Override
 	public void onKeyboardPressed(final KeyboardInput input) {
+		// overrideable by subclasses
 	}
 
 	@Override
 	public void onKeyboardReleased(final KeyboardInput input) {
+		// overrideable by subclasses
 	}
 
+	@Override
+	protected void setPlatformRenderArea(
+			final PlatformRenderArea platformRenderArea) {
+		// repeated for package visibility
+		super.setPlatformRenderArea(platformRenderArea);
+	}
 }

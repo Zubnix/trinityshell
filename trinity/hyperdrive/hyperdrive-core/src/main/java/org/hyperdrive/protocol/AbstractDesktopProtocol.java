@@ -43,6 +43,6 @@ public abstract class AbstractDesktopProtocol implements DesktopProtocol {
 		this.protocolEventCache.updateCache(client, protocolEvent);
 		// TODO client should listen to the protocol, protocol should fire the
 		// event.
-		client.fireEvent(protocolEvent);
+		// client.fireEvent(protocolEvent);
 	}
 }

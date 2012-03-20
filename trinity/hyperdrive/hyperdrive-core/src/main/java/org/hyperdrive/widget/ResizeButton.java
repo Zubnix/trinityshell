@@ -16,29 +16,22 @@
 package org.hyperdrive.widget;
 
 import org.hydrogen.api.display.input.MouseInput;
-import org.hyperdrive.api.widget.ViewDefinition;
 
-// TODO create super push button class
 // TODO documentation
 /**
  * 
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ResizeButton extends DragButton {
-
-	@ViewDefinition
-	public interface View extends Button.View {
-
-	}
+public class ResizeButton extends BaseDragButton {
 
 	private int desiredWidth;
 	private int desiredHeight;
 
 	@Override
 	public void startDrag(final MouseInput input) {
-		this.desiredWidth = getTargetRenderArea().getWidth();
-		this.desiredHeight = getTargetRenderArea().getHeight();
+		this.desiredWidth = getBoundRectangle().getWidth();
+		this.desiredHeight = getBoundRectangle().getHeight();
 		super.startDrag(input);
 	}
 
@@ -47,12 +40,13 @@ public class ResizeButton extends DragButton {
 		this.desiredWidth += vectX;
 		this.desiredHeight += vectY;
 
-		getTargetRenderArea().setWidth(this.desiredWidth);
-		getTargetRenderArea().setHeight(this.desiredHeight);
+		getBoundRectangle().setWidth(this.desiredWidth);
+		getBoundRectangle().setHeight(this.desiredHeight);
 
+		// TODO use desktop protocol to automate this:
 		// use delay to sync with client as specified by ewmh
 		// _NET_WM_SYNC_REQUEST. implement this delay in the fusion-x11 package.
 
-		getTargetRenderArea().requestResize();
+		getBoundRectangle().requestResize();
 	}
 }

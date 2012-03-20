@@ -1,16 +1,15 @@
 package org.hyperdrive.api.input;
 
-import org.hydrogen.api.event.Type;
-import org.hyperdrive.api.core.ManagedDisplay;
+import org.hydrogen.api.event.EventManager;
 
 public interface InputDevice {
 	void grab();
-
-	Type[] getDeviceInputTypes();
 
 	void release();
 
 	boolean isGrabbed();
 
-	ManagedDisplay getManagedDisplay();
+	void addInputEventManager(EventManager inputEventManager);
+
+	void removeInputEventManager(EventManager inputEventManager);
 }

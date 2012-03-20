@@ -19,7 +19,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import org.hydrogen.api.display.Display;
-import org.hydrogen.api.display.PlatformRenderArea;
 import org.hydrogen.api.display.event.ButtonNotifyEvent;
 import org.hydrogen.api.display.event.ConfigureRequestEvent;
 import org.hydrogen.api.display.event.DestroyNotifyEvent;
@@ -36,11 +35,13 @@ import org.hydrogen.api.paint.PainterFactory;
 import org.hydrogen.display.EventPropagator;
 import org.hydrogen.event.EventBus;
 import org.hyperdrive.api.core.ManagedDisplay;
-import org.hyperdrive.api.core.RenderArea;
+import org.hyperdrive.api.core.event.ClientCreatedHandler;
+import org.hyperdrive.api.core.event.DisplayEventHandler;
+import org.hyperdrive.api.input.ManagedKeyboard;
 import org.hyperdrive.api.widget.Widget;
-import org.hyperdrive.input.ManagedKeyboard;
-import org.hyperdrive.input.ManagedMouse;
-import org.hyperdrive.widget.RealRoot;
+import org.hyperdrive.input.BaseManagedKeyboard;
+import org.hyperdrive.input.BaseManagedMouse;
+import org.hyperdrive.widget.BaseRoot;
 
 // TODO documentation
 /**
@@ -86,16 +87,13 @@ public class BaseManagedDisplay extends EventBus implements ManagedDisplay {
 
 	private final Display display;
 	private final DisplayEventDispatcher displayEventDispatcher;
-	private final ManagedMouse managedMouse;
+	private final BaseManagedMouse baseManagedMouse;
 	private final ManagedKeyboard managedKeyboard;
 	private final PainterFactory painterFactory;
 
-	// private final Map<DisplayEventSource, LinkedHashSet<EventBus>>
-	// eventConductorMap;
-	// private final Map<EventBus, DisplayEventSource> reverseEventConductorMap;
 	private final Executor managedDisplayEventExecutor;
-	private final WindowManagementInfo windowManagementInfo;
-	private final RealRoot root;
+	// private final WindowManagementInfo windowManagementInfo;
+	private final BaseRoot root;
 
 	/**
 	 * Wrap the given native <code>Display</code> implementation with the given
@@ -119,35 +117,29 @@ public class BaseManagedDisplay extends EventBus implements ManagedDisplay {
 	 */
 	public BaseManagedDisplay(final Display display) {
 		{
-			this.windowManagementInfo = new WindowManagementInfo(this);
+			// this.windowManagementInfo = new WindowManagementInfo(this);
 		}
 		{
 			this.painterFactory = display.getPainterFactory();
-			// this.eventConductorMap = new HashMap<DisplayEventSource,
-			// LinkedHashSet<EventBus>>(
-			// 30);
-			// this.reverseEventConductorMap = new HashMap<EventBus,
-			// DisplayEventSource>(
-			// 60);
 			this.display = display;
 			this.managedDisplayEventExecutor = Executors
 					.newSingleThreadExecutor();
 		}
 		{
-			this.managedMouse = new ManagedMouse(this);
-			this.managedKeyboard = new ManagedKeyboard(this);
+			this.baseManagedMouse = new BaseManagedMouse(this);
+			this.managedKeyboard = new BaseManagedKeyboard(this);
 		}
 		{
 			this.displayEventDispatcher = new DisplayEventDispatcher(this);
 		}
 		{
-			this.root = new RealRoot(this);
+			this.root = new BaseRoot(this);
 		}
 	}
 
-	public WindowManagementInfo getWindowManagementInfo() {
-		return this.windowManagementInfo;
-	}
+	// public WindowManagementInfo getWindowManagementInfo() {
+	// return this.windowManagementInfo;
+	// }
 
 	/**
 	 * 
@@ -210,11 +202,11 @@ public class BaseManagedDisplay extends EventBus implements ManagedDisplay {
 	 * A <code>ManagedMouse</code> is backed by a <code>Mouse</code> which
 	 * provides native mouse pointer operations.
 	 * 
-	 * @return A {@link ManagedMouse}.
+	 * @return A {@link BaseManagedMouse}.
 	 */
 	@Override
-	public ManagedMouse getManagedMouse() {
-		return this.managedMouse;
+	public BaseManagedMouse getManagedMouse() {
+		return this.baseManagedMouse;
 	}
 
 	/**
@@ -266,27 +258,51 @@ public class BaseManagedDisplay extends EventBus implements ManagedDisplay {
 
 	@Override
 	public Widget getRoot() {
-		// TODO
-		// return this.root;
-		return null;
+		return this.root;
 	}
 
-	@Override
-	public RenderArea getClientWindow(
-			final PlatformRenderArea platformRenderArea) {
-		// TODO check if there already exists a client window with this platform
-		// render area and return that one if so.
-		final RenderArea clientWindow = new ClientWindow(this,
-				platformRenderArea);
-		// TODO register client as eventbus (event consumer).
-
-		return clientWindow;
-	}
-
-	@Override
 	public void addEventManagerForDisplayEventSource(
 			final EventManager manager, final DisplayEventSource forSource) {
 		this.displayEventDispatcher.addEventManagerForDisplayEventSource(
 				manager, forSource);
+	}
+
+	@Override
+	public void addDisplayEventHandler(
+			final DisplayEventHandler<? extends DisplayEvent> displayEventHandler) {
+		this.displayEventDispatcher.addDisplayEventHandler(displayEventHandler);
+	}
+
+	@Override
+	public void addDisplayEventManager(final EventManager manager,
+			final DisplayEventSource forDisplayEventSource) {
+		this.displayEventDispatcher.addEventManagerForDisplayEventSource(
+				manager, forDisplayEventSource);
+	}
+
+	@Override
+	public void deliverNextDisplayEvent(final boolean block) {
+		this.displayEventDispatcher.dispatchNextEvent(block);
+	}
+
+	@Override
+	public void removeDisplayEventHandler(
+			final DisplayEventHandler<? extends DisplayEvent> displayEventHandler) {
+		this.displayEventDispatcher
+				.removeDisplayEventHandler(displayEventHandler);
+	}
+
+	@Override
+	public void addClientCreatedHandler(
+			final ClientCreatedHandler clientCreatedHandler) {
+		this.displayEventDispatcher
+				.addClientCreatedHandler(clientCreatedHandler);
+	}
+
+	@Override
+	public void removeClientCreatedHandler(
+			final ClientCreatedHandler clientCreatedHandler) {
+		this.displayEventDispatcher
+				.removeClientCreatedHandler(clientCreatedHandler);
 	}
 }
