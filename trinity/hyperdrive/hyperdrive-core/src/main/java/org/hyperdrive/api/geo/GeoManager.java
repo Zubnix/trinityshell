@@ -88,4 +88,70 @@ public interface GeoManager {
 	 */
 	void onChangeParentRequest(GeoTransformableRectangle geoTransformable,
 			GeoTransformation transformation);
+
+	/**
+	 * 
+	 * @param geoTransformable
+	 * @param transformation
+	 * 
+	 */
+	void onResizeNotify(GeoTransformableRectangle geoTransformable,
+			GeoTransformation transformation);
+
+	/**
+	 * 
+	 * @param geoTransformable
+	 * @param transformation
+	 * 
+	 */
+	void onMoveNotify(GeoTransformableRectangle geoTransformable,
+			GeoTransformation transformation);
+
+	/**
+	 * 
+	 * @param geoTransformable
+	 * @param transformation
+	 * 
+	 */
+	void onMoveResizeNotify(GeoTransformableRectangle geoTransformable,
+			GeoTransformation transformation);
+
+	/**
+	 * 
+	 * @param geoTransformable
+	 * @param transformation
+	 * 
+	 */
+	void onLowerNotify(GeoTransformableRectangle geoTransformable,
+			GeoTransformation transformation);
+
+	/**
+	 * 
+	 * @param geoTransformable
+	 * @param transformation
+	 * 
+	 */
+	void onRaiseNotify(GeoTransformableRectangle geoTransformable,
+			GeoTransformation transformation);
+
+	/**
+	 * 
+	 * @param geoTransformable
+	 * @param transformation
+	 * 
+	 */
+	void onChangeVisibilityNotify(GeoTransformableRectangle geoTransformable,
+			GeoTransformation transformation);
+
+	/**
+	 * 
+	 * @param geoTransformable
+	 * @param transformation
+	 * 
+	 */
+	void onChangeParentNotify(GeoTransformableRectangle geoTransformable,
+			GeoTransformation transformation);
+
+	void onDestroyNotify(GeoTransformableRectangle geoTransformable,
+			GeoTransformation transformation);
 }

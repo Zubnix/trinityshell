@@ -13,30 +13,19 @@
  * You should have received a copy of the GNU General Public License along with
  * HyperDrive. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.hyperdrive.widget;
+package org.hyperdrive.api.core.event;
 
-import org.hyperdrive.core.RenderAreaEvent;
-import org.hyperdrive.core.RenderAreaEventType;
+import org.hydrogen.api.event.Type;
 
-//TODO documentation
-/**
- * 
- * @author Erik De Rijcke
- * @since 1.0
- * 
- * @param <W>
- */
-public class WidgetEvent<R extends BaseWidget> extends
-		RenderAreaEvent<R, RenderAreaEventType<R>> {
+public class PropertyType implements Type {
 
-	public static final RenderAreaEventType<BaseWidget> WIDGET_INITIALIZED = new RenderAreaEventType<BaseWidget>();
+	private final String propertyName;
 
-	/**
-	 * 
-	 * @param type
-	 * @param renderArea
-	 */
-	public WidgetEvent(final RenderAreaEventType<R> type, final R renderArea) {
-		super(type, renderArea);
+	protected PropertyType(final String propertyName) {
+		this.propertyName = propertyName;
+	}
+
+	public String getPropertyName() {
+		return this.propertyName;
 	}
 }

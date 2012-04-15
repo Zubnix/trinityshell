@@ -15,11 +15,8 @@
  */
 package org.hyperdrive.geo;
 
-import org.hydrogen.api.event.EventHandler;
-import org.hyperdrive.api.geo.GeoEvent;
-import org.hyperdrive.api.geo.GeoEventHandler;
-import org.hyperdrive.api.geo.GeoOperation;
 import org.hyperdrive.api.geo.GeoTransformableRectangle;
+import org.hyperdrive.api.geo.GeoTransformation;
 
 // TODO documentation
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
@@ -36,7 +33,8 @@ import org.hyperdrive.api.geo.GeoTransformableRectangle;
  * @since 1.0
  * 
  */
-public class GeoManagerLine extends GeoManagerWithChildren<LineProperty> {
+public class GeoManagerLine extends
+		AbstractGeoManagerWithChildren<LineProperty> {
 
 	private boolean horizontalDirection;
 	private boolean inverseDirection;
@@ -57,7 +55,6 @@ public class GeoManagerLine extends GeoManagerWithChildren<LineProperty> {
 		super(container);
 		setHorizontalDirection(horizontalDirection);
 		setInverseDirection(inverseDirection);
-		registerEventHandlers();
 	}
 
 	/**
@@ -76,92 +73,11 @@ public class GeoManagerLine extends GeoManagerWithChildren<LineProperty> {
 		this.inverseDirection = inverseDirection;
 	}
 
-	/**
-	 * 
-	 */
-	protected void registerEventHandlers() {
-		addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
-				cancelMoveResize(square);
-			}
-		}, GeoOperation.MOVE_REQUEST);
-
-		addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
-				cancelMoveResize(square);
-			}
-		}, GeoOperation.RESIZE_REQUEST);
-
-		addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
-				cancelMoveResize(square);
-			}
-		}, GeoOperation.MOVE_RESIZE_REQUEST);
-
-		addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
-
-				square.doUpdateRaise();
-			}
-		}, GeoOperation.RAISE_REQUEST);
-
-		addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
-
-				square.doUpdateLower();
-			}
-		}, GeoOperation.LOWER_REQUEST);
-
-		addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
-				square.doUpdateVisibility();
-			}
-		}, GeoOperation.VISIBILITY_REQUEST);
-
-		addEventHandler(new EventHandler<GeoEvent>() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event.getGeoTransformableRectangle();
-				removeManagedChild(square);
-				square.doUpdateParentValue();
-			}
-		}, GeoOperation.REPARENT_REQUEST);
-
-		getContainer().addGeoEventHandler(new GeoEventHandler() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				layout();
-			}
-
-			@Override
-			public GeoOperation getType() {
-				return GeoOperation.RESIZE;
-			}
-		});
-
-		getContainer().addGeoEventHandler(new GeoEventHandler() {
-			@Override
-			public void handleEvent(final GeoEvent event) {
-				layout();
-			}
-
-			@Override
-			public GeoOperation getType() {
-				return GeoOperation.MOVE_RESIZE;
-			}
-		});
+	@Override
+	protected void handleContainerChanged(
+			final GeoTransformableRectangle container,
+			final GeoTransformation transformation) {
+		layout();
 	}
 
 	/**
@@ -217,7 +133,7 @@ public class GeoManagerLine extends GeoManagerWithChildren<LineProperty> {
 		// total size of all children
 		double totalWeightedChildSizes = 0;
 
-		for (final GeoTransformableRectangle child : getAllChildren()) {
+		for (final GeoTransformableRectangle child : getManagedChildren()) {
 			final int childWeight = getLayoutProperty(child).getWeight();
 			if (this.horizontalDirection) {
 				// we don't want to include children with 0 weight in the scale
@@ -252,7 +168,7 @@ public class GeoManagerLine extends GeoManagerWithChildren<LineProperty> {
 				newPlace = getContainer().getHeight();
 			}
 		}
-		final GeoTransformableRectangle[] children = getAllChildren();
+		final GeoTransformableRectangle[] children = getManagedChildren();
 		for (final GeoTransformableRectangle child : children) {
 
 			int childWeight = getLayoutProperty(child).getWeight();
@@ -302,7 +218,53 @@ public class GeoManagerLine extends GeoManagerWithChildren<LineProperty> {
 					newPlace += newChildHeight;
 				}
 			}
-			child.doUpdateSizePlaceValue();
+			child.doUpdateSizePlace();
 		}
+	}
+
+	@Override
+	protected void onChildChangeParentRequest(
+			final GeoTransformableRectangle child,
+			final GeoTransformation transformation) {
+		child.doUpdateParent();
+		layout();
+	}
+
+	@Override
+	protected void onChildChangeVisibilityRequest(
+			final GeoTransformableRectangle child,
+			final GeoTransformation transformation) {
+		child.doUpdateVisibility();
+	}
+
+	@Override
+	protected void onChildLowerRequest(final GeoTransformableRectangle child,
+			final GeoTransformation transformation) {
+		child.doUpdateLower();
+	}
+
+	@Override
+	protected void onChildMoveRequest(final GeoTransformableRectangle child,
+			final GeoTransformation transformation) {
+		cancelMoveResize(child);
+	}
+
+	@Override
+	protected void onChildMoveResizeRequest(
+			final GeoTransformableRectangle child,
+			final GeoTransformation transformation) {
+		cancelMoveResize(child);
+	}
+
+	@Override
+	protected void onChildRaiseRequest(final GeoTransformableRectangle child,
+			final GeoTransformation transformation) {
+		child.doUpdateRaise();
+	}
+
+	@Override
+	protected void onChildResizeRequest(final GeoTransformableRectangle child,
+			final GeoTransformation transformation) {
+		cancelMoveResize(child);
 	}
 }

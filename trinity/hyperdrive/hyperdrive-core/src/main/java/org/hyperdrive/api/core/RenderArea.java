@@ -1,6 +1,22 @@
+/*
+ * This file is part of HyperDriimport org.hydrogen.api.display.PlatformRenderArea;
+import org.hydrogen.api.display.Property;
+import org.hydrogen.api.display.PropertyInstance;
+import org.hyperdrive.api.core.event.PropertyChangedHandler;
+import org.hyperdrive.api.geo.GeoTransformableRectangle;
+ * HyperDrive is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * HyperDrive. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.hyperdrive.api.core;
 
 import org.hydrogen.api.display.PlatformRenderArea;
+import org.hydrogen.api.display.Property;
+import org.hydrogen.api.display.PropertyInstance;
+import org.hyperdrive.api.core.event.PropertyChangedHandler;
 import org.hyperdrive.api.geo.GeoTransformableRectangle;
 
 public interface RenderArea extends GeoTransformableRectangle {
@@ -45,4 +61,8 @@ public interface RenderArea extends GeoTransformableRectangle {
 	void setInputFocus();
 
 	boolean hasInputFocus();
+
+	void addPropertyChangedHandler(
+			PropertyChangedHandler<? extends Property<? extends PropertyInstance>> handler,
+			String propertyName);
 }

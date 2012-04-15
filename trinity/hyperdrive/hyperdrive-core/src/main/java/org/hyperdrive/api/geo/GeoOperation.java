@@ -100,9 +100,9 @@ public enum GeoOperation implements Type {
 	/**
 	 * 
 	 */
-	FROM_PARENT,
+	PARENT_NOTIFY,
 	/**
 	 * 
 	 */
-	CHILD_LEFT
+	CHILD_LEFT_NOTIFY
 }

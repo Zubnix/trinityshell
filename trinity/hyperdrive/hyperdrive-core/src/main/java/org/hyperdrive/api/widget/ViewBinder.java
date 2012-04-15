@@ -1,3 +1,18 @@
+/*
+ * This file is part of HyperDrive.
+ * 
+ * HyperDrive is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * HyperDrive is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * HyperDrive. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.hyperdrive.api.widget;
 
 import java.lang.reflect.Proxy;
@@ -51,6 +66,8 @@ public final class ViewBinder {
 		// get view instantiating method from map and call it.
 		final View view = ViewBinder.getViewInstance(paintable, viewInterface);
 
+		// TODO instead of creating a reflection proxy, use an asm library and
+		// create our own pure java proxy.
 		@SuppressWarnings("unchecked")
 		final T viewProxy = (T) Proxy.newProxyInstance(ViewBinder.class
 				.getClassLoader(), new Class[] { viewInterface },

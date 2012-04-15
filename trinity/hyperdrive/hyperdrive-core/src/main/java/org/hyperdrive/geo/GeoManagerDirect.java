@@ -15,7 +15,6 @@
  */
 package org.hyperdrive.geo;
 
-import org.hydrogen.event.EventBus;
 import org.hyperdrive.api.geo.GeoManager;
 import org.hyperdrive.api.geo.GeoTransformableRectangle;
 import org.hyperdrive.api.geo.GeoTransformation;
@@ -30,26 +29,26 @@ import org.hyperdrive.api.geo.GeoTransformation;
  * @since 1.0
  * 
  */
-public class GeoManagerDirect extends EventBus implements GeoManager {
+public class GeoManagerDirect implements GeoManager {
 
 	@Override
 	public void onResizeRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		geoTransformable.doUpdateSizeValue();
+		geoTransformable.doUpdateSize();
 	}
 
 	@Override
 	public void onMoveRequest(final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		geoTransformable.doUpdatePlaceValue();
+		geoTransformable.doUpdatePlace();
 	}
 
 	@Override
 	public void onMoveResizeRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		geoTransformable.doUpdateSizePlaceValue();
+		geoTransformable.doUpdateSizePlace();
 	}
 
 	@Override
@@ -77,6 +76,60 @@ public class GeoManagerDirect extends EventBus implements GeoManager {
 	public void onChangeParentRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		geoTransformable.doUpdateParentValue();
+		geoTransformable.doUpdateParent();
+	}
+
+	@Override
+	public void onResizeNotify(
+			final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		// do nothing
+	}
+
+	@Override
+	public void onMoveNotify(final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		// do nothing
+	}
+
+	@Override
+	public void onMoveResizeNotify(
+			final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		// do nothing
+	}
+
+	@Override
+	public void onLowerNotify(final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		// do nothing
+	}
+
+	@Override
+	public void onRaiseNotify(final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		// do nothing
+	}
+
+	@Override
+	public void onChangeVisibilityNotify(
+			final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		// do nothing
+	}
+
+	@Override
+	public void onChangeParentNotify(
+			final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		// do nothing
+	}
+
+	@Override
+	public void onDestroyNotify(
+			final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		// do nothin.
+
 	}
 }

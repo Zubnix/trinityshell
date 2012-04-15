@@ -83,7 +83,7 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 			final int newX = relativeX;
 			final int newY = relativeY;
 			final GeoTransformableRectangle currentParent = getManipulatedArea()
-					.toGeoTransformation().getParent0();
+					.getParent();
 			final Coordinates newRelativePosition = calculatePositionRelativeToTypedArea(
 					currentParent, newX, newY);
 
@@ -91,7 +91,6 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 			final int newRelativeY = newRelativePosition.getY();
 			this.getAreaManipulator().move(newRelativeX, newRelativeY);
 		}
-		// updateChildrenPosition();
 	}
 
 	@Override
@@ -111,7 +110,7 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 			final int newWidth = width;
 			final int newHeight = height;
 			final GeoTransformableRectangle currentParent = getManipulatedArea()
-					.toGeoTransformation().getParent0();
+					.getParent();
 
 			final Coordinates newRelativePosition = calculatePositionRelativeToTypedArea(
 					currentParent, newX, newY);
@@ -124,7 +123,6 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 			areaManipulator.moveResize(newRelativeX, newRelativeY, newWidth,
 					newHeight);
 		}
-		// updateChildrenPosition();
 	}
 
 	@Override
@@ -147,7 +145,6 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 		final int newAbsX = directParent.getAbsoluteX() + directRelativeX;
 		final int newAbsY = directParent.getAbsoluteY() + directRelativeY;
 
-		// TODO remove realroot dependency somehow
 		final RenderArea root = getManipulatedArea().getManagedDisplay()
 				.getRoot();
 		final Coordinates absCorParent = getAreaManipulator(root)
@@ -167,7 +164,7 @@ public class RenderAreaGeoExecutor extends AbstractGeoExecutor {
 	 * @param area
 	 * 
 	 */
-	private void initialize(final GeoTransformableRectangle parent,
+	protected void initialize(final GeoTransformableRectangle parent,
 			final GeoTransformableRectangle area) {
 		initializeGeoTransformableSquare(parent, area);
 		for (final GeoTransformableRectangle child : this.renderArea

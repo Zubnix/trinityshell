@@ -15,7 +15,6 @@
  */
 package org.hydrogen.event;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -61,13 +60,13 @@ import org.hydrogen.api.event.TypeBoundEventHandler;
 // declarations (unlike eclipse compiler).
 public class EventBus implements EventHandlerManager, EventManager {
 
-	private final Map<Type, List<WeakReference>> eventHandlerSwitch;
+	private final Map<Type, List<EventHandler>> eventHandlerSwitch;
 
 	/**
 	 * 
 	 */
 	public EventBus() {
-		this.eventHandlerSwitch = new ConcurrentHashMap<Type, List<WeakReference>>();
+		this.eventHandlerSwitch = new ConcurrentHashMap<Type, List<EventHandler>>();
 	}
 
 	@Override
@@ -86,22 +85,19 @@ public class EventBus implements EventHandlerManager, EventManager {
 			final EventHandler<? extends Event<T>> eventHandler, final T type,
 			final int index) {
 
-		final List<WeakReference> eventHandlersList;
+		final List<EventHandler> eventHandlersList;
 
 		if (this.eventHandlerSwitch.containsKey(type)) {
 			eventHandlersList = this.eventHandlerSwitch.get(type);
 		} else {
-			eventHandlersList = new CopyOnWriteArrayList<WeakReference>();
+			eventHandlersList = new CopyOnWriteArrayList<EventHandler>();
 			this.eventHandlerSwitch.put(type, eventHandlersList);
 		}
 
-		// TODO implement event handler cleanup object+thread.
-		final WeakReference<EventHandler> weakRef = new WeakReference<EventHandler>(
-				eventHandler, null);
 		if (index < 0) {
-			eventHandlersList.add(weakRef);
+			eventHandlersList.add(eventHandler);
 		} else {
-			eventHandlersList.add(index, weakRef);
+			eventHandlersList.add(index, eventHandler);
 		}
 	}
 
@@ -109,20 +105,11 @@ public class EventBus implements EventHandlerManager, EventManager {
 	@Override
 	public void fireEvent(final Event<? extends Type> event) {
 		if (this.eventHandlerSwitch.containsKey(event.getType())) {
-			final List<WeakReference> eventHandlersList = this.eventHandlerSwitch
+			final List<EventHandler> eventHandlersList = this.eventHandlerSwitch
 					.get(event.getType());
 
-			for (final WeakReference weakRef : eventHandlersList) {
-				final EventHandler eventHandler = (EventHandler) weakRef.get();
-				if ((eventHandler == null)) {
-					// instead of an immediate removal, we might want to keep
-					// track of weakrefs that are no longer used and clean them
-					// up all at once, eg. when a certain limit is reached or
-					// during regular intervals.
-					eventHandlersList.remove(weakRef);
-				} else {
-					eventHandler.handleEvent(event);
-				}
+			for (final EventHandler eventHandler : eventHandlersList) {
+				eventHandler.handleEvent(event);
 			}
 		}
 	}
@@ -131,17 +118,9 @@ public class EventBus implements EventHandlerManager, EventManager {
 	public <T extends Type> void removeEventHandler(
 			final EventHandler<? extends Event<T>> toBeDeletedEventHandler,
 			final T type) {
-		final List<WeakReference> eventHandlersList = this.eventHandlerSwitch
+		final List<EventHandler> eventHandlersList = this.eventHandlerSwitch
 				.get(type);
-
-		for (final WeakReference weakRef : eventHandlersList) {
-			final EventHandler eventHandler = (EventHandler) weakRef.get();
-			if ((eventHandler == null)
-					|| (toBeDeletedEventHandler == eventHandler)) {
-				eventHandlersList.remove(weakRef);
-				break;
-			}
-		}
+		eventHandlersList.remove(toBeDeletedEventHandler);
 	}
 
 	@Override
@@ -154,6 +133,5 @@ public class EventBus implements EventHandlerManager, EventManager {
 	public <T extends Type> void removeTypedEventHandler(
 			final TypeBoundEventHandler<T, ? extends Event<T>> typedEventHandler) {
 		removeEventHandler(typedEventHandler, typedEventHandler.getType());
-
 	}
 }

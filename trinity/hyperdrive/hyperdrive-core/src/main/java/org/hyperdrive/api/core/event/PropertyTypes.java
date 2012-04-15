@@ -13,34 +13,22 @@
  * You should have received a copy of the GNU General Public License along with
  * HyperDrive. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.hyperdrive.core;
+package org.hyperdrive.api.core.event;
 
-import org.hyperdrive.api.core.event.PropertyChangedEventType;
+import java.util.HashMap;
+import java.util.Map;
 
-//TODO documentation
-/**
- * 
- * @author Erik De Rijcke
- * @since 1.0
- */
-public class BasePropertyChangedEventType implements PropertyChangedEventType {
+public class PropertyTypes {
+	private static final Map<String, PropertyType> TYPES_MAP = new HashMap<String, PropertyType>();
 
-	private final String propertyName;
-
-	/**
-	 * 
-	 * @param propertyName
-	 */
-	protected BasePropertyChangedEventType(final String propertyName) {
-		this.propertyName = propertyName;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@Override
-	public String getPropertyName() {
-		return this.propertyName;
+	public PropertyType get(final String propertyName) {
+		PropertyType type;
+		if (PropertyTypes.TYPES_MAP.containsKey(propertyName)) {
+			type = PropertyTypes.TYPES_MAP.get(propertyName);
+		} else {
+			type = new PropertyType(propertyName);
+			PropertyTypes.TYPES_MAP.put(propertyName, type);
+		}
+		return type;
 	}
 }

@@ -5,7 +5,7 @@ import org.hydrogen.api.display.event.ConfigureRequestEvent;
 import org.hydrogen.api.display.event.DisplayEventType;
 import org.hydrogen.api.display.event.MapRequestEvent;
 import org.hydrogen.api.event.EventManager;
-import org.hyperdrive.DummyEnv;
+import org.hyperdrive.MockedEnv;
 import org.hyperdrive.api.core.ManagedDisplay;
 import org.hyperdrive.api.core.RenderArea;
 import org.hyperdrive.api.core.event.ClientCreatedHandler;
@@ -18,14 +18,20 @@ import org.mockito.InOrder;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
-public class TestBaseManagedDisplay {
+public class BaseManagedDisplayTest {
 
-	private DummyEnv dummyEnv;
+	private MockedEnv mockedEnv;
 
 	@Before
 	public void setup() {
-		this.dummyEnv = new DummyEnv();
-		this.dummyEnv.setup();
+		this.mockedEnv = new MockedEnv();
+		this.mockedEnv.setUp();
+	}
+
+	@Test
+	public void testStart() {
+		// TODO
+		throw new RuntimeException("Not yet implemented");
 	}
 
 	@Test
@@ -35,16 +41,20 @@ public class TestBaseManagedDisplay {
 	}
 
 	@Test
-	public void testAddDisplayEventHandler() throws InterruptedException {
+	public void testAddDisplayEventHandler() {
 		final ManagedDisplay baseManagedDisplay = new BaseManagedDisplay(
-				this.dummyEnv.displayMock);
+				this.mockedEnv.displayMock);
 
 		final MapRequestEvent c0Map = Mockito.mock(MapRequestEvent.class);
 		Mockito.when(c0Map.getType()).thenReturn(DisplayEventType.MAP_REQUEST);
+		Mockito.when(c0Map.getEventSource()).thenReturn(this.mockedEnv.c0);
+
 		final ConfigureRequestEvent c0Req = Mockito
 				.mock(ConfigureRequestEvent.class);
 		Mockito.when(c0Req.getType()).thenReturn(
 				DisplayEventType.CONFIGURE_REQUEST);
+		Mockito.when(c0Req.getEventSource()).thenReturn(this.mockedEnv.c0);
+
 		final MouseButtonPressedHandler buttonPressedHandler = Mockito
 				.mock(MouseButtonPressedHandler.class);
 		Mockito.when(buttonPressedHandler.getType()).thenReturn(
@@ -60,7 +70,7 @@ public class TestBaseManagedDisplay {
 		Mockito.when(configureRequestHandler.getType()).thenReturn(
 				DisplayEventType.CONFIGURE_REQUEST);
 
-		Mockito.when(this.dummyEnv.displayMock.getEventFromMasterQueue())
+		Mockito.when(this.mockedEnv.displayMock.getEventFromMasterQueue())
 				.thenReturn(c0Req, c0Map, null);
 
 		baseManagedDisplay.addDisplayEventHandler(mapRequestHandler);
@@ -83,17 +93,17 @@ public class TestBaseManagedDisplay {
 	}
 
 	@Test
-	public void testRemoveDisplayEventHandler() throws InterruptedException {
-		final ManagedDisplay baseManagedDisplay = new BaseManagedDisplay(
-				this.dummyEnv.displayMock);
+	public void testRemoveDisplayEventHandler() {
+		final BaseManagedDisplay baseManagedDisplay = new BaseManagedDisplay(
+				this.mockedEnv.displayMock);
 
 		final MapRequestEvent c0Map = Mockito.mock(MapRequestEvent.class);
 		Mockito.when(c0Map.getType()).thenReturn(DisplayEventType.MAP_REQUEST);
-		Mockito.when(c0Map.getEventSource()).thenReturn(this.dummyEnv.c0);
+		Mockito.when(c0Map.getEventSource()).thenReturn(this.mockedEnv.c0);
 
 		final ConfigureRequestEvent c0Req = Mockito
 				.mock(ConfigureRequestEvent.class);
-		Mockito.when(c0Req.getEventSource()).thenReturn(this.dummyEnv.c0);
+		Mockito.when(c0Req.getEventSource()).thenReturn(this.mockedEnv.c0);
 		Mockito.when(c0Req.getType()).thenReturn(
 				DisplayEventType.CONFIGURE_REQUEST);
 
@@ -107,7 +117,7 @@ public class TestBaseManagedDisplay {
 		Mockito.when(configureRequestHandler.getType()).thenReturn(
 				DisplayEventType.CONFIGURE_REQUEST);
 
-		Mockito.when(this.dummyEnv.displayMock.getEventFromMasterQueue())
+		Mockito.when(this.mockedEnv.displayMock.getEventFromMasterQueue())
 				.thenReturn(c0Req, c0Map, null);
 
 		baseManagedDisplay.addDisplayEventHandler(mapRequestHandler);
@@ -126,10 +136,10 @@ public class TestBaseManagedDisplay {
 	}
 
 	@Test
-	public void testAddDisplayEventManager() throws InterruptedException {
+	public void testAddDisplayEventManager() {
 
-		final ManagedDisplay baseManagedDisplay = new BaseManagedDisplay(
-				this.dummyEnv.displayMock);
+		final ManagedDisplay managedDisplay = new BaseManagedDisplay(
+				this.mockedEnv.displayMock);
 
 		// stub dummy display events
 		final MapRequestEvent c0Map = Mockito.mock(MapRequestEvent.class);
@@ -139,21 +149,21 @@ public class TestBaseManagedDisplay {
 				.mock(ConfigureRequestEvent.class);
 		final MapRequestEvent c1Map = Mockito.mock(MapRequestEvent.class);
 
-		Mockito.when(c0Map.getEventSource()).thenReturn(this.dummyEnv.c0);
+		Mockito.when(c0Map.getEventSource()).thenReturn(this.mockedEnv.c0);
 		Mockito.when(c0Map.getType()).thenReturn(DisplayEventType.MAP_REQUEST);
 
-		Mockito.when(c1Req.getEventSource()).thenReturn(this.dummyEnv.c1);
+		Mockito.when(c1Req.getEventSource()).thenReturn(this.mockedEnv.c1);
 		Mockito.when(c1Req.getType()).thenReturn(
 				DisplayEventType.CONFIGURE_REQUEST);
 
-		Mockito.when(c0Req.getEventSource()).thenReturn(this.dummyEnv.c0);
+		Mockito.when(c0Req.getEventSource()).thenReturn(this.mockedEnv.c0);
 		Mockito.when(c0Req.getType()).thenReturn(
 				DisplayEventType.CONFIGURE_REQUEST);
 
-		Mockito.when(c1Map.getEventSource()).thenReturn(this.dummyEnv.c1);
+		Mockito.when(c1Map.getEventSource()).thenReturn(this.mockedEnv.c1);
 		Mockito.when(c1Map.getType()).thenReturn(DisplayEventType.MAP_REQUEST);
 
-		Mockito.when(this.dummyEnv.displayMock.getEventFromMasterQueue())
+		Mockito.when(this.mockedEnv.displayMock.getEventFromMasterQueue())
 				.thenReturn(c0Map, c1Req, c0Req, c1Map, null);
 
 		// add stubbed eventmanagers that should receive the stubbed display
@@ -162,15 +172,15 @@ public class TestBaseManagedDisplay {
 				.mock(EventManager.class);
 		final EventManager c1EventManagerMock = Mockito
 				.mock(EventManager.class);
-		baseManagedDisplay.addDisplayEventManager(c0EventManagerMock,
-				this.dummyEnv.c0);
-		baseManagedDisplay.addDisplayEventManager(c1EventManagerMock,
-				this.dummyEnv.c1);
+		managedDisplay.addDisplayEventManager(c0EventManagerMock,
+				this.mockedEnv.c0);
+		managedDisplay.addDisplayEventManager(c1EventManagerMock,
+				this.mockedEnv.c1);
 
-		baseManagedDisplay.deliverNextDisplayEvent(false);
-		baseManagedDisplay.deliverNextDisplayEvent(false);
-		baseManagedDisplay.deliverNextDisplayEvent(false);
-		baseManagedDisplay.deliverNextDisplayEvent(false);
+		managedDisplay.deliverNextDisplayEvent(false);
+		managedDisplay.deliverNextDisplayEvent(false);
+		managedDisplay.deliverNextDisplayEvent(false);
+		managedDisplay.deliverNextDisplayEvent(false);
 
 		final InOrder eventManagersOrder = Mockito.inOrder(c0EventManagerMock,
 				c1EventManagerMock);
@@ -189,6 +199,34 @@ public class TestBaseManagedDisplay {
 	}
 
 	// TODO void removeDisplayEventManager(..)?
+	// @Test
+	// public void removeDisplayEventManager() {
+	// final ManagedDisplay managedDisplay = new BaseManagedDisplay(
+	// this.dummyEnv.displayMock);
+	//
+	// // stub dummy display events
+	// final MapRequestEvent c0Map = Mockito.mock(MapRequestEvent.class);
+	// final ConfigureRequestEvent c0Req = Mockito
+	// .mock(ConfigureRequestEvent.class);
+	//
+	// Mockito.when(c0Map.getEventSource()).thenReturn(this.dummyEnv.c0);
+	// Mockito.when(c0Map.getType()).thenReturn(DisplayEventType.MAP_REQUEST);
+	//
+	// Mockito.when(c0Req.getEventSource()).thenReturn(this.dummyEnv.c0);
+	// Mockito.when(c0Req.getType()).thenReturn(
+	// DisplayEventType.CONFIGURE_REQUEST);
+	//
+	// Mockito.when(this.dummyEnv.displayMock.getEventFromMasterQueue())
+	// .thenReturn(c0Map, c0Req);
+	//
+	// final EventManager c0EventManagerMock = Mockito
+	// .mock(EventManager.class);
+	// managedDisplay.addDisplayEventManager(c0EventManagerMock,
+	// this.dummyEnv.c0);
+	//
+	// managedDisplay.deliverNextDisplayEvent(false);
+	//
+	// }
 
 	public void testDeliverNextDisplayEvent() {
 		// trivial. not testing this. other tests will fail anyway if this
@@ -198,13 +236,13 @@ public class TestBaseManagedDisplay {
 	@Test
 	public void testAddClientCreatedListener() {
 		final ManagedDisplay managedDisplay = new BaseManagedDisplay(
-				this.dummyEnv.displayMock);
+				this.mockedEnv.displayMock);
 
 		final MapRequestEvent c0Map = Mockito.mock(MapRequestEvent.class);
-		Mockito.when(c0Map.getEventSource()).thenReturn(this.dummyEnv.c0);
+		Mockito.when(c0Map.getEventSource()).thenReturn(this.mockedEnv.c0);
 		Mockito.when(c0Map.getType()).thenReturn(DisplayEventType.MAP_REQUEST);
 
-		Mockito.when(this.dummyEnv.displayMock.getEventFromMasterQueue())
+		Mockito.when(this.mockedEnv.displayMock.getEventFromMasterQueue())
 				.thenReturn(c0Map);
 
 		final ClientCreatedHandler clientCreatedHandler = Mockito
@@ -219,17 +257,17 @@ public class TestBaseManagedDisplay {
 	@Test
 	public void testRemoveClientCreatedListener() {
 		final ManagedDisplay managedDisplay = new BaseManagedDisplay(
-				this.dummyEnv.displayMock);
+				this.mockedEnv.displayMock);
 
 		final MapRequestEvent c0Map = Mockito.mock(MapRequestEvent.class);
-		Mockito.when(c0Map.getEventSource()).thenReturn(this.dummyEnv.c0);
+		Mockito.when(c0Map.getEventSource()).thenReturn(this.mockedEnv.c0);
 		Mockito.when(c0Map.getType()).thenReturn(DisplayEventType.MAP_REQUEST);
 
 		final MapRequestEvent c1Map = Mockito.mock(MapRequestEvent.class);
-		Mockito.when(c1Map.getEventSource()).thenReturn(this.dummyEnv.c1);
+		Mockito.when(c1Map.getEventSource()).thenReturn(this.mockedEnv.c1);
 		Mockito.when(c1Map.getType()).thenReturn(DisplayEventType.MAP_REQUEST);
 
-		Mockito.when(this.dummyEnv.displayMock.getEventFromMasterQueue())
+		Mockito.when(this.mockedEnv.displayMock.getEventFromMasterQueue())
 				.thenReturn(c0Map, c1Map);
 
 		final ClientCreatedHandler clientCreatedHandler = Mockito

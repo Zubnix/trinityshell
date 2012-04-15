@@ -15,14 +15,11 @@
  */
 package org.hyperdrive.core;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.hydrogen.api.display.Property;
 import org.hydrogen.api.display.PropertyInstance;
 import org.hyperdrive.api.core.RenderArea;
 import org.hyperdrive.api.core.event.PropertyChangedEvent;
-import org.hyperdrive.api.core.event.PropertyChangedEventType;
+import org.hyperdrive.api.core.event.PropertyType;
 
 //TODO create seperate abstract renderareaevent super class
 //TODO documentation
@@ -37,8 +34,7 @@ public class BasePropertyChangedEvent<T extends Property<? extends PropertyInsta
 	private final T changedProperty;
 	private final boolean propertyDeleted;
 	private final RenderArea renderArea;
-	private final PropertyChangedEventType type;
-	private static final Map<String, PropertyChangedEventType> TYPES_MAP = new HashMap<String, PropertyChangedEventType>();
+	private final PropertyType type;
 
 	/**
 	 * 
@@ -49,8 +45,8 @@ public class BasePropertyChangedEvent<T extends Property<? extends PropertyInsta
 	public BasePropertyChangedEvent(final RenderArea renderArea,
 			final boolean propertyDeleted, final T changedProperty) {
 		this.renderArea = renderArea;
-		this.type = BasePropertyChangedEvent
-				.TYPE(changedProperty.getAtomName());
+		this.type = PropertyChangedEvent.TYPE
+				.get(changedProperty.getAtomName());
 		this.propertyDeleted = propertyDeleted;
 		this.changedProperty = changedProperty;
 	}
@@ -75,22 +71,6 @@ public class BasePropertyChangedEvent<T extends Property<? extends PropertyInsta
 
 	/**
 	 * 
-	 * @param propertyName
-	 * @return
-	 */
-	public static PropertyChangedEventType TYPE(final String propertyName) {
-		PropertyChangedEventType type;
-		if (BasePropertyChangedEvent.TYPES_MAP.containsKey(propertyName)) {
-			type = BasePropertyChangedEvent.TYPES_MAP.get(propertyName);
-		} else {
-			type = new BasePropertyChangedEventType(propertyName);
-			BasePropertyChangedEvent.TYPES_MAP.put(propertyName, type);
-		}
-		return type;
-	}
-
-	/**
-	 * 
 	 * @return
 	 */
 	@Override
@@ -99,7 +79,7 @@ public class BasePropertyChangedEvent<T extends Property<? extends PropertyInsta
 	}
 
 	@Override
-	public PropertyChangedEventType getType() {
+	public PropertyType getType() {
 		return this.type;
 	}
 }

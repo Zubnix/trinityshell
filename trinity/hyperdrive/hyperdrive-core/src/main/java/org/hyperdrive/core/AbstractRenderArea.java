@@ -26,6 +26,8 @@ import org.hydrogen.api.display.event.PropertyChangedNotifyEvent;
 import org.hydrogen.api.event.EventHandler;
 import org.hyperdrive.api.core.ManagedDisplay;
 import org.hyperdrive.api.core.RenderArea;
+import org.hyperdrive.api.core.event.PropertyChangedEvent;
+import org.hyperdrive.api.core.event.PropertyChangedHandler;
 import org.hyperdrive.api.geo.GeoTransformableRectangle;
 import org.hyperdrive.api.geo.GeoTransformation;
 import org.hyperdrive.geo.AbstractGeoTransformableRectangle;
@@ -63,8 +65,8 @@ public abstract class AbstractRenderArea extends
 	public static final boolean DEFAULT_IS_MOVABLE = true;
 	public static final int DEFAULT_MIN_WIDTH = 4;
 	public static final int DEFAULT_MIN_HEIGHT = 4;
-	public static final int DEFAULT_MAX_WIDTH = 32768;
-	public static final int DEFAULT_MAX_HEIGHT = 32768;
+	public static final int DEFAULT_MAX_WIDTH = 16384;
+	public static final int DEFAULT_MAX_HEIGHT = 16384;
 	public static final int DEFAULT_WIDTH_INC = 1;
 	public static final int DEFAULT_HEIGHT_INC = 1;
 
@@ -317,7 +319,6 @@ public abstract class AbstractRenderArea extends
 	 */
 	protected void setManagedDisplay(final ManagedDisplay managedDisplay) {
 		this.managedDisplay = managedDisplay;
-		initEventHandlers();
 	}
 
 	/**
@@ -462,12 +463,30 @@ public abstract class AbstractRenderArea extends
 
 	@Override
 	public void setWidth(final int width) {
-		super.setWidth(normalizedWidth(width));
+		if (isResizable()) {
+			super.setWidth(normalizedWidth(width));
+		}
 	}
 
 	@Override
 	public void setHeight(final int height) {
-		super.setHeight(normalizedHeight(height));
+		if (isResizable()) {
+			super.setHeight(normalizedHeight(height));
+		}
+	}
+
+	@Override
+	public void setX(final int x) {
+		if (isMovable()) {
+			super.setX(x);
+		}
+	}
+
+	@Override
+	public void setY(final int y) {
+		if (isMovable()) {
+			super.setY(y);
+		}
 	}
 
 	@Override
@@ -525,11 +544,21 @@ public abstract class AbstractRenderArea extends
 		final int width1 = normalizedWidth(newWidth);
 		final int height1 = normalizedHeight(newHeight);
 
+		setWidth(width1);
+		setHeight(height1);
+
 		return new BaseGeoTransformation(geoTransformation.getX0(),
 				geoTransformation.getY0(), geoTransformation.getWidth0(),
 				geoTransformation.getHeight0(), geoTransformation.isVisible0(),
 				geoTransformation.getParent0(), geoTransformation.getX1(),
 				geoTransformation.getY1(), width1, height1,
 				geoTransformation.isVisible1(), geoTransformation.getParent1());
+	}
+
+	@Override
+	public void addPropertyChangedHandler(
+			final PropertyChangedHandler<? extends Property<? extends PropertyInstance>> handler,
+			final String propertyName) {
+		addEventHandler(handler, PropertyChangedEvent.TYPE.get(propertyName));
 	}
 }

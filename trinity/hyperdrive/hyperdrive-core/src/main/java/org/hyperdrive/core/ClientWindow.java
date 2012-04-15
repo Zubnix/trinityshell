@@ -53,8 +53,6 @@ final class ClientWindow extends AbstractRenderArea {
 	 */
 	ClientWindow(final ManagedDisplay managedDisplay,
 			final PlatformRenderArea platformRenderArea) {
-		super();
-
 		setManagedDisplay(managedDisplay);
 		setPlatformRenderArea(platformRenderArea);
 
@@ -81,13 +79,11 @@ final class ClientWindow extends AbstractRenderArea {
 			@Override
 			public void handleEvent(final MapRequestEvent event) {
 				ClientWindow.this.handleMapRequest(event);
-
 			}
 		}, DisplayEventType.MAP_REQUEST);
 		this.addEventHandler(new EventHandler<ConfigureRequestEvent>() {
 			@Override
 			public void handleEvent(final ConfigureRequestEvent event) {
-
 				ClientWindow.this.handleConfigureRequest(event);
 
 			}

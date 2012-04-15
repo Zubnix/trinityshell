@@ -183,6 +183,7 @@ public class BaseWidget extends AbstractRenderArea implements Widget {
 		if (paintableParent != null) {
 			setManagedDisplay(paintableParent.getManagedDisplay());
 		}
+		this.painter = initPainter();
 
 		// we pass the paintable parent to the back-end which can choose to do
 		// with it as it pleases.
@@ -209,26 +210,23 @@ public class BaseWidget extends AbstractRenderArea implements Widget {
 
 		setPlatformRenderArea(renderArea);
 		getManagedDisplay().addDisplayEventManager(this, this);
+	}
 
-		// TODO
-		// getManagedDisplay().fireEvent(
-		// new WidgetEvent<Widget>(WidgetEvent.WIDGET_INITIALIZED, this));
-
+	protected Painter initPainter() {
+		return getManagedDisplay().getPainterFactory().getNewPainter(this);
 	}
 
 	@Override
 	public Painter getPainter() {
 		// We can not initialize the painter when constructing the widget
-		// because the managed display is not yet set. Instead we lazily
-		// initialize the painter. This means this method will fail if the
+		// because the managed display is not yet set. This means this method
+		// will fail if the
 		// widget is not yet initialized, ie the widget requires a managed
 		// display.
-
-		// TODO move painter initialization to init method
-		if (this.painter == null) {
-			this.painter = getManagedDisplay().getPainterFactory()
-					.getNewPainter(this);
-		}
+		// if (this.painter == null) {
+		// this.painter = getManagedDisplay().getPainterFactory()
+		// .getNewPainter(this);
+		// }
 		return this.painter;
 	}
 

@@ -13,11 +13,13 @@
  * You should have received a copy of the GNU General Public License along with
  * HyperDrive. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.hyperdrive.api.core;
+package org.hyperdrive.api.core.event;
 
-import org.hydrogen.api.config.DisplayConfiguration;
+import org.hydrogen.api.display.Property;
+import org.hydrogen.api.display.PropertyInstance;
+import org.hydrogen.api.event.EventHandler;
 
-public interface DisplayManager {
-	ManagedDisplay getNewManagedDisplay(
-			DisplayConfiguration displayConfiguration);
+public interface PropertyChangedHandler<T extends Property<? extends PropertyInstance>>
+		extends EventHandler<PropertyChangedEvent<T>> {
+
 }

@@ -22,9 +22,11 @@ import java.util.Map;
 
 import org.hyperdrive.api.geo.GeoEvent;
 import org.hyperdrive.api.geo.GeoEventHandler;
+import org.hyperdrive.api.geo.GeoManagerWithChildren;
 import org.hyperdrive.api.geo.GeoOperation;
 import org.hyperdrive.api.geo.GeoTransformableRectangle;
 import org.hyperdrive.api.geo.GeoTransformation;
+import org.hyperdrive.api.geo.LayoutProperty;
 
 // TODO documentation
 /**
@@ -37,7 +39,8 @@ import org.hyperdrive.api.geo.GeoTransformation;
  * 
  * @param <T>
  */
-public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
+public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
+		extends GeoManagerDirect implements GeoManagerWithChildren<T> {
 
 	private final List<GeoTransformableRectangle> children;
 	private final Map<GeoTransformableRectangle, T> childLayoutProperty;
@@ -46,7 +49,8 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 	/**
 	 * 
 	 */
-	public GeoManagerWithChildren(final GeoTransformableRectangle container) {
+	public AbstractGeoManagerWithChildren(
+			final GeoTransformableRectangle container) {
 		setContainer(container);
 		this.children = new ArrayList<GeoTransformableRectangle>();
 		this.childLayoutProperty = new HashMap<GeoTransformableRectangle, T>();
@@ -56,6 +60,7 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 	 * 
 	 * @return
 	 */
+	@Override
 	public GeoTransformableRectangle getContainer() {
 		return this.container;
 	}
@@ -64,6 +69,7 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 	 * 
 	 * @param container
 	 */
+	@Override
 	public void setContainer(final GeoTransformableRectangle container) {
 		this.container = container;
 	}
@@ -73,6 +79,7 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 	 * @param child
 	 * 
 	 */
+	@Override
 	public void addManagedChild(final GeoTransformableRectangle child) {
 		this.children.add(child);
 	}
@@ -83,6 +90,7 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 	 * @param layoutProperty
 	 * 
 	 */
+	@Override
 	public void addManagedChild(final GeoTransformableRectangle child,
 			final T layoutProperty) {
 		this.children.add(child);
@@ -106,7 +114,6 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 			public GeoOperation getType() {
 				return GeoOperation.REPARENT;
 			}
-
 		});
 	}
 
@@ -115,6 +122,7 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 	 * @param child
 	 * 
 	 */
+	@Override
 	public void removeManagedChild(final GeoTransformableRectangle child) {
 		this.children.remove(child);
 		this.childLayoutProperty.remove(child);
@@ -124,6 +132,7 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 	 * 
 	 * @param index
 	 */
+	@Override
 	public void removeManagedChild(final int index) {
 		final GeoTransformableRectangle removedChild = this.children
 				.remove(index);
@@ -134,7 +143,8 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 	 * 
 	 * @return
 	 */
-	public GeoTransformableRectangle[] getAllChildren() {
+	@Override
+	public GeoTransformableRectangle[] getManagedChildren() {
 		return this.children
 				.toArray(new GeoTransformableRectangle[this.children.size()]);
 	}
@@ -144,6 +154,7 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 	 * @param index
 	 * @return
 	 */
+	@Override
 	public GeoTransformableRectangle getManagedChild(final int index) {
 		return this.children.get(index);
 	}
@@ -153,6 +164,7 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 	 * @param child
 	 * @return
 	 */
+	@Override
 	public T getLayoutProperty(final GeoTransformableRectangle child) {
 		return this.childLayoutProperty.get(child);
 	}
@@ -161,90 +173,185 @@ public abstract class GeoManagerWithChildren<T> extends GeoManagerDirect {
 	public void onChangeParentRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)
-				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new BaseGeoEvent(GeoOperation.REPARENT_REQUEST,
-					geoTransformable, transformation));
+		if (this.children.contains(geoTransformable)) {
+			onChildChangeParentRequest(geoTransformable, transformation);
 		} else {
 			super.onChangeParentRequest(geoTransformable, transformation);
 		}
 	}
 
+	protected abstract void onChildChangeParentRequest(
+			GeoTransformableRectangle child, GeoTransformation transformation);
+
 	@Override
 	public void onChangeVisibilityRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)
-				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new BaseGeoEvent(GeoOperation.VISIBILITY_REQUEST,
-					geoTransformable, transformation));
+		if (this.children.contains(geoTransformable)) {
+			onChildChangeVisibilityRequest(geoTransformable, transformation);
 		} else {
 			super.onChangeVisibilityRequest(geoTransformable, transformation);
 		}
 	}
 
+	protected abstract void onChildChangeVisibilityRequest(
+			GeoTransformableRectangle child, GeoTransformation transformation);
+
 	@Override
 	public void onLowerRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)
-				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new BaseGeoEvent(GeoOperation.LOWER_REQUEST,
-					geoTransformable, transformation));
-
+		if (this.children.contains(geoTransformable)) {
+			onChildLowerRequest(geoTransformable, transformation);
 		} else {
 			super.onLowerRequest(geoTransformable, transformation);
 		}
 	}
 
+	protected abstract void onChildLowerRequest(
+			GeoTransformableRectangle child, GeoTransformation transformation);
+
 	@Override
 	public void onMoveRequest(final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)
-				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new BaseGeoEvent(GeoOperation.MOVE_REQUEST,
-					geoTransformable, transformation));
+		if (this.children.contains(geoTransformable)) {
+			onChildMoveRequest(geoTransformable, transformation);
 		} else {
 			super.onMoveRequest(geoTransformable, transformation);
 		}
 	}
 
+	protected abstract void onChildMoveRequest(GeoTransformableRectangle child,
+			GeoTransformation transformation);
+
 	@Override
 	public void onMoveResizeRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)
-				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new BaseGeoEvent(GeoOperation.MOVE_RESIZE_REQUEST,
-					geoTransformable, transformation));
+		if (this.children.contains(geoTransformable)) {
+			onChildMoveResizeRequest(geoTransformable, transformation);
 		} else {
 			super.onMoveResizeRequest(geoTransformable, transformation);
 		}
 	}
 
+	protected abstract void onChildMoveResizeRequest(
+			GeoTransformableRectangle child, GeoTransformation transformation);
+
 	@Override
 	public void onRaiseRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)
-				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new BaseGeoEvent(GeoOperation.RAISE_REQUEST,
-					geoTransformable, transformation));
+		if (this.children.contains(geoTransformable)) {
+			onChildRaiseRequest(geoTransformable, transformation);
 		} else {
 			super.onRaiseRequest(geoTransformable, transformation);
 		}
 	}
 
+	protected abstract void onChildRaiseRequest(
+			GeoTransformableRectangle child, GeoTransformation transformation);
+
 	@Override
 	public void onResizeRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)
-				|| getContainer().equals(geoTransformable)) {
-			fireEvent(new BaseGeoEvent(GeoOperation.RESIZE_REQUEST,
-					geoTransformable, transformation));
+		if (this.children.contains(geoTransformable)) {
+			onChildResizeRequest(geoTransformable, transformation);
 		} else {
 			super.onResizeRequest(geoTransformable, transformation);
+		}
+	}
+
+	protected abstract void onChildResizeRequest(
+			GeoTransformableRectangle child, GeoTransformation transformation);
+
+	@Override
+	public void onChangeParentNotify(
+			final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		if (getContainer().equals(geoTransformable)) {
+			handleContainerChanged(geoTransformable, transformation);
+		} else {
+			super.onChangeParentNotify(geoTransformable, transformation);
+		}
+	}
+
+	protected abstract void handleContainerChanged(
+			final GeoTransformableRectangle container,
+			final GeoTransformation transformation);
+
+	@Override
+	public void onChangeVisibilityNotify(
+			final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		if (getContainer().equals(geoTransformable)) {
+			handleContainerChanged(geoTransformable, transformation);
+		} else {
+			super.onChangeVisibilityNotify(geoTransformable, transformation);
+		}
+	}
+
+	@Override
+	public void onDestroyNotify(
+			final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		if (getContainer().equals(geoTransformable)) {
+			handleContainerChanged(geoTransformable, transformation);
+		} else {
+			super.onDestroyNotify(geoTransformable, transformation);
+		}
+	}
+
+	@Override
+	public void onLowerNotify(final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		if (getContainer().equals(geoTransformable)) {
+			handleContainerChanged(geoTransformable, transformation);
+		} else {
+			super.onLowerNotify(geoTransformable, transformation);
+		}
+	}
+
+	@Override
+	public void onMoveNotify(final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		if (getContainer().equals(geoTransformable)) {
+			handleContainerChanged(geoTransformable, transformation);
+		} else {
+			super.onMoveNotify(geoTransformable, transformation);
+		}
+	}
+
+	@Override
+	public void onMoveResizeNotify(
+			final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		if (getContainer().equals(geoTransformable)) {
+			handleContainerChanged(geoTransformable, transformation);
+		} else {
+			super.onMoveResizeNotify(geoTransformable, transformation);
+		}
+	}
+
+	@Override
+	public void onRaiseNotify(final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		if (getContainer().equals(geoTransformable)) {
+			handleContainerChanged(geoTransformable, transformation);
+		} else {
+			super.onRaiseNotify(geoTransformable, transformation);
+		}
+	}
+
+	@Override
+	public void onResizeNotify(
+			final GeoTransformableRectangle geoTransformable,
+			final GeoTransformation transformation) {
+		if (getContainer().equals(geoTransformable)) {
+			handleContainerChanged(geoTransformable, transformation);
+		} else {
+			super.onResizeNotify(geoTransformable, transformation);
 		}
 	}
 }

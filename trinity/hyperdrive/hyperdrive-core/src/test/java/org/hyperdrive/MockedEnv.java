@@ -3,11 +3,15 @@ package org.hyperdrive;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.hydrogen.api.display.Atom;
 import org.hydrogen.api.display.Display;
+import org.hydrogen.api.display.DisplayAtoms;
 import org.hydrogen.api.display.DisplayPlatform;
 import org.hydrogen.api.display.PlatformRenderArea;
 import org.hydrogen.api.display.PlatformRenderAreaAttributes;
 import org.hydrogen.api.display.PlatformRenderAreaGeometry;
+import org.hydrogen.api.display.Property;
+import org.hydrogen.api.display.PropertyInstance;
 import org.hydrogen.api.display.ResourceHandle;
 import org.hydrogen.api.geometry.Coordinates;
 import org.hydrogen.api.geometry.Rectangle;
@@ -18,6 +22,7 @@ import org.hydrogen.api.paint.PaintableRef;
 import org.hydrogen.api.paint.Painter;
 import org.hydrogen.api.paint.PainterFactory;
 import org.hydrogen.api.paint.PainterFactoryProvider;
+import org.hyperdrive.api.core.ManagedDisplay;
 import org.hyperdrive.api.widget.PaintInstruction;
 import org.hyperdrive.api.widget.Root;
 import org.hyperdrive.api.widget.ViewBinder;
@@ -28,7 +33,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class DummyEnv {
+public class MockedEnv {
 
 	// displayplatform level:
 	@Mock
@@ -42,6 +47,20 @@ public class DummyEnv {
 	public Display displayMock;
 	@Mock
 	public PainterFactory painterFactoryMock;
+	@Mock
+	public DisplayAtoms displayAtomsMock;
+	public String atomMockName = "dummyAtom";
+	@Mock
+	public Atom atomMock;
+	@Mock
+	public PropertyInstance propertyInstanceMock;
+	public String propertyMockName = "dummyProperty";
+	@Mock
+	public Property<PropertyInstance> propertyMock;
+
+	// managed display level:
+	@Mock
+	public ManagedDisplay managedDisplayMock;
 
 	// client level:
 	@Mock
@@ -50,6 +69,10 @@ public class DummyEnv {
 	public PlatformRenderArea c1;
 	@Mock
 	public PlatformRenderAreaGeometry c0PlatformRenderAreaGeometry;
+	public int c0X = 10;
+	public int c0Y = 15;
+	public int c0Width = 200;
+	public int c0Height = 250;
 	@Mock
 	public PlatformRenderAreaAttributes c0PlatformRenderAreaAttributes;
 	@Mock
@@ -66,6 +89,7 @@ public class DummyEnv {
 	public PlatformRenderArea widgetPlatformRenderAreaMock;
 	@Mock
 	public Painter painterMock;
+	@SuppressWarnings("rawtypes")
 	@Mock
 	public PaintContext widgetPaintContextMock;
 
@@ -74,13 +98,17 @@ public class DummyEnv {
 	public Widget.View widgetViewMock;
 	@Mock
 	public Object widgetPaintPeer;
+	@SuppressWarnings("rawtypes")
 	@Mock
 	public static PaintCall nullPaintCallMock;
+	@SuppressWarnings("rawtypes")
 	@Mock
 	public static PaintCall createPaintCallMock;
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@InjectMocks
 	public static PaintInstruction destroyInstructionMock = new PaintInstruction(
-			DummyEnv.nullPaintCallMock);
+			MockedEnv.nullPaintCallMock);
+	@SuppressWarnings("rawtypes")
 	@Mock
 	public static PaintInstruction createInstructionMock;
 	@Mock
@@ -90,6 +118,10 @@ public class DummyEnv {
 
 	@Mock
 	public PlatformRenderAreaGeometry widgetPlatformRenderAreaGeometry;
+	public int widgetPlatformRenderAreaX = 5;
+	public int widgetPlatformRenderAreaY = 10;
+	public int widgetPlatformRenderAreaWidth = 100;
+	public int widgetPlatformRenderAreaHeight = 100;
 
 	@Mock
 	public PlatformRenderAreaAttributes widgetPlatformRenderAreaAttributes;
@@ -97,11 +129,12 @@ public class DummyEnv {
 	@Mock
 	public Coordinates positionMock;
 
-	public void setup() {
+	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		stubAll();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void stubAll() {
 
 		// stub painterfactory provider
@@ -129,6 +162,8 @@ public class DummyEnv {
 				this.dislayNameMock);
 		Mockito.when(this.displayMock.getDisplayPlatform()).thenReturn(
 				this.displayPlatformMock);
+		Mockito.when(this.displayMock.getDisplayAtoms()).thenReturn(
+				this.displayAtomsMock);
 
 		// stub painterfactory
 		Mockito.when(
@@ -136,6 +171,25 @@ public class DummyEnv {
 						.any())).thenReturn(this.painterMock);
 		Mockito.when(this.displayMock.getPainterFactory()).thenReturn(
 				this.painterFactoryMock);
+
+		// stub displayatoms
+		Mockito.when(this.displayAtomsMock.getAtomByName(this.atomMockName))
+				.thenReturn(this.atomMock);
+		Mockito.when(this.displayAtomsMock.getAtomByName(this.propertyMockName))
+				.thenReturn(this.propertyMock);
+
+		// stub atom
+		Mockito.when(this.atomMock.getAtomName()).thenReturn(this.atomMockName);
+
+		// stub property
+		Mockito.when(this.propertyMock.getAtomName()).thenReturn(
+				this.propertyMockName);
+		Mockito.when(this.propertyMock.getDisplay()).thenReturn(
+				this.displayMock);
+		Mockito.when(
+				this.propertyMock
+						.getPropertyInstance((PlatformRenderArea) Matchers
+								.any())).thenReturn(this.propertyInstanceMock);
 
 		// stub client platformrenderareas
 		Mockito.when(this.c0.getPlatformRenderAreaGeometry()).thenReturn(
@@ -149,13 +203,13 @@ public class DummyEnv {
 
 		// stub clients platformrenderarea geometry
 		Mockito.when(this.c0PlatformRenderAreaGeometry.getRelativeX())
-				.thenReturn(5);
+				.thenReturn(this.c0X);
 		Mockito.when(this.c0PlatformRenderAreaGeometry.getRelativeY())
-				.thenReturn(5);
+				.thenReturn(this.c0Y);
 		Mockito.when(this.c0PlatformRenderAreaGeometry.getWidth()).thenReturn(
-				50);
+				this.c0Width);
 		Mockito.when(this.c0PlatformRenderAreaGeometry.getHeight()).thenReturn(
-				50);
+				this.c0Height);
 		Mockito.when(this.c1PlatformRenderAreaGeometry.getRelativeX())
 				.thenReturn(0);
 		Mockito.when(this.c1PlatformRenderAreaGeometry.getRelativeY())
@@ -171,25 +225,33 @@ public class DummyEnv {
 		Mockito.when(this.c1PlatformRenderAreaAttributes.isViewable())
 				.thenReturn(true);
 
-		// stub widget view
-		Mockito.when(this.widgetViewMock.doCreate(null, true, null))
-				.thenReturn(DummyEnv.createInstructionMock);
-		Mockito.when(this.widgetViewMock.doDestroy()).thenReturn(
-				DummyEnv.destroyInstructionMock);
-
-		// stub painter
-		Mockito.when(this.painterMock.getPaintable()).thenReturn(
+		// stub managedDisplay
+		Mockito.when(this.managedDisplayMock.getDisplay()).thenReturn(
+				this.displayMock);
+		Mockito.when(this.managedDisplayMock.getRoot()).thenReturn(
 				this.widgetMock);
-		Mockito.when(this.painterMock.paint(DummyEnv.createPaintCallMock))
-				.thenReturn(DummyEnv.createInstructionFutureMock);
 
 		// stub widget
+		Mockito.when(this.widgetMock.getManagedDisplay()).thenReturn(
+				this.managedDisplayMock);
 		Mockito.when(this.widgetMock.getView()).thenReturn(this.widgetViewMock);
 		Mockito.when(this.widgetMock.getPlatformRenderArea()).thenReturn(
 				this.widgetPlatformRenderAreaMock);
 
 		ViewBinder.bindView(Widget.View.class, WidgetViewMock.class);
 		ViewBinder.bindView(Root.View.class, WidgetViewMock.class);
+
+		// stub widget view
+		Mockito.when(this.widgetViewMock.doCreate(null, true, null))
+				.thenReturn(MockedEnv.createInstructionMock);
+		Mockito.when(this.widgetViewMock.doDestroy()).thenReturn(
+				MockedEnv.destroyInstructionMock);
+
+		// stub painter
+		Mockito.when(this.painterMock.getPaintable()).thenReturn(
+				this.widgetMock);
+		Mockito.when(this.painterMock.paint(MockedEnv.createPaintCallMock))
+				.thenReturn(MockedEnv.createInstructionFutureMock);
 
 		// stub widget platform renderarea
 		Mockito.when(
@@ -204,16 +266,20 @@ public class DummyEnv {
 				this.widgetPlatformRenderAreaMock.translateCoordinates(
 						(PlatformRenderArea) Matchers.any(), Matchers.anyInt(),
 						Matchers.anyInt())).thenReturn(this.positionMock);
+		Mockito.when(
+				this.widgetPlatformRenderAreaMock
+						.getPropertyInstance(this.propertyMock)).thenReturn(
+				this.propertyInstanceMock);
 
 		// stub widget platformrenderarea geometry
 		Mockito.when(this.widgetPlatformRenderAreaGeometry.getRelativeX())
-				.thenReturn(0);
+				.thenReturn(this.widgetPlatformRenderAreaX);
 		Mockito.when(this.widgetPlatformRenderAreaGeometry.getRelativeY())
-				.thenReturn(0);
+				.thenReturn(this.widgetPlatformRenderAreaY);
 		Mockito.when(this.widgetPlatformRenderAreaGeometry.getWidth())
-				.thenReturn(100);
+				.thenReturn(this.widgetPlatformRenderAreaWidth);
 		Mockito.when(this.widgetPlatformRenderAreaGeometry.getHeight())
-				.thenReturn(100);
+				.thenReturn(this.widgetPlatformRenderAreaHeight);
 
 		// stub widget platformrenderarea attributes
 		Mockito.when(this.widgetPlatformRenderAreaAttributes.isViewable())
@@ -227,18 +293,18 @@ public class DummyEnv {
 
 		// stub create paint call
 		Mockito.when(
-				DummyEnv.createPaintCallMock.call(this.widgetPaintContextMock))
+				MockedEnv.createPaintCallMock.call(this.widgetPaintContextMock))
 				.thenReturn(this.widgetResourceHandleMock);
 
 		// stub create paint instruction
-		Mockito.when(DummyEnv.createInstructionMock.getPaintCall()).thenReturn(
-				DummyEnv.createPaintCallMock);
-		Mockito.when(DummyEnv.createInstructionMock.getPaintResult())
-				.thenReturn(DummyEnv.createInstructionFutureMock);
+		Mockito.when(MockedEnv.createInstructionMock.getPaintCall())
+				.thenReturn(MockedEnv.createPaintCallMock);
+		Mockito.when(MockedEnv.createInstructionMock.getPaintResult())
+				.thenReturn(MockedEnv.createInstructionFutureMock);
 
 		// stub create instruction future
 		try {
-			Mockito.when(DummyEnv.createInstructionFutureMock.get())
+			Mockito.when(MockedEnv.createInstructionFutureMock.get())
 					.thenReturn(this.widgetResourceHandleMock);
 		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -251,15 +317,17 @@ public class DummyEnv {
 
 	public static class WidgetViewMock implements Widget.View {
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public PaintInstruction<ResourceHandle> doCreate(final Rectangle form,
 				final boolean visible, final Paintable parentPaintable) {
-			return DummyEnv.createInstructionMock;
+			return MockedEnv.createInstructionMock;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public PaintInstruction<Void> doDestroy() {
-			return DummyEnv.destroyInstructionMock;
+			return MockedEnv.destroyInstructionMock;
 		}
 	}
 }

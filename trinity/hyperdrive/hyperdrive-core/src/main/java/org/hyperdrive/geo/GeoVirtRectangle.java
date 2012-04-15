@@ -16,7 +16,6 @@
 package org.hyperdrive.geo;
 
 import org.hyperdrive.api.geo.GeoManager;
-import org.hyperdrive.api.geo.HasGeoManager;
 
 // TODO documentation
 /**
@@ -34,8 +33,7 @@ import org.hyperdrive.api.geo.HasGeoManager;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class GeoVirtRectangle extends AbstractGeoTransformableRectangle
-		implements HasGeoManager {
+public class GeoVirtRectangle extends AbstractGeoTransformableRectangle {
 	private final GeoVirtGeoExecutor geoExecutor;
 	private GeoManager geoManager;
 

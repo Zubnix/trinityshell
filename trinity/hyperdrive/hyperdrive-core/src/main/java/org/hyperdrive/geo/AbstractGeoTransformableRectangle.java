@@ -26,7 +26,6 @@ import org.hyperdrive.api.geo.GeoManager;
 import org.hyperdrive.api.geo.GeoOperation;
 import org.hyperdrive.api.geo.GeoTransformableRectangle;
 import org.hyperdrive.api.geo.GeoTransformation;
-import org.hyperdrive.api.geo.HasGeoManager;
 
 //TODO Let geo events travel downwards to children to notify them that one of their parents has changed
 // TODO documentation
@@ -65,113 +64,27 @@ import org.hyperdrive.api.geo.HasGeoManager;
 public abstract class AbstractGeoTransformableRectangle extends EventBus
 		implements GeoTransformableRectangle {
 
-	private final class LowerRequestHandler implements GeoEventHandler {
+	private final class ParentNotifyHandler implements GeoEventHandler {
 		@Override
 		public void handleEvent(final GeoEvent event) {
-			handleLowerEvent(event);
+			handleParentNotifyEvent(event);
 		}
 
 		@Override
 		public GeoOperation getType() {
-			return GeoOperation.LOWER_REQUEST;
+			return GeoOperation.PARENT_NOTIFY;
 		}
 	}
 
-	private final class RaiseRequestHandler implements GeoEventHandler {
+	private final class ChildLeftNotifyHandler implements GeoEventHandler {
 		@Override
 		public void handleEvent(final GeoEvent event) {
-			handleRaiseEvent(event);
+			handlechildLeftNotifyEvent(event);
 		}
 
 		@Override
 		public GeoOperation getType() {
-			return GeoOperation.RAISE_REQUEST;
-		}
-	}
-
-	private final class MoveRequestHandler implements GeoEventHandler {
-		@Override
-		public void handleEvent(final GeoEvent event) {
-			handleMoveEvent(event);
-		}
-
-		@Override
-		public GeoOperation getType() {
-			return GeoOperation.MOVE_REQUEST;
-		}
-	}
-
-	private final class ResizeRequestHandler implements GeoEventHandler {
-		@Override
-		public void handleEvent(final GeoEvent event) {
-			handleResizeEvent(event);
-		}
-
-		@Override
-		public GeoOperation getType() {
-			return GeoOperation.RESIZE_REQUEST;
-		}
-	}
-
-	private final class MoveResizeRequestHandler implements GeoEventHandler {
-		@Override
-		public void handleEvent(final GeoEvent event) {
-			handleMoveResizeEvent(event);
-
-		}
-
-		@Override
-		public GeoOperation getType() {
-			return GeoOperation.MOVE_RESIZE_REQUEST;
-		}
-	}
-
-	private final class VisibilityRequestHandler implements GeoEventHandler {
-		@Override
-		public void handleEvent(final GeoEvent event) {
-			handleVisibilityEvent(event);
-
-		}
-
-		@Override
-		public GeoOperation getType() {
-			return GeoOperation.VISIBILITY_REQUEST;
-		}
-	}
-
-	private final class ReparentRequestHandler implements GeoEventHandler {
-		@Override
-		public void handleEvent(final GeoEvent event) {
-			handleOwnReparentEvent(event);
-		}
-
-		@Override
-		public GeoOperation getType() {
-			return GeoOperation.REPARENT_REQUEST;
-		}
-	}
-
-	private final class GeoEventFromParentHandler implements GeoEventHandler {
-		@Override
-		public void handleEvent(final GeoEvent event) {
-			handleGeoEventFromParent(event);
-		}
-
-		@Override
-		public GeoOperation getType() {
-			return GeoOperation.FROM_PARENT;
-		}
-	}
-
-	private final class ChildLeftHandler implements GeoEventHandler {
-		@Override
-		public void handleEvent(final GeoEvent event) {
-			handlechildLeft(event);
-		}
-
-		@Override
-		public GeoOperation getType() {
-			return GeoOperation.CHILD_LEFT;
+			return GeoOperation.CHILD_LEFT_NOTIFY;
 		}
 	}
 
@@ -197,39 +110,18 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 
 	private final List<GeoTransformableRectangle> children;
 
-	private final LowerRequestHandler lowerRequestHandler;
-	private final RaiseRequestHandler raiseRequestHandler;
-	private final MoveRequestHandler moveRequestHandler;
-	private final ResizeRequestHandler resizeRequestHandler;
-	private final MoveResizeRequestHandler moveResizeRequestHandler;
-	private final VisibilityRequestHandler visibilityRequestHandler;
-	private final ReparentRequestHandler reparentRequestHandler;
-	private final GeoEventFromParentHandler geoEventFromParentHandler;
-	private final ChildLeftHandler childLeftHandler;
+	private final ParentNotifyHandler parentNotifyHandler;
+	private final ChildLeftNotifyHandler childLeftNotifyHandler;
+
+	private GeoManager geoManager;
 
 	/**
 	 * 
 	 */
 	public AbstractGeoTransformableRectangle() {
 		this.children = new ArrayList<GeoTransformableRectangle>();
-
-		this.lowerRequestHandler = new LowerRequestHandler();
-		this.raiseRequestHandler = new RaiseRequestHandler();
-		this.moveRequestHandler = new MoveRequestHandler();
-		this.resizeRequestHandler = new ResizeRequestHandler();
-		this.moveResizeRequestHandler = new MoveResizeRequestHandler();
-		this.visibilityRequestHandler = new VisibilityRequestHandler();
-		this.geoEventFromParentHandler = new GeoEventFromParentHandler();
-		this.reparentRequestHandler = new ReparentRequestHandler();
-		this.childLeftHandler = new ChildLeftHandler();
-
-		addGeoEventHandler(this.lowerRequestHandler);
-		addGeoEventHandler(this.raiseRequestHandler);
-		addGeoEventHandler(this.moveRequestHandler);
-		addGeoEventHandler(this.resizeRequestHandler);
-		addGeoEventHandler(this.moveResizeRequestHandler);
-		addGeoEventHandler(this.visibilityRequestHandler);
-		addGeoEventHandler(this.reparentRequestHandler);
+		this.parentNotifyHandler = new ParentNotifyHandler();
+		this.childLeftNotifyHandler = new ChildLeftNotifyHandler();
 	}
 
 	@Override
@@ -401,16 +293,18 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * @return
 	 */
 	@Override
-	public GeoManager getDominantGeoManager() {
-		if (getParent() != null) {
-			if (getParent() instanceof HasGeoManager) {
-				return ((HasGeoManager) getParent()).getGeoManager();
-			} else {
-				return getParent().getDominantGeoManager();
-			}
-		} else {
+	public GeoManager getParentGeoManager() {
+		final GeoTransformableRectangle parent = getParent();
+		if (parent == null) {
 			return null;
 		}
+
+		final GeoManager parentGeoManager = parent.getGeoManager();
+		if (parentGeoManager == null) {
+			return parent.getParentGeoManager();
+		}
+
+		return parentGeoManager;
 	}
 
 	/**
@@ -459,8 +353,9 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 */
 	@Override
 	public void requestRaise() {
-		fireEvent(new BaseGeoEvent(GeoOperation.RAISE_REQUEST, this,
-				toGeoTransformation()));
+		final GeoEvent event = newGeoEvent(GeoOperation.RAISE_REQUEST);
+		fireEvent(event);
+		handleRaiseRequestEvent(event);
 	}
 
 	/**
@@ -469,8 +364,13 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 */
 	@Override
 	public void requestLower() {
-		fireEvent(new BaseGeoEvent(GeoOperation.LOWER_REQUEST, this,
-				toGeoTransformation()));
+		final GeoEvent event = newGeoEvent(GeoOperation.LOWER_REQUEST);
+		fireEvent(event);
+		handleLowerRequestEvent(event);
+	}
+
+	protected GeoEvent newGeoEvent(final GeoOperation geoOperation) {
+		return new BaseGeoEvent(geoOperation, this, toGeoTransformation());
 	}
 
 	/**
@@ -478,10 +378,10 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * @param event
 	 * 
 	 */
-	protected void handleLowerEvent(final GeoEvent event) {
+	protected void handleLowerRequestEvent(final GeoEvent event) {
 		if (event.getGeoTransformableRectangle().equals(this)
-				&& (getDominantGeoManager() != null)) {
-			getDominantGeoManager().onLowerRequest(this,
+				&& (getParentGeoManager() != null)) {
+			getParentGeoManager().onLowerRequest(this,
 					event.getGeoTransformation());
 		} else {
 			this.doUpdateLower();
@@ -493,10 +393,10 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * @param event
 	 * 
 	 */
-	protected void handleRaiseEvent(final GeoEvent event) {
+	protected void handleRaiseRequestEvent(final GeoEvent event) {
 		if (event.getGeoTransformableRectangle().equals(this)
-				&& (getDominantGeoManager() != null)) {
-			getDominantGeoManager().onRaiseRequest(this,
+				&& (getParentGeoManager() != null)) {
+			getParentGeoManager().onRaiseRequest(this,
 					event.getGeoTransformation());
 		} else {
 			this.doUpdateRaise();
@@ -508,8 +408,10 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * 
 	 */
 	@Override
-	public void doUpdatePlaceValue() {
-		this.doUpdatePlaceValue(true);
+	public void doUpdatePlace() {
+		doUpdatePlaceValue(true);
+		handleMoveNotifyEvent(newGeoEvent(GeoOperation.MOVE));
+		fireGeoEvent(GeoOperation.MOVE);
 	}
 
 	/**
@@ -523,7 +425,14 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 		}
 		flushPlaceValues();
 		updateChildrenPosition();
-		fireGeoEvent(GeoOperation.MOVE);
+	}
+
+	protected void handleMoveNotifyEvent(final GeoEvent event) {
+		final GeoManager geoManager = getGeoManager();
+		if (geoManager != null) {
+			geoManager.onMoveNotify(event.getGeoTransformableRectangle(),
+					event.getGeoTransformation());
+		}
 	}
 
 	/**
@@ -555,13 +464,13 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * @param event
 	 * 
 	 */
-	protected void handleMoveEvent(final GeoEvent event) {
+	protected void handleMoveRequestEvent(final GeoEvent event) {
 		if (event.getGeoTransformableRectangle().equals(this)
-				&& (getDominantGeoManager() != null)) {
-			getDominantGeoManager().onMoveRequest(this,
+				&& (getParentGeoManager() != null)) {
+			getParentGeoManager().onMoveRequest(this,
 					event.getGeoTransformation());
 		} else {
-			this.doUpdatePlaceValue();
+			doUpdatePlace();
 		}
 	}
 
@@ -570,8 +479,18 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * 
 	 */
 	@Override
-	public void doUpdateSizeValue() {
-		this.doUpdateSizeValue(true);
+	public void doUpdateSize() {
+		this.doUpdateSize(true);
+		handleResizeNotifyEvent(newGeoEvent(GeoOperation.RESIZE));
+		fireGeoEvent(GeoOperation.RESIZE);
+	}
+
+	protected void handleResizeNotifyEvent(final GeoEvent event) {
+		final GeoManager geoManager = getGeoManager();
+		if (geoManager != null) {
+			geoManager.onResizeNotify(event.getGeoTransformableRectangle(),
+					event.getGeoTransformation());
+		}
 	}
 
 	/**
@@ -579,19 +498,18 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * @param execute
 	 * 
 	 */
-	protected void doUpdateSizeValue(final boolean execute) {
+	protected void doUpdateSize(final boolean execute) {
 		if (execute) {
-			execUpdateSizeValue();
+			execUpdateSize();
 		}
 		flushSizeValues();
-		fireGeoEvent(GeoOperation.RESIZE);
 	}
 
 	/**
 	 * 
 	 * 
 	 */
-	protected void execUpdateSizeValue() {
+	protected void execUpdateSize() {
 		getGeoExecutor().updateSize(this.desiredWidth, this.desiredHeight);
 	}
 
@@ -605,13 +523,13 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * @param event
 	 * 
 	 */
-	protected void handleResizeEvent(final GeoEvent event) {
+	protected void handleResizeRequestEvent(final GeoEvent event) {
 		if (event.getGeoTransformableRectangle().equals(this)
-				&& (getDominantGeoManager() != null)) {
-			getDominantGeoManager().onResizeRequest(this,
+				&& (getParentGeoManager() != null)) {
+			getParentGeoManager().onResizeRequest(this,
 					event.getGeoTransformation());
 		} else {
-			this.doUpdateSizeValue();
+			this.doUpdateSize();
 		}
 	}
 
@@ -620,8 +538,10 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * 
 	 */
 	@Override
-	public void doUpdateSizePlaceValue() {
+	public void doUpdateSizePlace() {
 		this.doUpdateSizePlaceValue(true);
+		fireGeoEvent(GeoOperation.MOVE_RESIZE);
+		handleMoveResizeNotifyEvent(newGeoEvent(GeoOperation.MOVE_RESIZE));
 	}
 
 	/**
@@ -635,7 +555,15 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 		}
 		flushSizePlaceValues();
 		updateChildrenPosition();
-		fireGeoEvent(GeoOperation.MOVE_RESIZE);
+
+	}
+
+	protected void handleMoveResizeNotifyEvent(final GeoEvent event) {
+		final GeoManager geoManager = getGeoManager();
+		if (geoManager != null) {
+			geoManager.onMoveResizeNotify(event.getGeoTransformableRectangle(),
+					event.getGeoTransformation());
+		}
 	}
 
 	/**
@@ -658,14 +586,14 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * @param event
 	 * 
 	 */
-	protected void handleMoveResizeEvent(final GeoEvent event) {
+	protected void handleMoveResizeRequestEvent(final GeoEvent event) {
 		if (event.getGeoTransformableRectangle().equals(this)
-				&& (getDominantGeoManager() != null)) {
-			final GeoManager dominantGeoManager = getDominantGeoManager();
+				&& (getParentGeoManager() != null)) {
+			final GeoManager dominantGeoManager = getParentGeoManager();
 			dominantGeoManager.onMoveResizeRequest(this,
 					event.getGeoTransformation());
 		} else {
-			this.doUpdateSizePlaceValue();
+			this.doUpdateSizePlace();
 		}
 	}
 
@@ -676,6 +604,17 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	@Override
 	public void doDestroy() {
 		this.doDestroy(true);
+		handleDestroyNotifyEvent(newGeoEvent(GeoOperation.DESTROYED));
+		fireGeoEvent(GeoOperation.DESTROYED);
+	}
+
+	protected void handleDestroyNotifyEvent(final GeoEvent geoEvent) {
+		final GeoManager geoManager = getGeoManager();
+		if (geoManager != null) {
+			getGeoManager().onDestroyNotify(
+					geoEvent.getGeoTransformableRectangle(),
+					geoEvent.getGeoTransformation());
+		}
 	}
 
 	/**
@@ -688,7 +627,6 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 			execDestroy();
 		}
 		this.destroyed = true;
-		fireGeoEvent(GeoOperation.DESTROYED);
 	}
 
 	/**
@@ -706,6 +644,8 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	@Override
 	public void doUpdateVisibility() {
 		this.doUpdateVisibility(true);
+		handleVisibilityNotifyEvent(newGeoEvent(GeoOperation.VISIBILITY));
+		fireGeoEvent(GeoOperation.VISIBILITY);
 	}
 
 	/**
@@ -718,30 +658,16 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 			execUpdateVisibility();
 		}
 		flushVisibilityValue();
-		fireGeoEvent(GeoOperation.VISIBILITY);
 	}
 
-	// /**
-	// *
-	// * @param geoEvent
-	// */
-	// protected void notifiyChildrenOfGeoEvent(final GeoEvent geoEvent) {
-	// notifiyChildrenOfGeoEventFromParent(geoEvent);
-	// }
-	//
-	// /**
-	// *
-	// * @param geoEventFromParent
-	// */
-	// protected void notifiyChildrenOfGeoEventFromParent(
-	// final GeoEvent geoEventFromParent) {
-	// for (final GeoTransformableRectangle child : getChildren()) {
-	// // TODO children should listen for FROM_PARENT events on their
-	// // parent and fire them
-	// // themself.
-	// child.fireEvent(geoEventFromParent);
-	// }
-	// }
+	protected void handleVisibilityNotifyEvent(final GeoEvent event) {
+		final GeoManager geoManager = getGeoManager();
+		if (geoManager != null) {
+			getGeoManager().onChangeVisibilityNotify(
+					event.getGeoTransformableRectangle(),
+					event.getGeoTransformation());
+		}
+	}
 
 	/**
 	 * 
@@ -758,6 +684,8 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	@Override
 	public void doUpdateRaise() {
 		this.doUpdateRaise(true);
+		handleRaiseNotifyEvent(newGeoEvent(GeoOperation.RAISE));
+		fireGeoEvent(GeoOperation.RAISE);
 	}
 
 	/**
@@ -769,8 +697,14 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 		if (execute) {
 			execUpdateRaise();
 		}
-		fireGeoEvent(GeoOperation.RAISE);
+	}
 
+	protected void handleRaiseNotifyEvent(final GeoEvent event) {
+		final GeoManager geoManager = getGeoManager();
+		if (geoManager != null) {
+			geoManager.onRaiseNotify(event.getGeoTransformableRectangle(),
+					event.getGeoTransformation());
+		}
 	}
 
 	/**
@@ -788,6 +722,8 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	@Override
 	public void doUpdateLower() {
 		this.doUpdateLower(true);
+		handleLowerNotifyEvent(newGeoEvent(GeoOperation.LOWER));
+		fireGeoEvent(GeoOperation.LOWER);
 	}
 
 	/**
@@ -799,7 +735,14 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 		if (execute) {
 			execUpdateLower();
 		}
-		fireGeoEvent(GeoOperation.LOWER);
+	}
+
+	protected void handleLowerNotifyEvent(final GeoEvent event) {
+		final GeoManager geoManager = getGeoManager();
+		if (geoManager != null) {
+			geoManager.onLowerNotify(event.getGeoTransformableRectangle(),
+					event.getGeoTransformation());
+		}
 	}
 
 	/**
@@ -819,10 +762,10 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * @param event
 	 * 
 	 */
-	protected void handleVisibilityEvent(final GeoEvent event) {
+	protected void handleVisibilityRequestEvent(final GeoEvent event) {
 		if (event.getGeoTransformableRectangle().equals(this)
-				&& (getDominantGeoManager() != null)) {
-			getDominantGeoManager().onChangeVisibilityRequest(this,
+				&& (getParentGeoManager() != null)) {
+			getParentGeoManager().onChangeVisibilityRequest(this,
 					event.getGeoTransformation());
 		} else {
 			this.doUpdateVisibility();
@@ -834,8 +777,10 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * 
 	 */
 	@Override
-	public void doUpdateParentValue() {
-		this.doUpdateParentValue(true);
+	public void doUpdateParent() {
+		doUpdateParentValue(true);
+		handleOwnReparentNotifyEvent(newGeoEvent(GeoOperation.REPARENT));
+		fireGeoEvent(GeoOperation.REPARENT);
 	}
 
 	/**
@@ -847,8 +792,8 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 
 		// notify the old parent
 		if (getParent() != null) {
-			getParent().removeGeoEventHandler(this.geoEventFromParentHandler);
-			fireEvent(new BaseGeoEvent(GeoOperation.CHILD_LEFT, this,
+			getParent().removeGeoEventHandler(this.parentNotifyHandler);
+			fireEvent(new BaseGeoEvent(GeoOperation.CHILD_LEFT_NOTIFY, this,
 					toGeoTransformation()));
 		}
 		// actual parent update
@@ -861,14 +806,21 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 		getParent().notifyChildAdded(this);
 
 		// listen to from_parent events.
-		getParent().addGeoEventHandler(this.geoEventFromParentHandler);
+		getParent().addGeoEventHandler(this.parentNotifyHandler);
 
 		// Make sure we have the same size
 		// and place in our new parent
 		// as in our old parent.
-		this.doUpdateSizePlaceValue();
+		this.doUpdateSizePlace();
+	}
 
-		fireGeoEvent(GeoOperation.REPARENT);
+	protected void handleOwnReparentNotifyEvent(final GeoEvent event) {
+		final GeoManager geoManager = getGeoManager();
+		if (geoManager != null) {
+			geoManager.onChangeParentNotify(
+					event.getGeoTransformableRectangle(),
+					event.getGeoTransformation());
+		}
 	}
 
 	/**
@@ -888,12 +840,12 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * @param event
 	 * 
 	 */
-	protected void handleOwnReparentEvent(final GeoEvent event) {
-		if (getDominantGeoManager() != null) {
-			getDominantGeoManager().onChangeParentRequest(this,
+	protected void handleOwnReparentRequestEvent(final GeoEvent event) {
+		if (getParentGeoManager() != null) {
+			getParentGeoManager().onChangeParentRequest(this,
 					event.getGeoTransformation());
 		} else {
-			this.doUpdateParentValue();
+			doUpdateParent();
 		}
 
 	}
@@ -920,13 +872,12 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * 
 	 * @param operation
 	 */
-	protected void fireGeoEvent(final GeoOperation operation) {
+	protected void fireGeoEvent(final GeoOperation geoOperation) {
 		final GeoTransformation geoTransformation = toGeoTransformation();
-		final GeoEvent geoEvent = new BaseGeoEvent(operation, this,
-				geoTransformation);
+		final GeoEvent geoEvent = newGeoEvent(geoOperation);
 		fireEvent(geoEvent);
 		final GeoEvent fromParentGeoEvent = new BaseGeoEvent(
-				GeoOperation.FROM_PARENT, this, geoTransformation);
+				GeoOperation.PARENT_NOTIFY, this, geoTransformation);
 		fireEvent(fromParentGeoEvent);
 	}
 
@@ -934,7 +885,7 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * 
 	 * @param geoEventFromParent
 	 */
-	protected void handleGeoEventFromParent(final GeoEvent geoEventFromParent) {
+	protected void handleParentNotifyEvent(final GeoEvent geoEventFromParent) {
 		fireEvent(geoEventFromParent);
 	}
 
@@ -943,21 +894,31 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 		addTypedEventHandler(geoEventHandler);
 	}
 
-	protected void handlechildLeft(final GeoEvent event) {
+	protected void handlechildLeftNotifyEvent(final GeoEvent event) {
 		final GeoTransformableRectangle child = event
 				.getGeoTransformableRectangle();
-		child.removeGeoEventHandler(this.childLeftHandler);
+		child.removeGeoEventHandler(this.childLeftNotifyHandler);
 		this.children.remove(child);
 	}
 
 	@Override
 	public void notifyChildAdded(final GeoTransformableRectangle newChild) {
-		newChild.addGeoEventHandler(this.childLeftHandler);
+		newChild.addGeoEventHandler(this.childLeftNotifyHandler);
 		this.children.add(newChild);
 	}
 
 	@Override
 	public void removeGeoEventHandler(final GeoEventHandler geoEventHandler) {
 		removeTypedEventHandler(geoEventHandler);
+	}
+
+	@Override
+	public GeoManager getGeoManager() {
+		return this.geoManager;
+	}
+
+	@Override
+	public void setGeoManager(final GeoManager geoManager) {
+		this.geoManager = geoManager;
 	}
 }
