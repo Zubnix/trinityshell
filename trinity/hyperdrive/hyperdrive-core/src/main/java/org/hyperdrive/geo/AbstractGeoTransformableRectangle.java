@@ -421,7 +421,7 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 */
 	protected void doUpdatePlaceValue(final boolean execute) {
 		if (execute) {
-			execUpdatePlaceValue();
+			execUpdatePlace();
 		}
 		flushPlaceValues();
 		updateChildrenPosition();
@@ -449,7 +449,7 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * 
 	 * 
 	 */
-	protected void execUpdatePlaceValue() {
+	protected void execUpdatePlace() {
 		getGeoExecutor().updatePlace(this.desiredRelativeX,
 				this.desiredRelativeY);
 	}
@@ -551,7 +551,7 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 */
 	protected void doUpdateSizePlaceValue(final boolean execute) {
 		if (execute) {
-			execUpdateSizePlaceValue();
+			execUpdateSizePlace();
 		}
 		flushSizePlaceValues();
 		updateChildrenPosition();
@@ -570,7 +570,7 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * 
 	 * 
 	 */
-	protected void execUpdateSizePlaceValue() {
+	protected void execUpdateSizePlace() {
 		final GeoExecutor geoExecutor = getGeoExecutor();
 		geoExecutor.updateSizePlace(this.desiredRelativeX,
 				this.desiredRelativeY, this.desiredWidth, this.desiredHeight);
@@ -798,7 +798,7 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 		}
 		// actual parent update
 		if (execute) {
-			execUpdateParentValue();
+			execUpdateParent();
 		}
 		flushParentValue();
 
@@ -827,7 +827,7 @@ public abstract class AbstractGeoTransformableRectangle extends EventBus
 	 * 
 	 * 
 	 */
-	protected void execUpdateParentValue() {
+	protected void execUpdateParent() {
 		getGeoExecutor().updateParent(this.desiredParent);
 	}
 

@@ -15,10 +15,10 @@
  */
 package org.hyperdrive.geo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.hyperdrive.api.geo.GeoEvent;
 import org.hyperdrive.api.geo.GeoEventHandler;
@@ -42,8 +42,7 @@ import org.hyperdrive.api.geo.LayoutProperty;
 public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 		extends GeoManagerDirect implements GeoManagerWithChildren<T> {
 
-	private final List<GeoTransformableRectangle> children;
-	private final Map<GeoTransformableRectangle, T> childLayoutProperty;
+	private final Map<GeoTransformableRectangle, T> childrenWithLayoutProperty;
 	private GeoTransformableRectangle container;
 
 	/**
@@ -52,8 +51,7 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	public AbstractGeoManagerWithChildren(
 			final GeoTransformableRectangle container) {
 		setContainer(container);
-		this.children = new ArrayList<GeoTransformableRectangle>();
-		this.childLayoutProperty = new HashMap<GeoTransformableRectangle, T>();
+		this.childrenWithLayoutProperty = new LinkedHashMap<GeoTransformableRectangle, T>();
 	}
 
 	/**
@@ -77,25 +75,22 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	/**
 	 * 
 	 * @param child
-	 * 
-	 */
-	@Override
-	public void addManagedChild(final GeoTransformableRectangle child) {
-		this.children.add(child);
-	}
-
-	/**
-	 * 
-	 * @param child
 	 * @param layoutProperty
 	 * 
 	 */
 	@Override
-	public void addManagedChild(final GeoTransformableRectangle child,
+	public T addManagedChild(final GeoTransformableRectangle child,
 			final T layoutProperty) {
-		this.children.add(child);
-		this.childLayoutProperty.put(child, layoutProperty);
+		this.childrenWithLayoutProperty.put(child, layoutProperty);
+		return layoutProperty;
 	}
+
+	@Override
+	public T addManagedChild(final GeoTransformableRectangle child) {
+		return addManagedChild(child, newDefaultLayoutProperty());
+	}
+
+	protected abstract T newDefaultLayoutProperty();
 
 	/**
 	 * 
@@ -124,8 +119,7 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	 */
 	@Override
 	public void removeManagedChild(final GeoTransformableRectangle child) {
-		this.children.remove(child);
-		this.childLayoutProperty.remove(child);
+		this.childrenWithLayoutProperty.remove(child);
 	}
 
 	/**
@@ -134,9 +128,16 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	 */
 	@Override
 	public void removeManagedChild(final int index) {
-		final GeoTransformableRectangle removedChild = this.children
-				.remove(index);
-		this.childLayoutProperty.remove(removedChild);
+
+		final Iterator<Entry<GeoTransformableRectangle, T>> it = this.childrenWithLayoutProperty
+				.entrySet().iterator();
+
+		for (int i = 0; it.hasNext(); i++, it.next()) {
+			if (i == index) {
+				it.remove();
+				break;
+			}
+		}
 	}
 
 	/**
@@ -145,8 +146,8 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	 */
 	@Override
 	public GeoTransformableRectangle[] getManagedChildren() {
-		return this.children
-				.toArray(new GeoTransformableRectangle[this.children.size()]);
+		return this.childrenWithLayoutProperty.keySet().toArray(
+				new GeoTransformableRectangle[] {});
 	}
 
 	/**
@@ -156,7 +157,16 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	 */
 	@Override
 	public GeoTransformableRectangle getManagedChild(final int index) {
-		return this.children.get(index);
+		final Iterator<Entry<GeoTransformableRectangle, T>> it = this.childrenWithLayoutProperty
+				.entrySet().iterator();
+
+		GeoTransformableRectangle child = null;
+		for (int i = 0; it.hasNext(); i++, child = it.next().getKey()) {
+			if (i == index) {
+				break;
+			}
+		}
+		return child;
 	}
 
 	/**
@@ -166,14 +176,14 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	 */
 	@Override
 	public T getLayoutProperty(final GeoTransformableRectangle child) {
-		return this.childLayoutProperty.get(child);
+		return this.childrenWithLayoutProperty.get(child);
 	}
 
 	@Override
 	public void onChangeParentRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)) {
+		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
 			onChildChangeParentRequest(geoTransformable, transformation);
 		} else {
 			super.onChangeParentRequest(geoTransformable, transformation);
@@ -187,7 +197,7 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	public void onChangeVisibilityRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)) {
+		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
 			onChildChangeVisibilityRequest(geoTransformable, transformation);
 		} else {
 			super.onChangeVisibilityRequest(geoTransformable, transformation);
@@ -201,7 +211,7 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	public void onLowerRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)) {
+		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
 			onChildLowerRequest(geoTransformable, transformation);
 		} else {
 			super.onLowerRequest(geoTransformable, transformation);
@@ -214,7 +224,7 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	@Override
 	public void onMoveRequest(final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)) {
+		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
 			onChildMoveRequest(geoTransformable, transformation);
 		} else {
 			super.onMoveRequest(geoTransformable, transformation);
@@ -228,7 +238,7 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	public void onMoveResizeRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)) {
+		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
 			onChildMoveResizeRequest(geoTransformable, transformation);
 		} else {
 			super.onMoveResizeRequest(geoTransformable, transformation);
@@ -242,7 +252,7 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	public void onRaiseRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)) {
+		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
 			onChildRaiseRequest(geoTransformable, transformation);
 		} else {
 			super.onRaiseRequest(geoTransformable, transformation);
@@ -256,7 +266,7 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	public void onResizeRequest(
 			final GeoTransformableRectangle geoTransformable,
 			final GeoTransformation transformation) {
-		if (this.children.contains(geoTransformable)) {
+		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
 			onChildResizeRequest(geoTransformable, transformation);
 		} else {
 			super.onResizeRequest(geoTransformable, transformation);

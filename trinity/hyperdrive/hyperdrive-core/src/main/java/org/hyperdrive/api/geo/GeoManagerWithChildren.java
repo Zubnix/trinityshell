@@ -6,9 +6,9 @@ public interface GeoManagerWithChildren<T extends LayoutProperty> extends
 
 	GeoTransformableRectangle getContainer();
 
-	void addManagedChild(GeoTransformableRectangle child);
+	T addManagedChild(GeoTransformableRectangle child);
 
-	void addManagedChild(final GeoTransformableRectangle child,
+	T addManagedChild(final GeoTransformableRectangle child,
 			final T layoutProperty);
 
 	T getLayoutProperty(final GeoTransformableRectangle child);

@@ -54,7 +54,7 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 		final GeoTransformableRectangle[] children = getVirtSquare()
 				.getChildren();
 		for (final GeoTransformableRectangle child : children) {
-			child.requestLower();
+			child.getGeoExecutor().lower();
 		}
 	}
 
@@ -63,7 +63,7 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 		final GeoTransformableRectangle[] children = getVirtSquare()
 				.getChildren();
 		for (final GeoTransformableRectangle child : children) {
-			child.requestRaise();
+			child.getGeoExecutor().raise();
 		}
 	}
 
@@ -108,20 +108,22 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 		final GeoTransformableRectangle[] children = getVirtSquare()
 				.getChildren();
 		for (final GeoTransformableRectangle child : children) {
-			updateChildVisibility(child);
+			updateChildVisibility(child, visible);
 		}
 	}
 
 	/**
 	 * 
 	 * @param child
+	 * @param visible
 	 * 
 	 */
-	private void updateChildVisibility(final GeoTransformableRectangle child) {
+	private void updateChildVisibility(final GeoTransformableRectangle child,
+			final boolean parentVisible) {
 		final boolean childVisible = child.isVisible();
 		// directly update underlying platform specific visibility of
 		// the child
-		child.getGeoExecutor().updateVisibility(childVisible);
+		child.getGeoExecutor().updateVisibility(childVisible & parentVisible);
 	}
 
 	@Override
@@ -129,18 +131,18 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 		final GeoTransformableRectangle[] children = getVirtSquare()
 				.getChildren();
 
+		final boolean parentVisible = parent.isVisible();
 		for (final GeoTransformableRectangle child : children) {
 			// directly update underlying platform specific parent of
 			// the child
 			child.getGeoExecutor().updateParent(getVirtSquare());
-
-			updateChildVisibility(child);
+			updateChildVisibility(child, parentVisible);
 		}
 	}
 
 	@Override
 	public void destroy() {
 		// TODO destroy all children. (Will somebody *please* think of the
-		// children! D: )
+		// children! :'( )
 	}
 }

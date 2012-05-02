@@ -59,6 +59,22 @@ public class GeoManagerLine extends
 
 	/**
 	 * 
+	 * @return
+	 */
+	public boolean isHorizontalDirection() {
+		return this.horizontalDirection;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isInverseDirection() {
+		return this.inverseDirection;
+	}
+
+	/**
+	 * 
 	 * @param horizontalDirection
 	 */
 	public void setHorizontalDirection(final boolean horizontalDirection) {
@@ -73,13 +89,6 @@ public class GeoManagerLine extends
 		this.inverseDirection = inverseDirection;
 	}
 
-	@Override
-	protected void handleContainerChanged(
-			final GeoTransformableRectangle container,
-			final GeoTransformation transformation) {
-		layout();
-	}
-
 	/**
 	 * 
 	 * @param square
@@ -91,41 +100,18 @@ public class GeoManagerLine extends
 	}
 
 	@Override
-	public void addManagedChild(final GeoTransformableRectangle child) {
-		addManagedChild(child, new LineProperty(0));
+	protected LineProperty newDefaultLayoutProperty() {
+		return new LineProperty(0, new Margins(0));
 	}
 
-	@Override
-	public void addManagedChild(final GeoTransformableRectangle child,
-			final LineProperty layoutProperty) {
-		super.addManagedChild(child, layoutProperty);
-		layout();
-	}
-
-	@Override
-	public void removeManagedChild(final GeoTransformableRectangle child) {
-		super.removeManagedChild(child);
-		layout();
-	}
-
-	/**
-	 * 
-	 * 
-	 *
-	 * 
-	 */
-	// TODO refactor
-	protected void layout() {
+	protected void layoutHorizontal() {
 		// total available size of the container
 		int newSize = 0;
 		int fixedSize = 0;
-		if (this.horizontalDirection) {
-			newSize = getContainer().getWidth();
-			fixedSize = getContainer().getHeight();
-		} else {
-			newSize = getContainer().getHeight();
-			fixedSize = getContainer().getWidth();
-		}
+
+		newSize = getContainer().getWidth();
+		fixedSize = getContainer().getHeight();
+
 		if (newSize == 0) {
 			return;
 		}
@@ -135,21 +121,12 @@ public class GeoManagerLine extends
 
 		for (final GeoTransformableRectangle child : getManagedChildren()) {
 			final int childWeight = getLayoutProperty(child).getWeight();
-			if (this.horizontalDirection) {
-				// we don't want to include children with 0 weight in the scale
-				// calculation since they are treated as constants
-				if (childWeight == 0) {
-					newSize -= child.toGeoTransformation().getWidth1();
-				}
-				totalWeightedChildSizes += childWeight;
-			} else {
-				// we don't want to include children with 0 weight in the scale
-				// calculation since they are treated as constants
-				if (childWeight == 0) {
-					newSize -= child.toGeoTransformation().getHeight1();
-				}
-				totalWeightedChildSizes += childWeight;
+			// we don't want to include children with 0 weight in the scale
+			// calculation since they are treated as constants
+			if (childWeight == 0) {
+				newSize -= child.toGeoTransformation().getWidth1();
 			}
+			totalWeightedChildSizes += childWeight;
 		}
 
 		// calculate scale to apply to the desired new size of a child
@@ -162,64 +139,143 @@ public class GeoManagerLine extends
 		// new place of the next child
 		int newPlace = 0;
 		if (this.inverseDirection) {
-			if (this.horizontalDirection) {
-				newPlace = getContainer().getWidth();
-			} else {
-				newPlace = getContainer().getHeight();
-			}
+			newPlace = getContainer().getWidth();
 		}
+
 		final GeoTransformableRectangle[] children = getManagedChildren();
 		for (final GeoTransformableRectangle child : children) {
-
-			int childWeight = getLayoutProperty(child).getWeight();
+			final LineProperty layoutProperty = getLayoutProperty(child);
+			int childWeight = layoutProperty.getWeight();
 
 			double resizeFactor = scale;
 			if (resizeFactor == 0) {
 				resizeFactor = 1;
 			}
 
-			if (this.horizontalDirection) {
-				if (childWeight == 0) {
-					resizeFactor = 1;
+			if (childWeight == 0) {
+				resizeFactor = 1;
+				childWeight = child.toGeoTransformation().getWidth1();
+			}
 
-					childWeight = child.toGeoTransformation().getWidth1();
-				}
-				child.setHeight(fixedSize);
-				// calculate new width
-				final double desiredChildWidth = childWeight * resizeFactor;
-				final int newChildWidth = (int) Math.round(desiredChildWidth);
-				child.setWidth(newChildWidth);
+			final int vMargins = layoutProperty.getMargins().getTop()
+					+ layoutProperty.getMargins().getBottom();
+			child.setHeight(fixedSize - vMargins);
+			// calculate new width
+			final double desiredChildWidth = childWeight * resizeFactor;
+			final int newChildWidth = (int) Math.round(desiredChildWidth);
 
-				if (this.inverseDirection) {
-					newPlace -= newChildWidth;
-					child.setX(newPlace);
-				} else {
-					child.setX(newPlace);
-					// calculate next child's position
-					newPlace += newChildWidth;
-				}
+			final int hMargins = layoutProperty.getMargins().getLeft()
+					+ layoutProperty.getMargins().getRight();
+			child.setWidth(newChildWidth - hMargins);
+
+			final int leftMargin = layoutProperty.getMargins().getLeft();
+			final int topMargin = layoutProperty.getMargins().getTop();
+			if (this.inverseDirection) {
+				newPlace -= newChildWidth;
+				child.setY(topMargin);
+				child.setX(newPlace + leftMargin);
 			} else {
-				if (childWeight == 0) {
-					resizeFactor = 1;
-					childWeight = child.toGeoTransformation().getHeight1();
-				}
-				child.setWidth(fixedSize);
-				// calculate new height
-				final double desiredChildHeight = childWeight * resizeFactor;
+				child.setY(topMargin);
+				child.setX(newPlace + leftMargin);
+				// calculate next child's position
+				newPlace += newChildWidth;
+			}
 
-				final int newChildHeight = (int) Math.round(desiredChildHeight);
-				child.setHeight(newChildHeight);
+			child.doUpdateSizePlace();
+		}
+	}
 
-				if (this.inverseDirection) {
-					newPlace -= newChildHeight;
-					child.setY(newPlace);
-				} else {
-					child.setY(newPlace);
-					newPlace += newChildHeight;
-				}
+	protected void layoutVertical() {
+		int newSize = 0;
+		int fixedSize = 0;
+
+		newSize = getContainer().getHeight();
+		fixedSize = getContainer().getWidth();
+
+		if (newSize == 0) {
+			return;
+		}
+
+		// total size of all children
+		double totalWeightedChildSizes = 0;
+
+		for (final GeoTransformableRectangle child : getManagedChildren()) {
+			final int childWeight = getLayoutProperty(child).getWeight();
+			// we don't want to include children with 0 weight in the scale
+			// calculation since they are treated as constants
+			if (childWeight == 0) {
+				newSize -= child.toGeoTransformation().getHeight1();
+			}
+			totalWeightedChildSizes += childWeight;
+		}
+
+		// calculate scale to apply to the desired new size of a child
+		if (totalWeightedChildSizes == 0) {
+			// make scale = 1
+			totalWeightedChildSizes = newSize;
+		}
+		final double scale = newSize / totalWeightedChildSizes;
+
+		// new place of the next child
+		int newPlace = 0;
+		if (this.inverseDirection) {
+			newPlace = getContainer().getHeight();
+		}
+
+		final GeoTransformableRectangle[] children = getManagedChildren();
+		for (final GeoTransformableRectangle child : children) {
+			final LineProperty layoutProperty = getLayoutProperty(child);
+			int childWeight = layoutProperty.getWeight();
+
+			double resizeFactor = scale;
+			if (resizeFactor == 0) {
+				resizeFactor = 1;
+			}
+
+			if (childWeight == 0) {
+				resizeFactor = 1;
+				childWeight = child.toGeoTransformation().getHeight1();
+			}
+			final int hMargins = layoutProperty.getMargins().getLeft()
+					+ layoutProperty.getMargins().getRight();
+			child.setWidth(fixedSize - hMargins);
+			// calculate new height
+			final double desiredChildHeight = childWeight * resizeFactor;
+
+			final int newChildHeight = (int) Math.round(desiredChildHeight);
+
+			final int vMargins = layoutProperty.getMargins().getTop()
+					+ layoutProperty.getMargins().getBottom();
+			child.setHeight(newChildHeight - vMargins);
+
+			final int topMargin = layoutProperty.getMargins().getTop();
+			final int leftMargin = layoutProperty.getMargins().getLeft();
+			if (this.inverseDirection) {
+				newPlace -= newChildHeight;
+				child.setX(leftMargin);
+				child.setY(newPlace + topMargin);
+			} else {
+				child.setX(leftMargin);
+				child.setY(newPlace + topMargin);
+				newPlace += newChildHeight;
 			}
 			child.doUpdateSizePlace();
 		}
+	}
+
+	protected void layout() {
+		if (isHorizontalDirection()) {
+			layoutHorizontal();
+		} else {
+			layoutVertical();
+		}
+	}
+
+	@Override
+	protected void handleContainerChanged(
+			final GeoTransformableRectangle container,
+			final GeoTransformation transformation) {
+		layout();
 	}
 
 	@Override
@@ -253,7 +309,12 @@ public class GeoManagerLine extends
 	protected void onChildMoveResizeRequest(
 			final GeoTransformableRectangle child,
 			final GeoTransformation transformation) {
-		cancelMoveResize(child);
+		if (getLayoutProperty(child).getWeight() == 0) {
+			child.doUpdateSize();
+			layout();
+		} else {
+			cancelMoveResize(child);
+		}
 	}
 
 	@Override
@@ -265,6 +326,6 @@ public class GeoManagerLine extends
 	@Override
 	protected void onChildResizeRequest(final GeoTransformableRectangle child,
 			final GeoTransformation transformation) {
-		cancelMoveResize(child);
+		onChildMoveResizeRequest(child, transformation);
 	}
 }

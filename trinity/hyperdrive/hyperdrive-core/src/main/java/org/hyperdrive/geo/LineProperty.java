@@ -34,6 +34,7 @@ import org.hyperdrive.api.geo.LayoutProperty;
  */
 public class LineProperty implements LayoutProperty {
 	private int weight;
+	private Margins margins;
 
 	/**
 	 * A weight of 0 or lower indicates a static size.
@@ -51,8 +52,9 @@ public class LineProperty implements LayoutProperty {
 	 * 
 	 * @param weight
 	 */
-	public LineProperty(final int weight) {
+	public LineProperty(final int weight, final Margins margins) {
 		setWeight(weight);
+		setMargins(margins);
 	}
 
 	/**
@@ -61,5 +63,13 @@ public class LineProperty implements LayoutProperty {
 	 */
 	public int getWeight() {
 		return this.weight;
+	}
+
+	public Margins getMargins() {
+		return this.margins;
+	}
+
+	public void setMargins(final Margins margins) {
+		this.margins = margins;
 	}
 }
