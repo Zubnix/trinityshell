@@ -19,7 +19,7 @@ import org.fusion.x11.core.XID;
 import org.fusion.x11.core.XWindow;
 import org.fusion.x11.icccm.WmHintsInstance;
 import org.fusion.x11.icccm.WmStateEnum;
-import org.hyperdrive.api.core.RenderArea;
+import org.hyperdrive.core.api.RenderArea;
 import org.hyperdrive.protocol.ClientIcon;
 import org.hyperdrive.protocol.ClientIsUrgent;
 import org.hyperdrive.protocol.ClientPreferedGeometry;

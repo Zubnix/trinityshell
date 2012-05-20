@@ -15,8 +15,8 @@
  */
 package org.hypercube.protocol.fusionx11;
 
-import org.hydrogen.display.PropertyInstanceTexts;
-import org.hyperdrive.api.core.RenderArea;
+import org.hydrogen.display.api.base.PropertyInstanceTexts;
+import org.hyperdrive.core.api.RenderArea;
 import org.hyperdrive.protocol.ClientSoftwareDescription;
 
 //TODO documentation

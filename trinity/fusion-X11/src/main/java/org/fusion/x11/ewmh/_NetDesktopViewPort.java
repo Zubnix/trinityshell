@@ -21,7 +21,7 @@ import org.fusion.x11.core.XDisplay;
 import org.fusion.x11.core.XPropertyInstanceInfo;
 import org.fusion.x11.core.XPropertyXAtom;
 import org.fusion.x11.ewmh._NetDesktopViewPortInstance.DesktopViewPortCoordinate;
-import org.hydrogen.api.display.PlatformRenderArea;
+import org.hydrogen.display.api.PlatformRenderArea;
 
 // TODO documentation
 /**

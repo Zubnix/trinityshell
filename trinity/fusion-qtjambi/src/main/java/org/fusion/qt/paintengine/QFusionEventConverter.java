@@ -16,8 +16,8 @@
  */
 package org.fusion.qt.paintengine;
 
-import org.hydrogen.api.display.event.DisplayEvent;
-import org.hydrogen.api.display.event.DisplayEventSource;
+import org.hydrogen.display.api.event.DisplayEvent;
+import org.hydrogen.display.api.event.DisplayEventSource;
 
 import com.trolltech.qt.core.QEvent;
 

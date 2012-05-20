@@ -6,12 +6,57 @@
 		<version>0.0.1</version>
 		<relativePath>..</relativePath>
 	</parent>
+
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>org.trinity.hyperdrive</groupId>
 	<artifactId>hyperdrive</artifactId>
 	<name>hyperdrive</name>
 	<packaging>pom</packaging>
+
 	<modules>
-		<module>hyperdrive-core</module>
+		<module>api</module>
+		<module>foundation</module>
+		<module>geo</module>
+		<module>input</module>
+		<module>protocol</module>
+		<module>widget</module>
 	</modules>
+
+	<dependencies>
+		<!-- START TEST DEP -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.0-rc1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- END TEST DEP -->
+
+		<dependency>
+			<groupId>org.trinity.hydrogen</groupId>
+			<artifactId>hydrogen</artifactId>
+			<version>0.0.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>3.0</version>
+		</dependency>
+	</dependencies>
 </project>

@@ -25,10 +25,10 @@ import java.util.concurrent.FutureTask;
 import org.apache.log4j.Logger;
 import org.fusion.qt.painter.QFusionPaintCall;
 import org.fusion.qt.painter.QFusionPainter;
-import org.hydrogen.api.display.Display;
-import org.hydrogen.api.paint.Paintable;
-import org.hydrogen.api.paint.PaintableRef;
-import org.hydrogen.paint.BasePaintableRef;
+import org.hydrogen.display.api.Display;
+import org.hydrogen.paint.api.Paintable;
+import org.hydrogen.paint.api.PaintableRef;
+import org.hydrogen.paint.api.base.BasePaintableRef;
 
 import com.trolltech.qt.core.QCoreApplication;
 import com.trolltech.qt.core.QEvent;

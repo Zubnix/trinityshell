@@ -49,15 +49,15 @@ import org.fusion.x11.core.event.XSelectionRequestEvent;
 import org.fusion.x11.core.event.XUnknownEvent;
 import org.fusion.x11.core.event.XUnmapNotify;
 import org.fusion.x11.nativeHelpers.NativeBufferHelper;
-import org.hydrogen.api.display.PropertyInstance;
-import org.hydrogen.api.display.event.DisplayEvent;
-import org.hydrogen.api.display.event.DisplayEventType;
-import org.hydrogen.api.display.input.Momentum;
-import org.hydrogen.display.input.BaseButton;
-import org.hydrogen.display.input.BaseInputModifiers;
-import org.hydrogen.display.input.BaseKey;
-import org.hydrogen.display.input.BaseKeyboardInput;
-import org.hydrogen.display.input.BaseMouseInput;
+import org.hydrogen.display.api.PropertyInstance;
+import org.hydrogen.display.api.event.DisplayEvent;
+import org.hydrogen.display.api.event.DisplayEventType;
+import org.hydrogen.display.api.input.Momentum;
+import org.hydrogen.display.api.input.base.BaseButton;
+import org.hydrogen.display.api.input.base.BaseInputModifiers;
+import org.hydrogen.display.api.input.base.BaseKey;
+import org.hydrogen.display.api.input.base.BaseKeyboardInput;
+import org.hydrogen.display.api.input.base.BaseMouseInput;
 
 // TODO documentation
 /**

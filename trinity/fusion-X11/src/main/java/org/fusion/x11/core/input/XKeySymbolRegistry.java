@@ -17,8 +17,8 @@
 package org.fusion.x11.core.input;
 
 import org.fusion.x11.core.xcb.input.XcbKeySymbol;
-import org.hydrogen.api.display.input.InputModifiers;
-import org.hydrogen.api.display.input.Key;
+import org.hydrogen.display.api.input.InputModifiers;
+import org.hydrogen.display.api.input.Key;
 
 // TODO documentation
 /**

@@ -16,7 +16,7 @@
 package org.fusion.x11.core.xcb.extension;
 
 import org.fusion.x11.core.extension.XSyncCounterNotify;
-import org.hydrogen.display.event.BaseDisplayEvent;
+import org.hydrogen.display.api.event.base.BaseDisplayEvent;
 
 // TODO documentation
 // currently unused

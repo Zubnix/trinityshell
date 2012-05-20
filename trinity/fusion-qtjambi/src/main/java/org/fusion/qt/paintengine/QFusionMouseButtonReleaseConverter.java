@@ -16,14 +16,14 @@
  */
 package org.fusion.qt.paintengine;
 
-import org.hydrogen.api.display.event.ButtonNotifyEvent;
-import org.hydrogen.api.display.event.DisplayEventSource;
-import org.hydrogen.api.display.event.DisplayEventType;
-import org.hydrogen.api.display.input.Momentum;
-import org.hydrogen.display.event.BaseButtonNotifyEvent;
-import org.hydrogen.display.input.BaseButton;
-import org.hydrogen.display.input.BaseInputModifiers;
-import org.hydrogen.display.input.BaseMouseInput;
+import org.hydrogen.display.api.event.ButtonNotifyEvent;
+import org.hydrogen.display.api.event.DisplayEventSource;
+import org.hydrogen.display.api.event.DisplayEventType;
+import org.hydrogen.display.api.event.base.BaseButtonNotifyEvent;
+import org.hydrogen.display.api.input.Momentum;
+import org.hydrogen.display.api.input.base.BaseButton;
+import org.hydrogen.display.api.input.base.BaseInputModifiers;
+import org.hydrogen.display.api.input.base.BaseMouseInput;
 
 import com.trolltech.qt.gui.QMouseEvent;
 

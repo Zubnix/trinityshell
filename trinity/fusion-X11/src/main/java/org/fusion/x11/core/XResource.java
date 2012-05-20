@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core;
 
-import org.hydrogen.api.display.DisplayResource;
+import org.hydrogen.display.api.DisplayResource;
 
 /**
  * An <code>XResource</code> is a resource (window, pixmap, ...) that lives on

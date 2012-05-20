@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.ewmh;
 
-import org.hydrogen.api.display.event.ClientMessageEvent;
-import org.hydrogen.api.event.Event;
+import org.hydrogen.display.api.event.ClientMessageEvent;
+import org.hydrogen.event.api.Event;
 
 //TODO documentation
 /**

@@ -19,7 +19,7 @@ package org.fusion.x11.icccm;
 import org.fusion.x11.core.XDisplay;
 import org.fusion.x11.core.XID;
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.display.BasePropertyInstance;
+import org.hydrogen.display.api.base.BasePropertyInstance;
 
 // TODO documentation
 /**

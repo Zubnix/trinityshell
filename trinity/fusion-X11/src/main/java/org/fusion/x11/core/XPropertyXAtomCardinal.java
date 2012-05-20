@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core;
 
-import org.hydrogen.api.display.PlatformRenderArea;
+import org.hydrogen.display.api.PlatformRenderArea;
 
 // TODO documentation
 /**

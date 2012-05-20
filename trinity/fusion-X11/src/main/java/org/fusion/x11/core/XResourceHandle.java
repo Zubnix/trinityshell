@@ -18,7 +18,7 @@ package org.fusion.x11.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hydrogen.api.display.ResourceHandle;
+import org.hydrogen.display.api.ResourceHandle;
 
 //TODO documentation
 /**

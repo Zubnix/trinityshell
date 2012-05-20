@@ -20,10 +20,10 @@ import java.util.Map;
 
 import org.fusion.x11.core.XAtom;
 import org.fusion.x11.core.XDisplay;
-import org.hydrogen.api.display.Atom;
-import org.hydrogen.api.display.event.ClientMessageEvent;
-import org.hydrogen.api.event.EventHandler;
-import org.hydrogen.event.EventBus;
+import org.hydrogen.display.api.Atom;
+import org.hydrogen.display.api.event.ClientMessageEvent;
+import org.hydrogen.event.api.EventHandler;
+import org.hydrogen.event.api.base.EventBus;
 
 
 //TODO documentation

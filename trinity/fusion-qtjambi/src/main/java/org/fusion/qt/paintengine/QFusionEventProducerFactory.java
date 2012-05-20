@@ -19,9 +19,9 @@ package org.fusion.qt.paintengine;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hydrogen.api.display.Display;
-import org.hydrogen.api.display.EventProducer;
-import org.hydrogen.api.display.EventProducerFactory;
+import org.hydrogen.display.api.Display;
+import org.hydrogen.display.api.EventProducer;
+import org.hydrogen.display.api.EventProducerFactory;
 
 // TODO documentation
 /**

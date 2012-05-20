@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.fusion.qt.error.RenderEngineQuitError;
 import org.fusion.qt.error.RenderEngineTimeOutError;
-import org.hydrogen.api.display.Display;
+import org.hydrogen.display.api.Display;
 
 import com.trolltech.qt.gui.QApplication;
 

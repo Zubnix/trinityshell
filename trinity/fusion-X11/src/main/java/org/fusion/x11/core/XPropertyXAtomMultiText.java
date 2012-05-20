@@ -19,8 +19,8 @@ import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.hydrogen.api.display.PlatformRenderArea;
-import org.hydrogen.display.PropertyInstanceTexts;
+import org.hydrogen.display.api.PlatformRenderArea;
+import org.hydrogen.display.api.base.PropertyInstanceTexts;
 
 // TODO documentation
 /**

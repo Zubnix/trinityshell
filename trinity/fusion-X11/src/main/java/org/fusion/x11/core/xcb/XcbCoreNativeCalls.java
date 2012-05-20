@@ -22,8 +22,8 @@ import org.fusion.x11.core.XWindowAttributes;
 import org.fusion.x11.core.XWindowGeometry;
 import org.fusion.x11.nativeHelpers.NativeBufferHelper;
 import org.fusion.x11.nativeHelpers.XNativeCall;
-import org.hydrogen.api.geometry.Coordinates;
-import org.hydrogen.geometry.BaseCoordinates;
+import org.hydrogen.geometry.api.Coordinates;
+import org.hydrogen.geometry.api.base.BaseCoordinates;
 
 /**
  * An <code>XcbCoreNativeCalls</code> statically groups all native calls that

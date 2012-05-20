@@ -2,9 +2,9 @@ package org.fusion.qt.paintengine;
 
 import java.util.Map;
 
-import org.hydrogen.api.display.event.DisplayEventSource;
-import org.hydrogen.api.paint.PaintContext;
-import org.hydrogen.api.paint.PaintableRef;
+import org.hydrogen.display.api.event.DisplayEventSource;
+import org.hydrogen.paint.api.PaintContext;
+import org.hydrogen.paint.api.PaintableRef;
 
 import com.trolltech.qt.gui.QWidget;
 

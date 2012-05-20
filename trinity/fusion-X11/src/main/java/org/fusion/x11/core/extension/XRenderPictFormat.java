@@ -1,7 +1,7 @@
 package org.fusion.x11.core.extension;
 
 import org.fusion.x11.core.XColormap;
-import org.hydrogen.api.display.DisplayResource;
+import org.hydrogen.display.api.DisplayResource;
 
 //currently unused
 //TODO documentation

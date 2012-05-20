@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.core.input;
 
-import org.hydrogen.api.display.input.InputModifierName;
-import org.hydrogen.api.display.input.Keyboard;
+import org.hydrogen.display.api.input.InputModifierName;
+import org.hydrogen.display.api.input.Keyboard;
 
 // TODO documentation
 /**

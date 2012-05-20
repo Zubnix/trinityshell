@@ -1,13 +1,15 @@
 package org.hypercube.view.fusionqtjambi;
 
-import org.hydrogen.api.paint.PaintContext;
-import org.hyperdrive.widget.BaseRoot;
+import org.hydrogen.paint.api.PaintContext;
+import org.hyperdrive.widget.api.Root;
+import org.hyperdrive.widget.api.ViewImplementation;
 
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QDesktopWidget;
 import com.trolltech.qt.gui.QWidget;
 
-public class RealRootView extends WidgetView implements BaseRoot.View {
+@ViewImplementation(Root.View.class)
+public class RealRootView extends WidgetView implements Root.View {
 	@Override
 	protected QWidget createPaintPeer(
 			final PaintContext<? extends QWidget> paintContext,

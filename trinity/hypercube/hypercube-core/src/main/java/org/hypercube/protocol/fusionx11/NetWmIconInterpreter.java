@@ -2,7 +2,7 @@ package org.hypercube.protocol.fusionx11;
 
 import org.fusion.x11.ewmh._NetWmIconInstance;
 import org.fusion.x11.ewmh._NetWmIconInstance.WmIcon;
-import org.hyperdrive.api.core.RenderArea;
+import org.hyperdrive.core.api.RenderArea;
 import org.hyperdrive.protocol.ClientIcon;
 import org.hyperdrive.protocol.ClientIcon.IconFormat;
 

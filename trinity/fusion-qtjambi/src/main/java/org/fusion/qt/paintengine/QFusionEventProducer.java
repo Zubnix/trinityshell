@@ -24,10 +24,10 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.fusion.qt.error.DisplayNotSetError;
 import org.fusion.x11.core.XDisplay;
-import org.hydrogen.api.display.Display;
-import org.hydrogen.api.display.EventProducer;
-import org.hydrogen.api.display.event.DisplayEvent;
-import org.hydrogen.api.display.event.DisplayEventSource;
+import org.hydrogen.display.api.Display;
+import org.hydrogen.display.api.EventProducer;
+import org.hydrogen.display.api.event.DisplayEvent;
+import org.hydrogen.display.api.event.DisplayEventSource;
 
 import com.trolltech.qt.core.QEvent;
 
@@ -93,7 +93,7 @@ public class QFusionEventProducer implements EventProducer {
 	// should suffice.
 	private final XDisplay display;
 	private final ArrayBlockingQueue<DisplayEvent> qEventQueue;
-
+	
 	private static final int TIME_OUT = 60;
 	private static final int DEFAULT_EVENT_QUEUE_SIZE = 128;
 

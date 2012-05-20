@@ -2,8 +2,8 @@ package org.fusion.x11.core.event;
 
 import org.fusion.x11.core.XAtom;
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.api.display.event.DisplayEventType;
-import org.hydrogen.display.event.BaseDisplayEvent;
+import org.hydrogen.display.api.event.DisplayEventType;
+import org.hydrogen.display.api.event.base.BaseDisplayEvent;
 
 //TODO documentation
 /**
@@ -22,7 +22,8 @@ public class XSelectionClearNotifyEvent extends BaseDisplayEvent {
 	 * @param eventSource
 	 * @param selection
 	 */
-	public XSelectionClearNotifyEvent(final XWindow eventSource, final XAtom selection) {
+	public XSelectionClearNotifyEvent(final XWindow eventSource,
+			final XAtom selection) {
 		super(XSelectionClearNotifyEvent.TYPE, eventSource);
 		this.selection = selection;
 	}

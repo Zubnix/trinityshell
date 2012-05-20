@@ -21,11 +21,11 @@ import org.fusion.x11.core.extension.XExtensions;
 import org.fusion.x11.core.input.XKeyboard;
 import org.fusion.x11.core.input.XMouse;
 import org.fusion.x11.ewmh.Ewmh;
-import org.hydrogen.api.display.PropertyInstance;
-import org.hydrogen.api.display.event.DisplayEvent;
-import org.hydrogen.api.display.event.DisplayEventType;
-import org.hydrogen.api.event.EventHandler;
-import org.hydrogen.display.BaseEventProducingDisplay;
+import org.hydrogen.display.api.PropertyInstance;
+import org.hydrogen.display.api.base.BaseDisplay;
+import org.hydrogen.display.api.event.DisplayEvent;
+import org.hydrogen.display.api.event.DisplayEventType;
+import org.hydrogen.event.api.EventHandler;
 
 // TODO documentation
 /**
@@ -42,7 +42,7 @@ import org.hydrogen.display.BaseEventProducingDisplay;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class XDisplay extends BaseEventProducingDisplay {
+public class XDisplay extends BaseDisplay {
 
 	private final Long nativePeer;
 	private final XCoreInterface xCoreInterface;

@@ -34,7 +34,7 @@ package org.fusion.x11.core.event;
 import org.fusion.x11.core.DataContainer;
 import org.fusion.x11.core.XAtom;
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.display.event.BaseClientMessageEvent;
+import org.hydrogen.display.api.event.base.BaseClientMessageEvent;
 
 // TODO documentation
 

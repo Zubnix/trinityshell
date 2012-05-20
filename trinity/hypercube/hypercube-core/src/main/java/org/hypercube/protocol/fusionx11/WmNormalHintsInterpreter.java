@@ -16,7 +16,7 @@
 package org.hypercube.protocol.fusionx11;
 
 import org.fusion.x11.icccm.WmSizeHintsInstance;
-import org.hyperdrive.api.core.RenderArea;
+import org.hyperdrive.core.api.RenderArea;
 import org.hyperdrive.protocol.ClientPreferedGeometry;
 
 //TODO documentation

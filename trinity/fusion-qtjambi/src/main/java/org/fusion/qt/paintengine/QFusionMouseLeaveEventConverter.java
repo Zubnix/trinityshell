@@ -16,8 +16,8 @@
  */
 package org.fusion.qt.paintengine;
 
-import org.hydrogen.api.display.event.DisplayEventSource;
-import org.hydrogen.display.event.BaseMouseLeaveNotifyEvent;
+import org.hydrogen.display.api.event.DisplayEventSource;
+import org.hydrogen.display.api.event.base.BaseMouseLeaveNotifyEvent;
 
 import com.trolltech.qt.core.QEvent;
 

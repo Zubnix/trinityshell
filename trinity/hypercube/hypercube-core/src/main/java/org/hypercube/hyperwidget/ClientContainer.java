@@ -15,8 +15,8 @@
  */
 package org.hypercube.hyperwidget;
 
-import org.hyperdrive.api.widget.HasView;
-import org.hyperdrive.widget.BaseWidget;
+import org.hyperdrive.widget.api.ViewReference;
+import org.hyperdrive.widget.impl.BaseWidget;
 
 // TODO documentation
 // TODO find a cleaner and easier way to bind a view to a widget
@@ -27,8 +27,15 @@ import org.hyperdrive.widget.BaseWidget;
  */
 public class ClientContainer extends BaseWidget {
 
-	@HasView
 	public interface View extends BaseWidget.View {
 
+	}
+
+	@ViewReference
+	private View view;
+
+	@Override
+	public View getView() {
+		return view;
 	}
 }

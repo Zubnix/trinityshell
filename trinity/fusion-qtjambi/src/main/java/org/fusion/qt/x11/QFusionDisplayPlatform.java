@@ -41,9 +41,8 @@ public class QFusionDisplayPlatform extends XDisplayPlatform {
 	 * @param xCoreInterfaceProvider
 	 */
 	public QFusionDisplayPlatform(final Map<String, String> backEndProperties,
-	                              final XCoreInterfaceProvider xCoreInterfaceProvider) {
-		super(new QFusionPainterFactoryProvider(backEndProperties),
-		      xCoreInterfaceProvider);
+			final XCoreInterfaceProvider xCoreInterfaceProvider) {
+		super(xCoreInterfaceProvider);
 		addEventProducerFactory(new QFusionEventProducerFactory());
 	}
 }

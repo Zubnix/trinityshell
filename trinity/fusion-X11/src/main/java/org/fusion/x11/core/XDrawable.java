@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.core;
 
-import org.hydrogen.api.display.DisplayResource;
-import org.hydrogen.api.display.event.DisplayEventSource;
+import org.hydrogen.display.api.DisplayResource;
+import org.hydrogen.display.api.event.DisplayEventSource;
 //currently unused
 //TODO documentation
 //TODO instead of defining a seperate blingbling class hierarchy we might want to implement a 

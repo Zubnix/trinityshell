@@ -17,8 +17,8 @@
 package org.fusion.qt.painter;
 
 import org.fusion.qt.paintengine.QFusionRenderEngine;
-import org.hydrogen.api.paint.Paintable;
-import org.hydrogen.api.paint.PainterFactory;
+import org.hydrogen.paint.api.Paintable;
+import org.hydrogen.paint.api.PainterFactory;
 
 /**
  * A <code>QFusionPainterFactory</code> provides an implementations of a

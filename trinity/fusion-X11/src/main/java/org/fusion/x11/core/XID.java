@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core;
 
-import org.hydrogen.api.display.DisplayResourceHandle;
+import org.hydrogen.display.api.DisplayResourceHandle;
 
 /**
  * An <code>XID</code> identifies an X resource by combining the

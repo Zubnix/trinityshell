@@ -25,7 +25,7 @@ import org.fusion.x11.core.XProtocolConstants;
 import org.fusion.x11.core.XResourceHandle;
 import org.fusion.x11.core.XWindow;
 import org.fusion.x11.error.NotYetImplementedError;
-import org.hydrogen.api.display.PlatformRenderArea;
+import org.hydrogen.display.api.PlatformRenderArea;
 
 // TODO documentation
 /**

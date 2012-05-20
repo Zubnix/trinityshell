@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hydrogen.event.EventBus;
+import org.hydrogen.event.api.base.EventBus;
 
 /**
  * An <code>XResourcesRegistry</code> keeps track of registered

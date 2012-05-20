@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core.extension;
 
-import org.hydrogen.api.display.event.DisplayEventSource;
+import org.hydrogen.display.api.event.DisplayEventSource;
 
 //currently unused
 //TODO documentation

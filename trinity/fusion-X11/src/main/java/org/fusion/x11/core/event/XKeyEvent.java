@@ -16,10 +16,10 @@
 package org.fusion.x11.core.event;
 
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.api.display.PlatformRenderArea;
-import org.hydrogen.api.display.event.DisplayEventType;
-import org.hydrogen.display.event.BaseKeyNotifyEvent;
-import org.hydrogen.display.input.BaseKeyboardInput;
+import org.hydrogen.display.api.PlatformRenderArea;
+import org.hydrogen.display.api.event.DisplayEventType;
+import org.hydrogen.display.api.event.base.BaseKeyNotifyEvent;
+import org.hydrogen.display.api.input.base.BaseKeyboardInput;
 
 // TODO documentation
 /**

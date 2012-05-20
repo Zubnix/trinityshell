@@ -1,12 +1,14 @@
 package org.hypercube.view.fusionqtjambi;
 
 import org.fusion.qt.painter.QFusionPaintCall;
-import org.hydrogen.api.paint.PaintContext;
-import org.hyperdrive.api.widget.PaintInstruction;
-import org.hyperdrive.widget.BaseClientManager.ClientManagerLabel;
+import org.hydrogen.paint.api.PaintContext;
+import org.hyperdrive.widget.api.ViewImplementation;
+import org.hyperdrive.widget.impl.impl.BaseClientManager.ClientManagerLabel;
+import org.hyperdrive.widget.impl.impl.api.PaintInstruction;
 
 import com.trolltech.qt.gui.QWidget;
 
+@ViewImplementation(ClientManagerLabel)
 public class ClientManagerLabelView extends LabelView implements
 		ClientManagerLabel.View {
 

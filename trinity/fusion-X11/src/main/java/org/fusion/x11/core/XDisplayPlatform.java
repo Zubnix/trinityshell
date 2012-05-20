@@ -20,13 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.hydrogen.api.display.Display;
-import org.hydrogen.api.display.DisplayPlatform;
-import org.hydrogen.api.display.EventProducer;
-import org.hydrogen.api.display.EventProducerFactory;
-import org.hydrogen.api.display.ResourceHandle;
-import org.hydrogen.api.event.Type;
-import org.hydrogen.api.paint.PainterFactoryProvider;
+import org.hydrogen.display.api.DisplayPlatform;
 
 // TODO split painting & window management function providers into separate
 // objects that way we can have completely seperate painting & window management
@@ -43,7 +37,6 @@ import org.hydrogen.api.paint.PainterFactoryProvider;
 public class XDisplayPlatform implements DisplayPlatform {
 
 	private final Set<EventProducerFactory> eventProducerFactories;
-	private final PainterFactoryProvider painterFactoryProvider;
 	private final XCoreInterfaceProvider xCoreInterfaceProvider;
 	private final XResourcesRegistry resourcesRegistry;
 
@@ -66,15 +59,12 @@ public class XDisplayPlatform implements DisplayPlatform {
 	 * @param xCoreInterfaceProvider
 	 *            An {@link XCoreInterfaceProvider}.
 	 */
-	public XDisplayPlatform(
-			final PainterFactoryProvider painterFactoryProvider,
-			final XCoreInterfaceProvider xCoreInterfaceProvider) {
+	public XDisplayPlatform(final XCoreInterfaceProvider xCoreInterfaceProvider) {
 		this.nativeXEventsMap = new HashMap<Integer, Type>();
 
 		this.resourcesRegistry = new XResourcesRegistry();
 		this.xCoreInterfaceProvider = xCoreInterfaceProvider;
 		this.eventProducerFactories = new HashSet<EventProducerFactory>();
-		this.painterFactoryProvider = painterFactoryProvider;
 
 		addEventProducerFactory(new EventProducerFactory() {
 			@Override
@@ -101,11 +91,6 @@ public class XDisplayPlatform implements DisplayPlatform {
 		return this.eventProducerFactories
 				.toArray(new EventProducerFactory[this.eventProducerFactories
 						.size()]);
-	}
-
-	@Override
-	public PainterFactoryProvider getPainterFactoryProvider() {
-		return this.painterFactoryProvider;
 	}
 
 	@Override

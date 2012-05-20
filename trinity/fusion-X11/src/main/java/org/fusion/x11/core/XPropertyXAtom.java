@@ -16,10 +16,10 @@
 
 package org.fusion.x11.core;
 
-import org.hydrogen.api.display.Atom;
-import org.hydrogen.api.display.PlatformRenderArea;
-import org.hydrogen.api.display.Property;
-import org.hydrogen.api.display.PropertyInstance;
+import org.hydrogen.display.api.Atom;
+import org.hydrogen.display.api.PlatformRenderArea;
+import org.hydrogen.display.api.Property;
+import org.hydrogen.display.api.PropertyInstance;
 
 // TODO documentation
 /**

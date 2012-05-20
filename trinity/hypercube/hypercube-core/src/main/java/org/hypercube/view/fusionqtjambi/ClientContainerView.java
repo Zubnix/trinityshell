@@ -1,6 +1,6 @@
 package org.hypercube.view.fusionqtjambi;
 
-import org.hydrogen.api.paint.PaintContext;
+import org.hydrogen.paint.api.PaintContext;
 
 import com.trolltech.qt.gui.QWidget;
 

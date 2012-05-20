@@ -18,19 +18,19 @@ package org.fusion.x11.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hydrogen.api.display.Atom;
-import org.hydrogen.api.display.PlatformRenderArea;
-import org.hydrogen.api.display.PlatformRenderAreaAttributes;
-import org.hydrogen.api.display.Property;
-import org.hydrogen.api.display.PropertyInstance;
-import org.hydrogen.api.display.event.ClientMessageEvent;
-import org.hydrogen.api.display.input.InputModifiers;
-import org.hydrogen.api.display.input.Key;
-import org.hydrogen.api.geometry.Coordinates;
-import org.hydrogen.display.EventPropagator;
-import org.hydrogen.display.input.BaseButton;
-import org.hydrogen.display.input.BaseInputModifiers;
-import org.hydrogen.display.input.BaseKey;
+import org.hydrogen.display.api.Atom;
+import org.hydrogen.display.api.PlatformRenderArea;
+import org.hydrogen.display.api.PlatformRenderAreaAttributes;
+import org.hydrogen.display.api.Property;
+import org.hydrogen.display.api.PropertyInstance;
+import org.hydrogen.display.api.base.EventPropagator;
+import org.hydrogen.display.api.event.ClientMessageEvent;
+import org.hydrogen.display.api.input.InputModifiers;
+import org.hydrogen.display.api.input.Key;
+import org.hydrogen.display.api.input.base.BaseButton;
+import org.hydrogen.display.api.input.base.BaseInputModifiers;
+import org.hydrogen.display.api.input.base.BaseKey;
+import org.hydrogen.geometry.api.Coordinates;
 
 /**
  * An <code>XWindow</code> represents a native X window. This implies that a

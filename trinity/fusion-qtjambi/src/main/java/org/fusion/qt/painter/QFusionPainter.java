@@ -20,14 +20,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.fusion.qt.paintengine.QFusionRenderEngine;
-import org.hydrogen.api.geometry.Coordinates;
-import org.hydrogen.api.paint.PaintCall;
-import org.hydrogen.api.paint.PaintContext;
-import org.hydrogen.api.paint.Paintable;
-import org.hydrogen.api.paint.PaintableRef;
-import org.hydrogen.api.paint.Painter;
-import org.hydrogen.geometry.BaseCoordinates;
-import org.hydrogen.paint.BasePaintableRef;
+import org.hydrogen.geometry.api.Coordinates;
+import org.hydrogen.geometry.api.base.BaseCoordinates;
+import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintContext;
+import org.hydrogen.paint.api.Paintable;
+import org.hydrogen.paint.api.PaintableRef;
+import org.hydrogen.paint.api.Painter;
+import org.hydrogen.paint.api.base.BasePaintableRef;
 
 import com.trolltech.qt.core.QPoint;
 import com.trolltech.qt.gui.QWidget;

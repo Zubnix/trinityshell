@@ -1,9 +1,10 @@
 package org.hydrogen.event;
 
-import org.hydrogen.api.event.Event;
-import org.hydrogen.api.event.EventHandler;
-import org.hydrogen.api.event.Type;
-import org.hydrogen.api.event.TypeBoundEventHandler;
+import org.hydrogen.event.api.Event;
+import org.hydrogen.event.api.EventHandler;
+import org.hydrogen.event.api.Type;
+import org.hydrogen.event.api.TypeBoundEventHandler;
+import org.hydrogen.event.api.base.EventBus;
 import org.junit.Test;
 import org.mockito.Mockito;
 

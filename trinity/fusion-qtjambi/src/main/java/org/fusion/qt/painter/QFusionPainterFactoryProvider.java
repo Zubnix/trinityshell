@@ -24,8 +24,8 @@ import org.apache.log4j.Logger;
 import org.fusion.qt.error.InterruptedPaintResourceInitialization;
 import org.fusion.qt.paintengine.QFusionRenderEngine;
 import org.fusion.qt.paintengine.RenderEngineInitializer;
-import org.hydrogen.api.display.Display;
-import org.hydrogen.api.paint.PainterFactoryProvider;
+import org.hydrogen.display.api.Display;
+import org.hydrogen.paint.api.PainterFactoryProvider;
 
 /**
  * A <code>QFusionPainterFactoryProvider</code> is responsible for creating a

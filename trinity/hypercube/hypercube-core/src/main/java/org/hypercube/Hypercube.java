@@ -20,9 +20,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.fusion.qt.x11.QFusionDisplayConfiguration;
-import org.hydrogen.api.config.DisplayConfiguration;
-import org.hyperdrive.api.core.ManagedDisplay;
-import org.hyperdrive.core.BaseDisplayManager;
+import org.hydrogen.config.api.DisplayConfiguration;
+import org.hyperdrive.core.api.ManagedDisplay;
+import org.hyperdrive.core.impl.BaseDisplayManager;
 
 import com.martiansoftware.jsap.JSAPException;
 

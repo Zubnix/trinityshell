@@ -26,11 +26,11 @@ import org.fusion.x11.core.input.XKeyboard;
 import org.fusion.x11.core.input.XModifier;
 import org.fusion.x11.core.xcb.XcbCoreInterfaceImpl;
 import org.fusion.x11.core.xcb.error.UnknownKeyException;
-import org.hydrogen.api.display.input.InputModifierName;
-import org.hydrogen.api.display.input.InputModifiers;
-import org.hydrogen.api.display.input.Key;
-import org.hydrogen.api.display.input.Modifier;
-import org.hydrogen.display.input.BaseInputModifiers;
+import org.hydrogen.display.api.input.InputModifierName;
+import org.hydrogen.display.api.input.InputModifiers;
+import org.hydrogen.display.api.input.Key;
+import org.hydrogen.display.api.input.Modifier;
+import org.hydrogen.display.api.input.base.BaseInputModifiers;
 
 // TODO documentation
 /**
