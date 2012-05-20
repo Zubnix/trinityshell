@@ -20,6 +20,7 @@ import org.hydrogen.display.api.event.DisplayEventType;
 import org.hydrogen.display.api.event.StackingNotifyEvent;
 
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 //TODO documentation
 /**
@@ -38,7 +39,7 @@ public class BaseStackingNotifyEvent extends BaseDisplayEvent implements
 	 * @param eventSource
 	 */
 	@Inject
-	protected BaseStackingNotifyEvent(final DisplayEventSource eventSource) {
+	protected BaseStackingNotifyEvent(@Assisted final DisplayEventSource eventSource) {
 		super(DisplayEventType.STACKING_CHANGED, eventSource);
 	}
 }

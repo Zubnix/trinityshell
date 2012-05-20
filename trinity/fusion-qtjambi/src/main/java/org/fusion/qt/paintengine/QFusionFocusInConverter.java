@@ -18,7 +18,7 @@ package org.fusion.qt.paintengine;
 
 import org.hydrogen.display.api.event.DisplayEventSource;
 import org.hydrogen.display.api.event.FocusNotifyEvent;
-import org.hydrogen.display.api.event.base.BaseFocusInNotifyEvent;
+import org.hydrogen.display.api.event.base.BaseFocusGainNotifyEvent;
 
 import com.trolltech.qt.gui.QFocusEvent;
 
@@ -36,7 +36,7 @@ public final class QFusionFocusInConverter implements
 	@Override
 	public FocusNotifyEvent sinkEvent(final DisplayEventSource eventSource,
 			final QFocusEvent qEvent) {
-		final BaseFocusInNotifyEvent focusNotifyEvent = new BaseFocusInNotifyEvent(
+		final BaseFocusGainNotifyEvent focusNotifyEvent = new BaseFocusGainNotifyEvent(
 				eventSource);
 		return focusNotifyEvent;
 	}

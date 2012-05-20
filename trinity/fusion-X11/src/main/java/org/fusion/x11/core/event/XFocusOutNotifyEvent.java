@@ -16,7 +16,7 @@
 package org.fusion.x11.core.event;
 
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.display.api.event.base.BaseFocusOutNotifyEvent;
+import org.hydrogen.display.api.event.base.BaseFocusLostNotifyEvent;
 
 //TODO documentation
 /**
@@ -24,7 +24,7 @@ import org.hydrogen.display.api.event.base.BaseFocusOutNotifyEvent;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class XFocusOutNotifyEvent extends BaseFocusOutNotifyEvent {
+public class XFocusOutNotifyEvent extends BaseFocusLostNotifyEvent {
 
 	/**
 	 * 

@@ -1,17 +1,13 @@
 /*
- * This file is part of Hydrogen.
- * 
- * Hydrogen is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * Hydrogen is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * Hydrogen. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of Hydrogen. Hydrogen is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. Hydrogen is distributed in
+ * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+ * the GNU General Public License for more details. You should have received a
+ * copy of the GNU General Public License along with Hydrogen. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.hydrogen.display.api.event.base;
 
@@ -20,6 +16,8 @@ import org.hydrogen.display.api.event.DisplayEventSource;
 import org.hydrogen.display.api.event.DisplayEventType;
 
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 
 // TODO documentation
 /**
@@ -29,7 +27,6 @@ import com.google.inject.Inject;
  * 
  * @author Erik De Rijcke
  * @since 1.0
- * 
  */
 public class BaseConfigureRequestEvent extends BaseDisplayEvent implements
 		ConfigureRequestEvent {
@@ -43,8 +40,8 @@ public class BaseConfigureRequestEvent extends BaseDisplayEvent implements
 	private final int height;
 	private final int width;
 
-	/**
-	 * 
+	/*****************************************
+	 * @param configureNotify
 	 * @param eventSource
 	 * @param xSet
 	 * @param ySet
@@ -54,13 +51,19 @@ public class BaseConfigureRequestEvent extends BaseDisplayEvent implements
 	 * @param y
 	 * @param width
 	 * @param height
-	 */
+	 ****************************************/
 	@Inject
-	protected BaseConfigureRequestEvent(final DisplayEventSource eventSource,
-			final boolean xSet, final boolean ySet, final boolean heightSet,
-			final boolean widthSet, final int x, final int y, final int width,
-			final int height) {
-		super(DisplayEventType.CONFIGURE_REQUEST, eventSource);
+	protected BaseConfigureRequestEvent(@Named("ConfigureRequest") final DisplayEventType configureNotify,
+										@Assisted final DisplayEventSource eventSource,
+										@Assisted final boolean xSet,
+										@Assisted final boolean ySet,
+										@Assisted final boolean heightSet,
+										@Assisted final boolean widthSet,
+										@Assisted final int x,
+										@Assisted final int y,
+										@Assisted final int width,
+										@Assisted final int height) {
+		super(configureNotify, eventSource);
 		this.xSet = xSet;
 		this.ySet = ySet;
 		this.widthSet = widthSet;
@@ -113,9 +116,16 @@ public class BaseConfigureRequestEvent extends BaseDisplayEvent implements
 
 	@Override
 	public String toString() {
-		return String.format(
-				"%s\tDetails: %d+%d : %dx%d - Enabled?: %s+%s : %s+%s",
-				super.toString(), this.x, this.y, this.width, this.height,
-				this.xSet, this.ySet, this.widthSet, this.heightSet);
+		return String
+				.format("%s\tDetails: %d+%d : %dx%d - Enabled?: %s+%s : %s+%s",
+						super.toString(),
+						this.x,
+						this.y,
+						this.width,
+						this.height,
+						this.xSet,
+						this.ySet,
+						this.widthSet,
+						this.heightSet);
 	}
 }

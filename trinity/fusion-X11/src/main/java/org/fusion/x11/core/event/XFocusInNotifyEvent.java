@@ -16,7 +16,7 @@
 package org.fusion.x11.core.event;
 
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.display.api.event.base.BaseFocusInNotifyEvent;
+import org.hydrogen.display.api.event.base.BaseFocusGainNotifyEvent;
 
 //TODO documentation
 /**
@@ -24,7 +24,7 @@ import org.hydrogen.display.api.event.base.BaseFocusInNotifyEvent;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class XFocusInNotifyEvent extends BaseFocusInNotifyEvent {
+public class XFocusInNotifyEvent extends BaseFocusGainNotifyEvent {
 
 	/**
 	 * 

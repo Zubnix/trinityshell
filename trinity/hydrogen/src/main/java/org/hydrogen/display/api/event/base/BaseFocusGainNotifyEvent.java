@@ -13,28 +13,29 @@ package org.hydrogen.display.api.event.base;
 
 import org.hydrogen.display.api.event.DisplayEventSource;
 import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.MouseEnterLeaveNotifyEvent;
+import org.hydrogen.display.api.event.FocusNotifyEvent;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 
-// TODO documentation
 /**
- * A <code>BaseMouseEnterNotifyEvent</code> is a basic implementation of a
- * <code>MouseEnterLeaveNotifyEvent</code>. Classes wishing to implement
- * <code>MouseEnterLeaveNotifyEvent</code> can use this class as a base.
+ * A <code>BaseFocusInNotifyEvent</code> is a basic implementation of a
+ * <code>FocusNotifyEvent</code>. Classes wishing to implement
+ * <code>FocusNotifyEvent</code> can use this class as a base.
  * 
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class BaseMouseEnterNotifyEvent extends BaseDisplayEvent implements
-		MouseEnterLeaveNotifyEvent {
+public class BaseFocusGainNotifyEvent extends BaseDisplayEvent implements
+		FocusNotifyEvent {
 
 	/**
 	 * @param eventSource
 	 */
 	@Inject
-	protected BaseMouseEnterNotifyEvent(@Assisted final DisplayEventSource eventSource) {
-		super(DisplayEventType.MOUSE_ENTER, eventSource);
+	protected BaseFocusGainNotifyEvent(	@Named("FocusGainNotify") final DisplayEventType displayEventType,
+										@Assisted final DisplayEventSource eventSource) {
+		super(displayEventType, eventSource);
 	}
 }

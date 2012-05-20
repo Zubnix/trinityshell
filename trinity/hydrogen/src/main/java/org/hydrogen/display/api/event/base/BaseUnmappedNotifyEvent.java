@@ -20,6 +20,7 @@ import org.hydrogen.display.api.event.DisplayEventType;
 import org.hydrogen.display.api.event.UnmappedNotifyEvent;
 
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 // TODO documentation
 /**
@@ -39,7 +40,7 @@ public class BaseUnmappedNotifyEvent extends BaseDisplayEvent implements
 	 * @param eventSource
 	 */
 	@Inject
-	protected BaseUnmappedNotifyEvent(final DisplayEventSource eventSource) {
+	protected BaseUnmappedNotifyEvent(@Assisted final DisplayEventSource eventSource) {
 		super(DisplayEventType.UNMAP_NOTIFY, eventSource);
 	}
 }

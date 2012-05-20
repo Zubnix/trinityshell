@@ -1,17 +1,13 @@
 /*
- * This file is part of Hydrogen.
- * 
- * Hydrogen is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * Hydrogen is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * Hydrogen. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of Hydrogen. Hydrogen is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. Hydrogen is distributed in
+ * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+ * the GNU General Public License for more details. You should have received a
+ * copy of the GNU General Public License along with Hydrogen. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.hydrogen.display.api.event;
 
@@ -19,78 +15,76 @@ import org.hydrogen.event.api.Type;
 
 // TODO documentation
 /**
- * 
  * @author Erik De Rijcke
  * @since 1.0
- * 
  */
-public enum DisplayEventType implements Type {
+public class DisplayEventType implements Type {
 	/**
 	 * 
 	 */
-	BUTTON_PRESSED,
+	public static final DisplayEventType BUTTON_PRESSED = new DisplayEventType();
 	/**
 	 * 
 	 */
-	BUTTON_RELEASED,
+	public static final DisplayEventType BUTTON_RELEASED = new DisplayEventType();
 	/**
 	 * 
 	 */
-	CLIENT_MESSAGE,
+	public static final DisplayEventType CLIENT_MESSAGE = new DisplayEventType();
 	/*
 	 * 
 	 */
-	CONFIGURE_NOTIFY,
+	public static final DisplayEventType CONFIGURE_NOTIFY = new DisplayEventType();
 	/**
 	 * 
 	 */
-	CONFIGURE_REQUEST,
+	public static final DisplayEventType CONFIGURE_REQUEST = new DisplayEventType();
 	/**
 	 * 
 	 */
-	DESTROY_NOTIFY,
+	public static final DisplayEventType DESTROY_NOTIFY = new DisplayEventType();
 	/**
 	 * 
 	 */
-	FOCUS_GAIN_NOTIFY,
+	public static final DisplayEventType FOCUS_GAIN_NOTIFY = new DisplayEventType();
 	/**
 	 * 
 	 */
-	FOCUS_LOST_NOTIFY,
+	public static final DisplayEventType FOCUS_LOST_NOTIFY = new DisplayEventType();
 	/**
 	 * 
 	 */
-	KEY_PRESSED,
+	public static final DisplayEventType KEY_PRESSED = new DisplayEventType();
 	/**
 	 * 
 	 */
-	KEY_RELEASED,
+	public static final DisplayEventType KEY_RELEASED = new DisplayEventType();
 	/**
 	 * 
 	 */
-	MAP_NOTIFY,
+	public static final DisplayEventType MAP_NOTIFY = new DisplayEventType();
 	/**
 	 * 
 	 */
-	MAP_REQUEST,
+	public static final DisplayEventType MAP_REQUEST = new DisplayEventType();
 	/**
 	 * 
 	 */
-	MOUSE_ENTER,
+	public static final DisplayEventType MOUSE_ENTER = new DisplayEventType();
 	/**
 	 * 
 	 */
-	MOUSE_LEAVE,
+	public static final DisplayEventType MOUSE_LEAVE = new DisplayEventType();
 	/**
 	 * 
 	 */
-	PROPERTY_CHANGED,
+	public static final DisplayEventType PROPERTY_CHANGED = new DisplayEventType();
 	/**
 	 * 
 	 */
-	STACKING_CHANGED,
+	public static final DisplayEventType STACKING_CHANGED = new DisplayEventType();
 	/**
 	 * 
 	 */
-	UNMAP_NOTIFY
+	public static final DisplayEventType UNMAP_NOTIFY = new DisplayEventType();
 }

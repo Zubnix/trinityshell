@@ -20,6 +20,7 @@ import org.hydrogen.display.api.event.DisplayEventType;
 import org.hydrogen.display.api.event.MouseEnterLeaveNotifyEvent;
 
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 // TODO documentation
 /**
@@ -38,7 +39,7 @@ public class BaseMouseLeaveNotifyEvent extends BaseDisplayEvent implements
 	 * @param eventSource
 	 */
 	@Inject
-	protected BaseMouseLeaveNotifyEvent(final DisplayEventSource eventSource) {
+	protected BaseMouseLeaveNotifyEvent(@Assisted final DisplayEventSource eventSource) {
 		super(DisplayEventType.MOUSE_LEAVE, eventSource);
 	}
 }

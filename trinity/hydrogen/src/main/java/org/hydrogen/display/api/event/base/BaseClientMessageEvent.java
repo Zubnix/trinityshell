@@ -20,6 +20,7 @@ import org.hydrogen.display.api.event.DisplayEventType;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 
 // TODO documentation
 /**
@@ -44,11 +45,12 @@ public class BaseClientMessageEvent extends BaseDisplayEvent implements
 	 * @param data
 	 */
 	@Inject
-	protected BaseClientMessageEvent(	@Assisted final DisplayEventSource platformRenderAreaArgument,
+	protected BaseClientMessageEvent(	@Named("ClientMessage") DisplayEventType displayEventType,
+										@Assisted final DisplayEventSource platformRenderAreaArgument,
 										@Assisted final Atom dataType,
 										@Assisted final int dataFormat,
 										@Assisted final byte[] data) {
-		super(DisplayEventType.CLIENT_MESSAGE, platformRenderAreaArgument);
+		super(displayEventType, platformRenderAreaArgument);
 		this.dataType = dataType;
 		this.dataFormat = dataFormat;
 		this.data = data;

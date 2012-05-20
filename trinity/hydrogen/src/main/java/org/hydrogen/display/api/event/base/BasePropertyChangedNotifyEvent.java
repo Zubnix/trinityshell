@@ -22,6 +22,7 @@ import org.hydrogen.display.api.event.DisplayEventType;
 import org.hydrogen.display.api.event.PropertyChangedNotifyEvent;
 
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 //TODO documentation
 /**
@@ -46,9 +47,9 @@ public class BasePropertyChangedNotifyEvent extends BaseDisplayEvent implements
 	 */
 	@Inject
 	protected BasePropertyChangedNotifyEvent(
-			final DisplayEventSource eventSource,
-			final boolean propertyDeleted,
-			final Property<? extends PropertyInstance> changedProperty) {
+			@Assisted final DisplayEventSource eventSource,
+			@Assisted final boolean propertyDeleted,
+			@Assisted final Property<? extends PropertyInstance> changedProperty) {
 		super(DisplayEventType.PROPERTY_CHANGED, eventSource);
 		this.propertyDeleted = propertyDeleted;
 		this.changedProperty = changedProperty;

@@ -5,6 +5,8 @@ import org.hydrogen.display.api.event.DisplayEventSource;
 import org.hydrogen.display.api.event.DisplayEventType;
 
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 
 public class BaseConfigureNotifyEvent extends BaseDisplayEvent implements
 		ConfigureNotifyEvent {
@@ -15,9 +17,13 @@ public class BaseConfigureNotifyEvent extends BaseDisplayEvent implements
 	private final int height;
 
 	@Inject
-	protected BaseConfigureNotifyEvent(final DisplayEventSource eventSource,
-			final int x, final int y, final int width, final int height) {
-		super(DisplayEventType.CONFIGURE_NOTIFY, eventSource);
+	protected BaseConfigureNotifyEvent(	@Named("ConfigureNotify") final DisplayEventType configureNotify,
+										@Assisted final DisplayEventSource eventSource,
+										@Assisted final int x,
+										@Assisted final int y,
+										@Assisted final int width,
+										@Assisted final int height) {
+		super(configureNotify, eventSource);
 		this.x = x;
 		this.y = y;
 		this.width = width;

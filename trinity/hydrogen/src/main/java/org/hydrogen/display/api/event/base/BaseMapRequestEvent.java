@@ -20,6 +20,7 @@ import org.hydrogen.display.api.event.DisplayEventType;
 import org.hydrogen.display.api.event.MapRequestEvent;
 
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 // TODO documentation
 /**
@@ -39,7 +40,7 @@ public class BaseMapRequestEvent extends BaseDisplayEvent implements
 	 * @param eventSource
 	 */
 	@Inject
-	protected BaseMapRequestEvent(final DisplayEventSource eventSource) {
+	protected BaseMapRequestEvent(@Assisted final DisplayEventSource eventSource) {
 		super(DisplayEventType.MAP_REQUEST, eventSource);
 	}
 
