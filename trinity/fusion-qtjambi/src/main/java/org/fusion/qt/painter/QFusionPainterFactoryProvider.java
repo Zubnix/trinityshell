@@ -22,8 +22,8 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.fusion.qt.error.InterruptedPaintResourceInitialization;
-import org.fusion.qt.paintengine.QFusionRenderEngine;
-import org.fusion.qt.paintengine.RenderEngineInitializer;
+import org.fusion.qt.paintengine.impl.QFusionRenderEngineImpl;
+import org.fusion.qt.paintengine.impl.RenderEngineInitializer;
 import org.hydrogen.display.api.Display;
 import org.hydrogen.paint.api.PainterFactoryProvider;
 
@@ -75,7 +75,7 @@ public class QFusionPainterFactoryProvider implements PainterFactoryProvider {
 				display, this.backEndProperties);
 		getRenderEnginesExecutor().submit(renderEngineInitializer);
 
-		QFusionRenderEngine renderEngine = null;
+		QFusionRenderEngineImpl renderEngine = null;
 		while (renderEngine == null) {
 			try {
 				renderEngine = renderEngineInitializer.getRenderEngine();

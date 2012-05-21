@@ -19,10 +19,10 @@ public class BaseConfigureNotifyEvent extends BaseDisplayEvent implements
 	@Inject
 	protected BaseConfigureNotifyEvent(	@Named("ConfigureNotify") final DisplayEventType configureNotify,
 										@Assisted final DisplayEventSource eventSource,
-										@Assisted final int x,
-										@Assisted final int y,
-										@Assisted final int width,
-										@Assisted final int height) {
+										@Assisted("x") final int x,
+										@Assisted("y") final int y,
+										@Assisted("width") final int width,
+										@Assisted("height") final int height) {
 		super(configureNotify, eventSource);
 		this.x = x;
 		this.y = y;

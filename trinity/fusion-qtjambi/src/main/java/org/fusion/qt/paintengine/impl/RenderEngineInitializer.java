@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with
  * Fusion-qtjambi. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.fusion.qt.paintengine;
+package org.fusion.qt.paintengine.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +59,8 @@ public final class RenderEngineInitializer implements Runnable {
 	private static int threadNr = 0;
 
 	private final Display display;
-	private QFusionRenderEngine renderEngine;
-	private final BlockingQueue<QFusionRenderEngine> renderEngineContainer;
+	private QFusionRenderEngineImpl renderEngine;
+	private final BlockingQueue<QFusionRenderEngineImpl> renderEngineContainer;
 	private final Map<String, String> backEndProperties;
 
 	/**
@@ -75,7 +75,7 @@ public final class RenderEngineInitializer implements Runnable {
 			final Map<String, String> backEndProperties) {
 		this.backEndProperties = backEndProperties;
 		this.display = display;
-		this.renderEngineContainer = new ArrayBlockingQueue<QFusionRenderEngine>(
+		this.renderEngineContainer = new ArrayBlockingQueue<QFusionRenderEngineImpl>(
 				1);
 	}
 
@@ -86,7 +86,7 @@ public final class RenderEngineInitializer implements Runnable {
 	 * @return
 	 * @throws InterruptedException
 	 */
-	public QFusionRenderEngine getRenderEngine() throws InterruptedException {
+	public QFusionRenderEngineImpl getRenderEngine() throws InterruptedException {
 		if (this.renderEngine == null) {
 			this.renderEngine = this.renderEngineContainer.poll(
 					RenderEngineInitializer.INIT_TIMEOUT, TimeUnit.SECONDS);
@@ -113,9 +113,9 @@ public final class RenderEngineInitializer implements Runnable {
 	 * 
 	 * @return
 	 */
-	protected QFusionRenderEngine newQFusionRenderEngine() {
+	protected QFusionRenderEngineImpl newQFusionRenderEngine() {
 		// construct new String[] args from back-end properties.
-		return new QFusionRenderEngine(this.display, constructArgs());
+		return new QFusionRenderEngineImpl(this.display, constructArgs());
 	}
 
 	private String[] constructArgs() {

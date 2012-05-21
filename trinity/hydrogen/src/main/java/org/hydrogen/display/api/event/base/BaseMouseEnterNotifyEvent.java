@@ -13,10 +13,11 @@ package org.hydrogen.display.api.event.base;
 
 import org.hydrogen.display.api.event.DisplayEventSource;
 import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.MouseEnterLeaveNotifyEvent;
+import org.hydrogen.display.api.event.MouseVisitationNotifyEvent;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 
 // TODO documentation
 /**
@@ -28,13 +29,14 @@ import com.google.inject.assistedinject.Assisted;
  * @since 1.0
  */
 public class BaseMouseEnterNotifyEvent extends BaseDisplayEvent implements
-		MouseEnterLeaveNotifyEvent {
+		MouseVisitationNotifyEvent {
 
 	/**
 	 * @param eventSource
 	 */
 	@Inject
-	protected BaseMouseEnterNotifyEvent(@Assisted final DisplayEventSource eventSource) {
-		super(DisplayEventType.MOUSE_ENTER, eventSource);
+	protected BaseMouseEnterNotifyEvent(@Named("MouseEnter") final DisplayEventType displayEventType,
+										@Assisted final DisplayEventSource eventSource) {
+		super(displayEventType, eventSource);
 	}
 }

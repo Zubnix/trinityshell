@@ -41,6 +41,11 @@
 			<artifactId>guice-assistedinject</artifactId>
 			<version>3.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-multibindings</artifactId>
+			<version>3.0</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>

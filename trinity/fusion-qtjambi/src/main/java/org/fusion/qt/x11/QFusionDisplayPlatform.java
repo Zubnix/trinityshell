@@ -18,7 +18,7 @@ package org.fusion.qt.x11;
 
 import java.util.Map;
 
-import org.fusion.qt.paintengine.QFusionEventProducerFactory;
+import org.fusion.qt.paintengine.impl.QFusionEventProducerFactory;
 import org.fusion.qt.painter.QFusionPainterFactoryProvider;
 import org.fusion.x11.core.XCoreInterfaceProvider;
 import org.fusion.x11.core.XDisplayPlatform;

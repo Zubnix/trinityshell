@@ -55,14 +55,14 @@ public class BaseConfigureRequestEvent extends BaseDisplayEvent implements
 	@Inject
 	protected BaseConfigureRequestEvent(@Named("ConfigureRequest") final DisplayEventType configureNotify,
 										@Assisted final DisplayEventSource eventSource,
-										@Assisted final boolean xSet,
-										@Assisted final boolean ySet,
-										@Assisted final boolean heightSet,
-										@Assisted final boolean widthSet,
-										@Assisted final int x,
-										@Assisted final int y,
-										@Assisted final int width,
-										@Assisted final int height) {
+										@Assisted("xSet") final boolean xSet,
+										@Assisted("ySet") final boolean ySet,
+										@Assisted("heightSet") final boolean heightSet,
+										@Assisted("widthSet") final boolean widthSet,
+										@Assisted("x") final int x,
+										@Assisted("y") final int y,
+										@Assisted("width") final int width,
+										@Assisted("height") final int height) {
 		super(configureNotify, eventSource);
 		this.xSet = xSet;
 		this.ySet = ySet;

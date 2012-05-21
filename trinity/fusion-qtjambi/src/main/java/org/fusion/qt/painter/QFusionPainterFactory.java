@@ -16,7 +16,7 @@
  */
 package org.fusion.qt.painter;
 
-import org.fusion.qt.paintengine.QFusionRenderEngine;
+import org.fusion.qt.paintengine.impl.QFusionRenderEngineImpl;
 import org.hydrogen.paint.api.Paintable;
 import org.hydrogen.paint.api.PainterFactory;
 
@@ -30,7 +30,7 @@ import org.hydrogen.paint.api.PainterFactory;
  */
 public class QFusionPainterFactory implements PainterFactory {
 
-	public final QFusionRenderEngine renderEngine;
+	public final QFusionRenderEngineImpl renderEngine;
 
 	/**
 	 * Create a new <code>QFusionPainterFactory</code>. The
@@ -39,9 +39,9 @@ public class QFusionPainterFactory implements PainterFactory {
 	 * <code>QFusionRenderEngine</code>.
 	 * 
 	 * @param renderEngine
-	 *            A {@link QFusionRenderEngine}.
+	 *            A {@link QFusionRenderEngineImpl}.
 	 */
-	public QFusionPainterFactory(final QFusionRenderEngine renderEngine) {
+	public QFusionPainterFactory(final QFusionRenderEngineImpl renderEngine) {
 		this.renderEngine = renderEngine;
 	}
 
@@ -59,7 +59,7 @@ public class QFusionPainterFactory implements PainterFactory {
 	 *         <code>QFusionPainter</code> implementations whil delegate their
 	 *         public methods to.
 	 */
-	public QFusionRenderEngine getRenderEngine() {
+	public QFusionRenderEngineImpl getRenderEngine() {
 		return this.renderEngine;
 	}
 

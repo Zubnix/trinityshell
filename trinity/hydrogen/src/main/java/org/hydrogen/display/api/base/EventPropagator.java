@@ -22,7 +22,7 @@ import org.hydrogen.display.api.event.DestroyNotifyEvent;
 import org.hydrogen.display.api.event.DisplayEvent;
 import org.hydrogen.display.api.event.FocusNotifyEvent;
 import org.hydrogen.display.api.event.MapRequestEvent;
-import org.hydrogen.display.api.event.MouseEnterLeaveNotifyEvent;
+import org.hydrogen.display.api.event.MouseVisitationNotifyEvent;
 import org.hydrogen.display.api.event.PropertyChangedNotifyEvent;
 import org.hydrogen.display.api.event.UnmappedNotifyEvent;
 
@@ -48,13 +48,13 @@ public class EventPropagator {
 	public static final EventPropagator NOTIFY_CHANGED_WINDOW_PROPERTY = new EventPropagator();
 
 	/**
-	 * Indicates that we want to receive {@link MouseEnterLeaveNotifyEvent}s
+	 * Indicates that we want to receive {@link MouseVisitationNotifyEvent}s
 	 * whenever a mouse cursors enters a <code>PlatformRenderArea</code>.
 	 */
 	public static final EventPropagator NOTIFY_MOUSE_ENTER = new EventPropagator();
 
 	/**
-	 * Indicates that we want to receive {@link MouseEnterLeaveNotifyEvent}s
+	 * Indicates that we want to receive {@link MouseVisitationNotifyEvent}s
 	 * whenever a mouse cursor leaves a <code>PlatformRenderArea</code>.
 	 */
 	public static final EventPropagator NOTIFY_MOUSE_LEAVE = new EventPropagator();

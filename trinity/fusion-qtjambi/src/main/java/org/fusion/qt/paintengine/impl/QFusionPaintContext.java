@@ -1,4 +1,4 @@
-package org.fusion.qt.paintengine;
+package org.fusion.qt.paintengine.impl;
 
 import java.util.Map;
 
@@ -13,9 +13,9 @@ public class QFusionPaintContext<P extends QWidget> implements PaintContext<P> {
 	private final PaintableRef paintableRef;
 	private final P paintPeer;
 	private final Map<PaintableRef, QWidget> paintPeers;
-	private final QFusionRenderEngine renderEngine;
+	private final QFusionRenderEngineImpl renderEngine;
 
-	protected QFusionPaintContext(final QFusionRenderEngine renderEngine,
+	protected QFusionPaintContext(final QFusionRenderEngineImpl renderEngine,
 			final PaintableRef paintableRef, final P paintPeer,
 			final Map<PaintableRef, QWidget> paintPeers) {
 		this.renderEngine = renderEngine;

@@ -28,7 +28,7 @@ import org.hydrogen.display.api.event.DisplayEventSource;
 import org.hydrogen.display.api.event.FocusNotifyEvent;
 import org.hydrogen.display.api.event.KeyNotifyEvent;
 import org.hydrogen.display.api.event.MapRequestEvent;
-import org.hydrogen.display.api.event.MouseEnterLeaveNotifyEvent;
+import org.hydrogen.display.api.event.MouseVisitationNotifyEvent;
 import org.hydrogen.display.api.event.PropertyChangedNotifyEvent;
 import org.hydrogen.display.api.event.UnmappedNotifyEvent;
 import org.hydrogen.event.api.EventManager;
@@ -63,7 +63,7 @@ import com.google.inject.Inject;
  * <li> {@link KeyNotifyEvent}</li>
  * <li> {@link DestroyNotifyEvent}</li>
  * <li> {@link UnmappedNotifyEvent}</li>
- * <li> {@link MouseEnterLeaveNotifyEvent}</li>
+ * <li> {@link MouseVisitationNotifyEvent}</li>
  * <li> {@link PropertyChangedNotifyEvent}</li>
  * <li> {@link FocusNotifyEvent}</li>
  * </ul>

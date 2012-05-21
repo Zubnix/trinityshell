@@ -19,7 +19,7 @@ package org.fusion.qt.painter;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import org.fusion.qt.paintengine.QFusionRenderEngine;
+import org.fusion.qt.paintengine.impl.QFusionRenderEngineImpl;
 import org.hydrogen.geometry.api.Coordinates;
 import org.hydrogen.geometry.api.base.BaseCoordinates;
 import org.hydrogen.paint.api.PaintCall;
@@ -127,7 +127,7 @@ public class QFusionPainter implements Painter {
 		}
 	};
 
-	private final QFusionRenderEngine qFusionRenderEngine;
+	private final QFusionRenderEngineImpl qFusionRenderEngine;
 	private final Paintable paintable;
 
 	/**
@@ -139,7 +139,7 @@ public class QFusionPainter implements Painter {
 	 *            all delegated public method calls from the created
 	 *            <code>QFusionPainter</code>.
 	 */
-	protected QFusionPainter(final QFusionRenderEngine qFusionRenderEngine,
+	protected QFusionPainter(final QFusionRenderEngineImpl qFusionRenderEngine,
 			final Paintable paintable) {
 		this.qFusionRenderEngine = qFusionRenderEngine;
 		this.paintable = paintable;
@@ -154,9 +154,9 @@ public class QFusionPainter implements Painter {
 	 * The <code>QFusionRenderEngine</code> responsible for correctly
 	 * implementing all visualization.
 	 * 
-	 * @return A {@link QFusionRenderEngine}.
+	 * @return A {@link QFusionRenderEngineImpl}.
 	 */
-	public QFusionRenderEngine getQtRenderEngine() {
+	public QFusionRenderEngineImpl getQtRenderEngine() {
 		return this.qFusionRenderEngine;
 	}
 

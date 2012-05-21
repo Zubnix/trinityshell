@@ -5,7 +5,7 @@ import org.hydrogen.display.api.PropertyInstance;
 
 import com.google.inject.AbstractModule;
 
-public class DisplayBaseModule extends AbstractModule {
+public class BaseDisplayModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

@@ -13,7 +13,7 @@ package org.hydrogen.display.api.event.base;
 
 import org.hydrogen.display.api.event.DisplayEventSource;
 import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.MouseVisitationNotifyEvent;
+import org.hydrogen.display.api.event.StackingChangedNotifyEvent;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -21,22 +21,22 @@ import com.google.inject.name.Named;
 
 // TODO documentation
 /**
- * A <code>BaseMouseLeaveNotifyEvent</code> is a basic implementation of a
- * <code>MouseEnterLeaveNotifyEvent</code>. Classes wishing to implement
- * <code>MouseEnterLeaveNotifyEvent</code> can use this class as a base.
+ * A <code>BaseStackingNotifyEvent</code> is a basic implementation of a
+ * <code>StackingNotifyEvent</code>. Classes wishing to implement
+ * <code>StackingNotifyEvent</code> can use this class as a base.
  * 
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class BaseMouseLeaveNotifyEvent extends BaseDisplayEvent implements
-		MouseVisitationNotifyEvent {
+public class BaseStackingChangedNotifyEvent extends BaseDisplayEvent implements
+		StackingChangedNotifyEvent {
 
 	/**
 	 * @param eventSource
 	 */
 	@Inject
-	protected BaseMouseLeaveNotifyEvent(@Named("MouseLeave") final DisplayEventType displayEventType,
-										@Assisted final DisplayEventSource eventSource) {
+	protected BaseStackingChangedNotifyEvent(	@Named("StackingChanged") final DisplayEventType displayEventType,
+												@Assisted final DisplayEventSource eventSource) {
 		super(displayEventType, eventSource);
 	}
 }

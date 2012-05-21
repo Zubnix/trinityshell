@@ -1,20 +1,15 @@
 /*
- * This file is part of Fusion-qtjambi.
- * 
- * Fusion-qtjambi is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
- * 
- * Fusion-qtjambi is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * Fusion-qtjambi. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of Fusion-qtjambi. Fusion-qtjambi is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. Fusion-qtjambi is distributed
+ * in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details. You should have received
+ * a copy of the GNU General Public License along with Fusion-qtjambi. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
-package org.fusion.qt.paintengine;
+package org.fusion.qt.paintengine.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,12 +18,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.apache.log4j.Logger;
+import org.fusion.qt.paintengine.api.QFusionRenderEngine;
 import org.fusion.qt.painter.QFusionPaintCall;
 import org.fusion.qt.painter.QFusionPainter;
 import org.hydrogen.display.api.Display;
 import org.hydrogen.paint.api.Paintable;
-import org.hydrogen.paint.api.PaintableRef;
-import org.hydrogen.paint.api.base.BasePaintableRef;
 
 import com.trolltech.qt.core.QCoreApplication;
 import com.trolltech.qt.core.QEvent;
@@ -54,10 +48,11 @@ import com.trolltech.qt.gui.QWidget;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class QFusionRenderEngine extends QApplication {
+public class QFusionRenderEngineImpl extends QApplication implements
+		QFusionRenderEngine {
 
 	private static final Logger LOGGER = Logger
-			.getLogger(QFusionRenderEngine.class);
+			.getLogger(QFusionRenderEngineImpl.class);
 	private static final String NULLPAINTCALL_WARN_LOGMESSAGE = "Received null PaintCall for Paintable: %s";
 
 	public Map<PaintableRef, QWidget> qWidgetMap;
@@ -65,16 +60,15 @@ public class QFusionRenderEngine extends QApplication {
 	private static ThreadLocal<QFusionEventProducer> THREADLOCAL_EVENT_PRODUCER;
 
 	/**
-	 * 
 	 * @param display
 	 * @param backEndProperties
 	 */
-	protected QFusionRenderEngine(final Display display,
-			final String[] backEndProperties) {
+	protected QFusionRenderEngineImpl(	final Display display,
+										final String[] backEndProperties) {
 		super(backEndProperties);
 		// FIXME we are using a dynamic display instance in a static variable.
 		// Not good!
-		QFusionRenderEngine.THREADLOCAL_EVENT_PRODUCER = new ThreadLocal<QFusionEventProducer>() {
+		QFusionRenderEngineImpl.THREADLOCAL_EVENT_PRODUCER = new ThreadLocal<QFusionEventProducer>() {
 			@Override
 			protected QFusionEventProducer initialValue() {
 				final QFusionEventProducer promotor = QFusionEventProducerFactory
@@ -96,7 +90,7 @@ public class QFusionRenderEngine extends QApplication {
 	 * @return
 	 */
 	public static QFusionEventProducer getEventPromotor() {
-		return QFusionRenderEngine.THREADLOCAL_EVENT_PRODUCER.get();
+		return QFusionRenderEngineImpl.THREADLOCAL_EVENT_PRODUCER.get();
 	}
 
 	@Override
@@ -121,30 +115,30 @@ public class QFusionRenderEngine extends QApplication {
 	 *            A {@link Paintable}.
 	 * @see {@link QFusionPainter#paintAsync(Paintable)}.
 	 */
-	public <R, P extends QWidget> Future<R> invoke(final Paintable paintable,
-			final QFusionPaintCall<R, P> paintCall) {
+	public <R, P extends QWidget> Future<R> invoke(	final Paintable paintable,
+													final QFusionPaintCall<R, P> paintCall) {
 		if (paintCall != null) {
 			final PaintableRef paintableRef = new BasePaintableRef(paintable);
-			final FutureTask<R> futureTask = new FutureTask<R>(
-					new Callable<R>() {
-						@Override
-						public R call() throws Exception {
-							@SuppressWarnings("unchecked")
-							final P paintPeer = (P) QFusionRenderEngine.this.qWidgetMap
-									.get(paintableRef);
-							final QFusionPaintContext<P> paintContext = new QFusionPaintContext<P>(
-									QFusionRenderEngine.this, paintableRef,
-									paintPeer,
-									QFusionRenderEngine.this.qWidgetMap);
-							return paintCall.call(paintContext);
-						}
-					});
+			final FutureTask<R> futureTask = new FutureTask<R>(new Callable<R>() {
+				@Override
+				public R call() throws Exception {
+					@SuppressWarnings("unchecked")
+					final P paintPeer = (P) QFusionRenderEngineImpl.this.qWidgetMap
+							.get(paintableRef);
+					final QFusionPaintContext<P> paintContext = new QFusionPaintContext<P>(	QFusionRenderEngineImpl.this,
+																							paintableRef,
+																							paintPeer,
+																							QFusionRenderEngineImpl.this.qWidgetMap);
+					return paintCall.call(paintContext);
+				}
+			});
 			QCoreApplication.invokeLater(futureTask);
 			return futureTask;
 		} else {
-			QFusionRenderEngine.LOGGER.warn(String.format(
-					QFusionRenderEngine.NULLPAINTCALL_WARN_LOGMESSAGE,
-					paintable));
+			QFusionRenderEngineImpl.LOGGER
+					.warn(String
+							.format(QFusionRenderEngineImpl.NULLPAINTCALL_WARN_LOGMESSAGE,
+									paintable));
 			return null;
 		}
 	}

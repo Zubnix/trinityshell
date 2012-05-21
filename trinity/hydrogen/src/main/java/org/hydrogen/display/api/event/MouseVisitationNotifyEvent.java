@@ -23,5 +23,5 @@ package org.hydrogen.display.api.event;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public interface MouseEnterLeaveNotifyEvent extends DisplayEvent {
+public interface MouseVisitationNotifyEvent extends DisplayEvent {
 }

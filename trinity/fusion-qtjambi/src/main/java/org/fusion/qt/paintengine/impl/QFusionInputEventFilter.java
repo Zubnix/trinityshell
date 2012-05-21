@@ -1,20 +1,15 @@
 /*
- * This file is part of Fusion-qtjambi.
- * 
- * Fusion-qtjambi is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
- * 
- * Fusion-qtjambi is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * Fusion-qtjambi. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of Fusion-qtjambi. Fusion-qtjambi is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. Fusion-qtjambi is distributed
+ * in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details. You should have received
+ * a copy of the GNU General Public License along with Fusion-qtjambi. If not,
+ * see <http://www.gnu.org/licenses/>.
  */
-package org.fusion.qt.paintengine;
+package org.fusion.qt.paintengine.impl;
 
 import org.hydrogen.display.api.event.DisplayEventSource;
 
@@ -30,7 +25,7 @@ import com.trolltech.qt.gui.QWidget;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class QFusionInputEventFilter extends QObject {
+final class QFusionInputEventFilter extends QObject {
 
 	private final DisplayEventSource eventSource;
 
@@ -43,8 +38,8 @@ public class QFusionInputEventFilter extends QObject {
 	 * @param eventSource
 	 * @param eventProducingVisual
 	 */
-	public QFusionInputEventFilter(final DisplayEventSource eventSource,
-			final QWidget eventProducingVisual) {
+	public QFusionInputEventFilter(	final DisplayEventSource eventSource,
+									final QWidget eventProducingVisual) {
 		this.eventSource = eventSource;
 		eventProducingVisual.installEventFilter(this);
 	}
@@ -54,15 +49,15 @@ public class QFusionInputEventFilter extends QObject {
 		// Make sure we are interested in the event we receive.
 		if (isEventSourceAndTypeValid(qObject, qEvent)) {
 			// We are interested and thus convert the event.
-			QFusionRenderEngine.getEventPromotor().promote(this.eventSource,
-					qEvent);
+			QFusionRenderEngineImpl.getEventPromotor()
+					.promote(this.eventSource, qEvent);
 			return true;
 		}
 		return false;
 	}
 
-	private boolean isEventSourceAndTypeValid(final QObject qObject,
-			final QEvent qEvent) {
+	private boolean isEventSourceAndTypeValid(	final QObject qObject,
+												final QEvent qEvent) {
 		return (qObject.isWidgetType() && ((qEvent.type() == Type.KeyPress)
 				|| (qEvent.type() == Type.KeyRelease)
 				|| (qEvent.type() == Type.MouseButtonPress)

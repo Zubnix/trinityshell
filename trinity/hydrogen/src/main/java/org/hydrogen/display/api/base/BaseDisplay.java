@@ -1,17 +1,13 @@
 /*
- * This file is part of Hydrogen.
- * 
- * Hydrogen is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * Hydrogen is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * Hydrogen. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of Hydrogen. Hydrogen is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. Hydrogen is distributed in
+ * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+ * the GNU General Public License for more details. You should have received a
+ * copy of the GNU General Public License along with Hydrogen. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.hydrogen.display.api.base;
 
@@ -128,25 +124,24 @@ public abstract class BaseDisplay extends EventBus implements Display {
 	 *            when an error related to the underlying native display occurs.
 	 */
 	@Inject
-	protected BaseDisplay(Set<EventFetcher> eventFetchers) {
+	protected BaseDisplay(final Set<EventFetcher> eventFetchers) {
 		this.eventFetchers = eventFetchers;
-		this.masterQueue = new ArrayBlockingQueue<DisplayEvent>(
-				BaseDisplay.EVENT_QUEUE_SIZE, true);
+		this.masterQueue = new ArrayBlockingQueue<DisplayEvent>(BaseDisplay.EVENT_QUEUE_SIZE,
+																true);
 		this.eventFetchingService = Executors.newCachedThreadPool();
 
 	}
 
 	/**
-	 * 
 	 * @param displayEvent
 	 */
+	@Override
 	public void addEventToMasterQueue(final DisplayEvent displayEvent) {
 		try {
 			if (!this.masterQueue.offer(displayEvent,
-					BaseDisplay.EVENT_OFFER_TIMEOUT,
-					BaseDisplay.EVENT_OFFER_TIMEOUT_UNIT)) {
-				throw new RuntimeException(
-						String.format("Time Out.\nCould not add event to queue."));
+										BaseDisplay.EVENT_OFFER_TIMEOUT,
+										BaseDisplay.EVENT_OFFER_TIMEOUT_UNIT)) {
+				throw new RuntimeException(String.format("Time Out.\nCould not add event to queue."));
 			}
 		} catch (final InterruptedException e) {
 			LOGGER.error(EVENT_QUEUE_ERROR_LOGMESSAGE);
@@ -162,7 +157,6 @@ public abstract class BaseDisplay extends EventBus implements Display {
 	}
 
 	/**
-	 * 
 	 * @return
 	 */
 	protected ArrayBlockingQueue<DisplayEvent> getMasterQueue() {
@@ -173,7 +167,7 @@ public abstract class BaseDisplay extends EventBus implements Display {
 	public DisplayEvent getEventFromMasterQueue() {
 		try {
 			return this.masterQueue.take();
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			LOGGER.error(EVENT_QUEUE_ERROR_LOGMESSAGE);
 			return null;
 		}
