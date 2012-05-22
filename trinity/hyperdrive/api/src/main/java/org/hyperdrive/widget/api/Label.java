@@ -15,12 +15,12 @@
  */
 package org.hyperdrive.widget.api;
 
-import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintInstruction;
 
 public interface Label extends Widget {
 
 	public interface View extends Widget.View {
-		PaintCall<Void, ?> labelUpdated(String labelValue);
+		PaintInstruction<Void, ?> labelUpdated(String labelValue);
 	}
 
 	@Override

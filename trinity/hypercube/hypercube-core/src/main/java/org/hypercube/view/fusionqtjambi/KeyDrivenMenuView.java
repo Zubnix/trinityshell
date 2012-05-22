@@ -2,7 +2,7 @@ package org.hypercube.view.fusionqtjambi;
 
 import java.util.List;
 
-import org.fusion.qt.painter.QFusionPaintCall;
+import org.fusion.paintengine.impl.painter.QFusionPaintCall;
 import org.hydrogen.paint.api.PaintContext;
 import org.hypercube.view.fusionqtjambi.visual.KeyDrivenMenuVisual;
 import org.hyperdrive.widget.api.KeyDrivenMenu;

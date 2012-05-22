@@ -15,7 +15,7 @@ import org.hydrogen.display.api.PropertyInstance;
 import org.hydrogen.display.api.ResourceHandle;
 import org.hydrogen.geometry.api.Coordinates;
 import org.hydrogen.geometry.api.Rectangle;
-import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintInstruction;
 import org.hydrogen.paint.api.PaintContext;
 import org.hydrogen.paint.api.Paintable;
 import org.hydrogen.paint.api.PaintableRef;
@@ -100,10 +100,10 @@ public class MockedEnv {
 	public Object widgetPaintPeer;
 	@SuppressWarnings("rawtypes")
 	@Mock
-	public static PaintCall nullPaintCallMock;
+	public static PaintInstruction nullPaintCallMock;
 	@SuppressWarnings("rawtypes")
 	@Mock
-	public static PaintCall createPaintCallMock;
+	public static PaintInstruction createPaintCallMock;
 
 	@Mock
 	public static Future<ResourceHandle> createInstructionFutureMock;
@@ -308,13 +308,13 @@ public class MockedEnv {
 			VirtualRoot.View {
 
 		@Override
-		public PaintCall<ResourceHandle, ?> doCreate(Rectangle form,
+		public PaintInstruction<ResourceHandle, ?> doCreate(Rectangle form,
 				boolean visible, Paintable parentPaintable) {
 			return createPaintCallMock;
 		}
 
 		@Override
-		public PaintCall<Void, ?> doDestroy() {
+		public PaintInstruction<Void, ?> doDestroy() {
 			return nullPaintCallMock;
 		}
 	}

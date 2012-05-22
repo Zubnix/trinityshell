@@ -1,17 +1,13 @@
 /*
- * This file is part of Fusion-X11.
- * 
- * Fusion-X11 is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * Fusion-X11 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * Fusion-X11. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of Fusion-X11. Fusion-X11 is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. Fusion-X11 is distributed in
+ * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+ * the GNU General Public License for more details. You should have received a
+ * copy of the GNU General Public License along with Fusion-X11. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.fusion.x11.core;
 
@@ -20,7 +16,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.hydrogen.display.api.Display;
 import org.hydrogen.display.api.DisplayPlatform;
+import org.hydrogen.display.api.EventProducer;
+import org.hydrogen.display.api.ResourceHandle;
 
 // TODO split painting & window management function providers into separate
 // objects that way we can have completely seperate painting & window management
@@ -78,11 +77,9 @@ public class XDisplayPlatform implements DisplayPlatform {
 	}
 
 	/**
-	 * 
 	 * @param eventProducerFactory
 	 */
-	public void addEventProducerFactory(
-			final EventProducerFactory eventProducerFactory) {
+	public void addEventProducerFactory(final EventProducerFactory eventProducerFactory) {
 		this.eventProducerFactories.add(eventProducerFactory);
 	}
 
@@ -103,8 +100,8 @@ public class XDisplayPlatform implements DisplayPlatform {
 
 	// move to painting provider(?)
 	@Override
-	public XWindow findPaintablePlatformRenderAreaFromId(final Display display,
-			final ResourceHandle windowID) {
+	public XWindow findPaintablePlatformRenderAreaFromId(	final Display display,
+															final ResourceHandle windowID) {
 
 		final XID xid = new XID((XDisplay) display, (XResourceHandle) windowID);
 		final XWindow returnPlatformRenderArea = getResourcesRegistry()

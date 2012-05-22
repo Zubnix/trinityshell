@@ -15,16 +15,16 @@
  */
 package org.hyperdrive.widget.api;
 
-import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintInstruction;
 import org.hyperdrive.foundation.api.RenderArea;
 import org.hyperdrive.geo.api.GeoTransformableRectangle;
 
 public interface RectangleManipulator extends Widget {
 
 	public interface View extends Label.View {
-		PaintCall<Void, ?> rectangleBound(final RenderArea targetWindow);
+		PaintInstruction<Void, ?> rectangleBound(final RenderArea targetWindow);
 
-		PaintCall<Void, ?> rectangleUnbound(final RenderArea targetWindow);
+		PaintInstruction<Void, ?> rectangleUnbound(final RenderArea targetWindow);
 	}
 
 	@Override

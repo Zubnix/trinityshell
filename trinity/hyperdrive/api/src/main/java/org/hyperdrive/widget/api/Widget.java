@@ -20,7 +20,7 @@ import org.hydrogen.display.api.event.DisplayEventSource;
 import org.hydrogen.display.api.input.KeyboardInput;
 import org.hydrogen.display.api.input.MouseInput;
 import org.hydrogen.geometry.api.Rectangle;
-import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintInstruction;
 import org.hydrogen.paint.api.Paintable;
 import org.hyperdrive.foundation.api.RenderArea;
 
@@ -35,10 +35,10 @@ public interface Widget extends Paintable, DisplayEventSource, RenderArea {
 		 *            that needs to be created.
 		 * @return
 		 */
-		PaintCall<ResourceHandle, ?> doCreate(Rectangle form, boolean visible,
+		PaintInstruction<ResourceHandle, ?> doCreate(Rectangle form, boolean visible,
 				Paintable parentPaintable);
 
-		PaintCall<Void, ?> doDestroy();
+		PaintInstruction<Void, ?> doDestroy();
 	}
 
 	View getView();

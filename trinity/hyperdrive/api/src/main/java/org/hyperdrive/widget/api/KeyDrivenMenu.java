@@ -18,19 +18,19 @@ package org.hyperdrive.widget.api;
 import java.util.List;
 
 import org.hydrogen.display.api.input.KeyboardInput;
-import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintInstruction;
 
 public interface KeyDrivenMenu extends Widget {
 
 	public interface View extends Widget.View {
-		PaintCall<Void, ?> clear();
+		PaintInstruction<Void, ?> clear();
 
-		PaintCall<Void, ?> update(String input, List<String> possibleValues,
+		PaintInstruction<Void, ?> update(String input, List<String> possibleValues,
 				int activeValue);
 
-		PaintCall<Void, ?> startedKeyListening();
+		PaintInstruction<Void, ?> startedKeyListening();
 
-		PaintCall<Void, ?> stoppedKeyListening();
+		PaintInstruction<Void, ?> stoppedKeyListening();
 	}
 
 	@Override

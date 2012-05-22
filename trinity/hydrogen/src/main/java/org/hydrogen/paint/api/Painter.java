@@ -1,26 +1,20 @@
 /*
- * This file is part of Hydrogen.
- * 
- * Hydrogen is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * Hydrogen is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * Hydrogen. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of Hydrogen. Hydrogen is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. Hydrogen is distributed in
+ * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+ * the GNU General Public License for more details. You should have received a
+ * copy of the GNU General Public License along with Hydrogen. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.hydrogen.paint.api;
 
-import java.util.concurrent.Future;
-
 import org.hydrogen.display.api.AreaManipulator;
+import org.hydrogen.display.api.ResourceHandle;
 
 /**
- * 
  * A <code>Painter</code> can be seen as the "gate keeper" to the underlying
  * paint back-end. It talks to a paint back-end by feeding it
  * <code>PaintCall</code>s.It provides the means to manipulate a
@@ -69,7 +63,6 @@ public interface Painter extends AreaManipulator<Paintable> {
 	 * @param paintCall
 	 *            The <code>PaintCall</code> that will create a new paint
 	 *            toolkit specific paint peer.
-	 * 
 	 * @return the id of the underlying native render area. This id can be used
 	 *         to get a reference to a native render area.
 	 */
@@ -92,7 +85,11 @@ public interface Painter extends AreaManipulator<Paintable> {
 	 *            A <code>PaintCall</code> implementation that will be passed to
 	 *            the underlying paint back-end for execution.
 	 */
-	<T> Future<T> paint(PaintCall<T, ?> paintCall);
+	void instruct(PaintInstruction<? extends RenderEngine> paintInstruction);
+
+	ResourceHandle construct(PaintConstruction<? extends RenderEngine> paintConstruction);
+
+	<R> R calculate(PaintCalculation<R, ? extends RenderEngine> paintCalculation);
 
 	// TODO Should calls that relate to the paintable's input be implemented by
 	// the painter or should a seperate input manipulator be used?

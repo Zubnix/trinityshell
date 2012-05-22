@@ -15,18 +15,18 @@
  */
 package org.hyperdrive.widget.api;
 
-import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintInstruction;
 import org.hyperdrive.foundation.api.RenderArea;
 import org.hyperdrive.geo.api.GeoOperation;
 
 public interface ClientManager extends Widget {
 
 	public interface View extends Widget.View {
-		PaintCall<Void, ?> onManageClient(RenderArea client);
+		PaintInstruction<Void, ?> onManageClient(RenderArea client);
 
-		PaintCall<Void, ?> onUnmanageClient(RenderArea client);
+		PaintInstruction<Void, ?> onUnmanageClient(RenderArea client);
 
-		PaintCall<Void, ?> onClientStateChanged(RenderArea client,
+		PaintInstruction<Void, ?> onClientStateChanged(RenderArea client,
 				GeoOperation geoOperation);
 	}
 

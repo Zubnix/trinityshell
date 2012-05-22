@@ -15,15 +15,15 @@
  */
 package org.hyperdrive.widget.api;
 
-import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintInstruction;
 import org.hyperdrive.foundation.api.RenderArea;
 
 public interface DragButton extends Button, RectangleManipulator {
 
 	public interface View extends Button.View, RectangleManipulator.View {
-		PaintCall<Void, ?> clientWindowStartDrag(final RenderArea targetWindow);
+		PaintInstruction<Void, ?> clientWindowStartDrag(final RenderArea targetWindow);
 
-		PaintCall<Void, ?> clientWindowStopDrag(final RenderArea targetWindow);
+		PaintInstruction<Void, ?> clientWindowStopDrag(final RenderArea targetWindow);
 	}
 
 	@Override

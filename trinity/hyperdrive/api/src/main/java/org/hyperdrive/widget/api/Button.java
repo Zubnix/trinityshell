@@ -16,14 +16,14 @@
 package org.hyperdrive.widget.api;
 
 import org.hydrogen.display.api.input.MouseInput;
-import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintInstruction;
 
 public interface Button extends Widget {
 
 	public interface View extends Widget.View {
-		PaintCall<Void, ?> mouseButtonPressed(final MouseInput input);
+		PaintInstruction<Void, ?> mouseButtonPressed(final MouseInput input);
 
-		PaintCall<Void, ?> mouseButtonReleased(final MouseInput input);
+		PaintInstruction<Void, ?> mouseButtonReleased(final MouseInput input);
 	}
 
 	@Override

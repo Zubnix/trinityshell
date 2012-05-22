@@ -15,15 +15,15 @@
  */
 package org.hyperdrive.widget.api;
 
-import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintInstruction;
 import org.hyperdrive.foundation.api.RenderArea;
 
 public interface MaximizeButton extends Button, RectangleManipulator {
 
 	public interface View extends Button.View, RectangleManipulator.View {
-		PaintCall<Void, ?> clientWindowMaximized(final RenderArea targetWindow);
+		PaintInstruction<Void, ?> clientWindowMaximized(final RenderArea targetWindow);
 
-		PaintCall<Void, ?> clientWindowRestored(final RenderArea targetWindow);
+		PaintInstruction<Void, ?> clientWindowRestored(final RenderArea targetWindow);
 	}
 
 	@Override

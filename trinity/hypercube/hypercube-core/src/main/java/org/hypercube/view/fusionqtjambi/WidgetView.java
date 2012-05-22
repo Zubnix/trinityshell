@@ -1,10 +1,10 @@
 package org.hypercube.view.fusionqtjambi;
 
-import org.fusion.qt.painter.QFusionPaintCall;
+import org.fusion.paintengine.impl.painter.QFusionPaintCall;
 import org.fusion.x11.core.XResourceHandle;
 import org.hydrogen.display.api.ResourceHandle;
 import org.hydrogen.geometry.api.Rectangle;
-import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintInstruction;
 import org.hydrogen.paint.api.PaintContext;
 import org.hydrogen.paint.api.Paintable;
 import org.hydrogen.paint.api.PaintableRef;
@@ -77,7 +77,7 @@ public class WidgetView implements Widget.View {
 	}
 
 	@Override
-	public PaintCall<Void, ?> doDestroy() {
+	public PaintInstruction<Void, ?> doDestroy() {
 		// TODO Auto-generated method stub
 		return null;
 	}

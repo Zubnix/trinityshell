@@ -1,6 +1,6 @@
 package org.hypercube.view.fusionqtjambi;
 
-import org.fusion.qt.painter.QFusionPaintCall;
+import org.fusion.paintengine.impl.painter.QFusionPaintCall;
 import org.hydrogen.paint.api.PaintContext;
 import org.hyperdrive.widget.api.Label;
 import org.hyperdrive.widget.api.ViewImplementation;

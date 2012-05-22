@@ -13,6 +13,7 @@ package org.hydrogen.display.api.event.base;
 
 import org.hydrogen.display.api.event.ButtonNotifyEvent;
 import org.hydrogen.display.api.event.ConfigureRequestEvent;
+import org.hydrogen.display.api.event.DisplayEventFactory;
 import org.hydrogen.display.api.event.DisplayEventSource;
 import org.hydrogen.display.api.input.MouseInput;
 import org.junit.Assert;

@@ -1,0 +1,94 @@
+/*
+ * This file is part of Fusion-qtjambi. Fusion-qtjambi is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. Fusion-qtjambi is distributed
+ * in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details. You should have received
+ * a copy of the GNU General Public License along with Fusion-qtjambi. If not,
+ * see <http://www.gnu.org/licenses/>.
+ */
+package org.fusion.paintengine.impl.eventconverters;
+
+import org.fusion.paintengine.api.QFRenderEventConverter;
+import org.hydrogen.display.api.event.DisplayEventFactory;
+import org.hydrogen.display.api.event.DisplayEventSource;
+import org.hydrogen.display.api.event.KeyNotifyEvent;
+import org.hydrogen.display.api.input.InputModifiers;
+import org.hydrogen.display.api.input.InputModifiersFactory;
+import org.hydrogen.display.api.input.Key;
+import org.hydrogen.display.api.input.KeyFactory;
+import org.hydrogen.display.api.input.KeyboardInput;
+import org.hydrogen.display.api.input.KeyboardInputFactory;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.trolltech.qt.core.QEvent;
+import com.trolltech.qt.core.QEvent.Type;
+import com.trolltech.qt.gui.QKeyEvent;
+
+// TODO documentation
+/**
+ * A <code>QFusionKeyPressConverter</code> takes a <code>QKeyEvent</code> and
+ * it's <code>DisplayEventSource</code> as input and converts it to a
+ * <code>KeyNotifyEvent</code>.
+ * 
+ * @author Erik De Rijcke
+ * @since 1.0
+ */
+public final class QFKeyPressedConverterImpl implements
+		QFRenderEventConverter {
+
+	private final DisplayEventFactory displayEventFactory;
+	private final KeyFactory keyFactory;
+	private final InputModifiersFactory inputModifiersFactory;
+	private final KeyboardInputFactory keyboardInputFactory;
+	private final QEvent.Type qType;
+
+	@Inject
+	protected QFKeyPressedConverterImpl(	@Named("QKeyPress") final QEvent.Type qType,
+											final DisplayEventFactory displayEventFactory,
+											final KeyFactory keyFactory,
+											final InputModifiersFactory inputModifiersFactory,
+											final KeyboardInputFactory keyboardInputFactory) {
+		this.displayEventFactory = displayEventFactory;
+		this.keyFactory = keyFactory;
+		this.inputModifiersFactory = inputModifiersFactory;
+		this.keyboardInputFactory = keyboardInputFactory;
+		this.qType = qType;
+	}
+
+	@Override
+	public KeyNotifyEvent convertEvent(	final DisplayEventSource source,
+										final QEvent qEvent) {
+
+		qEvent.accept();
+		final QKeyEvent keyEvent = (QKeyEvent) qEvent;
+
+		if (keyEvent.isAutoRepeat()) {
+			return null;
+		}
+
+		final int keyCode = keyEvent.nativeScanCode();
+
+		final int state = keyEvent.nativeModifiers();
+
+		final Key key = this.keyFactory.createKey(keyCode);
+		final InputModifiers inputModifiers = this.inputModifiersFactory
+				.createInputModifiers(state);
+		final KeyboardInput input = this.keyboardInputFactory
+				.createKeyboardInputStarted(key, inputModifiers);
+
+		return this.displayEventFactory.createKeyPressed(source, input);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.fusion.qt.paintengine.QFusionEventConverter#getFromType()
+	 */
+	@Override
+	public Type getFromType() {
+		return this.qType;
+	}
+}

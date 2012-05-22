@@ -15,13 +15,13 @@
  */
 package org.hyperdrive.widget.api;
 
-import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintInstruction;
 import org.hyperdrive.foundation.api.RenderArea;
 
 public interface CloseButton extends Button, RectangleManipulator {
 
 	public interface View extends Button.View, RectangleManipulator.View {
-		PaintCall<Void, ?> clientWindowClosed(final RenderArea targetWindow);
+		PaintInstruction<Void, ?> clientWindowClosed(final RenderArea targetWindow);
 	}
 
 	@Override

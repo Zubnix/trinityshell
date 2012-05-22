@@ -5,6 +5,7 @@ import org.hydrogen.display.api.event.ClientMessageEvent;
 import org.hydrogen.display.api.event.ConfigureNotifyEvent;
 import org.hydrogen.display.api.event.ConfigureRequestEvent;
 import org.hydrogen.display.api.event.DestroyNotifyEvent;
+import org.hydrogen.display.api.event.DisplayEventFactory;
 import org.hydrogen.display.api.event.DisplayEventType;
 import org.hydrogen.display.api.event.FocusNotifyEvent;
 import org.hydrogen.display.api.event.KeyNotifyEvent;

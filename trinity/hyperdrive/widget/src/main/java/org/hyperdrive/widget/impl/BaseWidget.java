@@ -24,7 +24,7 @@ import org.hydrogen.display.api.event.ButtonNotifyEvent;
 import org.hydrogen.display.api.event.KeyNotifyEvent;
 import org.hydrogen.display.api.input.KeyboardInput;
 import org.hydrogen.display.api.input.MouseInput;
-import org.hydrogen.paint.api.PaintCall;
+import org.hydrogen.paint.api.PaintInstruction;
 import org.hydrogen.paint.api.Painter;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.foundation.api.event.KeyboardKeyPressedHandler;
@@ -48,7 +48,7 @@ import org.hyperdrive.widget.api.Widget;
  * A <code>Widget</code> is manipulated through a {@link Painter} that talks to
  * a paint back-end. This is done by the <code>Widget</code>'s {@link View}
  * object. The <code>View</code> object receives state change notifications of
- * the <code>Widget</code> and in turn returns a {@link PaintCall}. This
+ * the <code>Widget</code> and in turn returns a {@link PaintInstruction}. This
  * <code>PaintCall</code> is then fed to the <code>Widget</code>'s
  * <code>Painter</code>. A <code>View</code> is defined by the
  * {@link ViewClassFactory} implementation that was given as a parameter at
@@ -268,7 +268,7 @@ public class BaseWidget extends AbstractRenderArea implements Widget {
 		super.setPlatformRenderArea(platformRenderArea);
 	}
 
-	protected <R> Future<R> draw(PaintCall<R, ?> paintCall) {
+	protected <R> Future<R> draw(PaintInstruction<R, ?> paintCall) {
 		return getPainter().paint(paintCall);
 	}
 }
