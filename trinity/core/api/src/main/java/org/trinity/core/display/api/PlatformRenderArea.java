@@ -13,6 +13,9 @@ package org.trinity.core.display.api;
 
 import org.trinity.core.display.api.event.ClientMessageEvent;
 import org.trinity.core.display.api.event.DisplayEventSource;
+import org.trinity.core.display.api.property.Property;
+import org.trinity.core.display.api.property.PropertyInstance;
+import org.trinity.core.geometry.api.Rectangle;
 import org.trinity.core.input.api.Button;
 import org.trinity.core.input.api.InputModifiers;
 import org.trinity.core.input.api.Key;
@@ -44,9 +47,9 @@ public interface PlatformRenderArea extends DisplayResource, Area,
 	 * handling.
 	 * 
 	 * @param eventMask
-	 *            An number of different {@link EventPropagator}s.
+	 *            An number of different {@link DisplayEventSelector}s.
 	 */
-	void propagateEvent(EventPropagator... eventMask);
+	void propagateEvent(DisplayEventSelector... eventMask);
 
 	/**
 	 * Get the current <code>PlatformRenderArea</code> geometry information. The
@@ -56,7 +59,7 @@ public interface PlatformRenderArea extends DisplayResource, Area,
 	 * @return This <code>PlatformRenderArea</code>'s
 	 *         {@link PlatformRenderAreaGeometry}.
 	 */
-	PlatformRenderAreaGeometry getPlatformRenderAreaGeometry();
+	Rectangle getPlatformRenderAreaGeometry();
 
 	/**
 	 * Get the current <code>PlatformRenderArea</code> attributes information.

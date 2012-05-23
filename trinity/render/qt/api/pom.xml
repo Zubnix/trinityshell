@@ -22,13 +22,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<dependencies>
 		<dependency>
-			<groupId>org.trinity.hydrogen</groupId>
-			<artifactId>hydrogen</artifactId>
-			<version>0.0.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>net.sf.qtjambi</groupId>
 			<artifactId>qtjambi</artifactId>
 			<!-- <version>4.5.2_01</version> -->

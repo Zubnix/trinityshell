@@ -11,13 +11,13 @@
  */
 package org.trinity.core.render.api;
 
-import org.trinity.core.display.api.EventProducer;
+import org.trinity.core.display.api.DisplayEventProducer;
 import org.trinity.core.display.api.event.DisplayEventSource;
 
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
-public interface RenderEventBridge<T> extends EventProducer {
+public interface RenderEventBridge<T> extends DisplayEventProducer {
 	void queueRenderEvent(	final DisplayEventSource eventSource,
 							final T renderEvent);
 }

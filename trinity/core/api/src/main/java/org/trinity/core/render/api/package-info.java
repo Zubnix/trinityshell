@@ -36,7 +36,7 @@
  * windowing system.</li>
  * <li>Be able to listen for events of the paint toolkit and construct the corresponding
  * events defined in the <code>org.hydrogen.displayinterface.event</code> package. These events
- * should be placed on the event queue of the <code>Display</code> object. (See {@link org.trinity.core.display.api.EventProducer})</li>
+ * should be placed on the event queue of the <code>Display</code> object. (See {@link org.trinity.core.display.api.DisplayEventProducer})</li>
  * <li>Be able to enable+disable redirecting all keyboard input events of a paint peer.</li>
  * <li>Be able to enable+disbable redirecting all mouse input events of a paint peer.</li>
  * <li>Be able to change the geometry of a paint peer.</li>

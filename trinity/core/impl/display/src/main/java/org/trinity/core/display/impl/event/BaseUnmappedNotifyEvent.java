@@ -28,7 +28,7 @@ import com.google.inject.name.Named;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class BaseUnmappedNotifyEvent extends BaseDisplayEvent implements
+public class BaseUnmappedNotifyEvent extends DisplayEventImpl implements
 		UnmappedNotifyEvent {
 
 	/**

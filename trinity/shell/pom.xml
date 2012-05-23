@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>trinity</artifactId>
+		<groupId>org.trinity.root</groupId>
+		<version>0.0.1</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.trinity.shell</groupId>
+	<artifactId>shell</artifactId>
+	<name>Shell</name>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>api</module>
+		<module>impl</module>
+	</modules>
+
+	<dependencies>
+		<!-- START TEST DEP -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.0-rc1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- END TEST DEP -->
+
+		<dependency>
+			<groupId>org.trinity.core</groupId>
+			<artifactId>core.api</artifactId>
+			<version>0.0.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>3.0</version>
+		</dependency>
+	</dependencies>
+</project>

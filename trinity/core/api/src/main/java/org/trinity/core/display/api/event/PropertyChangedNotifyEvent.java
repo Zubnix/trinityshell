@@ -16,8 +16,8 @@
 
 package org.trinity.core.display.api.event;
 
-import org.trinity.core.display.api.Property;
-import org.trinity.core.display.api.PropertyInstance;
+import org.trinity.core.display.api.property.Property;
+import org.trinity.core.display.api.property.PropertyInstance;
 
 // TODO documentation
 /**
