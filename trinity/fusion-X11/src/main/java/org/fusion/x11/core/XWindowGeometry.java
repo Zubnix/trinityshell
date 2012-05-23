@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core;
 
-import org.hydrogen.display.api.PlatformRenderAreaGeometry;
+import org.trinity.core.display.api.PlatformRenderAreaGeometry;
 
 /**
  * An <code>XWindowGeometry</code> groups the geometric information at a certain

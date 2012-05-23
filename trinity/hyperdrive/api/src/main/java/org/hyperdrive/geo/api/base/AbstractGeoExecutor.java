@@ -15,9 +15,9 @@
  */
 package org.hyperdrive.geo.api.base;
 
-import org.hydrogen.display.api.Area;
-import org.hydrogen.display.api.AreaManipulator;
 import org.hyperdrive.geo.api.GeoExecutor;
+import org.trinity.core.display.api.Area;
+import org.trinity.core.display.api.AreaManipulator;
 
 // TODO documentation
 /**

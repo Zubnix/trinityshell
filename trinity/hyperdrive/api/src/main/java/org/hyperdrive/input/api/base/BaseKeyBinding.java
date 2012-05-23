@@ -20,18 +20,18 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.hydrogen.display.api.event.KeyNotifyEvent;
-import org.hydrogen.display.api.input.InputModifierName;
-import org.hydrogen.display.api.input.InputModifiers;
-import org.hydrogen.display.api.input.Key;
-import org.hydrogen.display.api.input.Modifier;
-import org.hydrogen.display.api.input.Momentum;
-import org.hydrogen.display.api.input.SpecialKeyName;
-import org.hydrogen.display.api.input.base.BaseInputModifiers;
-import org.hydrogen.display.api.input.base.BaseKey;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.foundation.api.event.KeyboardKeyPressedHandler;
 import org.hyperdrive.foundation.api.event.KeyboardKeyReleasedHandler;
+import org.trinity.core.display.api.event.KeyNotifyEvent;
+import org.trinity.core.input.api.InputModifierName;
+import org.trinity.core.input.api.InputModifiers;
+import org.trinity.core.input.api.Key;
+import org.trinity.core.input.api.Modifier;
+import org.trinity.core.input.api.Momentum;
+import org.trinity.core.input.api.SpecialKeyName;
+import org.trinity.core.input.impl.BaseInputModifiers;
+import org.trinity.core.input.impl.BaseKey;
 
 // TODO documentation
 /**

@@ -17,8 +17,8 @@ package org.hyperdrive.widget.api;
 
 import java.util.List;
 
-import org.hydrogen.display.api.input.KeyboardInput;
-import org.hydrogen.paint.api.PaintInstruction;
+import org.trinity.core.input.api.KeyboardInput;
+import org.trinity.core.render.api.PaintInstruction;
 
 public interface KeyDrivenMenu extends Widget {
 

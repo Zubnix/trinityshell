@@ -21,7 +21,7 @@ import org.fusion.x11.core.XDisplay;
 import org.fusion.x11.core.XID;
 import org.fusion.x11.core.XResourceHandle;
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.display.api.event.ClientMessageEvent;
+import org.trinity.core.display.api.event.ClientMessageEvent;
 
 //TODO documentation
 /**

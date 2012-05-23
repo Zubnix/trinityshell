@@ -15,14 +15,14 @@
  */
 package org.hyperdrive.widget.api;
 
-import org.hydrogen.display.api.ResourceHandle;
-import org.hydrogen.display.api.event.DisplayEventSource;
-import org.hydrogen.display.api.input.KeyboardInput;
-import org.hydrogen.display.api.input.MouseInput;
-import org.hydrogen.geometry.api.Rectangle;
-import org.hydrogen.paint.api.PaintInstruction;
-import org.hydrogen.paint.api.Paintable;
 import org.hyperdrive.foundation.api.RenderArea;
+import org.trinity.core.display.api.ResourceHandle;
+import org.trinity.core.display.api.event.DisplayEventSource;
+import org.trinity.core.geometry.api.Rectangle;
+import org.trinity.core.input.api.KeyboardInput;
+import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.render.api.PaintInstruction;
+import org.trinity.core.render.api.Paintable;
 
 public interface Widget extends Paintable, DisplayEventSource, RenderArea {
 

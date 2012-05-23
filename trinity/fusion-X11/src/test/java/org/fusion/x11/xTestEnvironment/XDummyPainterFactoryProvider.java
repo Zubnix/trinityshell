@@ -15,9 +15,9 @@
  */
 package org.fusion.x11.xTestEnvironment;
 
-import org.hydrogen.display.api.Display;
-import org.hydrogen.paint.api.PainterFactory;
-import org.hydrogen.paint.api.PainterFactoryProvider;
+import org.trinity.core.display.api.Display;
+import org.trinity.core.render.api.PainterFactory;
+import org.trinity.core.render.api.PainterFactoryProvider;
 
 /**
  * Test framework code. Currently unused.

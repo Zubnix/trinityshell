@@ -18,7 +18,6 @@ package org.hyperdrive.geo.api.base;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hydrogen.event.api.base.EventBus;
 import org.hyperdrive.geo.api.GeoEvent;
 import org.hyperdrive.geo.api.GeoEventHandler;
 import org.hyperdrive.geo.api.GeoExecutor;
@@ -26,6 +25,7 @@ import org.hyperdrive.geo.api.GeoManager;
 import org.hyperdrive.geo.api.GeoOperation;
 import org.hyperdrive.geo.api.GeoTransformableRectangle;
 import org.hyperdrive.geo.api.GeoTransformation;
+import org.trinity.core.event.api.EventBus;
 
 //TODO Let geo events travel downwards to children to notify them that one of their parents has changed
 // TODO documentation

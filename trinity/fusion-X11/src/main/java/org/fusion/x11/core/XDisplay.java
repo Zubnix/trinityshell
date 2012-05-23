@@ -21,11 +21,11 @@ import org.fusion.x11.core.extension.XExtensions;
 import org.fusion.x11.core.input.XKeyboard;
 import org.fusion.x11.core.input.XMouse;
 import org.fusion.x11.ewmh.Ewmh;
-import org.hydrogen.display.api.PropertyInstance;
-import org.hydrogen.display.api.base.BaseDisplay;
-import org.hydrogen.display.api.event.DisplayEvent;
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.event.api.EventHandler;
+import org.trinity.core.display.api.PropertyInstance;
+import org.trinity.core.display.api.event.DisplayEvent;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.display.impl.BaseDisplay;
+import org.trinity.core.event.api.EventHandler;
 
 // TODO documentation
 /**

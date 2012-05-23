@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.geo.api;
 
-import org.hydrogen.event.api.TypeBoundEventHandler;
+import org.trinity.core.event.api.TypeBoundEventHandler;
 
 public interface GeoEventHandler extends
 		TypeBoundEventHandler<GeoOperation, GeoEvent> {

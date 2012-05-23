@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.ewmh;
 
-import org.hydrogen.event.api.Type;
+import org.trinity.core.event.api.Type;
 //TODO documentation
 /**
 * 

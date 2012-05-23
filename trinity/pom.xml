@@ -24,9 +24,9 @@
 		</developer>
 	</developers>
 	<modules>
-		<module>hydrogen</module>
+		<module>core</module>
 		<module>hyperdrive</module>
-		<module>fusion-X11</module>
+		<module>render</module>
 		<module>hypercube</module>
 		<module>fusion-qtjambi</module>
 		<!-- <module>fusion-swing/trunk</module> -->

@@ -1,10 +1,10 @@
 package org.hypercube.view.fusionqtjambi;
 
 import org.fusion.paintengine.impl.painter.QFusionPaintCall;
-import org.hydrogen.paint.api.PaintContext;
 import org.hyperdrive.widget.api.ViewImplementation;
 import org.hyperdrive.widget.impl.impl.BaseClientManager.ClientManagerLabel;
 import org.hyperdrive.widget.impl.impl.api.PaintInstruction;
+import org.trinity.core.render.api.PaintContext;
 
 import com.trolltech.qt.gui.QWidget;
 

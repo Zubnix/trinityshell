@@ -15,8 +15,8 @@
  */
 package org.hyperdrive.foundation.api.event;
 
-import org.hydrogen.display.api.event.ButtonNotifyEvent;
-import org.hydrogen.display.api.event.DisplayEventType;
+import org.trinity.core.display.api.event.ButtonNotifyEvent;
+import org.trinity.core.display.api.event.DisplayEventType;
 
 public abstract class MouseButtonReleasedHandler implements
 		DisplayEventHandler<ButtonNotifyEvent> {

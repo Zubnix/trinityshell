@@ -2,11 +2,6 @@ package org.hyperdrive.foundation.impl;
 
 import junit.framework.Assert;
 
-import org.hydrogen.display.api.Property;
-import org.hydrogen.display.api.PropertyInstance;
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.MapRequestEvent;
-import org.hydrogen.display.api.event.PropertyChangedNotifyEvent;
 import org.hyperdrive.MockedEnv;
 import org.hyperdrive.core.api.ManagedDisplay;
 import org.hyperdrive.core.api.PropertyManipulator;
@@ -20,6 +15,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
+import org.trinity.core.display.api.Property;
+import org.trinity.core.display.api.PropertyInstance;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.display.api.event.MapRequestEvent;
+import org.trinity.core.display.api.event.PropertyChangedNotifyEvent;
 
 public class PropertyInteractionTest {
 

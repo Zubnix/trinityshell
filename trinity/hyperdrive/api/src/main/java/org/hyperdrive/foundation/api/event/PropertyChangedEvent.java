@@ -16,10 +16,10 @@ on, either version 3 of the License, or (at your option) any later
  */
 package org.hyperdrive.foundation.api.event;
 
-import org.hydrogen.display.api.Property;
-import org.hydrogen.display.api.PropertyInstance;
-import org.hydrogen.event.api.Event;
 import org.hyperdrive.foundation.api.RenderArea;
+import org.trinity.core.display.api.Property;
+import org.trinity.core.display.api.PropertyInstance;
+import org.trinity.core.event.api.Event;
 
 public interface PropertyChangedEvent<T extends Property<? extends PropertyInstance>>
 		extends Event<PropertyType> {

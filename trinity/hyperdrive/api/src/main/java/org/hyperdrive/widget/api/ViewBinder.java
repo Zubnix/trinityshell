@@ -4,8 +4,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hydrogen.paint.api.Paintable;
-import org.hydrogen.paint.api.Painter;
+import org.trinity.core.render.api.Paintable;
+import org.trinity.core.render.api.Painter;
 
 public class ViewBinder {
 

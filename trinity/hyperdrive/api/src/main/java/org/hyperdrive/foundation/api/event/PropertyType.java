@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.foundation.api.event;
 
-import org.hydrogen.event.api.Type;
+import org.trinity.core.event.api.Type;
 
 public class PropertyType implements Type {
 

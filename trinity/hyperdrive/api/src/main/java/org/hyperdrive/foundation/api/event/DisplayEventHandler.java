@@ -16,9 +16,9 @@ import org.hydrogen.api.event.TypeBoundEventHandler;
  */
 package org.hyperdrive.foundation.api.event;
 
-import org.hydrogen.display.api.event.DisplayEvent;
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.event.api.TypeBoundEventHandler;
+import org.trinity.core.display.api.event.DisplayEvent;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.event.api.TypeBoundEventHandler;
 
 public interface DisplayEventHandler<E extends DisplayEvent> extends
 		TypeBoundEventHandler<DisplayEventType, E> {

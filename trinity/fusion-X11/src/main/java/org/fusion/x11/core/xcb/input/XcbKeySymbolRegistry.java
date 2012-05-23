@@ -24,10 +24,10 @@ import org.fusion.x11.core.input.XKeySymbol;
 import org.fusion.x11.core.input.XKeySymbolRegistry;
 import org.fusion.x11.core.input.XModifier;
 import org.fusion.x11.core.xcb.XcbCoreNative;
-import org.hydrogen.display.api.input.InputModifierName;
-import org.hydrogen.display.api.input.InputModifiers;
-import org.hydrogen.display.api.input.Key;
-import org.hydrogen.display.api.input.SpecialKeyName;
+import org.trinity.core.input.api.InputModifierName;
+import org.trinity.core.input.api.InputModifiers;
+import org.trinity.core.input.api.Key;
+import org.trinity.core.input.api.SpecialKeyName;
 
 // TODO This is becoming a bit of a mess, rewrite?
 // TODO documentation

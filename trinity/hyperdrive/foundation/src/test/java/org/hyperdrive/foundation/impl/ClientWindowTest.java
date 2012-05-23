@@ -2,15 +2,15 @@ package org.hyperdrive.foundation.impl;
 
 import junit.framework.Assert;
 
-import org.hydrogen.display.api.event.ConfigureRequestEvent;
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.MapRequestEvent;
-import org.hydrogen.display.api.event.UnmappedNotifyEvent;
 import org.hyperdrive.MockedEnv;
 import org.hyperdrive.geo.api.GeoTransformation;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.trinity.core.display.api.event.ConfigureRequestEvent;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.display.api.event.MapRequestEvent;
+import org.trinity.core.display.api.event.UnmappedNotifyEvent;
 
 public class ClientWindowTest {
 

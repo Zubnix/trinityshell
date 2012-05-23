@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.input.api;
 
-import org.hydrogen.geometry.api.Coordinates;
+import org.trinity.core.geometry.api.Coordinates;
 
 public interface ManagedMouse extends InputDevice {
 	Coordinates getAbsolutePosition();

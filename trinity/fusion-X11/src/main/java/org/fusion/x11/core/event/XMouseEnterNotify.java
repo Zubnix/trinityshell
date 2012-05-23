@@ -16,7 +16,7 @@
 package org.fusion.x11.core.event;
 
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.display.api.event.base.BaseMouseEnterNotifyEvent;
+import org.trinity.core.display.impl.event.BaseMouseEnterNotifyEvent;
 
 // TODO documentation
 /**

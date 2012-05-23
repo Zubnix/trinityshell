@@ -16,10 +16,10 @@
 package org.hyperdrive.foundation.impl;
 
 import org.apache.log4j.Logger;
-import org.hydrogen.display.api.Property;
-import org.hydrogen.display.api.PropertyInstance;
 import org.hyperdrive.foundation.api.PropertyManipulator;
 import org.hyperdrive.foundation.api.RenderArea;
+import org.trinity.core.display.api.Property;
+import org.trinity.core.display.api.PropertyInstance;
 
 //TODO documentation
 /**

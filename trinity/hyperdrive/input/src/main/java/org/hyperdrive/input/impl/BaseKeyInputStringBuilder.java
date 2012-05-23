@@ -19,11 +19,11 @@ package org.hyperdrive.input.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hydrogen.display.api.event.KeyNotifyEvent;
-import org.hydrogen.display.api.input.InputModifierName;
-import org.hydrogen.display.api.input.SpecialKeyName;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.input.api.KeyInputStringBuilder;
+import org.trinity.core.display.api.event.KeyNotifyEvent;
+import org.trinity.core.input.api.InputModifierName;
+import org.trinity.core.input.api.SpecialKeyName;
 
 // TODO documentation
 /**

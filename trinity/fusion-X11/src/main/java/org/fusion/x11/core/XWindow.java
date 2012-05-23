@@ -18,19 +18,19 @@ package org.fusion.x11.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hydrogen.display.api.Atom;
-import org.hydrogen.display.api.PlatformRenderArea;
-import org.hydrogen.display.api.PlatformRenderAreaAttributes;
-import org.hydrogen.display.api.Property;
-import org.hydrogen.display.api.PropertyInstance;
-import org.hydrogen.display.api.base.EventPropagator;
-import org.hydrogen.display.api.event.ClientMessageEvent;
-import org.hydrogen.display.api.input.InputModifiers;
-import org.hydrogen.display.api.input.Key;
-import org.hydrogen.display.api.input.base.BaseButton;
-import org.hydrogen.display.api.input.base.BaseInputModifiers;
-import org.hydrogen.display.api.input.base.BaseKey;
-import org.hydrogen.geometry.api.Coordinates;
+import org.trinity.core.display.api.Atom;
+import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.core.display.api.PlatformRenderAreaAttributes;
+import org.trinity.core.display.api.Property;
+import org.trinity.core.display.api.PropertyInstance;
+import org.trinity.core.display.api.event.ClientMessageEvent;
+import org.trinity.core.display.impl.EventPropagator;
+import org.trinity.core.geometry.api.Coordinates;
+import org.trinity.core.input.api.InputModifiers;
+import org.trinity.core.input.api.Key;
+import org.trinity.core.input.impl.BaseButton;
+import org.trinity.core.input.impl.BaseInputModifiers;
+import org.trinity.core.input.impl.BaseKey;
 
 /**
  * An <code>XWindow</code> represents a native X window. This implies that a

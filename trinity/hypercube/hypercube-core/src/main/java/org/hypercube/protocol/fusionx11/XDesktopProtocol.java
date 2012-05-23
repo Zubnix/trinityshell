@@ -41,11 +41,6 @@ import org.fusion.x11.icccm.WmNormalHints;
 import org.fusion.x11.icccm.WmSizeHintsInstance;
 import org.fusion.x11.icccm.WmStateEnum;
 import org.fusion.x11.icccm.WmStateInstance;
-import org.hydrogen.display.api.PlatformRenderArea;
-import org.hydrogen.display.api.PropertyInstance;
-import org.hydrogen.display.api.base.PropertyInstanceText;
-import org.hydrogen.display.api.base.PropertyInstanceTexts;
-import org.hydrogen.event.api.EventHandler;
 import org.hyperdrive.core.api.ManagedDisplay;
 import org.hyperdrive.core.api.RenderArea;
 import org.hyperdrive.core.impl.BasePropertyChangedEvent;
@@ -53,6 +48,11 @@ import org.hyperdrive.core.impl.BasePropertyManipulator;
 import org.hyperdrive.geo.api.GeoEvent;
 import org.hyperdrive.geo.api.GeoOperation;
 import org.hyperdrive.protocol.AbstractDesktopProtocol;
+import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.core.display.api.PropertyInstance;
+import org.trinity.core.display.impl.PropertyInstanceText;
+import org.trinity.core.display.impl.PropertyInstanceTexts;
+import org.trinity.core.event.api.EventHandler;
 
 //TODO documentation
 /**

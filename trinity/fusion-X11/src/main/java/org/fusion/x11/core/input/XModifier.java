@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.core.input;
 
-import org.hydrogen.display.api.input.InputModifierName;
-import org.hydrogen.display.api.input.Modifier;
+import org.trinity.core.input.api.InputModifierName;
+import org.trinity.core.input.api.Modifier;
 
 // TODO documentation
 /**

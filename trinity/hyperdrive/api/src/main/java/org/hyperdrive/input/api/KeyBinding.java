@@ -15,9 +15,9 @@
  */
 package org.hyperdrive.input.api;
 
-import org.hydrogen.display.api.input.InputModifierName;
-import org.hydrogen.display.api.input.Momentum;
 import org.hyperdrive.foundation.api.ManagedDisplay;
+import org.trinity.core.input.api.InputModifierName;
+import org.trinity.core.input.api.Momentum;
 
 public interface KeyBinding {
 	void performAction();

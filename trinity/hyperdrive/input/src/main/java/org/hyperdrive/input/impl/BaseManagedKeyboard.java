@@ -15,13 +15,13 @@
  */
 package org.hyperdrive.input.impl;
 
-import org.hydrogen.display.api.event.KeyNotifyEvent;
-import org.hydrogen.display.api.input.Keyboard;
-import org.hydrogen.display.api.input.KeyboardInput;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.foundation.api.event.KeyboardKeyPressedHandler;
 import org.hyperdrive.foundation.api.event.KeyboardKeyReleasedHandler;
 import org.hyperdrive.input.api.ManagedKeyboard;
+import org.trinity.core.display.api.event.KeyNotifyEvent;
+import org.trinity.core.input.api.Keyboard;
+import org.trinity.core.input.api.KeyboardInput;
 
 // TODO documentation
 /**

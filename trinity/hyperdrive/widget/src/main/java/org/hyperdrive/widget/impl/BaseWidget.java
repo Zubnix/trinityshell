@@ -18,14 +18,6 @@ package org.hyperdrive.widget.impl;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import org.hydrogen.display.api.PlatformRenderArea;
-import org.hydrogen.display.api.ResourceHandle;
-import org.hydrogen.display.api.event.ButtonNotifyEvent;
-import org.hydrogen.display.api.event.KeyNotifyEvent;
-import org.hydrogen.display.api.input.KeyboardInput;
-import org.hydrogen.display.api.input.MouseInput;
-import org.hydrogen.paint.api.PaintInstruction;
-import org.hydrogen.paint.api.Painter;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.foundation.api.event.KeyboardKeyPressedHandler;
 import org.hyperdrive.foundation.api.event.KeyboardKeyReleasedHandler;
@@ -37,6 +29,14 @@ import org.hyperdrive.geo.api.GeoTransformableRectangle;
 import org.hyperdrive.widget.api.ViewBinder;
 import org.hyperdrive.widget.api.ViewReference;
 import org.hyperdrive.widget.api.Widget;
+import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.core.display.api.ResourceHandle;
+import org.trinity.core.display.api.event.ButtonNotifyEvent;
+import org.trinity.core.display.api.event.KeyNotifyEvent;
+import org.trinity.core.input.api.KeyboardInput;
+import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.render.api.PaintInstruction;
+import org.trinity.core.render.api.Painter;
 
 // TODO documentation
 // TODO list emitted events

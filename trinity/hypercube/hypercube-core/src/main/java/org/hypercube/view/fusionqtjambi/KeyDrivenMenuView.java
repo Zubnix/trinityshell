@@ -3,10 +3,10 @@ package org.hypercube.view.fusionqtjambi;
 import java.util.List;
 
 import org.fusion.paintengine.impl.painter.QFusionPaintCall;
-import org.hydrogen.paint.api.PaintContext;
 import org.hypercube.view.fusionqtjambi.visual.KeyDrivenMenuVisual;
 import org.hyperdrive.widget.api.KeyDrivenMenu;
 import org.hyperdrive.widget.api.ViewImplementation;
+import org.trinity.core.render.api.PaintContext;
 
 import com.trolltech.qt.gui.QWidget;
 

@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.core.xcb.error;
 
-import org.hydrogen.display.api.input.InputModifiers;
-import org.hydrogen.display.api.input.Key;
+import org.trinity.core.input.api.InputModifiers;
+import org.trinity.core.input.api.Key;
 
 //TODO documentation
 /**

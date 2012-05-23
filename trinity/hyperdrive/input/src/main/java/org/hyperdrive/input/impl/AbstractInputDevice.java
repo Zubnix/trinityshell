@@ -18,11 +18,11 @@ package org.hyperdrive.input.impl;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.hydrogen.display.api.event.InputNotifyEvent;
-import org.hydrogen.display.api.input.Input;
-import org.hydrogen.event.api.EventManager;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.input.api.InputDevice;
+import org.trinity.core.display.api.event.InputNotifyEvent;
+import org.trinity.core.event.api.EventManager;
+import org.trinity.core.input.api.Input;
 
 // TODO documentation
 /**

@@ -18,8 +18,8 @@ package org.fusion.x11.core.event;
 
 import org.fusion.x11.core.XPropertyXAtom;
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.display.api.PropertyInstance;
-import org.hydrogen.display.api.event.base.BasePropertyChangedNotifyEvent;
+import org.trinity.core.display.api.PropertyInstance;
+import org.trinity.core.display.impl.event.BasePropertyChangedNotifyEvent;
 
 // TODO documentation
 /**

@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.widget.impl;
 
-import org.hydrogen.display.api.input.MouseInput;
+import org.trinity.core.input.api.MouseInput;
 
 // TODO documentation
 /**

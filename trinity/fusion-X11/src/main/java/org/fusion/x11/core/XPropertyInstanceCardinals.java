@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core;
 
-import org.hydrogen.display.api.base.PropertyInstanceNumbers;
+import org.trinity.core.display.impl.PropertyInstanceNumbers;
 
 //TODO documentation
 /**

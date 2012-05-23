@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.geo.api;
 
-import org.hydrogen.event.api.Type;
+import org.trinity.core.event.api.Type;
 
 /**
  * A <code>GeoOperation</code> is a type of a <code>GeoEvent</code>. The

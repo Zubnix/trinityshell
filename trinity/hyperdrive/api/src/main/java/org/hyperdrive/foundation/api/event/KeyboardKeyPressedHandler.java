@@ -15,8 +15,8 @@
  */
 package org.hyperdrive.foundation.api.event;
 
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.KeyNotifyEvent;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.display.api.event.KeyNotifyEvent;
 
 public abstract class KeyboardKeyPressedHandler implements
 		DisplayEventHandler<KeyNotifyEvent> {

@@ -15,16 +15,16 @@
  */
 package org.hyperdrive.foundation.api.base;
 
-import org.hydrogen.display.api.Area;
-import org.hydrogen.display.api.AreaManipulator;
-import org.hydrogen.display.api.base.EventPropagator;
-import org.hydrogen.geometry.api.Coordinates;
-import org.hydrogen.geometry.api.base.BaseCoordinates;
 import org.hyperdrive.foundation.api.RenderArea;
 import org.hyperdrive.geo.api.GeoExecutor;
 import org.hyperdrive.geo.api.GeoTransformableRectangle;
 import org.hyperdrive.geo.api.GeoTransformation;
 import org.hyperdrive.geo.api.base.AbstractGeoExecutor;
+import org.trinity.core.display.api.Area;
+import org.trinity.core.display.api.AreaManipulator;
+import org.trinity.core.display.impl.EventPropagator;
+import org.trinity.core.geometry.api.Coordinates;
+import org.trinity.core.geometry.impl.BaseCoordinates;
 
 // TODO documentation
 /**

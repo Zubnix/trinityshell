@@ -15,14 +15,14 @@
  */
 package org.hyperdrive.input.impl;
 
-import org.hydrogen.display.api.event.ButtonNotifyEvent;
-import org.hydrogen.display.api.input.Mouse;
-import org.hydrogen.geometry.api.Coordinates;
-import org.hydrogen.geometry.api.base.BaseCoordinates;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.foundation.api.event.MouseButtonPressedHandler;
 import org.hyperdrive.foundation.api.event.MouseButtonReleasedHandler;
 import org.hyperdrive.input.api.ManagedMouse;
+import org.trinity.core.display.api.event.ButtonNotifyEvent;
+import org.trinity.core.geometry.api.Coordinates;
+import org.trinity.core.geometry.impl.BaseCoordinates;
+import org.trinity.core.input.api.Mouse;
 
 /**
  * A <code>ManagedMouse</code> represents a mouse pointer from a

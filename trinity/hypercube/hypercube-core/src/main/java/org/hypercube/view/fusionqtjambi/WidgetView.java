@@ -2,16 +2,16 @@ package org.hypercube.view.fusionqtjambi;
 
 import org.fusion.paintengine.impl.painter.QFusionPaintCall;
 import org.fusion.x11.core.XResourceHandle;
-import org.hydrogen.display.api.ResourceHandle;
-import org.hydrogen.geometry.api.Rectangle;
-import org.hydrogen.paint.api.PaintInstruction;
-import org.hydrogen.paint.api.PaintContext;
-import org.hydrogen.paint.api.Paintable;
-import org.hydrogen.paint.api.PaintableRef;
-import org.hydrogen.paint.api.base.BasePaintableRef;
 import org.hyperdrive.widget.api.ViewImplementation;
 import org.hyperdrive.widget.api.Widget;
 import org.hyperdrive.widget.impl.BaseWidget;
+import org.trinity.core.display.api.ResourceHandle;
+import org.trinity.core.geometry.api.Rectangle;
+import org.trinity.core.render.api.PaintContext;
+import org.trinity.core.render.api.PaintInstruction;
+import org.trinity.core.render.api.Paintable;
+import org.trinity.core.render.api.PaintableRef;
+import org.trinity.core.render.api.base.BasePaintableRef;
 
 import com.trolltech.qt.core.Qt.WidgetAttribute;
 import com.trolltech.qt.core.Qt.WindowType;

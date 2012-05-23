@@ -42,14 +42,14 @@ import org.fusion.x11.core.xcb.input.XcbKeyboard;
 import org.fusion.x11.nativeHelpers.FusionNativeLibLoader;
 import org.fusion.x11.nativeHelpers.NativeBufferHelper;
 import org.fusion.x11.nativeHelpers.XNativeCaller;
-import org.hydrogen.display.api.base.EventPropagator;
-import org.hydrogen.display.api.event.ClientMessageEvent;
-import org.hydrogen.display.api.event.DisplayEvent;
-import org.hydrogen.display.api.input.Button;
-import org.hydrogen.display.api.input.InputModifiers;
-import org.hydrogen.display.api.input.Key;
-import org.hydrogen.display.api.input.base.BaseKey;
-import org.hydrogen.geometry.api.Coordinates;
+import org.trinity.core.display.api.event.ClientMessageEvent;
+import org.trinity.core.display.api.event.DisplayEvent;
+import org.trinity.core.display.impl.EventPropagator;
+import org.trinity.core.geometry.api.Coordinates;
+import org.trinity.core.input.api.Button;
+import org.trinity.core.input.api.InputModifiers;
+import org.trinity.core.input.api.Key;
+import org.trinity.core.input.impl.BaseKey;
 
 /**
  * An <code>XcbCoreInterfaceImpl</code> provides access to the native X back-end

@@ -16,7 +16,7 @@
 
 package org.fusion.x11.core;
 
-import org.hydrogen.display.api.Atom;
+import org.trinity.core.display.api.Atom;
 
 /**
  * An <code>Atom</code> linked to an <code>XDisplay</code>.

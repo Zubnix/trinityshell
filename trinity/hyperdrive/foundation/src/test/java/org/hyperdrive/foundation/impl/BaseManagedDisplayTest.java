@@ -1,10 +1,5 @@
 package org.hyperdrive.foundation.impl;
 
-import org.hydrogen.display.api.event.ButtonNotifyEvent;
-import org.hydrogen.display.api.event.ConfigureRequestEvent;
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.MapRequestEvent;
-import org.hydrogen.event.api.EventManager;
 import org.hyperdrive.MockedEnv;
 import org.hyperdrive.core.api.ManagedDisplay;
 import org.hyperdrive.core.api.RenderArea;
@@ -18,6 +13,11 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
+import org.trinity.core.display.api.event.ButtonNotifyEvent;
+import org.trinity.core.display.api.event.ConfigureRequestEvent;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.display.api.event.MapRequestEvent;
+import org.trinity.core.event.api.EventManager;
 
 public class BaseManagedDisplayTest {
 

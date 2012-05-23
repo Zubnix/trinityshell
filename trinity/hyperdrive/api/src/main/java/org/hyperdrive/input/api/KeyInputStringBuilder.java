@@ -1,7 +1,7 @@
 package org.hyperdrive.input.api;
 
-import org.hydrogen.display.api.event.KeyNotifyEvent;
 import org.hyperdrive.foundation.api.ManagedDisplay;
+import org.trinity.core.display.api.event.KeyNotifyEvent;
 
 public interface KeyInputStringBuilder {
 

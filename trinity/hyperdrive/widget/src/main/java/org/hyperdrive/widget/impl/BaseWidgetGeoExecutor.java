@@ -15,13 +15,13 @@
  */
 package org.hyperdrive.widget.impl;
 
-import org.hydrogen.display.api.Area;
-import org.hydrogen.display.api.AreaManipulator;
-import org.hydrogen.display.api.PlatformRenderArea;
 import org.hyperdrive.foundation.api.RenderArea;
 import org.hyperdrive.foundation.impl.RenderAreaGeoExecutor;
 import org.hyperdrive.geo.api.GeoExecutor;
 import org.hyperdrive.geo.api.GeoTransformableRectangle;
+import org.trinity.core.display.api.Area;
+import org.trinity.core.display.api.AreaManipulator;
+import org.trinity.core.display.api.PlatformRenderArea;
 
 // TODO documentation
 /**

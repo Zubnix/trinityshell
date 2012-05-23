@@ -15,8 +15,8 @@
  */
 package org.hyperdrive.foundation.api.event;
 
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.MapRequestEvent;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.display.api.event.MapRequestEvent;
 
 public abstract class MapRequestHandler implements
 		DisplayEventHandler<MapRequestEvent> {

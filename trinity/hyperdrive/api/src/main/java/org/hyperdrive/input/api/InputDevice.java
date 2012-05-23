@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.input.api;
 
-import org.hydrogen.event.api.EventManager;
+import org.trinity.core.event.api.EventManager;
 
 public interface InputDevice {
 	void grab();

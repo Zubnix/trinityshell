@@ -15,15 +15,6 @@
  */
 package org.hyperdrive.foundation.api.base;
 
-import org.hydrogen.display.api.PlatformRenderArea;
-import org.hydrogen.display.api.PlatformRenderAreaGeometry;
-import org.hydrogen.display.api.Property;
-import org.hydrogen.display.api.PropertyInstance;
-import org.hydrogen.display.api.event.DestroyNotifyEvent;
-import org.hydrogen.display.api.event.DisplayEvent;
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.PropertyChangedNotifyEvent;
-import org.hydrogen.event.api.EventHandler;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.foundation.api.RenderArea;
 import org.hyperdrive.foundation.api.event.PropertyChangedEvent;
@@ -31,6 +22,15 @@ import org.hyperdrive.foundation.api.event.PropertyChangedHandler;
 
 import org.hyperdrive.geo.api.GeoTransformableRectangle;
 import org.hyperdrive.geo.api.base.AbstractGeoTransformableRectangle;
+import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.core.display.api.PlatformRenderAreaGeometry;
+import org.trinity.core.display.api.Property;
+import org.trinity.core.display.api.PropertyInstance;
+import org.trinity.core.display.api.event.DestroyNotifyEvent;
+import org.trinity.core.display.api.event.DisplayEvent;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.display.api.event.PropertyChangedNotifyEvent;
+import org.trinity.core.event.api.EventHandler;
 
 // TODO documentation
 // TODO redesign/evaluate input manager integration/method delegation.

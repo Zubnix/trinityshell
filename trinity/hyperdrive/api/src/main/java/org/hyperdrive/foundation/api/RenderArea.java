@@ -13,11 +13,11 @@ import org.hyperdrive.api.geo.GeoTransformableRectangle;
  */
 package org.hyperdrive.foundation.api;
 
-import org.hydrogen.display.api.PlatformRenderArea;
-import org.hydrogen.display.api.Property;
-import org.hydrogen.display.api.PropertyInstance;
 import org.hyperdrive.foundation.api.event.PropertyChangedHandler;
 import org.hyperdrive.geo.api.GeoTransformableRectangle;
+import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.core.display.api.Property;
+import org.trinity.core.display.api.PropertyInstance;
 
 public interface RenderArea extends GeoTransformableRectangle {
 	int getHeightIncrement();

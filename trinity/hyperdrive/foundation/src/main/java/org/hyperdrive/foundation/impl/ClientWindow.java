@@ -15,17 +15,17 @@
  */
 package org.hyperdrive.foundation.impl;
 
-import org.hydrogen.display.api.PlatformRenderArea;
-import org.hydrogen.display.api.base.EventPropagator;
-import org.hydrogen.display.api.event.ConfigureRequestEvent;
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.MapRequestEvent;
-import org.hydrogen.display.api.event.UnmappedNotifyEvent;
-import org.hydrogen.event.api.EventHandler;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.foundation.api.base.AbstractRenderArea;
 import org.hyperdrive.foundation.api.base.BaseRenderAreaGeoExecutor;
 import org.hyperdrive.geo.api.GeoExecutor;
+import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.core.display.api.event.ConfigureRequestEvent;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.display.api.event.MapRequestEvent;
+import org.trinity.core.display.api.event.UnmappedNotifyEvent;
+import org.trinity.core.display.impl.EventPropagator;
+import org.trinity.core.event.api.EventHandler;
 
 // TODO documentation
 /**

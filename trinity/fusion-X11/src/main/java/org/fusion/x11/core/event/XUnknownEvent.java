@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.core.event;
 
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.base.BaseDisplayEvent;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.display.impl.event.BaseDisplayEvent;
 
 // TODO documentation
 /**

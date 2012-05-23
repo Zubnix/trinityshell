@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.input.api;
 
-import org.hydrogen.display.api.event.KeyNotifyEvent;
+import org.trinity.core.display.api.event.KeyNotifyEvent;
 
 public interface ManagedKeyboard extends InputDevice {
 

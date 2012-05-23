@@ -15,11 +15,11 @@
  */
 package org.hyperdrive.widget.impl;
 
-import org.hydrogen.display.api.input.MouseInput;
 import org.hyperdrive.foundation.api.RenderArea;
 import org.hyperdrive.protocol.api.DesktopProtocol;
 import org.hyperdrive.widget.api.CloseButton;
 import org.hyperdrive.widget.api.ViewReference;
+import org.trinity.core.input.api.MouseInput;
 
 /**
  * A <code>CloseButton</code> can terminate another

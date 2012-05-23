@@ -18,13 +18,13 @@ package org.hyperdrive.widget.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.KeyNotifyEvent;
-import org.hydrogen.display.api.input.SpecialKeyName;
-import org.hydrogen.event.api.EventHandler;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.widget.api.KeyDrivenMenu;
 import org.hyperdrive.widget.api.ViewReference;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.display.api.event.KeyNotifyEvent;
+import org.trinity.core.event.api.EventHandler;
+import org.trinity.core.input.api.SpecialKeyName;
 
 // TODO documentation
 /**

@@ -16,9 +16,9 @@
 package org.fusion.x11.core.event;
 
 import org.fusion.x11.core.XWindow;
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.base.BaseButtonNotifyEvent;
-import org.hydrogen.display.api.input.MouseInput;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.display.impl.event.BaseButtonNotifyEvent;
+import org.trinity.core.input.api.MouseInput;
 
 // TODO documentation
 /**

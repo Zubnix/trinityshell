@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.foundation.api;
 
-import org.hydrogen.display.api.PropertyInstance;
+import org.trinity.core.display.api.PropertyInstance;
 
 public interface PropertyManipulator {
 	RenderArea getRenderArea();

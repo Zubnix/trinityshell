@@ -16,10 +16,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.hydrogen.display.api.Display;
-import org.hydrogen.display.api.DisplayPlatform;
-import org.hydrogen.display.api.EventProducer;
-import org.hydrogen.display.api.ResourceHandle;
+import org.trinity.core.display.api.Display;
+import org.trinity.core.display.api.DisplayPlatform;
+import org.trinity.core.display.api.EventProducer;
+import org.trinity.core.display.api.ResourceHandle;
 
 // TODO split painting & window management function providers into separate
 // objects that way we can have completely seperate painting & window management

@@ -17,7 +17,7 @@ package org.fusion.x11.core.xcb.extension;
 
 import org.fusion.x11.core.extension.XSyncAlarmNotify;
 import org.fusion.x11.core.extension.XSyncAlarmState;
-import org.hydrogen.display.api.event.base.BaseDisplayEvent;
+import org.trinity.core.display.impl.event.BaseDisplayEvent;
 
 // TODO documentation
 // currently unused

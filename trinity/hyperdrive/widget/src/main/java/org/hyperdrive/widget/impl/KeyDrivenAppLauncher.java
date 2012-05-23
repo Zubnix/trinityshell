@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.hydrogen.display.api.input.SpecialKeyName;
+import org.trinity.core.input.api.SpecialKeyName;
 
 // TODO documentation
 /**

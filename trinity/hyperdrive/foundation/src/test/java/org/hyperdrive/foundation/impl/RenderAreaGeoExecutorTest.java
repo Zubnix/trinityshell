@@ -1,7 +1,5 @@
 package org.hyperdrive.foundation.impl;
 
-import org.hydrogen.display.api.PlatformRenderArea;
-import org.hydrogen.geometry.api.Coordinates;
 import org.hyperdrive.MockedEnv;
 import org.hyperdrive.core.api.RenderArea;
 import org.hyperdrive.foundation.api.base.BaseRenderAreaGeoExecutor;
@@ -11,6 +9,8 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.core.geometry.api.Coordinates;
 
 //TODO split this class into a parameterized test. parameters are: platformrenderarea of renderarea, parent and platformrenderea of parent
 public class RenderAreaGeoExecutorTest {

@@ -18,22 +18,6 @@ package org.hyperdrive.foundation.impl;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import org.hydrogen.display.api.Display;
-import org.hydrogen.display.api.base.EventPropagator;
-import org.hydrogen.display.api.event.ButtonNotifyEvent;
-import org.hydrogen.display.api.event.ConfigureRequestEvent;
-import org.hydrogen.display.api.event.DestroyNotifyEvent;
-import org.hydrogen.display.api.event.DisplayEvent;
-import org.hydrogen.display.api.event.DisplayEventSource;
-import org.hydrogen.display.api.event.FocusNotifyEvent;
-import org.hydrogen.display.api.event.KeyNotifyEvent;
-import org.hydrogen.display.api.event.MapRequestEvent;
-import org.hydrogen.display.api.event.MouseVisitationNotifyEvent;
-import org.hydrogen.display.api.event.PropertyChangedNotifyEvent;
-import org.hydrogen.display.api.event.UnmappedNotifyEvent;
-import org.hydrogen.event.api.EventManager;
-import org.hydrogen.event.api.base.EventBus;
-import org.hydrogen.paint.api.PainterFactory;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.foundation.api.event.ClientCreatedHandler;
 import org.hyperdrive.foundation.api.event.DisplayEventHandler;
@@ -42,13 +26,29 @@ import org.hyperdrive.input.api.ManagedMouse;
 
 import org.hyperdrive.widget.api.Root;
 import org.hyperdrive.widget.api.Widget;
+import org.trinity.core.display.api.Display;
+import org.trinity.core.display.api.event.ButtonNotifyEvent;
+import org.trinity.core.display.api.event.ConfigureRequestEvent;
+import org.trinity.core.display.api.event.DestroyNotifyEvent;
+import org.trinity.core.display.api.event.DisplayEvent;
+import org.trinity.core.display.api.event.DisplayEventSource;
+import org.trinity.core.display.api.event.FocusNotifyEvent;
+import org.trinity.core.display.api.event.KeyNotifyEvent;
+import org.trinity.core.display.api.event.MapRequestEvent;
+import org.trinity.core.display.api.event.MouseVisitationNotifyEvent;
+import org.trinity.core.display.api.event.PropertyChangedNotifyEvent;
+import org.trinity.core.display.api.event.UnmappedNotifyEvent;
+import org.trinity.core.display.impl.EventPropagator;
+import org.trinity.core.event.api.EventBus;
+import org.trinity.core.event.api.EventManager;
+import org.trinity.core.render.api.PainterFactory;
 
 import com.google.inject.Inject;
 
 // TODO documentation
 /**
  * Provides extra functionality by wrapping a platform specific implementation
- * of a {@link org.hydrogen.display.api.Display}. The
+ * of a {@link org.trinity.core.display.api.Display}. The
  * <code>ManagedDisplay</code> is at the core of any hyperdrive object
  * interacting with the platform display server.
  * <p>

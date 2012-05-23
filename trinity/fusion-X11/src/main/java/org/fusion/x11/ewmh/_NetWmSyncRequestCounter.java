@@ -19,7 +19,7 @@ import org.fusion.x11.core.FlexDataContainer;
 import org.fusion.x11.core.XDisplay;
 import org.fusion.x11.core.XPropertyInstanceInfo;
 import org.fusion.x11.core.XPropertyXAtom;
-import org.hydrogen.display.api.PlatformRenderArea;
+import org.trinity.core.display.api.PlatformRenderArea;
 
 // TODO documentation
 /**

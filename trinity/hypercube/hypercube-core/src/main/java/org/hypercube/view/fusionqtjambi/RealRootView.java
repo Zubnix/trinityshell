@@ -1,8 +1,8 @@
 package org.hypercube.view.fusionqtjambi;
 
-import org.hydrogen.paint.api.PaintContext;
 import org.hyperdrive.widget.api.Root;
 import org.hyperdrive.widget.api.ViewImplementation;
+import org.trinity.core.render.api.PaintContext;
 
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QDesktopWidget;

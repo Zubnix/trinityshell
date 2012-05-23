@@ -22,19 +22,19 @@ import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
-import org.hydrogen.display.api.Display;
-import org.hydrogen.display.api.PlatformRenderArea;
-import org.hydrogen.display.api.event.ConfigureRequestEvent;
-import org.hydrogen.display.api.event.DisplayEvent;
-import org.hydrogen.display.api.event.DisplayEventSource;
-import org.hydrogen.display.api.event.DisplayEventType;
-import org.hydrogen.display.api.event.MapRequestEvent;
-import org.hydrogen.event.api.EventHandler;
-import org.hydrogen.event.api.EventManager;
-import org.hydrogen.event.api.base.EventBus;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.foundation.api.event.ClientCreatedHandler;
 import org.hyperdrive.foundation.api.event.DisplayEventHandler;
+import org.trinity.core.display.api.Display;
+import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.core.display.api.event.ConfigureRequestEvent;
+import org.trinity.core.display.api.event.DisplayEvent;
+import org.trinity.core.display.api.event.DisplayEventSource;
+import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.core.display.api.event.MapRequestEvent;
+import org.trinity.core.event.api.EventBus;
+import org.trinity.core.event.api.EventHandler;
+import org.trinity.core.event.api.EventManager;
 
 /**
  * An <code>EventDispatcher</code> fetches and dispatches

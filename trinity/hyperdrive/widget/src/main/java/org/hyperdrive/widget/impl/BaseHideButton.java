@@ -15,11 +15,11 @@
  */
 package org.hyperdrive.widget.impl;
 
-import org.hydrogen.display.api.input.MouseInput;
-import org.hydrogen.display.api.input.base.BaseMouseInput;
 import org.hyperdrive.geo.api.GeoTransformableRectangle;
 import org.hyperdrive.widget.api.HideButton;
 import org.hyperdrive.widget.api.ViewReference;
+import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.input.impl.BaseMouseInput;
 
 // TODO create abstract push button class
 /**

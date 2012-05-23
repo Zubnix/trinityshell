@@ -15,9 +15,9 @@
  */
 package org.hyperdrive.widget.api;
 
-import org.hydrogen.paint.api.PaintInstruction;
 import org.hyperdrive.foundation.api.RenderArea;
 import org.hyperdrive.geo.api.GeoOperation;
+import org.trinity.core.render.api.PaintInstruction;
 
 public interface ClientManager extends Widget {
 

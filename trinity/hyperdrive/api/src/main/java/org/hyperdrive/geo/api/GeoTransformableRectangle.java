@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.geo.api;
 
-import org.hydrogen.paint.api.HierarchicalRectangle;
+import org.trinity.core.render.api.HierarchicalRectangle;
 
 public interface GeoTransformableRectangle extends HierarchicalRectangle,
 		GeoTransformable {

@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.geo.api;
 
-import org.hydrogen.event.api.Event;
+import org.trinity.core.event.api.Event;
 
 public interface GeoEvent extends Event<GeoOperation> {
 	GeoTransformableRectangle getGeoTransformableRectangle();

@@ -15,7 +15,7 @@
  */
 package org.hyperdrive.protocol;
 
-import org.hydrogen.event.api.Type;
+import org.trinity.core.event.api.Type;
 
 //TODO documentation
 /**

@@ -15,11 +15,11 @@
  */
 package org.hyperdrive.widget.impl;
 
-import org.hydrogen.display.api.input.MouseInput;
-import org.hydrogen.geometry.api.Rectangle;
 import org.hyperdrive.geo.api.GeoTransformableRectangle;
 import org.hyperdrive.widget.api.MaximizeButton;
 import org.hyperdrive.widget.api.ViewReference;
+import org.trinity.core.geometry.api.Rectangle;
+import org.trinity.core.input.api.MouseInput;
 
 // TODO create push button superclass
 /**

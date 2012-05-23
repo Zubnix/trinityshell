@@ -15,9 +15,9 @@
  */
 package org.hyperdrive.foundation.api.event;
 
-import org.hydrogen.display.api.Property;
-import org.hydrogen.display.api.PropertyInstance;
-import org.hydrogen.event.api.EventHandler;
+import org.trinity.core.display.api.Property;
+import org.trinity.core.display.api.PropertyInstance;
+import org.trinity.core.event.api.EventHandler;
 
 public interface PropertyChangedHandler<T extends Property<? extends PropertyInstance>>
 		extends EventHandler<PropertyChangedEvent<T>> {

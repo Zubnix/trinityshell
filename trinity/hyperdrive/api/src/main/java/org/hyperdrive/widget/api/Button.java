@@ -15,8 +15,8 @@
  */
 package org.hyperdrive.widget.api;
 
-import org.hydrogen.display.api.input.MouseInput;
-import org.hydrogen.paint.api.PaintInstruction;
+import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.render.api.PaintInstruction;
 
 public interface Button extends Widget {
 

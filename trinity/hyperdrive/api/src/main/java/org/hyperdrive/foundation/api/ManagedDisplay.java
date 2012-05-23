@@ -15,16 +15,16 @@
  */
 package org.hyperdrive.foundation.api;
 
-import org.hydrogen.display.api.Display;
-import org.hydrogen.display.api.event.DisplayEvent;
-import org.hydrogen.display.api.event.DisplayEventSource;
-import org.hydrogen.event.api.EventManager;
-import org.hydrogen.paint.api.PainterFactory;
 import org.hyperdrive.foundation.api.event.ClientCreatedHandler;
 import org.hyperdrive.foundation.api.event.DisplayEventHandler;
 import org.hyperdrive.input.api.ManagedKeyboard;
 import org.hyperdrive.input.api.ManagedMouse;
 import org.hyperdrive.widget.api.Widget;
+import org.trinity.core.display.api.Display;
+import org.trinity.core.display.api.event.DisplayEvent;
+import org.trinity.core.display.api.event.DisplayEventSource;
+import org.trinity.core.event.api.EventManager;
+import org.trinity.core.render.api.PainterFactory;
 
 public interface ManagedDisplay {
 

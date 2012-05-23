@@ -15,11 +15,11 @@
  */
 package org.hyperdrive.widget.impl;
 
-import org.hydrogen.display.api.event.ButtonNotifyEvent;
 import org.hyperdrive.foundation.api.ManagedDisplay;
 import org.hyperdrive.foundation.api.event.MouseButtonReleasedHandler;
 import org.hyperdrive.widget.api.Button;
 import org.hyperdrive.widget.api.ViewReference;
+import org.trinity.core.display.api.event.ButtonNotifyEvent;
 
 //TODO documentation
 /**

@@ -15,11 +15,11 @@
  */
 package org.hyperdrive.foundation.api.base;
 
-import org.hydrogen.display.api.Property;
-import org.hydrogen.display.api.PropertyInstance;
 import org.hyperdrive.foundation.api.RenderArea;
 import org.hyperdrive.foundation.api.event.PropertyChangedEvent;
 import org.hyperdrive.foundation.api.event.PropertyType;
+import org.trinity.core.display.api.Property;
+import org.trinity.core.display.api.PropertyInstance;
 
 //TODO create seperate abstract renderareaevent super class
 //TODO documentation
