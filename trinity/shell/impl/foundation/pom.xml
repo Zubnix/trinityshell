@@ -10,5 +10,13 @@
 
 	<artifactId>shell.impl.foundation</artifactId>
 	<name>Shell foundation implementation</name>
+
+	<dependencies>
+		<dependency>
+			<artifactId>shell.impl.geo</artifactId>
+			<groupId>org.trinity.shell</groupId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
 </project>
 

@@ -25,10 +25,10 @@
 	</developers>
 	<modules>
 		<module>core</module>
-		<module>hyperdrive</module>
-		<module>render</module>
+		<module>shell</module>
+		<module>display</module>
 		<module>hypercube</module>
-		<module>fusion-qtjambi</module>
+		<module>render</module>
 		<!-- <module>fusion-swing/trunk</module> -->
 	</modules>
 	<properties>

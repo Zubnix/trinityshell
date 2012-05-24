@@ -1,9 +1,9 @@
 package org.hyperdrive.widget.impl;
 
-import org.hyperdrive.widget.api.ViewReference;
-import org.hyperdrive.widget.impl.BaseWidget;
+import org.trinity.shell.widget.api.ViewReference;
+import org.trinity.shell.widget.impl.WidgetImpl;
 
-public class DummyWidget extends BaseWidget {
+public class DummyWidget extends WidgetImpl {
 
 	@ViewReference
 	private View view;

@@ -9,5 +9,14 @@
 	</parent>
 	<artifactId>shell.api</artifactId>
 	<name>Shell API</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.core</groupId>
+			<artifactId>core.api</artifactId>
+			<version>0.0.1</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 </project>
 

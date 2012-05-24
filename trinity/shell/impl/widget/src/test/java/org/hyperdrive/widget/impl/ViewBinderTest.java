@@ -1,9 +1,9 @@
 package org.hyperdrive.widget.impl;
 
-import org.hyperdrive.widget.api.ViewBinder;
-import org.hyperdrive.widget.api.Widget;
 import org.junit.Assert;
 import org.junit.Test;
+import org.trinity.shell.widget.api.ViewBinder;
+import org.trinity.shell.widget.api.Widget;
 
 public class ViewBinderTest {
 

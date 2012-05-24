@@ -112,5 +112,5 @@ public interface Display extends DisplayEventProducer {
 	 */
 	PlatformRenderArea getInputFocus();
 
-	PlatformRenderArea findPlatformRender(ResourceHandle resourceHandle);
+	PlatformRenderArea findPlatformRenderArea(ResourceHandle resourceHandle);
 }

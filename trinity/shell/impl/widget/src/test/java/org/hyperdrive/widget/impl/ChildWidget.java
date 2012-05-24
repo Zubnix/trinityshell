@@ -1,10 +1,10 @@
 package org.hyperdrive.widget.impl;
 
-import org.hyperdrive.widget.api.ViewReference;
-import org.hyperdrive.widget.api.Widget;
-import org.hyperdrive.widget.impl.BaseWidget;
+import org.trinity.shell.widget.api.ViewReference;
+import org.trinity.shell.widget.api.Widget;
+import org.trinity.shell.widget.impl.WidgetImpl;
 
-public class ChildWidget extends BaseWidget {
+public class ChildWidget extends WidgetImpl {
 
 	public interface View extends Widget.View {
 

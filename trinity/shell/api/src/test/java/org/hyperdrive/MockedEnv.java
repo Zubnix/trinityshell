@@ -3,12 +3,6 @@ package org.hyperdrive;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import org.hyperdrive.foundation.api.ManagedDisplay;
-import org.hyperdrive.widget.api.Root;
-import org.hyperdrive.widget.api.ViewBinder;
-import org.hyperdrive.widget.api.ViewImplementation;
-import org.hyperdrive.widget.api.VirtualRoot;
-import org.hyperdrive.widget.api.Widget;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -32,6 +26,12 @@ import org.trinity.core.render.api.PaintableRef;
 import org.trinity.core.render.api.Painter;
 import org.trinity.core.render.api.PainterFactory;
 import org.trinity.core.render.api.PainterFactoryProvider;
+import org.trinity.shell.foundation.api.ManagedDisplay;
+import org.trinity.shell.widget.api.Root;
+import org.trinity.shell.widget.api.ViewBinder;
+import org.trinity.shell.widget.api.ViewImplementation;
+import org.trinity.shell.widget.api.VirtualRoot;
+import org.trinity.shell.widget.api.Widget;
 
 public class MockedEnv {
 
