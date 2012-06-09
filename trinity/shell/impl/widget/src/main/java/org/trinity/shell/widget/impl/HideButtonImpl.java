@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.input.api.PointerInput;
 import org.trinity.core.render.api.PainterFactory;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
@@ -59,7 +59,7 @@ public class HideButtonImpl extends ButtonImpl implements HideButton {
 	}
 
 	@Override
-	public void onMouseButtonPressed(final MouseInput input) {
+	public void onMouseButtonPressed(final PointerInput input) {
 		hideClientWindow();
 	}
 

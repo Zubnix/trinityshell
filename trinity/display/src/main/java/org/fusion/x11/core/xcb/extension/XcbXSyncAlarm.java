@@ -15,10 +15,10 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XResource;
-import org.fusion.x11.core.extension.XSyncAlarm;
-import org.fusion.x11.core.extension.XSyncAlarmAttributes;
+import org.trinity.display.x11.api.extension.sync.XSyncAlarm;
+import org.trinity.display.x11.api.extension.sync.XSyncAlarmAttributes;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceImpl;
  
 
 // TODO documentation
@@ -27,9 +27,9 @@ import org.fusion.x11.core.extension.XSyncAlarmAttributes;
  * @author Erik De Rijcke
  * @since 1.1
  */
-public class XcbXSyncAlarm extends XResource implements XSyncAlarm {
+public class XcbXSyncAlarm extends XResourceImpl implements XSyncAlarm {
 
-	protected XcbXSyncAlarm(final XID xid)    {
+	protected XcbXSyncAlarm(final XIDImpl xid)    {
 		super(xid);
 		// TODO more functions:
 		// create alarm

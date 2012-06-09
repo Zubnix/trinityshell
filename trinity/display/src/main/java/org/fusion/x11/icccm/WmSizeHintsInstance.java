@@ -16,8 +16,8 @@
 
 package org.fusion.x11.icccm;
 
-import org.fusion.x11.core.XDisplay;
 import org.trinity.core.display.impl.BasePropertyInstance;
+import org.trinity.display.x11.impl.XServerImpl;
 
 // TODO documentation
 /**
@@ -67,7 +67,7 @@ public final class WmSizeHintsInstance extends BasePropertyInstance {
 	 * @param baseHeight
 	 * @param winGravity
 	 */
-	WmSizeHintsInstance(final XDisplay display, final long flags, final int x,
+	WmSizeHintsInstance(final XServerImpl display, final long flags, final int x,
 			final int y, final int width, final int height, final int minWidth,
 			final int minHeight, final int maxWidth, final int maxHeight,
 			final int widthInc, final int heightInc, final int minAspectNum,

@@ -11,7 +11,7 @@
  */
 package org.trinity.render.paintengine.qt.api;
 
-import org.trinity.core.render.api.RenderEventConverter;
+import org.trinity.core.display.api.DisplayEventConverter;
 
 import com.trolltech.qt.core.QEvent;
 
@@ -19,6 +19,6 @@ import com.trolltech.qt.core.QEvent;
  * @author Erik De Rijcke
  ****************************************/
 public interface QFRenderEventConverter extends
-		RenderEventConverter<QEvent, QEvent.Type> {
+		DisplayEventConverter<QEvent, QEvent.Type> {
 
 }

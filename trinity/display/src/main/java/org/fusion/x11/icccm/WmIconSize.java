@@ -17,11 +17,11 @@ package org.fusion.x11.icccm;
 
 import org.fusion.x11.core.FlexDataContainer;
 import org.fusion.x11.core.IntDataContainer;
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XPropertyInstanceInfo;
-import org.fusion.x11.core.XPropertyXAtom;
-import org.fusion.x11.core.XProtocolConstants;
 import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.display.x11.api.XProtocolConstants;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.property.XPropertyInstanceInfo;
+import org.trinity.display.x11.impl.property.XPropertyXAtom;
 
 // TODO documentation
 /**
@@ -36,7 +36,7 @@ public final class WmIconSize extends XPropertyXAtom<WmIconSizeInstance> {
 	 * @param display
 	 * 
 	 */
-	public WmIconSize(final XDisplay display) {
+	public WmIconSize(final XServerImpl display) {
 		super(display, IcccmAtoms.WM_ICON_SIZE_ATOM_NAME, Long
 				.valueOf(XProtocolConstants.WM_ICON_SIZE));
 	}

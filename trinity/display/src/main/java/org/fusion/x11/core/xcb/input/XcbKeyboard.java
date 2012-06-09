@@ -20,9 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.fusion.x11.core.XDisplay;
 import org.fusion.x11.core.input.XKeySymbol;
-import org.fusion.x11.core.input.XKeyboard;
 import org.fusion.x11.core.input.XModifier;
 import org.fusion.x11.core.xcb.XcbCoreInterfaceImpl;
 import org.fusion.x11.core.xcb.error.UnknownKeyException;
@@ -31,6 +29,8 @@ import org.trinity.core.input.api.InputModifiers;
 import org.trinity.core.input.api.Key;
 import org.trinity.core.input.api.Modifier;
 import org.trinity.core.input.impl.BaseInputModifiers;
+import org.trinity.display.x11.api.XKeyboard;
+import org.trinity.display.x11.impl.XServerImpl;
 
 // TODO documentation
 /**
@@ -40,7 +40,7 @@ import org.trinity.core.input.impl.BaseInputModifiers;
  */
 public class XcbKeyboard implements XKeyboard {
 
-	private final XDisplay display;
+	private final XServerImpl display;
 
 	private final Map<String, Key[]> keyCache;
 	private final Map<InputModifierName, XModifier> modifiers;
@@ -52,7 +52,7 @@ public class XcbKeyboard implements XKeyboard {
 	 * @param display
 	 * @param displayInterface
 	 */
-	public XcbKeyboard(final XDisplay display,
+	public XcbKeyboard(final XServerImpl display,
 			final XcbCoreInterfaceImpl displayInterface) {
 		this.keyCache = new HashMap<String, Key[]>();
 
@@ -71,7 +71,7 @@ public class XcbKeyboard implements XKeyboard {
 	 * 
 	 * @return
 	 */
-	public XDisplay getDisplay() {
+	public XServerImpl getDisplay() {
 		return this.display;
 	}
 

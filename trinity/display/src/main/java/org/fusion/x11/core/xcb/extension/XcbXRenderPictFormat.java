@@ -16,10 +16,10 @@
 package org.fusion.x11.core.xcb.extension;
 
 import org.fusion.x11.core.XColormap;
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XResource;
-import org.fusion.x11.core.extension.XRenderDirectFormat;
-import org.fusion.x11.core.extension.XRenderPictFormat;
+import org.trinity.display.x11.api.extension.render.XRenderDirectFormat;
+import org.trinity.display.x11.api.extension.render.XRenderPictFormat;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceImpl;
  
 
 // TODO documentation
@@ -28,7 +28,7 @@ import org.fusion.x11.core.extension.XRenderPictFormat;
  * @author Erik De Rijcke
  * @since 1.1
  */
-public final class XcbXRenderPictFormat extends XResource implements
+public final class XcbXRenderPictFormat extends XResourceImpl implements
                 XRenderPictFormat {
 
 	private final int                 type;
@@ -36,7 +36,7 @@ public final class XcbXRenderPictFormat extends XResource implements
 	private final XRenderDirectFormat directFormat;
 	private final XColormap           colormap;
 
-	XcbXRenderPictFormat(final XID xid,
+	XcbXRenderPictFormat(final XIDImpl xid,
 	                     final int type,
 	                     final int depth,
 	                     final XRenderDirectFormat directFormat,

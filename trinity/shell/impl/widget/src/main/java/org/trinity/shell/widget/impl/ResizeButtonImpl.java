@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.input.api.PointerInput;
 import org.trinity.core.render.api.PainterFactory;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.input.api.ManagedMouse;
@@ -42,7 +42,7 @@ public class ResizeButtonImpl extends DragButtonImpl {
 	private int desiredHeight;
 
 	@Override
-	public void startDrag(final MouseInput input) {
+	public void startDrag(final PointerInput input) {
 		this.desiredWidth = getBoundRectangle().getWidth();
 		this.desiredHeight = getBoundRectangle().getHeight();
 		super.startDrag(input);

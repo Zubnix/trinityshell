@@ -71,7 +71,7 @@ public class ManagedDisplayImplTest {
 		Mockito.when(configureRequestHandler.getType()).thenReturn(
 				DisplayEventType.CONFIGURE_REQUEST);
 
-		Mockito.when(this.mockedEnv.displayMock.getEventFromMasterQueue())
+		Mockito.when(this.mockedEnv.displayMock.getNextDisplayEvent())
 				.thenReturn(c0Req, c0Map, null);
 
 		baseManagedDisplay.addDisplayEventHandler(mapRequestHandler);
@@ -118,7 +118,7 @@ public class ManagedDisplayImplTest {
 		Mockito.when(configureRequestHandler.getType()).thenReturn(
 				DisplayEventType.CONFIGURE_REQUEST);
 
-		Mockito.when(this.mockedEnv.displayMock.getEventFromMasterQueue())
+		Mockito.when(this.mockedEnv.displayMock.getNextDisplayEvent())
 				.thenReturn(c0Req, c0Map, null);
 
 		baseManagedDisplay.addDisplayEventHandler(mapRequestHandler);
@@ -164,7 +164,7 @@ public class ManagedDisplayImplTest {
 		Mockito.when(c1Map.getEventSource()).thenReturn(this.mockedEnv.c1);
 		Mockito.when(c1Map.getType()).thenReturn(DisplayEventType.MAP_REQUEST);
 
-		Mockito.when(this.mockedEnv.displayMock.getEventFromMasterQueue())
+		Mockito.when(this.mockedEnv.displayMock.getNextDisplayEvent())
 				.thenReturn(c0Map, c1Req, c0Req, c1Map, null);
 
 		// add stubbed eventmanagers that should receive the stubbed display
@@ -243,7 +243,7 @@ public class ManagedDisplayImplTest {
 		Mockito.when(c0Map.getEventSource()).thenReturn(this.mockedEnv.c0);
 		Mockito.when(c0Map.getType()).thenReturn(DisplayEventType.MAP_REQUEST);
 
-		Mockito.when(this.mockedEnv.displayMock.getEventFromMasterQueue())
+		Mockito.when(this.mockedEnv.displayMock.getNextDisplayEvent())
 				.thenReturn(c0Map);
 
 		final ClientCreatedHandler clientCreatedHandler = Mockito
@@ -268,7 +268,7 @@ public class ManagedDisplayImplTest {
 		Mockito.when(c1Map.getEventSource()).thenReturn(this.mockedEnv.c1);
 		Mockito.when(c1Map.getType()).thenReturn(DisplayEventType.MAP_REQUEST);
 
-		Mockito.when(this.mockedEnv.displayMock.getEventFromMasterQueue())
+		Mockito.when(this.mockedEnv.displayMock.getNextDisplayEvent())
 				.thenReturn(c0Map, c1Map);
 
 		final ClientCreatedHandler clientCreatedHandler = Mockito

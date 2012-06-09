@@ -15,7 +15,7 @@
  */
 package org.trinity.core.display.api.event;
 
-import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.input.api.PointerInput;
 
 // TODO documentation
 /**
@@ -26,6 +26,6 @@ import org.trinity.core.input.api.MouseInput;
  * @since 1.0
  * 
  */
-public interface ButtonNotifyEvent extends InputNotifyEvent<MouseInput> {
+public interface ButtonNotifyEvent extends InputNotifyEvent<PointerInput> {
 
 }

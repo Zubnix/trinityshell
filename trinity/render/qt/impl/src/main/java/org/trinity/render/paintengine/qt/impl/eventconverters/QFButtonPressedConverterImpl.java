@@ -18,8 +18,8 @@ import org.trinity.core.input.api.Button;
 import org.trinity.core.input.api.ButtonFactory;
 import org.trinity.core.input.api.InputModifiers;
 import org.trinity.core.input.api.InputModifiersFactory;
-import org.trinity.core.input.api.MouseInput;
-import org.trinity.core.input.api.MouseInputFactory;
+import org.trinity.core.input.api.PointerInput;
+import org.trinity.core.input.api.PointerInputFactory;
 import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
 
 import com.google.inject.Inject;
@@ -45,7 +45,7 @@ public final class QFButtonPressedConverterImpl implements
 	private final ButtonFactory buttonFactory;
 	private final InputModifiersFactory inputModifiersFactory;
 	private final DisplayEventFactory displayEventFactory;
-	private final MouseInputFactory mouseInputFactory;
+	private final PointerInputFactory mouseInputFactory;
 	private final QEvent.Type qType;
 
 	@Inject
@@ -53,7 +53,7 @@ public final class QFButtonPressedConverterImpl implements
 											final DisplayEventFactory displayEventFactory,
 											final ButtonFactory buttonFactory,
 											final InputModifiersFactory inputModifiersFactory,
-											final MouseInputFactory mouseInputFactory) {
+											final PointerInputFactory mouseInputFactory) {
 		this.buttonFactory = buttonFactory;
 		this.inputModifiersFactory = inputModifiersFactory;
 		this.mouseInputFactory = mouseInputFactory;
@@ -79,8 +79,8 @@ public final class QFButtonPressedConverterImpl implements
 		final Button button = this.buttonFactory.createButton(buttonCode);
 		final InputModifiers inputModifiers = this.inputModifiersFactory
 				.createInputModifiers(state);
-		final MouseInput mouseInput = this.mouseInputFactory
-				.createMouseInputStarted(	button,
+		final PointerInput mouseInput = this.mouseInputFactory
+				.createPointerInputStarted(	button,
 											inputModifiers,
 											rootX,
 											rootY,

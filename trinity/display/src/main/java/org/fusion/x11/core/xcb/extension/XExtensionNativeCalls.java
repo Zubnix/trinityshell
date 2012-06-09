@@ -16,8 +16,8 @@
 package org.fusion.x11.core.xcb.extension;
 
 import org.fusion.x11.core.extension.XExtensionNative;
-import org.fusion.x11.nativeHelpers.NativeBufferHelper;
-import org.fusion.x11.nativeHelpers.XNativeCall;
+import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
+import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
 
 // TODO documentation
 // currently unused
@@ -36,7 +36,7 @@ public final class XExtensionNativeCalls {
 	private final XDamageInit xDamageInit;
 
 	public final class XDamageInit extends
-			XNativeCall<XcbExtensionVersionReply, Long, Integer> {
+			AbstractXcbCall<XcbExtensionVersionReply, Long, Integer> {
 		private XDamageInit() {
 		}
 
@@ -47,11 +47,11 @@ public final class XExtensionNativeCalls {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
+		protected boolean callImpl() {
 			final int majorVersion = getArgs()[0].intValue();
 			final int minorVersion = getArgs()[1].intValue();
 			final boolean error = XExtensionNative.nativeXDamageInit(
-					getDisplayPeer().longValue(), majorVersion, minorVersion,
+					getConnectionReference().longValue(), majorVersion, minorVersion,
 					getNativeBufferHelper().getBuffer());
 			return error;
 		}
@@ -64,7 +64,7 @@ public final class XExtensionNativeCalls {
 
 	private final XDamageCreate xDamageCreate;
 
-	public final class XDamageCreate extends XNativeCall<Long, Long, Number> {
+	public final class XDamageCreate extends AbstractXcbCall<Long, Long, Number> {
 		private XDamageCreate() {
 		}
 
@@ -75,9 +75,9 @@ public final class XExtensionNativeCalls {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
+		protected boolean callImpl() {
 			final boolean error = XExtensionNative.nativeXDamageCreate(
-					getDisplayPeer().longValue(), getArgs()[0].longValue(),
+					getConnectionReference().longValue(), getArgs()[0].longValue(),
 					getArgs()[1].intValue(), getNativeBufferHelper()
 							.getBuffer());
 			return error;
@@ -91,14 +91,14 @@ public final class XExtensionNativeCalls {
 
 	private final XDamageSubtract xDamageSubtract;
 
-	public final class XDamageSubtract extends XNativeCall<Void, Long, Number> {
+	public final class XDamageSubtract extends AbstractXcbCall<Void, Long, Number> {
 		private XDamageSubtract() {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
+		protected boolean callImpl() {
 			final boolean error = XExtensionNative.nativeXDamageSubtract(
-					getDisplayPeer().longValue(), getArgs()[0].longValue(),
+					getConnectionReference().longValue(), getArgs()[0].longValue(),
 					getArgs()[1].longValue(), getArgs()[2].longValue(),
 					getNativeBufferHelper().getBuffer());
 			return error;
@@ -118,7 +118,7 @@ public final class XExtensionNativeCalls {
 	private final XRenderInit xRenderInit;
 
 	public final class XRenderInit extends
-			XNativeCall<XcbExtensionVersionReply, Long, Integer> {
+			AbstractXcbCall<XcbExtensionVersionReply, Long, Integer> {
 		private XRenderInit() {
 		}
 
@@ -129,11 +129,11 @@ public final class XExtensionNativeCalls {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
+		protected boolean callImpl() {
 			final int majorVersion = getArgs()[0].intValue();
 			final int minorVersion = getArgs()[1].intValue();
 			final boolean error = XExtensionNative.nativeXRenderInit(
-					getDisplayPeer().longValue(), majorVersion, minorVersion,
+					getConnectionReference().longValue(), majorVersion, minorVersion,
 					getNativeBufferHelper().getBuffer());
 			return error;
 		}
@@ -152,7 +152,7 @@ public final class XExtensionNativeCalls {
 	private final XShapeInit xShapeInit;
 
 	public final class XShapeInit extends
-			XNativeCall<XcbExtensionVersionReply, Long, Integer> {
+			AbstractXcbCall<XcbExtensionVersionReply, Long, Integer> {
 		private XShapeInit() {
 		}
 
@@ -163,11 +163,11 @@ public final class XExtensionNativeCalls {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
+		protected boolean callImpl() {
 			final int majorVersion = getArgs()[0].intValue();
 			final int minorVersion = getArgs()[1].intValue();
 			final boolean error = XExtensionNative.nativeXShapeInit(
-					getDisplayPeer().longValue(), majorVersion, minorVersion,
+					getConnectionReference().longValue(), majorVersion, minorVersion,
 					getNativeBufferHelper().getBuffer());
 			return error;
 		}
@@ -186,7 +186,7 @@ public final class XExtensionNativeCalls {
 	private final XSyncInit xSyncInit;
 
 	public final class XSyncInit extends
-			XNativeCall<XcbExtensionVersionReply, Long, Integer> {
+			AbstractXcbCall<XcbExtensionVersionReply, Long, Integer> {
 		private XSyncInit() {
 		}
 
@@ -197,11 +197,11 @@ public final class XExtensionNativeCalls {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
+		protected boolean callImpl() {
 			final int majorVersion = getArgs()[0].intValue();
 			final int minorVersion = getArgs()[1].intValue();
 			final boolean error = XExtensionNative.nativeXSyncInit(
-					getDisplayPeer().longValue(), majorVersion, minorVersion,
+					getConnectionReference().longValue(), majorVersion, minorVersion,
 					getNativeBufferHelper().getBuffer());
 			return error;
 		}
@@ -215,14 +215,14 @@ public final class XExtensionNativeCalls {
 	private final XSyncAwaitCondition xSyncAwaitCondition;
 
 	public final class XSyncAwaitCondition extends
-			XNativeCall<Void, Long, Number> {
+			AbstractXcbCall<Void, Long, Number> {
 		private XSyncAwaitCondition() {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
+		protected boolean callImpl() {
 			final boolean error = XExtensionNative.nativeXSyncAwaitCondition(
-					getDisplayPeer().longValue(), getNativeBufferHelper()
+					getConnectionReference().longValue(), getNativeBufferHelper()
 							.getBuffer());
 			return error;
 		}
@@ -241,7 +241,7 @@ public final class XExtensionNativeCalls {
 	private final XCompositeInit xCompositeInit;
 
 	public final class XCompositeInit extends
-			XNativeCall<XcbExtensionVersionReply, Long, Integer> {
+			AbstractXcbCall<XcbExtensionVersionReply, Long, Integer> {
 		private XCompositeInit() {
 		}
 
@@ -252,11 +252,11 @@ public final class XExtensionNativeCalls {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
+		protected boolean callImpl() {
 			final int majorVersion = getArgs()[0].intValue();
 			final int minorVersion = getArgs()[1].intValue();
 			final boolean error = XExtensionNative.nativeXCompositeInit(
-					getDisplayPeer().longValue(), majorVersion, minorVersion,
+					getConnectionReference().longValue(), majorVersion, minorVersion,
 					getNativeBufferHelper().getBuffer());
 			return error;
 		}
@@ -270,14 +270,14 @@ public final class XExtensionNativeCalls {
 	private final XCompositeRedirectSubwindow xCompositeRedirectSubwindow;
 
 	public final class XCompositeRedirectSubwindow extends
-			XNativeCall<Void, Long, Number> {
+			AbstractXcbCall<Void, Long, Number> {
 		private XCompositeRedirectSubwindow() {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
+		protected boolean callImpl() {
 			return XExtensionNative.nativeXCompositeRedirectSubwindow(
-					getDisplayPeer().longValue(), getArgs()[0].longValue(),
+					getConnectionReference().longValue(), getArgs()[0].longValue(),
 					getArgs()[1].intValue(), getNativeBufferHelper()
 							.getBuffer());
 		}
@@ -296,7 +296,7 @@ public final class XExtensionNativeCalls {
 	private final XFixesInit xFixesInit;
 
 	public final class XFixesInit extends
-			XNativeCall<XcbExtensionVersionReply, Long, Integer> {
+			AbstractXcbCall<XcbExtensionVersionReply, Long, Integer> {
 		private XFixesInit() {
 		}
 
@@ -307,11 +307,11 @@ public final class XExtensionNativeCalls {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
+		protected boolean callImpl() {
 			final int majorVersion = getArgs()[0].intValue();
 			final int minorVersion = getArgs()[1].intValue();
 			final boolean error = XExtensionNative.nativeXFixesInit(
-					getDisplayPeer().longValue(), majorVersion, minorVersion,
+					getConnectionReference().longValue(), majorVersion, minorVersion,
 					getNativeBufferHelper().getBuffer());
 			return error;
 		}
@@ -325,7 +325,7 @@ public final class XExtensionNativeCalls {
 	private final XFixesCreateRegionFromWindow xFixesCreateRegionFromWindow;
 
 	public final class XFixesCreateRegionFromWindow extends
-			XNativeCall<Long, Long, Number> {
+			AbstractXcbCall<Long, Long, Number> {
 		private XFixesCreateRegionFromWindow() {
 		}
 
@@ -337,8 +337,8 @@ public final class XExtensionNativeCalls {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
-			final long display = getDisplayPeer().longValue();
+		protected boolean callImpl() {
+			final long display = getConnectionReference().longValue();
 			final long windowId = getArgs()[0].longValue();
 			final int regionBounding = getArgs()[1].intValue();
 			final boolean error = XExtensionNative
@@ -356,13 +356,13 @@ public final class XExtensionNativeCalls {
 	private final XFixesTranslateRegion xFixesTranslateRegion;
 
 	public final class XFixesTranslateRegion extends
-			XNativeCall<Void, Long, Number> {
+			AbstractXcbCall<Void, Long, Number> {
 		private XFixesTranslateRegion() {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
-			final long display = getDisplayPeer().longValue();
+		protected boolean callImpl() {
+			final long display = getConnectionReference().longValue();
 			final long regionId = getArgs()[0].longValue();
 			final int x = getArgs()[1].intValue();
 			final int y = getArgs()[2].intValue();
@@ -382,13 +382,13 @@ public final class XExtensionNativeCalls {
 	private final XFixesSetPictureClipRegion xFixesSetPictureClipRegion;
 
 	public final class XFixesSetPictureClipRegion extends
-			XNativeCall<Void, Long, Number> {
+			AbstractXcbCall<Void, Long, Number> {
 		private XFixesSetPictureClipRegion() {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
-			final long display = getDisplayPeer().longValue();
+		protected boolean callImpl() {
+			final long display = getConnectionReference().longValue();
 			final long pictureId = getArgs()[0].longValue();
 			final int clipXOrigin = getArgs()[1].intValue();
 			final int clipYOrigin = getArgs()[2].intValue();
@@ -410,13 +410,13 @@ public final class XExtensionNativeCalls {
 	private final XFixesDestroyRegion xFixesDestroyRegion;
 
 	public final class XFixesDestroyRegion extends
-			XNativeCall<Void, Long, Long> {
+			AbstractXcbCall<Void, Long, Long> {
 		private XFixesDestroyRegion() {
 		}
 
 		@Override
-		protected boolean nativeCallImpl() {
-			final long display = getDisplayPeer().longValue();
+		protected boolean callImpl() {
+			final long display = getConnectionReference().longValue();
 			final long regionId = getArgs()[0].longValue();
 
 			final boolean error = XExtensionNative.nativeXFixesDestroyRegion(

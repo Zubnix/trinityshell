@@ -14,7 +14,7 @@ package org.trinity.shell.foundation.impl;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import org.trinity.core.display.api.Display;
+import org.trinity.core.display.api.DisplayServer;
 import org.trinity.core.display.api.DisplayEventSelector;
 import org.trinity.core.display.api.event.ButtonNotifyEvent;
 import org.trinity.core.display.api.event.ConfigureRequestEvent;
@@ -41,7 +41,7 @@ import com.google.inject.Singleton;
 // TODO documentation
 /**
  * Provides extra functionality by wrapping a platform specific implementation
- * of a {@link org.trinity.core.display.api.Display}. The
+ * of a {@link org.trinity.core.display.api.DisplayServer}. The
  * <code>ManagedDisplay</code> is at the core of any hyperdrive object
  * interacting with the platform display server.
  * <p>
@@ -81,7 +81,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class ManagedDisplayImpl extends EventBus implements ManagedDisplay {
 
-	private final Display display;
+	private final DisplayServer display;
 	private final DisplayEventDispatcher displayEventDispatcher;
 	private final Executor managedDisplayEventExecutor;
 	private final Root root;
@@ -106,7 +106,7 @@ public class ManagedDisplayImpl extends EventBus implements ManagedDisplay {
 	 *            A <code>ViewFactory</code> implementation.
 	 */
 	@Inject
-	protected ManagedDisplayImpl(	final Display display,
+	protected ManagedDisplayImpl(	final DisplayServer display,
 									final Root root,
 									final RenderAreaFactory clientFactory) {
 		this.display = display;
@@ -164,10 +164,10 @@ public class ManagedDisplayImpl extends EventBus implements ManagedDisplay {
 	 * <p>
 	 * Calls to the native underlying display are done using this peer.
 	 * 
-	 * @return A {@link Display} peer.
+	 * @return A {@link DisplayServer} peer.
 	 */
 	@Override
-	public Display getDisplay() {
+	public DisplayServer getDisplay() {
 		return this.display;
 	}
 

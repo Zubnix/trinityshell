@@ -17,13 +17,13 @@ License as published by the Free Software
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XResource;
-import org.fusion.x11.core.extension.XDamage;
+import org.trinity.display.x11.api.extension.damage.XDamage;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceImpl;
 
 // currently unused
-public final class XcbXDamage extends XResource implements XDamage {
-	XcbXDamage(final XID xid) {
+public final class XcbXDamage extends XResourceImpl implements XDamage {
+	XcbXDamage(final XIDImpl xid) {
 		super(xid);
 	}
 }

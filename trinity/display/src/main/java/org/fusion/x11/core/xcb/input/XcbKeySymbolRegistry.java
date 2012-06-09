@@ -19,15 +19,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.fusion.x11.core.XCoreInterface;
-import org.fusion.x11.core.XDisplay;
 import org.fusion.x11.core.input.XKeySymbol;
 import org.fusion.x11.core.input.XKeySymbolRegistry;
 import org.fusion.x11.core.input.XModifier;
-import org.fusion.x11.core.xcb.XcbCoreNative;
 import org.trinity.core.input.api.InputModifierName;
 import org.trinity.core.input.api.InputModifiers;
 import org.trinity.core.input.api.Key;
 import org.trinity.core.input.api.SpecialKeyName;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.xcb.jni.Xcb4J;
 
 // TODO This is becoming a bit of a mess, rewrite?
 // TODO documentation
@@ -54,7 +54,7 @@ public class XcbKeySymbolRegistry implements XKeySymbolRegistry {
 	 * @param display
 	 * @param xCoreInterface
 	 */
-	public XcbKeySymbolRegistry(final XDisplay display,
+	public XcbKeySymbolRegistry(final XServerImpl display,
 			final XCoreInterface xCoreInterface) {
 		this.xCoreInterface = xCoreInterface;
 		final Long displayPeer = display.getNativePeer();
@@ -311,7 +311,7 @@ public class XcbKeySymbolRegistry implements XKeySymbolRegistry {
 	 * @return
 	 */
 	private long allocateNativeXKeysymbols(final Long displayPointer) {
-		final long nativeXkeySymbolsPeer = XcbCoreNative
+		final long nativeXkeySymbolsPeer = Xcb4J
 				.nativeAllocateKeysyms(displayPointer.longValue());
 		return nativeXkeySymbolsPeer;
 	}
@@ -327,7 +327,7 @@ public class XcbKeySymbolRegistry implements XKeySymbolRegistry {
 	 * @param nativeXkeySymbolsPeer
 	 */
 	private void freeNativeXKeysymbols(final long nativeXkeySymbolsPeer) {
-		XcbCoreNative.nativeFreeKeysyms(nativeXkeySymbolsPeer);
+		Xcb4J.nativeFreeKeysyms(nativeXkeySymbolsPeer);
 	}
 
 	@Override

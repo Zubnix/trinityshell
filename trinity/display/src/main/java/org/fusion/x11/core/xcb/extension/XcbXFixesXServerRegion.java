@@ -15,15 +15,15 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XResource;
-import org.fusion.x11.core.extension.XFixesXServerRegion;
+import org.trinity.display.x11.api.extension.fixes.XFixesXServerRegion;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceImpl;
  
 
 // currently unused
-public final class XcbXFixesXServerRegion extends XResource implements
+public final class XcbXFixesXServerRegion extends XResourceImpl implements
                 XFixesXServerRegion {
-	XcbXFixesXServerRegion(final XID xid)    {
+	XcbXFixesXServerRegion(final XIDImpl xid)    {
 		super(xid);
 	}
 }

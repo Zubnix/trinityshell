@@ -17,13 +17,13 @@
 package org.fusion.x11.icccm;
 
 import org.fusion.x11.core.FlexDataContainer;
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XPropertyInstanceInfo;
-import org.fusion.x11.core.XPropertyXAtom;
-import org.fusion.x11.core.XProtocolConstants;
-import org.fusion.x11.core.XWindow;
 import org.fusion.x11.error.NotYetImplementedError;
 import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.display.x11.api.XProtocolConstants;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
+import org.trinity.display.x11.impl.property.XPropertyInstanceInfo;
+import org.trinity.display.x11.impl.property.XPropertyXAtom;
  
 
 // TODO documentation
@@ -41,7 +41,7 @@ public final class WmNormalHints extends XPropertyXAtom<WmSizeHintsInstance> {
 	 * @param atomId
 	 * @param xAtomRegistry
 	 */
-	public WmNormalHints(final XDisplay display) {
+	public WmNormalHints(final XServerImpl display) {
 		super(display, IcccmAtoms.WM_NORMAL_HINTS_ATOM_NAME, Long
 				.valueOf(XProtocolConstants.WM_NORMAL_HINTS));
 	}
@@ -94,7 +94,7 @@ public final class WmNormalHints extends XPropertyXAtom<WmSizeHintsInstance> {
 		final long winGravity = propertyDataContainer.readSignedInt();
 
 		// f*ck*ng X borders...
-		final int borderWidth = ((XWindow) platformRenderArea)
+		final int borderWidth = ((XWindowImpl) platformRenderArea)
 				.getPlatformRenderAreaGeometry().getBorderWidth();
 
 		return new WmSizeHintsInstance(getDisplay(), flags, x, y, width

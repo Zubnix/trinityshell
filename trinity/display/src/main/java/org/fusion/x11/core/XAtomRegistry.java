@@ -1,17 +1,13 @@
 /*
- * This file is part of Fusion-X11.
- * 
- * Fusion-X11 is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * Fusion-X11 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * Fusion-X11. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of Fusion-X11. Fusion-X11 is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. Fusion-X11 is distributed in
+ * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+ * the GNU General Public License for more details. You should have received a
+ * copy of the GNU General Public License along with Fusion-X11. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 package org.fusion.x11.core;
@@ -19,28 +15,28 @@ package org.fusion.x11.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.trinity.core.display.api.DisplayAtoms;
+import org.trinity.core.display.api.property.Atom;
+import org.trinity.core.display.api.property.DisplayAtoms;
+import org.trinity.display.x11.impl.XServerImpl;
 
 // TODO documentation
 /**
  * An <code>XAtomRegistry</code> groups all client side known {@link XAtom}s on
- * an given {@link XDisplay}.
+ * an given {@link XServerImpl}.
  * 
  * @author Erik De Rijcke
  * @since 1.0
  * @see Atom
  */
 public class XAtomRegistry implements DisplayAtoms {
-	private final Map<Long, XAtom> allXAtomsById;
+	private final Map<Integer, XAtom> allXAtomsById;
 	private final Map<String, XAtom> allXAtomsByName;
 
 	/**
-	 * 
 	 * @param display
-	 * 
 	 */
-	public XAtomRegistry(final XDisplay display) {
-		this.allXAtomsById = new HashMap<Long, XAtom>();
+	public XAtomRegistry(final XServerImpl display) {
+		this.allXAtomsById = new HashMap<Integer, XAtom>();
 		this.allXAtomsByName = new HashMap<String, XAtom>();
 	}
 
@@ -62,7 +58,7 @@ public class XAtomRegistry implements DisplayAtoms {
 		return xAtom;
 	}
 
-	public XAtom getById(final Long id) {
+	public XAtom getById(final int id) {
 		final XAtom xAtom = this.allXAtomsById.get(id);
 		return xAtom;
 	}

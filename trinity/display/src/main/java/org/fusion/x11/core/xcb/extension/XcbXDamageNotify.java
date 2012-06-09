@@ -17,9 +17,9 @@ package org.fusion.x11.core.xcb.extension;
 
 import org.fusion.x11.core.XDrawable;
 import org.fusion.x11.core.XRectangle;
-import org.fusion.x11.core.extension.XDamage;
-import org.fusion.x11.core.extension.XDamageNotify;
 import org.trinity.core.display.impl.event.BaseDisplayEvent;
+import org.trinity.display.x11.api.extension.damage.XDamage;
+import org.trinity.display.x11.api.extension.damage.XDamageNotify;
 
 // currently unused
 public class XcbXDamageNotify extends BaseDisplayEvent implements XDamageNotify {

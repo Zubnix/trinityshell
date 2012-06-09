@@ -15,9 +15,9 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XResource;
-import org.fusion.x11.core.extension.XSyncSystemCounter;
+import org.trinity.display.x11.api.extension.sync.XSyncSystemCounter;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceImpl;
  
 
 // TODO documentation
@@ -26,11 +26,11 @@ import org.fusion.x11.core.extension.XSyncSystemCounter;
  * @author Erik De Rijcke
  * @since 1.1
  */
-public class XcbXSyncCounter extends XResource implements XSyncSystemCounter {
+public class XcbXSyncCounter extends XResourceImpl implements XSyncSystemCounter {
 
 	private final String name;
 
-	protected XcbXSyncCounter(final XID xid, final String name)
+	protected XcbXSyncCounter(final XIDImpl xid, final String name)
 			   {
 		super(xid);
 		this.name = name;

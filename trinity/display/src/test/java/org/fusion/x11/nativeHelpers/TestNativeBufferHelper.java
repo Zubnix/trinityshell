@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
 
 public class TestNativeBufferHelper {
 

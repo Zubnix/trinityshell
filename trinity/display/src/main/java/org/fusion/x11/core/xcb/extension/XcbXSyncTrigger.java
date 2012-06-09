@@ -15,9 +15,9 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.extension.XSyncTestType;
-import org.fusion.x11.core.extension.XSyncTrigger;
-import org.fusion.x11.core.extension.XSyncValueType;
+import org.trinity.display.x11.api.extension.sync.XSyncTestType;
+import org.trinity.display.x11.api.extension.sync.XSyncTrigger;
+import org.trinity.display.x11.api.extension.sync.XSyncValueType;
 
 // TODO documentation
 // currently unused

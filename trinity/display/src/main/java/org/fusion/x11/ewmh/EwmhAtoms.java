@@ -2,14 +2,14 @@ package org.fusion.x11.ewmh;
 
 import org.fusion.x11.core.XAtom;
 import org.fusion.x11.core.XAtomRegistry;
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XPropertyXAtomAtoms;
-import org.fusion.x11.core.XPropertyXAtomCardinal;
-import org.fusion.x11.core.XPropertyXAtomCardinals;
-import org.fusion.x11.core.XPropertyXAtomMultiText;
-import org.fusion.x11.core.XPropertyXAtomSingleText;
-import org.fusion.x11.core.XPropertyXAtomWindow;
-import org.fusion.x11.core.XPropertyXAtomWindows;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.property.XPropertyXAtomAtoms;
+import org.trinity.display.x11.impl.property.XPropertyXAtomCardinal;
+import org.trinity.display.x11.impl.property.XPropertyXAtomCardinals;
+import org.trinity.display.x11.impl.property.XPropertyXAtomMultiText;
+import org.trinity.display.x11.impl.property.XPropertyXAtomSingleText;
+import org.trinity.display.x11.impl.property.XPropertyXAtomWindow;
+import org.trinity.display.x11.impl.property.XPropertyXAtomWindows;
 
 // TODO move the seperate file in EWMH package
 /**
@@ -174,7 +174,7 @@ public final class EwmhAtoms {
 
 	// TODO more
 
-	public EwmhAtoms(final XDisplay display) {
+	public EwmhAtoms(final XServerImpl display) {
 		final XAtomRegistry atomRegistry = display.getDisplayAtoms();
 		// ****EWMH ATOMS****//
 		// Root Window DisplayAtoms (and Related Messages)

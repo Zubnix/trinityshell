@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.ewmh;
 
-import org.fusion.x11.core.XDisplay;
 import org.trinity.core.display.impl.BasePropertyInstance;
+import org.trinity.display.x11.impl.XServerImpl;
 
 // TODO documentation
 /**
@@ -34,7 +34,7 @@ public final class _NetWmSyncRequestCounterInstance extends
 	 * @param display
 	 * @param counter
 	 */
-	_NetWmSyncRequestCounterInstance(final XDisplay display,
+	_NetWmSyncRequestCounterInstance(final XServerImpl display,
 	                                 final long counter) {
 		super(display.getxCoreAtoms().getCardinal());
 		this.counter = counter;

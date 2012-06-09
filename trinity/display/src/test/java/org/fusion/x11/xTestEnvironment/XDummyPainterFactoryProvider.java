@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.xTestEnvironment;
 
-import org.trinity.core.display.api.Display;
+import org.trinity.core.display.api.DisplayServer;
 import org.trinity.core.render.api.PainterFactory;
 import org.trinity.core.render.api.PainterFactoryProvider;
 
@@ -34,7 +34,7 @@ public class XDummyPainterFactoryProvider implements PainterFactoryProvider {
 	 * @return null
 	 */
 	@Override
-	public PainterFactory newPainterFactory(final Display display) {
+	public PainterFactory newPainterFactory(final DisplayServer display) {
 		return null;
 	}
 }

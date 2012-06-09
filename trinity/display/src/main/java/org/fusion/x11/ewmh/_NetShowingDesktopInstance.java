@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.ewmh;
 
-import org.fusion.x11.core.XDisplay;
 import org.trinity.core.display.impl.BasePropertyInstance;
+import org.trinity.display.x11.impl.XServerImpl;
 
 // TODO documentation
 /**
@@ -33,7 +33,7 @@ public final class _NetShowingDesktopInstance extends BasePropertyInstance {
 	 * @param display
 	 * @param showingDesktop
 	 */
-	public _NetShowingDesktopInstance(final XDisplay display,
+	public _NetShowingDesktopInstance(final XServerImpl display,
 			final boolean showingDesktop) {
 		super(display.getxCoreAtoms().getCardinal());
 		this.showingDesktop = showingDesktop;

@@ -15,11 +15,11 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XWindow;
-import org.fusion.x11.core.extension.XCompositeUpdateMode;
-import org.fusion.x11.core.extension.XExtensionComposite;
-import org.fusion.x11.nativeHelpers.XNativeCaller;
+import org.trinity.display.x11.api.extension.composite.XCompositeUpdateMode;
+import org.trinity.display.x11.api.extension.composite.XExtensionComposite;
+import org.trinity.display.x11.impl.XCallerImpl;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
 
 // TODO documentation
 // currently unused
@@ -34,8 +34,8 @@ public class XcbExtensionComposite extends XcbExtensionBase implements
 	public static final int MAJOR_VERSION = 0;
 	public static final int MINOR_VERSION = 4;
 
-	public XcbExtensionComposite(final XNativeCaller nativeCaller,
-			final XExtensionNativeCalls nativeCalls, final XDisplay display) {
+	public XcbExtensionComposite(final XCallerImpl nativeCaller,
+			final XExtensionNativeCalls nativeCalls, final XServerImpl display) {
 		super(nativeCaller, nativeCalls, nativeCalls.getCallXCompositeInit(),
 				display, XcbExtensionComposite.EXTENSION_NAME,
 				XcbExtensionComposite.MAJOR_VERSION,
@@ -43,7 +43,7 @@ public class XcbExtensionComposite extends XcbExtensionBase implements
 	}
 
 	@Override
-	public void redirectSubWindow(final XWindow window,
+	public void redirectSubWindow(final XWindowImpl window,
 			final XCompositeUpdateMode updateMode) {
 		final Long displayPeer = window.getDisplayResourceHandle().getDisplay()
 				.getNativePeer();
@@ -51,7 +51,7 @@ public class XcbExtensionComposite extends XcbExtensionBase implements
 				.getResourceHandle().getNativeHandle();
 		final Integer updateModeValue = Integer.valueOf(updateMode.ordinal());
 
-		this.nativeCaller.doNativeCall(
+		this.nativeCaller.doCall(
 				this.nativeCalls.getCallXCompositeRedirectSubwindow(),
 				displayPeer, windowId, updateModeValue);
 	}

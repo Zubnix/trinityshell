@@ -57,6 +57,7 @@ public class PropertyManipulatorImpl implements PropertyManipulator {
 	 */
 	@Override
 	public <T extends PropertyInstance> T getPropertyValue(final String propertyName) {
+		// TODO from factory
 		@SuppressWarnings("unchecked")
 		final Property<T> property = (Property<T>) getRenderArea()
 				.getManagedDisplay().getDisplay().getDisplayAtoms()

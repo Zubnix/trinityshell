@@ -17,11 +17,11 @@ package org.fusion.x11.ewmh;
 
 import org.fusion.x11.core.IntDataContainer;
 import org.fusion.x11.core.XAtom;
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XResourceHandle;
-import org.fusion.x11.core.XWindow;
 import org.trinity.core.display.api.event.ClientMessageEvent;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceHandleImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
 
 //TODO documentation
 /**
@@ -33,7 +33,7 @@ public final class _NetWmPingMessage extends EwmhClientMessageEvent {
 
 	private final XAtom netWmPingAtom;
 	private final int timestamp;
-	private final XWindow window;
+	private final XWindowImpl window;
 
 	/**
 	 * 
@@ -41,7 +41,7 @@ public final class _NetWmPingMessage extends EwmhClientMessageEvent {
 	 * @param clientMessageEvent
 	 * 
 	 */
-	public _NetWmPingMessage(final XDisplay display,
+	public _NetWmPingMessage(final XServerImpl display,
 			final ClientMessageEvent clientMessageEvent) {
 		super(clientMessageEvent);
 		final IntDataContainer intDataContainer = new IntDataContainer(
@@ -56,7 +56,7 @@ public final class _NetWmPingMessage extends EwmhClientMessageEvent {
 				.getDisplayPlatform()
 				.getResourcesRegistry()
 				.getClientXWindow(
-						new XID(display, XResourceHandle.valueOf(windowId)));
+						new XIDImpl(display, XResourceHandleImpl.valueOf(windowId)));
 	}
 
 	/**
@@ -79,7 +79,7 @@ public final class _NetWmPingMessage extends EwmhClientMessageEvent {
 	 * 
 	 * @return
 	 */
-	public XWindow getWindow() {
+	public XWindowImpl getWindow() {
 		return this.window;
 	}
 

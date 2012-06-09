@@ -18,6 +18,8 @@ package org.fusion.x11.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.trinity.display.x11.api.XProtocolConstants;
+
 //currently unused
 //TODO documentation
 /**

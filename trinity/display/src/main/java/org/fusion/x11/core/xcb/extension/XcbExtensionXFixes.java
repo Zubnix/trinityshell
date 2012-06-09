@@ -15,14 +15,14 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XResourceHandle;
-import org.fusion.x11.core.XWindow;
-import org.fusion.x11.core.extension.XExtensionXFixes;
-import org.fusion.x11.core.extension.XFixesXServerRegion;
-import org.fusion.x11.core.extension.XRenderPicture;
-import org.fusion.x11.nativeHelpers.XNativeCaller;
+import org.trinity.display.x11.api.extension.fixes.XExtensionXFixes;
+import org.trinity.display.x11.api.extension.fixes.XFixesXServerRegion;
+import org.trinity.display.x11.api.extension.render.XRenderPicture;
+import org.trinity.display.x11.impl.XCallerImpl;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceHandleImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
 
 // TODO documentation
 // currently unused
@@ -37,8 +37,8 @@ public class XcbExtensionXFixes extends XcbExtensionBase implements
 	public static final int MAJOR_VERSION = 2;
 	public static final int MINOR_VERSION = 0;
 
-	public XcbExtensionXFixes(final XNativeCaller nativeCaller,
-			final XExtensionNativeCalls nativeCalls, final XDisplay display) {
+	public XcbExtensionXFixes(final XCallerImpl nativeCaller,
+			final XExtensionNativeCalls nativeCalls, final XServerImpl display) {
 		super(nativeCaller, nativeCalls, nativeCalls.getCallXFixesInit(),
 				display, XcbExtensionXFixes.EXTENSION_NAME,
 				XcbExtensionXFixes.MAJOR_VERSION,
@@ -46,7 +46,7 @@ public class XcbExtensionXFixes extends XcbExtensionBase implements
 	}
 
 	@Override
-	public XcbXFixesXServerRegion createRegionFromWindow(final XWindow window,
+	public XcbXFixesXServerRegion createRegionFromWindow(final XWindowImpl window,
 			final int regionBounding) {
 		final Long displayPeer = window.getDisplayResourceHandle().getDisplay()
 				.getNativePeer();
@@ -56,14 +56,14 @@ public class XcbExtensionXFixes extends XcbExtensionBase implements
 
 		Long regionId;
 
-		regionId = this.nativeCaller.doNativeCall(
+		regionId = this.nativeCaller.doCall(
 				this.nativeCalls.getCallXFixesCreateRegionFromWindow(),
 				displayPeer, windowId, regionBoundingValue);
 
 		// TODO use resources registry
 		final XcbXFixesXServerRegion region = new XcbXFixesXServerRegion(
-				new XID(window.getDisplayResourceHandle().getDisplay(),
-						XResourceHandle.valueOf(regionId)));
+				new XIDImpl(window.getDisplayResourceHandle().getDisplay(),
+						XResourceHandleImpl.valueOf(regionId)));
 		return region;
 	}
 
@@ -78,7 +78,7 @@ public class XcbExtensionXFixes extends XcbExtensionBase implements
 		final Integer xValue = Integer.valueOf(x);
 		final Integer yValue = Integer.valueOf(y);
 
-		this.nativeCaller.doNativeCall(
+		this.nativeCaller.doCall(
 				this.nativeCalls.getCallXFixesTranslateRegion(), displayPeer,
 				regionId, xValue, yValue);
 	}
@@ -97,7 +97,7 @@ public class XcbExtensionXFixes extends XcbExtensionBase implements
 		final Long regionId = region.getDisplayResourceHandle().getDisplay()
 				.getNativePeer();
 
-		this.nativeCaller.doNativeCall(
+		this.nativeCaller.doCall(
 				this.nativeCalls.getCallXFixesSetPictureClipRegion(),
 				displayPeer, pictureId, clipXOriginVal, clipYOriginVal,
 				regionId);
@@ -111,7 +111,7 @@ public class XcbExtensionXFixes extends XcbExtensionBase implements
 		final Long regionId = region.getDisplayResourceHandle()
 				.getResourceHandle().getNativeHandle();
 
-		this.nativeCaller.doNativeCall(
+		this.nativeCaller.doCall(
 				this.nativeCalls.getCallXFixesDestroyRegion(), displayPeer,
 				regionId);
 

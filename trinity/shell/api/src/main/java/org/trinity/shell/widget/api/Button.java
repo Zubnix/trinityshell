@@ -11,15 +11,15 @@
  */
 package org.trinity.shell.widget.api;
 
-import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.input.api.PointerInput;
 import org.trinity.core.render.api.PaintInstruction;
 
 public interface Button extends Widget {
 
 	public interface View extends Widget.View {
-		PaintInstruction<?> mouseButtonPressed(final MouseInput input);
+		PaintInstruction<?> mouseButtonPressed(final PointerInput input);
 
-		PaintInstruction<?> mouseButtonReleased(final MouseInput input);
+		PaintInstruction<?> mouseButtonReleased(final PointerInput input);
 	}
 
 	@Override

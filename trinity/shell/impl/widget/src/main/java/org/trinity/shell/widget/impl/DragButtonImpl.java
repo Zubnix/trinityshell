@@ -12,7 +12,7 @@
 package org.trinity.shell.widget.impl;
 
 import org.trinity.core.geometry.api.Coordinates;
-import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.input.api.PointerInput;
 import org.trinity.core.render.api.PainterFactory;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
@@ -164,7 +164,7 @@ public class DragButtonImpl extends ButtonImpl implements DragButton {
 	 * 
 	 * @param input
 	 */
-	public void startDrag(final MouseInput input) {
+	public void startDrag(final PointerInput input) {
 		if (!isStarted()) {
 			setX0(input.getRootX());
 			setY0(input.getRootY());
@@ -186,12 +186,12 @@ public class DragButtonImpl extends ButtonImpl implements DragButton {
 	}
 
 	@Override
-	public void onMouseButtonReleased(final MouseInput input) {
+	public void onMouseButtonReleased(final PointerInput input) {
 		stopDrag();
 	}
 
 	@Override
-	public void onMouseButtonPressed(final MouseInput input) {
+	public void onMouseButtonPressed(final PointerInput input) {
 		startDrag(input);
 	}
 

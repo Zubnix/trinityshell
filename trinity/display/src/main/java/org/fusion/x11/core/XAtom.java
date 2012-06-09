@@ -1,22 +1,19 @@
 /*
- * This file is part of Fusion-X11.
- * 
- * Fusion-X11 is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * Fusion-X11 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * Fusion-X11. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of Fusion-X11. Fusion-X11 is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. Fusion-X11 is distributed in
+ * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+ * the GNU General Public License for more details. You should have received a
+ * copy of the GNU General Public License along with Fusion-X11. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
 package org.fusion.x11.core;
 
-import org.trinity.core.display.api.Atom;
+import org.trinity.core.display.api.property.Atom;
+import org.trinity.display.x11.impl.XServerImpl;
 
 /**
  * An <code>Atom</code> linked to an <code>XDisplay</code>.
@@ -28,8 +25,8 @@ import org.trinity.core.display.api.Atom;
 public class XAtom implements Atom {
 
 	private final String atomName;
-	private final Long atomId;
-	private final XDisplay display;
+	private final int atomId;
+	private final XServerImpl display;
 
 	/**
 	 * Construct an <code>Atom</code> that is already known by the given
@@ -50,8 +47,7 @@ public class XAtom implements Atom {
 	 * @see XAtomRegistry#getAtomByName(String)
 	 * @see XAtomRegistry#getById(Long)
 	 */
-	public XAtom(final XDisplay display, final String atomName,
-			final Long atomId) {
+	public XAtom(final XServerImpl display, final String atomName, final int atomId) {
 		this.display = display;
 		this.atomName = atomName;
 		this.atomId = atomId;
@@ -71,16 +67,15 @@ public class XAtom implements Atom {
 	 * 
 	 * @param display
 	 * @param atomName
-	 * @  
-	 * @see XAtomRegistry#getAtomByName(String)
+	 *            @ * @see XAtomRegistry#getAtomByName(String)
 	 */
-	public XAtom(final XDisplay display, final String atomName) {
-		this(display, atomName, display.getXCoreInterface().internAtom(display,
-				atomName));
+	public XAtom(final XServerImpl display, final String atomName) {
+		this(display, atomName, display.getXCoreInterface()
+				.internAtom(display, atomName));
 	}
 
 	@Override
-	public Long getAtomId() {
+	public int getAtomId() {
 		return this.atomId;
 	}
 
@@ -90,7 +85,7 @@ public class XAtom implements Atom {
 	}
 
 	@Override
-	public XDisplay getDisplay() {
+	public XServerImpl getDisplay() {
 		return this.display;
 	}
 

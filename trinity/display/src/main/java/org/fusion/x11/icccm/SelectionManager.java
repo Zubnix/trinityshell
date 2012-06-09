@@ -16,11 +16,11 @@
 package org.fusion.x11.icccm;
 
 import org.fusion.x11.core.XAtom;
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XWindow;
-import org.fusion.x11.core.event.XSelectionClearNotifyEvent;
-import org.fusion.x11.core.event.XSelectionRequestEvent;
 import org.trinity.core.event.api.EventHandler;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
+import org.trinity.display.x11.impl.event.XSelectionClearNotifyEvent;
+import org.trinity.display.x11.impl.event.XSelectionRequestEvent;
 
 //TODO documentation
 /**
@@ -30,9 +30,9 @@ import org.trinity.core.event.api.EventHandler;
  */
 public final class SelectionManager {
 
-	private final XWindow icccmSelectionOwner;
+	private final XWindowImpl icccmSelectionOwner;
 	private final IcccmAtoms icccmAtoms;
-	private final XDisplay display;
+	private final XServerImpl display;
 
 	SelectionManager(final IcccmAtoms icccmAtoms) {
 		this.display = icccmAtoms.getDisplay();
@@ -82,8 +82,8 @@ public final class SelectionManager {
 	private void handleSelectionRequest(
 			final XSelectionRequestEvent selectionRequestEvent) {
 
-		final XWindow selectionOwner = selectionRequestEvent.getEventSource();
-		final XWindow requestingClient = selectionRequestEvent.getRequestor();
+		final XWindowImpl selectionOwner = selectionRequestEvent.getEventSource();
+		final XWindowImpl requestingClient = selectionRequestEvent.getRequestor();
 		final XAtom requestedSelectionAtom = selectionRequestEvent
 				.getSelection();
 		final XAtom targetAtom = selectionRequestEvent.getTarget();
@@ -106,7 +106,7 @@ public final class SelectionManager {
 	public boolean isScreenSelectionAvailable() {
 		// TODO how to determine screen number? default to 0 for now
 		final XAtom selectionAtom = getIcccmAtoms().getScreenSelectionAtom(0);
-		final XWindow owner = getDisplay().getXCoreInterface()
+		final XWindowImpl owner = getDisplay().getXCoreInterface()
 				.getSelectionOwner(selectionAtom);
 		return owner == getDisplay().getNoneWindow();
 	}
@@ -120,7 +120,7 @@ public final class SelectionManager {
 		listenForSelectionEvents();
 	}
 
-	public XDisplay getDisplay() {
+	public XServerImpl getDisplay() {
 		return this.display;
 	}
 
@@ -128,7 +128,7 @@ public final class SelectionManager {
 		return this.icccmAtoms;
 	}
 
-	public XWindow getIcccmSelectionOwner() {
+	public XWindowImpl getIcccmSelectionOwner() {
 		return this.icccmSelectionOwner;
 	}
 }

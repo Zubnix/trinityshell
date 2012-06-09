@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.icccm;
 
-import org.fusion.x11.core.XDisplay;
 import org.trinity.core.display.impl.BasePropertyInstance;
+import org.trinity.display.x11.impl.XServerImpl;
 
 // TODO documentation
 /**
@@ -39,7 +39,7 @@ public final class WmIconSizeInstance extends BasePropertyInstance {
 	 * @param widthInc
 	 * @param heightInc
 	 */
-	public WmIconSizeInstance(final XDisplay display, final int maxWidth,
+	public WmIconSizeInstance(final XServerImpl display, final int maxWidth,
 			final int maxHeight, final int widthInc, final int heightInc) {
 		super(display.getDisplayAtoms().getAtomByName("WM_ICON_SIZE"));
 		this.maxHeight = maxHeight;

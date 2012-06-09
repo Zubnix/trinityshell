@@ -22,11 +22,11 @@ package org.fusion.x11.ewmh;
  * @since 1.0
  */
 import org.fusion.x11.core.IntDataContainer;
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XResourceHandle;
-import org.fusion.x11.core.XWindow;
 import org.trinity.core.display.api.event.ClientMessageEvent;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceHandleImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
 
 public final class _NetActiveWindowMessage extends EwmhClientMessageEvent
 		implements HasSourceIndication {
@@ -35,14 +35,14 @@ public final class _NetActiveWindowMessage extends EwmhClientMessageEvent
 
 	private final SourceIndication sourceIndication;
 	private final int timestamp;
-	private final XWindow newActiveWindow;
+	private final XWindowImpl newActiveWindow;
 
 	/**
 	 * 
 	 * @param display
 	 * @param clientMessageEvent
 	 */
-	public _NetActiveWindowMessage(final XDisplay display,
+	public _NetActiveWindowMessage(final XServerImpl display,
 			final ClientMessageEvent clientMessageEvent) {
 		super(clientMessageEvent);
 		final IntDataContainer intDataContainer = new IntDataContainer(
@@ -51,10 +51,10 @@ public final class _NetActiveWindowMessage extends EwmhClientMessageEvent
 				.readDataBlock().intValue()];
 		this.timestamp = intDataContainer.readDataBlock().intValue();
 		final Integer newActiveWindowId = intDataContainer.readDataBlock();
-		this.newActiveWindow = (XWindow) display
+		this.newActiveWindow = (XWindowImpl) display
 				.getDisplayPlatform()
 				.getResourcesRegistry()
-				.get(new XID(display, XResourceHandle.valueOf(Long
+				.get(new XIDImpl(display, XResourceHandleImpl.valueOf(Long
 						.valueOf(newActiveWindowId.longValue()))));
 	}
 
@@ -62,7 +62,7 @@ public final class _NetActiveWindowMessage extends EwmhClientMessageEvent
 	 * 
 	 * @return
 	 */
-	public XWindow getNewActiveWindow() {
+	public XWindowImpl getNewActiveWindow() {
 		return this.newActiveWindow;
 	}
 

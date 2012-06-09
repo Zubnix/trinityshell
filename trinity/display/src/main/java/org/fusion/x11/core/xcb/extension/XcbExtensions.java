@@ -15,18 +15,18 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.extension.XExtensionComposite;
-import org.fusion.x11.core.extension.XExtensionDamage;
-import org.fusion.x11.core.extension.XExtensionXFixes;
-import org.fusion.x11.core.extension.XExtensionXRender;
-import org.fusion.x11.core.extension.XExtensionXShape;
-import org.fusion.x11.core.extension.XExtensionXSync;
-import org.fusion.x11.core.extension.XExtensions;
-import org.fusion.x11.nativeHelpers.XNativeCaller;
+import org.trinity.display.x11.api.extension.XExtensionFactory;
+import org.trinity.display.x11.api.extension.composite.XExtensionComposite;
+import org.trinity.display.x11.api.extension.damage.XExtensionDamage;
+import org.trinity.display.x11.api.extension.fixes.XExtensionXFixes;
+import org.trinity.display.x11.api.extension.render.XExtensionXRender;
+import org.trinity.display.x11.api.extension.shape.XExtensionXShape;
+import org.trinity.display.x11.api.extension.sync.XExtensionXSync;
+import org.trinity.display.x11.impl.XCallerImpl;
+import org.trinity.display.x11.impl.XServerImpl;
 
 // currently unused
-public class XcbExtensions implements XExtensions {
+public class XcbExtensions implements XExtensionFactory {
 	private final XcbExtensionComposite xcbExtensionComposite;
 	private final XcbExtensionDamage xcbExtensionDamage;
 	private final XcbExtensionXFixes xcbExtensionXFixes;
@@ -34,8 +34,8 @@ public class XcbExtensions implements XExtensions {
 	private final XcbExtensionXShape xcbExtensionXShape;
 	private final XcbExtensionXSync xcbExtensionXSync;
 
-	public XcbExtensions(final XDisplay display,
-			final XNativeCaller nativeCaller) {
+	public XcbExtensions(final XServerImpl display,
+			final XCallerImpl nativeCaller) {
 		final XExtensionNativeCalls nativeCalls = new XExtensionNativeCalls();
 
 		this.xcbExtensionComposite = new XcbExtensionComposite(nativeCaller,

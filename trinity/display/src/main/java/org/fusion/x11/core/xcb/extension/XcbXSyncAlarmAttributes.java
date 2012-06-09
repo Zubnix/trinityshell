@@ -15,9 +15,9 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.extension.XSyncAlarmAttributes;
-import org.fusion.x11.core.extension.XSyncAlarmState;
-import org.fusion.x11.core.extension.XSyncTrigger;
+import org.trinity.display.x11.api.extension.sync.XSyncAlarmAttributes;
+import org.trinity.display.x11.api.extension.sync.XSyncAlarmState;
+import org.trinity.display.x11.api.extension.sync.XSyncTrigger;
 
 // TODO documentation
 // currently unused

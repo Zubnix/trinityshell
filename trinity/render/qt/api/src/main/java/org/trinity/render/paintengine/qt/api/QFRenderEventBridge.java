@@ -11,13 +11,14 @@
  */
 package org.trinity.render.paintengine.qt.api;
 
-import org.trinity.core.render.api.RenderEventBridge;
+import org.trinity.core.display.api.event.DisplayEventSource;
 
 import com.trolltech.qt.core.QEvent;
 
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
-public interface QFRenderEventBridge extends RenderEventBridge<QEvent> {
-
+public interface QFRenderEventBridge {
+	void queueRenderEvent(	final DisplayEventSource eventSource,
+							final QEvent event);
 }

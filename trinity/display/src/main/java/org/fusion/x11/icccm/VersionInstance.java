@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.icccm;
 
-import org.fusion.x11.core.XDisplay;
 import org.trinity.core.display.impl.PropertyInstanceNumbers;
+import org.trinity.display.x11.impl.XServerImpl;
 
 //TODO documentation
 /**
@@ -31,7 +31,7 @@ public class VersionInstance extends PropertyInstanceNumbers {
 	 * @param display
 	 * @param numbers
 	 */
-	public VersionInstance(final XDisplay display, final int... numbers) {
+	public VersionInstance(final XServerImpl display, final int... numbers) {
 		super(display.getxCoreAtoms().getInteger(), numbers);
 	}
 }

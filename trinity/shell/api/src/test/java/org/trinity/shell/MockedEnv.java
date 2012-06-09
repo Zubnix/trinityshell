@@ -8,9 +8,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.trinity.core.display.api.Atom;
-import org.trinity.core.display.api.Display;
-import org.trinity.core.display.api.DisplayAtoms;
-import org.trinity.core.display.api.DisplayPlatform;
+import org.trinity.core.display.api.DisplayServer;
+import org.trinity.core.display.api.DisplayServer;
+import org.trinity.core.display.api.DisplayServer;
 import org.trinity.core.display.api.PlatformRenderArea;
 import org.trinity.core.display.api.PlatformRenderAreaAttributes;
 import org.trinity.core.display.api.PlatformRenderAreaGeometry;
@@ -44,7 +44,7 @@ public class MockedEnv {
 	// display level:
 	public String dislayNameMock = "display mock";
 	@Mock
-	public Display displayMock;
+	public DisplayServer displayMock;
 	@Mock
 	public PainterFactory painterFactoryMock;
 	@Mock

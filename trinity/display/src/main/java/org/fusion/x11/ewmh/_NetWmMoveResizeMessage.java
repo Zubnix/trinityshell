@@ -16,11 +16,11 @@
 package org.fusion.x11.ewmh;
 
 import org.fusion.x11.core.IntDataContainer;
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XResourceHandle;
-import org.fusion.x11.core.XWindow;
 import org.trinity.core.display.api.event.ClientMessageEvent;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceHandleImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
 
 //TODO documentation
 /**
@@ -34,7 +34,7 @@ public final class _NetWmMoveResizeMessage extends EwmhClientMessageEvent
 	private final int absoluteX;
 	private final int absoluteY;
 	private final Direction direction;
-	private final XWindow button;
+	private final XWindowImpl button;
 
 	private final SourceIndication sourceIndication;
 
@@ -44,7 +44,7 @@ public final class _NetWmMoveResizeMessage extends EwmhClientMessageEvent
 	 * @param clientMessageEvent
 	 * 
 	 */
-	public _NetWmMoveResizeMessage(final XDisplay display,
+	public _NetWmMoveResizeMessage(final XServerImpl display,
 			final ClientMessageEvent clientMessageEvent) {
 		super(clientMessageEvent);
 		final IntDataContainer intDataContainer = new IntDataContainer(
@@ -58,7 +58,7 @@ public final class _NetWmMoveResizeMessage extends EwmhClientMessageEvent
 				.getDisplayPlatform()
 				.getResourcesRegistry()
 				.getClientXWindow(
-						new XID(display, XResourceHandle.valueOf(Long
+						new XIDImpl(display, XResourceHandleImpl.valueOf(Long
 								.valueOf(windowId.longValue()))));
 		final int source = intDataContainer.readDataBlock().intValue();
 
@@ -93,7 +93,7 @@ public final class _NetWmMoveResizeMessage extends EwmhClientMessageEvent
 	 * 
 	 * @return
 	 */
-	public XWindow getButton() {
+	public XWindowImpl getButton() {
 		return this.button;
 	}
 

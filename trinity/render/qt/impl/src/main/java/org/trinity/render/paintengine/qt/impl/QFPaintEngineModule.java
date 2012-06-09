@@ -11,10 +11,10 @@
  */
 package org.trinity.render.paintengine.qt.impl;
 
+import org.trinity.core.display.api.DisplayEventConverter;
 import org.trinity.core.display.api.DisplayEventProducer;
 import org.trinity.core.render.api.RenderEngine;
-import org.trinity.core.render.api.RenderEventBridge;
-import org.trinity.core.render.api.RenderEventConverter;
+import org.trinity.render.paintengine.qt.api.QFRenderEventBridge;
 import org.trinity.render.paintengine.qt.impl.eventconverters.QFButtonPressedConverterImpl;
 import org.trinity.render.paintengine.qt.impl.eventconverters.QFButtonReleasedConverterImpl;
 import org.trinity.render.paintengine.qt.impl.eventconverters.QFDestroyConverterImpl;
@@ -65,8 +65,8 @@ public class QFPaintEngineModule extends AbstractModule {
 
 		@SuppressWarnings("rawtypes")
 		// start add render event conversion bindings
-		final Multibinder<RenderEventConverter> eventConvertMultibinder = Multibinder
-				.newSetBinder(binder(), RenderEventConverter.class);
+		final Multibinder<DisplayEventConverter> eventConvertMultibinder = Multibinder
+				.newSetBinder(binder(), DisplayEventConverter.class);
 		eventConvertMultibinder.addBinding()
 				.to(QFButtonPressedConverterImpl.class);
 		eventConvertMultibinder.addBinding()
@@ -85,14 +85,14 @@ public class QFPaintEngineModule extends AbstractModule {
 		// end add render event conversion bindings
 
 		// start bindings
-		bind(RenderEventBridge.class).to(QFRenderEventBridgeImpl.class);
+		bind(QFRenderEventBridge.class).to(QFRenderEventBridgeImpl.class);
 		bind(RenderEngine.class).to(QFRenderEngineImpl.class);
 		// end bindings
 
 		// start add event producer binding
 		final Multibinder<DisplayEventProducer> eventProcuderMultibinder = Multibinder
 				.newSetBinder(binder(), DisplayEventProducer.class);
-		eventProcuderMultibinder.addBinding().to(QFRenderEventBridgeImpl.class);
+		eventProcuderMultibinder.addBinding().to(QFRenderEngineImpl.class);
 		// end add event producer bindings
 	}
 }

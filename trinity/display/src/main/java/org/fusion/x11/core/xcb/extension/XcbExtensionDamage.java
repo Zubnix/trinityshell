@@ -15,15 +15,15 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XResourceHandle;
-import org.fusion.x11.core.XWindow;
-import org.fusion.x11.core.extension.XDamage;
-import org.fusion.x11.core.extension.XDamageToReport;
-import org.fusion.x11.core.extension.XExtensionDamage;
-import org.fusion.x11.core.extension.XFixesXServerRegion;
-import org.fusion.x11.nativeHelpers.XNativeCaller;
+import org.trinity.display.x11.api.extension.damage.XDamage;
+import org.trinity.display.x11.api.extension.damage.XDamageToReport;
+import org.trinity.display.x11.api.extension.damage.XExtensionDamage;
+import org.trinity.display.x11.api.extension.fixes.XFixesXServerRegion;
+import org.trinity.display.x11.impl.XCallerImpl;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceHandleImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
 
 // TODO documentation
 // currently unused
@@ -39,8 +39,8 @@ public class XcbExtensionDamage extends XcbExtensionBase implements
 	public static final int MAJOR_VERSION = 1;
 	public static final int MINOR_VERSION = 1;
 
-	public XcbExtensionDamage(final XNativeCaller nativeCaller,
-			final XExtensionNativeCalls nativeCalls, final XDisplay display) {
+	public XcbExtensionDamage(final XCallerImpl nativeCaller,
+			final XExtensionNativeCalls nativeCalls, final XServerImpl display) {
 		super(nativeCaller, nativeCalls, nativeCalls.getCallXDamageInit(),
 				display, XcbExtensionDamage.EXTENSION_NAME,
 				XcbExtensionDamage.MAJOR_VERSION,
@@ -48,7 +48,7 @@ public class XcbExtensionDamage extends XcbExtensionBase implements
 	}
 
 	@Override
-	public XcbXDamage create(final XWindow window,
+	public XcbXDamage create(final XWindowImpl window,
 			final XDamageToReport damageReport) {
 		final Long displayPeer = window.getDisplayResourceHandle().getDisplay()
 				.getNativePeer();
@@ -58,12 +58,12 @@ public class XcbExtensionDamage extends XcbExtensionBase implements
 
 		XcbXDamage damage;
 
-		final Long xDamageId = this.nativeCaller.doNativeCall(
+		final Long xDamageId = this.nativeCaller.doCall(
 				this.nativeCalls.getCallXDamageCreate(), displayPeer, windowId,
 				damageToReportValue);
 		// TODO use resource registry
-		damage = new XcbXDamage(new XID(window.getDisplayResourceHandle()
-				.getDisplay(), XResourceHandle.valueOf(xDamageId)));
+		damage = new XcbXDamage(new XIDImpl(window.getDisplayResourceHandle()
+				.getDisplay(), XResourceHandleImpl.valueOf(xDamageId)));
 
 		return damage;
 	}
@@ -80,7 +80,7 @@ public class XcbExtensionDamage extends XcbExtensionBase implements
 		final Long partsRegionId = parts.getDisplayResourceHandle()
 				.getResourceHandle().getNativeHandle();
 
-		this.nativeCaller.doNativeCall(
+		this.nativeCaller.doCall(
 				this.nativeCalls.getCallXDamageSubtract(), displayPeer,
 				damageId, repairRegionId, partsRegionId);
 	}

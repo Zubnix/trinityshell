@@ -1,6 +1,6 @@
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.extension.XRenderColor;
+import org.trinity.display.x11.api.extension.render.XRenderColor;
 
 // currently unused
 public class XcbXRenderColor implements XRenderColor {

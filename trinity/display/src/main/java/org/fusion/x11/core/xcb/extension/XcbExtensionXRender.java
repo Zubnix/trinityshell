@@ -15,13 +15,13 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XWindow;
-import org.fusion.x11.core.extension.XExtensionXRender;
-import org.fusion.x11.core.extension.XRenderPictFormat;
-import org.fusion.x11.core.extension.XRenderPictOp;
-import org.fusion.x11.core.extension.XRenderPicture;
-import org.fusion.x11.nativeHelpers.XNativeCaller;
+import org.trinity.display.x11.api.extension.render.XExtensionXRender;
+import org.trinity.display.x11.api.extension.render.XRenderPictFormat;
+import org.trinity.display.x11.api.extension.render.XRenderPictOp;
+import org.trinity.display.x11.api.extension.render.XRenderPicture;
+import org.trinity.display.x11.impl.XCallerImpl;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
 
 // TODO documentation
 // currently unused
@@ -37,8 +37,8 @@ public class XcbExtensionXRender extends XcbExtensionBase implements
 	public static final int MAJOR_VERSION = 0;
 	public static final int MINOR_VERSION = 11;
 
-	public XcbExtensionXRender(final XNativeCaller nativeCaller,
-			final XExtensionNativeCalls nativeCalls, final XDisplay display) {
+	public XcbExtensionXRender(final XCallerImpl nativeCaller,
+			final XExtensionNativeCalls nativeCalls, final XServerImpl display) {
 		super(nativeCaller, nativeCalls, nativeCalls.getCallXRenderInit(),
 				display, XcbExtensionXRender.EXTENSION_NAME,
 				XcbExtensionXRender.MAJOR_VERSION,
@@ -47,20 +47,20 @@ public class XcbExtensionXRender extends XcbExtensionBase implements
 	}
 
 	@Override
-	public XRenderPicture createPicture(final XWindow window) {
+	public XRenderPicture createPicture(final XWindowImpl window) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public XRenderPictFormat findVisualFormat(final XDisplay display,
+	public XRenderPictFormat findVisualFormat(final XServerImpl display,
 			final long visualPeer) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void XRenderComposite(final XDisplay display,
+	public void XRenderComposite(final XServerImpl display,
 			final XRenderPictOp pictOp, final XRenderPicture src,
 			final XRenderPicture mask, final XRenderPicture dst,
 			final int srcX, final int srcY, final int maskX, final int maskY,

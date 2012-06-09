@@ -15,15 +15,15 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XResource;
-import org.fusion.x11.core.extension.XRenderPicture;
+import org.trinity.display.x11.api.extension.render.XRenderPicture;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceImpl;
  
 
 // currently unused
-public final class XcbXRenderPicture extends XResource implements
+public final class XcbXRenderPicture extends XResourceImpl implements
                 XRenderPicture {
-	XcbXRenderPicture(final XID xid)    {
+	XcbXRenderPicture(final XIDImpl xid)    {
 		super(xid);
 	}
 }

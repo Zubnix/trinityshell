@@ -17,10 +17,10 @@ package org.fusion.x11.ewmh;
 
 import org.fusion.x11.core.FlexDataContainer;
 import org.fusion.x11.core.IntDataContainer;
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XPropertyInstanceInfo;
-import org.fusion.x11.core.XPropertyXAtom;
 import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.property.XPropertyInstanceInfo;
+import org.trinity.display.x11.impl.property.XPropertyXAtom;
 
 // TODO documentation
 /**
@@ -37,7 +37,7 @@ public final class _NetShowingDesktop extends
 	 * @param display
 	 * 
 	 */
-	public _NetShowingDesktop(final XDisplay display) {
+	public _NetShowingDesktop(final XServerImpl display) {
 		super(display, EwmhAtoms.NET_SHOWING_DESKTOP_ATOM_NAME);
 	}
 

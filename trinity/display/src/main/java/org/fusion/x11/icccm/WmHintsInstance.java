@@ -16,10 +16,10 @@
 
 package org.fusion.x11.icccm;
 
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XWindow;
 import org.trinity.core.display.impl.BasePropertyInstance;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
 
 // TODO documentation
 /**
@@ -31,12 +31,12 @@ public final class WmHintsInstance extends BasePropertyInstance {
 	private final int flags;
 	private final long input;
 	private final WmStateEnum initialState;
-	private final XID iconPixmap;
-	private final XWindow iconWindow;
+	private final XIDImpl iconPixmap;
+	private final XWindowImpl iconWindow;
 	private final int iconX;
 	private final int iconY;
-	private final XID iconMask;
-	private final XWindow windowGroup;
+	private final XIDImpl iconMask;
+	private final XWindowImpl windowGroup;
 
 	/**
 	 * 
@@ -50,10 +50,10 @@ public final class WmHintsInstance extends BasePropertyInstance {
 	 * @param iconMask
 	 * @param windowGroup
 	 */
-	WmHintsInstance(final XDisplay display, final int flags, final long input,
-			final WmStateEnum initialState, final XID iconPixmap,
-			final XWindow iconWindow, final int iconX, final int iconY,
-			final XID iconMask, final XWindow windowGroup) {
+	WmHintsInstance(final XServerImpl display, final int flags, final long input,
+			final WmStateEnum initialState, final XIDImpl iconPixmap,
+			final XWindowImpl iconWindow, final int iconX, final int iconY,
+			final XIDImpl iconMask, final XWindowImpl windowGroup) {
 		super(display.getDisplayAtoms().getAtomByName("WM_HINTS"));
 
 		// /** Marks which fields in this structure are defined */
@@ -97,7 +97,7 @@ public final class WmHintsInstance extends BasePropertyInstance {
 	 * 
 	 * @return
 	 */
-	public XID getIconMask() {
+	public XIDImpl getIconMask() {
 		return this.iconMask;
 	}
 
@@ -105,7 +105,7 @@ public final class WmHintsInstance extends BasePropertyInstance {
 	 * 
 	 * @return
 	 */
-	public XID getIconPixmap() {
+	public XIDImpl getIconPixmap() {
 		return this.iconPixmap;
 	}
 
@@ -113,7 +113,7 @@ public final class WmHintsInstance extends BasePropertyInstance {
 	 * 
 	 * @return
 	 */
-	public XWindow getIconWindow() {
+	public XWindowImpl getIconWindow() {
 		return this.iconWindow;
 	}
 
@@ -153,7 +153,7 @@ public final class WmHintsInstance extends BasePropertyInstance {
 	 * 
 	 * @return
 	 */
-	public XWindow getWindowGroup() {
+	public XWindowImpl getWindowGroup() {
 		return this.windowGroup;
 	}
 }

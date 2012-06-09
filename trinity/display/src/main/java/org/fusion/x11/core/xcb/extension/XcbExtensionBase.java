@@ -15,10 +15,10 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.extension.XExtensionBase;
-import org.fusion.x11.nativeHelpers.XNativeCall;
-import org.fusion.x11.nativeHelpers.XNativeCaller;
+import org.trinity.display.x11.impl.XCallerImpl;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.extension.XExtensionImpl;
+import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
 
 // TODO documentation
 // currently unused
@@ -26,22 +26,22 @@ import org.fusion.x11.nativeHelpers.XNativeCaller;
  * @author Erik De Rijcke
  * @since 1.1
  */
-public class XcbExtensionBase extends XExtensionBase {
+public class XcbExtensionBase extends XExtensionImpl {
 
 	private static final String UNSUPPORTE_EXTENSION_WARNING = "WARNING: X extension %s v%d.%d is not supported. Subsequent calls to this extension will fail!";
 
 	protected final XExtensionNativeCalls nativeCalls;
-	protected final XNativeCaller nativeCaller;
+	protected final XCallerImpl nativeCaller;
 
-	private final XNativeCall<XcbExtensionVersionReply, Long, Integer> versionReplyCall;
+	private final AbstractXcbCall<XcbExtensionVersionReply, Long, Integer> versionReplyCall;
 
 	private final boolean supported;
 
 	public XcbExtensionBase(
-			final XNativeCaller nativeCaller,
+			final XCallerImpl nativeCaller,
 			final XExtensionNativeCalls nativeCalls,
-			final XNativeCall<XcbExtensionVersionReply, Long, Integer> versionReplyCall,
-			final XDisplay display, final String extensionName,
+			final AbstractXcbCall<XcbExtensionVersionReply, Long, Integer> versionReplyCall,
+			final XServerImpl display, final String extensionName,
 			final int majorVersion, final int minorVersion) {
 		super(extensionName, majorVersion, minorVersion);
 		this.nativeCaller = nativeCaller;
@@ -61,14 +61,14 @@ public class XcbExtensionBase extends XExtensionBase {
 	}
 
 	@Override
-	public boolean queryExtension(final XDisplay display) {
+	public boolean queryExtension(final XServerImpl display) {
 
 		final Long displayPeer = display.getNativePeer();
 		final Integer requiredMajorVersion = Integer.valueOf(getMajorVersion());
 		final Integer requiredMinorVersion = Integer.valueOf(getMinorVersion());
 
 		XcbExtensionVersionReply reply;
-		reply = this.nativeCaller.doNativeCall(this.versionReplyCall,
+		reply = this.nativeCaller.doCall(this.versionReplyCall,
 				displayPeer, requiredMajorVersion, requiredMinorVersion);
 
 		return (reply.getSupportedMajorVersion() > getMajorVersion())

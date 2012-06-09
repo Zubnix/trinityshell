@@ -17,6 +17,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
+import org.trinity.core.display.api.DisplayEventProducer;
 import org.trinity.core.display.api.ResourceHandle;
 import org.trinity.core.display.api.ResourceHandleFactory;
 import org.trinity.core.display.api.event.DisplayEventSource;
@@ -24,8 +25,8 @@ import org.trinity.core.render.api.PaintCalculation;
 import org.trinity.core.render.api.PaintConstruction;
 import org.trinity.core.render.api.PaintInstruction;
 import org.trinity.core.render.api.Paintable;
-import org.trinity.core.render.api.RenderEventBridge;
 import org.trinity.render.paintengine.qt.api.QFRenderEngine;
+import org.trinity.render.paintengine.qt.api.QFRenderEventBridge;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -54,10 +55,11 @@ import com.trolltech.qt.gui.QWidget;
  * @since 1.0
  */
 @Singleton
-public class QFRenderEngineImpl extends QApplication implements QFRenderEngine {
+public class QFRenderEngineImpl extends QApplication implements QFRenderEngine,
+		DisplayEventProducer {
 
 	private final ResourceHandleFactory resourceHandleFactory;
-	private final RenderEventBridge<QEvent> renderEventBridge;
+	private final QFRenderEventBridge renderEventBridge;
 	private final Map<Paintable, QWidget> paintableToPaintPeer = new HashMap<Paintable, QWidget>();
 
 	/**
@@ -66,7 +68,7 @@ public class QFRenderEngineImpl extends QApplication implements QFRenderEngine {
 	 */
 	@Inject
 	protected QFRenderEngineImpl(	final ResourceHandleFactory resourceHandleFactory,
-									final RenderEventBridge<QEvent> renderEventBridge) {
+									final QFRenderEventBridge renderEventBridge) {
 		super(new String[] {});
 		this.resourceHandleFactory = resourceHandleFactory;
 		this.renderEventBridge = renderEventBridge;
@@ -99,7 +101,13 @@ public class QFRenderEngineImpl extends QApplication implements QFRenderEngine {
 	 */
 	@Override
 	public void stop() {
-		QCoreApplication.quit();
+		QCoreApplication.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				QCoreApplication.quit();
+
+			}
+		});
 	}
 
 	/*
@@ -174,9 +182,9 @@ public class QFRenderEngineImpl extends QApplication implements QFRenderEngine {
 									final Paintable paintable,
 									final QWidget visual) {
 		this.paintableToPaintPeer.put(paintable, visual);
-		visual.installEventFilter(new QFInputEventFilterImpl(	this.renderEventBridge,
-																displayEventSource,
-																visual));
+		visual.installEventFilter(new QFRenderEventFilter(	this.renderEventBridge,
+															displayEventSource,
+															visual));
 		final long winId = visual.winId();
 		return this.resourceHandleFactory.createResourceHandle(Long
 				.valueOf(winId));

@@ -16,11 +16,11 @@
 package org.fusion.x11.ewmh;
 
 import org.fusion.x11.core.IntDataContainer;
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XResourceHandle;
-import org.fusion.x11.core.XWindow;
 import org.trinity.core.display.api.event.ClientMessageEvent;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceHandleImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
 
 //TODO documentation
 /**
@@ -33,7 +33,7 @@ public final class _NetCloseWindowMessage extends EwmhClientMessageEvent {
 	public static final EwmhClientMessageEventType TYPE = new EwmhClientMessageEventType();
 
 	private final int timestamp;
-	private final XWindow clientToClose;
+	private final XWindowImpl clientToClose;
 
 	/**
 	 * 
@@ -41,14 +41,14 @@ public final class _NetCloseWindowMessage extends EwmhClientMessageEvent {
 	 * @param clientMessageEvent
 	 * 
 	 */
-	public _NetCloseWindowMessage(final XDisplay display,
+	public _NetCloseWindowMessage(final XServerImpl display,
 			final ClientMessageEvent clientMessageEvent) {
 		super(clientMessageEvent);
 		final IntDataContainer intDataContainer = new IntDataContainer(
 				clientMessageEvent.getData());
 		this.timestamp = intDataContainer.readDataBlock().intValue();
 		final Integer xWindowId = intDataContainer.readDataBlock();
-		final XID xid = new XID(display, XResourceHandle.valueOf(Long
+		final XIDImpl xid = new XIDImpl(display, XResourceHandleImpl.valueOf(Long
 				.valueOf(xWindowId.longValue())));
 		this.clientToClose = display.getDisplayPlatform()
 				.getResourcesRegistry().getClientXWindow(xid);
@@ -66,7 +66,7 @@ public final class _NetCloseWindowMessage extends EwmhClientMessageEvent {
 	 * 
 	 * @return
 	 */
-	public XWindow getClientToClose() {
+	public XWindowImpl getClientToClose() {
 		return this.clientToClose;
 	}
 

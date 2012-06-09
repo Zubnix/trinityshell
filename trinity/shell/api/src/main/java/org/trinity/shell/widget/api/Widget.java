@@ -14,7 +14,7 @@ package org.trinity.shell.widget.api;
 import org.trinity.core.display.api.event.DisplayEventSource;
 import org.trinity.core.geometry.api.Rectangle;
 import org.trinity.core.input.api.KeyboardInput;
-import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.input.api.PointerInput;
 import org.trinity.core.render.api.PaintConstruction;
 import org.trinity.core.render.api.PaintInstruction;
 import org.trinity.core.render.api.Paintable;
@@ -37,9 +37,9 @@ public interface Widget extends Paintable, DisplayEventSource, RenderArea {
 		PaintInstruction<?> doDestroy();
 	}
 
-	void onMouseButtonPressed(final MouseInput input);
+	void onMouseButtonPressed(final PointerInput input);
 
-	void onMouseButtonReleased(final MouseInput input);
+	void onMouseButtonReleased(final PointerInput input);
 
 	void onKeyboardPressed(final KeyboardInput input);
 

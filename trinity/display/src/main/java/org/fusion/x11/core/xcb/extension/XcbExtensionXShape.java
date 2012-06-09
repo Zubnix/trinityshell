@@ -15,10 +15,10 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XWindow;
-import org.fusion.x11.core.extension.XExtensionXShape;
-import org.fusion.x11.nativeHelpers.XNativeCaller;
+import org.trinity.display.x11.api.extension.shape.XExtensionXShape;
+import org.trinity.display.x11.impl.XCallerImpl;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
 
 // TODO documentation
 // currently unused
@@ -34,8 +34,8 @@ public class XcbExtensionXShape extends XcbExtensionBase implements
 	public static final int MAJOR_VERSION = 1;
 	public static final int MINOR_VERSION = 0;
 
-	public XcbExtensionXShape(final XNativeCaller nativeCaller,
-			final XExtensionNativeCalls nativeCalls, final XDisplay display) {
+	public XcbExtensionXShape(final XCallerImpl nativeCaller,
+			final XExtensionNativeCalls nativeCalls, final XServerImpl display) {
 		super(nativeCaller, nativeCalls, nativeCalls.getCallXShapeInit(),
 				display, XcbExtensionXShape.EXTENSION_NAME,
 				XcbExtensionXShape.MAJOR_VERSION,
@@ -43,7 +43,7 @@ public class XcbExtensionXShape extends XcbExtensionBase implements
 	}
 
 	@Override
-	public void selectInput(final XWindow window, final long shapeNotifyMask) {
+	public void selectInput(final XWindowImpl window, final long shapeNotifyMask) {
 		// TODO Auto-generated method stub
 
 	}

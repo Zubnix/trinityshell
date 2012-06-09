@@ -17,8 +17,8 @@ package org.fusion.x11.ewmh;
 
 import java.util.Arrays;
 
-import org.fusion.x11.core.XDisplay;
 import org.trinity.core.display.impl.BasePropertyInstance;
+import org.trinity.display.x11.impl.XServerImpl;
 
 // TODO documentation
 /**
@@ -83,7 +83,7 @@ public final class _NetWmIconInstance extends BasePropertyInstance {
 	 * @param display
 	 * @param wmIcons
 	 */
-	_NetWmIconInstance(final XDisplay display, final WmIcon[] wmIcons) {
+	_NetWmIconInstance(final XServerImpl display, final WmIcon[] wmIcons) {
 		super(display.getxCoreAtoms().getCardinal());
 		this.wmIcons = Arrays.copyOf(wmIcons, wmIcons.length);
 	}

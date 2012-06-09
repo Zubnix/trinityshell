@@ -17,8 +17,8 @@ package org.fusion.x11.ewmh;
 
 import java.util.Arrays;
 
-import org.fusion.x11.core.XDisplay;
 import org.trinity.core.display.impl.BasePropertyInstance;
+import org.trinity.display.x11.impl.XServerImpl;
 
 // TODO documentation
 /**
@@ -58,7 +58,7 @@ public final class _NetDesktopViewPortInstance extends BasePropertyInstance {
 	 * @param display
 	 * @param coordinates
 	 */
-	public _NetDesktopViewPortInstance(final XDisplay display,
+	public _NetDesktopViewPortInstance(final XServerImpl display,
 			final DesktopViewPortCoordinate... coordinates) {
 		super(display.getxCoreAtoms().getCardinal());
 		this.coordinates = coordinates;

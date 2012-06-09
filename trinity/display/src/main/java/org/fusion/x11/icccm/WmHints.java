@@ -17,15 +17,15 @@
 package org.fusion.x11.icccm;
 
 import org.fusion.x11.core.FlexDataContainer;
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XPropertyInstanceInfo;
-import org.fusion.x11.core.XPropertyXAtom;
-import org.fusion.x11.core.XProtocolConstants;
-import org.fusion.x11.core.XResourceHandle;
-import org.fusion.x11.core.XWindow;
 import org.fusion.x11.error.NotYetImplementedError;
 import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.display.x11.api.XProtocolConstants;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceHandleImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
+import org.trinity.display.x11.impl.property.XPropertyInstanceInfo;
+import org.trinity.display.x11.impl.property.XPropertyXAtom;
 
 // TODO documentation
 /**
@@ -40,7 +40,7 @@ public final class WmHints extends XPropertyXAtom<WmHintsInstance> {
 	 * @param atomId
 	 * @param xAtomRegistry
 	 */
-	public WmHints(final XDisplay display) {
+	public WmHints(final XServerImpl display) {
 		super(display, IcccmAtoms.WM_HINTS_ATOM_NAME, Long
 				.valueOf(XProtocolConstants.WM_HINTS));
 	}
@@ -86,15 +86,15 @@ public final class WmHints extends XPropertyXAtom<WmHintsInstance> {
 				break;
 			}
 		}
-		final XID iconPixmapXid = new XID(getDisplay(),
-				XResourceHandle.valueOf(Long.valueOf(iconPixmapId)));
-		final XID iconPixmapMaskXid = new XID(getDisplay(),
-				XResourceHandle.valueOf(Long.valueOf(iconPixmapMaskId)));
-		final XWindow iconWindow = getDisplay()
+		final XIDImpl iconPixmapXid = new XIDImpl(getDisplay(),
+				XResourceHandleImpl.valueOf(Long.valueOf(iconPixmapId)));
+		final XIDImpl iconPixmapMaskXid = new XIDImpl(getDisplay(),
+				XResourceHandleImpl.valueOf(Long.valueOf(iconPixmapMaskId)));
+		final XWindowImpl iconWindow = getDisplay()
 				.getDisplayPlatform()
 				.getResourcesRegistry()
 				.getClientXWindow(
-						new XID(getDisplay(), XResourceHandle.valueOf(Long
+						new XIDImpl(getDisplay(), XResourceHandleImpl.valueOf(Long
 								.valueOf(iconWindowId))));
 
 		return new WmHintsInstance(getDisplay(), flags, input,

@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.extension.XSyncCounterNotify;
 import org.trinity.core.display.impl.event.BaseDisplayEvent;
+import org.trinity.display.x11.api.extension.sync.XSyncCounterNotify;
 
 // TODO documentation
 // currently unused

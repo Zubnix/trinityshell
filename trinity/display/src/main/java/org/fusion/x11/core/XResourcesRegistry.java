@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.trinity.core.event.api.EventBus;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
 
 /**
  * An <code>XResourcesRegistry</code> keeps track of registered
@@ -29,19 +32,19 @@ import org.trinity.core.event.api.EventBus;
  * @since 1.0
  */
 public final class XResourcesRegistry extends EventBus {
-	private final Map<XID, XResource> registeredResources = Collections
-			.synchronizedMap(new HashMap<XID, XResource>());
+	private final Map<XIDImpl, XResourceImpl> registeredResources = Collections
+			.synchronizedMap(new HashMap<XIDImpl, XResourceImpl>());
 
 	/**
 	 * Check if an <code>XResource</code> is registered with the given
 	 * <code>XID</code> on this <code>XResourcesRegistry</code>.
 	 * 
 	 * @param xid
-	 *            An {@link XID}.
+	 *            An {@link XIDImpl}.
 	 * @return True if an <code>XResource</code> is registered with the given
 	 *         <code>XID</code>, false if not.
 	 */
-	public boolean containsKey(final XID xid) {
+	public boolean containsKey(final XIDImpl xid) {
 		synchronized (this.registeredResources) {
 			final boolean returnboolean = this.registeredResources
 					.containsKey(xid);
@@ -54,10 +57,10 @@ public final class XResourcesRegistry extends EventBus {
 	 * <code>XResource</code> is found an <code>AssertionError</code> is thrown.
 	 * 
 	 * @param xid
-	 *            An {@link XID}.
-	 * @return An {@link XResource}.
+	 *            An {@link XIDImpl}.
+	 * @return An {@link XResourceImpl}.
 	 */
-	public XResource get(final XID xid) {
+	public XResourceImpl get(final XIDImpl xid) {
 		synchronized (this.registeredResources) {
 			if (!this.registeredResources.containsKey(xid)) {
 				throw new AssertionError(String.format(
@@ -65,7 +68,7 @@ public final class XResourcesRegistry extends EventBus {
 								.getResourceHandle().getNativeHandle()));
 			}
 
-			XResource returnXResource = null;
+			XResourceImpl returnXResource = null;
 
 			returnXResource = this.registeredResources.get(xid);
 
@@ -84,11 +87,11 @@ public final class XResourcesRegistry extends EventBus {
 	 * already registered, an <code>AssertionError</code> is thrown.
 	 * 
 	 * @param xobject
-	 *            An {@link XResource}.
+	 *            An {@link XResourceImpl}.
 	 */
-	public void register(final XResource xobject) {
+	public void register(final XResourceImpl xobject) {
 		synchronized (this.registeredResources) {
-			final XID xid = xobject.getDisplayResourceHandle();
+			final XIDImpl xid = xobject.getDisplayResourceHandle();
 
 			if (this.registeredResources.containsKey(xid)) {
 				throw new AssertionError(
@@ -114,7 +117,7 @@ public final class XResourcesRegistry extends EventBus {
 	 * @param xid
 	 *            An <code>XID</code>.
 	 */
-	public void unregister(final XID xid) {
+	public void unregister(final XIDImpl xid) {
 		synchronized (this.registeredResources) {
 			if (this.registeredResources.containsKey(xid) == false) {
 				throw new AssertionError(
@@ -131,18 +134,18 @@ public final class XResourcesRegistry extends EventBus {
 	 * @param xid
 	 * @return
 	 */
-	public XWindow getClientXWindow(final XID xid) {
-		XWindow xWindow;
+	public XWindowImpl getClientXWindow(final XIDImpl xid) {
+		XWindowImpl xWindow;
 		if (containsKey(xid)) {
-			final XResource xResource = get(xid);
-			if (xResource instanceof XWindow) {
-				xWindow = (XWindow) xResource;
+			final XResourceImpl xResource = get(xid);
+			if (xResource instanceof XWindowImpl) {
+				xWindow = (XWindowImpl) xResource;
 			} else {
 				throw new IllegalArgumentException(String.format(
 						"Given XID : %s is not an X window.", xid));
 			}
 		} else {
-			xWindow = new XWindow(xid);
+			xWindow = new XWindowImpl(xid);
 		}
 		return xWindow;
 	}

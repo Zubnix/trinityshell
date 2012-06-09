@@ -75,7 +75,7 @@ public class PropertyInteractionTest {
 				DisplayEventType.PROPERTY_CHANGED);
 		Mockito.when(c0Prop.getChangedProperty()).thenReturn(prop);
 
-		Mockito.when(this.mockedEnv.displayMock.getEventFromMasterQueue())
+		Mockito.when(this.mockedEnv.displayMock.getNextDisplayEvent())
 				.thenReturn(c0Map, c0Prop);
 
 		final PropertyChangedHandler<Property<? extends PropertyInstance>> handler = Mockito

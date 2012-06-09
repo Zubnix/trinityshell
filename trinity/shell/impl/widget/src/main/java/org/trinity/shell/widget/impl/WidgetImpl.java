@@ -16,7 +16,7 @@ import org.trinity.core.display.api.ResourceHandle;
 import org.trinity.core.display.api.event.ButtonNotifyEvent;
 import org.trinity.core.display.api.event.KeyNotifyEvent;
 import org.trinity.core.input.api.KeyboardInput;
-import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.input.api.PointerInput;
 import org.trinity.core.render.api.PaintInstruction;
 import org.trinity.core.render.api.Painter;
 import org.trinity.core.render.api.PainterFactory;
@@ -180,6 +180,7 @@ public class WidgetImpl extends AbstractRenderArea implements Widget {
 
 		PlatformRenderArea renderArea = null;
 
+		// TODO from factory
 		renderArea = getManagedDisplay().getDisplay()
 				.findPlatformRenderArea(resourceHandle);
 
@@ -225,12 +226,12 @@ public class WidgetImpl extends AbstractRenderArea implements Widget {
 	}
 
 	@Override
-	public void onMouseButtonPressed(final MouseInput input) {
+	public void onMouseButtonPressed(final PointerInput input) {
 		// overrideable by subclasses
 	}
 
 	@Override
-	public void onMouseButtonReleased(final MouseInput input) {
+	public void onMouseButtonReleased(final PointerInput input) {
 		// overrideable by subclasses
 	}
 

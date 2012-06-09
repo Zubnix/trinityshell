@@ -5,13 +5,13 @@ import java.util.Map;
 
 import org.fusion.x11.core.XAtom;
 import org.fusion.x11.core.XAtomRegistry;
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XPropertyXAtomAtoms;
-import org.fusion.x11.core.XPropertyXAtomMultiText;
-import org.fusion.x11.core.XPropertyXAtomSingleText;
-import org.fusion.x11.core.XPropertyXAtomWindow;
-import org.fusion.x11.core.XPropertyXAtomWindows;
-import org.fusion.x11.core.XProtocolConstants;
+import org.trinity.display.x11.api.XProtocolConstants;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.property.XPropertyXAtomAtoms;
+import org.trinity.display.x11.impl.property.XPropertyXAtomMultiText;
+import org.trinity.display.x11.impl.property.XPropertyXAtomSingleText;
+import org.trinity.display.x11.impl.property.XPropertyXAtomWindow;
+import org.trinity.display.x11.impl.property.XPropertyXAtomWindows;
 
 /**
  * Groups atoms defined by the ICCCM protocol.
@@ -76,9 +76,9 @@ public final class IcccmAtoms {
 	private final Version version;
 
 	private final XAtomRegistry atomRegistry;
-	private final XDisplay display;
+	private final XServerImpl display;
 
-	public IcccmAtoms(final XDisplay display) {
+	public IcccmAtoms(final XServerImpl display) {
 		this.display = display;
 		this.atomRegistry = display.getDisplayAtoms();
 		// ****ICCCM ATOMS****//
@@ -161,7 +161,7 @@ public final class IcccmAtoms {
 		return selectionAtom;
 	}
 
-	public XDisplay getDisplay() {
+	public XServerImpl getDisplay() {
 		return this.display;
 	}
 

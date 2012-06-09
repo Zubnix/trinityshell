@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.input.api.PointerInput;
 import org.trinity.core.render.api.PainterFactory;
 import org.trinity.shell.foundation.api.RenderArea;
 import org.trinity.shell.foundation.impl.AbstractRenderArea;
@@ -81,7 +81,7 @@ public class CloseButtonImpl extends ButtonImpl implements CloseButton {
 	}
 
 	@Override
-	public void onMouseButtonPressed(final MouseInput input) {
+	public void onMouseButtonPressed(final PointerInput input) {
 		closeClientWindow();
 	}
 

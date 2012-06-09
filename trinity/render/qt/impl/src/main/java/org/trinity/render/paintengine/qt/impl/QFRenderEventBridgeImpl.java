@@ -14,12 +14,11 @@ package org.trinity.render.paintengine.qt.impl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
+import org.trinity.core.display.api.DisplayEventConverter;
+import org.trinity.core.display.api.DisplayEventQueue;
 import org.trinity.core.display.api.event.DisplayEvent;
 import org.trinity.core.display.api.event.DisplayEventSource;
-import org.trinity.core.render.api.RenderEventConverter;
 import org.trinity.render.paintengine.qt.api.QFRenderEventBridge;
 
 import com.google.inject.Inject;
@@ -43,26 +42,20 @@ import com.trolltech.qt.core.QEvent;
  */
 public class QFRenderEventBridgeImpl implements QFRenderEventBridge {
 
-	private final Map<QEvent.Type, RenderEventConverter<? extends QEvent, QEvent.Type>> converterByQEventType = new HashMap<QEvent.Type, RenderEventConverter<? extends QEvent, QEvent.Type>>();
-
-	private final ArrayBlockingQueue<DisplayEvent> qEventQueue = new ArrayBlockingQueue<DisplayEvent>(	QFRenderEventBridgeImpl.DEFAULT_EVENT_QUEUE_SIZE,
-																										true);
-
-	private static final int TIME_OUT = 60;
-	private static final int DEFAULT_EVENT_QUEUE_SIZE = 128;
+	private final Map<QEvent.Type, DisplayEventConverter<? extends QEvent, QEvent.Type>> converterByQEventType = new HashMap<QEvent.Type, DisplayEventConverter<? extends QEvent, QEvent.Type>>();
+	private final DisplayEventQueue displayEventQueue;
 
 	@Inject
-	protected QFRenderEventBridgeImpl(final Set<RenderEventConverter<? extends QEvent, QEvent.Type>> qfusionEventConverters) {
-		for (final RenderEventConverter<? extends QEvent, QEvent.Type> eventConverter : qfusionEventConverters) {
-			this.converterByQEventType.put(	eventConverter.getFromType(),
+	protected QFRenderEventBridgeImpl(	final Set<DisplayEventConverter<? extends QEvent, QEvent.Type>> qfusionEventConverters,
+										final DisplayEventQueue displayEventQueue) {
+		this.displayEventQueue = displayEventQueue;
+		for (final DisplayEventConverter<? extends QEvent, QEvent.Type> eventConverter : qfusionEventConverters) {
+			this.converterByQEventType.put(	eventConverter.getFromSourceType(),
 											eventConverter);
 		}
+
 	}
 
-	/**
-	 * @param eventSource
-	 * @param event
-	 */
 	@Override
 	public void queueRenderEvent(	final DisplayEventSource eventSource,
 									final QEvent event) {
@@ -71,45 +64,16 @@ public class QFRenderEventBridgeImpl implements QFRenderEventBridge {
 		}
 
 		@SuppressWarnings("unchecked")
-		final RenderEventConverter<QEvent, QEvent.Type> eventConverter = (RenderEventConverter<QEvent, QEvent.Type>) this.converterByQEventType
+		final DisplayEventConverter<QEvent, QEvent.Type> eventConverter = (DisplayEventConverter<QEvent, QEvent.Type>) this.converterByQEventType
 				.get(event.type());
 
 		if (eventConverter != null) {
-			DisplayEvent convertedEvent;
+			final DisplayEvent convertedEvent = eventConverter
+					.convertEvent(eventSource, event);
 
-			convertedEvent = eventConverter.convertEvent(eventSource, event);
-
-			try {
-				if ((convertedEvent != null)
-						&& !this.qEventQueue
-								.offer(	convertedEvent,
-										QFRenderEventBridgeImpl.TIME_OUT,
-										TimeUnit.SECONDS)) {
-
-					// TODO seperate exception
-					throw new RuntimeException(String.format("Time out.\n"
-							+ "Could not add qfusion event %s to queue", event));
-				}
-			} catch (final InterruptedException e) {
-
-				// TODO seperate exception
-				throw new RuntimeException(	String.format(	"Interrupted while waiting for free queue space.\n"
-																	+ "Could not add qfusion event %s to queue",
-															event),
-											e);
+			if (convertedEvent != null) {
+				this.displayEventQueue.queueDisplayEvent(convertedEvent);
 			}
-		}
-	}
-
-	@Override
-	public DisplayEvent getNextEvent() {
-		try {
-			final DisplayEvent returnEvent = this.qEventQueue.take();
-			return returnEvent;
-		} catch (final InterruptedException e) {
-			// TODO log
-			// TODO seperate exception
-			throw new RuntimeException(e);
 		}
 	}
 }

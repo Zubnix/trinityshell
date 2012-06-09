@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.extension.XRenderDirectFormat;
+import org.trinity.display.x11.api.extension.render.XRenderDirectFormat;
 
 // TODO documentation
 // currently unused

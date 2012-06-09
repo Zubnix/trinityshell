@@ -19,11 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.fusion.x11.core.XAtom;
-import org.fusion.x11.core.XDisplay;
 import org.trinity.core.display.api.Atom;
 import org.trinity.core.display.api.event.ClientMessageEvent;
 import org.trinity.core.event.api.EventBus;
 import org.trinity.core.event.api.EventHandler;
+import org.trinity.display.x11.impl.XServerImpl;
 
 
 //TODO documentation
@@ -183,14 +183,14 @@ public final class EwmhClientMessageEmitter extends EventBus implements
 	}
 
 	private final Map<Atom, EwmhClientMessageWrapper> ewmhClientMessageWrappers;
-	private final XDisplay display;
+	private final XServerImpl display;
 
 	/**
 	 * 
 	 * @author Erik De Rijcke
 	 * @since 1.0
 	 */
-	public EwmhClientMessageEmitter(final XDisplay display) {
+	public EwmhClientMessageEmitter(final XServerImpl display) {
 		this.display = display;
 		this.ewmhClientMessageWrappers = new HashMap<Atom, EwmhClientMessageEmitter.EwmhClientMessageWrapper>(
 				16);
@@ -290,7 +290,7 @@ public final class EwmhClientMessageEmitter extends EventBus implements
 	 * 
 	 * @return
 	 */
-	public XDisplay getDisplay() {
+	public XServerImpl getDisplay() {
 		return this.display;
 	}
 

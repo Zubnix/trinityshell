@@ -17,13 +17,13 @@ package org.fusion.x11.icccm;
 
 import org.fusion.x11.core.FlexDataContainer;
 import org.fusion.x11.core.IntDataContainer;
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XID;
-import org.fusion.x11.core.XPropertyInstanceInfo;
-import org.fusion.x11.core.XPropertyXAtom;
-import org.fusion.x11.core.XResourceHandle;
-import org.fusion.x11.core.XWindow;
 import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceHandleImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
+import org.trinity.display.x11.impl.property.XPropertyInstanceInfo;
+import org.trinity.display.x11.impl.property.XPropertyXAtom;
 
 // TODO documentation
 /**
@@ -38,7 +38,7 @@ public final class WmState extends XPropertyXAtom<WmStateInstance> {
 	 * @param display
 	 * 
 	 */
-	public WmState(final XDisplay display) {
+	public WmState(final XServerImpl display) {
 		super(display, IcccmAtoms.WM_STATE_ATOM_NAME);
 	}
 
@@ -68,11 +68,11 @@ public final class WmState extends XPropertyXAtom<WmStateInstance> {
 		final long iconWindowId = propertyDataContainer.readUnsignedInt();
 
 		final WmStateEnum wmState = WmStateEnum.values()[(int) state];
-		final XWindow iconWindow = getDisplay()
+		final XWindowImpl iconWindow = getDisplay()
 				.getDisplayPlatform()
 				.getResourcesRegistry()
 				.getClientXWindow(
-						new XID(getDisplay(), XResourceHandle.valueOf(Long
+						new XIDImpl(getDisplay(), XResourceHandleImpl.valueOf(Long
 								.valueOf(iconWindowId))));
 
 		final WmStateInstance reply = new WmStateInstance(getDisplay(),

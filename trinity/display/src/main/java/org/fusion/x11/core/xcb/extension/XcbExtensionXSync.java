@@ -15,10 +15,10 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.extension.XExtensionXSync;
-import org.fusion.x11.core.extension.XSyncWaitCondition;
-import org.fusion.x11.nativeHelpers.XNativeCaller;
+import org.trinity.display.x11.api.extension.sync.XExtensionXSync;
+import org.trinity.display.x11.api.extension.sync.XSyncWaitCondition;
+import org.trinity.display.x11.impl.XCallerImpl;
+import org.trinity.display.x11.impl.XServerImpl;
 
 // TODO documentation
 // currently unused
@@ -33,8 +33,8 @@ public class XcbExtensionXSync extends XcbExtensionBase implements
 	public static final int MAJOR_VERSION = 3;
 	public static final int MINOR_VERSION = 0;
 
-	public XcbExtensionXSync(final XNativeCaller nativeCaller,
-			final XExtensionNativeCalls nativeCalls, final XDisplay display) {
+	public XcbExtensionXSync(final XCallerImpl nativeCaller,
+			final XExtensionNativeCalls nativeCalls, final XServerImpl display) {
 		super(nativeCaller, nativeCalls, nativeCalls.getCallXSyncInit(),
 				display, XcbExtensionXSync.EXTENSION_NAME,
 				XcbExtensionXSync.MAJOR_VERSION,

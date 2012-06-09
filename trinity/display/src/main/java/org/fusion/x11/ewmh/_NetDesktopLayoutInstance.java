@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.ewmh;
 
-import org.fusion.x11.core.XDisplay;
 import org.trinity.core.display.impl.BasePropertyInstance;
+import org.trinity.display.x11.impl.XServerImpl;
 
 // TODO documentation
 /**
@@ -39,7 +39,7 @@ public final class _NetDesktopLayoutInstance extends BasePropertyInstance {
 	 * @param rows
 	 * @param startingCorner
 	 */
-	_NetDesktopLayoutInstance(final XDisplay display,
+	_NetDesktopLayoutInstance(final XServerImpl display,
 			final DesktopLayoutOrientation orientation, final int columns,
 			final int rows, final DesktopLayoutStartingPoint startingCorner) {
 		super(display.getxCoreAtoms().getCardinal());

@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.ewmh;
 
-import org.fusion.x11.core.XDisplay;
 import org.trinity.core.display.impl.BasePropertyInstance;
+import org.trinity.display.x11.impl.XServerImpl;
 
 // TODO documentation
 /**
@@ -29,7 +29,7 @@ public final class _NetWmHandledIconsInstance extends BasePropertyInstance {
 	 * 
 	 * @param display
 	 */
-	_NetWmHandledIconsInstance(final XDisplay display) {
+	_NetWmHandledIconsInstance(final XServerImpl display) {
 		super(display.getDisplayAtoms().getAtomByName(
 				_NetWmHandledIcons.ATOM_NAME));
 	}

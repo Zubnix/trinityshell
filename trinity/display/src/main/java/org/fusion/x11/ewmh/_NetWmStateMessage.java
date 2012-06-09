@@ -17,8 +17,8 @@ package org.fusion.x11.ewmh;
 
 import org.fusion.x11.core.IntDataContainer;
 import org.fusion.x11.core.XAtom;
-import org.fusion.x11.core.XDisplay;
 import org.trinity.core.display.api.event.ClientMessageEvent;
+import org.trinity.display.x11.impl.XServerImpl;
 
 //TODO documentation
 /**
@@ -40,7 +40,7 @@ public final class _NetWmStateMessage extends EwmhClientMessageEvent implements
 	 * @param display
 	 * @param clientMessageEvent
 	 */
-	public _NetWmStateMessage(final XDisplay display,
+	public _NetWmStateMessage(final XServerImpl display,
 			final ClientMessageEvent clientMessageEvent) {
 		super(clientMessageEvent);
 

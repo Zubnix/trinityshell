@@ -17,8 +17,8 @@ package org.fusion.x11.ewmh;
 
 import java.util.Arrays;
 
-import org.fusion.x11.core.XDisplay;
 import org.trinity.core.display.impl.BasePropertyInstance;
+import org.trinity.display.x11.impl.XServerImpl;
 
 //TODO documentation
 /**
@@ -95,7 +95,7 @@ public final class _NetWorkAreaInstance extends BasePropertyInstance {
 	 * @param display
 	 * @param workAreaGeometries
 	 */
-	public _NetWorkAreaInstance(final XDisplay display,
+	public _NetWorkAreaInstance(final XServerImpl display,
 			final WorkAreaGeometry... workAreaGeometries) {
 		super(display.getxCoreAtoms().getCardinal());
 		this.workAreaGeometries = workAreaGeometries;

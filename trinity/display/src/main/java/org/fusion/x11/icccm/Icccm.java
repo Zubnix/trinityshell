@@ -15,7 +15,7 @@
  */
 package org.fusion.x11.icccm;
 
-import org.fusion.x11.core.XDisplay;
+import org.trinity.display.x11.impl.XServerImpl;
 
 //TODO documentation
 /**
@@ -29,13 +29,13 @@ public final class Icccm {
 
 	private final IcccmAtoms icccmAtoms;
 	private final SelectionManager selectionManager;
-	private final XDisplay display;
+	private final XServerImpl display;
 
 	/**
 	 * 
 	 * @param display
 	 */
-	public Icccm(final XDisplay display) {
+	public Icccm(final XServerImpl display) {
 		this.display = display;
 		this.icccmAtoms = new IcccmAtoms(display);
 		this.selectionManager = new SelectionManager(getIcccmAtoms());
@@ -45,7 +45,7 @@ public final class Icccm {
 	 * 
 	 * @return
 	 */
-	public XDisplay getDisplay() {
+	public XServerImpl getDisplay() {
 		return this.display;
 	}
 

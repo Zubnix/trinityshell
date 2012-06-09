@@ -15,6 +15,9 @@
  */
 package org.fusion.x11.core;
 
+import org.trinity.display.x11.impl.XIDImpl;
+import org.trinity.display.x11.impl.XResourceImpl;
+
 //currently unused
 //TODO documentation
 //TODO instead of defining a seperate blingbling class hierarchy we might want to implement a 
@@ -25,14 +28,14 @@ package org.fusion.x11.core;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class XPixmap extends XResource implements XDrawable {
+public class XPixmap extends XResourceImpl implements XDrawable {
 
 	/**
 	 * 
 	 * @param xid
 	 * 
 	 */
-	protected XPixmap(final XID xid) {
+	protected XPixmap(final XIDImpl xid) {
 		super(xid);
 	}
 }

@@ -1,18 +1,18 @@
 package org.fusion.x11.ewmh;
 
-import org.fusion.x11.core.XDisplay;
+import org.trinity.display.x11.impl.XServerImpl;
  
 
 public class Ewmh {
-	private final XDisplay display;
+	private final XServerImpl display;
 	private final EwmhAtoms ewmhAtoms;
 
-	public Ewmh(XDisplay display)    {
+	public Ewmh(XServerImpl display)    {
 		this.display = display;
 		this.ewmhAtoms = new EwmhAtoms(display);
 	}
 
-	public XDisplay getDisplay() {
+	public XServerImpl getDisplay() {
 		return display;
 	}
 

@@ -15,7 +15,7 @@ import org.trinity.core.display.api.property.Atom;
 import org.trinity.core.display.api.property.Property;
 import org.trinity.core.display.api.property.PropertyInstance;
 import org.trinity.core.input.api.KeyboardInput;
-import org.trinity.core.input.api.MouseInput;
+import org.trinity.core.input.api.PointerInput;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
@@ -27,11 +27,11 @@ public interface DisplayEventFactory {
 
 	@Named("ButtonPressedEvent")
 	ButtonNotifyEvent createButtonPressed(	DisplayEventSource eventSource,
-											MouseInput input);
+											PointerInput input);
 
 	@Named("ButtonReleasedEvent")
 	ButtonNotifyEvent createButtonReleased(	DisplayEventSource eventSource,
-											MouseInput input);
+											PointerInput input);
 
 	ClientMessageEvent createClientMessage(	DisplayEventSource platformRenderAreaArgument,
 											final Atom dataType,

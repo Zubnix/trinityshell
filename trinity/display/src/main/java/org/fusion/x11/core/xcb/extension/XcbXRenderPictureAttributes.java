@@ -17,9 +17,9 @@ package org.fusion.x11.core.xcb.extension;
 
 import org.fusion.x11.core.XAtom;
 import org.fusion.x11.core.XPixmap;
-import org.fusion.x11.core.extension.XRenderPicture;
-import org.fusion.x11.core.extension.XRenderPictureAttributes;
-import org.fusion.x11.core.extension.XRenderSubwindowMode;
+import org.trinity.display.x11.api.extension.render.XRenderPicture;
+import org.trinity.display.x11.api.extension.render.XRenderPictureAttributes;
+import org.trinity.display.x11.api.extension.render.XRenderSubwindowMode;
 
 // TODO documentation
 // currently unused

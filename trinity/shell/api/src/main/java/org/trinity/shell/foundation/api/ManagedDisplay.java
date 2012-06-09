@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.foundation.api;
 
-import org.trinity.core.display.api.Display;
+import org.trinity.core.display.api.DisplayServer;
 import org.trinity.core.display.api.event.DisplayEvent;
 import org.trinity.core.display.api.event.DisplayEventSource;
 import org.trinity.core.event.api.EventManager;
@@ -20,7 +20,7 @@ import org.trinity.shell.foundation.api.event.DisplayEventHandler;
 
 public interface ManagedDisplay {
 
-	Display getDisplay();
+	DisplayServer getDisplay();
 
 	void shutDown();
 

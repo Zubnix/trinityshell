@@ -15,9 +15,9 @@
  */
 package org.fusion.x11.icccm;
 
-import org.fusion.x11.core.XDisplay;
-import org.fusion.x11.core.XWindow;
 import org.trinity.core.display.impl.BasePropertyInstance;
+import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.display.x11.impl.XWindowImpl;
 
 // TODO documentation
 /**
@@ -28,7 +28,7 @@ import org.trinity.core.display.impl.BasePropertyInstance;
 public final class WmStateInstance extends BasePropertyInstance {
 
 	private final WmStateEnum state;
-	private final XWindow iconWindow;
+	private final XWindowImpl iconWindow;
 
 	/**
 	 * 
@@ -36,8 +36,8 @@ public final class WmStateInstance extends BasePropertyInstance {
 	 * @param state
 	 * @param iconWindow
 	 */
-	public WmStateInstance(final XDisplay display, final WmStateEnum state,
-			final XWindow iconWindow) {
+	public WmStateInstance(final XServerImpl display, final WmStateEnum state,
+			final XWindowImpl iconWindow) {
 		super(display.getDisplayAtoms().getAtomByName("WM_STATE"));
 		this.state = state;
 		this.iconWindow = iconWindow;
@@ -55,7 +55,7 @@ public final class WmStateInstance extends BasePropertyInstance {
 	 * 
 	 * @return
 	 */
-	public XWindow getIconWindow() {
+	public XWindowImpl getIconWindow() {
 		return this.iconWindow;
 	}
 }

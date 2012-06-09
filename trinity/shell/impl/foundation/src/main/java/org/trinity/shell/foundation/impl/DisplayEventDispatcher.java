@@ -18,7 +18,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
-import org.trinity.core.display.api.Display;
+import org.trinity.core.display.api.DisplayServer;
 import org.trinity.core.display.api.PlatformRenderArea;
 import org.trinity.core.display.api.event.ConfigureRequestEvent;
 import org.trinity.core.display.api.event.DisplayEvent;
@@ -100,12 +100,12 @@ final class DisplayEventDispatcher implements Runnable {
 	private static final String THREADSTART_LOGMESSAGE = "Starting display event dispatching loop.";
 	private static final String THREADSTOP_LOGMESSAGE = "Display event dispatching loop terminated.";
 
-	private final Display display;
+	private final DisplayServer display;
 
 	private final RenderAreaFactory clientFactory;
 	private volatile boolean running;
 
-	DisplayEventDispatcher(	final Display display,
+	DisplayEventDispatcher(	final DisplayServer display,
 							final RenderAreaFactory clientFactory) {
 		this.clientCreatedHandlers = new CopyOnWriteArrayList<ClientCreatedHandler>();
 		this.eventManagers = new WeakHashMap<DisplayEventSource, List<WeakReference<EventManager>>>();
@@ -226,12 +226,12 @@ final class DisplayEventDispatcher implements Runnable {
 	 *            continue without dispatching an event.
 	 */
 	void dispatchNextEvent(final boolean block) {
-		if (!block && this.display.isMasterQueueEmpty()) {
+		if (!block && this.display.hasNextDisplayEvent()) {
 			return;
 		}
 
 		final DisplayEvent displayEvent = this.display
-				.getEventFromMasterQueue();
+				.getNextDisplayEvent();
 
 		if (displayEvent != null) {
 

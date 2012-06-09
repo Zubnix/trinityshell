@@ -16,6 +16,7 @@
 package org.fusion.x11.core;
 
 import org.trinity.core.display.api.PlatformRenderAreaAttributes;
+import org.trinity.display.x11.api.XProtocolConstants;
 
 /**
  * An <code>XWindowAttributes</code> groups a number of native X window related
