@@ -25,7 +25,7 @@ import org.fusion.x11.ewmh._NetWmIconInstance.WmIcon;
 import org.trinity.core.display.api.PlatformRenderArea;
 import org.trinity.display.x11.impl.XServerImpl;
 import org.trinity.display.x11.impl.property.XPropertyInstanceInfo;
-import org.trinity.display.x11.impl.property.XPropertyXAtom;
+import org.trinity.display.x11.impl.property.AbstractXProperty;
 
 // TODO documentation
 /**
@@ -33,7 +33,7 @@ import org.trinity.display.x11.impl.property.XPropertyXAtom;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public final class _NetWmIcon extends XPropertyXAtom<_NetWmIconInstance> {
+public final class _NetWmIcon extends AbstractXProperty<_NetWmIconInstance> {
 	// CARDINAL[][2+n]/32
 
 	/**

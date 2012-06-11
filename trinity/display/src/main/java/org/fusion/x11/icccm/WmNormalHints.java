@@ -23,7 +23,7 @@ import org.trinity.display.x11.api.XProtocolConstants;
 import org.trinity.display.x11.impl.XServerImpl;
 import org.trinity.display.x11.impl.XWindowImpl;
 import org.trinity.display.x11.impl.property.XPropertyInstanceInfo;
-import org.trinity.display.x11.impl.property.XPropertyXAtom;
+import org.trinity.display.x11.impl.property.AbstractXProperty;
  
 
 // TODO documentation
@@ -32,7 +32,7 @@ import org.trinity.display.x11.impl.property.XPropertyXAtom;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public final class WmNormalHints extends XPropertyXAtom<WmSizeHintsInstance> {
+public final class WmNormalHints extends AbstractXProperty<WmSizeHintsInstance> {
 
 	public static final String ATOM_NAME = "WM_NORMAL_HINTS";
 

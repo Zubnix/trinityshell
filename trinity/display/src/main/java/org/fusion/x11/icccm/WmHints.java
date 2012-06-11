@@ -25,7 +25,7 @@ import org.trinity.display.x11.impl.XIDImpl;
 import org.trinity.display.x11.impl.XResourceHandleImpl;
 import org.trinity.display.x11.impl.XWindowImpl;
 import org.trinity.display.x11.impl.property.XPropertyInstanceInfo;
-import org.trinity.display.x11.impl.property.XPropertyXAtom;
+import org.trinity.display.x11.impl.property.AbstractXProperty;
 
 // TODO documentation
 /**
@@ -33,7 +33,7 @@ import org.trinity.display.x11.impl.property.XPropertyXAtom;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public final class WmHints extends XPropertyXAtom<WmHintsInstance> {
+public final class WmHints extends AbstractXProperty<WmHintsInstance> {
 
 	/**
 	 * 

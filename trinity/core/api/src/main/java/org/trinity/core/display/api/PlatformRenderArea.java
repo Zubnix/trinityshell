@@ -11,10 +11,7 @@
  */
 package org.trinity.core.display.api;
 
-import org.trinity.core.display.api.event.ClientMessageEvent;
 import org.trinity.core.display.api.event.DisplayEventSource;
-import org.trinity.core.display.api.property.Property;
-import org.trinity.core.display.api.property.PropertyInstance;
 import org.trinity.core.geometry.api.Rectangle;
 import org.trinity.core.input.api.Button;
 import org.trinity.core.input.api.InputModifiers;
@@ -72,10 +69,10 @@ public interface PlatformRenderArea extends DisplayResource, Area,
 	 */
 	PlatformRenderAreaAttributes getPlatformRenderAreaAttributes();
 
-	/**
-	 * @param clientMessageEvent
-	 */
-	void sendMessage(ClientMessageEvent clientMessageEvent);
+	// /**
+	// * @param clientMessageEvent
+	// */
+	// void sendMessage(ClientMessageEvent clientMessageEvent);
 
 	/**
 	 * @param catchKey
@@ -128,12 +125,11 @@ public interface PlatformRenderArea extends DisplayResource, Area,
 	 * @param property
 	 * @return
 	 */
-	<T extends PropertyInstance> T getPropertyInstance(final Property<T> property);
+	<T> T getProperty(final String propertyName);
 
 	/**
 	 * @param property
 	 * @param propertyInstance
 	 */
-	<T extends PropertyInstance> void setPropertyInstance(	final Property<T> property,
-															T propertyInstance);
+	void setProperty(String propertyName, Object value);
 }

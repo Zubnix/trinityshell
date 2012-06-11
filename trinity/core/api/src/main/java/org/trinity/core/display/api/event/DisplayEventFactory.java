@@ -11,9 +11,6 @@
  */
 package org.trinity.core.display.api.event;
 
-import org.trinity.core.display.api.property.Atom;
-import org.trinity.core.display.api.property.Property;
-import org.trinity.core.display.api.property.PropertyInstance;
 import org.trinity.core.input.api.KeyboardInput;
 import org.trinity.core.input.api.PointerInput;
 
@@ -33,10 +30,11 @@ public interface DisplayEventFactory {
 	ButtonNotifyEvent createButtonReleased(	DisplayEventSource eventSource,
 											PointerInput input);
 
-	ClientMessageEvent createClientMessage(	DisplayEventSource platformRenderAreaArgument,
-											final Atom dataType,
-											int dataFormat,
-											byte[] data);
+	// ClientMessageEvent createClientMessage( DisplayEventSource
+	// platformRenderAreaArgument,
+	// final Atom dataType,
+	// int dataFormat,
+	// byte[] data);
 
 	ConfigureNotifyEvent createConfigureNotify(	DisplayEventSource eventSource,
 												@Assisted("x") int x,
@@ -82,7 +80,7 @@ public interface DisplayEventFactory {
 
 	PropertyChangedNotifyEvent createPropertyChangedNotify(	DisplayEventSource eventSource,
 															boolean propertyDeleted,
-															Property<? extends PropertyInstance> changedProperty);
+															String changedProperty);
 
 	StackingChangedNotifyEvent createStackingChangedNotify(DisplayEventSource eventSource);
 

@@ -21,7 +21,7 @@ import org.fusion.x11.ewmh._NetWorkAreaInstance.WorkAreaGeometry;
 import org.trinity.core.display.api.PlatformRenderArea;
 import org.trinity.display.x11.impl.XServerImpl;
 import org.trinity.display.x11.impl.property.XPropertyInstanceInfo;
-import org.trinity.display.x11.impl.property.XPropertyXAtom;
+import org.trinity.display.x11.impl.property.AbstractXProperty;
 
 //TODO documentation
 /**
@@ -29,7 +29,7 @@ import org.trinity.display.x11.impl.property.XPropertyXAtom;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public final class _NetWorkArea extends XPropertyXAtom<_NetWorkAreaInstance> {
+public final class _NetWorkArea extends AbstractXProperty<_NetWorkAreaInstance> {
 
 	/**
 	 * 
