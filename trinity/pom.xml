@@ -25,6 +25,7 @@
 	</developers>
 	<modules>
 		<module>core</module>
+		<module>foundation</module>
 		<module>shell</module>
 		<module>display</module>
 		<module>hypercube</module>

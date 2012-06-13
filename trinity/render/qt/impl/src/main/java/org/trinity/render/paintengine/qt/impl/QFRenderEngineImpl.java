@@ -17,14 +17,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
-import org.trinity.core.display.api.DisplayEventProducer;
-import org.trinity.core.display.api.ResourceHandle;
-import org.trinity.core.display.api.ResourceHandleFactory;
-import org.trinity.core.display.api.event.DisplayEventSource;
-import org.trinity.core.render.api.PaintCalculation;
-import org.trinity.core.render.api.PaintConstruction;
-import org.trinity.core.render.api.PaintInstruction;
-import org.trinity.core.render.api.Paintable;
+import org.trinity.foundation.display.api.DisplayEventProducer;
+import org.trinity.foundation.display.api.ResourceHandle;
+import org.trinity.foundation.display.api.ResourceHandleFactory;
+import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.render.api.PaintCalculation;
+import org.trinity.foundation.render.api.PaintConstruction;
+import org.trinity.foundation.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.Paintable;
 import org.trinity.render.paintengine.qt.api.QFRenderEngine;
 import org.trinity.render.paintengine.qt.api.QFRenderEventBridge;
 

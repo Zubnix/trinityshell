@@ -13,10 +13,7 @@
  */
 package org.trinity.shell.foundation.api;
 
-import org.trinity.core.display.api.PlatformRenderArea;
-import org.trinity.core.display.api.property.Property;
-import org.trinity.core.display.api.property.PropertyInstance;
-import org.trinity.shell.foundation.api.event.PropertyChangedHandler;
+import org.trinity.foundation.display.api.PlatformRenderArea;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 
 public interface RenderArea extends GeoTransformableRectangle {
@@ -62,6 +59,7 @@ public interface RenderArea extends GeoTransformableRectangle {
 
 	boolean hasInputFocus();
 
-	void addPropertyChangedHandler(	PropertyChangedHandler<? extends Property<? extends PropertyInstance>> handler,
-									String propertyName);
+	// void addPropertyChangedHandler( PropertyChangedHandler<? extends
+	// Property<? extends PropertyInstance>> handler,
+	// String propertyName);
 }

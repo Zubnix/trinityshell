@@ -15,9 +15,9 @@
  */
 package org.fusion.x11.xTestEnvironment;
 
-import org.trinity.core.display.api.DisplayServer;
-import org.trinity.core.render.api.PainterFactory;
-import org.trinity.core.render.api.PainterFactoryProvider;
+import org.trinity.foundation.display.api.DisplayServer;
+import org.trinity.foundation.render.api.PainterFactory;
+import org.trinity.foundation.render.api.PainterFactoryProvider;
 
 /**
  * Test framework code. Currently unused.

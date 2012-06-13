@@ -11,15 +11,15 @@
  */
 package org.trinity.shell.foundation.impl;
 
-import org.trinity.core.display.api.PlatformRenderArea;
-import org.trinity.core.display.api.event.DestroyNotifyEvent;
-import org.trinity.core.display.api.event.DisplayEvent;
-import org.trinity.core.display.api.event.DisplayEventType;
-import org.trinity.core.display.api.event.PropertyChangedNotifyEvent;
-import org.trinity.core.display.api.property.Property;
-import org.trinity.core.display.api.property.PropertyInstance;
 import org.trinity.core.event.api.EventHandler;
 import org.trinity.core.geometry.api.Rectangle;
+import org.trinity.foundation.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
+import org.trinity.foundation.display.api.event.DisplayEvent;
+import org.trinity.foundation.display.api.event.DisplayEventType;
+import org.trinity.foundation.display.api.event.PropertyChangedNotifyEvent;
+import org.trinity.foundation.display.api.property.Property;
+import org.trinity.foundation.display.api.property.PropertyInstance;
 import org.trinity.shell.foundation.api.ManagedDisplay;
 import org.trinity.shell.foundation.api.RenderArea;
 import org.trinity.shell.foundation.api.event.PropertyChangedEvent;

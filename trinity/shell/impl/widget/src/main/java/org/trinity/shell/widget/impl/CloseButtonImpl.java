@@ -11,8 +11,8 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.core.input.api.PointerInput;
-import org.trinity.core.render.api.PainterFactory;
+import org.trinity.foundation.input.api.PointerInput;
+import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.foundation.api.RenderArea;
 import org.trinity.shell.foundation.impl.AbstractRenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;

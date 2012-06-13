@@ -11,13 +11,12 @@
 
 	<artifactId>shell.impl.input</artifactId>
 	<name>Shell input implementation</name>
-
-	<!--  dependencies>
+	<dependencies>
 		<dependency>
-			<groupId>org.trinity.shell</groupId>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.input.api</artifactId>
 			<version>0.0.1</version>
-			<artifactId>shell.impl.foundation</artifactId>
 		</dependency>
-	</dependencies-->
+	</dependencies>
 </project>
 

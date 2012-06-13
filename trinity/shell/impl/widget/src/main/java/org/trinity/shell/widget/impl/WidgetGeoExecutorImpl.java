@@ -11,10 +11,10 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.core.display.api.Area;
-import org.trinity.core.display.api.AreaManipulator;
-import org.trinity.core.display.api.PlatformRenderArea;
 import org.trinity.core.geometry.api.GeometryFactory;
+import org.trinity.foundation.display.api.Area;
+import org.trinity.foundation.display.api.AreaManipulator;
+import org.trinity.foundation.display.api.PlatformRenderArea;
 import org.trinity.shell.foundation.api.RenderArea;
 import org.trinity.shell.foundation.impl.RenderAreaGeoExecutorImpl;
 import org.trinity.shell.geo.api.GeoExecutor;

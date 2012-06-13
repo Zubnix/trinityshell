@@ -11,9 +11,9 @@
  */
 package org.trinity.shell.input.impl;
 
-import org.trinity.core.display.api.event.KeyNotifyEvent;
-import org.trinity.core.input.api.Keyboard;
-import org.trinity.core.input.api.KeyboardInput;
+import org.trinity.foundation.display.api.event.KeyNotifyEvent;
+import org.trinity.foundation.input.api.Keyboard;
+import org.trinity.foundation.input.api.KeyboardInput;
 import org.trinity.shell.foundation.api.ManagedDisplay;
 import org.trinity.shell.foundation.api.event.KeyboardKeyPressedHandler;
 import org.trinity.shell.foundation.api.event.KeyboardKeyReleasedHandler;

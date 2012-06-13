@@ -16,7 +16,6 @@ import java.nio.ByteBuffer;
 
 import org.apache.log4j.Logger;
 import org.fusion.x11.core.DataContainer;
-import org.fusion.x11.core.FlexDataContainer;
 import org.fusion.x11.core.XWindowAttributes;
 import org.fusion.x11.core.XWindowGeometry;
 import org.fusion.x11.core.input.XKeySymbol;
@@ -24,20 +23,21 @@ import org.fusion.x11.core.xcb.error.NativeLibraryNotFoundException;
 import org.fusion.x11.core.xcb.extension.XcbExtensions;
 import org.fusion.x11.core.xcb.input.XcbKeyboard;
 import org.fusion.x11.nativeHelpers.FusionNativeLibLoader;
-import org.trinity.core.display.api.event.ClientMessageEvent;
-import org.trinity.core.display.api.event.DisplayEvent;
 import org.trinity.core.geometry.api.Coordinates;
-import org.trinity.core.input.api.Button;
-import org.trinity.core.input.api.InputModifiers;
-import org.trinity.core.input.api.Key;
 import org.trinity.display.x11.api.XCaller;
 import org.trinity.display.x11.api.XEventBridge;
 import org.trinity.display.x11.api.XKeyboard;
 import org.trinity.display.x11.api.XProtocolConstants;
+import org.trinity.display.x11.impl.FlexDataContainer;
 import org.trinity.display.x11.impl.XResourceHandleImpl;
 import org.trinity.display.x11.impl.XWindowImpl;
 import org.trinity.display.x11.impl.error.XcbNativeErrorHandler;
 import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
+import org.trinity.foundation.display.api.event.ClientMessageEvent;
+import org.trinity.foundation.display.api.event.DisplayEvent;
+import org.trinity.foundation.input.api.Button;
+import org.trinity.foundation.input.api.InputModifiers;
+import org.trinity.foundation.input.api.Key;
 
 /**
  * An <code>XcbCoreInterfaceImpl</code> provides access to the native X back-end

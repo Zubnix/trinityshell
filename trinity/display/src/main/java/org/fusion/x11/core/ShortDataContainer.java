@@ -17,6 +17,8 @@ package org.fusion.x11.core;
 
 import java.nio.ShortBuffer;
 
+import org.trinity.display.x11.api.core.DataFormat;
+
 /**
  * A <code>ShortDataContainer</code> is a helper class to read or write raw byte
  * data coming from a 16-bit <code>Short</code>.

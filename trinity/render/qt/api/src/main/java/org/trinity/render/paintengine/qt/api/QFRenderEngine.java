@@ -11,10 +11,10 @@
  */
 package org.trinity.render.paintengine.qt.api;
 
-import org.trinity.core.display.api.ResourceHandle;
-import org.trinity.core.display.api.event.DisplayEventSource;
-import org.trinity.core.render.api.Paintable;
-import org.trinity.core.render.api.RenderEngine;
+import org.trinity.foundation.display.api.ResourceHandle;
+import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.render.api.Paintable;
+import org.trinity.foundation.render.api.RenderEngine;
 
 import com.trolltech.qt.gui.QWidget;
 

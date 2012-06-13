@@ -11,17 +11,55 @@
  */
 package org.trinity.core.geometry.api;
 
+import com.google.inject.assistedinject.Assisted;
+
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
 public interface GeometryFactory {
-	Coordinates createCoordinates(int x, int y);
+	/*****************************************
+	 * @param x
+	 * @param y
+	 * @return
+	 *************************************** 
+	 */
+	Coordinates createCoordinates(@Assisted("x") int x, @Assisted("y") int y);
 
+	/*****************************************
+	 * @param coordinates
+	 * @return
+	 *************************************** 
+	 */
 	Coordinates createCoordinates(Coordinates coordinates);
 
-	Rectangle createRectangle(int x, int y, int width, int height);
+	/*****************************************
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @return
+	 *************************************** 
+	 */
+	Rectangle createRectangle(	@Assisted("x") int x,
+								@Assisted("y") int y,
+								@Assisted("width") int width,
+								@Assisted("height") int height);
 
+	/*****************************************
+	 * @param rectangle
+	 * @return
+	 *************************************** 
+	 */
 	Rectangle createRectangle(Rectangle rectangle);
 
-	Rectangle createRectangle(Coordinates coordinates, int width, int height);
+	/*****************************************
+	 * @param coordinates
+	 * @param width
+	 * @param height
+	 * @return
+	 *************************************** 
+	 */
+	Rectangle createRectangle(	Coordinates coordinates,
+								@Assisted("width") int width,
+								@Assisted("height") int height);
 }

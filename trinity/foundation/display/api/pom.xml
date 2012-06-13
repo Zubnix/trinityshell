@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<artifactId>foundation.display</artifactId>
+		<groupId>org.trinity.foundation</groupId>
+		<version>0.0.1</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>foundation.display.api</artifactId>
+	<name>Foundation Display API</name>
+	<packaging>jar</packaging>
+
+	<properties>
+		<maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.executable>javac</maven.compiler.executable>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.core</groupId>
+			<artifactId>core.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.input.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
+</project>
+

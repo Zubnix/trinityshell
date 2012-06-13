@@ -15,8 +15,8 @@
  */
 package org.trinity.shell.foundation.api.event;
 
-import org.trinity.core.display.api.event.DisplayEventType;
-import org.trinity.core.display.api.event.MapRequestEvent;
+import org.trinity.foundation.display.api.event.DisplayEventType;
+import org.trinity.foundation.display.api.event.MapRequestEvent;
 
 public abstract class MapRequestHandler implements
 		DisplayEventHandler<MapRequestEvent> {

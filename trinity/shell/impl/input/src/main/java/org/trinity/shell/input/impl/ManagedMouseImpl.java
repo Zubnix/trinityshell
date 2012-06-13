@@ -11,10 +11,9 @@
  */
 package org.trinity.shell.input.impl;
 
-import org.trinity.core.display.api.event.ButtonNotifyEvent;
 import org.trinity.core.geometry.api.Coordinates;
 import org.trinity.core.geometry.api.GeometryFactory;
-import org.trinity.core.input.api.Mouse;
+import org.trinity.foundation.input.api.Mouse;
 import org.trinity.shell.foundation.api.ManagedDisplay;
 import org.trinity.shell.foundation.api.event.MouseButtonPressedHandler;
 import org.trinity.shell.foundation.api.event.MouseButtonReleasedHandler;
@@ -97,13 +96,4 @@ public class ManagedMouseImpl extends AbstractInputDevice implements
 	public Coordinates getAbsolutePosition() {
 		return this.mouse.getRootCoordinates();
 	}
-
-	// /**
-	// * Refresh the geometric values of this <code>ManagedMouse</code> so it
-	// * represents the values at the time of this call.
-	// */
-	// @Override
-	// public void refreshPositionInfo() {
-	// this.mouse.refreshInfo();
-	// }
 }

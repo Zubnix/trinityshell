@@ -15,6 +15,8 @@
  */
 package org.fusion.x11.core;
 
+import org.trinity.display.x11.api.core.DataFormat;
+
 /**
  * A <code>ByteDataContainer</code> is a helper class to read or write raw byte
  * data coming from a 8-bit <code>byte</code>.

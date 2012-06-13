@@ -15,9 +15,9 @@ package org.fusion.x11.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.trinity.core.display.api.property.Atom;
-import org.trinity.core.display.api.property.DisplayAtoms;
 import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.foundation.display.api.property.Atom;
+import org.trinity.foundation.display.api.property.DisplayAtoms;
 
 // TODO documentation
 /**

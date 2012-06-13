@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
+import org.trinity.dispay.x11.api.extension.composite.XExtensionComposite;
 import org.trinity.display.x11.api.extension.XExtensionFactory;
-import org.trinity.display.x11.api.extension.composite.XExtensionComposite;
 import org.trinity.display.x11.api.extension.damage.XExtensionDamage;
 import org.trinity.display.x11.api.extension.fixes.XExtensionXFixes;
 import org.trinity.display.x11.api.extension.render.XExtensionXRender;

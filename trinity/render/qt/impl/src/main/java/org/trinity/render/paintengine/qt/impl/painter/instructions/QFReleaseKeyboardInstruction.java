@@ -11,7 +11,7 @@
  */
 package org.trinity.render.paintengine.qt.impl.painter.instructions;
 
-import org.trinity.core.render.api.Paintable;
+import org.trinity.foundation.render.api.Paintable;
 import org.trinity.render.paintengine.qt.api.QFRenderEngine;
 import org.trinity.render.paintengine.qt.api.painter.QFPaintInstruction;
 

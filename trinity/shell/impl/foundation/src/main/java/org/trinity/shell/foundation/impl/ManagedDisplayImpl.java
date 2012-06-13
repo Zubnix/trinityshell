@@ -14,21 +14,21 @@ package org.trinity.shell.foundation.impl;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import org.trinity.core.display.api.DisplayServer;
-import org.trinity.core.display.api.DisplayEventSelector;
-import org.trinity.core.display.api.event.ButtonNotifyEvent;
-import org.trinity.core.display.api.event.ConfigureRequestEvent;
-import org.trinity.core.display.api.event.DestroyNotifyEvent;
-import org.trinity.core.display.api.event.DisplayEvent;
-import org.trinity.core.display.api.event.DisplayEventSource;
-import org.trinity.core.display.api.event.FocusNotifyEvent;
-import org.trinity.core.display.api.event.KeyNotifyEvent;
-import org.trinity.core.display.api.event.MapRequestEvent;
-import org.trinity.core.display.api.event.MouseVisitationNotifyEvent;
-import org.trinity.core.display.api.event.PropertyChangedNotifyEvent;
-import org.trinity.core.display.api.event.UnmappedNotifyEvent;
 import org.trinity.core.event.api.EventBus;
 import org.trinity.core.event.api.EventManager;
+import org.trinity.foundation.display.api.DisplayEventSelector;
+import org.trinity.foundation.display.api.DisplayServer;
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
+import org.trinity.foundation.display.api.event.ConfigureRequestEvent;
+import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
+import org.trinity.foundation.display.api.event.DisplayEvent;
+import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.FocusNotifyEvent;
+import org.trinity.foundation.display.api.event.KeyNotifyEvent;
+import org.trinity.foundation.display.api.event.MapRequestEvent;
+import org.trinity.foundation.display.api.event.MouseVisitationNotifyEvent;
+import org.trinity.foundation.display.api.event.PropertyChangedNotifyEvent;
+import org.trinity.foundation.display.api.event.UnmappedNotifyEvent;
 import org.trinity.shell.foundation.api.ManagedDisplay;
 import org.trinity.shell.foundation.api.RenderAreaFactory;
 import org.trinity.shell.foundation.api.event.ClientCreatedHandler;
@@ -41,7 +41,7 @@ import com.google.inject.Singleton;
 // TODO documentation
 /**
  * Provides extra functionality by wrapping a platform specific implementation
- * of a {@link org.trinity.core.display.api.DisplayServer}. The
+ * of a {@link org.trinity.foundation.display.api.DisplayServer}. The
  * <code>ManagedDisplay</code> is at the core of any hyperdrive object
  * interacting with the platform display server.
  * <p>

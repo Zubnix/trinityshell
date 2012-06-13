@@ -16,9 +16,9 @@ import org.hydrogen.api.event.TypeBoundEventHandler;
  */
 package org.trinity.shell.foundation.api.event;
 
-import org.trinity.core.display.api.event.DisplayEvent;
-import org.trinity.core.display.api.event.DisplayEventType;
 import org.trinity.core.event.api.TypeBoundEventHandler;
+import org.trinity.foundation.display.api.event.DisplayEvent;
+import org.trinity.foundation.display.api.event.DisplayEventType;
 
 public interface DisplayEventHandler<E extends DisplayEvent> extends
 		TypeBoundEventHandler<DisplayEventType, E> {

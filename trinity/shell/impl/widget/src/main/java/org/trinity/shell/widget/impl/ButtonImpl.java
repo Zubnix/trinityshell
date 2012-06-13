@@ -11,8 +11,8 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.core.display.api.event.ButtonNotifyEvent;
-import org.trinity.core.render.api.PainterFactory;
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
+import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.foundation.api.ManagedDisplay;
 import org.trinity.shell.foundation.api.event.MouseButtonReleasedHandler;
 import org.trinity.shell.geo.api.GeoEventHandler;

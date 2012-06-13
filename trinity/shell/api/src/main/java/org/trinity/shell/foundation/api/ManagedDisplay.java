@@ -11,10 +11,10 @@
  */
 package org.trinity.shell.foundation.api;
 
-import org.trinity.core.display.api.DisplayServer;
-import org.trinity.core.display.api.event.DisplayEvent;
-import org.trinity.core.display.api.event.DisplayEventSource;
 import org.trinity.core.event.api.EventManager;
+import org.trinity.foundation.display.api.DisplayServer;
+import org.trinity.foundation.display.api.event.DisplayEvent;
+import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.shell.foundation.api.event.ClientCreatedHandler;
 import org.trinity.shell.foundation.api.event.DisplayEventHandler;
 

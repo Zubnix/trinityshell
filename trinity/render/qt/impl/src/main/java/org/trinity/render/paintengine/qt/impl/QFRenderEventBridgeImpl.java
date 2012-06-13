@@ -15,10 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.trinity.core.display.api.DisplayEventConverter;
-import org.trinity.core.display.api.DisplayEventQueue;
-import org.trinity.core.display.api.event.DisplayEvent;
-import org.trinity.core.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.DisplayEventConverter;
+import org.trinity.foundation.display.api.DisplayEventQueue;
+import org.trinity.foundation.display.api.event.DisplayEvent;
+import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.render.paintengine.qt.api.QFRenderEventBridge;
 
 import com.google.inject.Inject;

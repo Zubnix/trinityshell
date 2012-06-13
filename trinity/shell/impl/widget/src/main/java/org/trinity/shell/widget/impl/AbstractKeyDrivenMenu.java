@@ -14,11 +14,11 @@ package org.trinity.shell.widget.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.trinity.core.display.api.event.DisplayEventType;
-import org.trinity.core.display.api.event.KeyNotifyEvent;
 import org.trinity.core.event.api.EventHandler;
-import org.trinity.core.input.api.SpecialKeyName;
-import org.trinity.core.render.api.PainterFactory;
+import org.trinity.foundation.display.api.event.DisplayEventType;
+import org.trinity.foundation.display.api.event.KeyNotifyEvent;
+import org.trinity.foundation.input.api.SpecialKeyName;
+import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.input.api.KeyInputStringBuilder;
 import org.trinity.shell.input.api.ManagedKeyboard;

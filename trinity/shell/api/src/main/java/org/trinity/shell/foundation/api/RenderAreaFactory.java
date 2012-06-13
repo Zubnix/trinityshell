@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.foundation.api;
 
-import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.PlatformRenderArea;
 
 /*****************************************
  * @author Erik De Rijcke

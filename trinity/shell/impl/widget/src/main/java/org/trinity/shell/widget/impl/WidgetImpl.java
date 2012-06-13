@@ -11,15 +11,15 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.core.display.api.PlatformRenderArea;
-import org.trinity.core.display.api.ResourceHandle;
-import org.trinity.core.display.api.event.ButtonNotifyEvent;
-import org.trinity.core.display.api.event.KeyNotifyEvent;
-import org.trinity.core.input.api.KeyboardInput;
-import org.trinity.core.input.api.PointerInput;
-import org.trinity.core.render.api.PaintInstruction;
-import org.trinity.core.render.api.Painter;
-import org.trinity.core.render.api.PainterFactory;
+import org.trinity.foundation.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.ResourceHandle;
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
+import org.trinity.foundation.display.api.event.KeyNotifyEvent;
+import org.trinity.foundation.input.api.KeyboardInput;
+import org.trinity.foundation.input.api.PointerInput;
+import org.trinity.foundation.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.Painter;
+import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.foundation.api.ManagedDisplay;
 import org.trinity.shell.foundation.api.event.KeyboardKeyPressedHandler;
 import org.trinity.shell.foundation.api.event.KeyboardKeyReleasedHandler;

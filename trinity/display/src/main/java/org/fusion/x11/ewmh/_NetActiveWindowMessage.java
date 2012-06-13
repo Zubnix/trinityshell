@@ -22,11 +22,11 @@ package org.fusion.x11.ewmh;
  * @since 1.0
  */
 import org.fusion.x11.core.IntDataContainer;
-import org.trinity.core.display.api.event.ClientMessageEvent;
 import org.trinity.display.x11.impl.XServerImpl;
 import org.trinity.display.x11.impl.XIDImpl;
 import org.trinity.display.x11.impl.XResourceHandleImpl;
 import org.trinity.display.x11.impl.XWindowImpl;
+import org.trinity.foundation.display.api.event.ClientMessageEvent;
 
 public final class _NetActiveWindowMessage extends EwmhClientMessageEvent
 		implements HasSourceIndication {

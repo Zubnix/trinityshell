@@ -11,15 +11,15 @@
  */
 package org.trinity.render.paintengine.qt.impl.eventconverters;
 
-import org.trinity.core.display.api.event.ButtonNotifyEvent;
-import org.trinity.core.display.api.event.DisplayEventFactory;
-import org.trinity.core.display.api.event.DisplayEventSource;
-import org.trinity.core.input.api.Button;
-import org.trinity.core.input.api.ButtonFactory;
-import org.trinity.core.input.api.InputModifiers;
-import org.trinity.core.input.api.InputModifiersFactory;
-import org.trinity.core.input.api.PointerInput;
-import org.trinity.core.input.api.PointerInputFactory;
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
+import org.trinity.foundation.display.api.event.DisplayEventFactory;
+import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.input.api.Button;
+import org.trinity.foundation.input.api.ButtonFactory;
+import org.trinity.foundation.input.api.InputModifiers;
+import org.trinity.foundation.input.api.InputModifiersFactory;
+import org.trinity.foundation.input.api.PointerInput;
+import org.trinity.foundation.input.api.PointerInputFactory;
 import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
 
 import com.google.inject.Inject;

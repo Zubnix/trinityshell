@@ -19,11 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.fusion.x11.core.XAtom;
-import org.trinity.core.display.api.Atom;
-import org.trinity.core.display.api.event.ClientMessageEvent;
 import org.trinity.core.event.api.EventBus;
 import org.trinity.core.event.api.EventHandler;
 import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.foundation.display.api.Atom;
+import org.trinity.foundation.display.api.event.ClientMessageEvent;
 
 
 //TODO documentation

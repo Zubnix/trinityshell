@@ -13,14 +13,14 @@ package org.trinity.render.paintengine.qt.impl.painter;
 
 import javax.inject.Named;
 
-import org.trinity.core.display.api.ResourceHandle;
 import org.trinity.core.geometry.api.Coordinates;
-import org.trinity.core.render.api.PaintCalculation;
-import org.trinity.core.render.api.PaintConstruction;
-import org.trinity.core.render.api.PaintInstruction;
-import org.trinity.core.render.api.Paintable;
-import org.trinity.core.render.api.Painter;
-import org.trinity.core.render.api.RenderEngine;
+import org.trinity.foundation.display.api.ResourceHandle;
+import org.trinity.foundation.render.api.PaintCalculation;
+import org.trinity.foundation.render.api.PaintConstruction;
+import org.trinity.foundation.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.Paintable;
+import org.trinity.foundation.render.api.Painter;
+import org.trinity.foundation.render.api.RenderEngine;
 import org.trinity.render.paintengine.qt.api.QFRenderEngine;
 import org.trinity.render.paintengine.qt.api.painter.QFPaintCalculationFactory;
 import org.trinity.render.paintengine.qt.api.painter.QFPaintConstruction;

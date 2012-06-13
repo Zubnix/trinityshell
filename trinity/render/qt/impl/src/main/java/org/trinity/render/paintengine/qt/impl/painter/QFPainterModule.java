@@ -11,10 +11,10 @@
  */
 package org.trinity.render.paintengine.qt.impl.painter;
 
-import org.trinity.core.render.api.PaintCalculation;
-import org.trinity.core.render.api.PaintInstruction;
-import org.trinity.core.render.api.Painter;
-import org.trinity.core.render.api.PainterFactory;
+import org.trinity.foundation.render.api.PaintCalculation;
+import org.trinity.foundation.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.Painter;
+import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.render.paintengine.qt.api.painter.QFPaintCalculationFactory;
 import org.trinity.render.paintengine.qt.api.painter.QFPaintInstructionFactory;
 import org.trinity.render.paintengine.qt.impl.painter.instructions.QFDestroyInstruction;

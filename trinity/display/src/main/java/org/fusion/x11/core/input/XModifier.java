@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.core.input;
 
-import org.trinity.core.input.api.InputModifierName;
-import org.trinity.core.input.api.Modifier;
+import org.trinity.foundation.input.api.InputModifierName;
+import org.trinity.foundation.input.api.Modifier;
 
 // TODO documentation
 /**

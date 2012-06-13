@@ -11,10 +11,10 @@
  */
 package org.trinity.core.display.impl.event;
 
-import org.trinity.core.display.api.event.DisplayEventSource;
-import org.trinity.core.display.api.event.DisplayEventType;
-import org.trinity.core.display.api.event.InputNotifyEvent;
-import org.trinity.core.input.api.Input;
+import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.DisplayEventType;
+import org.trinity.foundation.display.api.event.InputNotifyEvent;
+import org.trinity.foundation.input.api.Input;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;

@@ -11,8 +11,8 @@
  */
 package org.trinity.shell.geo.impl;
 
-import org.trinity.core.display.api.Area;
-import org.trinity.core.display.api.AreaManipulator;
+import org.trinity.foundation.display.api.Area;
+import org.trinity.foundation.display.api.AreaManipulator;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 

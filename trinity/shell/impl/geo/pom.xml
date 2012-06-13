@@ -11,5 +11,12 @@
 
 	<artifactId>shell.impl.geo</artifactId>
 	<name>Shell geometry implementation</name>
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.display.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
 </project>
 

@@ -13,7 +13,7 @@ package org.trinity.render.paintengine.qt.api.painter;
 
 import javax.inject.Named;
 
-import org.trinity.core.render.api.Paintable;
+import org.trinity.foundation.render.api.Paintable;
 
 import com.google.inject.assistedinject.Assisted;
 

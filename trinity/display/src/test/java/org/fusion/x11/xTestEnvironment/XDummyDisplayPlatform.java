@@ -18,7 +18,7 @@ package org.fusion.x11.xTestEnvironment;
 import org.fusion.x11.core.XCoreInterfaceProvider;
 import org.fusion.x11.core.XDisplayPlatform;
  
-import org.trinity.core.render.api.PainterFactoryProvider;
+import org.trinity.foundation.render.api.PainterFactoryProvider;
 
 /**
  * Test framework code. Currently unused.

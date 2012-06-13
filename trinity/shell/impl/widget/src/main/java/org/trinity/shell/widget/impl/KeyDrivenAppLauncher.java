@@ -18,8 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.trinity.core.input.api.SpecialKeyName;
-import org.trinity.core.render.api.PainterFactory;
+import org.trinity.foundation.input.api.SpecialKeyName;
+import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.input.api.KeyInputStringBuilder;
 import org.trinity.shell.input.api.ManagedKeyboard;

@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>display.x11.api.extension</artifactId>
+		<groupId>org.trinity.display.x11</groupId>
+		<version>0.0.1</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<artifactId>display.x11.api.extension.damage</artifactId>
+	<name>Display X11 damage API module</name>
+	<packaging>jar</packaging>
+
+	<properties>
+		<maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.executable>javac</maven.compiler.executable>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.display.x11</groupId>
+			<artifactId>display.x11.api.core</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.display.x11</groupId>
+			<artifactId>display.x11.api.extension.fixes</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
+</project>
+

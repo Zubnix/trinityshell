@@ -11,9 +11,9 @@
  */
 package org.trinity.render.paintengine.qt.impl.eventconverters;
 
-import org.trinity.core.display.api.event.DestroyNotifyEvent;
-import org.trinity.core.display.api.event.DisplayEventFactory;
-import org.trinity.core.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
+import org.trinity.foundation.display.api.event.DisplayEventFactory;
+import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
 
 import com.google.inject.Inject;

@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.core.render.api.PainterFactory;
+import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.impl.manager.GeoManagerDirect;
 import org.trinity.shell.widget.api.Root;

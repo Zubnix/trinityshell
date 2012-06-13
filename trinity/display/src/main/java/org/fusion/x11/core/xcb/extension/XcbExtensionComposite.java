@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.core.xcb.extension;
 
-import org.trinity.display.x11.api.extension.composite.XCompositeUpdateMode;
-import org.trinity.display.x11.api.extension.composite.XExtensionComposite;
+import org.trinity.dispay.x11.api.extension.composite.XCompositeUpdateMode;
+import org.trinity.dispay.x11.api.extension.composite.XExtensionComposite;
 import org.trinity.display.x11.impl.XCallerImpl;
 import org.trinity.display.x11.impl.XServerImpl;
 import org.trinity.display.x11.impl.XWindowImpl;

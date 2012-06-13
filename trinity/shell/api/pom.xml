@@ -12,10 +12,14 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.trinity.core</groupId>
-			<artifactId>core.api</artifactId>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.display.api</artifactId>
 			<version>0.0.1</version>
-			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.render.api</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 	</dependencies>
 </project>

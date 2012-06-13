@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.ewmh;
 
-import org.trinity.core.display.api.event.ClientMessageEvent;
 import org.trinity.core.event.api.Event;
+import org.trinity.foundation.display.api.event.ClientMessageEvent;
 
 //TODO documentation
 /**

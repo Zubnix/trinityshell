@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.fusion.x11.core.FlexDataContainer;
 import org.fusion.x11.core.IntDataContainer;
 import org.fusion.x11.ewmh._NetWmIconInstance.WmIcon;
-import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.display.x11.impl.FlexDataContainer;
 import org.trinity.display.x11.impl.XServerImpl;
 import org.trinity.display.x11.impl.property.XPropertyInstanceInfo;
 import org.trinity.display.x11.impl.property.AbstractXProperty;
+import org.trinity.foundation.display.api.PlatformRenderArea;
 
 // TODO documentation
 /**

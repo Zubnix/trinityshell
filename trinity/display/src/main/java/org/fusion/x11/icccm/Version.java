@@ -15,12 +15,12 @@
  */
 package org.fusion.x11.icccm;
 
-import org.fusion.x11.core.FlexDataContainer;
 import org.fusion.x11.core.IntDataContainer;
-import org.trinity.core.display.api.PlatformRenderArea;
+import org.trinity.display.x11.impl.FlexDataContainer;
 import org.trinity.display.x11.impl.XServerImpl;
 import org.trinity.display.x11.impl.property.XPropertyInstanceInfo;
 import org.trinity.display.x11.impl.property.AbstractXProperty;
+import org.trinity.foundation.display.api.PlatformRenderArea;
 
 //TODO documentation
 /**

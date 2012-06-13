@@ -15,9 +15,9 @@ package org.trinity.shell.input.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.trinity.core.display.api.event.KeyNotifyEvent;
-import org.trinity.core.input.api.InputModifierName;
-import org.trinity.core.input.api.SpecialKeyName;
+import org.trinity.foundation.display.api.event.KeyNotifyEvent;
+import org.trinity.foundation.input.api.InputModifierName;
+import org.trinity.foundation.input.api.SpecialKeyName;
 import org.trinity.shell.input.api.KeyInputStringBuilder;
 import org.trinity.shell.input.api.ManagedKeyboard;
 

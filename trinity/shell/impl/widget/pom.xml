@@ -18,6 +18,11 @@
 			<version>0.0.1</version>
 			<artifactId>shell.impl.foundation</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.render.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 	</dependencies>
 </project>
 

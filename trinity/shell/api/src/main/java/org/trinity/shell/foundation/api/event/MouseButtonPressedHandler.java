@@ -15,8 +15,8 @@
  */
 package org.trinity.shell.foundation.api.event;
 
-import org.trinity.core.display.api.event.ButtonNotifyEvent;
-import org.trinity.core.display.api.event.DisplayEventType;
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
+import org.trinity.foundation.display.api.event.DisplayEventType;
 
 public abstract class MouseButtonPressedHandler implements
 		DisplayEventHandler<ButtonNotifyEvent> {

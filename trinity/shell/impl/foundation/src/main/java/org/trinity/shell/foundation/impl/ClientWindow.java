@@ -11,13 +11,13 @@
  */
 package org.trinity.shell.foundation.impl;
 
-import org.trinity.core.display.api.DisplayEventSelector;
-import org.trinity.core.display.api.PlatformRenderArea;
-import org.trinity.core.display.api.event.ConfigureRequestEvent;
-import org.trinity.core.display.api.event.DisplayEventType;
-import org.trinity.core.display.api.event.MapRequestEvent;
-import org.trinity.core.display.api.event.UnmappedNotifyEvent;
 import org.trinity.core.event.api.EventHandler;
+import org.trinity.foundation.display.api.DisplayEventSelector;
+import org.trinity.foundation.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.event.ConfigureRequestEvent;
+import org.trinity.foundation.display.api.event.DisplayEventType;
+import org.trinity.foundation.display.api.event.MapRequestEvent;
+import org.trinity.foundation.display.api.event.UnmappedNotifyEvent;
 import org.trinity.shell.foundation.api.ManagedDisplay;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.widget.api.Root;

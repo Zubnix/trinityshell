@@ -14,9 +14,9 @@ package org.trinity.shell.input.impl;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.trinity.core.display.api.event.InputNotifyEvent;
 import org.trinity.core.event.api.EventManager;
-import org.trinity.core.input.api.Input;
+import org.trinity.foundation.display.api.event.InputNotifyEvent;
+import org.trinity.foundation.input.api.Input;
 import org.trinity.shell.input.api.InputDevice;
 
 // TODO documentation

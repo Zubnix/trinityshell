@@ -17,6 +17,8 @@ package org.fusion.x11.core;
 
 import java.nio.LongBuffer;
 
+import org.trinity.display.x11.api.core.DataFormat;
+
 /**
  * A <code>LongDataContainer</code> is a helper class to read or write raw byte
  * data coming from a 64-bit <code>Long</code>.

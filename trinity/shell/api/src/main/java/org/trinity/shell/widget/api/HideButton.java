@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.widget.api;
 
-import org.trinity.core.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.shell.foundation.api.RenderArea;
 
 public interface HideButton extends Button, RectangleManipulator {

@@ -15,8 +15,8 @@
  */
 package org.trinity.shell.foundation.api.event;
 
-import org.trinity.core.display.api.event.DisplayEventType;
-import org.trinity.core.display.api.event.KeyNotifyEvent;
+import org.trinity.foundation.display.api.event.DisplayEventType;
+import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 
 public abstract class KeyboardKeyReleasedHandler implements
 		DisplayEventHandler<KeyNotifyEvent> {

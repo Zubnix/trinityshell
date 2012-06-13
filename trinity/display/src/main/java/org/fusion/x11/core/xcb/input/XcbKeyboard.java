@@ -24,13 +24,13 @@ import org.fusion.x11.core.input.XKeySymbol;
 import org.fusion.x11.core.input.XModifier;
 import org.fusion.x11.core.xcb.XcbCoreInterfaceImpl;
 import org.fusion.x11.core.xcb.error.UnknownKeyException;
-import org.trinity.core.input.api.InputModifierName;
-import org.trinity.core.input.api.InputModifiers;
-import org.trinity.core.input.api.Key;
-import org.trinity.core.input.api.Modifier;
 import org.trinity.core.input.impl.BaseInputModifiers;
 import org.trinity.display.x11.api.XKeyboard;
 import org.trinity.display.x11.impl.XServerImpl;
+import org.trinity.foundation.input.api.InputModifierName;
+import org.trinity.foundation.input.api.InputModifiers;
+import org.trinity.foundation.input.api.Key;
+import org.trinity.foundation.input.api.Modifier;
 
 // TODO documentation
 /**

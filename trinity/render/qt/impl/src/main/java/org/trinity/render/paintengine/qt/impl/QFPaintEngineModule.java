@@ -11,9 +11,6 @@
  */
 package org.trinity.render.paintengine.qt.impl;
 
-import org.trinity.core.display.api.DisplayEventConverter;
-import org.trinity.core.display.api.DisplayEventProducer;
-import org.trinity.core.render.api.RenderEngine;
 import org.trinity.render.paintengine.qt.api.QFRenderEventBridge;
 import org.trinity.render.paintengine.qt.impl.eventconverters.QFButtonPressedConverterImpl;
 import org.trinity.render.paintengine.qt.impl.eventconverters.QFButtonReleasedConverterImpl;

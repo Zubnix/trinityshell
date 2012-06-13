@@ -17,6 +17,8 @@ package org.fusion.x11.core;
 
 import java.nio.IntBuffer;
 
+import org.trinity.display.x11.api.core.DataFormat;
+
 /**
  * An <code>IntDataContainer</code> is a helper class to read or write raw byte
  * data coming from a 32-bit <code>Integer</code>.

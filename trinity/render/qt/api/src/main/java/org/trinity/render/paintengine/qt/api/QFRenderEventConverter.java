@@ -11,8 +11,6 @@
  */
 package org.trinity.render.paintengine.qt.api;
 
-import org.trinity.core.display.api.DisplayEventConverter;
-
 import com.trolltech.qt.core.QEvent;
 
 /*****************************************

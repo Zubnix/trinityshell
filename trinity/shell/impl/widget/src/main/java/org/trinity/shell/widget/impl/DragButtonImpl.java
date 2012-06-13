@@ -12,8 +12,8 @@
 package org.trinity.shell.widget.impl;
 
 import org.trinity.core.geometry.api.Coordinates;
-import org.trinity.core.input.api.PointerInput;
-import org.trinity.core.render.api.PainterFactory;
+import org.trinity.foundation.input.api.PointerInput;
+import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.input.api.ManagedMouse;

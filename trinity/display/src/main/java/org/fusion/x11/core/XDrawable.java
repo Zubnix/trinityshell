@@ -15,8 +15,8 @@
  */
 package org.fusion.x11.core;
 
-import org.trinity.core.display.api.DisplayResource;
-import org.trinity.core.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.DisplayResource;
+import org.trinity.foundation.display.api.event.DisplayEventSource;
 //currently unused
 //TODO documentation
 //TODO instead of defining a seperate blingbling class hierarchy we might want to implement a 

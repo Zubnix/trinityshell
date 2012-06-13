@@ -13,7 +13,7 @@ package org.trinity.shell.widget.api;
 
 import java.util.List;
 
-import org.trinity.core.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.PaintInstruction;
 
 public interface KeyDrivenMenu extends Widget {
 

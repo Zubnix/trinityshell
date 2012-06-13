@@ -22,12 +22,12 @@ import org.fusion.x11.core.XCoreInterface;
 import org.fusion.x11.core.input.XKeySymbol;
 import org.fusion.x11.core.input.XKeySymbolRegistry;
 import org.fusion.x11.core.input.XModifier;
-import org.trinity.core.input.api.InputModifierName;
-import org.trinity.core.input.api.InputModifiers;
-import org.trinity.core.input.api.Key;
-import org.trinity.core.input.api.SpecialKeyName;
 import org.trinity.display.x11.impl.XServerImpl;
 import org.trinity.display.x11.impl.xcb.jni.Xcb4J;
+import org.trinity.foundation.input.api.InputModifierName;
+import org.trinity.foundation.input.api.InputModifiers;
+import org.trinity.foundation.input.api.Key;
+import org.trinity.foundation.input.api.SpecialKeyName;
 
 // TODO This is becoming a bit of a mess, rewrite?
 // TODO documentation
