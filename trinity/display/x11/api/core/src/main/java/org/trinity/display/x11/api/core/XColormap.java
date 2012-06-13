@@ -9,20 +9,12 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.render.paintengine.qt.api;
-
-import org.trinity.foundation.display.api.event.DisplayEvent;
-import org.trinity.foundation.display.api.event.DisplayEventSource;
-
-import com.trolltech.qt.core.QEvent;
+package org.trinity.display.x11.api.core;
 
 /*****************************************
  * @author Erik De Rijcke
+ * 
  ****************************************/
-public interface QFRenderEventConverter {
-
-	DisplayEvent convertEvent(DisplayEventSource eventSource, QEvent xEvent);
-
-	QEvent.Type getQEventType();
+public interface XColormap extends XResource {
 
 }

@@ -15,11 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.trinity.foundation.display.api.DisplayEventConverter;
 import org.trinity.foundation.display.api.DisplayEventQueue;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.render.paintengine.qt.api.QFRenderEventBridge;
+import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
 
 import com.google.inject.Inject;
 import com.trolltech.qt.core.QEvent;
@@ -42,15 +42,15 @@ import com.trolltech.qt.core.QEvent;
  */
 public class QFRenderEventBridgeImpl implements QFRenderEventBridge {
 
-	private final Map<QEvent.Type, DisplayEventConverter<? extends QEvent, QEvent.Type>> converterByQEventType = new HashMap<QEvent.Type, DisplayEventConverter<? extends QEvent, QEvent.Type>>();
+	private final Map<QEvent.Type, QFRenderEventConverter> converterByQEventType = new HashMap<QEvent.Type, QFRenderEventConverter>();
 	private final DisplayEventQueue displayEventQueue;
 
 	@Inject
-	protected QFRenderEventBridgeImpl(	final Set<DisplayEventConverter<? extends QEvent, QEvent.Type>> qfusionEventConverters,
+	protected QFRenderEventBridgeImpl(	final Set<QFRenderEventConverter> qfusionEventConverters,
 										final DisplayEventQueue displayEventQueue) {
 		this.displayEventQueue = displayEventQueue;
-		for (final DisplayEventConverter<? extends QEvent, QEvent.Type> eventConverter : qfusionEventConverters) {
-			this.converterByQEventType.put(	eventConverter.getFromSourceType(),
+		for (final QFRenderEventConverter eventConverter : qfusionEventConverters) {
+			this.converterByQEventType.put(	eventConverter.getQEventType(),
 											eventConverter);
 		}
 
@@ -63,8 +63,7 @@ public class QFRenderEventBridgeImpl implements QFRenderEventBridge {
 			return;
 		}
 
-		@SuppressWarnings("unchecked")
-		final DisplayEventConverter<QEvent, QEvent.Type> eventConverter = (DisplayEventConverter<QEvent, QEvent.Type>) this.converterByQEventType
+		final QFRenderEventConverter eventConverter = this.converterByQEventType
 				.get(event.type());
 
 		if (eventConverter != null) {

@@ -96,7 +96,7 @@ public final class QFButtonReleasedConverterImpl implements
 	 * @see org.fusion.qt.paintengine.QFusionEventConverter#getFromType()
 	 */
 	@Override
-	public Type getFromType() {
+	public Type getQEventType() {
 		return this.qType;
 	}
 }
