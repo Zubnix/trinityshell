@@ -7,6 +7,6 @@
 		<relativePath>..</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>core.api</artifactId>
+	<artifactId>core.api.depricated</artifactId>
 	<name>Core API</name>
 </project>

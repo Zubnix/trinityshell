@@ -4,19 +4,19 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<artifactId>trinity</artifactId>
-		<groupId>org.trinity.root</groupId>
+		<groupId>org.trinity.display.x11</groupId>
+		<artifactId>display.x11</artifactId>
 		<version>0.0.1</version>
 		<relativePath>..</relativePath>
 	</parent>
 
-	<groupId>org.trinity.display</groupId>
-	<artifactId>display</artifactId>
-	<name>Display</name>
+	<artifactId>display.x11.core</artifactId>
+	<name>Display X11 core</name>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>x11</module>
+		<module>api</module>
+		<module>impl</module>
 	</modules>
 </project>
 

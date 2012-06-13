@@ -16,6 +16,7 @@
 		<module>display</module>
 		<module>input</module>
 		<module>render</module>
+		<module>shared</module>
 	</modules>
 
 	<properties>
@@ -24,5 +25,18 @@
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<maven.compiler.executable>javac</maven.compiler.executable>
 	</properties>
+	
+	<dependencies>
+	<dependency>
+		<groupId>com.google.inject.extensions</groupId>
+		<artifactId>guice-assistedinject</artifactId>
+		<version>3.0</version>
+	</dependency>
+	<dependency>
+		<groupId>com.google.guava</groupId>
+		<artifactId>guava</artifactId>
+		<version>12.0</version>
+	</dependency>
+	</dependencies>
 </project>
 

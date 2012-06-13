@@ -12,19 +12,17 @@
 
 	<groupId>org.trinity.display.x11</groupId>
 	<artifactId>display.x11</artifactId>
-	<name>Display X11 module</name>
+	<name>Display X11</name>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>api</module>
-		<module>impl</module>
+		<module>composite</module>
+		<module>core</module>
+		<module>damage</module>
+		<module>fixes</module>
+		<module>render</module>
+		<module>shape</module>
+		<module>sync</module>
+		<module>xcb4j</module>
 	</modules>
-
-	<properties>
-		<maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
-		<maven.compiler.executable>javac</maven.compiler.executable>
-	</properties>
 </project>
-
