@@ -11,7 +11,7 @@
  */
 package org.trinity.foundation.input.api;
 
-import org.trinity.core.geometry.api.Coordinates;
+import org.trinity.foundation.shared.geometry.api.Coordinates;
 
 /**
  * A <code>Mouse</code> is a graphical pointer representing a native pointing

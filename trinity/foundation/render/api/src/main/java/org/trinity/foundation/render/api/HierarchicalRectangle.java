@@ -11,8 +11,8 @@
  */
 package org.trinity.foundation.render.api;
 
-import org.trinity.core.geometry.api.Rectangle;
 import org.trinity.foundation.display.api.Area;
+import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 // TODO documentation
 /**

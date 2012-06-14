@@ -11,7 +11,7 @@
  */
 package org.trinity.display.x11.api.core;
 
-import org.trinity.core.geometry.api.Rectangle;
+import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 /*****************************************
  * @author Erik De Rijcke

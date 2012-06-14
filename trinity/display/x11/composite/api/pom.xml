@@ -13,5 +13,12 @@
 	<artifactId>display.x11.composite.api</artifactId>
 	<name>Display X11 composite api</name>
 	<packaging>jar</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.display.x11</groupId>
+			<artifactId>display.x11.core.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
 </project>
 

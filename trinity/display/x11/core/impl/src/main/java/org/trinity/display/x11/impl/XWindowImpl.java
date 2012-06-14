@@ -11,7 +11,6 @@
  */
 package org.trinity.display.x11.impl;
 
-import org.trinity.core.geometry.api.Coordinates;
 import org.trinity.display.x11.api.core.XCall;
 import org.trinity.display.x11.api.core.XCaller;
 import org.trinity.display.x11.api.core.XConnection;
@@ -26,6 +25,7 @@ import org.trinity.foundation.display.api.PlatformRenderAreaAttributes;
 import org.trinity.foundation.input.api.Button;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
+import org.trinity.foundation.shared.geometry.api.Coordinates;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;

@@ -11,21 +11,15 @@
 	<name>Foundation Display API</name>
 	<packaging>jar</packaging>
 
-	<properties>
-		<maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
-		<maven.compiler.executable>javac</maven.compiler.executable>
-	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>org.trinity.core</groupId>
-			<artifactId>core.api</artifactId>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.input.api</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.trinity.foundation</groupId>
-			<artifactId>foundation.input.api</artifactId>
+			<artifactId>foundation.shared.api</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 	</dependencies>

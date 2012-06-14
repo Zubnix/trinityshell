@@ -11,11 +11,11 @@
  */
 package org.trinity.foundation.display.api;
 
-import org.trinity.core.geometry.api.Rectangle;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.input.api.Button;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
+import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 // TODO documentation
 /**

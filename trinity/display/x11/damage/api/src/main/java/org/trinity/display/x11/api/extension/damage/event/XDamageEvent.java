@@ -1,8 +1,8 @@
 package org.trinity.display.x11.api.extension.damage.event;
 
-import org.trinity.core.geometry.api.Rectangle;
 import org.trinity.display.x11.api.core.event.XEvent;
 import org.trinity.display.x11.api.extension.damage.XDamage;
+import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 // currently unused
 // TODO documentation
