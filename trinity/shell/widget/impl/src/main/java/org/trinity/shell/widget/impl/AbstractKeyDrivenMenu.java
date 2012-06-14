@@ -11,11 +11,10 @@
  */
 package org.trinity.shell.widget.impl;
 
+import java.beans.EventHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.trinity.core.event.api.EventHandler;
-import org.trinity.foundation.display.api.event.DisplayEventType;
 import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.SpecialKeyName;
 import org.trinity.foundation.render.api.PainterFactory;

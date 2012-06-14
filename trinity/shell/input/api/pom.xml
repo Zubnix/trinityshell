@@ -12,4 +12,16 @@
 	<artifactId>shell.input.api</artifactId>
 	<name>Shell input api</name>
 	<packaging>jar</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.input.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.display.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
 </project>

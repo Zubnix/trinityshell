@@ -12,4 +12,11 @@
 	<artifactId>shell.geo.impl</artifactId>
 	<name>Shell geo implementation</name>
 	<packaging>jar</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.geo.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
 </project>

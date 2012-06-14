@@ -76,10 +76,6 @@ public interface GeoTransformableRectangle extends HierarchicalRectangle,
 	@Override
 	GeoTransformableRectangle getParent();
 
-	void addGeoEventHandler(GeoEventHandler geoEventHandler);
-
-	void removeGeoEventHandler(GeoEventHandler geoEventHandler);
-
 	/**
 	 * Handles a child's geometry request and will be notified of this
 	 * <code>GeoTransformableRectangle</code> geometry changes.

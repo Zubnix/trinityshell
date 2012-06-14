@@ -11,7 +11,6 @@
  */
 package org.trinity.shell.core.api;
 
-import org.trinity.core.event.api.EventManager;
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;

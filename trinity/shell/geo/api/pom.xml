@@ -12,4 +12,11 @@
 	<artifactId>shell.geo.api</artifactId>
 	<name>Shell geo api</name>
 	<packaging>jar</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.render.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
 </project>

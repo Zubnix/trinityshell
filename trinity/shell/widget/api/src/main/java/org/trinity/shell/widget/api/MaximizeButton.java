@@ -12,7 +12,7 @@
 package org.trinity.shell.widget.api;
 
 import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.shell.foundation.api.RenderArea;
+import org.trinity.shell.core.api.RenderArea;
 
 public interface MaximizeButton extends Button, RectangleManipulator {
 

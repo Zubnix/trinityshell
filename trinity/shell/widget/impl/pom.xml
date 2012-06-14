@@ -12,4 +12,11 @@
 	<artifactId>shell.widget.impl</artifactId>
 	<name>Shell widget implementation</name>
 	<packaging>jar</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.widget.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
 </project>

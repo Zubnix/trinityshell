@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.input.api;
 
-import org.trinity.core.geometry.api.Coordinates;
+import org.trinity.foundation.shared.geometry.api.Coordinates;
 
 public interface ManagedMouse extends InputDevice {
 	Coordinates getAbsolutePosition();

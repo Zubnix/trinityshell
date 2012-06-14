@@ -25,9 +25,9 @@ import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.input.api.Modifier;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.input.api.SpecialKeyName;
-import org.trinity.shell.foundation.api.ManagedDisplay;
-import org.trinity.shell.foundation.api.event.KeyboardKeyPressedHandler;
-import org.trinity.shell.foundation.api.event.KeyboardKeyReleasedHandler;
+import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.event.KeyboardKeyPressedHandler;
+import org.trinity.shell.core.api.event.KeyboardKeyReleasedHandler;
 import org.trinity.shell.input.api.KeyBinding;
 import org.trinity.shell.widget.api.Root;
 

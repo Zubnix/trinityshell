@@ -14,7 +14,6 @@ package org.trinity.shell.geo.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.trinity.core.event.api.EventBus;
 import org.trinity.shell.geo.api.GeoEvent;
 import org.trinity.shell.geo.api.GeoEventHandler;
 import org.trinity.shell.geo.api.GeoExecutor;
@@ -22,6 +21,8 @@ import org.trinity.shell.geo.api.GeoOperation;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.api.GeoTransformation;
 import org.trinity.shell.geo.api.manager.GeoManager;
+
+import com.google.common.eventbus.EventBus;
 
 // TODO Let geo events travel downwards to children to notify them that one of
 // their parents has changed

@@ -11,14 +11,14 @@
  */
 package org.trinity.shell.widget.api;
 
-import org.trinity.core.geometry.api.Rectangle;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.input.api.KeyboardInput;
 import org.trinity.foundation.input.api.PointerInput;
 import org.trinity.foundation.render.api.PaintConstruction;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Paintable;
-import org.trinity.shell.foundation.api.RenderArea;
+import org.trinity.foundation.shared.geometry.api.Rectangle;
+import org.trinity.shell.core.api.RenderArea;
 
 public interface Widget extends Paintable, DisplayEventSource, RenderArea {
 

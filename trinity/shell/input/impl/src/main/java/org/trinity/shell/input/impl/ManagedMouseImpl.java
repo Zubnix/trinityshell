@@ -11,12 +11,13 @@
  */
 package org.trinity.shell.input.impl;
 
-import org.trinity.core.geometry.api.Coordinates;
-import org.trinity.core.geometry.api.GeometryFactory;
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.input.api.Mouse;
-import org.trinity.shell.foundation.api.ManagedDisplay;
-import org.trinity.shell.foundation.api.event.MouseButtonPressedHandler;
-import org.trinity.shell.foundation.api.event.MouseButtonReleasedHandler;
+import org.trinity.foundation.shared.geometry.api.Coordinates;
+import org.trinity.foundation.shared.geometry.api.GeometryFactory;
+import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.event.MouseButtonPressedHandler;
+import org.trinity.shell.core.api.event.MouseButtonReleasedHandler;
 import org.trinity.shell.input.api.ManagedMouse;
 import org.trinity.shell.widget.api.Root;
 
