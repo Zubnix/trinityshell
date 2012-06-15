@@ -85,4 +85,14 @@ public interface GeoTransformableRectangle extends HierarchicalRectangle,
 	GeoManager getGeoManager();
 
 	void setGeoManager(GeoManager geoManager);
+
+	/*****************************************
+	 * @param geoEventHandler
+	 ****************************************/
+	void addGeoEventHandler(Object geoEventHandler);
+
+	/*****************************************
+	 * @param abstractGeoTransformableRectangle
+	 ****************************************/
+	void removeGeoEventHandler(Object geoEventHandler);
 }

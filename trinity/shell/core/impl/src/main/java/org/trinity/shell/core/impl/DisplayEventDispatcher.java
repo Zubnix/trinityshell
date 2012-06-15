@@ -17,21 +17,17 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.log4j.Logger;
-import org.trinity.core.event.api.EventBus;
-import org.trinity.core.event.api.EventHandler;
-import org.trinity.core.event.api.EventManager;
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.PlatformRenderArea;
 import org.trinity.foundation.display.api.event.ConfigureRequestEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.display.api.event.DisplayEventType;
 import org.trinity.foundation.display.api.event.MapRequestEvent;
-import org.trinity.shell.foundation.api.ManagedDisplay;
-import org.trinity.shell.foundation.api.RenderAreaFactory;
-import org.trinity.shell.foundation.api.event.ClientCreatedHandler;
-import org.trinity.shell.foundation.api.event.DisplayEventHandler;
+import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.RenderAreaFactory;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 /**
  * An <code>EventDispatcher</code> fetches and dispatches
@@ -53,169 +49,65 @@ import org.trinity.shell.foundation.api.event.DisplayEventHandler;
  */
 final class DisplayEventDispatcher implements Runnable {
 
-	private final EventBus displayEventEmitter = new EventBus();
+	private final EventBus displayEventBus;
 
 	// TODO this is basically the same mechanism as used in EventBus. Find a way
 	// to seperate and uniform this mechanism.
-	private final Map<DisplayEventSource, List<WeakReference<EventManager>>> eventManagers;
-	private final List<ClientCreatedHandler> clientCreatedHandlers;
-
-	private final class ConfigureRequestHandler implements
-			DisplayEventHandler<ConfigureRequestEvent> {
-		@Override
-		public void handleEvent(final ConfigureRequestEvent event) {
-			handleConfigureRequestEvent(event);
-		}
-
-		@Override
-		public DisplayEventType getType() {
-			return DisplayEventType.CONFIGURE_REQUEST;
-		}
-	}
-
-	private final class MapRequestEventHandler implements
-			DisplayEventHandler<MapRequestEvent> {
-		@Override
-		public void handleEvent(final MapRequestEvent event) {
-			handleMapRequestEvent(event);
-		}
-
-		@Override
-		public DisplayEventType getType() {
-			return DisplayEventType.MAP_REQUEST;
-		}
-	}
-
-	private final class DefaultDisplayEventHandler implements
-			EventHandler<DisplayEvent> {
-		@Override
-		public void handleEvent(final DisplayEvent event) {
-			doDefaultEventHandlingForDisplayEvent(event);
-		}
-	}
-
-	private static final Logger LOGGER = Logger
-			.getLogger(DisplayEventDispatcher.class);
-	private static final String DISPLAYEVENT_LOGMESSAGE = "Firing display event: %s";
-	private static final String THREADSTART_LOGMESSAGE = "Starting display event dispatching loop.";
-	private static final String THREADSTOP_LOGMESSAGE = "Display event dispatching loop terminated.";
+	private final Map<DisplayEventSource, List<WeakReference<EventBus>>> eventManagers;
 
 	private final DisplayServer display;
 
 	private final RenderAreaFactory clientFactory;
-	private volatile boolean running;
 
-	DisplayEventDispatcher(	final DisplayServer display,
+	DisplayEventDispatcher(	final EventBus eventBus,
+							final DisplayServer display,
 							final RenderAreaFactory clientFactory) {
-		this.clientCreatedHandlers = new CopyOnWriteArrayList<ClientCreatedHandler>();
-		this.eventManagers = new WeakHashMap<DisplayEventSource, List<WeakReference<EventManager>>>();
+		this.displayEventBus = eventBus;
+		this.eventManagers = new WeakHashMap<DisplayEventSource, List<WeakReference<EventBus>>>();
 		this.display = display;
 		this.clientFactory = clientFactory;
-		initEventManagers();
+		this.displayEventBus.register(this);
 	}
 
-	private void initEventManagers() {
-		this.displayEventEmitter
-				.addTypedEventHandler(new ConfigureRequestHandler());
-		this.displayEventEmitter
-				.addTypedEventHandler(new MapRequestEventHandler());
-		final DefaultDisplayEventHandler defaultDisplayEventHandler = new DefaultDisplayEventHandler();
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.BUTTON_PRESSED);
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.BUTTON_RELEASED);
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.KEY_PRESSED);
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.KEY_RELEASED);
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.DESTROY_NOTIFY);
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.UNMAP_NOTIFY);
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.MOUSE_ENTER);
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.MOUSE_LEAVE);
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.PROPERTY_CHANGED);
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.FOCUS_GAIN_NOTIFY);
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.FOCUS_LOST_NOTIFY);
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.MAP_NOTIFY);
-		this.displayEventEmitter
-				.addEventHandler(	defaultDisplayEventHandler,
-									DisplayEventType.CONFIGURE_NOTIFY);
-	}
-
-	private void handleMapRequestEvent(final MapRequestEvent event) {
+	@Subscribe
+	public void handleMapRequestEvent(final MapRequestEvent event) {
 		createNewClientWhenNoEventManagers(event);
 	}
 
-	private void handleConfigureRequestEvent(final ConfigureRequestEvent event) {
+	@Subscribe
+	public void handleConfigureRequestEvent(final ConfigureRequestEvent event) {
 		createNewClientWhenNoEventManagers(event);
 	}
 
 	private void createNewClientWhenNoEventManagers(final DisplayEvent event) {
-		final List<WeakReference<EventManager>> eventManagersByEventSource = this.eventManagers
+		final List<WeakReference<EventBus>> eventManagersByEventSource = this.eventManagers
 				.get(event.getEventSource());
 
 		final DisplayEventSource eventSource = event.getEventSource();
 
 		if (((eventManagersByEventSource == null) || eventManagersByEventSource
 				.isEmpty()) && (eventSource instanceof PlatformRenderArea)) {
-			final ClientWindow client = (ClientWindow) this.clientFactory
+			this.clientFactory
 					.createRenderArea((PlatformRenderArea) eventSource);
-			notifyClientCreatedHandlers(client);
-			client.fireEvent(event);
-		} else {
-			doDefaultEventHandlingForDisplayEvent(event);
 		}
-	}
-
-	private void notifyClientCreatedHandlers(final ClientWindow clientWindow) {
-		for (final ClientCreatedHandler clientCreatedHandler : this.clientCreatedHandlers) {
-			clientCreatedHandler.handleCreatedClient(clientWindow);
-		}
+		doDefaultEventHandlingForDisplayEvent(event);
 	}
 
 	@Override
 	public void run() {
-		DisplayEventDispatcher.LOGGER
-				.info(DisplayEventDispatcher.THREADSTART_LOGMESSAGE);
-
-		if (this.running) {
-			return;
-		}
-		this.running = true;
 		Thread.currentThread()
 				.setName(String.format(	"Hyperdrive %s thread",
 										DisplayEventDispatcher.class
 												.getSimpleName()));
 
-		while (this.running) {
+		while (!Thread.interrupted()) {
 			try {
-				dispatchNextEvent(true);
+				postNextEvent(true);
 			} catch (final Exception e) {
 				e.printStackTrace();
 			}
+			Thread.yield();
 		}
-
-		DisplayEventDispatcher.LOGGER
-				.info(DisplayEventDispatcher.THREADSTOP_LOGMESSAGE);
 	}
 
 	/**
@@ -225,68 +117,42 @@ final class DisplayEventDispatcher implements Runnable {
 	 *            True to wait for a new event to become available. False to
 	 *            continue without dispatching an event.
 	 */
-	void dispatchNextEvent(final boolean block) {
+	public void postNextEvent(final boolean block) {
 		if (!block && this.display.hasNextDisplayEvent()) {
 			return;
 		}
 
-		final DisplayEvent displayEvent = this.display
-				.getNextDisplayEvent();
+		final DisplayEvent displayEvent = this.display.getNextDisplayEvent();
 
 		if (displayEvent != null) {
-
-			DisplayEventDispatcher.LOGGER.debug(String
-					.format(DisplayEventDispatcher.DISPLAYEVENT_LOGMESSAGE,
-							displayEvent,
-							this.display));
-
-			this.displayEventEmitter.fireEvent(displayEvent);
+			this.displayEventBus.post(displayEvent);
 		}
 	}
 
-	void shutDown() {
-		this.running = false;
-	}
+	@Subscribe
+	public void doDefaultEventHandlingForDisplayEvent(final DisplayEvent event) {
+		final List<WeakReference<EventBus>> list = this.eventManagers.get(event
+				.getEventSource());
 
-	private void doDefaultEventHandlingForDisplayEvent(final DisplayEvent event) {
-		final List<WeakReference<EventManager>> list = this.eventManagers
-				.get(event.getEventSource());
-
-		for (final WeakReference<EventManager> eventManagerRef : list) {
-			final EventManager eventManager = eventManagerRef.get();
+		for (final WeakReference<EventBus> eventManagerRef : list) {
+			final EventBus eventManager = eventManagerRef.get();
 			if (eventManager == null) {
 				list.remove(eventManagerRef);
 			} else {
-				eventManager.fireEvent(event);
+				eventManager.post(event);
 			}
 		}
 	}
 
-	void addEventManagerForDisplayEventSource(	final EventManager manager,
-												final DisplayEventSource forSource) {
-		final WeakReference<EventManager> eventManagerReference = new WeakReference<EventManager>(manager);
+	public void addEventManagerForDisplayEventSource(	final EventBus eventBus,
+														final DisplayEventSource forSource) {
+		final WeakReference<EventBus> eventManagerReference = new WeakReference<EventBus>(eventBus);
 		if (this.eventManagers.containsKey(forSource)) {
 			this.eventManagers.get(forSource).add(eventManagerReference);
 		} else {
-			final CopyOnWriteArrayList<WeakReference<EventManager>> list = new CopyOnWriteArrayList<WeakReference<EventManager>>();
+			final CopyOnWriteArrayList<WeakReference<EventBus>> list = new CopyOnWriteArrayList<WeakReference<EventBus>>();
 			list.add(eventManagerReference);
 			this.eventManagers.put(forSource, list);
 		}
-	}
-
-	void addDisplayEventHandler(final DisplayEventHandler<? extends DisplayEvent> displayEventHandler) {
-		this.displayEventEmitter.addTypedEventHandler(displayEventHandler);
-	}
-
-	void removeDisplayEventHandler(final DisplayEventHandler<? extends DisplayEvent> displayEventHandler) {
-		this.displayEventEmitter.removeTypedEventHandler(displayEventHandler);
-	}
-
-	void addClientCreatedHandler(final ClientCreatedHandler clientCreatedHandler) {
-		this.clientCreatedHandlers.add(clientCreatedHandler);
-	}
-
-	void removeClientCreatedHandler(final ClientCreatedHandler clientCreatedHandler) {
-		this.clientCreatedHandlers.remove(clientCreatedHandler);
 	}
 }

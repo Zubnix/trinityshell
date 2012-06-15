@@ -185,7 +185,7 @@ public class WidgetImpl extends AbstractRenderArea implements Widget {
 				.findPlatformRenderArea(resourceHandle);
 
 		setPlatformRenderArea(renderArea);
-		getManagedDisplay().addDisplayEventManager(this, this);
+		getManagedDisplay().registerDisplayEventBusForSource(this, this);
 	}
 
 	@Override

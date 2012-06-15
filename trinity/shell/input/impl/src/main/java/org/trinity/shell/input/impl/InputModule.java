@@ -1,5 +1,13 @@
 package org.trinity.shell.input.impl;
 
+import org.trinity.shell.input.api.KeyBinding;
+import org.trinity.shell.input.api.KeyBindingFactory;
+import org.trinity.shell.input.api.KeyInputStringBuilder;
+import org.trinity.shell.input.api.ManagedKeyboard;
+import org.trinity.shell.input.api.ManagedMouse;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 public class InputModule extends AbstractModule {
 

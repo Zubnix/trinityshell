@@ -25,14 +25,14 @@ import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.input.api.Modifier;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.input.api.SpecialKeyName;
-import org.trinity.shell.core.api.ManagedDisplay;
-import org.trinity.shell.core.api.event.KeyboardKeyPressedHandler;
-import org.trinity.shell.core.api.event.KeyboardKeyReleasedHandler;
+import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.input.api.KeyBinding;
-import org.trinity.shell.widget.api.Root;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 
 // TODO documentation
 /**
@@ -56,8 +56,8 @@ public class KeyBindingImpl implements KeyBinding {
 
 	// TODO release keybinding function
 
-	private final ManagedDisplay managedDisplay;
-	private final Root root;
+	private final EventBus eventBus;
+	private final RenderArea root;
 	private final Keyboard keyboard;
 	private final InputModifiersFactory inputModifiersFactory;
 
@@ -75,8 +75,8 @@ public class KeyBindingImpl implements KeyBinding {
 	 * @param modKeyNames
 	 */
 	@Inject
-	protected KeyBindingImpl(	final ManagedDisplay managedDisplay,
-								final Root root,
+	protected KeyBindingImpl(	@Named("displayEventBus") final EventBus eventBus,
+								@Named("root") final RenderArea root,
 								final Keyboard keyboard,
 								final InputModifiersFactory inputModifiersFactory,
 								@Assisted final Runnable runnable,
@@ -84,7 +84,7 @@ public class KeyBindingImpl implements KeyBinding {
 								@Assisted final String keyName,
 								@Assisted final boolean ignoreOftenUsedModifiers,
 								@Assisted final InputModifierName... modKeyNames) {
-		this.managedDisplay = managedDisplay;
+		this.eventBus = eventBus;
 		this.root = root;
 		this.keyboard = keyboard;
 		this.inputModifiersFactory = inputModifiersFactory;
@@ -132,12 +132,15 @@ public class KeyBindingImpl implements KeyBinding {
 		}
 		validInputModifiersCombinations.add(inputModifiers);
 
+		this.eventBus.register(this);
+
 		for (final Key validKey : validKeys) {
 			// install a keygrab
 			this.root.getPlatformRenderArea()
 					.catchKeyboardInput(validKey, inputModifiers);
 
 			if (getMomentum() == Momentum.STARTED) {
+				this.eventBus.register(this);
 				this.managedDisplay
 						.addDisplayEventHandler(new KeyboardKeyPressedHandler() {
 							@Override
@@ -170,7 +173,12 @@ public class KeyBindingImpl implements KeyBinding {
 		}
 	}
 
-	private void validateAction(final InputModifiers inputModifiers,
+	public void handleKeyNotifyEvent(final KeyNotifyEvent keyNotifyEvent) {
+
+	}
+
+	@Subscribe
+	public void validateAction(	final InputModifiers inputModifiers,
 								final Key validKey,
 								final KeyNotifyEvent event) {
 		final short eventKeyCode = (short) event.getInput().getKey()

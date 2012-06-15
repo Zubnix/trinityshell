@@ -12,4 +12,11 @@
 	<artifactId>shell.protocol.api</artifactId>
 	<name>Shell protocol api</name>
 	<packaging>jar</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.core.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
 </project>

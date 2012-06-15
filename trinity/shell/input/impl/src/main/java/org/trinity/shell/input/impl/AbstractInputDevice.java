@@ -11,11 +11,6 @@
  */
 package org.trinity.shell.input.impl;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.trinity.foundation.display.api.event.InputNotifyEvent;
-import org.trinity.foundation.input.api.Input;
 import org.trinity.shell.input.api.InputDevice;
 
 // TODO documentation
@@ -29,15 +24,6 @@ import org.trinity.shell.input.api.InputDevice;
  */
 public abstract class AbstractInputDevice implements InputDevice {
 	private boolean grabbed;
-	private final List<EventManager> inputEventManagers;
-
-	/**
-	 * @param managedDisplay
-	 * @param grabEventTypes
-	 */
-	public AbstractInputDevice() {
-		this.inputEventManagers = new CopyOnWriteArrayList<EventManager>();
-	}
 
 	/**
 	 * @param grabber
@@ -56,12 +42,6 @@ public abstract class AbstractInputDevice implements InputDevice {
 
 	protected abstract void delegateInputEventsAndGrab();
 
-	protected void delegateInputEventToInputEventManagers(final InputNotifyEvent<? extends Input> displayEvent) {
-		for (final EventManager inputEventManager : AbstractInputDevice.this.inputEventManagers) {
-			inputEventManager.fireEvent(displayEvent);
-		}
-	}
-
 	/**
 	 * @return
 	 */
@@ -75,15 +55,5 @@ public abstract class AbstractInputDevice implements InputDevice {
 	 */
 	protected void setGrabbed(final boolean grabbed) {
 		this.grabbed = grabbed;
-	}
-
-	@Override
-	public void addInputEventManager(final EventManager inputEventManager) {
-		this.inputEventManagers.add(inputEventManager);
-	}
-
-	@Override
-	public void removeInputEventManager(final EventManager inputEventManager) {
-		this.inputEventManagers.remove(inputEventManager);
 	}
 }

@@ -46,7 +46,7 @@ public interface PlatformRenderArea extends DisplayResource, Area,
 	 * @param eventMask
 	 *            An number of different {@link DisplayEventSelector}s.
 	 */
-	void propagateEvent(DisplayEventSelector... eventMask);
+	void selectEvent(DisplayEventSelector... eventMask);
 
 	/**
 	 * Get the current <code>PlatformRenderArea</code> geometry information. The

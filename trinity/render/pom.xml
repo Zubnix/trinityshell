@@ -15,16 +15,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modules>
 		<module>qt</module>
-		<module>swing</module>
+		<!-- <module>swing</module> -->
 	</modules>
-
-	<dependencies>
-		<dependency>
-			<groupId>org.trinity.core</groupId>
-			<artifactId>core.api</artifactId>
-			<version>0.0.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
 </project>

@@ -1,10 +1,8 @@
 package org.trinity.shell.core.impl;
 
-import org.trinity.shell.foundation.api.ManagedDisplay;
-import org.trinity.shell.foundation.api.PropertyManipulator;
-import org.trinity.shell.foundation.api.PropertyManipulatorFactory;
-import org.trinity.shell.foundation.api.RenderArea;
-import org.trinity.shell.foundation.api.RenderAreaFactory;
+import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.RenderArea;
+import org.trinity.shell.core.api.RenderAreaFactory;
 import org.trinity.shell.geo.api.GeoExecutor;
 
 import com.google.inject.AbstractModule;
@@ -24,10 +22,6 @@ public class FoundationModule extends AbstractModule {
 		install(new FactoryModuleBuilder().implement(	RenderArea.class,
 														ClientWindow.class)
 				.build(RenderAreaFactory.class));
-		install(new FactoryModuleBuilder()
-				.implement(	PropertyManipulator.class,
-							PropertyManipulatorImpl.class)
-				.build(PropertyManipulatorFactory.class));
 		// end foundation factory bindings
 	}
 }

@@ -16,10 +16,10 @@ import org.trinity.foundation.input.api.Mouse;
 import org.trinity.foundation.shared.geometry.api.Coordinates;
 import org.trinity.foundation.shared.geometry.api.GeometryFactory;
 import org.trinity.shell.core.api.ManagedDisplay;
-import org.trinity.shell.core.api.event.MouseButtonPressedHandler;
-import org.trinity.shell.core.api.event.MouseButtonReleasedHandler;
+import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.input.api.ManagedMouse;
-import org.trinity.shell.widget.api.Root;
+
+import com.google.inject.name.Named;
 
 /**
  * A <code>ManagedMouse</code> represents a mouse pointer from a
@@ -49,7 +49,7 @@ public class ManagedMouseImpl extends AbstractInputDevice implements
 	}
 
 	private final ManagedDisplay managedDisplay;
-	private final Root root;
+	private final RenderArea root;
 	private final Mouse mouse;
 	private final ButtonPressedForwarder buttonPressedForwarder;
 	private final ButtonReleasedForwarder buttonReleasedForwarder;
@@ -66,7 +66,7 @@ public class ManagedMouseImpl extends AbstractInputDevice implements
 	 *            <code>ManagedDisplay</code> has an illegal state.
 	 */
 	protected ManagedMouseImpl(	final ManagedDisplay managedDisplay,
-								final Root root,
+								@Named("root") final RenderArea root,
 								final GeometryFactory geometryFactory,
 								final Mouse mouse) {
 		this.managedDisplay = managedDisplay;

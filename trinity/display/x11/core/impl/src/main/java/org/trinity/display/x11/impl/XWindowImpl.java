@@ -312,7 +312,7 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 	}
 
 	@Override
-	public void propagateEvent(final DisplayEventSelector... eventMasks) {
+	public void selectEvent(final DisplayEventSelector... eventMasks) {
 		long eventMask0 = 0L;
 		for (final DisplayEventSelector eventPropagator : eventMasks) {
 			if (eventPropagator == DisplayEventSelector.NOTIFY_CHANGED_WINDOW_PROPERTY) {

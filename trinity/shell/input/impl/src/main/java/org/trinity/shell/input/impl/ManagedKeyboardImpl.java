@@ -15,12 +15,11 @@ import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.input.api.KeyboardInput;
 import org.trinity.shell.core.api.ManagedDisplay;
-import org.trinity.shell.core.api.event.KeyboardKeyPressedHandler;
-import org.trinity.shell.core.api.event.KeyboardKeyReleasedHandler;
+import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.input.api.ManagedKeyboard;
-import org.trinity.shell.widget.api.Root;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 // TODO documentation
 /**
@@ -44,7 +43,7 @@ public class ManagedKeyboardImpl extends AbstractInputDevice implements
 		}
 	}
 
-	private final Root root;
+	private final RenderArea root;
 	private final ManagedDisplay managedDisplay;
 
 	private final Keyboard keyboard;
@@ -57,7 +56,7 @@ public class ManagedKeyboardImpl extends AbstractInputDevice implements
 	 */
 	@Inject
 	protected ManagedKeyboardImpl(	final ManagedDisplay managedDisplay,
-									final Root root,
+									@Named("root") final RenderArea root,
 									final Keyboard keyboard) {
 		this.managedDisplay = managedDisplay;
 		this.root = root;
@@ -89,7 +88,7 @@ public class ManagedKeyboardImpl extends AbstractInputDevice implements
 	}
 
 	@Override
-	protected void delegateInputEventsAndGrab() {
+	public void delegateInputEventsAndGrab() {
 		this.root.getPlatformRenderArea().catchAllKeyboardInput();
 		this.managedDisplay.addDisplayEventHandler(this.keyPressedForwarder);
 		this.managedDisplay.addDisplayEventHandler(this.keyReleasedForwarder);

@@ -78,9 +78,9 @@ public class ManagedDisplayImplTest {
 		baseManagedDisplay.addDisplayEventHandler(configureRequestHandler);
 		baseManagedDisplay.addDisplayEventHandler(buttonPressedHandler);
 
-		baseManagedDisplay.deliverNextDisplayEvent(false);
-		baseManagedDisplay.deliverNextDisplayEvent(false);
-		baseManagedDisplay.deliverNextDisplayEvent(false);
+		baseManagedDisplay.postNextDisplayEvent(false);
+		baseManagedDisplay.postNextDisplayEvent(false);
+		baseManagedDisplay.postNextDisplayEvent(false);
 
 		final InOrder eventHandlersOrder = Mockito.inOrder(mapRequestHandler,
 				configureRequestHandler);
@@ -126,9 +126,9 @@ public class ManagedDisplayImplTest {
 
 		baseManagedDisplay.removeDisplayEventHandler(configureRequestHandler);
 
-		baseManagedDisplay.deliverNextDisplayEvent(false);
-		baseManagedDisplay.deliverNextDisplayEvent(false);
-		baseManagedDisplay.deliverNextDisplayEvent(false);
+		baseManagedDisplay.postNextDisplayEvent(false);
+		baseManagedDisplay.postNextDisplayEvent(false);
+		baseManagedDisplay.postNextDisplayEvent(false);
 
 		Mockito.verify(mapRequestHandler, Mockito.times(1)).handleEvent(c0Map);
 
@@ -173,15 +173,15 @@ public class ManagedDisplayImplTest {
 				.mock(EventManager.class);
 		final EventManager c1EventManagerMock = Mockito
 				.mock(EventManager.class);
-		managedDisplay.addDisplayEventManager(c0EventManagerMock,
+		managedDisplay.registerDisplayEventBusForSource(c0EventManagerMock,
 				this.mockedEnv.c0);
-		managedDisplay.addDisplayEventManager(c1EventManagerMock,
+		managedDisplay.registerDisplayEventBusForSource(c1EventManagerMock,
 				this.mockedEnv.c1);
 
-		managedDisplay.deliverNextDisplayEvent(false);
-		managedDisplay.deliverNextDisplayEvent(false);
-		managedDisplay.deliverNextDisplayEvent(false);
-		managedDisplay.deliverNextDisplayEvent(false);
+		managedDisplay.postNextDisplayEvent(false);
+		managedDisplay.postNextDisplayEvent(false);
+		managedDisplay.postNextDisplayEvent(false);
+		managedDisplay.postNextDisplayEvent(false);
 
 		final InOrder eventManagersOrder = Mockito.inOrder(c0EventManagerMock,
 				c1EventManagerMock);
@@ -249,7 +249,7 @@ public class ManagedDisplayImplTest {
 		final ClientCreatedHandler clientCreatedHandler = Mockito
 				.mock(ClientCreatedHandler.class);
 		managedDisplay.addClientCreatedHandler(clientCreatedHandler);
-		managedDisplay.deliverNextDisplayEvent(true);
+		managedDisplay.postNextDisplayEvent(true);
 
 		Mockito.verify(clientCreatedHandler, Mockito.times(1))
 				.handleCreatedClient((RenderArea) Matchers.any());
@@ -274,9 +274,9 @@ public class ManagedDisplayImplTest {
 		final ClientCreatedHandler clientCreatedHandler = Mockito
 				.mock(ClientCreatedHandler.class);
 		managedDisplay.addClientCreatedHandler(clientCreatedHandler);
-		managedDisplay.deliverNextDisplayEvent(true);
+		managedDisplay.postNextDisplayEvent(true);
 		managedDisplay.removeClientCreatedHandler(clientCreatedHandler);
-		managedDisplay.deliverNextDisplayEvent(true);
+		managedDisplay.postNextDisplayEvent(true);
 
 		Mockito.verify(clientCreatedHandler, Mockito.times(1))
 				.handleCreatedClient((RenderArea) Matchers.any());

@@ -1,6 +1,6 @@
 package org.trinity.shell.protocol.api;
 
-import org.trinity.shell.foundation.api.RenderArea;
+import org.trinity.shell.core.api.RenderArea;
 
 public interface DesktopProtocol {
 

@@ -238,7 +238,7 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 	 * 
 	 */
 	public void startKeyListening() {
-		this.managedKeyboard.addInputEventManager(this);
+		this.managedKeyboard.registerInputEventBus(this);
 		this.managedKeyboard.grab();
 		draw(getView().startedKeyListening());
 	}
@@ -249,7 +249,7 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 	 */
 	public void stopKeyListening() {
 		this.managedKeyboard.release();
-		this.managedKeyboard.removeInputEventManager(this);
+		this.managedKeyboard.unregisterInputEventBus(this);
 		draw(getView().stoppedKeyListening());
 	}
 

@@ -11,16 +11,17 @@
  */
 package org.trinity.shell.core.impl;
 
-import java.beans.EventHandler;
-
 import org.trinity.foundation.display.api.PlatformRenderArea;
 import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
-import org.trinity.foundation.display.api.event.PropertyChangedNotifyEvent;
+import org.trinity.foundation.shared.geometry.api.Rectangle;
 import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.impl.AbstractGeoTransformableRectangle;
+
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 // TODO documentation
 // TODO redesign/evaluate input manager integration/method delegation.
@@ -57,7 +58,7 @@ public abstract class AbstractRenderArea extends
 	public static final int DEFAULT_WIDTH_INC = 1;
 	public static final int DEFAULT_HEIGHT_INC = 1;
 
-	private ManagedDisplay managedDisplay;
+	private final ManagedDisplay managedDisplay;
 	private PlatformRenderArea platformRenderArea;
 
 	private boolean movable;
@@ -72,12 +73,15 @@ public abstract class AbstractRenderArea extends
 	private int widthIncrement;
 	private int heightIncrement;
 
+	private final EventBus eventBus;
+
 	/**
 	 * Create new <code>AbstractRenderArea</code>
 	 */
-	protected AbstractRenderArea() {
-		// protected to reduce visibility and encourage dependency injection
-
+	protected AbstractRenderArea(	final EventBus eventBus,
+									final ManagedDisplay managedDisplay) {
+		this.eventBus = eventBus;
+		this.managedDisplay = managedDisplay;
 		initBasics();
 	}
 
@@ -116,13 +120,15 @@ public abstract class AbstractRenderArea extends
 	/**
 	 * @return
 	 */
-	@Override
-	public boolean hasInputFocus() {
-		// TODO delegate to input handler
-		return getManagedDisplay().getDisplay().getInputFocus()
-				.getDisplayResourceHandle().getResourceHandle() == getPlatformRenderArea()
-				.getDisplayResourceHandle().getResourceHandle();
-	}
+	// @Override
+	// public boolean hasInputFocus() {
+	// // TODO delegate to input handler
+	//
+	// return this.managedDisplay.getDisplay().getInputFocus()
+	// .getDisplayResourceHandle().getResourceHandle() ==
+	// getPlatformRenderArea()
+	// .getDisplayResourceHandle().getResourceHandle();
+	// }
 
 	/**
 	 * Set the minimum height. The minimum height is guaranteed to be respected.
@@ -212,60 +218,19 @@ public abstract class AbstractRenderArea extends
 		return this.maxWidth;
 	}
 
-	/**
-	 * Set the default <code>EventHandler</code>s that will respond to
-	 * <code>Event</code>s that are fired by this object.
-	 * <p>
-	 * The default <code>EventHandler</code>s will handle the following
-	 * <code>Event</code>.<code>Type</code>s:
-	 * <ul>
-	 * <li>DestroyNotifyEvent.TYPE</li>
-	 * <li>PropertyChangedNotifyEvent.TYPE</li>
-	 * </ul>
-	 */
-	protected void initEventHandlers() {
-
-		// TODO use typed event handlers.
-		addEventHandler(new EventHandler<DestroyNotifyEvent>() {
-			@Override
-			public void handleEvent(final DestroyNotifyEvent event) {
-				AbstractRenderArea.this.handleDestroyNotify(event);
-			}
-		}, DisplayEventType.DESTROY_NOTIFY);
-
-		addEventHandler(new EventHandler<PropertyChangedNotifyEvent>() {
-			@Override
-			public void handleEvent(final PropertyChangedNotifyEvent event) {
-				final PropertyChangedEventImpl<Property<? extends PropertyInstance>> renderAreaPropertyChangedEvent = new PropertyChangedEventImpl<Property<? extends PropertyInstance>>(	AbstractRenderArea.this,
-																																															event.isPropertyDeleted(),
-																																															event.getChangedProperty());
-				fireEvent(renderAreaPropertyChangedEvent);
-			}
-		},
-						DisplayEventType.PROPERTY_CHANGED);
-	}
-
-	/**
-	 * @param event
-	 */
-	protected void handleDestroyNotify(final DestroyNotifyEvent event) {
+	@Subscribe
+	public void handleDestroyNotify(final DestroyNotifyEvent event) {
 		if (!isDestroyed()) {
 			doDestroy(false);
 		}
 		// unregister();
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public int getWidthIncrement() {
 		return this.widthIncrement;
 	}
 
-	/**
-	 * @param widthIncrement
-	 */
 	@Override
 	public void setWidthIncrement(final int widthIncrement) {
 		if (widthIncrement > 0) {
@@ -273,9 +238,6 @@ public abstract class AbstractRenderArea extends
 		}
 	}
 
-	/**
-	 * @param heightIncrement
-	 */
 	@Override
 	public void setHeightIncrement(final int heightIncrement) {
 		if (heightIncrement > 0) {
@@ -283,30 +245,9 @@ public abstract class AbstractRenderArea extends
 		}
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public int getHeightIncrement() {
 		return this.heightIncrement;
-	}
-
-	/**
-	 * @param managedDisplay
-	 */
-	protected void setManagedDisplay(final ManagedDisplay managedDisplay) {
-		this.managedDisplay = managedDisplay;
-	}
-
-	/**
-	 * The <code>ManagedDisplay</code> where this
-	 * <code>AbstractRenderArea</code> lives on.
-	 * 
-	 * @return A {@link ManagedDisplay}.
-	 */
-	@Override
-	public ManagedDisplay getManagedDisplay() {
-		return this.managedDisplay;
 	}
 
 	/**
@@ -398,7 +339,9 @@ public abstract class AbstractRenderArea extends
 	 */
 	protected void setPlatformRenderArea(final PlatformRenderArea platformRenderArea) {
 		this.platformRenderArea = platformRenderArea;
-		this.managedDisplay.addDisplayEventManager(this, platformRenderArea);
+		this.managedDisplay
+				.registerDisplayEventBusForSource(	this.eventBus,
+													platformRenderArea);
 	}
 
 	/**
@@ -533,11 +476,12 @@ public abstract class AbstractRenderArea extends
 	// geoTransformation.isVisible1(), geoTransformation.getParent1());
 	// }
 
-	@Override
-	public void addPropertyChangedHandler(	final PropertyChangedHandler<? extends Property<? extends PropertyInstance>> handler,
-											final String propertyName) {
-		addEventHandler(handler, PropertyChangedEvent.TYPE.get(propertyName));
-	}
+	// @Override
+	// public void addPropertyChangedHandler( final PropertyChangedHandler<?
+	// extends Property<? extends PropertyInstance>> handler,
+	// final String propertyName) {
+	// addEventHandler(handler, PropertyChangedEvent.TYPE.get(propertyName));
+	// }
 
 	@Override
 	protected int getDesiredWidth() {

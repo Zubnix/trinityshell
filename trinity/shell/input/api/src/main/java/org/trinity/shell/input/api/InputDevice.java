@@ -11,14 +11,11 @@
  */
 package org.trinity.shell.input.api;
 
+
 public interface InputDevice {
 	void grab();
 
 	void release();
 
 	boolean isGrabbed();
-
-	void addInputEventManager(EventManager inputEventManager);
-
-	void removeInputEventManager(EventManager inputEventManager);
 }

@@ -19,8 +19,6 @@ import org.trinity.shell.geo.api.GeoTransformableRectangle;
 public interface RenderArea extends GeoTransformableRectangle {
 	int getHeightIncrement();
 
-	ManagedDisplay getManagedDisplay();
-
 	int getMaxHeight();
 
 	int getMaxWidth();
@@ -56,10 +54,4 @@ public interface RenderArea extends GeoTransformableRectangle {
 	void syncGeoToPlatformRenderAreaGeo();
 
 	void setInputFocus();
-
-	boolean hasInputFocus();
-
-	// void addPropertyChangedHandler( PropertyChangedHandler<? extends
-	// Property<? extends PropertyInstance>> handler,
-	// String propertyName);
 }

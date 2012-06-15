@@ -14,8 +14,6 @@ package org.trinity.shell.core.impl;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import org.trinity.core.event.api.EventBus;
-import org.trinity.core.event.api.EventManager;
 import org.trinity.foundation.display.api.DisplayEventSelector;
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
@@ -29,14 +27,14 @@ import org.trinity.foundation.display.api.event.MapRequestEvent;
 import org.trinity.foundation.display.api.event.MouseVisitationNotifyEvent;
 import org.trinity.foundation.display.api.event.PropertyChangedNotifyEvent;
 import org.trinity.foundation.display.api.event.UnmappedNotifyEvent;
-import org.trinity.shell.foundation.api.ManagedDisplay;
-import org.trinity.shell.foundation.api.RenderAreaFactory;
-import org.trinity.shell.foundation.api.event.ClientCreatedHandler;
-import org.trinity.shell.foundation.api.event.DisplayEventHandler;
-import org.trinity.shell.widget.api.Root;
+import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.RenderArea;
+import org.trinity.shell.core.api.RenderAreaFactory;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 // TODO documentation
 /**
@@ -79,12 +77,13 @@ import com.google.inject.Singleton;
  * @since 1.0
  */
 @Singleton
-public class ManagedDisplayImpl extends EventBus implements ManagedDisplay {
+public class ManagedDisplayImpl implements ManagedDisplay {
 
 	private final DisplayServer display;
 	private final DisplayEventDispatcher displayEventDispatcher;
+	private final Thread displayEventDispatcherThread;
 	private final Executor managedDisplayEventExecutor;
-	private final Root root;
+	private final RenderArea root;
 
 	/**
 	 * Wrap the given native <code>Display</code> implementation with the given
@@ -107,12 +106,15 @@ public class ManagedDisplayImpl extends EventBus implements ManagedDisplay {
 	 */
 	@Inject
 	protected ManagedDisplayImpl(	final DisplayServer display,
-									final Root root,
+									@Named("displayEventBus") final EventBus eventBus,
+									@Named("root") final RenderArea root,
 									final RenderAreaFactory clientFactory) {
 		this.display = display;
 		this.managedDisplayEventExecutor = Executors.newSingleThreadExecutor();
-		this.displayEventDispatcher = new DisplayEventDispatcher(	display,
+		this.displayEventDispatcher = new DisplayEventDispatcher(	eventBus,
+																	display,
 																	clientFactory);
+		this.displayEventDispatcherThread = new Thread(this.displayEventDispatcherThread);
 		this.root = root;
 	}
 
@@ -125,7 +127,7 @@ public class ManagedDisplayImpl extends EventBus implements ManagedDisplay {
 		// neutral mechanism/interface and hide any reference to RealRoot.
 		this.root
 				.getPlatformRenderArea()
-				.propagateEvent(DisplayEventSelector.REDIRECT_CHILD_WINDOW_GEOMETRY_CHANGES);
+				.selectEvent(DisplayEventSelector.REDIRECT_CHILD_WINDOW_GEOMETRY_CHANGES);
 		this.managedDisplayEventExecutor.execute(getEventDispatcher());
 	}
 
@@ -137,41 +139,6 @@ public class ManagedDisplayImpl extends EventBus implements ManagedDisplay {
 	}
 
 	/**
-	 * 
-	 *  
-	 */
-	public void manageUnmanagedClientWindows() {
-		// TODO
-		// final PlatformRenderArea[] children =
-		// getRoot().getPlatformRenderArea()
-		// .getChildren();
-		// for (final PlatformRenderArea clientRenderArea : children) {
-		// final PlatformRenderAreaAttributes attributes = clientRenderArea
-		// .getPlatformRenderAreaAttributes();
-		// final boolean viewable = attributes.isViewable();
-		// final boolean overrideRedirect = attributes.isOverrideRedirect();
-		// final boolean registered = isEventSourceRegistered(clientRenderArea);
-		// if (!registered && !overrideRedirect && viewable) {
-		// final ClientWindow client = new ClientWindow(this,
-		// clientRenderArea);
-		// client.syncGeoToPlatformRenderAreaGeo();
-		// }
-		// }
-	}
-
-	/**
-	 * The <code>Display</code> peer of this <code>ManagedDisplay</code>.
-	 * <p>
-	 * Calls to the native underlying display are done using this peer.
-	 * 
-	 * @return A {@link DisplayServer} peer.
-	 */
-	@Override
-	public DisplayServer getDisplay() {
-		return this.display;
-	}
-
-	/**
 	 * Shut down all <code>Paintable</code>s, shut down the backing paint engine
 	 * for these <code>PaintAble</code>s, shut down the event handling mechanism
 	 * and release all resources.
@@ -180,13 +147,9 @@ public class ManagedDisplayImpl extends EventBus implements ManagedDisplay {
 	 * down the native display.
 	 */
 	@Override
-	public void shutDown() {
-		// TODO Shut down any paint back end and
-		// release all resources.
-		getEventDispatcher().shutDown();
-		// this.eventConductorMap.clear();
-		this.display.shutDown();
+	public void stop() {
 
+		this.display.shutDown();
 	}
 
 	@Override
@@ -194,45 +157,22 @@ public class ManagedDisplayImpl extends EventBus implements ManagedDisplay {
 		return String.format("Display: %s", this.display);
 	}
 
-	public void addEventManagerForDisplayEventSource(	final EventManager manager,
+	public void addEventManagerForDisplayEventSource(	final EventBus manager,
 														final DisplayEventSource forSource) {
 		this.displayEventDispatcher
 				.addEventManagerForDisplayEventSource(manager, forSource);
 	}
 
 	@Override
-	public void addDisplayEventHandler(final DisplayEventHandler<? extends DisplayEvent> displayEventHandler) {
-		this.displayEventDispatcher.addDisplayEventHandler(displayEventHandler);
+	public void postNextDisplayEvent(final boolean block) {
+		this.displayEventDispatcher.postNextEvent(block);
 	}
 
 	@Override
-	public void addDisplayEventManager(	final EventManager manager,
-										final DisplayEventSource forDisplayEventSource) {
+	public void registerDisplayEventBusForSource(	final EventBus eventBus,
+													final DisplayEventSource forDisplayEventSource) {
 		this.displayEventDispatcher
-				.addEventManagerForDisplayEventSource(	manager,
+				.addEventManagerForDisplayEventSource(	eventBus,
 														forDisplayEventSource);
-	}
-
-	@Override
-	public void deliverNextDisplayEvent(final boolean block) {
-		this.displayEventDispatcher.dispatchNextEvent(block);
-	}
-
-	@Override
-	public void removeDisplayEventHandler(final DisplayEventHandler<? extends DisplayEvent> displayEventHandler) {
-		this.displayEventDispatcher
-				.removeDisplayEventHandler(displayEventHandler);
-	}
-
-	@Override
-	public void addClientCreatedHandler(final ClientCreatedHandler clientCreatedHandler) {
-		this.displayEventDispatcher
-				.addClientCreatedHandler(clientCreatedHandler);
-	}
-
-	@Override
-	public void removeClientCreatedHandler(final ClientCreatedHandler clientCreatedHandler) {
-		this.displayEventDispatcher
-				.removeClientCreatedHandler(clientCreatedHandler);
 	}
 }

@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.trinity.shell.geo.api.GeoEvent;
-import org.trinity.shell.geo.api.GeoEventHandler;
 import org.trinity.shell.geo.api.GeoOperation;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.api.GeoTransformation;

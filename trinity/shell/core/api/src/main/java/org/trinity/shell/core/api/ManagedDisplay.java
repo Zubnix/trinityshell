@@ -11,34 +11,20 @@
  */
 package org.trinity.shell.core.api;
 
-import org.trinity.foundation.display.api.DisplayServer;
-import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.shell.core.api.event.ClientCreatedHandler;
-import org.trinity.shell.core.api.event.DisplayEventHandler;
+
+import com.google.common.eventbus.EventBus;
 
 public interface ManagedDisplay {
 
-	DisplayServer getDisplay();
-
-	void shutDown();
+	void stop();
 
 	void start();
 
-	void addDisplayEventHandler(DisplayEventHandler<? extends DisplayEvent> displayEventHandler);
+	void registerDisplayEventBusForSource(	EventBus eventBus,
+											DisplayEventSource forDisplayEventSource);
 
-	void removeDisplayEventHandler(DisplayEventHandler<? extends DisplayEvent> displayEventHandler);
+	void postNextDisplayEvent(boolean block);
 
-	void addDisplayEventManager(EventManager manager,
-								DisplayEventSource forDisplayEventSource);
-
-	// TODO void removeDisplayEventManager(..)?
-
-	void deliverNextDisplayEvent(boolean block);
-
-	void addClientCreatedHandler(ClientCreatedHandler clientCreatedHandler);
-
-	void removeClientCreatedHandler(ClientCreatedHandler clientCreatedHandler);
-
-	// TODO be able to listen for client created events
+	// boolean hasFocus(RenderArea renderArea);
 }

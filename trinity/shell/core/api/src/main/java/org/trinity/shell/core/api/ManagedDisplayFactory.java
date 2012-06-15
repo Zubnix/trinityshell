@@ -9,21 +9,14 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.render.paintengine.qt.api.painter;
+package org.trinity.shell.core.api;
 
-import javax.inject.Named;
-
-import org.trinity.foundation.render.api.Paintable;
-import org.trinity.foundation.shared.geometry.api.Coordinates;
-
-import com.google.inject.assistedinject.Assisted;
+import org.trinity.foundation.display.api.event.DisplayEvent;
 
 /*****************************************
  * @author Erik De Rijcke
+ * 
  ****************************************/
-public interface QFPaintCalculationFactory {
-	@Named("QFTranslateCoordinates")
-	QFPaintCalculation<Coordinates> createTranslateCoordinatesCalculation(	Paintable source,
-																			@Assisted("sourceX") int sourceX,
-																			@Assisted("sourceY") int sourceY);
+public interface ManagedDisplayFactory {
+	void createManagedDisplay(DisplayEvent display);
 }

@@ -12,7 +12,6 @@
 package org.trinity.shell.geo.impl;
 
 import org.trinity.shell.geo.api.GeoEvent;
-import org.trinity.shell.geo.api.GeoOperation;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.api.GeoTransformation;
 
@@ -29,7 +28,6 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class GeoEventImpl implements GeoEvent {
 
-	private final GeoOperation operation;
 	private final GeoTransformableRectangle transformableSquare;
 	private final GeoTransformation transformation;
 
@@ -39,10 +37,8 @@ public class GeoEventImpl implements GeoEvent {
 	 * @param transformation
 	 */
 	@Inject
-	protected GeoEventImpl(	@Assisted final GeoOperation geoOperation,
-							@Assisted final GeoTransformableRectangle transformableSquare,
+	protected GeoEventImpl(	@Assisted final GeoTransformableRectangle transformableSquare,
 							@Assisted final GeoTransformation transformation) {
-		this.operation = geoOperation;
 		this.transformableSquare = transformableSquare;
 		this.transformation = transformation;
 	}
@@ -61,10 +57,5 @@ public class GeoEventImpl implements GeoEvent {
 	@Override
 	public GeoTransformation getGeoTransformation() {
 		return this.transformation;
-	}
-
-	@Override
-	public GeoOperation getType() {
-		return this.operation;
 	}
 }

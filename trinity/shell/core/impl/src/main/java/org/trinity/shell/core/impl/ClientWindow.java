@@ -11,17 +11,17 @@
  */
 package org.trinity.shell.core.impl;
 
-import org.trinity.core.event.api.EventHandler;
 import org.trinity.foundation.display.api.DisplayEventSelector;
 import org.trinity.foundation.display.api.PlatformRenderArea;
 import org.trinity.foundation.display.api.event.ConfigureRequestEvent;
-import org.trinity.foundation.display.api.event.DisplayEventType;
 import org.trinity.foundation.display.api.event.MapRequestEvent;
 import org.trinity.foundation.display.api.event.UnmappedNotifyEvent;
-import org.trinity.shell.foundation.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
-import org.trinity.shell.widget.api.Root;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
@@ -54,57 +54,19 @@ final class ClientWindow extends AbstractRenderArea {
 	 */
 	@Inject
 	protected ClientWindow(	final ManagedDisplay managedDisplay,
-							final Root root,
+							final EventBus eventBus,
+							@Named("root") final RenderArea root,
 							@Assisted final PlatformRenderArea platformRenderArea,
 							@Named("RenderArea") final GeoExecutor geoExecutor) {
-		setManagedDisplay(managedDisplay);
-		setPlatformRenderArea(platformRenderArea);
-
+		super(eventBus, managedDisplay);
 		this.renderAreaGeoExecutor = geoExecutor;
+		setPlatformRenderArea(platformRenderArea);
 		setParent(root);
 		doUpdateParentValue(false);
-		initEventHandlers();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <ul>
-	 * <li>MapRequestEvent.TYPE</li>
-	 * <li>ConfigureRequestEvent.TYPE</li>
-	 * <li>UnmappedNotifyEvent.TYPE</li>
-	 * </ul>
-	 */
-	@Override
-	protected void initEventHandlers() {
-		// move all event handles to super class render area?
-		super.initEventHandlers();
-		// Display event handlers
-		this.addEventHandler(new EventHandler<MapRequestEvent>() {
-			@Override
-			public void handleEvent(final MapRequestEvent event) {
-				ClientWindow.this.handleMapRequest(event);
-			}
-		}, DisplayEventType.MAP_REQUEST);
-		this.addEventHandler(new EventHandler<ConfigureRequestEvent>() {
-			@Override
-			public void handleEvent(final ConfigureRequestEvent event) {
-				ClientWindow.this.handleConfigureRequest(event);
-
-			}
-		}, DisplayEventType.CONFIGURE_REQUEST);
-
-		this.addEventHandler(new EventHandler<UnmappedNotifyEvent>() {
-			@Override
-			public void handleEvent(final UnmappedNotifyEvent event) {
-				ClientWindow.this.handleUnmapNotify(event);
-			}
-		}, DisplayEventType.UNMAP_NOTIFY);
-	}
-
-	/**
-	 * @param event
-	 */
-	protected void handleMapRequest(final MapRequestEvent event) {
+	@Subscribe
+	public void handleMapRequest(final MapRequestEvent event) {
 		if ((getPlatformRenderArea() == null)
 				&& (event.getEventSource() instanceof PlatformRenderArea)) {
 			setPlatformRenderArea((PlatformRenderArea) event.getEventSource());
@@ -113,18 +75,14 @@ final class ClientWindow extends AbstractRenderArea {
 		requestVisibilityChange();
 	}
 
-	/**
-	 * @param event
-	 */
-	protected void handleUnmapNotify(final UnmappedNotifyEvent event) {
+	@Subscribe
+	public void handleUnmapNotify(final UnmappedNotifyEvent event) {
 		setVisibility(false);
 		this.doUpdateVisibility(false);
 	}
 
-	/**
-	 * @param event
-	 */
-	protected void handleConfigureRequest(final ConfigureRequestEvent event) {
+	@Subscribe
+	public void handleConfigureRequest(final ConfigureRequestEvent event) {
 		if (event.isXSet()) {
 			setX(event.getX());
 		}
@@ -152,7 +110,7 @@ final class ClientWindow extends AbstractRenderArea {
 		syncGeoToPlatformRenderAreaGeo();
 
 		platformRenderArea
-				.propagateEvent(DisplayEventSelector.NOTIFY_CHANGED_WINDOW_PROPERTY,
+				.selectEvent(	DisplayEventSelector.NOTIFY_CHANGED_WINDOW_PROPERTY,
 								DisplayEventSelector.NOTIFY_CHANGED_WINDOW_GEOMETRY,
 								DisplayEventSelector.NOTIFY_MOUSE_ENTER,
 								DisplayEventSelector.NOTIFY_MOUSE_LEAVE,

@@ -90,8 +90,8 @@ public class PropertyInteractionTest {
 
 		managedDisplay.addClientCreatedHandler(clientCreatedHandler);
 
-		managedDisplay.deliverNextDisplayEvent(false);
-		managedDisplay.deliverNextDisplayEvent(false);
+		managedDisplay.postNextDisplayEvent(false);
+		managedDisplay.postNextDisplayEvent(false);
 
 		Mockito.verify(handler, Mockito.times(1))
 				.handleEvent(

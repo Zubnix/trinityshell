@@ -11,20 +11,20 @@
  */
 package org.trinity.shell.core.impl;
 
-import org.trinity.core.geometry.api.Coordinates;
-import org.trinity.core.geometry.api.GeometryFactory;
 import org.trinity.foundation.display.api.Area;
 import org.trinity.foundation.display.api.AreaManipulator;
 import org.trinity.foundation.display.api.DisplayEventSelector;
-import org.trinity.shell.foundation.api.RenderArea;
+import org.trinity.foundation.shared.geometry.api.Coordinates;
+import org.trinity.foundation.shared.geometry.api.GeometryFactory;
+import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.api.GeoTransformation;
 import org.trinity.shell.geo.impl.AbstractGeoExecutor;
-import org.trinity.shell.widget.api.Root;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 // TODO documentation
 /**
@@ -38,14 +38,14 @@ import com.google.inject.Singleton;
 @Singleton
 public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 
-	private final Root root;
+	private final RenderArea root;
 	private final GeometryFactory geometryFactory;
 
 	/**
 	 * @param renderArea
 	 */
 	@Inject
-	protected RenderAreaGeoExecutorImpl(final Root root,
+	protected RenderAreaGeoExecutorImpl(@Named("root") final RenderArea root,
 										final GeometryFactory geometryFactory) {
 		this.root = root;
 		this.geometryFactory = geometryFactory;
@@ -196,7 +196,7 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 	protected void preProcesNewSameTypeParent(final RenderArea newParentRenderArea) {
 		newParentRenderArea
 				.getPlatformRenderArea()
-				.propagateEvent(DisplayEventSelector.REDIRECT_CHILD_WINDOW_GEOMETRY_CHANGES);
+				.selectEvent(DisplayEventSelector.REDIRECT_CHILD_WINDOW_GEOMETRY_CHANGES);
 	}
 
 	@Override

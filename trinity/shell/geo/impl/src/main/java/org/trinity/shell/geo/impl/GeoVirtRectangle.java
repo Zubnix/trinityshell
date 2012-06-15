@@ -15,6 +15,7 @@ import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.manager.GeoManager;
 import org.trinity.shell.geo.impl.manager.GeoManagerDirect;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.name.Named;
 
 // TODO documentation
@@ -40,7 +41,9 @@ public class GeoVirtRectangle extends AbstractGeoTransformableRectangle {
 	/**
 	 * 
 	 */
-	protected GeoVirtRectangle(@Named("GeoVirt") final GeoExecutor geoExecutor) {
+	protected GeoVirtRectangle(	final EventBus eventBus,
+								@Named("GeoVirt") final GeoExecutor geoExecutor) {
+		super(eventBus);
 		this.geoExecutor = geoExecutor;
 		setGeoManager(new GeoManagerDirect());
 	}

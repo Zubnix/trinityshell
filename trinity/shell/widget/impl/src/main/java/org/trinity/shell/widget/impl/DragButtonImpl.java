@@ -130,7 +130,7 @@ public class DragButtonImpl extends ButtonImpl implements DragButton {
 			// receive the mouse button released event. This would result in
 			// an endless loop where the target window would be "glued" to
 			// the mouse cursor.
-			getManagedDisplay().deliverNextDisplayEvent(false);
+			getManagedDisplay().postNextDisplayEvent(false);
 		}
 	}
 
