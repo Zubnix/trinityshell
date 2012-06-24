@@ -42,7 +42,7 @@
  * can be found the request is directly executed without any interference.
  * <p>
  * The geometry package makes heavy use of the event system. Each geometry
- * request is implemented in the form of a {@link org.hyperdrive.geo.GeoEvent}.
+ * request is implemented in the form of a {@link org.trinity.shell.geo.api.event.hyperdrive.geo.GeoEvent}.
  * <p>
  * The following geometry operations are supplied by the geometry package:
  * <ul>

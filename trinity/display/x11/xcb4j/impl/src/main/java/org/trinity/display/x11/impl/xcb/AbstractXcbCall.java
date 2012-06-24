@@ -86,7 +86,8 @@ public abstract class AbstractXcbCall<R, D, A> implements XCall<R, D, A> {
 			nativeBufferHelper.getBuffer().flip();
 			return error;
 		} else {
-			throw new Error("Bug! Can not execute native call. Result buffer is not yet marked as done reading.");
+			throw new Error(
+					"Bug! Can not execute native call. Result buffer is not yet marked as done reading.");
 		}
 	}
 

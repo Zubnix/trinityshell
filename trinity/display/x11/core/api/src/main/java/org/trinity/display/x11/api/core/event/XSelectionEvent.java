@@ -11,9 +11,31 @@
  */
 package org.trinity.display.x11.api.core.event;
 
+import org.trinity.display.x11.api.core.XAtom;
+import org.trinity.display.x11.api.core.XWindow;
+
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
 public interface XSelectionEvent extends XEvent {
+	// contents of native buffer:
+	// uint8_t pad0; /**< */
+	// uint16_t sequence; /**< */
+	// xcb_timestamp_t time; /**< */
+	// xcb_window_t requestor; /**< */
+	// xcb_atom_t selection; /**< */
+	// xcb_atom_t target; /**< */
+	// xcb_atom_t property; /**< */
 
+	int getSequence();
+
+	int getTime();
+
+	XWindow getRequestor();
+
+	XAtom getSelection();
+
+	XAtom getTarget();
+
+	XAtom getProperty();
 }

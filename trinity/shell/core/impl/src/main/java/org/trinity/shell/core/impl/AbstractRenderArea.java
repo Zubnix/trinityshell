@@ -18,6 +18,7 @@ import org.trinity.foundation.shared.geometry.api.Rectangle;
 import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.geo.impl.AbstractGeoTransformableRectangle;
 
 import com.google.common.eventbus.EventBus;
@@ -79,7 +80,10 @@ public abstract class AbstractRenderArea extends
 	 * Create new <code>AbstractRenderArea</code>
 	 */
 	protected AbstractRenderArea(	final EventBus eventBus,
+									final GeoEventFactory geoEventFactory,
 									final ManagedDisplay managedDisplay) {
+		super(	eventBus,
+				geoEventFactory);
 		this.eventBus = eventBus;
 		this.managedDisplay = managedDisplay;
 		initBasics();
@@ -337,7 +341,8 @@ public abstract class AbstractRenderArea extends
 	 *            A {@link PlatformRenderArea}.
 	 * @see AbstractRenderArea#getPlatformRenderArea()
 	 */
-	protected void setPlatformRenderArea(final PlatformRenderArea platformRenderArea) {
+	protected void
+			setPlatformRenderArea(final PlatformRenderArea platformRenderArea) {
 		this.platformRenderArea = platformRenderArea;
 		this.managedDisplay
 				.registerDisplayEventBusForSource(	this.eventBus,
@@ -430,8 +435,7 @@ public abstract class AbstractRenderArea extends
 	 */
 	@Override
 	public void syncGeoToPlatformRenderAreaGeo() {
-		final Rectangle rectangle = getPlatformRenderArea()
-				.getPlatformRenderAreaGeometry();
+		final Rectangle rectangle = getPlatformRenderArea().getGeometry();
 		setX(rectangle.getX());
 		setY(rectangle.getY());
 

@@ -126,7 +126,7 @@ public class AbstractGeoTransRectGeoExecutorDelegationTest {
 		};
 
 		// when
-		this.geoTransformableRectangle.doUpdateLower();
+		this.geoTransformableRectangle.doLower();
 
 		// then
 		Mockito.verify(this.geoExecutor, Mockito.times(1)).lower();
@@ -143,7 +143,7 @@ public class AbstractGeoTransRectGeoExecutorDelegationTest {
 		};
 
 		// when
-		this.geoTransformableRectangle.doUpdateRaise();
+		this.geoTransformableRectangle.doRaise();
 
 		// then
 		Mockito.verify(this.geoExecutor, Mockito.times(1)).raise();

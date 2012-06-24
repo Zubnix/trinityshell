@@ -1,22 +1,17 @@
 /*
- * This file is part of HyperDrive.
- * 
- * HyperDrive is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * HyperDrive is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * HyperDrive. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of HyperDrive. HyperDrive is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. HyperDrive is distributed in
+ * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+ * the GNU General Public License for more details. You should have received a
+ * copy of the GNU General Public License along with HyperDrive. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.trinity.shell.geo.api.manager;
 
-import org.trinity.shell.geo.api.GeoTransformableRectangle;
-import org.trinity.shell.geo.api.GeoTransformation;
+import org.trinity.shell.geo.api.event.GeoEvent;
 
 // TODO documentation
 /**
@@ -35,8 +30,7 @@ public interface GeoManager {
 	 * @param transformation
 	 * 
 	 */
-	void onResizeRequest(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onResizeRequest(GeoEvent geoEvent);
 
 	/**
 	 * 
@@ -44,8 +38,7 @@ public interface GeoManager {
 	 * @param transformation
 	 * 
 	 */
-	void onMoveRequest(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onMoveRequest(GeoEvent geoEvent);
 
 	/**
 	 * 
@@ -53,8 +46,7 @@ public interface GeoManager {
 	 * @param transformation
 	 * 
 	 */
-	void onMoveResizeRequest(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onMoveResizeRequest(GeoEvent geoEvent);
 
 	/**
 	 * 
@@ -62,8 +54,7 @@ public interface GeoManager {
 	 * @param transformation
 	 * 
 	 */
-	void onLowerRequest(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onLowerRequest(GeoEvent geoEvent);
 
 	/**
 	 * 
@@ -71,8 +62,7 @@ public interface GeoManager {
 	 * @param transformation
 	 * 
 	 */
-	void onRaiseRequest(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onRaiseRequest(GeoEvent geoEvent);
 
 	/**
 	 * 
@@ -80,8 +70,7 @@ public interface GeoManager {
 	 * @param transformation
 	 * 
 	 */
-	void onChangeVisibilityRequest(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onChangeParentRequest(GeoEvent geoEvent);
 
 	/**
 	 * 
@@ -89,8 +78,7 @@ public interface GeoManager {
 	 * @param transformation
 	 * 
 	 */
-	void onChangeParentRequest(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onResizeNotify(GeoEvent geoEvent);
 
 	/**
 	 * 
@@ -98,8 +86,7 @@ public interface GeoManager {
 	 * @param transformation
 	 * 
 	 */
-	void onResizeNotify(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onMoveNotify(GeoEvent geoEvent);
 
 	/**
 	 * 
@@ -107,8 +94,7 @@ public interface GeoManager {
 	 * @param transformation
 	 * 
 	 */
-	void onMoveNotify(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onMoveResizeNotify(GeoEvent geoEvent);
 
 	/**
 	 * 
@@ -116,8 +102,7 @@ public interface GeoManager {
 	 * @param transformation
 	 * 
 	 */
-	void onMoveResizeNotify(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onLowerNotify(GeoEvent geoEvent);
 
 	/**
 	 * 
@@ -125,8 +110,7 @@ public interface GeoManager {
 	 * @param transformation
 	 * 
 	 */
-	void onLowerNotify(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onRaiseNotify(GeoEvent geoEvent);
 
 	/**
 	 * 
@@ -134,27 +118,40 @@ public interface GeoManager {
 	 * @param transformation
 	 * 
 	 */
-	void onRaiseNotify(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onChangeParentNotify(GeoEvent geoEvent);
 
 	/**
 	 * 
 	 * @param geoTransformable
 	 * @param transformation
-	 * 
 	 */
-	void onChangeVisibilityNotify(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onDestroyNotify(GeoEvent geoEvent);
 
 	/**
 	 * 
 	 * @param geoTransformable
 	 * @param transformation
-	 * 
 	 */
-	void onChangeParentNotify(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	void onShowNotify(GeoEvent geoEvent);
 
-	void onDestroyNotify(GeoTransformableRectangle geoTransformable,
-			GeoTransformation transformation);
+	/**
+	 * 
+	 * @param geoTransformable
+	 * @param transformation
+	 */
+	void onShowRequest(GeoEvent geoEvent);
+
+	/**
+	 * 
+	 * @param geoTransformable
+	 * @param transformation
+	 */
+	void onHideNotify(GeoEvent geoEvent);
+
+	/**
+	 * 
+	 * @param geoTransformable
+	 * @param transformation
+	 */
+	void onHideRequest(GeoEvent geoEvent);
 }

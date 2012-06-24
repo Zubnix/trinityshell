@@ -20,5 +20,9 @@ import org.trinity.foundation.display.api.ResourceHandle;
 public interface XDisplayResourceFactory extends DisplayResourceFactory {
 
 	@Override
-	public XWindow createPlatformRenderArea(ResourceHandle resourceHandle);
+	XWindow createPlatformRenderArea(ResourceHandle resourceHandle);
+
+	XVisual createXVisual(XResourceHandle xResourceHandle);
+
+	XColormap createXColormap(XResourceHandle xResourceHandle);
 }

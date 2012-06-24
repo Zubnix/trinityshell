@@ -11,9 +11,25 @@
  */
 package org.trinity.display.x11.api.core.event;
 
+import org.trinity.display.x11.api.core.XAtom;
+import org.trinity.display.x11.api.core.XWindow;
+
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
 public interface XSelectionRequestEvent extends XEvent {
 
+	int getSequence();
+
+	int getTime();
+
+	XWindow getOwner();
+
+	XWindow getRequestor();
+
+	XAtom getSelection();
+
+	XAtom getTarget();
+
+	XAtom getProperty();
 }

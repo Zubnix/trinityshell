@@ -11,12 +11,45 @@
  */
 package org.trinity.display.x11.impl.event;
 
+import org.trinity.display.x11.api.core.XAtom;
+import org.trinity.display.x11.api.core.XWindow;
 import org.trinity.display.x11.api.core.event.XSelectionRequestEvent;
+
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
 public class XSelectionRequestEventImpl implements XSelectionRequestEvent {
+
+	private final int eventCode;
+	private final int sequence;
+	private final int time;
+	private final XWindow owner;
+	private final XWindow requestor;
+	private final XAtom selection;
+	private final XAtom target;
+	private final XAtom property;
+
+	@Inject
+	public XSelectionRequestEventImpl(	@Assisted("eventCode") final int eventCode,
+										@Assisted("sequence") final int sequence,
+										@Assisted("time") final int time,
+										@Assisted("owner") final XWindow owner,
+										@Assisted("requestor") final XWindow requestor,
+										@Assisted("selection") final XAtom selection,
+										@Assisted("target") final XAtom target,
+										@Assisted("property") final XAtom property) {
+		this.eventCode = eventCode;
+		this.sequence = sequence;
+		this.time = time;
+		this.owner = owner;
+		this.requestor = requestor;
+		this.selection = selection;
+		this.target = target;
+		this.property = property;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -24,8 +57,42 @@ public class XSelectionRequestEventImpl implements XSelectionRequestEvent {
 	 */
 	@Override
 	public int getEventCode() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.eventCode;
 	}
 
+	@Override
+	public int getSequence() {
+
+		return this.sequence;
+	}
+
+	@Override
+	public int getTime() {
+		return this.time;
+	}
+
+	@Override
+	public XWindow getOwner() {
+		return this.owner;
+	}
+
+	@Override
+	public XWindow getRequestor() {
+		return this.requestor;
+	}
+
+	@Override
+	public XAtom getSelection() {
+		return this.selection;
+	}
+
+	@Override
+	public XAtom getTarget() {
+		return this.target;
+	}
+
+	@Override
+	public XAtom getProperty() {
+		return this.property;
+	}
 }

@@ -13,7 +13,6 @@ package org.trinity.display.x11.impl.xcb.error;
 
 import java.util.Date;
 
-import org.apache.log4j.Logger;
 import org.trinity.display.x11.api.core.XCall;
 import org.trinity.display.x11.api.core.XCallExceptionHandler;
 import org.trinity.display.x11.api.core.XCaller;
@@ -35,15 +34,12 @@ import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
  */
 public class XcbNativeErrorHandler implements XCallExceptionHandler {
 
-	private static final Logger logger = Logger
-			.getLogger(XcbNativeErrorHandler.class);
 	private static final String ERR_NATIVE_XCB_CALL_LOGSMESSAGE = "Erroneous native Xcb call.";
 
 	@Override
-	public <R, D, A> R handleException(	final XCaller xNativeCaller,
-										final XCall<R, D, A> erroneousNativeCall,
-										final D erroneousDisplayPeer,
-										final A... erroneousArgs) {
+	public <R, D, A> R handleException(final XCaller xNativeCaller,
+			final XCall<R, D, A> erroneousNativeCall,
+			final D erroneousDisplayPeer, final A... erroneousArgs) {
 		final NativeBufferHelper bufferHelper = ((AbstractXcbCall<R, D, A>) erroneousNativeCall)
 				.getNativeBufferHelper();
 		// final short responseType =
@@ -60,11 +56,7 @@ public class XcbNativeErrorHandler implements XCallExceptionHandler {
 		final XErrorCode xErrorCode = XErrorCodes.getByXErrorIntCode(errorCode);
 		bufferHelper.doneReading();
 
-		final BadXcbCall ex = new BadXcbCall(	xErrorCode,
-															resourceId,
-															new Date());
-
-		logger.error(ERR_NATIVE_XCB_CALL_LOGSMESSAGE, ex);
+		final BadXcbCall ex = new BadXcbCall(xErrorCode, resourceId, new Date());
 
 		throw ex;
 	}

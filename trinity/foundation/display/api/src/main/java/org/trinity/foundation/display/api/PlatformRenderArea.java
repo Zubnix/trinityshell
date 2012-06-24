@@ -56,24 +56,14 @@ public interface PlatformRenderArea extends DisplayResource, Area,
 	 * @return This <code>PlatformRenderArea</code>'s
 	 *         {@link PlatformRenderAreaGeometry}.
 	 */
-	Rectangle getPlatformRenderAreaGeometry();
-
-	/**
-	 * Get the current <code>PlatformRenderArea</code> attributes information.
-	 * The returned <code>PlatformRenderAreaAttributes</code> represents this
-	 * <code>PlatformRenderArea</code> native attributes at the time of the
-	 * call.
-	 * 
-	 * @return the {@link PlatformRenderAreaAttributes} of this
-	 *         <code>PlatformRenderArea</code> at the time of the call.
-	 */
-	PlatformRenderAreaAttributes getPlatformRenderAreaAttributes();
+	Rectangle getGeometry();
 
 	/**
 	 * @param catchKey
 	 * @param withModifiers
 	 */
-	void catchKeyboardInput(Key catchKey, InputModifiers withModifiers);
+	void catchKeyboardInput(Key catchKey,
+							InputModifiers withModifiers);
 
 	/**
 	 * 
@@ -91,7 +81,8 @@ public interface PlatformRenderArea extends DisplayResource, Area,
 	 * @param likeButton
 	 * @param withModifiers
 	 */
-	void catchMouseInput(Button catchButton, InputModifiers withModifiers);
+	void catchMouseInput(	Button catchButton,
+							InputModifiers withModifiers);
 
 	/**
 	 * 
@@ -107,7 +98,8 @@ public interface PlatformRenderArea extends DisplayResource, Area,
 	 * @param likeKey
 	 * @param withModifiers
 	 */
-	void disableKeyboardInputCatching(Key likeKey, InputModifiers withModifiers);
+	void disableKeyboardInputCatching(	Key likeKey,
+										InputModifiers withModifiers);
 
 	/**
 	 * @param likeButton

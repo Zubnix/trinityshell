@@ -19,6 +19,7 @@ import org.trinity.foundation.display.api.event.UnmappedNotifyEvent;
 import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -55,10 +56,13 @@ final class ClientWindow extends AbstractRenderArea {
 	@Inject
 	protected ClientWindow(	final ManagedDisplay managedDisplay,
 							final EventBus eventBus,
+							final GeoEventFactory geoEventFactory,
 							@Named("root") final RenderArea root,
 							@Assisted final PlatformRenderArea platformRenderArea,
 							@Named("RenderArea") final GeoExecutor geoExecutor) {
-		super(eventBus, managedDisplay);
+		super(	eventBus,
+				geoEventFactory,
+				managedDisplay);
 		this.renderAreaGeoExecutor = geoExecutor;
 		setPlatformRenderArea(platformRenderArea);
 		setParent(root);
@@ -67,18 +71,16 @@ final class ClientWindow extends AbstractRenderArea {
 
 	@Subscribe
 	public void handleMapRequest(final MapRequestEvent event) {
-		if ((getPlatformRenderArea() == null)
-				&& (event.getEventSource() instanceof PlatformRenderArea)) {
+		if (getPlatformRenderArea() == null
+				&& event.getEventSource() instanceof PlatformRenderArea) {
 			setPlatformRenderArea((PlatformRenderArea) event.getEventSource());
 		}
-		setVisibility(true);
-		requestVisibilityChange();
+		requestShow();
 	}
 
 	@Subscribe
 	public void handleUnmapNotify(final UnmappedNotifyEvent event) {
-		setVisibility(false);
-		this.doUpdateVisibility(false);
+		doHide(false);
 	}
 
 	@Subscribe
@@ -104,7 +106,8 @@ final class ClientWindow extends AbstractRenderArea {
 	}
 
 	@Override
-	protected void setPlatformRenderArea(final PlatformRenderArea platformRenderArea) {
+	protected void
+			setPlatformRenderArea(final PlatformRenderArea platformRenderArea) {
 		super.setPlatformRenderArea(platformRenderArea);
 
 		syncGeoToPlatformRenderAreaGeo();

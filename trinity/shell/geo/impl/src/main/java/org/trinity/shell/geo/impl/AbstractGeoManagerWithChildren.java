@@ -16,10 +16,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.trinity.shell.geo.api.GeoEvent;
 import org.trinity.shell.geo.api.GeoOperation;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.api.GeoTransformation;
+import org.trinity.shell.geo.api.event.GeoEvent;
 import org.trinity.shell.geo.api.manager.GeoManagerWithChildren;
 import org.trinity.shell.geo.api.manager.LayoutProperty;
 import org.trinity.shell.geo.impl.manager.GeoManagerDirect;
@@ -71,13 +71,15 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	@Override
 	public T addManagedChild(	final GeoTransformableRectangle child,
 								final T layoutProperty) {
-		this.childrenWithLayoutProperty.put(child, layoutProperty);
+		this.childrenWithLayoutProperty.put(child,
+											layoutProperty);
 		return layoutProperty;
 	}
 
 	@Override
 	public T addManagedChild(final GeoTransformableRectangle child) {
-		return addManagedChild(child, newDefaultLayoutProperty());
+		return addManagedChild(	child,
+								newDefaultLayoutProperty());
 	}
 
 	protected abstract T newDefaultLayoutProperty();
@@ -85,12 +87,12 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	/**
 	 * @param child
 	 */
-	protected void listenForChildReparent(final GeoTransformableRectangle child) {
+	protected void
+			listenForChildReparent(final GeoTransformableRectangle child) {
 		child.addGeoEventHandler(new GeoEventHandler() {
 			@Override
 			public void handleEvent(final GeoEvent event) {
-				final GeoTransformableRectangle square = event
-						.getGeoTransformableRectangle();
+				final GeoTransformableRectangle square = event.getSource();
 				removeManagedChild(square);
 			}
 
@@ -163,176 +165,199 @@ public abstract class AbstractGeoManagerWithChildren<T extends LayoutProperty>
 	}
 
 	@Override
-	public void onChangeParentRequest(	final GeoTransformableRectangle geoTransformable,
-										final GeoTransformation transformation) {
+	public void onChangeParentRequest(final GeoEvent geoEvent) {
 		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
-			onChildChangeParentRequest(geoTransformable, transformation);
+			onChildChangeParentRequest(	geoTransformable,
+										transformation);
 		} else {
-			super.onChangeParentRequest(geoTransformable, transformation);
+			super.onChangeParentRequest(geoTransformable,
+										transformation);
 		}
 	}
 
-	protected abstract void onChildChangeParentRequest(	GeoTransformableRectangle child,
-														GeoTransformation transformation);
+	protected abstract void
+			onChildChangeParentRequest(	GeoTransformableRectangle child,
+										GeoTransformation transformation);
 
 	@Override
-	public void onChangeVisibilityRequest(	final GeoTransformableRectangle geoTransformable,
-											final GeoTransformation transformation) {
+	public void onChangeVisibilityRequest(final GeoEvent geoEvent) {
 		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
-			onChildChangeVisibilityRequest(geoTransformable, transformation);
+			onChildChangeVisibilityRequest(	geoTransformable,
+											transformation);
 		} else {
-			super.onChangeVisibilityRequest(geoTransformable, transformation);
+			super.onChangeVisibilityRequest(geoTransformable,
+											transformation);
 		}
 	}
 
-	protected abstract void onChildChangeVisibilityRequest(	GeoTransformableRectangle child,
-															GeoTransformation transformation);
+	protected abstract void
+			onChildChangeVisibilityRequest(	GeoTransformableRectangle child,
+											GeoTransformation transformation);
 
 	@Override
-	public void onLowerRequest(	final GeoTransformableRectangle geoTransformable,
-								final GeoTransformation transformation) {
+	public void onLowerRequest(final GeoEvent geoEvent) {
 		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
-			onChildLowerRequest(geoTransformable, transformation);
+			onChildLowerRequest(geoTransformable,
+								transformation);
 		} else {
-			super.onLowerRequest(geoTransformable, transformation);
+			super.onLowerRequest(	geoTransformable,
+									transformation);
 		}
 	}
 
-	protected abstract void onChildLowerRequest(GeoTransformableRectangle child,
-												GeoTransformation transformation);
+	protected abstract void
+			onChildLowerRequest(GeoTransformableRectangle child,
+								GeoTransformation transformation);
 
 	@Override
-	public void onMoveRequest(	final GeoTransformableRectangle geoTransformable,
-								final GeoTransformation transformation) {
+	public void onMoveRequest(final GeoEvent geoEvent) {
 		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
-			onChildMoveRequest(geoTransformable, transformation);
+			onChildMoveRequest(	geoTransformable,
+								transformation);
 		} else {
-			super.onMoveRequest(geoTransformable, transformation);
+			super.onMoveRequest(geoTransformable,
+								transformation);
 		}
 	}
 
-	protected abstract void onChildMoveRequest(	GeoTransformableRectangle child,
-												GeoTransformation transformation);
+	protected abstract void
+			onChildMoveRequest(	GeoTransformableRectangle child,
+								GeoTransformation transformation);
 
 	@Override
-	public void onMoveResizeRequest(final GeoTransformableRectangle geoTransformable,
-									final GeoTransformation transformation) {
+	public void onMoveResizeRequest(final GeoEvent geoEvent) {
 		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
-			onChildMoveResizeRequest(geoTransformable, transformation);
+			onChildMoveResizeRequest(	geoTransformable,
+										transformation);
 		} else {
-			super.onMoveResizeRequest(geoTransformable, transformation);
+			super.onMoveResizeRequest(	geoTransformable,
+										transformation);
 		}
 	}
 
-	protected abstract void onChildMoveResizeRequest(	GeoTransformableRectangle child,
-														GeoTransformation transformation);
+	protected abstract void
+			onChildMoveResizeRequest(	GeoTransformableRectangle child,
+										GeoTransformation transformation);
 
 	@Override
-	public void onRaiseRequest(	final GeoTransformableRectangle geoTransformable,
-								final GeoTransformation transformation) {
+	public void onRaiseRequest(final GeoEvent geoEvent) {
 		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
-			onChildRaiseRequest(geoTransformable, transformation);
+			onChildRaiseRequest(geoTransformable,
+								transformation);
 		} else {
-			super.onRaiseRequest(geoTransformable, transformation);
+			super.onRaiseRequest(	geoTransformable,
+									transformation);
 		}
 	}
 
-	protected abstract void onChildRaiseRequest(GeoTransformableRectangle child,
-												GeoTransformation transformation);
+	protected abstract void
+			onChildRaiseRequest(GeoTransformableRectangle child,
+								GeoTransformation transformation);
 
 	@Override
-	public void onResizeRequest(final GeoTransformableRectangle geoTransformable,
-								final GeoTransformation transformation) {
+	public void onResizeRequest(final GeoEvent geoEvent) {
 		if (this.childrenWithLayoutProperty.containsKey(geoTransformable)) {
-			onChildResizeRequest(geoTransformable, transformation);
+			onChildResizeRequest(	geoTransformable,
+									transformation);
 		} else {
-			super.onResizeRequest(geoTransformable, transformation);
+			super.onResizeRequest(	geoTransformable,
+									transformation);
 		}
 	}
 
-	protected abstract void onChildResizeRequest(	GeoTransformableRectangle child,
-													GeoTransformation transformation);
+	protected abstract void
+			onChildResizeRequest(	GeoTransformableRectangle child,
+									GeoTransformation transformation);
 
 	@Override
-	public void onChangeParentNotify(	final GeoTransformableRectangle geoTransformable,
-										final GeoTransformation transformation) {
+	public void onChangeParentNotify(final GeoEvent geoEvent) {
 		if (getContainer().equals(geoTransformable)) {
-			handleContainerChanged(geoTransformable, transformation);
+			handleContainerChanged(	geoTransformable,
+									transformation);
 		} else {
-			super.onChangeParentNotify(geoTransformable, transformation);
+			super.onChangeParentNotify(	geoTransformable,
+										transformation);
 		}
 	}
 
-	protected abstract void handleContainerChanged(	final GeoTransformableRectangle container,
-													final GeoTransformation transformation);
+	protected abstract void
+			handleContainerChanged(	final GeoTransformableRectangle container,
+									final GeoTransformation transformation);
 
 	@Override
-	public void onChangeVisibilityNotify(	final GeoTransformableRectangle geoTransformable,
-											final GeoTransformation transformation) {
+	public void onChangeVisibilityNotify(final GeoEvent geoEvent) {
 		if (getContainer().equals(geoTransformable)) {
-			handleContainerChanged(geoTransformable, transformation);
+			handleContainerChanged(	geoTransformable,
+									transformation);
 		} else {
-			super.onChangeVisibilityNotify(geoTransformable, transformation);
-		}
-	}
-
-	@Override
-	public void onDestroyNotify(final GeoTransformableRectangle geoTransformable,
-								final GeoTransformation transformation) {
-		if (getContainer().equals(geoTransformable)) {
-			handleContainerChanged(geoTransformable, transformation);
-		} else {
-			super.onDestroyNotify(geoTransformable, transformation);
+			super.onChangeVisibilityNotify(	geoTransformable,
+											transformation);
 		}
 	}
 
 	@Override
-	public void onLowerNotify(	final GeoTransformableRectangle geoTransformable,
-								final GeoTransformation transformation) {
+	public void onDestroyNotify(final GeoEvent geoEvent) {
 		if (getContainer().equals(geoTransformable)) {
-			handleContainerChanged(geoTransformable, transformation);
+			handleContainerChanged(	geoTransformable,
+									transformation);
 		} else {
-			super.onLowerNotify(geoTransformable, transformation);
+			super.onDestroyNotify(	geoTransformable,
+									transformation);
 		}
 	}
 
 	@Override
-	public void onMoveNotify(	final GeoTransformableRectangle geoTransformable,
-								final GeoTransformation transformation) {
+	public void onLowerNotify(final GeoEvent geoEvent) {
 		if (getContainer().equals(geoTransformable)) {
-			handleContainerChanged(geoTransformable, transformation);
+			handleContainerChanged(	geoTransformable,
+									transformation);
 		} else {
-			super.onMoveNotify(geoTransformable, transformation);
+			super.onLowerNotify(geoTransformable,
+								transformation);
 		}
 	}
 
 	@Override
-	public void onMoveResizeNotify(	final GeoTransformableRectangle geoTransformable,
-									final GeoTransformation transformation) {
+	public void onMoveNotify(final GeoEvent geoEvent) {
 		if (getContainer().equals(geoTransformable)) {
-			handleContainerChanged(geoTransformable, transformation);
+			handleContainerChanged(	geoTransformable,
+									transformation);
 		} else {
-			super.onMoveResizeNotify(geoTransformable, transformation);
+			super.onMoveNotify(	geoTransformable,
+								transformation);
 		}
 	}
 
 	@Override
-	public void onRaiseNotify(	final GeoTransformableRectangle geoTransformable,
-								final GeoTransformation transformation) {
+	public void onMoveResizeNotify(final GeoEvent geoEvent) {
 		if (getContainer().equals(geoTransformable)) {
-			handleContainerChanged(geoTransformable, transformation);
+			handleContainerChanged(	geoTransformable,
+									transformation);
 		} else {
-			super.onRaiseNotify(geoTransformable, transformation);
+			super.onMoveResizeNotify(	geoTransformable,
+										transformation);
 		}
 	}
 
 	@Override
-	public void onResizeNotify(	final GeoTransformableRectangle geoTransformable,
-								final GeoTransformation transformation) {
+	public void onRaiseNotify(final GeoEvent geoEvent) {
 		if (getContainer().equals(geoTransformable)) {
-			handleContainerChanged(geoTransformable, transformation);
+			handleContainerChanged(	geoTransformable,
+									transformation);
 		} else {
-			super.onResizeNotify(geoTransformable, transformation);
+			super.onRaiseNotify(geoTransformable,
+								transformation);
+		}
+	}
+
+	@Override
+	public void onResizeNotify(final GeoEvent geoEvent) {
+		if (getContainer().equals(geoTransformable)) {
+			handleContainerChanged(	geoTransformable,
+									transformation);
+		} else {
+			super.onResizeNotify(	geoTransformable,
+									transformation);
 		}
 	}
 }

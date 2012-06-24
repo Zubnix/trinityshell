@@ -11,10 +11,14 @@
  */
 package org.trinity.display.x11.impl.xcb.windowcall;
 
+import org.trinity.display.x11.api.core.XDisplayResourceFactory;
+import org.trinity.display.x11.api.core.XResourceHandleFactory;
+import org.trinity.display.x11.api.core.XWindowAttributes;
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
+import org.trinity.display.x11.impl.xcb.XWindowAttributesImpl;
 import org.trinity.display.x11.impl.xcb.jni.Xcb4J;
-import org.trinity.foundation.display.api.PlatformRenderAreaAttributes;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -27,10 +31,20 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class GetWindowAttributes extends
-		AbstractXcbCall<PlatformRenderAreaAttributes, Long, Integer> {
+		AbstractXcbCall<XWindowAttributes, Long, Integer> {
+
+	private final XDisplayResourceFactory xDisplayResourceFactory;
+	private final XResourceHandleFactory xResourceHandleFactory;
+
+	@Inject
+	public GetWindowAttributes(	final XDisplayResourceFactory xDisplayResourceFactory,
+								final XResourceHandleFactory xResourceHandleFactory) {
+		this.xDisplayResourceFactory = xDisplayResourceFactory;
+		this.xResourceHandleFactory = xResourceHandleFactory;
+	}
 
 	@Override
-	public PlatformRenderAreaAttributes getResult() {
+	public XWindowAttributes getResult() {
 		// uint8_t response_type; /**< */
 		// uint8_t backing_store; /**< */
 		// uint16_t sequence; /**< */
@@ -51,55 +65,60 @@ public class GetWindowAttributes extends
 		// uint16_t do_not_propagate_mask; /**< */
 		// uint8_t pad0[2]; /**< */
 
-		getNativeBufferHelper().readUnsignedByte(); // uint8_t
-		// response_type
-		getNativeBufferHelper().readUnsignedByte();// uint8_t
-		// backing_store
-		getNativeBufferHelper().readUnsignedShort();// uint16_t
-		// sequence
-		getNativeBufferHelper().readUnsignedInt();// uint32_t
-		// length
-		final long visualPeer = getNativeBufferHelper().readUnsignedInt();// xcb_visualid_t
-		// visual
-		getNativeBufferHelper().readUnsignedShort();// uint16_t
-		// _class
-		getNativeBufferHelper().readUnsignedByte();// uint8_t
-		// bit_gravity
-		getNativeBufferHelper().readUnsignedByte();// uint8_t
-		// win_gravity
-		getNativeBufferHelper().readUnsignedInt();// uint32_t
-		// backing_planes
-		getNativeBufferHelper().readUnsignedInt();// uint32_t
-		// backing_pixel
-		getNativeBufferHelper().readUnsignedByte();// uint8_t
-		// save_under
-		getNativeBufferHelper().readUnsignedByte();// uint8_t
-		// map_is_installed
-		final int mapState = getNativeBufferHelper().readUnsignedByte();// uint8_t
-		// map_state
-		final boolean overrideRedirect = getNativeBufferHelper().readBoolean();// uint8_t
-		// override_redirect
-		getNativeBufferHelper().readUnsignedInt();// xcb_colormap_t
-		// colormap
-		getNativeBufferHelper().readUnsignedInt();// uint32_t
-		// all_event_masks
-		getNativeBufferHelper().readUnsignedInt();// uint32_t
-		// your_event_mask
-		getNativeBufferHelper().readUnsignedShort();// uint16_t
-		// do_not_propagate_mask
-		// pad
+		getNativeBufferHelper().readUnsignedByte();
+		final boolean backingStore = getNativeBufferHelper().readBoolean();
+		final int sequence = getNativeBufferHelper().readUnsignedShort();
+		final int length = (int) getNativeBufferHelper().readUnsignedInt();
+		final int visualId = (int) getNativeBufferHelper().readUnsignedInt();
+		getNativeBufferHelper().readUnsignedShort();
+		final int bitGravity = getNativeBufferHelper().readUnsignedByte();
+		final int winGravity = getNativeBufferHelper().readUnsignedByte();
+		final int backingPlanes = (int) getNativeBufferHelper()
+				.readUnsignedInt();
+		final int backingPixel = (int) getNativeBufferHelper()
+				.readUnsignedInt();
+		final boolean saveUnder = getNativeBufferHelper().readBoolean();
+		final boolean mapInstalled = getNativeBufferHelper().readBoolean();
+		final int mapState = getNativeBufferHelper().readUnsignedByte();
+		final boolean overrideRedirect = getNativeBufferHelper().readBoolean();
+		final int colormapId = (int) getNativeBufferHelper().readUnsignedInt();
+		final int allEventMasks = (int) getNativeBufferHelper()
+				.readUnsignedInt();
+		final int yourEventMask = (int) getNativeBufferHelper()
+				.readUnsignedInt();
+		final int doNotPropagateMask = getNativeBufferHelper()
+				.readUnsignedShort();
 		getNativeBufferHelper().doneReading();
-		final PlatformRenderAreaAttributes wa = new XWindowAttributes(	mapState,
-																		overrideRedirect,
-																		visualPeer);
 
-		return wa;
+		return new XWindowAttributesImpl(	backingStore,
+											sequence,
+											this.xDisplayResourceFactory
+													.createXVisual(this.xResourceHandleFactory
+															.createResourceHandle(Integer
+																	.valueOf(visualId))),
+											bitGravity,
+											winGravity,
+											backingPlanes,
+											backingPixel,
+											saveUnder,
+											mapInstalled,
+											mapState,
+											overrideRedirect,
+											this.xDisplayResourceFactory
+													.createXColormap(this.xResourceHandleFactory
+															.createResourceHandle(Integer
+																	.valueOf(colormapId))),
+											allEventMasks,
+											yourEventMask,
+											doNotPropagateMask);
 	}
 
 	@Override
 	public boolean callImpl() {
-		return Xcb4J.nativeGetWindowAttributes(getConnectionReference()
-				.longValue(), getArgs()[0].intValue(), getNativeBufferHelper()
-				.getBuffer());
+		return Xcb4J.nativeGetWindowAttributes(	getConnectionReference()
+														.longValue(),
+												getArgs()[0].intValue(),
+												getNativeBufferHelper()
+														.getBuffer());
 	}
 }

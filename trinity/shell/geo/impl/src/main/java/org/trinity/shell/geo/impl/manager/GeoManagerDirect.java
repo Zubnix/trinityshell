@@ -1,135 +1,103 @@
 /*
- * This file is part of HyperDrive.
- * 
- * HyperDrive is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * HyperDrive is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * HyperDrive. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of HyperDrive. HyperDrive is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. HyperDrive is distributed in
+ * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+ * the GNU General Public License for more details. You should have received a
+ * copy of the GNU General Public License along with HyperDrive. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.trinity.shell.geo.impl.manager;
 
-import org.trinity.shell.geo.api.GeoTransformableRectangle;
-import org.trinity.shell.geo.api.GeoTransformation;
+import org.trinity.shell.geo.api.event.GeoEvent;
 import org.trinity.shell.geo.api.manager.GeoManager;
 
-// TODO documentation
-/**
- * A <code>GeoManagerDirect</code> directly executes geometry requests without
- * changes or manipulation. A <code>GeoManagerDirect</code> provides thus an
- * absolute layout.
- * 
- * @author Erik De Rijcke
- * @since 1.0
- * 
- */
 public class GeoManagerDirect implements GeoManager {
 
 	@Override
-	public void onResizeRequest(
-			final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
-		geoTransformable.doUpdateSize();
+	public void onResizeRequest(final GeoEvent geoEvent) {
+		geoEvent.getSource().doUpdateSize();
 	}
 
 	@Override
-	public void onMoveRequest(final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
-		geoTransformable.doUpdatePlace();
+	public void onMoveRequest(final GeoEvent geoEvent) {
+		geoEvent.getSource().doUpdatePlace();
 	}
 
 	@Override
-	public void onMoveResizeRequest(
-			final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
-		geoTransformable.doUpdateSizePlace();
+	public void onMoveResizeRequest(final GeoEvent geoEvent) {
+		geoEvent.getSource().doUpdateSizePlace();
 	}
 
 	@Override
-	public void onLowerRequest(
-			final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
-		geoTransformable.doUpdateLower();
+	public void onLowerRequest(final GeoEvent geoEvent) {
+		geoEvent.getSource().doLower();
 	}
 
 	@Override
-	public void onRaiseRequest(
-			final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
-		geoTransformable.doUpdateRaise();
+	public void onRaiseRequest(final GeoEvent geoEvent) {
+		geoEvent.getSource().doRaise();
 	}
 
 	@Override
-	public void onChangeVisibilityRequest(
-			final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
-		geoTransformable.doUpdateVisibility();
+	public void onShowRequest(final GeoEvent geoEvent) {
+		geoEvent.getSource().doShow();
 	}
 
 	@Override
-	public void onChangeParentRequest(
-			final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
-		geoTransformable.doUpdateParent();
+	public void onHideRequest(final GeoEvent geoEvent) {
+		geoEvent.getSource().doHide();
 	}
 
 	@Override
-	public void onResizeNotify(
-			final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
+	public void onChangeParentRequest(final GeoEvent geoEvent) {
+		geoEvent.getSource().doUpdateParent();
+	}
+
+	@Override
+	public void onResizeNotify(final GeoEvent geoEvent) {
 		// do nothing
 	}
 
 	@Override
-	public void onMoveNotify(final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
+	public void onMoveNotify(final GeoEvent geoEvent) {
 		// do nothing
 	}
 
 	@Override
-	public void onMoveResizeNotify(
-			final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
+	public void onMoveResizeNotify(final GeoEvent geoEvent) {
 		// do nothing
 	}
 
 	@Override
-	public void onLowerNotify(final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
+	public void onLowerNotify(final GeoEvent geoEvent) {
 		// do nothing
 	}
 
 	@Override
-	public void onRaiseNotify(final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
+	public void onRaiseNotify(final GeoEvent geoEvent) {
 		// do nothing
 	}
 
 	@Override
-	public void onChangeVisibilityNotify(
-			final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
+	public void onHideNotify(final GeoEvent geoEvent) {
 		// do nothing
 	}
 
 	@Override
-	public void onChangeParentNotify(
-			final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
+	public void onShowNotify(final GeoEvent geoEvent) {
 		// do nothing
 	}
 
 	@Override
-	public void onDestroyNotify(
-			final GeoTransformableRectangle geoTransformable,
-			final GeoTransformation transformation) {
+	public void onChangeParentNotify(final GeoEvent geoEvent) {
+		// do nothing
+	}
+
+	@Override
+	public void onDestroyNotify(final GeoEvent geoEvent) {
 		// do nothin.
-
 	}
 }

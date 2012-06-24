@@ -16,16 +16,6 @@ import org.trinity.foundation.display.api.AreaManipulator;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 
-// TODO documentation
-/**
- * An <code>AbstractGeoExecutor</code> is an abstract base delegate class for
- * executing geometry requests that originated from a
- * <code>AbstractRenderArea</code>.
- * 
- * @author Erik De Rijcke
- * @since 1.0
- * @see GeoExecutor
- */
 public abstract class AbstractGeoExecutor implements GeoExecutor {
 
 	protected AbstractGeoExecutor() {
@@ -35,34 +25,41 @@ public abstract class AbstractGeoExecutor implements GeoExecutor {
 	/**
 	 * @return
 	 */
-	public abstract <T extends Area> AreaManipulator<T> getAreaManipulator(GeoTransformableRectangle geoTransformableRectangle);
+	public abstract
+			<T extends Area>
+			AreaManipulator<T>
+			getAreaManipulator(GeoTransformableRectangle geoTransformableRectangle);
 
 	@Override
-	public void lower(final GeoTransformableRectangle geoTransformableRectangle) {
+	public void
+			lower(final GeoTransformableRectangle geoTransformableRectangle) {
 		this.getAreaManipulator(geoTransformableRectangle).lower();
 	}
 
 	@Override
-	public void raise(final GeoTransformableRectangle geoTransformableRectangle) {
+	public void
+			raise(final GeoTransformableRectangle geoTransformableRectangle) {
 		this.getAreaManipulator(geoTransformableRectangle).raise();
 	}
 
 	@Override
-	public void updateSize(	final GeoTransformableRectangle geoTransformableRectangle,
-							final int width,
-							final int height) {
-		this.getAreaManipulator(geoTransformableRectangle)
-				.resize(width, height);
+	public
+			void
+			updateSize(	final GeoTransformableRectangle geoTransformableRectangle,
+						final int width,
+						final int height) {
+		this.getAreaManipulator(geoTransformableRectangle).resize(	width,
+																	height);
 	}
 
 	@Override
-	public void updateVisibility(	final GeoTransformableRectangle geoTransformableRectangle,
-									final boolean visible) {
-		if (visible) {
-			this.getAreaManipulator(geoTransformableRectangle).show();
-		} else {
-			this.getAreaManipulator(geoTransformableRectangle).hide();
-		}
+	public void show(final GeoTransformableRectangle geoTransformableRectangle) {
+		this.getAreaManipulator(geoTransformableRectangle).show();
+	}
+
+	@Override
+	public void hide(final GeoTransformableRectangle geoTransformableRectangle) {
+		this.getAreaManipulator(geoTransformableRectangle).hide();
 	}
 
 	/**
@@ -70,10 +67,12 @@ public abstract class AbstractGeoExecutor implements GeoExecutor {
 	 * @param newX
 	 * @param newY
 	 */
-	protected void reparent(final GeoTransformableRectangle geoTransformableRectangle,
-							final Area newParentArea,
-							final int newX,
-							final int newY) {
+	protected
+			void
+			reparent(	final GeoTransformableRectangle geoTransformableRectangle,
+						final Area newParentArea,
+						final int newX,
+						final int newY) {
 		getAreaManipulator(geoTransformableRectangle).setParent(newParentArea,
 																newX,
 																newY);

@@ -13,6 +13,8 @@ package org.trinity.shell.geo.api;
 
 import java.lang.reflect.Type;
 
+import org.trinity.shell.geo.api.event.GeoEvent;
+
 /**
  * A <code>GeoOperation</code> is a type of a <code>GeoEvent</code>. The
  * different instances of a <code>GeoOperation</code> are defined in the
@@ -23,80 +25,7 @@ import java.lang.reflect.Type;
  * 
  */
 public enum GeoOperation implements Type {
-	/**
-	 * 
-	 */
-	LOWER,
-	/**
-	 * 
-	 */
-	LOWER_REQUEST,
-	/**
-	 * 
-	 */
-	MOVE,
-	/**
-	 * 
-	 */
-	MOVE_REQUEST,
-	/**
-	 * 
-	 */
-	MOVE_RESIZE,
 
-	/**
-	 * 
-	 */
-	MOVE_RESIZE_REQUEST,
-
-	/**
-	 * 
-	 */
-	RAISE,
-
-	/**
-	 * 
-	 */
-	RAISE_REQUEST,
-
-	/**
-	 * 
-	 */
-	REPARENT,
-
-	/**
-	 * 
-	 */
-	REPARENT_REQUEST,
-
-	/**
-	 * 
-	 */
-	RESIZE,
-
-	/**
-	 * 
-	 */
-	RESIZE_REQUEST,
-
-	/**
-	 * 
-	 */
-	VISIBILITY,
-
-	/**
-	 * 
-	 */
-	VISIBILITY_REQUEST,
-
-	/**
-	 * 
-	 */
-	DESTROYED,
-	/**
-	 * 
-	 */
-	PARENT_NOTIFY,
 	/**
 	 * 
 	 */

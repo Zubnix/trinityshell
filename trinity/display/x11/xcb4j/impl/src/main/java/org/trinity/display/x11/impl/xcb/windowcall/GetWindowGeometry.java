@@ -13,6 +13,7 @@ package org.trinity.display.x11.impl.xcb.windowcall;
 
 import org.trinity.display.x11.api.core.XWindowGeometry;
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
+import org.trinity.display.x11.impl.xcb.XWindowGeometryImpl;
 import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
 import org.trinity.display.x11.impl.xcb.jni.Xcb4J;
 
@@ -64,8 +65,12 @@ public class GetWindowGeometry extends
 		final int borderWidth = nativeBufferHelper.readUnsignedShort();
 		nativeBufferHelper.doneReading();
 
-		final XWindowGeometry wg = new XWindowGeometry(x, y, width
-				+ borderWidth, height + borderWidth, borderWidth);
+		final XWindowGeometry wg = new XWindowGeometryImpl(	x,
+															y,
+															width + borderWidth,
+															height
+																	+ borderWidth,
+															borderWidth);
 
 		return wg;
 	}
@@ -73,7 +78,9 @@ public class GetWindowGeometry extends
 	@Override
 	public boolean callImpl() {
 		return Xcb4J.nativeGetCurrentWindowGeometry(getConnectionReference()
-				.longValue(), getArgs()[0].intValue(), getNativeBufferHelper()
-				.getBuffer());
+															.longValue(),
+													getArgs()[0].intValue(),
+													getNativeBufferHelper()
+															.getBuffer());
 	}
 }

@@ -17,5 +17,5 @@ import org.trinity.foundation.display.api.PlatformRenderArea;
  * @author Erik De Rijcke
  ****************************************/
 public interface XWindow extends PlatformRenderArea, XDrawable {
-
+	XWindowAttributes getWindowAttributes();
 }

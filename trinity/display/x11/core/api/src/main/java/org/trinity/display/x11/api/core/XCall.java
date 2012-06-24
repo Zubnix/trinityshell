@@ -15,6 +15,7 @@ package org.trinity.display.x11.api.core;
  * @author Erik De Rijcke
  ****************************************/
 public interface XCall<R, D, A> {
+
 	R getResult();
 
 	boolean exec();

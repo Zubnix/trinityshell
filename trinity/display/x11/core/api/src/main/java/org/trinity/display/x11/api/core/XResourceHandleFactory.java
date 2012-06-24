@@ -19,5 +19,5 @@ import org.trinity.foundation.display.api.ResourceHandleFactory;
  ****************************************/
 public interface XResourceHandleFactory extends ResourceHandleFactory {
 	@Override
-	public XResourceHandle createResourceHandle(Object nativeHandle);
+	XResourceHandle createResourceHandle(Object nativeHandle);
 }

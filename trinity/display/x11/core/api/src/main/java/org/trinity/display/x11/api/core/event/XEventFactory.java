@@ -35,24 +35,41 @@ public interface XEventFactory {
 									@Assisted("button") int button,
 									@Assisted boolean sameScreen);
 
-	XCirculateEvent createXCirculateEvent(	@Assisted("eventCode") int eventCode,
-											@Assisted("sequence") int sequence,
-											@Assisted("event") XWindow event,
-											@Assisted("window") XWindow window,
-											@Assisted("place") int place);
+	XCirculateEvent
+			createXCirculateEvent(	@Assisted("eventCode") int eventCode,
+									@Assisted("sequence") int sequence,
+									@Assisted("event") XWindow event,
+									@Assisted("window") XWindow window,
+									@Assisted("place") int place);
 
-	XClientMessageEvent createXClientMessageEvent(	@Assisted("eventCode") final int eventCode,
-													@Assisted("format") final int format,
-													@Assisted("sequence") final int sequence,
-													@Assisted final XWindow window,
-													@Assisted final XAtom atom,
-													@Assisted final byte[] data);
+	XClientMessageEvent
+			createXClientMessageEvent(	@Assisted("eventCode") int eventCode,
+										@Assisted("format") int format,
+										@Assisted("sequence") int sequence,
+										@Assisted XWindow window,
+										@Assisted XAtom atom,
+										@Assisted byte[] data);
 
 	XColormapEvent createXColormapEvent();
 
-	XConfigureEvent createXConfigureEvent(	@Assisted("eventCode") int eventCode,
+			XConfigureEvent
+			createXConfigureEvent(	@Assisted("eventCode") int eventCode,
+									@Assisted("sequence") int sequence,
+									@Assisted("event") XWindow event,
+									@Assisted("window") XWindow window,
+									@Assisted("aboveSibling") XWindow aboveSibling,
+									@Assisted("x") int x,
+									@Assisted("y") int y,
+									@Assisted("width") int width,
+									@Assisted("height") int height,
+									@Assisted("borderWidth") int borderWidth,
+									@Assisted boolean overrideRedirect);
+
+			XConfigureRequestEvent
+			createXConfigureRequestEvent(	@Assisted("eventCode") int eventCode,
+											@Assisted("stackMode") int stackMode,
 											@Assisted("sequence") int sequence,
-											@Assisted("event") XWindow event,
+											@Assisted("parent") XWindow parent,
 											@Assisted("window") XWindow window,
 											@Assisted("aboveSibling") XWindow aboveSibling,
 											@Assisted("x") int x,
@@ -60,29 +77,17 @@ public interface XEventFactory {
 											@Assisted("width") int width,
 											@Assisted("height") int height,
 											@Assisted("borderWidth") int borderWidth,
-											@Assisted boolean overrideRedirect);
-
-	XConfigureRequestEvent createXConfigureRequestEvent(@Assisted("eventCode") int eventCode,
-														@Assisted("stackMode") int stackMode,
-														@Assisted("sequence") int sequence,
-														@Assisted("parent") XWindow parent,
-														@Assisted("window") XWindow window,
-														@Assisted("aboveSibling") XWindow aboveSibling,
-														@Assisted("x") int x,
-														@Assisted("y") int y,
-														@Assisted("width") int width,
-														@Assisted("height") int height,
-														@Assisted("borderWidth") int borderWidth,
-														@Assisted("valueMask") int valueMask);
+											@Assisted("valueMask") int valueMask);
 
 	XCreateWindowEvent createXCreateWindowEvent();
 
 	XCrossingEvent createXCrossingEvent();
 
-	XDestroyWindowEvent createXDestroyWindowEvent(	@Assisted("eventCode") int eventCode,
-													@Assisted("sequence") int sequence,
-													@Assisted("event") XWindow event,
-													@Assisted("window") XWindow window);
+	XDestroyWindowEvent
+			createXDestroyWindowEvent(	@Assisted("eventCode") int eventCode,
+										@Assisted("sequence") int sequence,
+										@Assisted("event") XWindow event,
+										@Assisted("window") XWindow window);
 
 	XExposeEvent createXExposeEvent();
 
@@ -120,29 +125,31 @@ public interface XEventFactory {
 
 	XMappingEvent createXMappingEvent();
 
-	XMapRequestEvent createXMapRequestEvent(@Assisted("eventCode") int eventCode,
-											@Assisted("sequence") int sequence,
-											@Assisted("parent") XWindow parent,
-											@Assisted("window") XWindow window);
+	XMapRequestEvent
+			createXMapRequestEvent(	@Assisted("eventCode") int eventCode,
+									@Assisted("sequence") int sequence,
+									@Assisted("parent") XWindow parent,
+									@Assisted("window") XWindow window);
 
 	XMotionEvent createXMotionEvent();
 
 	XNoExposeEvent createXNoExposeEvent();
 
-	XPointerVisitationEvent createXPointerVisitationEvent(	@Assisted("eventCode") int eventCode,
-															@Assisted("detail") int detail,
-															@Assisted("sequence") int sequence,
-															@Assisted("time") int time,
-															@Assisted("root") XWindow root,
-															@Assisted("event") XWindow event,
-															@Assisted("child") XWindow child,
-															@Assisted("rootX") int rootX,
-															@Assisted("rootY") int rootY,
-															@Assisted("eventX") int eventX,
-															@Assisted("eventY") int eventY,
-															@Assisted("state") int state,
-															@Assisted("mode") int mode,
-															@Assisted boolean sameScreen);
+			XPointerVisitationEvent
+			createXPointerVisitationEvent(	@Assisted("eventCode") int eventCode,
+											@Assisted("detail") int detail,
+											@Assisted("sequence") int sequence,
+											@Assisted("time") int time,
+											@Assisted("root") XWindow root,
+											@Assisted("event") XWindow event,
+											@Assisted("child") XWindow child,
+											@Assisted("rootX") int rootX,
+											@Assisted("rootY") int rootY,
+											@Assisted("eventX") int eventX,
+											@Assisted("eventY") int eventY,
+											@Assisted("state") int state,
+											@Assisted("mode") int mode,
+											@Assisted boolean sameScreen);
 
 	XPropertyEvent createXPropertyEvent(@Assisted("eventCode") int eventCode,
 										@Assisted("sequence") int sequence,
@@ -155,13 +162,31 @@ public interface XEventFactory {
 
 	XResizeRequestEvent createXResizeRequestEvent();
 
-	XSelectionClearEvent createXSelectionClearEvent(@Assisted("eventCode") int eventCode,
-													@Assisted("sequence") int sequence,
-													@Assisted("time") int time,
-													@Assisted XWindow owner,
-													@Assisted XAtom selection);
+	XSelectionClearEvent
+			createXSelectionClearEvent(	@Assisted("eventCode") int eventCode,
+										@Assisted("sequence") int sequence,
+										@Assisted("time") int time,
+										@Assisted XWindow owner,
+										@Assisted XAtom selection);
 
-	XSelectionEvent createXSelectionEvent();
+	XSelectionEvent
+			createXSelectionEvent(	@Assisted("eventCode") int eventCode,
+									@Assisted("sequence") int sequence,
+									@Assisted("time") int time,
+									@Assisted XWindow requestor,
+									@Assisted("selection") XAtom selection,
+									@Assisted("target") XAtom target,
+									@Assisted("property") XAtom property);
+
+			XSelectionRequestEvent
+			createXSelectionRequestEvent(	@Assisted("eventCode") int eventCode,
+											@Assisted("sequence") int sequence,
+											@Assisted("time") int time,
+											@Assisted("owner") XWindow owner,
+											@Assisted("requestor") XWindow requestor,
+											@Assisted("selection") XAtom selection,
+											@Assisted("target") XAtom target,
+											@Assisted("property") XAtom property);
 
 	XUnmapEvent createXUnmapEvent(	@Assisted("eventCode") int eventCode,
 									@Assisted("sequence") int sequence,

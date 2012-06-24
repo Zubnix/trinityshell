@@ -16,13 +16,15 @@ import java.util.Map;
 
 import org.trinity.display.x11.api.core.XCall;
 import org.trinity.display.x11.api.core.XCaller;
+import org.trinity.display.x11.api.core.XColormap;
 import org.trinity.display.x11.api.core.XConnection;
 import org.trinity.display.x11.api.core.XDisplayResourceFactory;
 import org.trinity.display.x11.api.core.XDisplayServer;
 import org.trinity.display.x11.api.core.XResourceHandle;
+import org.trinity.display.x11.api.core.XVisual;
 import org.trinity.display.x11.api.core.XWindow;
+import org.trinity.display.x11.api.core.XWindowAttributes;
 import org.trinity.display.x11.api.core.XWindowGeometry;
-import org.trinity.foundation.display.api.PlatformRenderAreaAttributes;
 import org.trinity.foundation.display.api.ResourceHandle;
 import org.trinity.foundation.shared.geometry.api.Coordinates;
 
@@ -45,7 +47,7 @@ public class XDisplayResourceFactoryImpl implements XDisplayResourceFactory {
 	private final XCall<Void, Long, Integer> destroyWindow;
 	private final XCall<Void, Long, Number> enableEvents;
 	private final XCall<Void, Long, Integer> focusWindow;
-	private final XCall<PlatformRenderAreaAttributes, Long, Integer> getWindowAttributes;
+	private final XCall<XWindowAttributes, Long, Integer> getWindowAttributes;
 	private final XCall<XWindowGeometry, Long, Integer> getWindowGeometry;
 	private final XCall<Void, Long, Integer> grabButton;
 	private final XCall<Void, Long, Number> grabKey;
@@ -79,7 +81,7 @@ public class XDisplayResourceFactoryImpl implements XDisplayResourceFactory {
 										@Named("destroyWindow") final XCall<Void, Long, Integer> destroyWindow,
 										@Named("enableEvents") final XCall<Void, Long, Number> enableEvents,
 										@Named("focusWindow") final XCall<Void, Long, Integer> focusWindow,
-										@Named("getWindowAttributes") final XCall<PlatformRenderAreaAttributes, Long, Integer> getWindowAttributes,
+										@Named("getWindowAttributes") final XCall<XWindowAttributes, Long, Integer> getWindowAttributes,
 										@Named("getWindowGeometry") final XCall<XWindowGeometry, Long, Integer> getWindowGeometry,
 										@Named("grabButton") final XCall<Void, Long, Integer> grabButton,
 										@Named("grabKey") final XCall<Void, Long, Number> grabKey,
@@ -135,7 +137,8 @@ public class XDisplayResourceFactoryImpl implements XDisplayResourceFactory {
 	}
 
 	@Override
-	public XWindow createPlatformRenderArea(final ResourceHandle resourceHandle) {
+	public XWindow
+			createPlatformRenderArea(final ResourceHandle resourceHandle) {
 		// TODO Auto-generated method stub
 		XWindow xWindow = this.xWindows.get(resourceHandle);
 		if (xWindow == null) {
@@ -171,6 +174,18 @@ public class XDisplayResourceFactoryImpl implements XDisplayResourceFactory {
 										(XResourceHandle) resourceHandle);
 		}
 		return xWindow;
+	}
+
+	@Override
+	public XVisual createXVisual(final XResourceHandle xResourceHandle) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public XColormap createXColormap(final XResourceHandle xResourceHandle) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

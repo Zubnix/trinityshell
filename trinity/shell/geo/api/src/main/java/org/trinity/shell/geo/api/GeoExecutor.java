@@ -74,20 +74,16 @@ public interface GeoExecutor {
 	 * @param width
 	 * @param height
 	 */
-	void updateSizePlace(	GeoTransformableRectangle geoTransformableRectangle,
+			void
+			updateSizePlace(GeoTransformableRectangle geoTransformableRectangle,
 							int relativeX,
 							int relativeY,
 							int width,
 							int height);
 
-	/**
-	 * Execute the actual visibility change of the handled
-	 * <code>GeoTransformableRectangle</code>.
-	 * 
-	 * @param visible
-	 */
-	void updateVisibility(	GeoTransformableRectangle geoTransformableRectangle,
-							boolean visible);
+	void show(GeoTransformableRectangle geoTransformableRectangle);
+
+	void hide(GeoTransformableRectangle geoTransformableRectangle);
 
 	/**
 	 * Execute the actual parent update of the handled

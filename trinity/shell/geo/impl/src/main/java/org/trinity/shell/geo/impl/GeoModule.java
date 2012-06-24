@@ -11,14 +11,15 @@
  */
 package org.trinity.shell.geo.impl;
 
-import org.trinity.shell.geo.api.GeoEvent;
-import org.trinity.shell.geo.api.GeoEventFactory;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
+import org.trinity.shell.geo.api.event.GeoEvent;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.geo.api.manager.GeoManager;
 import org.trinity.shell.geo.api.manager.GeoManagerFactory;
 import org.trinity.shell.geo.api.manager.GeoManagerWithChildren;
 import org.trinity.shell.geo.api.manager.LayoutPropertyLine;
+import org.trinity.shell.geo.impl.event.GeoEventImpl;
 import org.trinity.shell.geo.impl.manager.GeoManagerDirect;
 import org.trinity.shell.geo.impl.manager.GeoManagerLine;
 import org.trinity.shell.geo.impl.manager.LayoutPropertyLineImpl;

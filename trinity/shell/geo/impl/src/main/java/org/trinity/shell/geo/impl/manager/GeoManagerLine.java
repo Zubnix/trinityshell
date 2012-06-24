@@ -297,7 +297,7 @@ public class GeoManagerLine extends
 	@Override
 	protected void onChildLowerRequest(final GeoTransformableRectangle child,
 			final GeoTransformation transformation) {
-		child.doUpdateLower();
+		child.doLower();
 	}
 
 	@Override
@@ -321,7 +321,7 @@ public class GeoManagerLine extends
 	@Override
 	protected void onChildRaiseRequest(final GeoTransformableRectangle child,
 			final GeoTransformation transformation) {
-		child.doUpdateRaise();
+		child.doRaise();
 	}
 
 	@Override

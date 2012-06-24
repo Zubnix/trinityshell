@@ -23,27 +23,30 @@ public interface GeoTransformableRectangle extends HierarchicalRectangle,
 
 	void doDestroy();
 
-	void doUpdateLower();
+	void doLower();
 
 	void doUpdateParent();
 
 	void doUpdatePlace();
 
-	void doUpdateRaise();
+	void doRaise();
 
 	void doUpdateSizePlace();
 
 	void doUpdateSize();
 
-	void doUpdateVisibility();
+	void doShow();
+
+	void doHide();
 
 	GeoTransformableRectangle[] getChildren();
-
-	void notifyChildAdded(GeoTransformableRectangle newChild);
 
 	GeoExecutor getGeoExecutor();
 
 	boolean isDestroyed();
+
+	@Override
+	boolean isVisible();
 
 	void requestLower();
 
@@ -57,7 +60,9 @@ public interface GeoTransformableRectangle extends HierarchicalRectangle,
 
 	void requestResize();
 
-	void requestVisibilityChange();
+	void requestShow();
+
+	void requestHide();
 
 	void setHeight(final int height);
 
@@ -66,8 +71,6 @@ public interface GeoTransformableRectangle extends HierarchicalRectangle,
 	void setX(final int x);
 
 	void setY(final int y);
-
-	void setVisibility(final boolean visible);
 
 	void setWidth(final int width);
 
