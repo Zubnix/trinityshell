@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.core.impl;
 
-import org.trinity.foundation.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
@@ -28,7 +28,7 @@ import com.google.common.eventbus.Subscribe;
 // TODO redesign/evaluate input manager integration/method delegation.
 /**
  * An <code>AbstractRenderArea</code> provides a basic abstract implementation
- * of an on-screen area. It wraps a {@link PlatformRenderArea} and provides and
+ * of an on-screen area. It wraps a {@link DisplayRenderArea} and provides and
  * implements additional basic functionality like state information, minimum,
  * maximum, current and requested dimensions. It is the the most basic
  * implementation of on on-screen area.
@@ -60,7 +60,7 @@ public abstract class AbstractRenderArea extends
 	public static final int DEFAULT_HEIGHT_INC = 1;
 
 	private final ManagedDisplay managedDisplay;
-	private PlatformRenderArea platformRenderArea;
+	private DisplayRenderArea platformRenderArea;
 
 	private boolean movable;
 	private boolean resizable;
@@ -274,10 +274,10 @@ public abstract class AbstractRenderArea extends
 	 * geometry will reflect the geometry of the returned
 	 * <code>PlatformRenderArea</code>.
 	 * 
-	 * @return A {@link PlatformRenderArea}.
+	 * @return A {@link DisplayRenderArea}.
 	 */
 	@Override
-	public PlatformRenderArea getPlatformRenderArea() {
+	public DisplayRenderArea getPlatformRenderArea() {
 		return this.platformRenderArea;
 	}
 
@@ -338,11 +338,11 @@ public abstract class AbstractRenderArea extends
 	 * visual representation.
 	 * 
 	 * @param platformRenderArea
-	 *            A {@link PlatformRenderArea}.
+	 *            A {@link DisplayRenderArea}.
 	 * @see AbstractRenderArea#getPlatformRenderArea()
 	 */
 	protected void
-			setPlatformRenderArea(final PlatformRenderArea platformRenderArea) {
+			setPlatformRenderArea(final DisplayRenderArea platformRenderArea) {
 		this.platformRenderArea = platformRenderArea;
 		this.managedDisplay
 				.registerDisplayEventBusForSource(	this.eventBus,
@@ -441,11 +441,7 @@ public abstract class AbstractRenderArea extends
 
 		setWidth(rectangle.getWidth());
 		setHeight(rectangle.getHeight());
-		doUpdateSizePlaceValue(false);
-
-		setVisibility(getPlatformRenderArea().getPlatformRenderAreaAttributes()
-				.isViewable());
-		doUpdateVisibility(false);
+		doMoveResize(false);
 	}
 
 	// @Override

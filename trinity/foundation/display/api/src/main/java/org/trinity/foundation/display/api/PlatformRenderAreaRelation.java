@@ -28,5 +28,5 @@ public interface PlatformRenderAreaRelation {
 	 * 
 	 * @return
 	 */
-	PlatformRenderArea getRelatedRenderArea();
+	DisplayRenderArea getRelatedRenderArea();
 }

@@ -11,9 +11,9 @@
  */
 package org.trinity.display.x11.impl.xcb.windowcall;
 
-import org.trinity.display.x11.api.core.XDisplayResourceFactory;
-import org.trinity.display.x11.api.core.XResourceHandleFactory;
-import org.trinity.display.x11.api.core.XWindowAttributes;
+import org.trinity.display.x11.core.api.XDisplayResourceFactory;
+import org.trinity.display.x11.core.api.XResourceHandleFactory;
+import org.trinity.display.x11.core.api.XWindowAttributes;
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
 import org.trinity.display.x11.impl.xcb.XWindowAttributesImpl;
 import org.trinity.display.x11.impl.xcb.jni.Xcb4J;
@@ -61,14 +61,14 @@ public class GetWindowAttributes extends
 		// uint8_t override_redirect; /**< */
 		// xcb_colormap_t colormap; /**< */
 		// uint32_t all_event_masks; /**< */
-		// uint32_t your_event_mask; /**< */
+		// uint32_t your_event_mask; /**< */ // TODO multibinding
 		// uint16_t do_not_propagate_mask; /**< */
 		// uint8_t pad0[2]; /**< */
 
 		getNativeBufferHelper().readUnsignedByte();
 		final boolean backingStore = getNativeBufferHelper().readBoolean();
 		final int sequence = getNativeBufferHelper().readUnsignedShort();
-		final int length = (int) getNativeBufferHelper().readUnsignedInt();
+		getNativeBufferHelper().readUnsignedInt();
 		final int visualId = (int) getNativeBufferHelper().readUnsignedInt();
 		getNativeBufferHelper().readUnsignedShort();
 		final int bitGravity = getNativeBufferHelper().readUnsignedByte();

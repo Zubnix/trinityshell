@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.foundation.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.display.api.ResourceHandle;
 import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.display.api.event.KeyNotifyEvent;
@@ -56,7 +56,7 @@ import com.google.inject.name.Named;
  * <code>Widget</code> will thus return null when <code>getManagedDisplay</code>, <code>getView</code>, <code>getPlatformRenderArea</code> is called. Calls
  * to <code>getPainter</code> will also fail.
  * <p>
- * An initialized <code>Widget</code> will have a {@link PlatformRenderArea}.
+ * An initialized <code>Widget</code> will have a {@link DisplayRenderArea}.
  * This is the native window that the <code>Widget</code> will be draw on. Note
  * that multiple <code>Widget</code>s can share the same
  * <code>PlatformRenderArea</code>. A <code>Widget</code> who's parent has a
@@ -178,7 +178,7 @@ public class WidgetImpl extends AbstractRenderArea implements Widget {
 		final ResourceHandle resourceHandle = getPainter().construct(getView()
 				.doCreate(this, isVisible(), paintableParent));
 
-		PlatformRenderArea renderArea = null;
+		DisplayRenderArea renderArea = null;
 
 		// TODO from factory
 		renderArea = getManagedDisplay().getDisplay()
@@ -246,7 +246,7 @@ public class WidgetImpl extends AbstractRenderArea implements Widget {
 	}
 
 	@Override
-	protected void setPlatformRenderArea(final PlatformRenderArea platformRenderArea) {
+	protected void setPlatformRenderArea(final DisplayRenderArea platformRenderArea) {
 		// repeated for package visibility
 		super.setPlatformRenderArea(platformRenderArea);
 	}

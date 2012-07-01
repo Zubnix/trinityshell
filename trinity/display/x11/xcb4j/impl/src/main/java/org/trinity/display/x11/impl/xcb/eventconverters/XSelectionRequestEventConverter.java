@@ -11,14 +11,14 @@
  */
 package org.trinity.display.x11.impl.xcb.eventconverters;
 
-import org.trinity.display.x11.api.core.XAtomFactory;
-import org.trinity.display.x11.api.core.XDisplayResourceFactory;
-import org.trinity.display.x11.api.core.XDisplayServer;
-import org.trinity.display.x11.api.core.XEventConverter;
-import org.trinity.display.x11.api.core.XProtocolConstants;
-import org.trinity.display.x11.api.core.XResourceHandleFactory;
-import org.trinity.display.x11.api.core.event.XEvent;
-import org.trinity.display.x11.api.core.event.XEventFactory;
+import org.trinity.display.x11.core.api.XAtomFactory;
+import org.trinity.display.x11.core.api.XDisplayResourceFactory;
+import org.trinity.display.x11.core.api.XDisplayServer;
+import org.trinity.display.x11.core.api.XEventConverter;
+import org.trinity.display.x11.core.api.XProtocolConstants;
+import org.trinity.display.x11.core.api.XResourceHandleFactory;
+import org.trinity.display.x11.core.api.event.XEvent;
+import org.trinity.display.x11.core.api.event.XEventFactory;
 import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 
@@ -78,11 +78,11 @@ public class XSelectionRequestEventConverter implements
 												sequence,
 												time,
 												this.xDisplayResourceFactory
-														.createPlatformRenderArea(this.xResourceHandleFactory
+														.createDisplayRenderArea(this.xResourceHandleFactory
 																.createResourceHandle(Integer
 																		.valueOf(ownerwId))),
 												this.xDisplayResourceFactory
-														.createPlatformRenderArea(this.xResourceHandleFactory
+														.createDisplayRenderArea(this.xResourceHandleFactory
 																.createResourceHandle(Integer
 																		.valueOf(requestorId))),
 												this.xAtomFactory

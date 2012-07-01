@@ -1,28 +1,35 @@
 /*
- * This file is part of HyperDrive.
- * 
- * HyperDrive is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * HyperDrive is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * HyperDrive. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of HyperDrive. HyperDrive is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. HyperDrive is distributed in
+ * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+ * the GNU General Public License for more details. You should have received a
+ * copy of the GNU General Public License along with HyperDrive. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.trinity.shell.geo.impl.manager;
 
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
-import org.trinity.shell.geo.api.GeoTransformation;
-import org.trinity.shell.geo.impl.AbstractGeoManagerWithChildren;
+import org.trinity.shell.geo.api.event.GeoDestroyEvent;
+import org.trinity.shell.geo.api.event.GeoHideRequestEvent;
+import org.trinity.shell.geo.api.event.GeoLowerRequestEvent;
+import org.trinity.shell.geo.api.event.GeoMoveResizeEvent;
+import org.trinity.shell.geo.api.event.GeoMoveResizeRequestEvent;
+import org.trinity.shell.geo.api.event.GeoRaiseRequestEvent;
+import org.trinity.shell.geo.api.event.GeoReparentRequestEvent;
+import org.trinity.shell.geo.api.event.GeoShowRequestEvent;
+import org.trinity.shell.geo.api.manager.LayoutPropertyLine;
+
+import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 // TODO documentation
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
 // be negative. childs with size 0, ...)
-//TODO refactor to reuse code and for cleaner reading
+// TODO refactor to reuse code and for cleaner reading
 /**
  * A <code>GeoManagerLine</code> provides a layout for children in a horizontal
  * or vertical line. All children will have the same height or width for a
@@ -35,7 +42,73 @@ import org.trinity.shell.geo.impl.AbstractGeoManagerWithChildren;
  * 
  */
 public class GeoManagerLine extends
-		AbstractGeoManagerWithChildren<LayoutPropertyLineImpl> {
+		AbstractConfigurableGeoManager<LayoutPropertyLine> {
+
+	private class ChildGeoListener {
+		@SuppressWarnings("unused")
+		@Subscribe
+		public
+				void
+				handleChildMoveResizeRequest(final GeoMoveResizeRequestEvent geoMoveResizeRequestEvent) {
+			final GeoTransformableRectangle child = geoMoveResizeRequestEvent
+					.getSource();
+			if (getLayoutProperty(child).getWeight() == 0) {
+				child.doResize();
+				layout();
+			} else {
+				cancelMoveResize(child);
+			}
+		}
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public void handleChildDestroyed(final GeoDestroyEvent geoDestroyEvent) {
+			removeManagedChild(geoDestroyEvent.getSource());
+		}
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public
+				void
+				handleChildReparentRequest(final GeoReparentRequestEvent geoReparentRequestEvent) {
+			geoReparentRequestEvent.getSource().doReparent();
+			layout();
+		}
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public
+				void
+				handleChildShowRequest(final GeoShowRequestEvent geoShowRequestEvent) {
+			geoShowRequestEvent.getSource().doShow();
+		}
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public
+				void
+				handleChildHideRequest(final GeoHideRequestEvent geoHideRequestEvent) {
+			geoHideRequestEvent.getSource().doHide();
+		}
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public
+				void
+				handleChildLowerRequest(final GeoLowerRequestEvent geoLowerRequestEvent) {
+			geoLowerRequestEvent.getSource().doLower();
+		}
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public
+				void
+				handleChildRaiseRequest(final GeoRaiseRequestEvent geoRaiseRequestEvent) {
+			geoRaiseRequestEvent.getSource().doRaise();
+		}
+	}
+
+	private final ChildGeoListener childGeoListener = new ChildGeoListener();
 
 	private boolean horizontalDirection;
 	private boolean inverseDirection;
@@ -51,27 +124,13 @@ public class GeoManagerLine extends
 	 * @param horizontalDirection
 	 * @param inverseDirection
 	 */
-	public GeoManagerLine(final GeoTransformableRectangle container,
-			final boolean horizontalDirection, final boolean inverseDirection) {
+	@Inject
+	public GeoManagerLine(	@Assisted final GeoTransformableRectangle container,
+							@Assisted("horiz") final boolean horizontalDirection,
+							@Assisted("inverse") final boolean inverseDirection) {
 		super(container);
 		setHorizontalDirection(horizontalDirection);
 		setInverseDirection(inverseDirection);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean isHorizontalDirection() {
-		return this.horizontalDirection;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean isInverseDirection() {
-		return this.inverseDirection;
 	}
 
 	/**
@@ -101,8 +160,8 @@ public class GeoManagerLine extends
 	}
 
 	@Override
-	protected LayoutPropertyLineImpl newDefaultLayoutProperty() {
-		return new LayoutPropertyLineImpl(0, new Margins(0));
+	public LayoutPropertyLine createLayoutProperty() {
+		return new LayoutPropertyLineImpl();
 	}
 
 	protected void layoutHorizontal() {
@@ -145,7 +204,7 @@ public class GeoManagerLine extends
 
 		final GeoTransformableRectangle[] children = getManagedChildren();
 		for (final GeoTransformableRectangle child : children) {
-			final LayoutPropertyLineImpl layoutProperty = getLayoutProperty(child);
+			final LayoutPropertyLine layoutProperty = getLayoutProperty(child);
 			int childWeight = layoutProperty.getWeight();
 
 			double resizeFactor = scale;
@@ -182,7 +241,7 @@ public class GeoManagerLine extends
 				newPlace += newChildWidth;
 			}
 
-			child.doUpdateSizePlace();
+			child.doMoveResize();
 		}
 	}
 
@@ -225,7 +284,7 @@ public class GeoManagerLine extends
 
 		final GeoTransformableRectangle[] children = getManagedChildren();
 		for (final GeoTransformableRectangle child : children) {
-			final LayoutPropertyLineImpl layoutProperty = getLayoutProperty(child);
+			final LayoutPropertyLine layoutProperty = getLayoutProperty(child);
 			int childWeight = layoutProperty.getWeight();
 
 			double resizeFactor = scale;
@@ -260,73 +319,37 @@ public class GeoManagerLine extends
 				child.setY(newPlace + topMargin);
 				newPlace += newChildHeight;
 			}
-			child.doUpdateSizePlace();
+			child.doMoveResize();
 		}
 	}
 
-	protected void layout() {
-		if (isHorizontalDirection()) {
+	@Override
+	public LayoutPropertyLine
+			addManagedChild(final GeoTransformableRectangle child,
+							final LayoutPropertyLine layoutProperty) {
+		child.addGeoEventHandler(this.childGeoListener);
+		return super.addManagedChild(	child,
+										layoutProperty);
+	}
+
+	@Override
+	public void removeManagedChild(final GeoTransformableRectangle child) {
+		child.removeGeoEventHandler(this.childGeoListener);
+		super.removeManagedChild(child);
+	}
+
+	@Override
+	public void layout() {
+		if (this.horizontalDirection) {
 			layoutHorizontal();
 		} else {
 			layoutVertical();
 		}
 	}
 
-	@Override
-	protected void handleContainerChanged(
-			final GeoTransformableRectangle container,
-			final GeoTransformation transformation) {
+	@Subscribe
+	public void
+			handleContainerMoveReize(final GeoMoveResizeEvent moveResizeEvent) {
 		layout();
-	}
-
-	@Override
-	protected void onChildChangeParentRequest(
-			final GeoTransformableRectangle child,
-			final GeoTransformation transformation) {
-		child.doUpdateParent();
-		layout();
-	}
-
-	@Override
-	protected void onChildChangeVisibilityRequest(
-			final GeoTransformableRectangle child,
-			final GeoTransformation transformation) {
-		child.doUpdateVisibility();
-	}
-
-	@Override
-	protected void onChildLowerRequest(final GeoTransformableRectangle child,
-			final GeoTransformation transformation) {
-		child.doLower();
-	}
-
-	@Override
-	protected void onChildMoveRequest(final GeoTransformableRectangle child,
-			final GeoTransformation transformation) {
-		cancelMoveResize(child);
-	}
-
-	@Override
-	protected void onChildMoveResizeRequest(
-			final GeoTransformableRectangle child,
-			final GeoTransformation transformation) {
-		if (getLayoutProperty(child).getWeight() == 0) {
-			child.doUpdateSize();
-			layout();
-		} else {
-			cancelMoveResize(child);
-		}
-	}
-
-	@Override
-	protected void onChildRaiseRequest(final GeoTransformableRectangle child,
-			final GeoTransformation transformation) {
-		child.doRaise();
-	}
-
-	@Override
-	protected void onChildResizeRequest(final GeoTransformableRectangle child,
-			final GeoTransformation transformation) {
-		onChildMoveResizeRequest(child, transformation);
 	}
 }

@@ -11,14 +11,14 @@
  */
 package org.trinity.display.x11.impl.xcb.eventconverters;
 
-import org.trinity.display.x11.api.core.XDisplayResourceFactory;
-import org.trinity.display.x11.api.core.XDisplayServer;
-import org.trinity.display.x11.api.core.XProtocolConstants;
-import org.trinity.display.x11.api.core.XResourceHandleFactory;
-import org.trinity.display.x11.api.core.XWindow;
-import org.trinity.display.x11.api.core.event.XEvent;
-import org.trinity.display.x11.api.core.event.XEventFactory;
-import org.trinity.display.x11.api.core.event.XKeyEvent;
+import org.trinity.display.x11.core.api.XDisplayResourceFactory;
+import org.trinity.display.x11.core.api.XDisplayServer;
+import org.trinity.display.x11.core.api.XProtocolConstants;
+import org.trinity.display.x11.core.api.XResourceHandleFactory;
+import org.trinity.display.x11.core.api.XWindow;
+import org.trinity.display.x11.core.api.event.XEvent;
+import org.trinity.display.x11.core.api.event.XEventFactory;
+import org.trinity.display.x11.core.api.event.XKeyEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventFactory;
 import org.trinity.foundation.input.api.InputModifiers;

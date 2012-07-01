@@ -23,7 +23,8 @@ public interface GeometryFactory {
 	 * @return
 	 *************************************** 
 	 */
-	Coordinates createCoordinates(@Assisted("x") int x, @Assisted("y") int y);
+	Coordinates createCoordinates(	@Assisted("x") int x,
+									@Assisted("y") int y);
 
 	/*****************************************
 	 * @param coordinates
@@ -62,4 +63,14 @@ public interface GeometryFactory {
 	Rectangle createRectangle(	Coordinates coordinates,
 								@Assisted("width") int width,
 								@Assisted("height") int height);
+
+	Margins createMargins(int margins);
+
+	Margins createMargins(	@Assisted("horiz") int horiz,
+							@Assisted("vert") int vert);
+
+	Margins createMargins(	@Assisted("top") int top,
+							@Assisted("right") int right,
+							@Assisted("bottom") int bottom,
+							@Assisted("left") int left);
 }

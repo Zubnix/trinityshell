@@ -11,7 +11,7 @@
  */
 package org.trinity.display.x11.impl.xcb.windowcall;
 
-import org.trinity.display.x11.api.core.XWindowGeometry;
+import org.trinity.display.x11.core.api.XWindowGeometry;
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
 import org.trinity.display.x11.impl.xcb.XWindowGeometryImpl;
 import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;

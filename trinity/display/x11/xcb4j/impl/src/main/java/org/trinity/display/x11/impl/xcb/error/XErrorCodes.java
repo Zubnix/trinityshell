@@ -14,7 +14,7 @@ package org.trinity.display.x11.impl.xcb.error;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.trinity.display.x11.api.core.XProtocolConstants;
+import org.trinity.display.x11.core.api.XProtocolConstants;
 
 /**
  * A <code>XErrorCodes</code> statically groups all possible native X errors and

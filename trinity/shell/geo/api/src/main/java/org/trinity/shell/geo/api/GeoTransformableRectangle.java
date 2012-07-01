@@ -25,15 +25,15 @@ public interface GeoTransformableRectangle extends HierarchicalRectangle,
 
 	void doLower();
 
-	void doUpdateParent();
+	void doReparent();
 
-	void doUpdatePlace();
+	void doMove();
 
 	void doRaise();
 
-	void doUpdateSizePlace();
+	void doMoveResize();
 
-	void doUpdateSize();
+	void doResize();
 
 	void doShow();
 

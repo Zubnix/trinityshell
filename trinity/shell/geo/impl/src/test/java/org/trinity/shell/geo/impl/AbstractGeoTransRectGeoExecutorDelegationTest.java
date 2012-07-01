@@ -162,7 +162,7 @@ public class AbstractGeoTransRectGeoExecutorDelegationTest {
 		// when
 		this.geoTransformableRectangle.setWidth(98);
 		this.geoTransformableRectangle.setHeight(76);
-		this.geoTransformableRectangle.doUpdateSize();
+		this.geoTransformableRectangle.doResize();
 
 		// then
 		Mockito.verify(this.geoExecutor, Mockito.times(1)).updateSize(98, 76);
@@ -183,7 +183,7 @@ public class AbstractGeoTransRectGeoExecutorDelegationTest {
 		this.geoTransformableRectangle.setY(21);
 		this.geoTransformableRectangle.setWidth(87);
 		this.geoTransformableRectangle.setHeight(65);
-		this.geoTransformableRectangle.doUpdateSizePlace();
+		this.geoTransformableRectangle.doMoveResize();
 
 		// then
 		Mockito.verify(this.geoExecutor, Mockito.times(1)).updateSizePlace(43,
@@ -203,7 +203,7 @@ public class AbstractGeoTransRectGeoExecutorDelegationTest {
 		// when
 		this.geoTransformableRectangle.setX(23);
 		this.geoTransformableRectangle.setY(45);
-		this.geoTransformableRectangle.doUpdatePlace();
+		this.geoTransformableRectangle.doMove();
 
 		// then
 		Mockito.verify(this.geoExecutor, Mockito.times(1)).updatePlace(23, 45);
@@ -225,7 +225,7 @@ public class AbstractGeoTransRectGeoExecutorDelegationTest {
 		// when
 		this.geoTransformableRectangle
 				.setParent(parentGeoTransformableRectangle);
-		this.geoTransformableRectangle.doUpdateParent();
+		this.geoTransformableRectangle.doReparent();
 
 		// then
 		Mockito.verify(this.geoExecutor, Mockito.times(1)).updateParent(

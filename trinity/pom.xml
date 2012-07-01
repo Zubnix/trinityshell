@@ -31,43 +31,31 @@
 		<module>render</module>
 		<!-- <module>fusion-swing/trunk</module> -->
 	</modules>
-	<!-- <build> Memory management properties for jenkins build. <pluginManagement> 
-		<plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-plugin</artifactId> 
-		<version>2.11</version> <configuration> <argLine>-Xmn8m -Xms32m -Xmx96m -XX:PermSize=32m 
-		-XX:MaxPermSize=128m</argLine> </configuration> </plugin> <plugin> <groupId>org.apache.maven.plugins</groupId> 
-		<artifactId>maven-site-plugin</artifactId> <version>3.0-beta-3</version> 
-		<configuration> <reportPlugins> <plugin> <groupId>org.apache.maven.plugins</groupId> 
-		<artifactId>maven-javadoc-plugin</artifactId> <version>2.8</version> <configuration> 
-		custom stylesheet config <stylesheetfile>${basedir}/site-resources/doc/api/stylesheet.css</stylesheetfile> 
-		<javadocDirectory>${basedir}/site-resources/doc/api</javadocDirectory> <docfilessubdirs>true</docfilessubdirs> 
-		uml graph config <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet> <docletArtifact> 
-		<groupId>org.umlgraph</groupId> <artifactId>UmlGraph</artifactId> <version>${umlgraph.javadoc.version}</version> 
-		</docletArtifact> <additionalparam>${umlgraph.javadoc.settings}</additionalparam> 
-		javadoc config <groups> <group> <title>Hypercube</title> <packages>org.hypercube*</packages> 
-		</group> <group> <title>Hyperdrive</title> <packages>org.hyperdrive*</packages> 
-		</group> <group> <title>Hydrogen</title> <packages>org.hydrogen*</packages> 
-		</group> <group> <title>Fusion-X11</title> <packages>org.fusion.x11*</packages> 
-		</group> <group> <title>Fusion-Qt</title> <packages>org.fusion.qt*</packages> 
-		</group> </groups> <linksource>true</linksource> <minmemory>16m</minmemory> 
-		<maxmemory>192m</maxmemory> </configuration> </plugin> </reportPlugins> </configuration> 
-		</plugin> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
-		<version>2.8</version> <configuration> custom stylesheet config <stylesheetfile>${basedir}/site-resources/doc/api/stylesheet.css</stylesheetfile> 
-		<javadocDirectory>${basedir}/site-resources/doc/api</javadocDirectory> <docfilessubdirs>true</docfilessubdirs> 
-		uml graph config <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet> <docletArtifact> 
-		<groupId>org.umlgraph</groupId> <artifactId>UmlGraph</artifactId> <version>${umlgraph.javadoc.version}</version> 
-		</docletArtifact> <additionalparam>${umlgraph.javadoc.settings}</additionalparam> 
-		javadoc config <groups> <group> <title>Hypercube: The actual window manager 
-		that utilizes the Hyperdrive library to do its work.</title> <packages>org.hypercube*</packages> 
-		</group> <group> <title>Hyperdrive: Wraps and extends the Hydrogen window 
-		management api with concrete helper classes and a widget library.</title> 
-		<packages>org.hyperdrive*</packages> </group> <group> <title>Hydrogen: defines 
-		a rudimentary window management api.</title> <packages>org.hydrogen*</packages> 
-		</group> <group> <title> Fusion-X11: Implementation of the display package 
-		of the Hydrogen window management api. It provides an implementation for 
-		the X display server.</title> <packages>org.fusion.x11*</packages> </group> 
-		<group> <title>Fusion-Qt: Implementation of paint package of the Hydorgen 
-		window management api. It provides an implementation with Qt-Jambi.</title> 
-		<packages>org.fusion.qt*</packages> </group> </groups> <linksource>true</linksource> 
-		<minmemory>16m</minmemory> <maxmemory>192m</maxmemory> </configuration> </plugin> 
-		</plugins> </pluginManagement> </build> -->
+
+	<dependencies>
+		<!-- START TEST DEP -->
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.0-rc1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- END TEST DEP -->
+	</dependencies>
+
+	<properties>
+		<maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.executable>javac</maven.compiler.executable>
+	</properties>
 </project>

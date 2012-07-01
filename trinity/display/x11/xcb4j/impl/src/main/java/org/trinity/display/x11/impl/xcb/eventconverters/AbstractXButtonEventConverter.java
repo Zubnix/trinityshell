@@ -11,12 +11,12 @@
  */
 package org.trinity.display.x11.impl.xcb.eventconverters;
 
-import org.trinity.display.x11.api.core.XDisplayResourceFactory;
-import org.trinity.display.x11.api.core.XDisplayServer;
-import org.trinity.display.x11.api.core.XEventConverter;
-import org.trinity.display.x11.api.core.XResourceHandleFactory;
-import org.trinity.display.x11.api.core.event.XButtonEvent;
-import org.trinity.display.x11.api.core.event.XEventFactory;
+import org.trinity.display.x11.core.api.XDisplayResourceFactory;
+import org.trinity.display.x11.core.api.XDisplayServer;
+import org.trinity.display.x11.core.api.XEventConverter;
+import org.trinity.display.x11.core.api.XResourceHandleFactory;
+import org.trinity.display.x11.core.api.event.XButtonEvent;
+import org.trinity.display.x11.core.api.event.XEventFactory;
 import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
 
 public abstract class AbstractXButtonEventConverter implements
@@ -90,15 +90,15 @@ public abstract class AbstractXButtonEventConverter implements
 				.createXButtonEvent(this.eventCode.intValue(),
 									sequence,
 									this.xResourceFactory
-											.createPlatformRenderArea(this.xResourceHandleFactory
+											.createDisplayRenderArea(this.xResourceHandleFactory
 													.createResourceHandle(Integer
 															.valueOf(eventWindowId))),
 									this.xResourceFactory
-											.createPlatformRenderArea(this.xResourceHandleFactory
+											.createDisplayRenderArea(this.xResourceHandleFactory
 													.createResourceHandle(Integer
 															.valueOf(rootId))),
 									this.xResourceFactory
-											.createPlatformRenderArea(this.xResourceHandleFactory
+											.createDisplayRenderArea(this.xResourceHandleFactory
 													.createResourceHandle(Integer
 															.valueOf(childId))),
 									timestamp,

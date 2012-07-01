@@ -12,7 +12,7 @@
 package org.trinity.shell.core.impl;
 
 import org.trinity.foundation.display.api.DisplayEventSelector;
-import org.trinity.foundation.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.display.api.event.ConfigureRequestEvent;
 import org.trinity.foundation.display.api.event.MapRequestEvent;
 import org.trinity.foundation.display.api.event.UnmappedNotifyEvent;
@@ -29,7 +29,7 @@ import com.google.inject.name.Named;
 
 // TODO documentation
 /**
- * A <code>ClientWindow</code> wraps a {@link PlatformRenderArea} that was
+ * A <code>ClientWindow</code> wraps a {@link DisplayRenderArea} that was
  * created by an independent program. As such the visual content can not be
  * directly manipulated. A <code>ClientWindow</code> is the owner of the
  * <code>PlatformRenderArea</code> it wraps. A <code>ClientWindow</code>
@@ -51,14 +51,14 @@ final class ClientWindow extends AbstractRenderArea {
 	 *            The {@link ManagedDisplay} where this
 	 *            <code>ClientWindow</code> lives on.
 	 * @param clientWindow
-	 *            The foreign {@link PlatformRenderArea}.
+	 *            The foreign {@link DisplayRenderArea}.
 	 */
 	@Inject
 	protected ClientWindow(	final ManagedDisplay managedDisplay,
 							final EventBus eventBus,
 							final GeoEventFactory geoEventFactory,
 							@Named("root") final RenderArea root,
-							@Assisted final PlatformRenderArea platformRenderArea,
+							@Assisted final DisplayRenderArea platformRenderArea,
 							@Named("RenderArea") final GeoExecutor geoExecutor) {
 		super(	eventBus,
 				geoEventFactory,
@@ -66,14 +66,14 @@ final class ClientWindow extends AbstractRenderArea {
 		this.renderAreaGeoExecutor = geoExecutor;
 		setPlatformRenderArea(platformRenderArea);
 		setParent(root);
-		doUpdateParentValue(false);
+		doReparent(false);
 	}
 
 	@Subscribe
 	public void handleMapRequest(final MapRequestEvent event) {
 		if (getPlatformRenderArea() == null
-				&& event.getEventSource() instanceof PlatformRenderArea) {
-			setPlatformRenderArea((PlatformRenderArea) event.getEventSource());
+				&& event.getEventSource() instanceof DisplayRenderArea) {
+			setPlatformRenderArea((DisplayRenderArea) event.getEventSource());
 		}
 		requestShow();
 	}
@@ -107,7 +107,7 @@ final class ClientWindow extends AbstractRenderArea {
 
 	@Override
 	protected void
-			setPlatformRenderArea(final PlatformRenderArea platformRenderArea) {
+			setPlatformRenderArea(final DisplayRenderArea platformRenderArea) {
 		super.setPlatformRenderArea(platformRenderArea);
 
 		syncGeoToPlatformRenderAreaGeo();

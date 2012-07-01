@@ -5,11 +5,11 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.trinity.foundation.shared.geometry.impl.MarginsImpl;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.api.GeoTransformation;
 import org.trinity.shell.geo.impl.manager.GeoManagerLine;
 import org.trinity.shell.geo.impl.manager.LayoutPropertyLineImpl;
-import org.trinity.shell.geo.impl.manager.Margins;
 
 //TODO test corner cases with margins (eg widths that are less than margins, zero width sizes etc.)
 public class GeoManagerLineTest {
@@ -43,9 +43,9 @@ public class GeoManagerLineTest {
 
 		geoManagerLine.addManagedChild(this.child0);
 		geoManagerLine.addManagedChild(this.child1, new LayoutPropertyLineImpl(10,
-				new Margins(10, 10)));
+				new MarginsImpl(10, 10)));
 		geoManagerLine.addManagedChild(this.child2, new LayoutPropertyLineImpl(30,
-				new Margins(5)));
+				new MarginsImpl(5)));
 
 		final GeoTransformation containerTransformation = Mockito
 				.mock(GeoTransformation.class);
@@ -93,9 +93,9 @@ public class GeoManagerLineTest {
 
 		geoManagerLine.addManagedChild(this.child0);
 		geoManagerLine.addManagedChild(this.child1, new LayoutPropertyLineImpl(10,
-				new Margins(10, 10)));
+				new MarginsImpl(10, 10)));
 		geoManagerLine.addManagedChild(this.child2, new LayoutPropertyLineImpl(30,
-				new Margins(5)));
+				new MarginsImpl(5)));
 
 		Mockito.when(this.container.getWidth()).thenReturn(130);
 		Mockito.when(this.container.getHeight()).thenReturn(100);
@@ -134,9 +134,9 @@ public class GeoManagerLineTest {
 
 		geoManagerLine.addManagedChild(this.child0);
 		geoManagerLine.addManagedChild(this.child1, new LayoutPropertyLineImpl(10,
-				new Margins(10, 10)));
+				new MarginsImpl(10, 10)));
 		geoManagerLine.addManagedChild(this.child2, new LayoutPropertyLineImpl(30,
-				new Margins(5)));
+				new MarginsImpl(5)));
 
 		final GeoTransformation containerTransformation = Mockito
 				.mock(GeoTransformation.class);
@@ -186,9 +186,9 @@ public class GeoManagerLineTest {
 
 		geoManagerLine.addManagedChild(this.child0);
 		geoManagerLine.addManagedChild(this.child1, new LayoutPropertyLineImpl(10,
-				new Margins(10, 10)));
+				new MarginsImpl(10, 10)));
 		geoManagerLine.addManagedChild(this.child2, new LayoutPropertyLineImpl(30,
-				new Margins(5)));
+				new MarginsImpl(5)));
 
 		Mockito.when(this.container.getWidth()).thenReturn(130);
 		Mockito.when(this.container.getHeight()).thenReturn(100);
@@ -229,9 +229,9 @@ public class GeoManagerLineTest {
 
 		geoManagerLine.addManagedChild(this.child0);
 		geoManagerLine.addManagedChild(this.child1, new LayoutPropertyLineImpl(10,
-				new Margins(10, 10)));
+				new MarginsImpl(10, 10)));
 		geoManagerLine.addManagedChild(this.child2, new LayoutPropertyLineImpl(30,
-				new Margins(5)));
+				new MarginsImpl(5)));
 
 		final GeoTransformation containerTransformation = Mockito
 				.mock(GeoTransformation.class);
@@ -282,9 +282,9 @@ public class GeoManagerLineTest {
 
 		geoManagerLine.addManagedChild(this.child0);
 		geoManagerLine.addManagedChild(this.child1, new LayoutPropertyLineImpl(10,
-				new Margins(10, 10)));
+				new MarginsImpl(10, 10)));
 		geoManagerLine.addManagedChild(this.child2, new LayoutPropertyLineImpl(30,
-				new Margins(5)));
+				new MarginsImpl(5)));
 
 		Mockito.when(this.container.getWidth()).thenReturn(130);
 		Mockito.when(this.container.getHeight()).thenReturn(100);
@@ -325,9 +325,9 @@ public class GeoManagerLineTest {
 
 		geoManagerLine.addManagedChild(this.child0);
 		geoManagerLine.addManagedChild(this.child1, new LayoutPropertyLineImpl(10,
-				new Margins(10, 10)));
+				new MarginsImpl(10, 10)));
 		geoManagerLine.addManagedChild(this.child2, new LayoutPropertyLineImpl(30,
-				new Margins(5)));
+				new MarginsImpl(5)));
 
 		final GeoTransformation containerTransformation = Mockito
 				.mock(GeoTransformation.class);
@@ -378,9 +378,9 @@ public class GeoManagerLineTest {
 
 		geoManagerLine.addManagedChild(this.child0);
 		geoManagerLine.addManagedChild(this.child1, new LayoutPropertyLineImpl(10,
-				new Margins(10, 10)));
+				new MarginsImpl(10, 10)));
 		geoManagerLine.addManagedChild(this.child2, new LayoutPropertyLineImpl(30,
-				new Margins(5)));
+				new MarginsImpl(5)));
 
 		Mockito.when(this.container.getWidth()).thenReturn(130);
 		Mockito.when(this.container.getHeight()).thenReturn(100);

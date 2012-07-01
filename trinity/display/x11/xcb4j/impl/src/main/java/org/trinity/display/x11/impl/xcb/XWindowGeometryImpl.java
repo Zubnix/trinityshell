@@ -1,6 +1,6 @@
 package org.trinity.display.x11.impl.xcb;
 
-import org.trinity.display.x11.api.core.XWindowGeometry;
+import org.trinity.display.x11.core.api.XWindowGeometry;
 
 public class XWindowGeometryImpl implements XWindowGeometry {
 
@@ -24,7 +24,6 @@ public class XWindowGeometryImpl implements XWindowGeometry {
 
 	@Override
 	public int getX() {
-
 		return this.x;
 	}
 

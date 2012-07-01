@@ -13,7 +13,7 @@ package org.trinity.shell.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.geo.api.GeoExecutor;
-import org.trinity.shell.geo.impl.manager.GeoManagerDirect;
+import org.trinity.shell.geo.impl.manager.AbstractAbsoluteGeoManager;
 import org.trinity.shell.widget.api.Root;
 import org.trinity.shell.widget.api.VirtualRoot;
 
@@ -54,7 +54,7 @@ public final class VirtualRootImpl extends WidgetImpl implements VirtualRoot {
 		setY(root.getY());
 		setWidth(root.getWidth());
 		setHeight(root.getHeight());
-		setGeoManager(new GeoManagerDirect());
+		setGeoManager(new AbstractAbsoluteGeoManager());
 		requestReparent();
 		requestMoveResize();
 	}

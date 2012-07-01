@@ -14,8 +14,8 @@ package org.trinity.foundation.shared.geometry.impl;
 import org.trinity.foundation.shared.geometry.api.Coordinates;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /*****************************************
  * @author Erik De Rijcke
@@ -27,7 +27,7 @@ public class RectangleImpl implements Rectangle {
 	private final int width;
 	private final int height;
 
-	@Inject
+	@AssistedInject
 	public RectangleImpl(	@Assisted("x") final int x,
 							@Assisted("y") final int y,
 							@Assisted("width") final int width,
@@ -38,11 +38,14 @@ public class RectangleImpl implements Rectangle {
 		this.height = height;
 	}
 
-	@Inject
+	@AssistedInject
 	public RectangleImpl(	@Assisted final Coordinates coordinates,
 							@Assisted("width") final int width,
 							@Assisted("height") final int height) {
-		this(coordinates.getX(), coordinates.getY(), width, height);
+		this(	coordinates.getX(),
+				coordinates.getY(),
+				width,
+				height);
 	}
 
 	/*

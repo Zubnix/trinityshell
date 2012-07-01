@@ -11,18 +11,15 @@
  */
 package org.trinity.shell.geo.api.manager;
 
+import org.trinity.shell.geo.api.GeoTransformableRectangle;
+
 import com.google.inject.name.Named;
 
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
 public interface GeoManagerFactory {
-
-	@Named("Direct")
-	GeoManager createGeoManagerDirect();
-
 	@Named("Line")
-	GeoManagerWithChildren<LayoutPropertyLine> createGeoManagerLine();
-
-	LayoutPropertyLine createLayoutPropertyLine();
+			ConfigurableGeoManager<LayoutPropertyLine>
+			createGeoManagerLine(GeoTransformableRectangle geoTransformableRectangle);
 }

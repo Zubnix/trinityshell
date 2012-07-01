@@ -1,8 +1,8 @@
 package org.trinity.display.x11.impl.xcb;
 
-import org.trinity.display.x11.api.core.XColormap;
-import org.trinity.display.x11.api.core.XVisual;
-import org.trinity.display.x11.api.core.XWindowAttributes;
+import org.trinity.display.x11.core.api.XColormap;
+import org.trinity.display.x11.core.api.XVisual;
+import org.trinity.display.x11.core.api.XWindowAttributes;
 
 public class XWindowAttributesImpl implements XWindowAttributes {
 

@@ -19,13 +19,6 @@
 		<module>shared</module>
 	</modules>
 
-	<properties>
-		<maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
-		<maven.compiler.executable>javac</maven.compiler.executable>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
@@ -37,22 +30,6 @@
 			<artifactId>guava</artifactId>
 			<version>12.0</version>
 		</dependency>
-		
-		<!-- START TEST DEP -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.7</version>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.9.0-rc1</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- END TEST DEP -->
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-multibindings</artifactId>

@@ -11,9 +11,19 @@
  */
 package org.trinity.shell.geo.api.manager;
 
+import org.trinity.foundation.shared.geometry.api.Margins;
+
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
 public interface LayoutPropertyLine extends LayoutProperty {
+
+	int getWeight();
+
+	Margins getMargins();
+
+	void setWeight(int weight);
+
+	void setMargins(Margins margins);
 
 }

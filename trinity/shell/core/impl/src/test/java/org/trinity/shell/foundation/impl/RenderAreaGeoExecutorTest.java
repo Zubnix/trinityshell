@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.trinity.core.geometry.api.Coordinates;
-import org.trinity.foundation.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.shell.MockedEnv;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.foundation.impl.RenderAreaGeoExecutorImpl;
@@ -23,7 +23,7 @@ public class RenderAreaGeoExecutorTest {
 	private RenderArea renderArea;
 
 	@Mock
-	private PlatformRenderArea platformRenderArea;
+	private DisplayRenderArea platformRenderArea;
 
 	@Before
 	public void setUp() {
@@ -143,8 +143,8 @@ public class RenderAreaGeoExecutorTest {
 
 		final RenderArea parentRenderArea = Mockito.mock(RenderArea.class);
 
-		final PlatformRenderArea parentPlatformRenderArea = Mockito
-				.mock(PlatformRenderArea.class);
+		final DisplayRenderArea parentPlatformRenderArea = Mockito
+				.mock(DisplayRenderArea.class);
 		Mockito.when(parentRenderArea.getPlatformRenderArea()).thenReturn(
 				parentPlatformRenderArea);
 		Mockito.when(parentRenderArea.getX()).thenReturn(15);
@@ -204,8 +204,8 @@ public class RenderAreaGeoExecutorTest {
 		// given
 		final RenderArea parentRenderArea = Mockito.mock(RenderArea.class);
 
-		final PlatformRenderArea parentPlatformRenderArea = Mockito
-				.mock(PlatformRenderArea.class);
+		final DisplayRenderArea parentPlatformRenderArea = Mockito
+				.mock(DisplayRenderArea.class);
 		Mockito.when(parentRenderArea.getPlatformRenderArea()).thenReturn(
 				parentPlatformRenderArea);
 
@@ -257,8 +257,8 @@ public class RenderAreaGeoExecutorTest {
 		// given
 		final RenderArea parentRenderArea = Mockito.mock(RenderArea.class);
 
-		final PlatformRenderArea parentPlatformRenderArea = Mockito
-				.mock(PlatformRenderArea.class);
+		final DisplayRenderArea parentPlatformRenderArea = Mockito
+				.mock(DisplayRenderArea.class);
 		Mockito.when(parentRenderArea.getPlatformRenderArea()).thenReturn(
 				parentPlatformRenderArea);
 		Mockito.when(this.renderArea.getPlatformRenderArea()).thenReturn(

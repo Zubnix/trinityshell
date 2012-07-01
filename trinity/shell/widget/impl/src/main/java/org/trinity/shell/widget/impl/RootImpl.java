@@ -14,7 +14,7 @@ package org.trinity.shell.widget.impl;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.foundation.api.ManagedDisplay;
 import org.trinity.shell.geo.api.GeoExecutor;
-import org.trinity.shell.geo.impl.manager.GeoManagerDirect;
+import org.trinity.shell.geo.impl.manager.AbstractAbsoluteGeoManager;
 import org.trinity.shell.widget.api.Root;
 import org.trinity.shell.widget.api.Widget;
 
@@ -53,7 +53,7 @@ public final class RootImpl extends WidgetImpl implements Root {
 						final PainterFactory painterFactory,
 						@Named("Widget") final GeoExecutor geoExecutor) {
 		super(painterFactory, geoExecutor);
-		setGeoManager(new GeoManagerDirect());
+		setGeoManager(new AbstractAbsoluteGeoManager());
 		setManagedDisplay(managedDisplay);
 		init(getParent());
 		setVisibility(true);

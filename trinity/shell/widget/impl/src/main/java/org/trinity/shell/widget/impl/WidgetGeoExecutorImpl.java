@@ -14,7 +14,7 @@ package org.trinity.shell.widget.impl;
 import org.trinity.core.geometry.api.GeometryFactory;
 import org.trinity.foundation.display.api.Area;
 import org.trinity.foundation.display.api.AreaManipulator;
-import org.trinity.foundation.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.shell.foundation.api.RenderArea;
 import org.trinity.shell.foundation.impl.RenderAreaGeoExecutorImpl;
 import org.trinity.shell.geo.api.GeoExecutor;
@@ -103,14 +103,14 @@ public class WidgetGeoExecutorImpl extends RenderAreaGeoExecutorImpl {
 		// If the old parent is null, we don't need to update the platform
 		// render area.
 		if (geoTransformableRectangle.toGeoTransformation().getParent0() != null) {
-			final PlatformRenderArea parentPlatformRenderArea = widgetImpl
+			final DisplayRenderArea parentPlatformRenderArea = widgetImpl
 					.getParentPaintable().getPlatformRenderArea();
-			final PlatformRenderArea platformRenderArea = widgetImpl
+			final DisplayRenderArea platformRenderArea = widgetImpl
 					.getPlatformRenderArea();
 
 			if (parentPlatformRenderArea.equals(platformRenderArea)) {
 				// we need to update the widget's platform render area
-				final PlatformRenderArea newParentPlatformRenderArea = widgetImpl
+				final DisplayRenderArea newParentPlatformRenderArea = widgetImpl
 						.getParentPaintable().getPlatformRenderArea();
 				widgetImpl.setPlatformRenderArea(newParentPlatformRenderArea);
 			}

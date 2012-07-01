@@ -17,10 +17,10 @@ import org.trinity.shell.geo.api.event.GeoEvent;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.geo.api.manager.GeoManager;
 import org.trinity.shell.geo.api.manager.GeoManagerFactory;
-import org.trinity.shell.geo.api.manager.GeoManagerWithChildren;
+import org.trinity.shell.geo.api.manager.ConfigurableGeoManager;
 import org.trinity.shell.geo.api.manager.LayoutPropertyLine;
 import org.trinity.shell.geo.impl.event.GeoEventImpl;
-import org.trinity.shell.geo.impl.manager.GeoManagerDirect;
+import org.trinity.shell.geo.impl.manager.AbstractAbsoluteGeoManager;
 import org.trinity.shell.geo.impl.manager.GeoManagerLine;
 import org.trinity.shell.geo.impl.manager.LayoutPropertyLineImpl;
 
@@ -44,7 +44,7 @@ public class GeoModule extends AbstractModule {
 				.to(GeoVirtGeoExecutor.class);
 		bind(GeoTransformableRectangle.class).to(GeoVirtRectangle.class);
 		bind(GeoManager.class).annotatedWith(Names.named("Direct"))
-				.to(GeoManagerDirect.class);
+				.to(AbstractAbsoluteGeoManager.class);
 		// end geo bindings
 
 		// start geo factory bindings
@@ -54,8 +54,8 @@ public class GeoModule extends AbstractModule {
 		install(new FactoryModuleBuilder()
 				.implement(	GeoManager.class,
 							Names.named("Direct"),
-							GeoManagerDirect.class)
-				.implement(	GeoManagerWithChildren.class,
+							AbstractAbsoluteGeoManager.class)
+				.implement(	ConfigurableGeoManager.class,
 							Names.named("Line"),
 							GeoManagerLine.class)
 				.implement(	LayoutPropertyLine.class,

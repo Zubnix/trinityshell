@@ -13,7 +13,7 @@
  */
 package org.trinity.shell.core.api;
 
-import org.trinity.foundation.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 
 public interface RenderArea extends GeoTransformableRectangle {
@@ -27,7 +27,7 @@ public interface RenderArea extends GeoTransformableRectangle {
 
 	int getMinWidth();
 
-	PlatformRenderArea getPlatformRenderArea();
+	DisplayRenderArea getPlatformRenderArea();
 
 	int getWidthIncrement();
 

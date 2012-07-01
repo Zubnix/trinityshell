@@ -13,7 +13,7 @@ package org.trinity.display.x11.impl.xcb.jni;
 
 import java.nio.ByteBuffer;
 
-import org.trinity.display.x11.impl.xcb.FlexByteContainer;
+import org.trinity.display.x11.impl.xcb.ByteBufferContainer;
 
 // TODO documentation
 /**
@@ -27,7 +27,7 @@ import org.trinity.display.x11.impl.xcb.FlexByteContainer;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public final class NativeBufferHelper extends FlexByteContainer {
+public final class NativeBufferHelper extends ByteBufferContainer {
 	private static final int MAX_ARGUMENTS_BYTE_SIZE = 16384;
 
 	private final Thread owningThread;

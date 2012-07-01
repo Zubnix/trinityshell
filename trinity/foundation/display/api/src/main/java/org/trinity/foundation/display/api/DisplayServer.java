@@ -66,7 +66,7 @@ public interface DisplayServer {
 	 * The <code>PlatformRenderArea</code> that has the input focus on this
 	 * <code>Display</code>
 	 * 
-	 * @return The focussed {@link PlatformRenderArea}.
+	 * @return The focussed {@link DisplayRenderArea}.
 	 */
-	PlatformRenderArea getInputFocus();
+	DisplayRenderArea getInputFocus();
 }

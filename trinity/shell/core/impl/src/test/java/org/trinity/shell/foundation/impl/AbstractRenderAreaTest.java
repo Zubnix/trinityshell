@@ -46,7 +46,7 @@ public class AbstractRenderAreaTest {
 
 		this.abstractRenderArea.setWidth(Integer.MAX_VALUE);
 		this.abstractRenderArea.setHeight(Integer.MAX_VALUE);
-		this.abstractRenderArea.doUpdateSize();
+		this.abstractRenderArea.doResize();
 
 		Assert.assertEquals(AbstractRenderArea.DEFAULT_MAX_WIDTH,
 				this.abstractRenderArea.getWidth());
@@ -55,13 +55,13 @@ public class AbstractRenderAreaTest {
 
 		this.abstractRenderArea.setWidth(10);
 		this.abstractRenderArea.setHeight(10);
-		this.abstractRenderArea.doUpdateSize();
+		this.abstractRenderArea.doResize();
 
 		this.abstractRenderArea.setWidthIncrement(5);
 		this.abstractRenderArea.setHeightIncrement(3);
 		this.abstractRenderArea.setWidth(17);
 		this.abstractRenderArea.setHeight(12);
-		this.abstractRenderArea.doUpdateSize();
+		this.abstractRenderArea.doResize();
 
 		Assert.assertEquals(15, this.abstractRenderArea.getWidth());
 		Assert.assertEquals(10, this.abstractRenderArea.getHeight());
@@ -72,7 +72,7 @@ public class AbstractRenderAreaTest {
 		this.abstractRenderArea.setHeight(30);
 		this.abstractRenderArea.setWidthIncrement(1);
 		this.abstractRenderArea.setHeightIncrement(1);
-		this.abstractRenderArea.doUpdateSize();
+		this.abstractRenderArea.doResize();
 
 		Assert.assertEquals(20, this.abstractRenderArea.getWidth());
 		Assert.assertEquals(20, this.abstractRenderArea.getHeight());
@@ -81,7 +81,7 @@ public class AbstractRenderAreaTest {
 		this.abstractRenderArea.setMinHeight(10);
 		this.abstractRenderArea.setWidth(5);
 		this.abstractRenderArea.setHeight(5);
-		this.abstractRenderArea.doUpdateSize();
+		this.abstractRenderArea.doResize();
 
 		Assert.assertEquals(10, this.abstractRenderArea.getWidth());
 		Assert.assertEquals(10, this.abstractRenderArea.getHeight());

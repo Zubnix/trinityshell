@@ -1,17 +1,13 @@
 /*
- * This file is part of Fusion-X11.
- * 
- * Fusion-X11 is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * Fusion-X11 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * Fusion-X11. If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of Fusion-X11. Fusion-X11 is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version. Fusion-X11 is distributed in
+ * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+ * the GNU General Public License for more details. You should have received a
+ * copy of the GNU General Public License along with Fusion-X11. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 package org.trinity.display.x11.impl.xcb.jni;
 
@@ -31,9 +27,13 @@ import java.nio.ByteBuffer;
  */
 public final class Xcb4J {
 
-	public static native boolean nativeTranslateCoordinates(
-			long displayAddress, long windowId, long sourceWindowId,
-			int sourceX, int sourceY, ByteBuffer buffer);
+	public static native boolean
+			nativeTranslateCoordinates(	long displayAddress,
+										long windowId,
+										long sourceWindowId,
+										int sourceX,
+										int sourceY,
+										ByteBuffer buffer);
 
 	/**
 	 * 
@@ -41,18 +41,8 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeGetInputFocus(long displayAddress,
-			ByteBuffer buffer);
-
-	/**
-	 * 
-	 * @param displayAddress
-	 * @param time
-	 * @param buffer
-	 * @return
-	 */
-	public static native boolean nativeUngrabKeyboard(long displayAddress,
-			int time, ByteBuffer buffer);
+	public static native boolean nativeGetInputFocus(	long displayAddress,
+														ByteBuffer buffer);
 
 	/**
 	 * 
@@ -61,8 +51,20 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeUngrabMouse(long displayAddress,
-			int time, ByteBuffer buffer);
+	public static native boolean nativeUngrabKeyboard(	long displayAddress,
+														int time,
+														ByteBuffer buffer);
+
+	/**
+	 * 
+	 * @param displayAddress
+	 * @param time
+	 * @param buffer
+	 * @return
+	 */
+	public static native boolean nativeUngrabMouse(	long displayAddress,
+													int time,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -72,8 +74,10 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeGrabMouse(long displayAddress,
-			long windowId, int time, ByteBuffer buffer);
+	public static native boolean nativeGrabMouse(	long displayAddress,
+													long windowId,
+													int time,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -84,7 +88,9 @@ public final class Xcb4J {
 	 * @return
 	 */
 	public static native boolean nativeGrabKeyboard(long displayAddress,
-			long windowId, int time, ByteBuffer buffer);
+													long windowId,
+													int time,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -96,9 +102,12 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeGrabKey(long displayAddress,
-			long windowID, long inputDetail, long modifiers, boolean blocking,
-			ByteBuffer buffer);
+	public static native boolean nativeGrabKey(	long displayAddress,
+												long windowID,
+												long inputDetail,
+												long modifiers,
+												boolean blocking,
+												ByteBuffer buffer);
 
 	/**
 	 * 
@@ -110,9 +119,12 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeGrabButton(long displayAddress,
-			long windowID, long inputDetail, long modifiers, boolean blocking,
-			ByteBuffer buffer);
+	public static native boolean nativeGrabButton(	long displayAddress,
+													long windowID,
+													long inputDetail,
+													long modifiers,
+													boolean blocking,
+													ByteBuffer buffer);
 
 	/**
 	 * Call the native code that will destroy the native window identified by
@@ -135,8 +147,9 @@ public final class Xcb4J {
 	 *            A {@link ByteBuffer} for communication with the native code.
 	 * @return True if an error occurs, false if not.
 	 */
-	public static native boolean Destroy(long displayAddress,
-			long windowID, ByteBuffer buffer);
+	public static native boolean Destroy(	long displayAddress,
+											long windowID,
+											ByteBuffer buffer);
 
 	/**
 	 * 
@@ -144,18 +157,8 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeFlush(long displayAddress,
-			ByteBuffer buffer);
-
-	/**
-	 * 
-	 * @param displayAddress
-	 * @param windowID
-	 * @param pointerInfo
-	 * @return
-	 */
-	public static native boolean nativeGetChildren(long displayAddress,
-			long windowID, ByteBuffer pointerInfo);
+	public static native boolean nativeFlush(	long displayAddress,
+												ByteBuffer buffer);
 
 	/**
 	 * 
@@ -164,9 +167,11 @@ public final class Xcb4J {
 	 * @param currentWindowGeometryResult
 	 * @return
 	 */
-	public static native boolean nativeGetCurrentWindowGeometry(
-			long displayAddress, long windowID,
-			ByteBuffer currentWindowGeometryResult);
+	public static native
+			boolean
+			nativeGetCurrentWindowGeometry(	long displayAddress,
+											long windowID,
+											ByteBuffer currentWindowGeometryResult);
 
 	/**
 	 * 
@@ -175,7 +180,7 @@ public final class Xcb4J {
 	 * @return
 	 */
 	public static native boolean nativeGetNextEvent(long displayAddress,
-			ByteBuffer nextEventResult);
+													ByteBuffer nextEventResult);
 
 	/**
 	 * 
@@ -183,8 +188,8 @@ public final class Xcb4J {
 	 * @param pointerInfo
 	 * @return
 	 */
-	public static native boolean nativeGetPointerInfo(long displayAddress,
-			ByteBuffer pointerInfo);
+	public static native boolean nativeGetPointerInfo(	long displayAddress,
+														ByteBuffer pointerInfo);
 
 	/**
 	 * 
@@ -192,8 +197,8 @@ public final class Xcb4J {
 	 * @param pointerInfo
 	 * @return
 	 */
-	public static native boolean nativeGetRootWindow(long displayAddress,
-			ByteBuffer pointerInfo);
+	public static native boolean nativeGetRootWindow(	long displayAddress,
+														ByteBuffer pointerInfo);
 
 	/**
 	 * 
@@ -202,8 +207,10 @@ public final class Xcb4J {
 	 * @param windowAttributesResult
 	 * @return
 	 */
-	public static native boolean nativeGetWindowAttributes(long displayAddress,
-			long windowID, ByteBuffer windowAttributesResult);
+	public static native boolean
+			nativeGetWindowAttributes(	long displayAddress,
+										long windowID,
+										ByteBuffer windowAttributesResult);
 
 	/**
 	 * 
@@ -213,8 +220,10 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeGiveFocus(long displayAddress,
-			long windowID, int time, ByteBuffer buffer);
+	public static native boolean nativeGiveFocus(	long displayAddress,
+													long windowID,
+													int time,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -223,8 +232,9 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeLower(long displayAddress,
-			long windowID, ByteBuffer buffer);
+	public static native boolean nativeLower(	long displayAddress,
+												long windowID,
+												ByteBuffer buffer);
 
 	/**
 	 * 
@@ -233,8 +243,9 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeMap(long displayAddress, long windowID,
-			ByteBuffer buffer);
+	public static native boolean nativeMap(	long displayAddress,
+											long windowID,
+											ByteBuffer buffer);
 
 	/**
 	 * 
@@ -245,8 +256,11 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeMove(long displayAddress, long windowID,
-			int x, int y, ByteBuffer buffer);
+	public static native boolean nativeMove(long displayAddress,
+											long windowID,
+											int x,
+											int y,
+											ByteBuffer buffer);
 
 	/**
 	 * 
@@ -259,9 +273,13 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeMoveResize(long displayAddress,
-			long windowID, int x, int y, int width, int height,
-			ByteBuffer buffer);
+	public static native boolean nativeMoveResize(	long displayAddress,
+													long windowID,
+													int x,
+													int y,
+													int width,
+													int height,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -269,19 +287,8 @@ public final class Xcb4J {
 	 * @param pointerInfo
 	 * @return
 	 */
-	public static native boolean nativeOpenDisplay(String displayName,
-			ByteBuffer pointerInfo);
-
-	/**
-	 * 
-	 * @param displayAddress
-	 * @param windowID
-	 * @param override
-	 * @param buffer
-	 * @return
-	 */
-	public static native boolean nativeOverrideRedirect(long displayAddress,
-			long windowID, boolean override, ByteBuffer buffer);
+	public static native boolean nativeOpenDisplay(	String displayName,
+													ByteBuffer pointerInfo);
 
 	/**
 	 * 
@@ -291,8 +298,10 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativePropagateEvent(long displayAddress,
-			long windowID, long eventMask, ByteBuffer buffer);
+	public static native boolean nativeSelectEvent(	long displayAddress,
+													long windowID,
+													long eventMask,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -301,8 +310,9 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeRaise(long displayAddress,
-			long windowID, ByteBuffer buffer);
+	public static native boolean nativeRaise(	long displayAddress,
+												long windowID,
+												ByteBuffer buffer);
 
 	/**
 	 * 
@@ -315,8 +325,11 @@ public final class Xcb4J {
 	 * @return
 	 */
 	public static native boolean nativeReparent(long displayAddress,
-			long childWindowID, long parentWindowID, int x, int y,
-			ByteBuffer buffer);
+												long childWindowID,
+												long parentWindowID,
+												int x,
+												int y,
+												ByteBuffer buffer);
 
 	/**
 	 * 
@@ -327,8 +340,11 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeResize(long displayAddress,
-			long windowID, int width, int height, ByteBuffer buffer);
+	public static native boolean nativeResize(	long displayAddress,
+												long windowID,
+												int width,
+												int height,
+												ByteBuffer buffer);
 
 	/**
 	 * 
@@ -339,7 +355,9 @@ public final class Xcb4J {
 	 * @return
 	 */
 	public static native boolean nativeSaveYourself(long displayAddress,
-			long windowID, boolean save, ByteBuffer buffer);
+													long windowID,
+													boolean save,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -348,7 +366,7 @@ public final class Xcb4J {
 	 * @return
 	 */
 	public static native boolean nativeShutDown(long displayAddress,
-			ByteBuffer buffer);
+												ByteBuffer buffer);
 
 	/**
 	 * 
@@ -357,8 +375,9 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeUnmap(long displayAddress,
-			long windowID, ByteBuffer buffer);
+	public static native boolean nativeUnmap(	long displayAddress,
+												long windowID,
+												ByteBuffer buffer);
 
 	/**
 	 * 
@@ -368,7 +387,9 @@ public final class Xcb4J {
 	 * @return
 	 */
 	public static native boolean nativeGetKeySymbol(long keysymsPeer,
-			int keyCode, int keyColumn, ByteBuffer buffer);
+													int keyCode,
+													int keyColumn,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -377,8 +398,9 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeGetKeyCodes(long keysymsPeer,
-			long keysymbolCode, ByteBuffer buffer);
+	public static native boolean nativeGetKeyCodes(	long keysymsPeer,
+													long keysymbolCode,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -389,8 +411,11 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeGrabKey(long displayAddres,
-			long windowId, int keyCode, int modifiersMask, ByteBuffer buffer);
+	public static native boolean nativeGrabKey(	long displayAddres,
+												long windowId,
+												int keyCode,
+												int modifiersMask,
+												ByteBuffer buffer);
 
 	/**
 	 * 
@@ -401,8 +426,11 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeGrabButton(long displayAddres,
-			long windowId, int buttonCode, int modifiersMask, ByteBuffer buffer);
+	public static native boolean nativeGrabButton(	long displayAddres,
+													long windowId,
+													int buttonCode,
+													int modifiersMask,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -413,8 +441,11 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeUngrabKey(long displayAddres,
-			long windowId, int keyCode, int modifiersMask, ByteBuffer buffer);
+	public static native boolean nativeUngrabKey(	long displayAddres,
+													long windowId,
+													int keyCode,
+													int modifiersMask,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -426,7 +457,10 @@ public final class Xcb4J {
 	 * @return
 	 */
 	public static native boolean nativeUngrabButton(long displayAddres,
-			long windowId, int buttonCode, int modifiersMask, ByteBuffer buffer);
+													long windowId,
+													int buttonCode,
+													int modifiersMask,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -439,9 +473,13 @@ public final class Xcb4J {
 	 * @param result
 	 * @return
 	 */
-	public static native boolean nativeChangeProperty(long displayAddress,
-			long windowId, long propertyAtomId, long typeAtomId, int format,
-			byte[] data, ByteBuffer result);
+	public static native boolean nativeChangeProperty(	long displayAddress,
+														long windowId,
+														long propertyAtomId,
+														long typeAtomId,
+														int format,
+														byte[] data,
+														ByteBuffer result);
 
 	/**
 	 * 
@@ -451,8 +489,10 @@ public final class Xcb4J {
 	 * @param result
 	 * @return
 	 */
-	public static native boolean nativeGetProperty(long displayAddress,
-			long windowId, long propertyAtomId, ByteBuffer result);
+	public static native boolean nativeGetProperty(	long displayAddress,
+													long windowId,
+													long propertyAtomId,
+													ByteBuffer result);
 
 	/**
 	 * 
@@ -464,9 +504,13 @@ public final class Xcb4J {
 	 * @param result
 	 * @return
 	 */
-	public static native boolean nativeSendClientMessage(long displayAddress,
-			long windowId, long atomId, int format, byte[] data,
-			ByteBuffer result);
+	public static native boolean
+			nativeSendClientMessage(long displayAddress,
+									long windowId,
+									long atomId,
+									int format,
+									byte[] data,
+									ByteBuffer result);
 
 	/**
 	 * 
@@ -476,7 +520,8 @@ public final class Xcb4J {
 	 * @return
 	 */
 	public static native boolean nativeRegisterAtom(final long displayAddress,
-			String string, ByteBuffer buffer);
+													String string,
+													ByteBuffer buffer);
 
 	/**
 	 * 
@@ -487,9 +532,12 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeSetSelectionOwner(long displayAddress,
-			long selectionAtomId, long ownerWindowId, int time,
-			ByteBuffer buffer);
+	public static native boolean
+			nativeSetSelectionOwner(long displayAddress,
+									long selectionAtomId,
+									long ownerWindowId,
+									int time,
+									ByteBuffer buffer);
 
 	/**
 	 * 
@@ -498,25 +546,18 @@ public final class Xcb4J {
 	 * @param buffer
 	 * @return
 	 */
-	public static native boolean nativeGetSelectionOwner(long displayAddress,
-			long selectionAtomId, ByteBuffer buffer);
+	public static native boolean
+			nativeGetSelectionOwner(long displayAddress,
+									long selectionAtomId,
+									ByteBuffer buffer);
 
 	/**
 	 * 
 	 * @param displayAddress
 	 * @return
 	 */
-	public static native boolean nativeCreateNewWindow(long displayAddress,
-			ByteBuffer buffer);
-
-	/**
-	 * 
-	 * @param displayAddress
-	 * @param windowId
-	 * @return
-	 */
-	public static native boolean AddToSaveSet(long displayAddress,
-			long windowId, ByteBuffer buffer);
+	public static native boolean nativeCreateNewWindow(	long displayAddress,
+														ByteBuffer buffer);
 
 	/**
 	 * 
@@ -524,9 +565,21 @@ public final class Xcb4J {
 	 * @param windowId
 	 * @return
 	 */
-	public static native boolean nativeRemoveFromSaveSet(long displayAddress,
-			long windowId, ByteBuffer buffer);
-	
+	public static native boolean AddToSaveSet(	long displayAddress,
+												long windowId,
+												ByteBuffer buffer);
+
+	/**
+	 * 
+	 * @param displayAddress
+	 * @param windowId
+	 * @return
+	 */
+	public static native boolean
+			nativeRemoveFromSaveSet(long displayAddress,
+									long windowId,
+									ByteBuffer buffer);
+
 	/**
 	 * 
 	 * @param displayAddress

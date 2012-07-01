@@ -24,7 +24,7 @@ import org.trinity.foundation.display.api.event.UnmappedNotifyEvent;
 /**
  * The <code>EventPropagation</code> functions as a way to express interest in
  * certain <code>DisplayEvent</code>s. A programmer can pass any number of
- * different <code>EventPropagation</code>s to a {@link PlatformRenderArea} to
+ * different <code>EventPropagation</code>s to a {@link DisplayRenderArea} to
  * inform the native display which <code>DisplayEvent</code>s it wants to
  * receive from that <code>PlatformRenderArea</code>.
  * <p>

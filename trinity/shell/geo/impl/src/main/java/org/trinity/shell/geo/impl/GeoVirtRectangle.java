@@ -14,7 +14,6 @@ package org.trinity.shell.geo.impl;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.geo.api.manager.GeoManager;
-import org.trinity.shell.geo.impl.manager.GeoManagerDirect;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -47,7 +46,6 @@ public class GeoVirtRectangle extends AbstractGeoTransformableRectangle {
 		super(	eventBus,
 				geoEventFactory);
 		this.geoExecutor = geoExecutor;
-		setGeoManager(new GeoManagerDirect());
 	}
 
 	@Override

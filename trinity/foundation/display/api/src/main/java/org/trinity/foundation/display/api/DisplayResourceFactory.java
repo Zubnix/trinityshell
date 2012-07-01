@@ -16,5 +16,5 @@ package org.trinity.foundation.display.api;
  * 
  ****************************************/
 public interface DisplayResourceFactory {
-	PlatformRenderArea createPlatformRenderArea(ResourceHandle resourceHandle);
+	DisplayRenderArea createDisplayRenderArea(ResourceHandle resourceHandle);
 }

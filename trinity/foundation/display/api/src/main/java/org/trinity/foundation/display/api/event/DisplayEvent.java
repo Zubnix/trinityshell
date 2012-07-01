@@ -11,7 +11,7 @@
  */
 package org.trinity.foundation.display.api.event;
 
-import org.trinity.foundation.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.DisplayRenderArea;
 
 /**
  * A <code>DisplayEvent</code> is a piece of information coming from a
@@ -28,7 +28,7 @@ public interface DisplayEvent {
 	 * The original display resource where this <code>DisplayEven</code>
 	 * originates from.
 	 * 
-	 * @return A {@link PlatformRenderArea}.
+	 * @return A {@link DisplayRenderArea}.
 	 */
 	DisplayEventSource getEventSource();
 }

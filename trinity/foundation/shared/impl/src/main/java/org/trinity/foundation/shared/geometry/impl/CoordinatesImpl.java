@@ -13,8 +13,8 @@ package org.trinity.foundation.shared.geometry.impl;
 
 import org.trinity.foundation.shared.geometry.api.Coordinates;
 
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 /*****************************************
  * @author Erik De Rijcke
@@ -24,16 +24,17 @@ public class CoordinatesImpl implements Coordinates {
 	private final int x;
 	private final int y;
 
-	@Inject
+	@AssistedInject
 	public CoordinatesImpl(	@Assisted("x") final int x,
 							@Assisted("y") final int y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	@Inject
+	@AssistedInject
 	public CoordinatesImpl(@Assisted final Coordinates coordinates) {
-		this(coordinates.getX(), coordinates.getY());
+		this(	coordinates.getX(),
+				coordinates.getY());
 	}
 
 	/*

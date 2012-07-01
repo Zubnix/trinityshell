@@ -11,7 +11,7 @@
  */
 package org.trinity.display.x11.impl.xcb;
 
-import org.trinity.display.x11.api.core.XCall;
+import org.trinity.display.x11.core.api.XCall;
 import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
 
 /**
@@ -86,8 +86,7 @@ public abstract class AbstractXcbCall<R, D, A> implements XCall<R, D, A> {
 			nativeBufferHelper.getBuffer().flip();
 			return error;
 		} else {
-			throw new Error(
-					"Bug! Can not execute native call. Result buffer is not yet marked as done reading.");
+			throw new Error("Bug! Can not execute native call. Result buffer is not yet marked as done reading.");
 		}
 	}
 
@@ -147,7 +146,7 @@ public abstract class AbstractXcbCall<R, D, A> implements XCall<R, D, A> {
 	 *            A number of arguments.
 	 */
 	@Override
-	public void setArgs(final A... args) {
+	public void setArgs(@SuppressWarnings("unchecked") final A... args) {
 		this.args = args;
 	}
 

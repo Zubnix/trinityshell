@@ -11,11 +11,11 @@
  */
 package org.trinity.shell.core.api;
 
-import org.trinity.foundation.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.DisplayRenderArea;
 
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
 public interface RenderAreaFactory {
-	RenderArea createRenderArea(PlatformRenderArea platformRenderArea);
+	RenderArea createRenderArea(DisplayRenderArea platformRenderArea);
 }

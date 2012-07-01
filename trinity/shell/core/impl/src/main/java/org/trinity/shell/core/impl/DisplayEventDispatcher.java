@@ -18,7 +18,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.trinity.foundation.display.api.DisplayServer;
-import org.trinity.foundation.display.api.PlatformRenderArea;
+import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.display.api.event.ConfigureRequestEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
@@ -86,9 +86,9 @@ final class DisplayEventDispatcher implements Runnable {
 		final DisplayEventSource eventSource = event.getEventSource();
 
 		if (((eventManagersByEventSource == null) || eventManagersByEventSource
-				.isEmpty()) && (eventSource instanceof PlatformRenderArea)) {
+				.isEmpty()) && (eventSource instanceof DisplayRenderArea)) {
 			this.clientFactory
-					.createRenderArea((PlatformRenderArea) eventSource);
+					.createRenderArea((DisplayRenderArea) eventSource);
 		}
 		doDefaultEventHandlingForDisplayEvent(event);
 	}

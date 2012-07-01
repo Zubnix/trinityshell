@@ -17,7 +17,7 @@ package org.trinity.display.x11.impl.xcb.error;
 
 import java.util.Date;
 
-import org.trinity.display.x11.api.core.exception.BadXCall;
+import org.trinity.display.x11.core.api.exception.BadXCall;
 
 
 // TODO documentation

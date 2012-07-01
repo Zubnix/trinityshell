@@ -11,6 +11,7 @@
  */
 package org.trinity.shell.geo.impl.manager;
 
+import org.trinity.foundation.shared.geometry.api.Margins;
 import org.trinity.shell.geo.api.manager.LayoutPropertyLine;
 
 /**
@@ -36,6 +37,7 @@ public class LayoutPropertyLineImpl implements LayoutPropertyLine {
 	 * 
 	 * @param weight
 	 */
+	@Override
 	public void setWeight(int weight) {
 		if (weight < 0) {
 			weight = 0;
@@ -44,24 +46,19 @@ public class LayoutPropertyLineImpl implements LayoutPropertyLine {
 	}
 
 	/**
-	 * @param weight
-	 */
-	public LayoutPropertyLineImpl(final int weight, final Margins margins) {
-		setWeight(weight);
-		setMargins(margins);
-	}
-
-	/**
 	 * @return
 	 */
+	@Override
 	public int getWeight() {
 		return this.weight;
 	}
 
+	@Override
 	public Margins getMargins() {
 		return this.margins;
 	}
 
+	@Override
 	public void setMargins(final Margins margins) {
 		this.margins = margins;
 	}

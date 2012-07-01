@@ -11,8 +11,8 @@
  */
 package org.trinity.display.x11.impl.xcb.displaycall;
 
-import org.trinity.display.x11.api.core.XResourceHandle;
-import org.trinity.display.x11.api.core.XResourceHandleFactory;
+import org.trinity.display.x11.core.api.XResourceHandle;
+import org.trinity.display.x11.core.api.XResourceHandleFactory;
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
 import org.trinity.display.x11.impl.xcb.jni.Xcb4J;
 

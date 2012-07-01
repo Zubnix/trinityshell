@@ -11,8 +11,8 @@
  */
 package org.trinity.display.x11.impl.xcb.displaycall;
 
-import org.trinity.display.x11.api.core.XEventBridge;
-import org.trinity.display.x11.api.core.event.XEvent;
+import org.trinity.display.x11.core.api.XEventBridge;
+import org.trinity.display.x11.core.api.event.XEvent;
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
 import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
 import org.trinity.display.x11.impl.xcb.jni.Xcb4J;

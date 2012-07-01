@@ -11,11 +11,11 @@
  */
 package org.trinity.display.x11.impl.xcb.eventconverters;
 
-import org.trinity.display.x11.api.core.XDisplayResourceFactory;
-import org.trinity.display.x11.api.core.XEventConverter;
-import org.trinity.display.x11.api.core.XResourceHandleFactory;
-import org.trinity.display.x11.api.core.event.XEvent;
-import org.trinity.display.x11.api.core.event.XEventFactory;
+import org.trinity.display.x11.core.api.XDisplayResourceFactory;
+import org.trinity.display.x11.core.api.XEventConverter;
+import org.trinity.display.x11.core.api.XResourceHandleFactory;
+import org.trinity.display.x11.core.api.event.XEvent;
+import org.trinity.display.x11.core.api.event.XEventFactory;
 import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
 
 /*****************************************
@@ -64,7 +64,7 @@ public abstract class AbstractXFocusEventConverter implements
 									detail,
 									sequence,
 									this.xDisplayResourceFactory
-											.createPlatformRenderArea(this.xResourceHandleFactory
+											.createDisplayRenderArea(this.xResourceHandleFactory
 													.createResourceHandle(Integer
 															.valueOf(eventId))),
 									mode);
