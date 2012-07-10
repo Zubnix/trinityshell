@@ -11,18 +11,22 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.core.geometry.api.GeometryFactory;
+import javax.inject.Named;
+
 import org.trinity.foundation.display.api.Area;
 import org.trinity.foundation.display.api.AreaManipulator;
 import org.trinity.foundation.display.api.DisplayRenderArea;
-import org.trinity.shell.foundation.api.RenderArea;
-import org.trinity.shell.foundation.impl.RenderAreaGeoExecutorImpl;
+import org.trinity.foundation.shared.geometry.api.GeometryFactory;
+import org.trinity.shell.core.api.RenderArea;
+import org.trinity.shell.core.impl.RenderAreaGeoExecutorImpl;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.widget.api.Root;
 import org.trinity.shell.widget.api.Widget;
 
 import com.google.inject.Inject;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
 /**
@@ -35,6 +39,8 @@ import com.google.inject.Inject;
  * @since 1.0
  * @see GeoExecutor
  */
+@Bind
+@Named("Widget")
 public class WidgetGeoExecutorImpl extends RenderAreaGeoExecutorImpl {
 
 	/*****************************************

@@ -13,11 +13,7 @@ package org.trinity.display.x11.core.impl;
 
 import org.trinity.display.x11.core.api.XAtom;
 import org.trinity.display.x11.core.api.XAtomFactory;
-import org.trinity.display.x11.core.api.XCaller;
-import org.trinity.display.x11.core.api.XConnection;
-import org.trinity.display.x11.core.api.XDisplayProtocol;
 import org.trinity.display.x11.core.api.XDisplayResourceFactory;
-import org.trinity.display.x11.core.api.XDisplayServer;
 import org.trinity.display.x11.core.api.XResourceHandle;
 import org.trinity.display.x11.core.api.XResourceHandleFactory;
 import org.trinity.display.x11.core.api.XWindow;
@@ -78,15 +74,17 @@ import org.trinity.display.x11.core.impl.event.XSelectionEventImpl;
 import org.trinity.display.x11.core.impl.event.XSelectionRequestEventImpl;
 import org.trinity.display.x11.core.impl.event.XUnmapEventImpl;
 import org.trinity.display.x11.core.impl.event.XVisibilityEventImpl;
-import org.trinity.foundation.input.api.Mouse;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+
+import de.devsurf.injection.guice.annotations.GuiceModule;
 
 /*****************************************
  * @author Erik De Rijcke
  * 
  ****************************************/
+@GuiceModule
 public class CoreX11DisplayModule extends AbstractModule {
 
 	@Override
@@ -96,78 +94,60 @@ public class CoreX11DisplayModule extends AbstractModule {
 	}
 
 	private void bindCoreEvents() {
-		install(new FactoryModuleBuilder().implement(	XButtonEvent.class,
-														XButtonEventImpl.class)
-				.implement(	XCirculateEvent.class,
-							XCirculateEventImpl.class)
+		install(new FactoryModuleBuilder()
+				.implement(XButtonEvent.class, XButtonEventImpl.class)
+				.implement(XCirculateEvent.class, XCirculateEventImpl.class)
 				.implement(	XCirculateRequestEvent.class,
 							XCirculateRequestEventImpl.class)
 				.implement(	XClientMessageEvent.class,
 							XClientMessageEventImpl.class)
-				.implement(	XColormapEvent.class,
-							XColormapEventImpl.class)
-				.implement(	XConfigureEvent.class,
-							XConfigureEventImpl.class)
+				.implement(XColormapEvent.class, XColormapEventImpl.class)
+				.implement(XConfigureEvent.class, XConfigureEventImpl.class)
 				.implement(	XConfigureRequestEvent.class,
 							XConfigureRequestEventImpl.class)
 				.implement(	XCreateWindowEvent.class,
 							XCreateWindowEventImpl.class)
-				.implement(	XCrossingEvent.class,
-							XCrossingEventImpl.class)
+				.implement(XCrossingEvent.class, XCrossingEventImpl.class)
 				.implement(	XDestroyWindowEvent.class,
 							XDestroyWindowEventImpl.class)
-				.implement(	XExposeEvent.class,
-							XExposeEventImpl.class)
-				.implement(	XFocusEvent.class,
-							XFocusEventImpl.class)
+				.implement(XExposeEvent.class, XExposeEventImpl.class)
+				.implement(XFocusEvent.class, XFocusEventImpl.class)
 				.implement(	XGraphicsExposeEvent.class,
 							XGraphicsExposeEventImpl.class)
-				.implement(	XGravityEvent.class,
-							XGravityEventImpl.class)
-				.implement(	XKeyEvent.class,
-							XKeyEventImpl.class)
-				.implement(	XMapEvent.class,
-							XMapEventImpl.class)
-				.implement(	XMapRequestEvent.class,
-							XMapRequestEventImpl.class)
-				.implement(	XMotionEvent.class,
-							XMotionEventImpl.class)
-				.implement(	XNoExposeEvent.class,
-							XNoExposeEventImpl.class)
+				.implement(XGravityEvent.class, XGravityEventImpl.class)
+				.implement(XKeyEvent.class, XKeyEventImpl.class)
+				.implement(XMapEvent.class, XMapEventImpl.class)
+				.implement(XMapRequestEvent.class, XMapRequestEventImpl.class)
+				.implement(XMotionEvent.class, XMotionEventImpl.class)
+				.implement(XNoExposeEvent.class, XNoExposeEventImpl.class)
 				.implement(	XPointerVisitationEvent.class,
 							XPointerVisitationEventImpl.class)
-				.implement(	XPropertyEvent.class,
-							XPropertyEventImpl.class)
-				.implement(	XReparentEvent.class,
-							XReparentEventImpl.class)
+				.implement(XPropertyEvent.class, XPropertyEventImpl.class)
+				.implement(XReparentEvent.class, XReparentEventImpl.class)
 				.implement(	XResizeRequestEvent.class,
 							XResizeRequestEventImpl.class)
 				.implement(	XSelectionClearEvent.class,
 							XSelectionClearEventImpl.class)
-				.implement(	XSelectionEvent.class,
-							XSelectionEventImpl.class)
+				.implement(XSelectionEvent.class, XSelectionEventImpl.class)
 				.implement(	XSelectionRequestEvent.class,
 							XSelectionRequestEventImpl.class)
-				.implement(	XUnmapEvent.class,
-							XUnmapEventImpl.class)
-				.implement(	XVisibilityEvent.class,
-							XVisibilityEventImpl.class)
+				.implement(XUnmapEvent.class, XUnmapEventImpl.class)
+				.implement(XVisibilityEvent.class, XVisibilityEventImpl.class)
 				.build(XEventFactory.class));
 	}
 
 	private void bindCore() {
-		bind(XCaller.class).to(XCallerImpl.class);
-		bind(XConnection.class).to(XConnectionImpl.class);
-		bind(XDisplayProtocol.class).to(XDisplayProtocolImpl.class);
-		bind(XDisplayServer.class).to(XDisplayServerImpl.class);
-		bind(Mouse.class).to(MouseImpl.class);
+		// bind(XCaller.class).to(XCallerImpl.class);
+		// bind(XConnection.class).to(XConnectionImpl.class);
+		// bind(XDisplayProtocol.class).to(XDisplayProtocolImpl.class);
+		// bind(XDisplayServer.class).to(XDisplayServerImpl.class);
+		// bind(Mouse.class).to(MouseImpl.class);
 
 		install(new FactoryModuleBuilder().implement(	XWindow.class,
 														XWindowImpl.class)
 				.build(XDisplayResourceFactory.class));
 		install(new FactoryModuleBuilder()
-				.implement(	XResourceHandle.class,
-							XResourceHandleImpl.class)
+				.implement(XResourceHandle.class, XResourceHandleImpl.class)
 				.build(XResourceHandleFactory.class));
 		install(new FactoryModuleBuilder().implement(	XAtom.class,
 														XAtomImpl.class)

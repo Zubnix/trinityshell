@@ -45,9 +45,8 @@ public class XResourceImpl implements XResource {
 	@Override
 	public String toString() {
 		final String toString = String
-				.format("Resource class: <%s> - id: <%s>",
-						getClass().getSimpleName(),
-						getResourceHandle());
+				.format("Resource class: <%s> - id: <%s>", getClass()
+						.getSimpleName(), getResourceHandle());
 		return toString;
 	}
 

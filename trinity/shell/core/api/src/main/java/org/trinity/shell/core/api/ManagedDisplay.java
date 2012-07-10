@@ -21,10 +21,8 @@ public interface ManagedDisplay {
 
 	void start();
 
-	void registerDisplayEventBusForSource(	EventBus eventBus,
-											DisplayEventSource forDisplayEventSource);
+	void registerEventBusForSource(	EventBus eventBus,
+									DisplayEventSource forDisplayEventSource);
 
 	void postNextDisplayEvent(boolean block);
-
-	// boolean hasFocus(RenderArea renderArea);
 }

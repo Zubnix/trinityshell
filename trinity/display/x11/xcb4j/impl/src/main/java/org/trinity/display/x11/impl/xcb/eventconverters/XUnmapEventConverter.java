@@ -23,9 +23,15 @@ import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventFactory;
 
+import com.google.inject.Singleton;
+
+import de.devsurf.injection.guice.annotations.Bind;
+
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
+@Bind(multiple = true)
+@Singleton
 public class XUnmapEventConverter implements
 		XEventConverter<NativeBufferHelper> {
 

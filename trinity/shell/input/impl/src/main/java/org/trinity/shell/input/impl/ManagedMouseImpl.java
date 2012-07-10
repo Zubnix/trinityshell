@@ -19,7 +19,10 @@ import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.input.api.ManagedMouse;
 
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 /**
  * A <code>ManagedMouse</code> represents a mouse pointer from a
@@ -29,6 +32,8 @@ import com.google.inject.name.Named;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
+@Singleton
 public class ManagedMouseImpl extends AbstractInputDevice implements
 		ManagedMouse {
 

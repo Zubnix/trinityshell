@@ -22,6 +22,8 @@ import com.google.inject.name.Named;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 /**
  * A <code>QFusionDestroyConverter</code> takes a <code>QEvent</code> and it's
  * <code>DisplayEventSource</code> as input and converts it to a
@@ -30,6 +32,7 @@ import com.trolltech.qt.core.QEvent.Type;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind(multiple = true)
 @Singleton
 public final class QFDestroyConverterImpl implements QFRenderEventConverter {
 

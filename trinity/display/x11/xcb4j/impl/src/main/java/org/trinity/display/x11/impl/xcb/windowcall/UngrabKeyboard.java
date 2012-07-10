@@ -11,10 +11,14 @@
  */
 package org.trinity.display.x11.impl.xcb.windowcall;
 
+import javax.inject.Named;
+
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
 import org.trinity.display.x11.impl.xcb.jni.Xcb4J;
 
 import com.google.inject.Singleton;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 /**
  * args: (Integer) time ret: (Void) null
@@ -22,6 +26,8 @@ import com.google.inject.Singleton;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
+@Named("UngrabKeyboard")
 @Singleton
 public final class UngrabKeyboard extends AbstractXcbCall<Void, Long, Integer> {
 

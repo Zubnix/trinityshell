@@ -12,44 +12,52 @@
 package org.trinity.shell.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
+import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.geo.api.GeoExecutor;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.widget.api.Label;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
 /**
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 public class LabelImpl extends WidgetImpl implements Label {
 
-	@Inject
-	private Label.View view;
+	private final Label.View view;
+	private String text;
 
-	/*****************************************
-	 * @param painterFactory
-	 * @param view
-	 ****************************************/
 	@Inject
-	protected LabelImpl(final PainterFactory painterFactory,
-						@Named("Widget") final GeoExecutor geoExecutor) {
-		super(painterFactory, geoExecutor);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.trinity.shell.widget.impl.WidgetImpl#getView()
-	 */
-	@Override
-	public Label.View getView() {
-		return this.view;
+	protected LabelImpl(final EventBus eventBus,
+						final GeoEventFactory geoEventFactory,
+						final ManagedDisplay managedDisplay,
+						final PainterFactory painterFactory,
+						@Named("Widget") final GeoExecutor geoExecutor,
+						final Label.View view) {
+		super(	eventBus,
+				geoEventFactory,
+				managedDisplay,
+				painterFactory,
+				geoExecutor,
+				view);
+		this.view = view;
 	}
 
 	@Override
-	public void updateLabel(final String name) {
-		draw(getView().labelUpdated(name));
+	public void setText(final String text) {
+		this.text = text;
+		this.view.update(text);
 	}
 
+	@Override
+	public String getText() {
+		return this.text;
+	}
 }

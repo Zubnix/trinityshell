@@ -11,13 +11,13 @@
  */
 package org.trinity.shell.widget.api;
 
-import org.trinity.foundation.render.api.PaintInstruction;
-
 public interface Label extends Widget {
 
-	public interface View extends Widget.View {
-		PaintInstruction<?> labelUpdated(String labelValue);
+	interface View extends Widget.View {
+		void update(String text);
 	}
 
-	void updateLabel(final String name);
+	void setText(String text);
+
+	String getText();
 }

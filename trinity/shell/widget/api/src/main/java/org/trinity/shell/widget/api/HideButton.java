@@ -11,17 +11,17 @@
  */
 package org.trinity.shell.widget.api;
 
-import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.shell.core.api.RenderArea;
+import org.trinity.shell.geo.api.GeoTransformableRectangle;
 
-public interface HideButton extends Button, RectangleManipulator {
+public interface HideButton extends Button {
 
-	public interface View extends Button.View, RectangleManipulator.View {
-		PaintInstruction<?> clientWindowHidden(final RenderArea targetWindow);
+	interface View extends Button.View {
+		void hideClient(final GeoTransformableRectangle client);
 	}
 
-	@Override
-	HideButton.View getView();
+	void hideClient();
 
-	void hideClientWindow();
+	void setClient(GeoTransformableRectangle renderArea);
+
+	GeoTransformableRectangle getClient();
 }

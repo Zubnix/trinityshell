@@ -18,12 +18,14 @@ import java.util.List;
 import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.SpecialKeyName;
 import org.trinity.foundation.render.api.PainterFactory;
+import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.geo.api.GeoExecutor;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.input.api.KeyInputStringBuilder;
 import org.trinity.shell.input.api.ManagedKeyboard;
 import org.trinity.shell.widget.api.KeyDrivenMenu;
 
-import com.google.inject.Inject;
+import com.google.common.eventbus.EventBus;
 
 // TODO documentation
 /**
@@ -38,33 +40,34 @@ import com.google.inject.Inject;
 public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 		KeyDrivenMenu {
 
-	@Inject
-	private KeyDrivenMenu.View view;
+	private final KeyDrivenMenu.View view;
 
 	private final ManagedKeyboard managedKeyboard;
 	private final KeyInputStringBuilder keyInputStringBuilder;
-	private int activeChoice;
+
+	private int activeChoiceIdx;
 	private final List<String> filteredChoices;
 
-	protected AbstractKeyDrivenMenu(final PainterFactory painterFactory,
+	protected AbstractKeyDrivenMenu(final EventBus eventBus,
+									final GeoEventFactory geoEventFactory,
+									final ManagedDisplay managedDisplay,
+									final PainterFactory painterFactory,
 									final GeoExecutor geoExecutor,
 									final ManagedKeyboard managedKeyboard,
-									final KeyInputStringBuilder keyInputStringBuilder) {
-		super(painterFactory, geoExecutor);
-		this.activeChoice = 0;
+									final KeyInputStringBuilder keyInputStringBuilder,
+									final KeyDrivenMenu.View view) {
+		super(	eventBus,
+				geoEventFactory,
+				managedDisplay,
+				painterFactory,
+				geoExecutor,
+				view);
+		this.view = view;
+		this.activeChoiceIdx = 0;
 		this.filteredChoices = new ArrayList<String>(25);
 		this.managedKeyboard = managedKeyboard;
 		this.keyInputStringBuilder = keyInputStringBuilder;
 		initKeyListeners();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.trinity.shell.widget.impl.WidgetImpl#getView()
-	 */
-	@Override
-	public KeyDrivenMenu.View getView() {
-		return this.view;
 	}
 
 	// TODO instead of referencing a keyname based on a string, we want to
@@ -108,14 +111,14 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 					AbstractKeyDrivenMenu.this.reset();
 				} else if (keyName.equals(SpecialKeyName.LEFT.name())) {
 					// left arrow key
-					if ((AbstractKeyDrivenMenu.this.activeChoice - 1) >= 0) {
-						AbstractKeyDrivenMenu.this.activeChoice--;
+					if ((AbstractKeyDrivenMenu.this.activeChoiceIdx - 1) >= 0) {
+						AbstractKeyDrivenMenu.this.activeChoiceIdx--;
 						AbstractKeyDrivenMenu.this.keyInputStringBuilder
 								.clearBuffer();
 
 						final String desired = AbstractKeyDrivenMenu.this
 								.getFilteredChoices()
-								.get(AbstractKeyDrivenMenu.this.activeChoice);
+								.get(AbstractKeyDrivenMenu.this.activeChoiceIdx);
 						AbstractKeyDrivenMenu.this.keyInputStringBuilder
 								.getStringBuffer().append(desired);
 
@@ -126,16 +129,16 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 								.update(desired,
 										AbstractKeyDrivenMenu.this
 												.getFilteredChoices(),
-										AbstractKeyDrivenMenu.this.activeChoice));
+										AbstractKeyDrivenMenu.this.activeChoiceIdx));
 					}
 				} else if (keyName.equals(SpecialKeyName.RIGHT.name())) {
 					// righ arrow key
-					if ((AbstractKeyDrivenMenu.this.activeChoice + 1) < AbstractKeyDrivenMenu.this
+					if ((AbstractKeyDrivenMenu.this.activeChoiceIdx + 1) < AbstractKeyDrivenMenu.this
 							.getFilteredChoices().size()) {
-						AbstractKeyDrivenMenu.this.activeChoice++;
+						AbstractKeyDrivenMenu.this.activeChoiceIdx++;
 						final String desired = AbstractKeyDrivenMenu.this
 								.getFilteredChoices()
-								.get(AbstractKeyDrivenMenu.this.activeChoice);
+								.get(AbstractKeyDrivenMenu.this.activeChoiceIdx);
 
 						AbstractKeyDrivenMenu.this.keyInputStringBuilder
 								.clearBuffer();
@@ -148,7 +151,7 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 								.update(desired,
 										AbstractKeyDrivenMenu.this
 												.getFilteredChoices(),
-										AbstractKeyDrivenMenu.this.activeChoice);
+										AbstractKeyDrivenMenu.this.activeChoiceIdx);
 					}
 				} else {
 					// other key
@@ -156,7 +159,7 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 							.build(event);
 					final String desired = AbstractKeyDrivenMenu.this.keyInputStringBuilder
 							.getStringBuffer().toString();
-					AbstractKeyDrivenMenu.this.activeChoice = 0;
+					AbstractKeyDrivenMenu.this.activeChoiceIdx = 0;
 
 					AbstractKeyDrivenMenu.this.updatePossibleChoices(desired);
 
@@ -166,7 +169,7 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 							.update(desired,
 									AbstractKeyDrivenMenu.this
 											.getFilteredChoices(),
-									AbstractKeyDrivenMenu.this.activeChoice);
+									AbstractKeyDrivenMenu.this.activeChoiceIdx);
 				}
 			}
 		},
@@ -195,16 +198,13 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 		}
 	}
 
-	/**
-	 * 
-	 * 
-	 */
-	public void reset() {
-		this.activeChoice = 0;
+	@Override
+	public void clear() {
+		this.activeChoiceIdx = 0;
 		// clear buffer
 		this.keyInputStringBuilder.clearBuffer();
 		// clear view
-		draw(getView().clear());
+		this.view.clear();
 	}
 
 	/**
@@ -233,28 +233,22 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 		return "";
 	}
 
-	/**
-	 * 
-	 * 
-	 */
-	public void startKeyListening() {
+	@Override
+	public void activate() {
 		this.managedKeyboard.registerInputEventBus(this);
 		this.managedKeyboard.grab();
-		draw(getView().startedKeyListening());
-	}
-
-	/**
-	 * 
-	 * 
-	 */
-	public void stopKeyListening() {
-		this.managedKeyboard.release();
-		this.managedKeyboard.unregisterInputEventBus(this);
-		draw(getView().stoppedKeyListening());
+		this.view.activate();
 	}
 
 	@Override
-	public String getFilter() {
+	public void deactivate() {
+		this.managedKeyboard.release();
+		this.managedKeyboard.unregisterInputEventBus(this);
+		this.view.deactivate();
+	}
+
+	@Override
+	public String getInput() {
 		return this.keyInputStringBuilder.getStringBuffer().toString();
 	}
 
@@ -264,8 +258,7 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 	}
 
 	@Override
-	public int getChoosenFilteredChoiceIdx() {
-		// TODO
-		return 0;
+	public int getActiveChoiceIdx() {
+		return this.activeChoiceIdx;
 	}
 }

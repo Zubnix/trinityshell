@@ -21,9 +21,13 @@ import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
+@Bind
+@javax.inject.Named("XEventPump")
 public class XEventPump implements Runnable {
 
 	private final XCaller xCaller;

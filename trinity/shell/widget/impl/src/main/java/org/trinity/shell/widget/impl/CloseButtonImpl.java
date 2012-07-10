@@ -11,16 +11,21 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.foundation.input.api.PointerInput;
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
+import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.foundation.api.RenderArea;
-import org.trinity.shell.foundation.impl.AbstractRenderArea;
+import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
-import org.trinity.shell.protocol.api.DesktopProtocol;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.widget.api.CloseButton;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 /**
  * A <code>CloseButton</code> can terminate another
@@ -41,61 +46,51 @@ import com.google.inject.name.Named;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 public class CloseButtonImpl extends ButtonImpl implements CloseButton {
 
-	@Inject
-	private CloseButton.View view;
-
-	private RenderArea boundRectangle;
+	private RenderArea client;
 	private final DesktopProtocol desktopProtocol;
+	private final CloseButton.View view;
 
 	@Inject
-	protected CloseButtonImpl(	final PainterFactory painterFactory,
+	protected CloseButtonImpl(	final EventBus eventBus,
+								final GeoEventFactory geoEventFactory,
+								final ManagedDisplay managedDisplay,
+								final PainterFactory painterFactory,
 								@Named("Widget") final GeoExecutor geoExecutor,
-								final DesktopProtocol desktopProtocol) {
-		super(painterFactory, geoExecutor);
+								final DesktopProtocol desktopProtocol,
+								final CloseButton.View view) {
+		super(	eventBus,
+				geoEventFactory,
+				managedDisplay,
+				painterFactory,
+				geoExecutor,
+				view);
 		this.desktopProtocol = desktopProtocol;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.trinity.shell.widget.impl.ButtonImpl#getView()
-	 */
-	@Override
-	public CloseButton.View getView() {
-		return this.view;
-	}
-
-	/**
-	 * Define the target <code>AbstractRenderArea</code>.
-	 * <p>
-	 * The target <code>AbstractRenderArea</code> is the
-	 * <code>AbstractRenderArea</code> which will be asked to terminate should
-	 * this <code>CloseButton</code> be triggered.
-	 * 
-	 * @param targetRenderArea
-	 *            A {@link AbstractRenderArea}.
-	 */
-	public void setTargetRenderArea(final RenderArea targetRenderArea) {
-		this.boundRectangle = targetRenderArea;
+		this.view = view;
 	}
 
 	@Override
-	public void onMouseButtonPressed(final PointerInput input) {
-		closeClientWindow();
+	public void setClient(final RenderArea client) {
+		this.client = client;
 	}
 
 	@Override
-	public RenderArea getBoundRectangle() {
-		return this.boundRectangle;
+	public RenderArea getClient() {
+		return this.client;
 	}
 
-	public void setBoundRectangle(final RenderArea rectangle) {
-		this.boundRectangle = rectangle;
+	@Subscribe
+	public void onMouseButtonPressed(final ButtonNotifyEvent input) {
+		if (input.getInput().getMomentum() == Momentum.STARTED) {
+			closeClient();
+		}
 	}
 
 	@Override
-	public void closeClientWindow() {
-		this.desktopProtocol.requestDelete(getBoundRectangle());
+	public void closeClient() {
+		this.desktopProtocol.requestDelete(getClient());
+		this.view.closeClient(getClient());
 	}
 }

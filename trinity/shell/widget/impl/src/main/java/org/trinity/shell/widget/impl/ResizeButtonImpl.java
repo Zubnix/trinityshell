@@ -11,41 +11,52 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.foundation.input.api.PointerInput;
 import org.trinity.foundation.render.api.PainterFactory;
+import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.geo.api.GeoExecutor;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.input.api.ManagedMouse;
+import org.trinity.shell.widget.api.DragButton;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
 /**
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 public class ResizeButtonImpl extends DragButtonImpl {
-
-	/*****************************************
-	 * @param painterFactory
-	 * @param geoExecutor
-	 * @param managedMouse
-	 ****************************************/
-	@Inject
-	protected ResizeButtonImpl(	final PainterFactory painterFactory,
-								@Named("Widget") final GeoExecutor geoExecutor,
-								final ManagedMouse managedMouse) {
-		super(painterFactory, geoExecutor, managedMouse);
-	}
 
 	private int desiredWidth;
 	private int desiredHeight;
 
+	@Inject
+	protected ResizeButtonImpl(	final EventBus eventBus,
+								final GeoEventFactory geoEventFactory,
+								final ManagedDisplay managedDisplay,
+								final PainterFactory painterFactory,
+								@Named("Widget") final GeoExecutor geoExecutor,
+								final ManagedMouse managedMouse,
+								final DragButton.View view) {
+		super(	eventBus,
+				geoEventFactory,
+				managedDisplay,
+				painterFactory,
+				geoExecutor,
+				managedMouse,
+				view);
+	}
+
 	@Override
-	public void startDrag(final PointerInput input) {
-		this.desiredWidth = getBoundRectangle().getWidth();
-		this.desiredHeight = getBoundRectangle().getHeight();
-		super.startDrag(input);
+	public void startDragClient() {
+		this.desiredWidth = getClient().getWidth();
+		this.desiredHeight = getClient().getHeight();
+		super.startDragClient();
 	}
 
 	@Override
@@ -53,13 +64,9 @@ public class ResizeButtonImpl extends DragButtonImpl {
 		this.desiredWidth += vectX;
 		this.desiredHeight += vectY;
 
-		getBoundRectangle().setWidth(this.desiredWidth);
-		getBoundRectangle().setHeight(this.desiredHeight);
+		getClient().setWidth(this.desiredWidth);
+		getClient().setHeight(this.desiredHeight);
 
-		// TODO use desktop protocol to automate this:
-		// use delay to sync with client as specified by ewmh
-		// _NET_WM_SYNC_REQUEST. implement this delay in the fusion-x11 package.
-
-		getBoundRectangle().requestResize();
+		getClient().requestResize();
 	}
 }

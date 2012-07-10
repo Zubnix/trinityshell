@@ -11,18 +11,26 @@
  */
 package org.trinity.shell.widget.api;
 
-import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.shell.core.api.RenderArea;
+import org.trinity.foundation.shared.geometry.api.Rectangle;
+import org.trinity.shell.geo.api.GeoTransformableRectangle;
 
-public interface MaximizeButton extends Button, RectangleManipulator {
+public interface MaximizeButton extends Button {
 
-	public interface View extends Button.View, RectangleManipulator.View {
-		PaintInstruction<?> clientWindowMaximized(final RenderArea targetWindow);
+	interface View extends Button.View {
+		void maximize(GeoTransformableRectangle client);
 
-		PaintInstruction<?> clientWindowRestored(final RenderArea targetWindow);
+		void restore(GeoTransformableRectangle client);
 	}
 
-	void maximizeClientWindow();
+	GeoTransformableRectangle getClient();
 
-	void restoreClientWindow();
+	void setClient(GeoTransformableRectangle client);
+
+	void maximize();
+
+	void restore();
+
+	void setMaximize(Rectangle rectangle);
+
+	Rectangle getMaximize();
 }

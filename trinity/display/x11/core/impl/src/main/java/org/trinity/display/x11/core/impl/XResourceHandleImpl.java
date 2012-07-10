@@ -16,11 +16,14 @@ import org.trinity.display.x11.core.api.XResourceHandle;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 // TODO documentation
 /**
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 public class XResourceHandleImpl implements XResourceHandle {
 
 	private final Integer handle;

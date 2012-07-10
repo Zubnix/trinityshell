@@ -20,6 +20,8 @@ import org.trinity.foundation.shared.geometry.api.Coordinates;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 /**
  * An <code>XMouse</code> represents an X mouse pointer on an X display server.
  * It holds the location of an X mouse pointer relative to the root window.
@@ -27,6 +29,7 @@ import com.google.inject.name.Named;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 public final class MouseImpl implements Mouse {
 
 	private final XConnection<Long> xConnection;

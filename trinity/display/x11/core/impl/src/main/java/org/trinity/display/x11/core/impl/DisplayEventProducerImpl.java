@@ -16,9 +16,12 @@ import org.trinity.foundation.display.api.DisplayEventProducer;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
+@Bind(multiple = true)
 public class DisplayEventProducerImpl implements DisplayEventProducer {
 
 	private final Thread eventPumpThread;

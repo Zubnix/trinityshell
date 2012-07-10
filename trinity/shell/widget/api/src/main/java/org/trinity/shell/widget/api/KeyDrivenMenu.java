@@ -13,36 +13,31 @@ package org.trinity.shell.widget.api;
 
 import java.util.List;
 
-import org.trinity.foundation.render.api.PaintInstruction;
-
 public interface KeyDrivenMenu extends Widget {
 
-	public interface View extends Widget.View {
-		PaintInstruction<?> clear();
+	interface View extends Widget.View {
+		void clear();
 
-		PaintInstruction<?> update(	String input,
-									List<String> possibleValues,
-									int activeValue);
+		void activate();
 
-		PaintInstruction<?> startedKeyListening();
+		void deactivate();
 
-		PaintInstruction<?> stoppedKeyListening();
+		void update(String input,
+					List<String> filteredChoices,
+					int activeChoiceIdx);
 	}
 
-	@Override
-	KeyDrivenMenu.View getView();
+	void clear();
+
+	void activate();
+
+	void deactivate();
 
 	List<String> getAllChoices();
 
-	String getFilter();
+	String getInput();
 
 	List<String> getFilteredChoices();
 
-	int getChoosenFilteredChoiceIdx();
-
-	// @Override
-	// void onKeyboardPressed(final KeyboardInput input);
-	//
-	// @Override
-	// void onKeyboardReleased(final KeyboardInput input);
+	int getActiveChoiceIdx();
 }

@@ -26,6 +26,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 // TODO documentation
 /**
  * A <code>RenderAreaGeoExecutor</code> is a delegate class for directly
@@ -36,6 +38,8 @@ import com.google.inject.name.Named;
  * @see GeoExecutor
  */
 @Singleton
+@Bind
+@javax.inject.Named("RenderArea")
 public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 
 	private final RenderArea root;
@@ -52,15 +56,12 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 	}
 
 	@Override
-	public
-			AreaManipulator<Area>
-			getAreaManipulator(final GeoTransformableRectangle geoTransformableRectangle) {
+	public AreaManipulator<Area> getAreaManipulator(final GeoTransformableRectangle geoTransformableRectangle) {
 		return this.getAreaManipulator(geoTransformableRectangle);
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T extends Area> AreaManipulator<T>
-			getAreaManipulator(final RenderArea renderArea) {
+	protected <T extends Area> AreaManipulator<T> getAreaManipulator(final RenderArea renderArea) {
 		return (AreaManipulator<T>) renderArea.getPlatformRenderArea();
 	}
 
@@ -77,11 +78,9 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 	}
 
 	@Override
-	public
-			void
-			updatePlace(final GeoTransformableRectangle geoTransformableRectangle,
-						final int relativeX,
-						final int relativeY) {
+	public void updatePlace(final GeoTransformableRectangle geoTransformableRectangle,
+							final int relativeX,
+							final int relativeY) {
 		if (isAreaInitialized((RenderArea) geoTransformableRectangle)) {
 			final int newX = relativeX;
 			final int newY = relativeY;
@@ -94,32 +93,25 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 			final int newRelativeX = newRelativePosition.getX();
 			final int newRelativeY = newRelativePosition.getY();
 			this.getAreaManipulator(geoTransformableRectangle)
-					.move(	newRelativeX,
-							newRelativeY);
+					.move(newRelativeX, newRelativeY);
 		}
 	}
 
 	@Override
-	public
-			void
-			updateSize(	final GeoTransformableRectangle geoTransformableRectangle,
-						final int width,
-						final int height) {
-		if (isAreaInitialized((RenderArea) geoTransformableRectangle)) {
-			super.updateSize(	geoTransformableRectangle,
-								width,
-								height);
-		}
-	}
-
-	@Override
-	public
-			void
-			updateSizePlace(final GeoTransformableRectangle geoTransformableRectangle,
-							final int relativeX,
-							final int relativeY,
+	public void updateSize(	final GeoTransformableRectangle geoTransformableRectangle,
 							final int width,
 							final int height) {
+		if (isAreaInitialized((RenderArea) geoTransformableRectangle)) {
+			super.updateSize(geoTransformableRectangle, width, height);
+		}
+	}
+
+	@Override
+	public void updateSizePlace(final GeoTransformableRectangle geoTransformableRectangle,
+								final int relativeX,
+								final int relativeY,
+								final int width,
+								final int height) {
 		final boolean areaInitialized = isAreaInitialized((RenderArea) geoTransformableRectangle);
 		if (areaInitialized) {
 			final int newX = relativeX;
@@ -145,11 +137,9 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 		}
 	}
 
-	protected
-			Coordinates
-			calculatePositionRelativeToTypedArea(	final GeoTransformableRectangle directParent,
-													final int directRelativeX,
-													final int directRelativeY) {
+	protected Coordinates calculatePositionRelativeToTypedArea(	final GeoTransformableRectangle directParent,
+																final int directRelativeX,
+																final int directRelativeY) {
 
 		final RenderArea parentRenderArea = findClosestSameTypeArea(directParent);
 
@@ -162,16 +152,13 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 		final int newAbsY = directParent.getAbsoluteY() + directRelativeY;
 
 		final Coordinates absCorParent = getAreaManipulator(this.root)
-				.translateCoordinates(	getAreaPeer(parentRenderArea),
-										0,
-										0);
+				.translateCoordinates(getAreaPeer(parentRenderArea), 0, 0);
 
 		final int newRelX = newAbsX - absCorParent.getX();
 		final int newRelY = newAbsY - absCorParent.getY();
 
 		final Coordinates corRelativeToTypedParent = this.geometryFactory
-				.createCoordinates(	newRelX,
-									newRelY);
+				.createCoordinates(newRelX, newRelY);
 
 		return corRelativeToTypedParent;
 	}
@@ -181,21 +168,17 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 	 */
 	protected void initialize(	final GeoTransformableRectangle parent,
 								final GeoTransformableRectangle area) {
-		initializeGeoTransformableSquare(	parent,
-											area);
+		initializeGeoTransformableSquare(parent, area);
 		for (final GeoTransformableRectangle child : area.getChildren()) {
-			initialize(	area,
-						child);
+			initialize(area, child);
 		}
 	}
 
 	/**
 	 * @param area
 	 */
-	protected
-			void
-			initializeGeoTransformableSquare(	final GeoTransformableRectangle parent,
-												final GeoTransformableRectangle area) {
+	protected void initializeGeoTransformableSquare(final GeoTransformableRectangle parent,
+													final GeoTransformableRectangle area) {
 		// Sublcasses should override & implement this method to make sure the
 		// given area is ready to make back-end calls.
 	}
@@ -206,18 +189,15 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 	 * 
 	 * @param newParentRenderArea
 	 */
-	protected void
-			preProcesNewSameTypeParent(final RenderArea newParentRenderArea) {
+	protected void preProcesNewSameTypeParent(final RenderArea newParentRenderArea) {
 		newParentRenderArea
 				.getPlatformRenderArea()
 				.selectEvent(DisplayEventSelector.REDIRECT_CHILD_WINDOW_GEOMETRY_CHANGES);
 	}
 
 	@Override
-	public
-			void
-			updateParent(	final GeoTransformableRectangle geoTransformableRectangle,
-							final GeoTransformableRectangle parent) {
+	public void updateParent(	final GeoTransformableRectangle geoTransformableRectangle,
+								final GeoTransformableRectangle parent) {
 		final RenderArea currentRenderArea = (RenderArea) geoTransformableRectangle;
 		final GeoTransformableRectangle newParent = parent;
 		final RenderArea newParentRenderArea = findClosestSameTypeArea(newParent);
@@ -228,8 +208,7 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 		if (newParentInitialized && !currentRenderAreaInitialized) {
 			// parent is ready but we are not. we initialize ourself with
 			// our ready parent as argument.
-			initialize(	newParent,
-						currentRenderArea);
+			initialize(newParent, currentRenderArea);
 		} else if (newParentInitialized && currentRenderAreaInitialized) {
 			// we are ready and our new parent is ready. we start the
 			// procedure to change to our new ready parent.
@@ -284,8 +263,7 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 	 *            upwards in the tree hierarchy.
 	 * @return The closest parent with type {@link RenderArea}.
 	 */
-	protected RenderArea
-			findClosestSameTypeArea(final GeoTransformableRectangle square) {
+	protected RenderArea findClosestSameTypeArea(final GeoTransformableRectangle square) {
 
 		// find the closest ancestor that is of type RenderArea
 		if (square instanceof RenderArea) {
@@ -326,8 +304,7 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 	}
 
 	@Override
-	public void
-			destroy(final GeoTransformableRectangle geoTransformableRectangle) {
+	public void destroy(final GeoTransformableRectangle geoTransformableRectangle) {
 		this.getAreaManipulator(geoTransformableRectangle).destroy();
 	}
 }

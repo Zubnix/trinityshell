@@ -27,6 +27,8 @@ import org.trinity.foundation.display.api.event.DisplayEvent;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 // TODO documentation
 /**
  * An <code>XDisplay</code> is the fusion-x11 representation of an X display
@@ -42,6 +44,7 @@ import com.google.inject.name.Named;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 public class XDisplayServerImpl implements XDisplayServer {
 
 	private final XCaller xCaller;
@@ -59,10 +62,10 @@ public class XDisplayServerImpl implements XDisplayServer {
 
 	@Inject
 	protected XDisplayServerImpl(	final Set<DisplayEventProducer> displayEventProducers,
-							final XConnection<Long> xConnection,
-							final XCaller xCaller,
-							@Named("getInputFocus") final XCall<XResourceHandle, Long, Void> getInputFocus,
-							final XDisplayResourceFactory xResourceFactory) {
+									final XConnection<Long> xConnection,
+									final XCaller xCaller,
+									@Named("getInputFocus") final XCall<XResourceHandle, Long, Void> getInputFocus,
+									final XDisplayResourceFactory xResourceFactory) {
 		this.displayEventProducers = displayEventProducers;
 		this.xResourceFactory = xResourceFactory;
 		this.xConnection = xConnection;

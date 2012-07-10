@@ -11,42 +11,16 @@
  */
 package org.trinity.shell.widget.api;
 
+import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.input.api.KeyboardInput;
-import org.trinity.foundation.input.api.PointerInput;
-import org.trinity.foundation.render.api.PaintConstruction;
-import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Paintable;
-import org.trinity.foundation.shared.geometry.api.Rectangle;
 import org.trinity.shell.core.api.RenderArea;
 
 public interface Widget extends Paintable, DisplayEventSource, RenderArea {
 
-	public interface View {
-		/**
-		 * @param args
-		 *            First arg is of type {@link Widget} and is the closest
-		 *            {@link Paintable} parent of the <code>Paintable</code>
-		 *            that needs to be created.
-		 * @return
-		 */
-		PaintConstruction<?> doCreate(	Rectangle form,
-										boolean visible,
-										Paintable parentPaintable);
+	interface View {
+		DisplayRenderArea create(Paintable paintable);
 
-		PaintInstruction<?> doDestroy();
+		void destroy();
 	}
-
-	void onMouseButtonPressed(final PointerInput input);
-
-	void onMouseButtonReleased(final PointerInput input);
-
-	void onKeyboardPressed(final KeyboardInput input);
-
-	void onKeyboardReleased(final KeyboardInput input);
-
-	/*****************************************
-	 * @return
-	 ****************************************/
-	View getView();
 }

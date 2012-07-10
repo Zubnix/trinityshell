@@ -24,6 +24,8 @@ import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
 import com.google.inject.Inject;
 import com.trolltech.qt.core.QEvent;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 // TODO documentation
 /**
  * Promotes <code>QEvent</code>s to <code>DisplayEvent</code>s so they can be
@@ -40,6 +42,7 @@ import com.trolltech.qt.core.QEvent;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 public class QFRenderEventBridgeImpl implements QFRenderEventBridge {
 
 	private final Map<QEvent.Type, QFRenderEventConverter> converterByQEventType = new HashMap<QEvent.Type, QFRenderEventConverter>();

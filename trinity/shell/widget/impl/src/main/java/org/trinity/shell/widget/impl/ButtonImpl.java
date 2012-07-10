@@ -11,68 +11,45 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.foundation.api.ManagedDisplay;
-import org.trinity.shell.foundation.api.event.MouseButtonReleasedHandler;
-import org.trinity.shell.geo.api.GeoEventHandler;
+import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.geo.api.GeoExecutor;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.widget.api.Button;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
 /**
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 public class ButtonImpl extends WidgetImpl implements Button {
-
-	@Inject
-	private Button.View view;
 
 	/*****************************************
 	 * @param painterFactory
 	 * @param view
 	 ****************************************/
 	@Inject
-	protected ButtonImpl(	final PainterFactory painterFactory,
-							@Named("Widget") final GeoExecutor geoExecutor) {
-		super(painterFactory, geoExecutor);
+	protected ButtonImpl(	final EventBus eventBus,
+							final GeoEventFactory geoEventFactory,
+							final ManagedDisplay managedDisplay,
+							final PainterFactory painterFactory,
+							@Named("Widget") final GeoExecutor geoExecutor,
+							final Button.View view) {
+		super(	eventBus,
+				geoEventFactory,
+				managedDisplay,
+				painterFactory,
+				geoExecutor,
+				view);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.trinity.shell.widget.impl.WidgetImpl#getView()
-	 */
-	@Override
-	public Button.View getView() {
-		return this.view;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.trinity.shell.geo.impl.AbstractGeoTransformableRectangle#
-	 * addGeoEventHandler(org.trinity.shell.geo.api.GeoEventHandler)
-	 */
-	@Override
-	public void addGeoEventHandler(final GeoEventHandler geoEventHandler) {
-		// TODO Auto-generated method stub
-		super.addGeoEventHandler(geoEventHandler);
-	}
-
-	@Override
-	protected void setManagedDisplay(final ManagedDisplay managedDisplay) {
-		super.setManagedDisplay(managedDisplay);
-		getManagedDisplay()
-				.addDisplayEventHandler(new MouseButtonReleasedHandler() {
-					@Override
-					public void handleEvent(final ButtonNotifyEvent event) {
-						draw(getView().mouseButtonReleased(event.getInput()));
-						ButtonImpl.this.onMouseButtonReleased(event.getInput());
-
-					}
-				});
-	}
+	// pressed?
+	// released?
 }

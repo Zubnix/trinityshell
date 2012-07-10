@@ -11,11 +11,15 @@
  */
 package org.trinity.shell.geo.impl;
 
+import javax.inject.Named;
+
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.api.GeoTransformation;
 
 import com.google.inject.Singleton;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
 /**
@@ -26,6 +30,8 @@ import com.google.inject.Singleton;
  * @since 1.0
  */
 @Singleton
+@Bind
+@Named("GeoVirt")
 public class GeoVirtGeoExecutor implements GeoExecutor {
 
 	/**
@@ -37,8 +43,7 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 	}
 
 	@Override
-	public void
-			lower(final GeoTransformableRectangle geoTransformableRectangle) {
+	public void lower(final GeoTransformableRectangle geoTransformableRectangle) {
 		final GeoTransformableRectangle[] children = geoTransformableRectangle
 				.getChildren();
 		for (final GeoTransformableRectangle child : children) {
@@ -47,8 +52,7 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 	}
 
 	@Override
-	public void
-			raise(final GeoTransformableRectangle geoTransformableRectangle) {
+	public void raise(final GeoTransformableRectangle geoTransformableRectangle) {
 		final GeoTransformableRectangle[] children = geoTransformableRectangle
 				.getChildren();
 		for (final GeoTransformableRectangle child : children) {
@@ -57,11 +61,9 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 	}
 
 	@Override
-	public
-			void
-			updatePlace(final GeoTransformableRectangle geoTransformableRectangle,
-						final int relativeX,
-						final int relativeY) {
+	public void updatePlace(final GeoTransformableRectangle geoTransformableRectangle,
+							final int relativeX,
+							final int relativeY) {
 
 		final GeoTransformation geoTransformation = geoTransformableRectangle
 				.toGeoTransformation();
@@ -80,32 +82,24 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 
 			// directly manipulated underlying platform specific geometry of the
 			// child
-			child.getGeoExecutor().updatePlace(	child,
-												newRelX,
-												newRelY);
+			child.getGeoExecutor().updatePlace(child, newRelX, newRelY);
 		}
 	}
 
 	@Override
-	public
-			void
-			updateSize(	final GeoTransformableRectangle geoTransformableRectangle,
-						final int width,
-						final int height) {
+	public void updateSize(	final GeoTransformableRectangle geoTransformableRectangle,
+							final int width,
+							final int height) {
 		// do nothing
 	}
 
 	@Override
-	public
-			void
-			updateSizePlace(final GeoTransformableRectangle geoTransformableRectangle,
-							final int relativeX,
-							final int relativeY,
-							final int width,
-							final int height) {
-		updatePlace(geoTransformableRectangle,
-					relativeX,
-					relativeY);
+	public void updateSizePlace(final GeoTransformableRectangle geoTransformableRectangle,
+								final int relativeX,
+								final int relativeY,
+								final int width,
+								final int height) {
+		updatePlace(geoTransformableRectangle, relativeX, relativeY);
 	}
 
 	@Override
@@ -113,8 +107,7 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 		final GeoTransformableRectangle[] children = geoTransformableRectangle
 				.getChildren();
 		for (final GeoTransformableRectangle child : children) {
-			updateChildVisibility(	child,
-									true);
+			updateChildVisibility(child, true);
 		}
 	}
 
@@ -123,8 +116,7 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 		final GeoTransformableRectangle[] children = geoTransformableRectangle
 				.getChildren();
 		for (final GeoTransformableRectangle child : children) {
-			updateChildVisibility(	child,
-									false);
+			updateChildVisibility(child, false);
 		}
 	}
 
@@ -145,10 +137,8 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 	}
 
 	@Override
-	public
-			void
-			updateParent(	final GeoTransformableRectangle geoTransformableRectangle,
-							final GeoTransformableRectangle parent) {
+	public void updateParent(	final GeoTransformableRectangle geoTransformableRectangle,
+								final GeoTransformableRectangle parent) {
 		final GeoTransformableRectangle[] children = geoTransformableRectangle
 				.getChildren();
 
@@ -158,14 +148,12 @@ public class GeoVirtGeoExecutor implements GeoExecutor {
 			// the child
 			child.getGeoExecutor().updateParent(child,
 												geoTransformableRectangle);
-			updateChildVisibility(	child,
-									parentVisible);
+			updateChildVisibility(child, parentVisible);
 		}
 	}
 
 	@Override
-	public void
-			destroy(final GeoTransformableRectangle geoTransformableRectangle) {
+	public void destroy(final GeoTransformableRectangle geoTransformableRectangle) {
 		// TODO destroy all children? (Will somebody *please* think of the
 		// children! :'( )
 	}

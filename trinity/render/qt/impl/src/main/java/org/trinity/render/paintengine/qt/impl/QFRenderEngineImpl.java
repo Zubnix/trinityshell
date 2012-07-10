@@ -36,6 +36,8 @@ import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 // TODO documentation
 /**
  * A <code> QFusionRenderEngine</code> is the core class for all paint related
@@ -54,6 +56,7 @@ import com.trolltech.qt.gui.QWidget;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 @Singleton
 public class QFRenderEngineImpl extends QApplication implements QFRenderEngine,
 		DisplayEventProducer {

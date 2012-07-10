@@ -22,6 +22,8 @@ import com.google.inject.name.Named;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 // TODO documentation
 /**
  * A <code>QFusionMouseEnterEventConverter</code> takes a <code>QEvent</code>
@@ -31,6 +33,7 @@ import com.trolltech.qt.core.QEvent.Type;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind(multiple = true)
 @Singleton
 public final class QFMouseEnterConverterImpl implements QFRenderEventConverter {
 

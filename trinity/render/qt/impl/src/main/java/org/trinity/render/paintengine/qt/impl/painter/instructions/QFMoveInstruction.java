@@ -33,12 +33,6 @@ public class QFMoveInstruction implements QFPaintInstruction {
 		this.y = y;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.hydrogen.paint.api.PaintInstruction#call(org.hydrogen.paint.api.Paintable
-	 * , org.hydrogen.paint.api.RenderEngine)
-	 */
 	@Override
 	public void call(	final Paintable paintable,
 						final QFRenderEngine renderEngine) {

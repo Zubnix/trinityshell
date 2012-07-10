@@ -12,13 +12,17 @@
 package org.trinity.shell.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
+import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
-import org.trinity.shell.geo.impl.manager.AbstractAbsoluteGeoManager;
-import org.trinity.shell.widget.api.Root;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.widget.api.VirtualRoot;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
 // TODO list events that are emitted by this widget in doc
@@ -31,30 +35,31 @@ import com.google.inject.name.Named;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 public final class VirtualRootImpl extends WidgetImpl implements VirtualRoot {
-
-	@Inject
-	private VirtualRoot.View view;
-
-	@Override
-	public VirtualRoot.View getView() {
-		return this.view;
-	}
 
 	/**
 	 * @param baseRoot
 	 */
 	@Inject
-	protected VirtualRootImpl(	final PainterFactory painterFactory,
-								final Root root,
-								@Named("Widget") final GeoExecutor geoExecutor) {
-		super(painterFactory, geoExecutor);
+	protected VirtualRootImpl(	final EventBus eventBus,
+								final GeoEventFactory geoEventFactory,
+								final ManagedDisplay managedDisplay,
+								final PainterFactory painterFactory,
+								@Named("Widget") final GeoExecutor geoExecutor,
+								@Named("Root") final RenderArea root,
+								final VirtualRoot.View view) {
+		super(	eventBus,
+				geoEventFactory,
+				managedDisplay,
+				painterFactory,
+				geoExecutor,
+				view);
 		setParent(root);
 		setX(root.getX());
 		setY(root.getY());
 		setWidth(root.getWidth());
 		setHeight(root.getHeight());
-		setGeoManager(new AbstractAbsoluteGeoManager());
 		requestReparent();
 		requestMoveResize();
 	}

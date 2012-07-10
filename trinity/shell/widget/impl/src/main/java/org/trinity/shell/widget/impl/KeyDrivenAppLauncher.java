@@ -20,12 +20,18 @@ import java.util.StringTokenizer;
 
 import org.trinity.foundation.input.api.SpecialKeyName;
 import org.trinity.foundation.render.api.PainterFactory;
+import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.geo.api.GeoExecutor;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.input.api.KeyInputStringBuilder;
 import org.trinity.shell.input.api.ManagedKeyboard;
+import org.trinity.shell.widget.api.KeyDrivenMenu;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
 /**
@@ -35,6 +41,7 @@ import com.google.inject.name.Named;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 public class KeyDrivenAppLauncher extends AbstractKeyDrivenMenu {
 
 	/*****************************************
@@ -44,14 +51,22 @@ public class KeyDrivenAppLauncher extends AbstractKeyDrivenMenu {
 	 * @param keyInputStringBuilder
 	 ****************************************/
 	@Inject
-	protected KeyDrivenAppLauncher(	final PainterFactory painterFactory,
+	protected KeyDrivenAppLauncher(	final EventBus eventBus,
+									final GeoEventFactory geoEventFactory,
+									final ManagedDisplay managedDisplay,
+									final PainterFactory painterFactory,
 									@Named("Widget") final GeoExecutor geoExecutor,
 									final ManagedKeyboard managedKeyboard,
-									final KeyInputStringBuilder keyInputStringBuilder) {
-		super(	painterFactory,
+									final KeyInputStringBuilder keyInputStringBuilder,
+									final KeyDrivenMenu.View view) {
+		super(	eventBus,
+				geoEventFactory,
+				managedDisplay,
+				painterFactory,
 				geoExecutor,
 				managedKeyboard,
-				keyInputStringBuilder);
+				keyInputStringBuilder,
+				view);
 	}
 
 	private static final String PATH = "PATH";

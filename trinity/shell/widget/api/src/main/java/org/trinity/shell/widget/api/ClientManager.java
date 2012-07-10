@@ -11,24 +11,19 @@
  */
 package org.trinity.shell.widget.api;
 
-import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.shell.core.api.RenderArea;
-import org.trinity.shell.geo.api.GeoOperation;
 
 public interface ClientManager extends Widget {
 
-	public interface View extends Widget.View {
-		PaintInstruction<?> onManageClient(RenderArea client);
+	interface View extends Widget.View {
+		void addClient(RenderArea client);
 
-		PaintInstruction<?> onUnmanageClient(RenderArea client);
-
-		PaintInstruction<?> onClientStateChanged(	RenderArea client,
-													GeoOperation geoOperation);
+		void removeClient(RenderArea client);
 	}
 
-	void unmanageClient(RenderArea client);
+	void removeClient(RenderArea client);
 
-	void manageClient(final RenderArea client);
+	void addClient(final RenderArea client);
 
-	RenderArea[] getManagedClients();
+	RenderArea[] getClients();
 }

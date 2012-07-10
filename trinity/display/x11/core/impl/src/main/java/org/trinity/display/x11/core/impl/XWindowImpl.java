@@ -160,9 +160,7 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 		final Long displayAddress = this.xConnection.getConnectionReference();
 		final Integer winId = getResourceHandle().getNativeHandle();
 
-		this.xCaller.doCall(this.destroyWindow,
-							displayAddress,
-							winId);
+		this.xCaller.doCall(this.destroyWindow, displayAddress, winId);
 	}
 
 	@Override
@@ -171,10 +169,7 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 		final Integer winId = getResourceHandle().getNativeHandle();
 		final int time = this.display.getLastServerTime();
 
-		this.xCaller.doCall(this.focusWindow,
-							displayAddress,
-							winId,
-							time);
+		this.xCaller.doCall(this.focusWindow, displayAddress, winId, time);
 	}
 
 	@Override
@@ -182,9 +177,7 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 		final Long displayAddress = this.xConnection.getConnectionReference();
 		final Integer winId = getResourceHandle().getNativeHandle();
 
-		this.xCaller.doCall(this.lowerWindow,
-							displayAddress,
-							winId);
+		this.xCaller.doCall(this.lowerWindow, displayAddress, winId);
 	}
 
 	@Override
@@ -192,14 +185,11 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 		final Long displayAddress = this.xConnection.getConnectionReference();
 		final Integer winId = getResourceHandle().getNativeHandle();
 
-		this.xCaller.doCall(this.mapWindow,
-							displayAddress,
-							winId);
+		this.xCaller.doCall(this.mapWindow, displayAddress, winId);
 	}
 
 	@Override
-	public void move(	final int x,
-						final int y) {
+	public void move(final int x, final int y) {
 		final Long displayAddress = this.xConnection.getConnectionReference();
 		final Integer winId = getResourceHandle().getNativeHandle();
 
@@ -270,10 +260,8 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 		final Long eventMask = Long.valueOf(eventMask0);
 		final Long displayAddress = this.xConnection.getConnectionReference();
 		final Integer winId = getResourceHandle().getNativeHandle();
-		this.xCaller.doCall(this.enableEvents,
-							displayAddress,
-							winId,
-							eventMask);
+		this.xCaller
+				.doCall(this.enableEvents, displayAddress, winId, eventMask);
 	}
 
 	@Override
@@ -293,9 +281,7 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 		final Long displayAddress = this.xConnection.getConnectionReference();
 		final Integer winId = getResourceHandle().getNativeHandle();
 
-		this.xCaller.doCall(this.raiseWindow,
-							displayAddress,
-							winId);
+		this.xCaller.doCall(this.raiseWindow, displayAddress, winId);
 	}
 
 	@Override
@@ -330,8 +316,7 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 	}
 
 	@Override
-	public void resize(	final int width,
-						final int height) {
+	public void resize(final int width, final int height) {
 		final Long displayAddress = this.xConnection.getConnectionReference();
 		final Integer winId = getResourceHandle().getNativeHandle();
 		this.xCaller.doCall(this.resizeWindow,
@@ -346,9 +331,7 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 		final Long displayAddress = this.xConnection.getConnectionReference();
 		final Integer winId = getResourceHandle().getNativeHandle();
 
-		this.xCaller.doCall(this.unmapWindow,
-							displayAddress,
-							winId);
+		this.xCaller.doCall(this.unmapWindow, displayAddress, winId);
 	}
 
 	// @Override
@@ -402,9 +385,8 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 	}
 
 	@Override
-	public void
-			disableKeyboardInputCatching(	final Key catchKey,
-											final InputModifiers withModifiers) {
+	public void disableKeyboardInputCatching(	final Key catchKey,
+												final InputModifiers withModifiers) {
 		final Long displayPeer = this.xConnection.getConnectionReference();
 		final Integer windowId = getResourceHandle().getNativeHandle();
 		final Integer keyCode = Integer.valueOf(catchKey.getKeyCode());
@@ -440,10 +422,7 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 		final Integer windowId = getResourceHandle().getNativeHandle();
 		final Integer time = Integer.valueOf(this.display.getLastServerTime());
 
-		this.xCaller.doCall(this.grabKeyboard,
-							displayAddress,
-							windowId,
-							time);
+		this.xCaller.doCall(this.grabKeyboard, displayAddress, windowId, time);
 	}
 
 	@Override
@@ -452,10 +431,7 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 		final Integer windowId = getResourceHandle().getNativeHandle();
 		final Integer time = Integer.valueOf(this.display.getLastServerTime());
 
-		this.xCaller.doCall(this.grabMouse,
-							displayAddress,
-							windowId,
-							time);
+		this.xCaller.doCall(this.grabMouse, displayAddress, windowId, time);
 	}
 
 	@Override
@@ -463,9 +439,7 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 		final Long displayAddress = this.xConnection.getConnectionReference();
 		final Integer time = Integer.valueOf(this.display.getLastServerTime());
 
-		this.xCaller.doCall(this.ungrabKeyboard,
-							displayAddress,
-							time);
+		this.xCaller.doCall(this.ungrabKeyboard, displayAddress, time);
 	}
 
 	@Override
@@ -473,27 +447,21 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 		final Long displayAddress = this.xConnection.getConnectionReference();
 		final Integer time = Integer.valueOf(this.display.getLastServerTime());
 
-		this.xCaller.doCall(this.ungrabMouse,
-							displayAddress,
-							time);
+		this.xCaller.doCall(this.ungrabMouse, displayAddress, time);
 	}
 
 	public void addToSaveSet() {
 		final Long displayAddress = this.xConnection.getConnectionReference();
 		final Integer windowId = getResourceHandle().getNativeHandle();
 
-		this.xCaller.doCall(this.addToSaveSet,
-							displayAddress,
-							windowId);
+		this.xCaller.doCall(this.addToSaveSet, displayAddress, windowId);
 	}
 
 	public void removeFromSaveSet() {
 		final Long displayAddress = this.xConnection.getConnectionReference();
 		final Integer windowId = getResourceHandle().getNativeHandle();
 
-		this.xCaller.doCall(this.removeFromSaveSet,
-							displayAddress,
-							windowId);
+		this.xCaller.doCall(this.removeFromSaveSet, displayAddress, windowId);
 	}
 
 	@Override

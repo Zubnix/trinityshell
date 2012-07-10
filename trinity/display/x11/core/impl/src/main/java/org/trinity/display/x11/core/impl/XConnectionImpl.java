@@ -19,9 +19,12 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
+@Bind
 public class XConnectionImpl implements XConnection<Long> {
 
 	private final XCaller xCaller;

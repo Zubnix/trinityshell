@@ -11,6 +11,8 @@
  */
 package org.trinity.display.x11.impl.xcb.windowcall;
 
+import javax.inject.Named;
+
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
 import org.trinity.display.x11.impl.xcb.jni.Xcb4J;
 import org.trinity.foundation.shared.geometry.api.Coordinates;
@@ -19,6 +21,10 @@ import org.trinity.foundation.shared.geometry.api.GeometryFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
+@Bind
+@Named("TranslateCoordinates")
 @Singleton
 public class TranslateCoordinates extends
 		AbstractXcbCall<Coordinates, Long, Integer> {
@@ -35,8 +41,7 @@ public class TranslateCoordinates extends
 		final int destX = getNativeBufferHelper().readUnsignedShort();
 		final int destY = getNativeBufferHelper().readUnsignedShort();
 		final Coordinates xCoordinates = this.geometryFactory
-				.createCoordinates(	destX,
-									destY);
+				.createCoordinates(destX, destY);
 		return xCoordinates;
 	}
 

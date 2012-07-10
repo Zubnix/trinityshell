@@ -11,17 +11,17 @@
  */
 package org.trinity.shell.widget.api;
 
-import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.shell.core.api.RenderArea;
 
-public interface CloseButton extends Button, RectangleManipulator {
+public interface CloseButton extends Button {
 
-	public interface View extends Button.View, RectangleManipulator.View {
-		PaintInstruction<?> clientWindowClosed(final RenderArea targetWindow);
+	interface View extends Button.View {
+		void closeClient(final RenderArea client);
 	}
 
-	@Override
-	CloseButton.View getView();
+	void closeClient();
 
-	void closeClientWindow();
+	void setClient(RenderArea renderArea);
+
+	RenderArea getClient();
 }

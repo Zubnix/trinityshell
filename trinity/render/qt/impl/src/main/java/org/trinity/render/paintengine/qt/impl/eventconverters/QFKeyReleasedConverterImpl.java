@@ -29,6 +29,8 @@ import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.gui.QKeyEvent;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 // TODO documentation
 /**
  * A <code>QFusionKeyReleaseConverter</code> takes a <code>QKeyEvent</code> and
@@ -38,6 +40,7 @@ import com.trolltech.qt.gui.QKeyEvent;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind(multiple = true)
 @Singleton
 public final class QFKeyReleasedConverterImpl implements QFRenderEventConverter {
 

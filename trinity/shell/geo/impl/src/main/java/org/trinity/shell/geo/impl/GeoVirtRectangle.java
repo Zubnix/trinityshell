@@ -19,6 +19,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 // TODO documentation
 /**
  * A <code>GeoVirtRectangle</code> is a 'virtual', invisible rectangle with a
@@ -35,6 +37,8 @@ import com.google.inject.name.Named;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
+@javax.inject.Named("GeoVirt")
 public class GeoVirtRectangle extends AbstractGeoTransformableRectangle {
 	private final GeoExecutor geoExecutor;
 	private GeoManager geoManager;
@@ -43,8 +47,7 @@ public class GeoVirtRectangle extends AbstractGeoTransformableRectangle {
 	protected GeoVirtRectangle(	final EventBus eventBus,
 								final GeoEventFactory geoEventFactory,
 								@Named("GeoVirt") final GeoExecutor geoExecutor) {
-		super(	eventBus,
-				geoEventFactory);
+		super(eventBus, geoEventFactory);
 		this.geoExecutor = geoExecutor;
 	}
 

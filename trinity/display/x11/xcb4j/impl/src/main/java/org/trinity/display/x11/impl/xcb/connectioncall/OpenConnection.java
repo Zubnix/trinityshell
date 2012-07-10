@@ -11,11 +11,20 @@
  */
 package org.trinity.display.x11.impl.xcb.connectioncall;
 
+import javax.inject.Named;
+
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
+
+import com.google.inject.Singleton;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
+@Bind
+@Named("OpenConnection")
+@Singleton
 public class OpenConnection extends AbstractXcbCall<Long, Void, Integer> {
 
 	/*

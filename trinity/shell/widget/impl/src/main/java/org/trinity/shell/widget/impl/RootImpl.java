@@ -12,15 +12,18 @@
 package org.trinity.shell.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.foundation.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.geo.api.GeoExecutor;
-import org.trinity.shell.geo.impl.manager.AbstractAbsoluteGeoManager;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.widget.api.Root;
 import org.trinity.shell.widget.api.Widget;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
 // TODO shutdown logic
@@ -38,26 +41,26 @@ import com.google.inject.name.Named;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
+@javax.inject.Named("Root")
 @Singleton
 public final class RootImpl extends WidgetImpl implements Root {
 
-	private Root.View view;
-
-	@Override
-	public Root.View getView() {
-		return this.view;
-	}
-
 	@Inject
-	protected RootImpl(	final ManagedDisplay managedDisplay,
+	protected RootImpl(	final EventBus eventBus,
+						final GeoEventFactory geoEventFactory,
+						final ManagedDisplay managedDisplay,
 						final PainterFactory painterFactory,
-						@Named("Widget") final GeoExecutor geoExecutor) {
-		super(painterFactory, geoExecutor);
-		setGeoManager(new AbstractAbsoluteGeoManager());
-		setManagedDisplay(managedDisplay);
+						@Named("Widget") final GeoExecutor geoExecutor,
+						final Root.View view) {
+		super(	eventBus,
+				geoEventFactory,
+				managedDisplay,
+				painterFactory,
+				geoExecutor,
+				view);
 		init(getParent());
-		setVisibility(true);
-		requestVisibilityChange();
+		requestShow();
 		syncGeoToPlatformRenderAreaGeo();
 	}
 

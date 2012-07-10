@@ -25,9 +25,12 @@ import org.trinity.foundation.display.api.event.DisplayEventFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
+@Bind(multiple = true)
 @Singleton
 public class XMouseLeaveEventConverter extends
 		AbstractXPointerVisitationConverter {

@@ -25,6 +25,8 @@ import org.trinity.foundation.display.api.event.DisplayEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 /**
  * An <code>XcbEventParser</code> implements the parsing that is needed to read
  * an <code>XcbEvent</code> from a <code>NativeBufferHelper</code>. It does this
@@ -34,6 +36,7 @@ import com.google.inject.Singleton;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 @Singleton
 public class XEventBridgeImpl implements XEventBridge<NativeBufferHelper> {
 

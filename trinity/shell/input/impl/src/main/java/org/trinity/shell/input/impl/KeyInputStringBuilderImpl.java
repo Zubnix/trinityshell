@@ -23,6 +23,8 @@ import org.trinity.shell.input.api.ManagedKeyboard;
 
 import com.google.inject.Inject;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 // TODO documentation
 /**
  * A <code>KeyInputStringBuilder</code> builds a Java <code>String</code> based
@@ -31,6 +33,7 @@ import com.google.inject.Inject;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 
 	/**

@@ -12,27 +12,21 @@
 package org.trinity.shell.widget.impl;
 
 import org.trinity.foundation.display.api.DisplayRenderArea;
-import org.trinity.foundation.display.api.ResourceHandle;
-import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
-import org.trinity.foundation.display.api.event.KeyNotifyEvent;
-import org.trinity.foundation.input.api.KeyboardInput;
-import org.trinity.foundation.input.api.PointerInput;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ManagedDisplay;
-import org.trinity.shell.core.api.event.KeyboardKeyPressedHandler;
-import org.trinity.shell.core.api.event.KeyboardKeyReleasedHandler;
-import org.trinity.shell.core.api.event.MouseButtonPressedHandler;
-import org.trinity.shell.core.api.event.MouseButtonReleasedHandler;
 import org.trinity.shell.core.impl.AbstractRenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
-import org.trinity.shell.geo.api.manager.GeoManager;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.widget.api.Widget;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
 // TODO list emitted events
@@ -73,15 +67,16 @@ import com.google.inject.name.Named;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class WidgetImpl extends AbstractRenderArea implements Widget {
 
-	@Inject
-	private Widget.View view;
+// TODO use guice aop to send commands to the view
+@Bind
+public class WidgetImpl extends AbstractRenderArea implements Widget {
 
 	private final Painter painter;
 	private final GeoExecutor geoExecutor;
-
-	private GeoManager geoManager;
+	private final ManagedDisplay managedDisplay;
+	private final EventBus eventBus;
+	private final Widget.View view;
 
 	/**
 	 * Create an uninitialized <code>Widget</code>.A <code>Widget</code> will
@@ -89,71 +84,18 @@ public class WidgetImpl extends AbstractRenderArea implements Widget {
 	 * parent <code>Widget</code>.
 	 */
 	@Inject
-	protected WidgetImpl(	final PainterFactory painterFactory,
-							@Named("Widget") final GeoExecutor geoExecutor) {
+	public WidgetImpl(	final EventBus eventBus,
+						final GeoEventFactory geoEventFactory,
+						final ManagedDisplay managedDisplay,
+						final PainterFactory painterFactory,
+						@Named("Widget") final GeoExecutor geoExecutor,
+						final Widget.View view) {
+		super(eventBus, geoEventFactory, managedDisplay);
+		this.managedDisplay = managedDisplay;
+		this.eventBus = eventBus;
 		this.geoExecutor = geoExecutor;
 		this.painter = painterFactory.createPainter(this);
-	}
-
-	/*****************************************
-	 * @return the view
-	 ****************************************/
-	@Override
-	public Widget.View getView() {
-		return this.view;
-	}
-
-	/**
-	 * The (optional) <code>GeoManager</code> that will be consulted when a
-	 * child <code>GeoTransformableRectangle</code> wishes to change its
-	 * geometry.
-	 * 
-	 * @param geoManager
-	 */
-	@Override
-	public void setGeoManager(final GeoManager geoManager) {
-		this.geoManager = geoManager;
-	}
-
-	@Override
-	public GeoManager getGeoManager() {
-		return this.geoManager;
-	}
-
-	@Override
-	protected void setManagedDisplay(final ManagedDisplay managedDisplay) {
-		super.setManagedDisplay(managedDisplay);
-	}
-
-	@Override
-	protected void initEventHandlers() {
-		super.initEventHandlers();
-
-		addTypedEventHandler(new MouseButtonPressedHandler() {
-			@Override
-			public void handleEvent(final ButtonNotifyEvent event) {
-				onMouseButtonPressed(event.getInput());
-			}
-		});
-		addTypedEventHandler(new MouseButtonReleasedHandler() {
-			@Override
-			public void handleEvent(final ButtonNotifyEvent event) {
-				onMouseButtonReleased(event.getInput());
-			}
-		});
-		addTypedEventHandler(new KeyboardKeyPressedHandler() {
-
-			@Override
-			public void handleEvent(final KeyNotifyEvent event) {
-				onKeyboardPressed(event.getInput());
-			}
-		});
-		addTypedEventHandler(new KeyboardKeyReleasedHandler() {
-			@Override
-			public void handleEvent(final KeyNotifyEvent event) {
-				onKeyboardReleased(event.getInput());
-			}
-		});
+		this.view = view;
 	}
 
 	/**
@@ -168,24 +110,8 @@ public class WidgetImpl extends AbstractRenderArea implements Widget {
 	 *            back-end level.
 	 */
 	protected void init(final Widget paintableParent) {
-		// we use the paintableParent to determine the managed display.
-		if (paintableParent != null) {
-			setManagedDisplay(paintableParent.getManagedDisplay());
-		}
-
-		// we pass the paintable parent to the back-end which can choose to do
-		// with it as it pleases.
-		final ResourceHandle resourceHandle = getPainter().construct(getView()
-				.doCreate(this, isVisible(), paintableParent));
-
-		DisplayRenderArea renderArea = null;
-
-		// TODO from factory
-		renderArea = getManagedDisplay().getDisplay()
-				.findPlatformRenderArea(resourceHandle);
-
-		setPlatformRenderArea(renderArea);
-		getManagedDisplay().registerDisplayEventBusForSource(this, this);
+		setPlatformRenderArea(this.view.create(this));
+		this.managedDisplay.registerEventBusForSource(this.eventBus, this);
 	}
 
 	@Override
@@ -226,32 +152,8 @@ public class WidgetImpl extends AbstractRenderArea implements Widget {
 	}
 
 	@Override
-	public void onMouseButtonPressed(final PointerInput input) {
-		// overrideable by subclasses
-	}
-
-	@Override
-	public void onMouseButtonReleased(final PointerInput input) {
-		// overrideable by subclasses
-	}
-
-	@Override
-	public void onKeyboardPressed(final KeyboardInput input) {
-		// overrideable by subclasses
-	}
-
-	@Override
-	public void onKeyboardReleased(final KeyboardInput input) {
-		// overrideable by subclasses
-	}
-
-	@Override
 	protected void setPlatformRenderArea(final DisplayRenderArea platformRenderArea) {
 		// repeated for package visibility
 		super.setPlatformRenderArea(platformRenderArea);
-	}
-
-	protected void draw(final PaintInstruction<?> paintCall) {
-		getPainter().instruct(paintCall);
 	}
 }

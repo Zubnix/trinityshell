@@ -17,29 +17,22 @@ import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.render.paintengine.qt.api.painter.QFPaintCalculationFactory;
 import org.trinity.render.paintengine.qt.api.painter.QFPaintInstructionFactory;
-import org.trinity.render.paintengine.qt.impl.painter.instructions.QFDestroyInstruction;
-import org.trinity.render.paintengine.qt.impl.painter.instructions.QFGiveFocusInstruction;
-import org.trinity.render.paintengine.qt.impl.painter.instructions.QFGrabKeyboardInstruction;
-import org.trinity.render.paintengine.qt.impl.painter.instructions.QFGrabMouse;
-import org.trinity.render.paintengine.qt.impl.painter.instructions.QFHideInstruction;
-import org.trinity.render.paintengine.qt.impl.painter.instructions.QFLowerInstruction;
 import org.trinity.render.paintengine.qt.impl.painter.instructions.QFMoveInstruction;
 import org.trinity.render.paintengine.qt.impl.painter.instructions.QFMoveResizeInstruction;
-import org.trinity.render.paintengine.qt.impl.painter.instructions.QFRaiseInstruction;
-import org.trinity.render.paintengine.qt.impl.painter.instructions.QFReleaseKeyboardInstruction;
-import org.trinity.render.paintengine.qt.impl.painter.instructions.QFReleaseMouseInstruction;
 import org.trinity.render.paintengine.qt.impl.painter.instructions.QFResizeInstruction;
 import org.trinity.render.paintengine.qt.impl.painter.instructions.QFSetParentInstruction;
-import org.trinity.render.paintengine.qt.impl.painter.instructions.QFShowInstruction;
 import org.trinity.render.paintengine.qt.impl.painter.instructions.QFTranslateCoordinatesCalculation;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
+import de.devsurf.injection.guice.annotations.GuiceModule;
+
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
+@GuiceModule
 public class QFPainterModule extends AbstractModule {
 
 	/*
@@ -48,32 +41,6 @@ public class QFPainterModule extends AbstractModule {
 	 */
 	@Override
 	protected void configure() {
-		// start bind painter instructions
-		bind(PaintInstruction.class).annotatedWith(Names.named("QFDestroy"))
-				.to(QFDestroyInstruction.class);
-		bind(PaintInstruction.class).annotatedWith(Names.named("QFGiveFocus"))
-				.to(QFGiveFocusInstruction.class);
-		bind(PaintInstruction.class)
-				.annotatedWith(Names.named("QFGrabKeyboard"))
-				.to(QFGrabKeyboardInstruction.class);
-		bind(PaintInstruction.class).annotatedWith(Names.named("QFGrabMouse"))
-				.to(QFGrabMouse.class);
-		bind(PaintInstruction.class).annotatedWith(Names.named("QFHide"))
-				.to(QFHideInstruction.class);
-		bind(PaintInstruction.class).annotatedWith(Names.named("QFLower"))
-				.to(QFLowerInstruction.class);
-		bind(PaintInstruction.class).annotatedWith(Names.named("QFRaise"))
-				.to(QFRaiseInstruction.class);
-		bind(PaintInstruction.class)
-				.annotatedWith(Names.named("QFReleaseKeyboard"))
-				.to(QFReleaseKeyboardInstruction.class);
-		bind(PaintInstruction.class)
-				.annotatedWith(Names.named("QFReleaseMouse"))
-				.to(QFReleaseMouseInstruction.class);
-		bind(PaintInstruction.class).annotatedWith(Names.named("QFShow"))
-				.to(QFShowInstruction.class);
-		// end bind painter instructions
-
 		// start bind painter instructions factory
 		install(new FactoryModuleBuilder()
 				.implement(	PaintInstruction.class,

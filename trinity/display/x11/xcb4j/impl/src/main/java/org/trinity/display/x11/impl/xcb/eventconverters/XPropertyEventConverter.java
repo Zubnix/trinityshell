@@ -25,6 +25,9 @@ import org.trinity.foundation.display.api.event.DisplayEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
+@Bind(multiple = true)
 @Singleton
 public class XPropertyEventConverter implements
 		XEventConverter<NativeBufferHelper> {

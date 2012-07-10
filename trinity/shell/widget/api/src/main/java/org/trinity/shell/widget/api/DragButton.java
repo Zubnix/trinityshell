@@ -11,21 +11,21 @@
  */
 package org.trinity.shell.widget.api;
 
-import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.shell.core.api.RenderArea;
+import org.trinity.shell.geo.api.GeoTransformableRectangle;
 
-public interface DragButton extends Button, RectangleManipulator {
+public interface DragButton extends Button {
 
-	public interface View extends Button.View, RectangleManipulator.View {
-		PaintInstruction<?> clientWindowStartDrag(final RenderArea targetWindow);
+	interface View extends Button.View {
+		void startDrag(GeoTransformableRectangle client);
 
-		PaintInstruction<?> clientWindowStopDrag(final RenderArea targetWindow);
+		void stopDrag(GeoTransformableRectangle client);
 	}
 
-	@Override
-	DragButton.View getView();
+	void startDragClient();
 
-	void startDrag();
+	void stopDragClient();
 
-	void stopDrag();
+	void setClient(GeoTransformableRectangle client);
+
+	GeoTransformableRectangle getClient();
 }

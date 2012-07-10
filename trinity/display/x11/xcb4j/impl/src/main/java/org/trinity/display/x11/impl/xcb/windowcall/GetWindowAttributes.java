@@ -11,6 +11,8 @@
  */
 package org.trinity.display.x11.impl.xcb.windowcall;
 
+import javax.inject.Named;
+
 import org.trinity.display.x11.core.api.XDisplayResourceFactory;
 import org.trinity.display.x11.core.api.XResourceHandleFactory;
 import org.trinity.display.x11.core.api.XWindowAttributes;
@@ -21,6 +23,8 @@ import org.trinity.display.x11.impl.xcb.jni.Xcb4J;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 /**
  * args: (Long) window id
  * <p>
@@ -29,6 +33,8 @@ import com.google.inject.Singleton;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
+@Named("GetWindowAttributes")
 @Singleton
 public class GetWindowAttributes extends
 		AbstractXcbCall<XWindowAttributes, Long, Integer> {
@@ -115,10 +121,8 @@ public class GetWindowAttributes extends
 
 	@Override
 	public boolean callImpl() {
-		return Xcb4J.nativeGetWindowAttributes(	getConnectionReference()
-														.longValue(),
-												getArgs()[0].intValue(),
-												getNativeBufferHelper()
-														.getBuffer());
+		return Xcb4J.nativeGetWindowAttributes(getConnectionReference()
+				.longValue(), getArgs()[0].intValue(), getNativeBufferHelper()
+				.getBuffer());
 	}
 }

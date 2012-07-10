@@ -18,7 +18,7 @@ public class MultipleViewImpl implements Widget.View, ChildWidget.View {
 	}
 
 	@Override
-	public PaintInstruction<Void, ?> doDestroy() {
+	public PaintInstruction<Void, ?> destroy() {
 		// TODO Auto-generated method stub
 		return null;
 	}

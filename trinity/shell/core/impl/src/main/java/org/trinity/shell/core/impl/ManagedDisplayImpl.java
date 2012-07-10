@@ -16,17 +16,7 @@ import java.util.concurrent.Executors;
 
 import org.trinity.foundation.display.api.DisplayEventSelector;
 import org.trinity.foundation.display.api.DisplayServer;
-import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
-import org.trinity.foundation.display.api.event.ConfigureRequestEvent;
-import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
-import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.display.api.event.FocusNotifyEvent;
-import org.trinity.foundation.display.api.event.KeyNotifyEvent;
-import org.trinity.foundation.display.api.event.MapRequestEvent;
-import org.trinity.foundation.display.api.event.MouseVisitationNotifyEvent;
-import org.trinity.foundation.display.api.event.PropertyChangedNotifyEvent;
-import org.trinity.foundation.display.api.event.UnmappedNotifyEvent;
 import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.core.api.RenderAreaFactory;
@@ -36,46 +26,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 // TODO documentation
-/**
- * Provides extra functionality by wrapping a platform specific implementation
- * of a {@link org.trinity.foundation.display.api.DisplayServer}. The
- * <code>ManagedDisplay</code> is at the core of any hyperdrive object
- * interacting with the platform display server.
- * <p>
- * The <code>ManagedDisplay</code> is at the root of the display event
- * hierarchy. This means that any <code>DisplayEvent</code> will first pass
- * through it's respective <code>ManagedDisplay</code> before being delivered at
- * the intended source. The following {@link DisplayEvent}s are emitted:
- * <ul>
- * <li> {@link ConfigureRequestEvent}</li>
- * <li> {@link MapRequestEvent}</li>
- * <li> {@link ButtonNotifyEvent}</li>
- * <li> {@link KeyNotifyEvent}</li>
- * <li> {@link DestroyNotifyEvent}</li>
- * <li> {@link UnmappedNotifyEvent}</li>
- * <li> {@link MouseVisitationNotifyEvent}</li>
- * <li> {@link PropertyChangedNotifyEvent}</li>
- * <li> {@link FocusNotifyEvent}</li>
- * </ul>
- * <p>
- * The <code>ManagedDisplay</code> gives access to:
- * <ul>
- * <li>the display's root window: {@link ManagedDisplay#getRealRootRenderArea()}
- * </li>
- * <li>the display's default virtual root window (default desktop window):
- * {@link ManagedDisplay#getDefaultVirtualRootRenderArea()}</li>
- * <li>the display's keyboard: {@link ManagedDisplay#getManagedKeyboard()}</li>
- * <li>the display's mouse: {@link ManagedDisplay#getManagedMouse()}</li>
- * <li>the display's window management bookkeeping:
- * {@link ManagedDisplay#getWindowManagementInfo()}</li>
- * <li>the visual representation of widgets created for this display:
- * {@link ManagedDisplay#getWidgetViewFactory()}</li>
- * </ul>
- * 
- * @author Erik De Rijcke
- * @since 1.0
- */
+@Bind
 @Singleton
 public class ManagedDisplayImpl implements ManagedDisplay {
 
@@ -85,25 +39,6 @@ public class ManagedDisplayImpl implements ManagedDisplay {
 	private final Executor managedDisplayEventExecutor;
 	private final RenderArea root;
 
-	/**
-	 * Wrap the given native <code>Display</code> implementation with the given
-	 * <code>ViewFactory</code> implementation.
-	 * <p>
-	 * The <code>Display</code> argument will be managed by the newly created
-	 * <code>ManagedDisplay</code>. <code>DisplayEvent</code>s will be fetched
-	 * and dispatched to their corresponding event source. Any other call to the
-	 * native display will go through this created <code>ManagedDisplay</code>
-	 * to the <code>Display</code>.
-	 * <p>
-	 * The <code>ViewFactory</code> argument will function as a
-	 * <code>View</code> constructor for <code>Widget</code>s that have this
-	 * <code>ManagedDisplay</code> set.
-	 * 
-	 * @param display
-	 *            A native <code>Display</code> implementation.
-	 * @param widgetViewFactory
-	 *            A <code>ViewFactory</code> implementation.
-	 */
 	@Inject
 	protected ManagedDisplayImpl(	final DisplayServer display,
 									@Named("displayEventBus") final EventBus eventBus,
@@ -169,8 +104,8 @@ public class ManagedDisplayImpl implements ManagedDisplay {
 	}
 
 	@Override
-	public void registerDisplayEventBusForSource(	final EventBus eventBus,
-													final DisplayEventSource forDisplayEventSource) {
+	public void registerEventBusForSource(	final EventBus eventBus,
+											final DisplayEventSource forDisplayEventSource) {
 		this.displayEventDispatcher
 				.addEventManagerForDisplayEventSource(	eventBus,
 														forDisplayEventSource);

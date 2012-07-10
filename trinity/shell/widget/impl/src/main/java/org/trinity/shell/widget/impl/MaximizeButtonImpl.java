@@ -11,13 +11,18 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.core.geometry.api.Rectangle;
-import org.trinity.foundation.input.api.PointerInput;
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
+import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
+import org.trinity.foundation.shared.geometry.api.Rectangle;
+import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.widget.api.MaximizeButton;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -28,11 +33,8 @@ import com.google.inject.name.Named;
  */
 public class MaximizeButtonImpl extends ButtonImpl implements MaximizeButton {
 
-	@Inject
-	private MaximizeButton.View view;
-
-	private GeoTransformableRectangle targetRenderArea;
-	private Rectangle maximizeToArea;
+	private GeoTransformableRectangle client;
+	private Rectangle maximize;
 
 	private int oldRelX;
 	private int oldRelY;
@@ -40,100 +42,87 @@ public class MaximizeButtonImpl extends ButtonImpl implements MaximizeButton {
 	private int oldHeight;
 	private boolean maximized = false;
 
+	private final MaximizeButton.View view;
+
 	@Inject
-	protected MaximizeButtonImpl(	final PainterFactory painterFactory,
-									@Named("Widget") final GeoExecutor geoExecutor) {
-		super(painterFactory, geoExecutor);
+	protected MaximizeButtonImpl(	final EventBus eventBus,
+									final GeoEventFactory geoEventFactory,
+									final ManagedDisplay managedDisplay,
+									final PainterFactory painterFactory,
+									@Named("Widget") final GeoExecutor geoExecutor,
+									final MaximizeButton.View view) {
+		super(	eventBus,
+				geoEventFactory,
+				managedDisplay,
+				painterFactory,
+				geoExecutor,
+				view);
+		this.view = view;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.trinity.shell.widget.impl.ButtonImpl#getView()
-	 */
-	@Override
-	public MaximizeButton.View getView() {
-		return this.view;
-	}
-
-	/**
-	 * The target <code>GeoTransformableRectangle</code> that will be maximized
-	 * when this <code>MaximizeButton</code> is activated.
-	 * 
-	 * @return
-	 */
-	public GeoTransformableRectangle getTargetRenderArea() {
-		return this.targetRenderArea;
-	}
-
-	/**
-	 * Define the target <code>GeoTransformableRectangle</code> that will be
-	 * maximized when this <code>MaximizeButton</code> is activated.
-	 * 
-	 * @param targetRenderArea
-	 */
-	public void setTargetRenderArea(final GeoTransformableRectangle targetRenderArea) {
-		this.targetRenderArea = targetRenderArea;
-	}
-
-	/**
-	 * @param maximizeToArea
-	 */
-	public void setMaximizeToArea(final Rectangle maximizeToArea) {
-		this.maximizeToArea = maximizeToArea;
-	}
-
-	/**
-	 * @return
-	 */
-	public Rectangle getMaximizeToArea() {
-		return this.maximizeToArea;
-	}
-
-	@Override
-	public void onMouseButtonPressed(final PointerInput input) {
-		if (this.maximized) {
-			restoreClientWindow();
-		} else {
-			maximizeClientWindow();
+	@Subscribe
+	public void onMouseButtonPressed(final ButtonNotifyEvent input) {
+		if (input.getInput().getMomentum() == Momentum.STARTED) {
+			if (this.maximized) {
+				restore();
+			} else {
+				maximize();
+			}
 		}
 	}
 
 	@Override
-	public GeoTransformableRectangle getBoundRectangle() {
-		// TODO Auto-generated method stub
-		return null;
+	public GeoTransformableRectangle getClient() {
+		return this.client;
 	}
 
 	@Override
-	public void maximizeClientWindow() {
-		final int newRelX = getMaximizeToArea().getX();
-		final int newRelY = getMaximizeToArea().getY();
-		final int newWidth = getMaximizeToArea().getWidth();
-		final int newHeight = getMaximizeToArea().getHeight();
+	public void maximize() {
+		final int newRelX = getMaximize().getX();
+		final int newRelY = getMaximize().getY();
+		final int newWidth = getMaximize().getWidth();
+		final int newHeight = getMaximize().getHeight();
 
-		final int currentRelX = getTargetRenderArea().getX();
-		final int currentRelY = getTargetRenderArea().getY();
+		this.oldRelX = getClient().getX();
+		this.oldRelY = getClient().getY();
+		this.oldWidth = getClient().getWidth();
+		this.oldHeight = getClient().getHeight();
 
-		this.oldRelX = currentRelX;
-		this.oldRelY = currentRelY;
-		this.oldWidth = getTargetRenderArea().getWidth();
-		this.oldHeight = getTargetRenderArea().getHeight();
-
-		getTargetRenderArea().setX(newRelX);
-		getTargetRenderArea().setY(newRelY);
-		getTargetRenderArea().setWidth(newWidth);
-		getTargetRenderArea().setHeight(newHeight);
+		getClient().setX(newRelX);
+		getClient().setY(newRelY);
+		getClient().setWidth(newWidth);
+		getClient().setHeight(newHeight);
 
 		this.maximized = true;
+
+		this.view.maximize(getClient());
 	}
 
 	@Override
-	public void restoreClientWindow() {
-		getTargetRenderArea().setX(this.oldRelX);
-		getTargetRenderArea().setY(this.oldRelY);
-		getTargetRenderArea().setWidth(this.oldWidth);
-		getTargetRenderArea().setHeight(this.oldHeight);
+	public void restore() {
+		getClient().setX(this.oldRelX);
+		getClient().setY(this.oldRelY);
+		getClient().setWidth(this.oldWidth);
+		getClient().setHeight(this.oldHeight);
 
 		this.maximized = false;
+
+		this.view.restore(getClient());
+	}
+
+	@Override
+	public void setClient(final GeoTransformableRectangle client) {
+		this.client = client;
+	}
+
+	@Override
+	public void setMaximize(final Rectangle rectangle) {
+		this.maximize = rectangle;
+
+	}
+
+	@Override
+	public Rectangle getMaximize() {
+		return this.maximize;
 	}
 }

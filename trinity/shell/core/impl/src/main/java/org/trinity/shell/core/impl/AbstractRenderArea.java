@@ -82,8 +82,7 @@ public abstract class AbstractRenderArea extends
 	protected AbstractRenderArea(	final EventBus eventBus,
 									final GeoEventFactory geoEventFactory,
 									final ManagedDisplay managedDisplay) {
-		super(	eventBus,
-				geoEventFactory);
+		super(eventBus, geoEventFactory);
 		this.eventBus = eventBus;
 		this.managedDisplay = managedDisplay;
 		initBasics();
@@ -118,21 +117,6 @@ public abstract class AbstractRenderArea extends
 		// TODO delegate to input handler
 		getPlatformRenderArea().setInputFocus();
 	}
-
-	// TODO implement through input interface? (set on abstractrenderarea &
-	// also implement in widget?)
-	/**
-	 * @return
-	 */
-	// @Override
-	// public boolean hasInputFocus() {
-	// // TODO delegate to input handler
-	//
-	// return this.managedDisplay.getDisplay().getInputFocus()
-	// .getDisplayResourceHandle().getResourceHandle() ==
-	// getPlatformRenderArea()
-	// .getDisplayResourceHandle().getResourceHandle();
-	// }
 
 	/**
 	 * Set the minimum height. The minimum height is guaranteed to be respected.
@@ -341,11 +325,10 @@ public abstract class AbstractRenderArea extends
 	 *            A {@link DisplayRenderArea}.
 	 * @see AbstractRenderArea#getPlatformRenderArea()
 	 */
-	protected void
-			setPlatformRenderArea(final DisplayRenderArea platformRenderArea) {
+	protected void setPlatformRenderArea(final DisplayRenderArea platformRenderArea) {
 		this.platformRenderArea = platformRenderArea;
 		this.managedDisplay
-				.registerDisplayEventBusForSource(	this.eventBus,
+				.registerEventBusForSource(	this.eventBus,
 													platformRenderArea);
 	}
 
@@ -443,45 +426,6 @@ public abstract class AbstractRenderArea extends
 		setHeight(rectangle.getHeight());
 		doMoveResize(false);
 	}
-
-	// @Override
-	// public GeoTransformation toGeoTransformation() {
-	// final GeoTransformation geoTransformation = super.toGeoTransformation();
-	// // we only want our size to increase with the preferred increment value
-	// // of the underlying platform render area.
-	//
-	// // we make sure that delta of old & new size is a multiple of he
-	// // desired increment.
-	// final int deltaWidth = geoTransformation.getDeltaWidth();
-	// final int newDeltaWidth = (deltaWidth / getWidthIncrement())
-	// * getWidthIncrement();
-	// final int deltaHeight = geoTransformation.getDeltaHeight();
-	// final int newDeltaHeight = (deltaHeight / getHeightIncrement())
-	// * getHeightIncrement();
-	//
-	// final int newWidth = geoTransformation.getWidth0() + newDeltaWidth;
-	// final int newHeight = geoTransformation.getHeight0() + newDeltaHeight;
-	//
-	// final int width1 = normalizedWidth(newWidth);
-	// final int height1 = normalizedHeight(newHeight);
-	//
-	// setWidth(width1);
-	// setHeight(height1);
-	//
-	// return new BaseGeoTransformation(geoTransformation.getX0(),
-	// geoTransformation.getY0(), geoTransformation.getWidth0(),
-	// geoTransformation.getHeight0(), geoTransformation.isVisible0(),
-	// geoTransformation.getParent0(), geoTransformation.getX1(),
-	// geoTransformation.getY1(), width1, height1,
-	// geoTransformation.isVisible1(), geoTransformation.getParent1());
-	// }
-
-	// @Override
-	// public void addPropertyChangedHandler( final PropertyChangedHandler<?
-	// extends Property<? extends PropertyInstance>> handler,
-	// final String propertyName) {
-	// addEventHandler(handler, PropertyChangedEvent.TYPE.get(propertyName));
-	// }
 
 	@Override
 	protected int getDesiredWidth() {

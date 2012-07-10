@@ -173,9 +173,9 @@ public class ManagedDisplayImplTest {
 				.mock(EventManager.class);
 		final EventManager c1EventManagerMock = Mockito
 				.mock(EventManager.class);
-		managedDisplay.registerDisplayEventBusForSource(c0EventManagerMock,
+		managedDisplay.registerEventBusForSource(c0EventManagerMock,
 				this.mockedEnv.c0);
-		managedDisplay.registerDisplayEventBusForSource(c1EventManagerMock,
+		managedDisplay.registerEventBusForSource(c1EventManagerMock,
 				this.mockedEnv.c1);
 
 		managedDisplay.postNextDisplayEvent(false);

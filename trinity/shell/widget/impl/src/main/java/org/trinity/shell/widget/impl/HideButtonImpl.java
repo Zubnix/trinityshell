@@ -11,14 +11,21 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.foundation.input.api.PointerInput;
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
+import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
+import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
+import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.widget.api.HideButton;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO create abstract push button class
 /**
@@ -32,49 +39,52 @@ import com.google.inject.name.Named;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
 public class HideButtonImpl extends ButtonImpl implements HideButton {
 
-	@Inject
-	private HideButton.View view;
-
-	private GeoTransformableRectangle boundRectangle;
+	private GeoTransformableRectangle client;
+	private final HideButton.View view;
 
 	/*****************************************
 	 * @param painterFactory
 	 * @param view
 	 ****************************************/
 	@Inject
-	protected HideButtonImpl(	final PainterFactory painterFactory,
-								@Named("Widget") final GeoExecutor geoExecutor) {
-		super(painterFactory, geoExecutor);
+	protected HideButtonImpl(	final EventBus eventBus,
+								final GeoEventFactory geoEventFactory,
+								final ManagedDisplay managedDisplay,
+								final PainterFactory painterFactory,
+								@Named("Widget") final GeoExecutor geoExecutor,
+								final HideButton.View view) {
+		super(	eventBus,
+				geoEventFactory,
+				managedDisplay,
+				painterFactory,
+				geoExecutor,
+				view);
+		this.view = view;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.trinity.shell.widget.impl.ButtonImpl#getView()
-	 */
-	@Override
-	public HideButton.View getView() {
-		return this.view;
-	}
-
-	@Override
-	public void onMouseButtonPressed(final PointerInput input) {
-		hideClientWindow();
-	}
-
-	@Override
-	public GeoTransformableRectangle getBoundRectangle() {
-		return this.boundRectangle;
-	}
-
-	public void setBoundRectangle(final GeoTransformableRectangle boundRectangle) {
-		this.boundRectangle = boundRectangle;
+	@Subscribe
+	public void onMouseButtonPressed(final ButtonNotifyEvent input) {
+		if (input.getInput().getMomentum() == Momentum.STARTED) {
+			hideClient();
+		}
 	}
 
 	@Override
-	public void hideClientWindow() {
-		getBoundRectangle().setVisibility(false);
-		getBoundRectangle().requestVisibilityChange();
+	public GeoTransformableRectangle getClient() {
+		return this.client;
+	}
+
+	@Override
+	public void setClient(final GeoTransformableRectangle client) {
+		this.client = client;
+	}
+
+	@Override
+	public void hideClient() {
+		getClient().requestHide();
+		this.view.hideClient(getClient());
 	}
 }

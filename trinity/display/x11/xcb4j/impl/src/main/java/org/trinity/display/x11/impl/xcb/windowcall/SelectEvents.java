@@ -11,10 +11,14 @@
  */
 package org.trinity.display.x11.impl.xcb.windowcall;
 
+import javax.inject.Named;
+
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
 import org.trinity.display.x11.impl.xcb.jni.Xcb4J;
 
 import com.google.inject.Singleton;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 /**
  * args: (Long) window id
@@ -24,13 +28,14 @@ import com.google.inject.Singleton;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
+@Named("SelectEvents")
 @Singleton
 public class SelectEvents extends AbstractXcbCall<Void, Long, Number> {
 
 	@Override
 	public boolean callImpl() {
-		return Xcb4J
-				.nativeSelectEvent(	getConnectionReference(),
+		return Xcb4J.nativeSelectEvent(	getConnectionReference(),
 										getArgs()[0].intValue(),
 										getArgs()[1].longValue(),
 										getNativeBufferHelper().getBuffer());

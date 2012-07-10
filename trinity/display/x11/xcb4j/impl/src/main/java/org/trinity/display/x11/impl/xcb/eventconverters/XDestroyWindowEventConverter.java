@@ -26,6 +26,9 @@ import org.trinity.foundation.display.api.event.DisplayEventFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
+@Bind(multiple = true)
 @Singleton
 public class XDestroyWindowEventConverter implements
 		XEventConverter<NativeBufferHelper> {

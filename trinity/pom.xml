@@ -27,12 +27,25 @@
 		<module>foundation</module>
 		<module>shell</module>
 		<module>display</module>
-		<module>hypercube</module>
 		<module>render</module>
-		<!-- <module>fusion-swing/trunk</module> -->
 	</modules>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-assistedinject</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>12.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-multibindings</artifactId>
+			<version>3.0</version>
+		</dependency>
 		<!-- START TEST DEP -->
 
 		<dependency>
@@ -50,6 +63,16 @@
 		</dependency>
 
 		<!-- END TEST DEP -->
+		<dependency>
+			<groupId>de.devsurf.injection.guice</groupId>
+			<artifactId>de.devsurf.injection.guice.core</artifactId>
+			<version>0.8.7</version>
+		</dependency>
+		<dependency>
+			<groupId>de.devsurf.injection.guice</groupId>
+			<artifactId>de.devsurf.injection.guice.aop</artifactId>
+			<version>0.8.7</version>
+		</dependency>
 	</dependencies>
 
 	<properties>

@@ -18,6 +18,9 @@ import org.trinity.display.x11.core.api.exception.BadXCall;
 
 import com.google.inject.Inject;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
+@Bind
 public final class XCallerImpl implements XCaller {
 	/**
 	 * 

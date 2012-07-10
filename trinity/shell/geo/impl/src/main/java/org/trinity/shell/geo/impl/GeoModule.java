@@ -11,13 +11,11 @@
  */
 package org.trinity.shell.geo.impl;
 
-import org.trinity.shell.geo.api.GeoExecutor;
-import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.api.event.GeoEvent;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
+import org.trinity.shell.geo.api.manager.ConfigurableGeoManager;
 import org.trinity.shell.geo.api.manager.GeoManager;
 import org.trinity.shell.geo.api.manager.GeoManagerFactory;
-import org.trinity.shell.geo.api.manager.ConfigurableGeoManager;
 import org.trinity.shell.geo.api.manager.LayoutPropertyLine;
 import org.trinity.shell.geo.impl.event.GeoEventImpl;
 import org.trinity.shell.geo.impl.manager.AbstractAbsoluteGeoManager;
@@ -28,26 +26,17 @@ import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
+import de.devsurf.injection.guice.annotations.GuiceModule;
+
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
+@GuiceModule
 public class GeoModule extends AbstractModule {
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.google.inject.AbstractModule#configure()
-	 */
 	@Override
 	protected void configure() {
-		// start geo bindings
-		bind(GeoExecutor.class).annotatedWith(Names.named("GeoVirt"))
-				.to(GeoVirtGeoExecutor.class);
-		bind(GeoTransformableRectangle.class).to(GeoVirtRectangle.class);
-		bind(GeoManager.class).annotatedWith(Names.named("Direct"))
-				.to(AbstractAbsoluteGeoManager.class);
-		// end geo bindings
-
-		// start geo factory bindings
+		// TODO more geovents
 		install(new FactoryModuleBuilder().implement(	GeoEvent.class,
 														GeoEventImpl.class)
 				.build(GeoEventFactory.class));
@@ -61,7 +50,5 @@ public class GeoModule extends AbstractModule {
 				.implement(	LayoutPropertyLine.class,
 							LayoutPropertyLineImpl.class)
 				.build(GeoManagerFactory.class));
-		// end geo factory bindings
-
 	}
 }

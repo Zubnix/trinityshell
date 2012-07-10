@@ -29,6 +29,8 @@ import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.gui.QMouseEvent;
 
+import de.devsurf.injection.guice.annotations.Bind;
+
 // TODO documentation
 /**
  * A <code>QFusionMouseButtonReleaseConverter</code> takes a
@@ -38,6 +40,7 @@ import com.trolltech.qt.gui.QMouseEvent;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind(multiple = true)
 @Singleton
 public final class QFButtonReleasedConverterImpl implements
 		QFRenderEventConverter {

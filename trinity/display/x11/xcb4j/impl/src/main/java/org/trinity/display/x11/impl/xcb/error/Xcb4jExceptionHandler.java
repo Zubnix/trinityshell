@@ -19,6 +19,10 @@ import org.trinity.display.x11.core.api.XCaller;
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
 import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
 
+import com.google.inject.Singleton;
+
+import de.devsurf.injection.guice.annotations.Bind;
+
 /**
  * A <code>XcbNativeErrorHandler</code> handles a <code>XNativeCall</code> if an
  * error is returned.
@@ -32,16 +36,15 @@ import org.trinity.display.x11.impl.xcb.jni.NativeBufferHelper;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
+@Singleton
 public class Xcb4jExceptionHandler implements XCallExceptionHandler {
 
 	@Override
-	public
-			<R, D, A>
-			R
-			handleException(final XCaller xNativeCaller,
-							final XCall<R, D, A> erroneousNativeCall,
-							final D erroneousDisplayPeer,
-							@SuppressWarnings("unchecked") final A... erroneousArgs) {
+	public <R, D, A> R handleException(	final XCaller xNativeCaller,
+										final XCall<R, D, A> erroneousNativeCall,
+										final D erroneousDisplayPeer,
+										@SuppressWarnings("unchecked") final A... erroneousArgs) {
 		final NativeBufferHelper bufferHelper = ((AbstractXcbCall<R, D, A>) erroneousNativeCall)
 				.getNativeBufferHelper();
 		// final short responseType =
@@ -58,9 +61,7 @@ public class Xcb4jExceptionHandler implements XCallExceptionHandler {
 		final XErrorCode xErrorCode = XErrorCodes.getByXErrorIntCode(errorCode);
 		bufferHelper.doneReading();
 
-		final BadXcbCall ex = new BadXcbCall(	xErrorCode,
-												resourceId,
-												new Date());
+		final BadXcbCall ex = new BadXcbCall(xErrorCode, resourceId, new Date());
 
 		throw ex;
 	}

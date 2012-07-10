@@ -19,13 +19,18 @@ import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.input.api.ManagedKeyboard;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
 /**
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
+@Singleton
 public class ManagedKeyboardImpl extends AbstractInputDevice implements
 		ManagedKeyboard {
 

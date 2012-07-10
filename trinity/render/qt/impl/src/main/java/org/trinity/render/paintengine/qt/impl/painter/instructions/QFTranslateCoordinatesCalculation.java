@@ -46,12 +46,6 @@ public class QFTranslateCoordinatesCalculation implements
 		this.sourceY = sourceY;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.hydrogen.paint.api.PaintCalculation#calculate(org.hydrogen.paint.
-	 * api.Paintable, org.hydrogen.paint.api.RenderEngine)
-	 */
 	@Override
 	public Coordinates calculate(	final Paintable paintable,
 									final QFRenderEngine renderEngine) {

@@ -11,10 +11,14 @@
  */
 package org.trinity.display.x11.impl.xcb.windowcall;
 
+import javax.inject.Named;
+
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
 import org.trinity.display.x11.impl.xcb.jni.Xcb4J;
 
 import com.google.inject.Singleton;
+
+import de.devsurf.injection.guice.annotations.Bind;
 
 /**
  * args: (Long) window id
@@ -24,6 +28,8 @@ import com.google.inject.Singleton;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Bind
+@Named("RemoveFromSaveSet")
 @Singleton
 public class RemoveFromSaveSet extends AbstractXcbCall<Void, Long, Integer> {
 

@@ -18,7 +18,7 @@ public class DummyWidgetViewImpl implements Widget.View {
 	}
 
 	@Override
-	public PaintInstruction<Void, ?> doDestroy() {
+	public PaintInstruction<Void, ?> destroy() {
 		// TODO Auto-generated method stub
 		return null;
 	}
