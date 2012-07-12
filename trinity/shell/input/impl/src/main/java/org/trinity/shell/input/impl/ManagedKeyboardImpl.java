@@ -14,7 +14,6 @@ package org.trinity.shell.input.impl;
 import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.input.api.KeyboardInput;
-import org.trinity.shell.core.api.ManagedDisplay;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.input.api.ManagedKeyboard;
 
@@ -34,46 +33,17 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ManagedKeyboardImpl extends AbstractInputDevice implements
 		ManagedKeyboard {
 
-	private final class KeyPressedForwarder extends KeyboardKeyPressedHandler {
-		@Override
-		public void handleEvent(final KeyNotifyEvent event) {
-			delegateInputEventToInputEventManagers(event);
-		}
-	}
-
-	private final class KeyReleasedForwarder extends KeyboardKeyReleasedHandler {
-		@Override
-		public void handleEvent(final KeyNotifyEvent event) {
-			delegateInputEventToInputEventManagers(event);
-		}
-	}
-
 	private final RenderArea root;
-	private final ManagedDisplay managedDisplay;
 
 	private final Keyboard keyboard;
 
-	private final KeyboardKeyPressedHandler keyPressedForwarder;
-	private final KeyboardKeyReleasedHandler keyReleasedForwarder;
-
-	/**
-	 * @param managedDisplay
-	 */
 	@Inject
-	protected ManagedKeyboardImpl(	final ManagedDisplay managedDisplay,
-									@Named("root") final RenderArea root,
+	protected ManagedKeyboardImpl(	@Named("root") final RenderArea root,
 									final Keyboard keyboard) {
-		this.managedDisplay = managedDisplay;
 		this.root = root;
 		this.keyboard = keyboard;
-		this.keyPressedForwarder = new KeyPressedForwarder();
-		this.keyReleasedForwarder = new KeyReleasedForwarder();
 	}
 
-	/**
-	 * @param keyNotifyEvent
-	 * @return
-	 */
 	@Override
 	public String keyEventToString(final KeyNotifyEvent keyNotifyEvent) {
 
@@ -87,16 +57,11 @@ public class ManagedKeyboardImpl extends AbstractInputDevice implements
 	@Override
 	public void release() {
 		this.root.getPlatformRenderArea().stopKeyboardInputCatching();
-		this.managedDisplay.removeDisplayEventHandler(this.keyPressedForwarder);
-		this.managedDisplay
-				.removeDisplayEventHandler(this.keyReleasedForwarder);
 	}
 
 	@Override
-	public void delegateInputEventsAndGrab() {
+	protected void delegateInputEventsAndGrab() {
 		this.root.getPlatformRenderArea().catchAllKeyboardInput();
-		this.managedDisplay.addDisplayEventHandler(this.keyPressedForwarder);
-		this.managedDisplay.addDisplayEventHandler(this.keyReleasedForwarder);
 	}
 
 }

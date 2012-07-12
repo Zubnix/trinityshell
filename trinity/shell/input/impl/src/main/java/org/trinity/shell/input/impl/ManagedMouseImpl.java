@@ -11,7 +11,6 @@
  */
 package org.trinity.shell.input.impl;
 
-import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.input.api.Mouse;
 import org.trinity.foundation.shared.geometry.api.Coordinates;
 import org.trinity.foundation.shared.geometry.api.GeometryFactory;
@@ -37,27 +36,8 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ManagedMouseImpl extends AbstractInputDevice implements
 		ManagedMouse {
 
-	private final class ButtonPressedForwarder extends
-			MouseButtonPressedHandler {
-		@Override
-		public void handleEvent(final ButtonNotifyEvent event) {
-			delegateInputEventToInputEventManagers(event);
-		}
-	}
-
-	private final class ButtonReleasedForwarder extends
-			MouseButtonReleasedHandler {
-		@Override
-		public void handleEvent(final ButtonNotifyEvent event) {
-			delegateInputEventToInputEventManagers(event);
-		}
-	}
-
-	private final ManagedDisplay managedDisplay;
 	private final RenderArea root;
 	private final Mouse mouse;
-	private final ButtonPressedForwarder buttonPressedForwarder;
-	private final ButtonReleasedForwarder buttonReleasedForwarder;
 
 	/**
 	 * Create a new <code>ManagedMouse</code>. This <code>ManagedMouse</code>
@@ -70,31 +50,20 @@ public class ManagedMouseImpl extends AbstractInputDevice implements
 	 *            A {@link ManagedDisplay}. @ Thrown when the given
 	 *            <code>ManagedDisplay</code> has an illegal state.
 	 */
-	protected ManagedMouseImpl(	final ManagedDisplay managedDisplay,
-								@Named("root") final RenderArea root,
+	protected ManagedMouseImpl(	@Named("root") final RenderArea root,
 								final GeometryFactory geometryFactory,
 								final Mouse mouse) {
-		this.managedDisplay = managedDisplay;
 		this.root = root;
 		this.mouse = mouse;
-		this.buttonPressedForwarder = new ButtonPressedForwarder();
-		this.buttonReleasedForwarder = new ButtonReleasedForwarder();
 	}
 
 	@Override
 	public void release() {
-		this.managedDisplay
-				.removeDisplayEventHandler(this.buttonPressedForwarder);
-		this.managedDisplay
-				.removeDisplayEventHandler(this.buttonReleasedForwarder);
 		this.root.getPlatformRenderArea().stopMouseInputCatching();
 	}
 
 	@Override
 	protected void delegateInputEventsAndGrab() {
-		this.managedDisplay.addDisplayEventHandler(this.buttonPressedForwarder);
-		this.managedDisplay
-				.addDisplayEventHandler(this.buttonReleasedForwarder);
 		this.root.getPlatformRenderArea().catchAllMouseInput();
 	}
 

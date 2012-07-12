@@ -41,7 +41,7 @@ public class ManagedDisplayImpl implements ManagedDisplay {
 
 	@Inject
 	protected ManagedDisplayImpl(	final DisplayServer display,
-									@Named("displayEventBus") final EventBus eventBus,
+									@Named("display") final EventBus eventBus,
 									@Named("root") final RenderArea root,
 									final RenderAreaFactory clientFactory) {
 		this.display = display;

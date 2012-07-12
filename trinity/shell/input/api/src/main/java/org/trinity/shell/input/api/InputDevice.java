@@ -11,7 +11,6 @@
  */
 package org.trinity.shell.input.api;
 
-
 public interface InputDevice {
 	void grab();
 

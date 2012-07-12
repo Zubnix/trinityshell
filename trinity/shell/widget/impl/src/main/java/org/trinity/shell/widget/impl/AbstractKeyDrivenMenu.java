@@ -11,11 +11,11 @@
  */
 package org.trinity.shell.widget.impl;
 
-import java.beans.EventHandler;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.trinity.foundation.display.api.event.KeyNotifyEvent;
+import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.input.api.SpecialKeyName;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ManagedDisplay;
@@ -26,6 +26,7 @@ import org.trinity.shell.input.api.ManagedKeyboard;
 import org.trinity.shell.widget.api.KeyDrivenMenu;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 // TODO documentation
 /**
@@ -41,14 +42,16 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 		KeyDrivenMenu {
 
 	private final KeyDrivenMenu.View view;
-
+	private final List<String> filteredChoices = new ArrayList<String>(25);
 	private final ManagedKeyboard managedKeyboard;
 	private final KeyInputStringBuilder keyInputStringBuilder;
 
-	private int activeChoiceIdx;
-	private final List<String> filteredChoices;
+	private int activeChoiceIdx = 0;
 
-	protected AbstractKeyDrivenMenu(final EventBus eventBus,
+	private final EventBus displayEventBus;
+
+	protected AbstractKeyDrivenMenu(final EventBus displayEventBus,
+									final EventBus eventBus,
 									final GeoEventFactory geoEventFactory,
 									final ManagedDisplay managedDisplay,
 									final PainterFactory painterFactory,
@@ -62,23 +65,21 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 				painterFactory,
 				geoExecutor,
 				view);
+		this.displayEventBus = displayEventBus;
 		this.view = view;
-		this.activeChoiceIdx = 0;
-		this.filteredChoices = new ArrayList<String>(25);
 		this.managedKeyboard = managedKeyboard;
 		this.keyInputStringBuilder = keyInputStringBuilder;
-		initKeyListeners();
 	}
 
 	// TODO instead of referencing a keyname based on a string, we want to
-	// reference a key instance which can be queried by a string
+	// reference a key instance which can be queried by a string (good idea?)
 	/**
 	 * @return
 	 */
 	public abstract String getConfirmChoiceKeyName();
 
 	// TODO instead of referencing a keyname based on a string, we want to
-	// reference a key which can be queried by a string
+	// reference a key which can be queried by a string (good idea?)
 	/**
 	 * @return
 	 */
@@ -89,91 +90,75 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 	 */
 	public abstract void choiceConfirmed(String choice);
 
-	/**
-	 * 
-	 */
-	protected void initKeyListeners() {
-		this.addEventHandler(new EventHandler<KeyNotifyEvent>() {
-			@Override
-			public void handleEvent(final KeyNotifyEvent event) {
-				final String keyName = AbstractKeyDrivenMenu.this.managedKeyboard
-						.keyEventToString(event);
-				if (keyName.equals(AbstractKeyDrivenMenu.this
-						.getCancelKeyName())) {
-					// cancel key
-					AbstractKeyDrivenMenu.this.stopKeyListening();
-					AbstractKeyDrivenMenu.this.reset();
-				} else if (keyName.equals(AbstractKeyDrivenMenu.this
-						.getConfirmChoiceKeyName())) {
-					// confirm key
-					AbstractKeyDrivenMenu.this.stopKeyListening();
-					AbstractKeyDrivenMenu.this.confirm();
-					AbstractKeyDrivenMenu.this.reset();
-				} else if (keyName.equals(SpecialKeyName.LEFT.name())) {
-					// left arrow key
-					if ((AbstractKeyDrivenMenu.this.activeChoiceIdx - 1) >= 0) {
-						AbstractKeyDrivenMenu.this.activeChoiceIdx--;
-						AbstractKeyDrivenMenu.this.keyInputStringBuilder
-								.clearBuffer();
+	@Subscribe
+	public void handleKeyNotify(final KeyNotifyEvent event) {
+		if (event.getInput().getMomentum() != Momentum.STARTED) {
+			return;
+		}
 
-						final String desired = AbstractKeyDrivenMenu.this
-								.getFilteredChoices()
-								.get(AbstractKeyDrivenMenu.this.activeChoiceIdx);
-						AbstractKeyDrivenMenu.this.keyInputStringBuilder
-								.getStringBuffer().append(desired);
+		final String keyName = this.managedKeyboard.keyEventToString(event);
 
-						// update view
+		if (keyName.equals(getCancelKeyName())) {
+			// cancel key
+			deactivate();
+			clear();
+			return;
+		}
 
-						draw(AbstractKeyDrivenMenu.this
-								.getView()
-								.update(desired,
-										AbstractKeyDrivenMenu.this
-												.getFilteredChoices(),
-										AbstractKeyDrivenMenu.this.activeChoiceIdx));
-					}
-				} else if (keyName.equals(SpecialKeyName.RIGHT.name())) {
-					// righ arrow key
-					if ((AbstractKeyDrivenMenu.this.activeChoiceIdx + 1) < AbstractKeyDrivenMenu.this
-							.getFilteredChoices().size()) {
-						AbstractKeyDrivenMenu.this.activeChoiceIdx++;
-						final String desired = AbstractKeyDrivenMenu.this
-								.getFilteredChoices()
-								.get(AbstractKeyDrivenMenu.this.activeChoiceIdx);
+		if (keyName.equals(getConfirmChoiceKeyName())) {
+			// confirm key
+			deactivate();
+			confirm();
+			clear();
+			return;
+		}
 
-						AbstractKeyDrivenMenu.this.keyInputStringBuilder
-								.clearBuffer();
-						AbstractKeyDrivenMenu.this.keyInputStringBuilder
-								.getStringBuffer().append(desired);
+		if (keyName.equals(SpecialKeyName.LEFT.name())) {
+			// left arrow key
+			if ((this.activeChoiceIdx - 1) >= 0) {
+				this.activeChoiceIdx--;
+				this.keyInputStringBuilder.clearBuffer();
 
-						// update view
-						AbstractKeyDrivenMenu.this
-								.getView()
-								.update(desired,
-										AbstractKeyDrivenMenu.this
-												.getFilteredChoices(),
-										AbstractKeyDrivenMenu.this.activeChoiceIdx);
-					}
-				} else {
-					// other key
-					AbstractKeyDrivenMenu.this.keyInputStringBuilder
-							.build(event);
-					final String desired = AbstractKeyDrivenMenu.this.keyInputStringBuilder
-							.getStringBuffer().toString();
-					AbstractKeyDrivenMenu.this.activeChoiceIdx = 0;
+				final String desired = getFilteredChoices()
+						.get(AbstractKeyDrivenMenu.this.activeChoiceIdx);
+				this.keyInputStringBuilder.getStringBuffer().append(desired);
 
-					AbstractKeyDrivenMenu.this.updatePossibleChoices(desired);
-
-					// update view
-
-					AbstractKeyDrivenMenu.this.getView()
-							.update(desired,
-									AbstractKeyDrivenMenu.this
-											.getFilteredChoices(),
-									AbstractKeyDrivenMenu.this.activeChoiceIdx);
-				}
+				// update view
+				this.view.update(	desired,
+									getFilteredChoices(),
+									this.activeChoiceIdx);
 			}
-		},
-								DisplayEventType.KEY_PRESSED);
+			return;
+		}
+
+		if (keyName.equals(SpecialKeyName.RIGHT.name())) {
+			// righ arrow key
+			if ((this.activeChoiceIdx + 1) < getFilteredChoices().size()) {
+				this.activeChoiceIdx++;
+				final String desired = getFilteredChoices()
+						.get(this.activeChoiceIdx);
+
+				this.keyInputStringBuilder.clearBuffer();
+				this.keyInputStringBuilder.getStringBuffer().append(desired);
+
+				// update view
+				this.view.update(desired,
+
+				getFilteredChoices(), this.activeChoiceIdx);
+			}
+			return;
+		}
+
+		// other keys
+		this.keyInputStringBuilder.build(event);
+		final String desired = this.keyInputStringBuilder.getStringBuffer()
+				.toString();
+		this.activeChoiceIdx = 0;
+
+		updatePossibleChoices(desired);
+
+		// update view
+		this.view.update(desired, getFilteredChoices(), this.activeChoiceIdx);
 	}
 
 	/**
@@ -212,12 +197,11 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 	 * 
 	 */
 	public void confirm() {
-		final String choice = searchFirstMatchingChoice(getFilter());
+		final String choice = searchFirstMatchingChoice(getInput());
 		if (choice.isEmpty()) {
 			return;
-		} else {
-			choiceConfirmed(choice);
 		}
+		choiceConfirmed(choice);
 	}
 
 	/**
@@ -235,7 +219,7 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 
 	@Override
 	public void activate() {
-		this.managedKeyboard.registerInputEventBus(this);
+		this.displayEventBus.register(this);
 		this.managedKeyboard.grab();
 		this.view.activate();
 	}
@@ -243,7 +227,7 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 	@Override
 	public void deactivate() {
 		this.managedKeyboard.release();
-		this.managedKeyboard.unregisterInputEventBus(this);
+		this.displayEventBus.unregister(this);
 		this.view.deactivate();
 	}
 

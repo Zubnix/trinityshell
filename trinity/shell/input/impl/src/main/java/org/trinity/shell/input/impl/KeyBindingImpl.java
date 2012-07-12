@@ -67,13 +67,9 @@ public class KeyBindingImpl implements KeyBinding {
 
 	private final Runnable runnable;
 
-	/**
-	 * @param sourceWindow
-	 * @param momentum
-	 * @param keyName
-	 * @param ignoreOftenUsedModifiers
-	 * @param modKeyNames
-	 */
+	private final InputModifiers inputModifiers;
+	private final Key[] validKeys;
+
 	@Inject
 	protected KeyBindingImpl(	@Named("displayEventBus") final EventBus eventBus,
 								@Named("root") final RenderArea root,
@@ -95,20 +91,12 @@ public class KeyBindingImpl implements KeyBinding {
 
 		this.runnable = runnable;
 
-		installKeyBindingListener(ignoreOftenUsedModifiers);
-	}
-
-	/**
-	 * @param ignoreOftenUsedModifiers
-	 */
-	protected void installKeyBindingListener(final boolean ignoreOftenUsedModifiers) {
 		// translate keyname and modkeynames to keys and modmask
-
-		final Key[] validKeys = this.keyboard.keys(getKeyName());
+		this.validKeys = this.keyboard.keys(getKeyName());
 
 		final List<InputModifiers> validInputModifiersCombinations = new LinkedList<InputModifiers>();
 
-		final InputModifiers inputModifiers = this.modKeyNames.length == 0 ? this.inputModifiersFactory
+		this.inputModifiers = this.modKeyNames.length == 0 ? this.inputModifiersFactory
 				.createInputModifiers(0) : this.keyboard
 				.modifiers(this.modKeyNames);
 		if (ignoreOftenUsedModifiers) {
@@ -121,7 +109,7 @@ public class KeyBindingImpl implements KeyBinding {
 				final Modifier modifier = this.keyboard
 						.modifier(ignoredModifier);
 
-				final int modifierMaskWithExtraModifier = inputModifiers
+				final int modifierMaskWithExtraModifier = this.inputModifiers
 						.getInputModifiersMask() & modifier.getModifierMask();
 				final InputModifiers inputModifiersWithExtraModifier = this.inputModifiersFactory
 						.createInputModifiers(modifierMaskWithExtraModifier);
@@ -130,57 +118,31 @@ public class KeyBindingImpl implements KeyBinding {
 			}
 
 		}
-		validInputModifiersCombinations.add(inputModifiers);
+		validInputModifiersCombinations.add(this.inputModifiers);
 
 		this.eventBus.register(this);
 
-		for (final Key validKey : validKeys) {
+		for (final Key validKey : this.validKeys) {
 			// install a keygrab
 			this.root.getPlatformRenderArea()
-					.catchKeyboardInput(validKey, inputModifiers);
-
-			if (getMomentum() == Momentum.STARTED) {
-				this.eventBus.register(this);
-				this.managedDisplay
-						.addDisplayEventHandler(new KeyboardKeyPressedHandler() {
-							@Override
-							public void handleEvent(final KeyNotifyEvent event) {
-								validateAction(inputModifiers, validKey, event);
-							}
-						});
-			} else {
-				this.managedDisplay
-						.addDisplayEventHandler(new KeyboardKeyReleasedHandler() {
-							@Override
-							public void handleEvent(final KeyNotifyEvent event) {
-								validateAction(inputModifiers, validKey, event);
-							}
-						});
-			}
-
-			// getManagedDisplay()
-			// .addEventHandler(
-			// new EventHandler<KeyNotifyEvent>() {
-			// @Override
-			// public void handleEvent(
-			// final KeyNotifyEvent event) {
-			//
-			// }
-			// },
-			// getMomentum() == Momentum.STARTED ? DisplayEventType.KEY_PRESSED
-			// : DisplayEventType.KEY_RELEASED, 0);
-
+					.catchKeyboardInput(validKey, this.inputModifiers);
 		}
 	}
 
-	public void handleKeyNotifyEvent(final KeyNotifyEvent keyNotifyEvent) {
-
+	@Subscribe
+	public void handleKeyNotifyEvent(final KeyNotifyEvent event) {
+		if (event.getInput().getMomentum() == getMomentum()) {
+			for (final Key validKey : this.validKeys) {
+				if (validateAction(this.inputModifiers, validKey, event)) {
+					break;
+				}
+			}
+		}
 	}
 
-	@Subscribe
-	public void validateAction(	final InputModifiers inputModifiers,
-								final Key validKey,
-								final KeyNotifyEvent event) {
+	public boolean validateAction(	final InputModifiers inputModifiers,
+									final Key validKey,
+									final KeyNotifyEvent event) {
 		final short eventKeyCode = (short) event.getInput().getKey()
 				.getKeyCode();
 		final short validKeyCode = (short) validKey.getKeyCode();
@@ -199,37 +161,26 @@ public class KeyBindingImpl implements KeyBinding {
 
 		if (gotValidKey && gotValidModifiers && gotValidMomentum) {
 			KeyBindingImpl.this.performAction();
+			return true;
 		}
+		return false;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public String getKeyName() {
 		return this.keyName;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.trinity.shell.input.api.KeyBinding#getInputModifierNames()
-	 */
 	@Override
 	public InputModifierName[] getInputModifierNames() {
 		return Arrays.copyOf(this.modKeyNames, this.modKeyNames.length);
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
 	public Momentum getMomentum() {
 		return this.momentum;
 	}
 
-	/**
-	 * 
-	 */
 	@Override
 	public void performAction() {
 		this.runnable.run();

@@ -51,7 +51,8 @@ public class KeyDrivenAppLauncher extends AbstractKeyDrivenMenu {
 	 * @param keyInputStringBuilder
 	 ****************************************/
 	@Inject
-	protected KeyDrivenAppLauncher(	final EventBus eventBus,
+	protected KeyDrivenAppLauncher(	@Named("display") final EventBus displayEventBus,
+									final EventBus eventBus,
 									final GeoEventFactory geoEventFactory,
 									final ManagedDisplay managedDisplay,
 									final PainterFactory painterFactory,
@@ -59,7 +60,8 @@ public class KeyDrivenAppLauncher extends AbstractKeyDrivenMenu {
 									final ManagedKeyboard managedKeyboard,
 									final KeyInputStringBuilder keyInputStringBuilder,
 									final KeyDrivenMenu.View view) {
-		super(	eventBus,
+		super(	displayEventBus,
+				eventBus,
 				geoEventFactory,
 				managedDisplay,
 				painterFactory,
