@@ -1,5 +1,6 @@
 package org.hyperdrive.widget.impl;
 
+import org.junit.Test;
 
 public class BaseWidgetTest {
 

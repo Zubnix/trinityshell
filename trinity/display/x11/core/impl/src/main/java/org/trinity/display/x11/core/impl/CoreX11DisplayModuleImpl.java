@@ -85,7 +85,7 @@ import de.devsurf.injection.guice.annotations.GuiceModule;
  * 
  ****************************************/
 @GuiceModule
-public class CoreX11DisplayModule extends AbstractModule {
+public class CoreX11DisplayModuleImpl extends AbstractModule {
 
 	@Override
 	protected void configure() {
@@ -137,12 +137,6 @@ public class CoreX11DisplayModule extends AbstractModule {
 	}
 
 	private void bindCore() {
-		// bind(XCaller.class).to(XCallerImpl.class);
-		// bind(XConnection.class).to(XConnectionImpl.class);
-		// bind(XDisplayProtocol.class).to(XDisplayProtocolImpl.class);
-		// bind(XDisplayServer.class).to(XDisplayServerImpl.class);
-		// bind(Mouse.class).to(MouseImpl.class);
-
 		install(new FactoryModuleBuilder().implement(	XWindow.class,
 														XWindowImpl.class)
 				.build(XDisplayResourceFactory.class));

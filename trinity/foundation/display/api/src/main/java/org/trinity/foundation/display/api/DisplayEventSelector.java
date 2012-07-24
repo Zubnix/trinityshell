@@ -43,7 +43,7 @@ public class DisplayEventSelector {
 	public static final DisplayEventSelector NOTIFY_CHANGED_WINDOW_PROPERTY = new DisplayEventSelector();
 
 	/**
-	 * Indicates that we want to receive {@link MouseVisitationNotifyEvent}s
+	 * Indicates that we want to receive {@link MouseVisitationNotifyEvent}
 	 * whenever a mouse cursors enters a <code>PlatformRenderArea</code>.
 	 */
 	public static final DisplayEventSelector NOTIFY_MOUSE_ENTER = new DisplayEventSelector();

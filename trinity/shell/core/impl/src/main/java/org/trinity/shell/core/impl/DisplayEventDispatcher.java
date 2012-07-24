@@ -23,7 +23,7 @@ import org.trinity.foundation.display.api.event.ConfigureRequestEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.display.api.event.MapRequestEvent;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.core.api.RenderAreaFactory;
 
 import com.google.common.eventbus.EventBus;
@@ -31,18 +31,18 @@ import com.google.common.eventbus.Subscribe;
 
 /**
  * An <code>EventDispatcher</code> fetches and dispatches
- * <code>DisplayEvent</code>s for a {@link ManagedDisplay}. An
+ * <code>DisplayEvent</code>s for a {@link ManagedDisplayService}. An
  * <code>EventDispatcher</code> fetches <code>DisplayEvent</code>s from the
  * <code>Display</code> that is wrapped by a <code>ManagedDisplay</code>. After
  * an event is fetched, it is delivered at corresponding the
  * <code>EventBus</code> objects that were registered with the
  * <code>ManagedDisplay</code>. (see
- * {@link ManagedDisplay#registerEventBus(DisplayEventSource, EventBus)})
+ * {@link ManagedDisplayService#registerEventBus(DisplayEventSource, EventBus)})
  * <p>
  * The <code>EventDispatcher</code> implements the main hyperdrive even loop in
  * it's run method. This method is activated by the <code>ManagedDisplay</code>
  * that created the <code>EventDispatcher</code>. See
- * {@link ManagedDisplay#start()}.
+ * {@link ManagedDisplayService#start()}.
  * 
  * @author Erik De Rijcke
  * @since 1.0

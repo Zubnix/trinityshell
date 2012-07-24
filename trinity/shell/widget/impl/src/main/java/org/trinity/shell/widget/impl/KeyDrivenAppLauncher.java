@@ -20,7 +20,7 @@ import java.util.StringTokenizer;
 
 import org.trinity.foundation.input.api.SpecialKeyName;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.input.api.KeyInputStringBuilder;
@@ -54,7 +54,7 @@ public class KeyDrivenAppLauncher extends AbstractKeyDrivenMenu {
 	protected KeyDrivenAppLauncher(	@Named("display") final EventBus displayEventBus,
 									final EventBus eventBus,
 									final GeoEventFactory geoEventFactory,
-									final ManagedDisplay managedDisplay,
+									final ManagedDisplayService managedDisplay,
 									final PainterFactory painterFactory,
 									@Named("Widget") final GeoExecutor geoExecutor,
 									final ManagedKeyboard managedKeyboard,

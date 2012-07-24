@@ -18,4 +18,11 @@ import org.trinity.foundation.display.api.DisplayRenderArea;
  ****************************************/
 public interface XWindow extends DisplayRenderArea, XDrawable {
 	XWindowAttributes getWindowAttributes();
+
+	/*****************************************
+	 * @param atom
+	 * @param format
+	 * @param data
+	 ****************************************/
+	void sendMessage(XAtom atom, int format, byte[] data);
 }

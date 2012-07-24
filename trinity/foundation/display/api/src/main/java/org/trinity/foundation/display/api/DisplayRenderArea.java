@@ -54,8 +54,7 @@ public interface DisplayRenderArea extends DisplayResource, Area,
 	 * @param catchKey
 	 * @param withModifiers
 	 */
-	void catchKeyboardInput(Key catchKey,
-							InputModifiers withModifiers);
+	void catchKeyboardInput(Key catchKey, InputModifiers withModifiers);
 
 	/**
 	 * 
@@ -73,8 +72,7 @@ public interface DisplayRenderArea extends DisplayResource, Area,
 	 * @param likeButton
 	 * @param withModifiers
 	 */
-	void catchMouseInput(	Button catchButton,
-							InputModifiers withModifiers);
+	void catchMouseInput(Button catchButton, InputModifiers withModifiers);
 
 	/**
 	 * 
@@ -90,8 +88,7 @@ public interface DisplayRenderArea extends DisplayResource, Area,
 	 * @param likeKey
 	 * @param withModifiers
 	 */
-	void disableKeyboardInputCatching(	Key likeKey,
-										InputModifiers withModifiers);
+	void disableKeyboardInputCatching(Key likeKey, InputModifiers withModifiers);
 
 	/**
 	 * @param likeButton

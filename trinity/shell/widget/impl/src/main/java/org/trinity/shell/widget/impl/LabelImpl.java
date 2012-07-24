@@ -12,7 +12,7 @@
 package org.trinity.shell.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.widget.api.Label;
@@ -37,7 +37,7 @@ public class LabelImpl extends WidgetImpl implements Label {
 	@Inject
 	protected LabelImpl(final EventBus eventBus,
 						final GeoEventFactory geoEventFactory,
-						final ManagedDisplay managedDisplay,
+						final ManagedDisplayService managedDisplay,
 						final PainterFactory painterFactory,
 						@Named("Widget") final GeoExecutor geoExecutor,
 						final Label.View view) {

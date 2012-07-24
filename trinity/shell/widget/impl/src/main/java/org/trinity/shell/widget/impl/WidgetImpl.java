@@ -15,7 +15,7 @@ import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.core.impl.AbstractRenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
@@ -42,7 +42,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  * <code>PaintCall</code> is then fed to the <code>Widget</code>'s
  * <code>Painter</code>. A <code>View</code> is defined by the
  * {@link ViewClassFactory} implementation that was given as a parameter at
- * startup to the {@link ManagedDisplay}.
+ * startup to the {@link ManagedDisplayService}.
  * <p>
  * A <code>Widget</code> is lazily initialized. This means that it is fully
  * initialized by the paint back-end when the <code>Widget</code> is assigned to
@@ -74,7 +74,7 @@ public class WidgetImpl extends AbstractRenderArea implements Widget {
 
 	private final Painter painter;
 	private final GeoExecutor geoExecutor;
-	private final ManagedDisplay managedDisplay;
+	private final ManagedDisplayService managedDisplay;
 	private final EventBus eventBus;
 	private final Widget.View view;
 
@@ -86,7 +86,7 @@ public class WidgetImpl extends AbstractRenderArea implements Widget {
 	@Inject
 	public WidgetImpl(	final EventBus eventBus,
 						final GeoEventFactory geoEventFactory,
-						final ManagedDisplay managedDisplay,
+						final ManagedDisplayService managedDisplay,
 						final PainterFactory painterFactory,
 						@Named("Widget") final GeoExecutor geoExecutor,
 						final Widget.View view) {

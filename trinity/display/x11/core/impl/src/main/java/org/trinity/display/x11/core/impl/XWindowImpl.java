@@ -11,6 +11,7 @@
  */
 package org.trinity.display.x11.core.impl;
 
+import org.trinity.display.x11.core.api.XAtom;
 import org.trinity.display.x11.core.api.XCall;
 import org.trinity.display.x11.core.api.XCaller;
 import org.trinity.display.x11.core.api.XConnection;
@@ -334,23 +335,16 @@ public class XWindowImpl extends XResourceImpl implements XWindow {
 		this.xCaller.doCall(this.unmapWindow, displayAddress, winId);
 	}
 
-	// @Override
-	// public void sendMessage(final ClientMessageEvent clientMessageEvent) {
-	// final Long displayAddress = this.xConnection.getConnectionReference();
-	// final Integer windowId = getResourceHandle().getNativeHandle();
-	// final Integer atomId = Integer.valueOf(clientMessageEvent
-	// .getMessageType().getAtomId());
-	// final Integer format = Integer.valueOf(clientMessageEvent
-	// .getDataFormat());
-	// final byte[] data = clientMessageEvent.getData();
-	//
-	// this.xCaller.doCall(this.sendClientMessage,
-	// displayAddress,
-	// windowId,
-	// atomId,
-	// format,
-	// data);
-	// }
+	@Override
+	public void sendMessage(final XAtom atom,
+							final int format,
+							final byte[] data) {
+		final Long displayAddress = this.xConnection.getConnectionReference();
+		final Integer windowId = getResourceHandle().getNativeHandle();
+		final Integer atomId = Integer.valueOf(atom.getId());
+
+		throw new RuntimeException("Not yet implemented.");
+	}
 
 	@Override
 	public void catchKeyboardInput(	final Key catchKey,

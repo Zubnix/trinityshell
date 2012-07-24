@@ -14,7 +14,7 @@ package org.trinity.shell.input.impl;
 import org.trinity.foundation.input.api.Mouse;
 import org.trinity.foundation.shared.geometry.api.Coordinates;
 import org.trinity.foundation.shared.geometry.api.GeometryFactory;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.input.api.ManagedMouse;
 
@@ -47,7 +47,7 @@ public class ManagedMouseImpl extends AbstractInputDevice implements
 	 * <code>ManagedDisplay</code>, will manage the same <code>Mouse</code>.
 	 * 
 	 * @param managedDisplay
-	 *            A {@link ManagedDisplay}. @ Thrown when the given
+	 *            A {@link ManagedDisplayService}. @ Thrown when the given
 	 *            <code>ManagedDisplay</code> has an illegal state.
 	 */
 	protected ManagedMouseImpl(	@Named("root") final RenderArea root,

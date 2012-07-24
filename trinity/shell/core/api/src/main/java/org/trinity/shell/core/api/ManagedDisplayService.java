@@ -15,11 +15,7 @@ import org.trinity.foundation.display.api.event.DisplayEventSource;
 
 import com.google.common.eventbus.EventBus;
 
-public interface ManagedDisplay {
-
-	void stop();
-
-	void start();
+public interface ManagedDisplayService extends ShellService {
 
 	void registerEventBusForSource(	EventBus eventBus,
 									DisplayEventSource forDisplayEventSource);

@@ -45,9 +45,6 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 	private final RenderArea root;
 	private final GeometryFactory geometryFactory;
 
-	/**
-	 * @param renderArea
-	 */
 	@Inject
 	protected RenderAreaGeoExecutorImpl(@Named("root") final RenderArea root,
 										final GeometryFactory geometryFactory) {
@@ -65,10 +62,6 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 		return (AreaManipulator<T>) renderArea.getPlatformRenderArea();
 	}
 
-	/**
-	 * @param renderArea
-	 * @return
-	 */
 	protected boolean isAreaInitialized(final RenderArea renderArea) {
 		if (renderArea == null) {
 			return false;
@@ -163,9 +156,6 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 		return corRelativeToTypedParent;
 	}
 
-	/**
-	 * @param area
-	 */
 	protected void initialize(	final GeoTransformableRectangle parent,
 								final GeoTransformableRectangle area) {
 		initializeGeoTransformableSquare(parent, area);
@@ -174,9 +164,6 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 		}
 	}
 
-	/**
-	 * @param area
-	 */
 	protected void initializeGeoTransformableSquare(final GeoTransformableRectangle parent,
 													final GeoTransformableRectangle area) {
 		// Sublcasses should override & implement this method to make sure the

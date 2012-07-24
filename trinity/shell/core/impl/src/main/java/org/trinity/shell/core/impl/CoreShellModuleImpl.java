@@ -9,7 +9,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import de.devsurf.injection.guice.annotations.GuiceModule;
 
 @GuiceModule
-public class CoreShellModule extends AbstractModule {
+public class CoreShellModuleImpl extends AbstractModule {
 	@Override
 	protected void configure() {
 		install(new FactoryModuleBuilder().implement(	RenderArea.class,

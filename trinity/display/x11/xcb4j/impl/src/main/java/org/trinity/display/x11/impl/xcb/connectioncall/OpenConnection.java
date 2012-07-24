@@ -14,6 +14,7 @@ package org.trinity.display.x11.impl.xcb.connectioncall;
 import javax.inject.Named;
 
 import org.trinity.display.x11.impl.xcb.AbstractXcbCall;
+import org.trinity.display.x11.impl.xcb.jni.Xcb4J;
 
 import com.google.inject.Singleton;
 
@@ -27,15 +28,15 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class OpenConnection extends AbstractXcbCall<Long, Void, Integer> {
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.trinity.display.x11.impl.displayprotocol.XNativeCall#nativeCallImpl()
-	 */
+	@Override
+	public Long getResult() {
+		return Long.valueOf(getNativeBufferHelper().readSignedLong());
+	}
+
 	@Override
 	protected boolean callImpl() {
-		// TODO Auto-generated method stub
-		return false;
+
+		return Xcb4J.nativeOpenDisplay(getArgs()[0], pointerInfo);
 	}
 
 }

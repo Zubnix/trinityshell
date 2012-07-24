@@ -12,7 +12,7 @@
 package org.trinity.shell.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.widget.api.Button;
@@ -38,7 +38,7 @@ public class ButtonImpl extends WidgetImpl implements Button {
 	@Inject
 	protected ButtonImpl(	final EventBus eventBus,
 							final GeoEventFactory geoEventFactory,
-							final ManagedDisplay managedDisplay,
+							final ManagedDisplayService managedDisplay,
 							final PainterFactory painterFactory,
 							@Named("Widget") final GeoExecutor geoExecutor,
 							final Button.View view) {

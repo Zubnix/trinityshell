@@ -53,13 +53,6 @@ public class XEventBridgeImpl implements XEventBridge<NativeBufferHelper> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.trinity.core.display.api.DisplayEventBridge#queueRenderEvent(org.
-	 * trinity.core.display.api.event.DisplayEventSource, java.lang.Object)
-	 */
-
 	@Override
 	public void queueXEvent(final XEvent sourceEvent) {
 
@@ -73,11 +66,6 @@ public class XEventBridgeImpl implements XEventBridge<NativeBufferHelper> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.fusion.display.x11.api.XEventBridge#constructXEvent(java.lang.Object)
-	 */
 	@Override
 	public XEvent constructXEvent(final NativeBufferHelper rawEvent) {
 		final Integer eventCode = readEventCode(rawEvent);
@@ -90,11 +78,6 @@ public class XEventBridgeImpl implements XEventBridge<NativeBufferHelper> {
 		return xEventConverter.constructEvent(rawEvent);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.fusion.display.x11.api.XEventBridge#readEventCode(java.lang.Object)
-	 */
 	private Integer readEventCode(final NativeBufferHelper rawEvent) {
 		final int eventCodeByte = rawEvent.readUnsignedByte();
 		return Integer.valueOf(eventCodeByte & ~0x80);

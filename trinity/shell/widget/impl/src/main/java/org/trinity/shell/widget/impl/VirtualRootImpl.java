@@ -12,7 +12,7 @@
 package org.trinity.shell.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
@@ -44,7 +44,7 @@ public final class VirtualRootImpl extends WidgetImpl implements VirtualRoot {
 	@Inject
 	protected VirtualRootImpl(	final EventBus eventBus,
 								final GeoEventFactory geoEventFactory,
-								final ManagedDisplay managedDisplay,
+								final ManagedDisplayService managedDisplay,
 								final PainterFactory painterFactory,
 								@Named("Widget") final GeoExecutor geoExecutor,
 								@Named("Root") final RenderArea root,

@@ -18,6 +18,7 @@ import org.trinity.foundation.input.api.Mouse;
 import org.trinity.foundation.shared.geometry.api.Coordinates;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
@@ -30,6 +31,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @since 1.0
  */
 @Bind
+@Singleton
 public final class MouseImpl implements Mouse {
 
 	private final XConnection<Long> xConnection;

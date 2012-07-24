@@ -20,7 +20,7 @@
  * shared by other non-core packages in the hyperdrice library. 
  * The core package does not group specific functionality 
  * but instead provides the foundation of the hyperdrive project.
- * {@link org.hyperdrive.core.ManagedDisplay},
+ * {@link org.ManagedDisplayService.core.ManagedDisplay},
  * {@link org.trinity.shell.core.impl.AbstractRenderArea} and
  * {@link org.trinity.shell.core.impl.ClientWindow} being the most important ones.
  * 

@@ -15,7 +15,7 @@ import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.foundation.shared.geometry.api.Coordinates;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
@@ -84,7 +84,7 @@ public class DragButtonImpl extends ButtonImpl implements DragButton {
 	private int y0;
 
 	private final ManagedMouse managedMouse;
-	private final ManagedDisplay managedDisplay;
+	private final ManagedDisplayService managedDisplay;
 
 	private final DragButton.View view;
 
@@ -94,7 +94,7 @@ public class DragButtonImpl extends ButtonImpl implements DragButton {
 	@Inject
 	protected DragButtonImpl(	final EventBus eventBus,
 								final GeoEventFactory geoEventFactory,
-								final ManagedDisplay managedDisplay,
+								final ManagedDisplayService managedDisplay,
 								final PainterFactory painterFactory,
 								@Named("Widget") final GeoExecutor geoExecutor,
 								final ManagedMouse managedMouse,

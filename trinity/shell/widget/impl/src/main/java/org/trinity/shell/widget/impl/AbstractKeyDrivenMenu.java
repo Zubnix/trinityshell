@@ -18,7 +18,7 @@ import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.input.api.SpecialKeyName;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.input.api.KeyInputStringBuilder;
@@ -53,7 +53,7 @@ public abstract class AbstractKeyDrivenMenu extends WidgetImpl implements
 	protected AbstractKeyDrivenMenu(final EventBus displayEventBus,
 									final EventBus eventBus,
 									final GeoEventFactory geoEventFactory,
-									final ManagedDisplay managedDisplay,
+									final ManagedDisplayService managedDisplay,
 									final PainterFactory painterFactory,
 									final GeoExecutor geoExecutor,
 									final ManagedKeyboard managedKeyboard,

@@ -11,10 +11,11 @@
  */
 package org.trinity.shell.widget.impl;
 
+import org.trinity.foundation.display.api.DisplayProtocol;
 import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
@@ -50,16 +51,16 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class CloseButtonImpl extends ButtonImpl implements CloseButton {
 
 	private RenderArea client;
-	private final DesktopProtocol desktopProtocol;
+	private final DisplayProtocol desktopProtocol;
 	private final CloseButton.View view;
 
 	@Inject
 	protected CloseButtonImpl(	final EventBus eventBus,
 								final GeoEventFactory geoEventFactory,
-								final ManagedDisplay managedDisplay,
+								final ManagedDisplayService managedDisplay,
 								final PainterFactory painterFactory,
 								@Named("Widget") final GeoExecutor geoExecutor,
-								final DesktopProtocol desktopProtocol,
+								final DisplayProtocol desktopProtocol,
 								final CloseButton.View view) {
 		super(	eventBus,
 				geoEventFactory,
@@ -90,7 +91,7 @@ public class CloseButtonImpl extends ButtonImpl implements CloseButton {
 
 	@Override
 	public void closeClient() {
-		this.desktopProtocol.requestDelete(getClient());
+		this.desktopProtocol.requestClose(getClient().getPlatformRenderArea());
 		this.view.closeClient(getClient());
 	}
 }

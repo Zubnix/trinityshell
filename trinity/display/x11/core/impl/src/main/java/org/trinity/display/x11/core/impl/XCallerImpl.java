@@ -17,10 +17,12 @@ import org.trinity.display.x11.core.api.XCaller;
 import org.trinity.display.x11.core.api.exception.BadXCall;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
+@Singleton
 public final class XCallerImpl implements XCaller {
 	/**
 	 * 

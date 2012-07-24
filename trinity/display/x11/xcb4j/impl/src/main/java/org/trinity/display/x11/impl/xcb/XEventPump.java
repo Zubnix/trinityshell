@@ -52,7 +52,7 @@ public class XEventPump implements Runnable {
 			final XEvent xEvent = this.xCaller
 					.doCall(this.getNextEvent,
 							this.xConnection.getConnectionReference());
-			// TODO handle event in display infrastructure
+			// TODO handle event in display infrastructure before queueing them
 
 			this.xEventBridge.queueXEvent(xEvent);
 			Thread.yield();

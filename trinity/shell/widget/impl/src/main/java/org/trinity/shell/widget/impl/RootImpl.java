@@ -12,7 +12,7 @@
 package org.trinity.shell.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
 import org.trinity.shell.widget.api.Root;
@@ -35,7 +35,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  * <code>ManagedDisplay</code>. Multiple <code>RealRoot</code> widgets can be
  * constructed from the same <code>ManagedDisplay</code> but will represent the
  * same on-screen drawable, it is thus recommended to use the
- * {@link ManagedDisplay#getRealRootRenderArea()} method to reference the real
+ * {@link ManagedDisplayService#getRealRootRenderArea()} method to reference the real
  * root.
  * 
  * @author Erik De Rijcke
@@ -49,7 +49,7 @@ public final class RootImpl extends WidgetImpl implements Root {
 	@Inject
 	protected RootImpl(	final EventBus eventBus,
 						final GeoEventFactory geoEventFactory,
-						final ManagedDisplay managedDisplay,
+						final ManagedDisplayService managedDisplay,
 						final PainterFactory painterFactory,
 						@Named("Widget") final GeoExecutor geoExecutor,
 						final Root.View view) {

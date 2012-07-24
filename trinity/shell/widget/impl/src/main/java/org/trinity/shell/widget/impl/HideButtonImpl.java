@@ -14,7 +14,7 @@ package org.trinity.shell.widget.impl;
 import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
@@ -52,7 +52,7 @@ public class HideButtonImpl extends ButtonImpl implements HideButton {
 	@Inject
 	protected HideButtonImpl(	final EventBus eventBus,
 								final GeoEventFactory geoEventFactory,
-								final ManagedDisplay managedDisplay,
+								final ManagedDisplayService managedDisplay,
 								final PainterFactory painterFactory,
 								@Named("Widget") final GeoExecutor geoExecutor,
 								final HideButton.View view) {

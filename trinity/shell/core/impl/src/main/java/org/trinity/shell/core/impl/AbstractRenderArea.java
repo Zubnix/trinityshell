@@ -15,7 +15,7 @@ import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
-import org.trinity.shell.core.api.ManagedDisplay;
+import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
@@ -38,12 +38,12 @@ import com.google.common.eventbus.Subscribe;
  * {@link ClientWindow} and {@link BaseWidget}.
  * <p>
  * <code>AbstractRenderArea</code> emits {@link DisplayEvent}s that it receives
- * from the {@link ManagedDisplay} it lives on.
+ * from the {@link ManagedDisplayService} it lives on.
  * 
  * @author Erik De Rijcke
  * @since 1.0
  * @see GeoTransformableRectangle
- * @see ManagedDisplay
+ * @see ManagedDisplayService
  * @see ClientWindow
  * @see BaseWidget
  */
@@ -59,7 +59,7 @@ public abstract class AbstractRenderArea extends
 	public static final int DEFAULT_WIDTH_INC = 1;
 	public static final int DEFAULT_HEIGHT_INC = 1;
 
-	private final ManagedDisplay managedDisplay;
+	private final ManagedDisplayService managedDisplay;
 	private DisplayRenderArea platformRenderArea;
 
 	private boolean movable;
@@ -81,7 +81,7 @@ public abstract class AbstractRenderArea extends
 	 */
 	protected AbstractRenderArea(	final EventBus eventBus,
 									final GeoEventFactory geoEventFactory,
-									final ManagedDisplay managedDisplay) {
+									final ManagedDisplayService managedDisplay) {
 		super(eventBus, geoEventFactory);
 		this.eventBus = eventBus;
 		this.managedDisplay = managedDisplay;

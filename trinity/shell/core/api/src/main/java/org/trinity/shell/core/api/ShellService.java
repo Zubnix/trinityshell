@@ -11,12 +11,12 @@
  */
 package org.trinity.shell.core.api;
 
-import org.trinity.foundation.display.api.event.DisplayEvent;
-
 /*****************************************
  * @author Erik De Rijcke
  * 
  ****************************************/
-public interface ManagedDisplayFactory {
-	void createManagedDisplay(DisplayEvent display);
+public interface ShellService {
+	void start();
+
+	void stop();
 }
