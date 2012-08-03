@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.input.api;
 
-import org.trinity.foundation.display.api.event.KeyNotifyEvent;
+import org.trinity.foundation.input.api.event.KeyNotifyEvent;
 
 public interface ManagedKeyboard extends InputDevice {
 

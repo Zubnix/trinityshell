@@ -16,13 +16,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>composite</module>
 		<module>core</module>
-		<module>damage</module>
-		<module>fixes</module>
-		<module>render</module>
-		<module>shape</module>
-		<module>sync</module>
-		<module>xcb4j</module>
+		<module>xcbjb</module>
 	</modules>
 </project>

@@ -10,6 +10,7 @@
 %include "niobuffers_java.i";
 %include "xcb_generic_error_t.i";
 %include "equals_hash_java.i";
+%include "custom_xcb.i";
 //TODO somewhere a pointer-pointer of xcb_screen_t is used. handle this.
 
 %{
@@ -27,6 +28,8 @@
 #include <xcb/xcb_atom.h>
 #include <xcb/xcb_ewmh.h>
 %}
+
+%apply char **STRING_ARRAY {char **host};
 
 //xcb_extenstion_t is an opaque structure that we only want to pass around after the extension is queried.
 %immutable;

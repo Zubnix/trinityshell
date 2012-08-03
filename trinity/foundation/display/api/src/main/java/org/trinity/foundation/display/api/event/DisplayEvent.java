@@ -22,7 +22,16 @@ import org.trinity.foundation.display.api.DisplayRenderArea;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public interface DisplayEvent {
+public class DisplayEvent {
+
+	private final DisplayEventSource displayEventSource;
+
+	/*****************************************
+	 * 
+	 ****************************************/
+	public DisplayEvent(final DisplayEventSource displayEventSource) {
+		this.displayEventSource = displayEventSource;
+	}
 
 	/**
 	 * The original display resource where this <code>DisplayEven</code>
@@ -30,5 +39,7 @@ public interface DisplayEvent {
 	 * 
 	 * @return A {@link DisplayRenderArea}.
 	 */
-	DisplayEventSource getEventSource();
+	public DisplayEventSource getEventSource() {
+		return this.displayEventSource;
+	}
 }

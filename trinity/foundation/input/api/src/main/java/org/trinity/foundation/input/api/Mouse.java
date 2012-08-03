@@ -11,7 +11,10 @@
  */
 package org.trinity.foundation.input.api;
 
-import org.trinity.foundation.shared.geometry.api.Coordinates;
+import java.awt.Button;
+
+import org.trinity.foundation.display.api.DisplayRenderArea;
+import org.trinity.foundation.shared.geometry.api.Coordinate;
 
 /**
  * A <code>Mouse</code> is a graphical pointer representing a native pointing
@@ -22,37 +25,30 @@ import org.trinity.foundation.shared.geometry.api.Coordinates;
  */
 public interface Mouse {
 
-	// /**
-	// * Get the the X coordinate of this <code>Mouse</code> inside the root
-	// * <code>PlatformRenderArea</code> at the time of the last
-	// * {@link Mouse#refreshInfo()} call.
-	// * <p>
-	// * A coordinate is always measured from the top left corner of the root
-	// * <code>PlatformRenderArea</code>.
-	// *
-	// * @return the horizontal value in pixels of this <code>Mouse</code> 's
-	// * location.
-	// */
-	// int getRootX();
-	//
-	// /**
-	// * Get the the Y coordinate of this <code>Mouse</code> inside the root
-	// * <code>PlatformRenderArea</code> at the time of the last
-	// * {@link Mouse#refreshInfo()} call.
-	// * <p>
-	// * A coordinate is always measured from the top left corner of the root
-	// * <code>PlatformRenderArea</code>.
-	// *
-	// * @return the vertical value in pixels of this <code>Mouse</code> 's
-	// * location.
-	// */
-	// int getRootY();
+	Coordinate getRootCoordinates();
 
-	Coordinates getRootCoordinates();
+	/**
+	 * @param likeButton
+	 * @param withModifiers
+	 */
+	void catchMouseInput(	DisplayRenderArea displayRenderArea,
+							Button catchButton,
+							InputModifiers withModifiers);
 
-	// /**
-	// * Renews the values returned by the other methods in this
-	// * <code>Mouse</code> to match the native mouse pointer.
-	// */
-	// void refreshInfo();
+	/**
+	 * 
+	 */
+	void catchAllMouseInput();
+
+	/**
+	 * 
+	 */
+	void stopMouseInputCatching();
+
+	/**
+	 * @param likeButton
+	 * @param withModifiers
+	 */
+	void disableMouseInputCatching(	Button likeButton,
+									InputModifiers withModifiers);
 }

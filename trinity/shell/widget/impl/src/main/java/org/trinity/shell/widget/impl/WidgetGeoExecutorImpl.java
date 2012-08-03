@@ -16,7 +16,6 @@ import javax.inject.Named;
 import org.trinity.foundation.display.api.Area;
 import org.trinity.foundation.display.api.AreaManipulator;
 import org.trinity.foundation.display.api.DisplayRenderArea;
-import org.trinity.foundation.shared.geometry.api.GeometryFactory;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.core.impl.RenderAreaGeoExecutorImpl;
 import org.trinity.shell.geo.api.GeoExecutor;
@@ -48,9 +47,8 @@ public class WidgetGeoExecutorImpl extends RenderAreaGeoExecutorImpl {
 	 * @param geometryFactory
 	 ****************************************/
 	@Inject
-	protected WidgetGeoExecutorImpl(final Root root,
-									final GeometryFactory geometryFactory) {
-		super(root, geometryFactory);
+	protected WidgetGeoExecutorImpl(final Root root) {
+		super(root);
 	}
 
 	@Override

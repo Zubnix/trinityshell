@@ -61,12 +61,4 @@ public interface DisplayServer {
 	 * closes the connection to the underlying native display.
 	 */
 	void shutDown();
-
-	/**
-	 * The <code>PlatformRenderArea</code> that has the input focus on this
-	 * <code>Display</code>
-	 * 
-	 * @return The focussed {@link DisplayRenderArea}.
-	 */
-	DisplayRenderArea getInputFocus();
 }

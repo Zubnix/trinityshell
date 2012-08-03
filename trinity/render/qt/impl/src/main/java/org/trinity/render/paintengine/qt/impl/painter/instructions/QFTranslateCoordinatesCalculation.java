@@ -12,7 +12,7 @@
 package org.trinity.render.paintengine.qt.impl.painter.instructions;
 
 import org.trinity.foundation.render.api.Paintable;
-import org.trinity.foundation.shared.geometry.api.Coordinates;
+import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.foundation.shared.geometry.api.GeometryFactory;
 import org.trinity.render.paintengine.qt.api.QFRenderEngine;
 import org.trinity.render.paintengine.qt.api.painter.QFPaintCalculation;
@@ -26,7 +26,7 @@ import com.trolltech.qt.gui.QWidget;
  * @author Erik De Rijcke
  ****************************************/
 public class QFTranslateCoordinatesCalculation implements
-		QFPaintCalculation<Coordinates> {
+		QFPaintCalculation<Coordinate> {
 
 	private final GeometryFactory geometryFactory;
 
@@ -47,14 +47,14 @@ public class QFTranslateCoordinatesCalculation implements
 	}
 
 	@Override
-	public Coordinates calculate(	final Paintable paintable,
+	public Coordinate calculate(	final Paintable paintable,
 									final QFRenderEngine renderEngine) {
 		final QWidget sourcePaintPeer = renderEngine.getVisual(this.source);
 		final QWidget targetPaintPeer = renderEngine.getVisual(paintable);
 
 		final QPoint translatedPoint = sourcePaintPeer
 				.mapTo(targetPaintPeer, new QPoint(this.sourceX, this.sourceY));
-		final Coordinates coordinates = this.geometryFactory
+		final Coordinate coordinates = this.geometryFactory
 				.createCoordinates(translatedPoint.x(), translatedPoint.y());
 		return coordinates;
 	}

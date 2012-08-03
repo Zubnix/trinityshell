@@ -13,13 +13,13 @@ package org.trinity.render.paintengine.qt.impl.eventconverters;
 
 import org.trinity.foundation.display.api.event.DisplayEventFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.InputModifiersFactory;
 import org.trinity.foundation.input.api.Key;
 import org.trinity.foundation.input.api.KeyFactory;
 import org.trinity.foundation.input.api.KeyboardInput;
 import org.trinity.foundation.input.api.KeyboardInputFactory;
+import org.trinity.foundation.input.api.event.KeyNotifyEvent;
 import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
 
 import com.google.inject.Inject;

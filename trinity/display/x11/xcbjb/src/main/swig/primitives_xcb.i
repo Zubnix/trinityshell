@@ -5,3 +5,5 @@ typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
 //for performance reasons we typedef uint32_t to c int, this is because a java long (which will map to a c unsigned int) requires 2 operations in the jvm.
 typedef signed int uint32_t;
+typedef signed long long int64_t;
+typedef long long uint64_t;

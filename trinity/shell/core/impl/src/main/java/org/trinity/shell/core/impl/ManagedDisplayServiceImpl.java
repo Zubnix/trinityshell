@@ -14,7 +14,6 @@ package org.trinity.shell.core.impl;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import org.trinity.foundation.display.api.DisplayEventSelector;
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.shell.core.api.ManagedDisplayService;
@@ -57,9 +56,9 @@ public class ManagedDisplayServiceImpl implements ManagedDisplayService {
 		// TODO this is more an X specific thing, create a more platform
 		// neutral mechanism/interface and hide any reference to root window. ->
 		// use DisplayProtocol itf?
-		this.root
-				.getPlatformRenderArea()
-				.selectEvent(DisplayEventSelector.REDIRECT_CHILD_WINDOW_GEOMETRY_CHANGES);
+		// this.root
+		// .getPlatformRenderArea()
+		// .selectEvent(DisplayEventSelector.REDIRECT_CHILD_WINDOW_GEOMETRY_CHANGES);
 		this.managedDisplayEventExecutor.execute(getEventDispatcher());
 	}
 

@@ -16,7 +16,7 @@ vpath %.c $(LIBSRCDIR)
 JAVA_INCLUDE_DIR = $(JAVA_HOME)/include
 JNI = $(JAVA_INCLUDE_DIR)
 JNI_LINUX = $(JAVA_INCLUDE_DIR)/linux
-JNI_SOURCE_DIR = ../java/xcbjb
+JNI_SOURCE_DIR = ../../../target/generated-sources/swig/xcbjb
 
 CFLAGS = -march=$(MARCH) -O2 -fno-strict-aliasing -fPIC -c -g -Wall -I$(JNI) -I$(JNI_LINUX) -fno-stack-protector
 LFLAGS = -lxcb -lxcb-keysyms -lxcb-util -lxcb-damage -lxcb-composite -lxcb-render -lxcb-sync -lxcb-shape -lxcb-xfixes

@@ -12,7 +12,7 @@
 	<properties>
 		<swig.file>${basedir}/src/main/swig/xcb.i</swig.file>
 		<swig.package>xcbjb</swig.package>
-		<swig.outdir>${project.build.sourceDirectory}/xcbjb</swig.outdir>
+		<swig.outdir>${project.build.directory}/generated-sources/swig/${swig.package}</swig.outdir>
 	</properties>
 	<profiles>
 		<profile>
@@ -54,6 +54,7 @@
 						</goals>
 						<configuration>
 							<tasks>
+								<mkdir dir="${swig.outdir}" />
 								<exec dir="${project.build.sourceDirectory}" executable="swig"
 									failonerror="true">
 									<arg value="-java" />
@@ -83,6 +84,32 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${swig.outdir}</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.display.x11</groupId>
+			<artifactId>XcbJb</artifactId>
+			<version>0.0.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

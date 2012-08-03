@@ -11,7 +11,7 @@
  */
 package org.trinity.foundation.display.api;
 
-import org.trinity.foundation.shared.geometry.api.Coordinates;
+import org.trinity.foundation.shared.geometry.api.Coordinate;
 
 /**
  * An <code>AreaManipulator</code> provides the operations that are available
@@ -123,5 +123,5 @@ public interface AreaManipulator<AREATYPE extends Area> {
 	 */
 	void hide();
 
-	Coordinates translateCoordinates(AREATYPE source, int sourceX, int sourceY);
+	Coordinate translateCoordinates(AREATYPE source, int sourceX, int sourceY);
 }

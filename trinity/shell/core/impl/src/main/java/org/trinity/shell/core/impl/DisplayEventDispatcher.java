@@ -19,10 +19,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.DisplayRenderArea;
-import org.trinity.foundation.display.api.event.ConfigureRequestEvent;
+import org.trinity.foundation.display.api.event.GeometryRequestEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.display.api.event.MapRequestEvent;
+import org.trinity.foundation.display.api.event.ShowRequestEvent;
 import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.core.api.RenderAreaFactory;
 
@@ -70,12 +70,12 @@ final class DisplayEventDispatcher implements Runnable {
 	}
 
 	@Subscribe
-	public void handleMapRequestEvent(final MapRequestEvent event) {
+	public void handleMapRequestEvent(final ShowRequestEvent event) {
 		createNewClientWhenNoEventManagers(event);
 	}
 
 	@Subscribe
-	public void handleConfigureRequestEvent(final ConfigureRequestEvent event) {
+	public void handleConfigureRequestEvent(final GeometryRequestEvent event) {
 		createNewClientWhenNoEventManagers(event);
 	}
 

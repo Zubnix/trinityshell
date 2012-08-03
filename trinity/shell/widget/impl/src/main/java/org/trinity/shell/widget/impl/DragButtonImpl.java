@@ -11,10 +11,10 @@
  */
 package org.trinity.shell.widget.impl;
 
-import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.input.api.Momentum;
+import org.trinity.foundation.input.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.foundation.shared.geometry.api.Coordinates;
+import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
@@ -49,12 +49,12 @@ public class DragButtonImpl extends ButtonImpl implements DragButton {
 	private final Runnable dragRun = new Runnable() {
 		@Override
 		public void run() {
-			final Coordinates mousePos = DragButtonImpl.this.managedMouse
+			final Coordinate mousePos = DragButtonImpl.this.managedMouse
 					.getAbsolutePosition();
 			DragButtonImpl.this.x0 = mousePos.getX();
 			DragButtonImpl.this.y0 = mousePos.getY();
 			while (!Thread.interrupted()) {
-				final Coordinates mousePosition = DragButtonImpl.this.managedMouse
+				final Coordinate mousePosition = DragButtonImpl.this.managedMouse
 						.getAbsolutePosition();
 				final int x1 = mousePosition.getX();
 				final int y1 = mousePosition.getY();

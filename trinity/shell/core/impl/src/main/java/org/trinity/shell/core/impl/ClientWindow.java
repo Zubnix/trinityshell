@@ -11,11 +11,11 @@
  */
 package org.trinity.shell.core.impl;
 
-import org.trinity.foundation.display.api.DisplayEventSelector;
 import org.trinity.foundation.display.api.DisplayRenderArea;
-import org.trinity.foundation.display.api.event.ConfigureRequestEvent;
-import org.trinity.foundation.display.api.event.MapRequestEvent;
-import org.trinity.foundation.display.api.event.UnmappedNotifyEvent;
+import org.trinity.foundation.display.api.event.GeometryRequestEvent;
+import org.trinity.foundation.display.api.event.HideNotifyEvent;
+import org.trinity.foundation.display.api.event.ShowRequestEvent;
+import org.trinity.foundation.shared.geometry.api.Rectangle;
 import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
@@ -68,7 +68,7 @@ public class ClientWindow extends AbstractRenderArea {
 	}
 
 	@Subscribe
-	public void handleMapRequest(final MapRequestEvent event) {
+	public void handleMapRequest(final ShowRequestEvent event) {
 		if ((getPlatformRenderArea() == null)
 				&& (event.getEventSource() instanceof DisplayRenderArea)) {
 			setPlatformRenderArea((DisplayRenderArea) event.getEventSource());
@@ -77,23 +77,24 @@ public class ClientWindow extends AbstractRenderArea {
 	}
 
 	@Subscribe
-	public void handleUnmapNotify(final UnmappedNotifyEvent event) {
+	public void handleUnmapNotify(final HideNotifyEvent event) {
 		doHide(false);
 	}
 
 	@Subscribe
-	public void handleConfigureRequest(final ConfigureRequestEvent event) {
-		if (event.isXSet()) {
-			setX(event.getX());
+	public void handleConfigureRequest(final GeometryRequestEvent event) {
+		final Rectangle rectangle = event.getGeometry();
+		if (event.configureX()) {
+			setX(rectangle.getX());
 		}
-		if (event.isYSet()) {
-			setY(event.getY());
+		if (event.configureY()) {
+			setY(rectangle.getY());
 		}
-		if (event.isWidthSet()) {
-			setWidth(event.getWidth());
+		if (event.configureWidth()) {
+			setWidth(rectangle.getWidth());
 		}
-		if (event.isHeightSet()) {
-			setHeight(event.getHeight());
+		if (event.configureHeight()) {
+			setHeight(rectangle.getHeight());
 		}
 		requestMoveResize();
 	}
@@ -109,11 +110,11 @@ public class ClientWindow extends AbstractRenderArea {
 
 		syncGeoToPlatformRenderAreaGeo();
 
-		platformRenderArea
-				.selectEvent(	DisplayEventSelector.NOTIFY_CHANGED_WINDOW_PROPERTY,
-								DisplayEventSelector.NOTIFY_CHANGED_WINDOW_GEOMETRY,
-								DisplayEventSelector.NOTIFY_MOUSE_ENTER,
-								DisplayEventSelector.NOTIFY_MOUSE_LEAVE,
-								DisplayEventSelector.NOTIFY_CHANGED_WINDOW_FOCUS);
+		// platformRenderArea
+		// .selectEvent( DisplayEventSelector.NOTIFY_CHANGED_WINDOW_PROPERTY,
+		// DisplayEventSelector.NOTIFY_CHANGED_WINDOW_GEOMETRY,
+		// DisplayEventSelector.NOTIFY_MOUSE_ENTER,
+		// DisplayEventSelector.NOTIFY_MOUSE_LEAVE,
+		// DisplayEventSelector.NOTIFY_CHANGED_WINDOW_FOCUS);
 	}
 }

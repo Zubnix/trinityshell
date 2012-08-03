@@ -14,7 +14,7 @@ package org.trinity.render.paintengine.qt.api.painter;
 import javax.inject.Named;
 
 import org.trinity.foundation.render.api.Paintable;
-import org.trinity.foundation.shared.geometry.api.Coordinates;
+import org.trinity.foundation.shared.geometry.api.Coordinate;
 
 import com.google.inject.assistedinject.Assisted;
 
@@ -23,7 +23,7 @@ import com.google.inject.assistedinject.Assisted;
  ****************************************/
 public interface QFPaintCalculationFactory {
 	@Named("QFTranslateCoordinates")
-	QFPaintCalculation<Coordinates> createTranslateCoordinatesCalculation(	Paintable source,
+	QFPaintCalculation<Coordinate> createTranslateCoordinatesCalculation(	Paintable source,
 																			@Assisted("sourceX") int sourceX,
 																			@Assisted("sourceY") int sourceY);
 }

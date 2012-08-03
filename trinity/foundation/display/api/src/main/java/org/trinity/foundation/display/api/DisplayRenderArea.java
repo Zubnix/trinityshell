@@ -12,9 +12,6 @@
 package org.trinity.foundation.display.api;
 
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.input.api.Button;
-import org.trinity.foundation.input.api.InputModifiers;
-import org.trinity.foundation.input.api.Key;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 // TODO documentation
@@ -30,15 +27,15 @@ import org.trinity.foundation.shared.geometry.api.Rectangle;
 public interface DisplayRenderArea extends DisplayResource, Area,
 		AreaManipulator<DisplayRenderArea>, DisplayEventSource {
 
-	/**
-	 * Select which <code>DisplayEvent</code> types this
-	 * <code> PlatformRenderArea</code> should propagate for further event
-	 * handling.
-	 * 
-	 * @param eventMask
-	 *            An number of different {@link DisplayEventSelector}s.
-	 */
-	void selectEvent(DisplayEventSelector... eventMask);
+	// /**
+	// * Select which <code>DisplayEvent</code> types this
+	// * <code> PlatformRenderArea</code> should propagate for further event
+	// * handling.
+	// *
+	// * @param eventMask
+	// * An number of different {@link DisplayEventSelector}s.
+	// */
+	// void selectEvent(DisplayEventSelector... eventMask);
 
 	/**
 	 * Get the current <code>PlatformRenderArea</code> geometry information. The
@@ -50,50 +47,4 @@ public interface DisplayRenderArea extends DisplayResource, Area,
 	 */
 	Rectangle getGeometry();
 
-	/**
-	 * @param catchKey
-	 * @param withModifiers
-	 */
-	void catchKeyboardInput(Key catchKey, InputModifiers withModifiers);
-
-	/**
-	 * 
-	 * 
-	 */
-	void catchAllKeyboardInput();
-
-	/**
-	 * 
-	 * 
-	 */
-	void stopKeyboardInputCatching();
-
-	/**
-	 * @param likeButton
-	 * @param withModifiers
-	 */
-	void catchMouseInput(Button catchButton, InputModifiers withModifiers);
-
-	/**
-	 * 
-	 */
-	void catchAllMouseInput();
-
-	/**
-	 * 
-	 */
-	void stopMouseInputCatching();
-
-	/**
-	 * @param likeKey
-	 * @param withModifiers
-	 */
-	void disableKeyboardInputCatching(Key likeKey, InputModifiers withModifiers);
-
-	/**
-	 * @param likeButton
-	 * @param withModifiers
-	 */
-	void disableMouseInputCatching(	Button likeButton,
-									InputModifiers withModifiers);
 }

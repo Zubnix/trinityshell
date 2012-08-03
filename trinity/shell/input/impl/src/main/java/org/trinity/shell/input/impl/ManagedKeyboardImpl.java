@@ -11,15 +11,13 @@
  */
 package org.trinity.shell.input.impl;
 
-import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.input.api.KeyboardInput;
-import org.trinity.shell.core.api.RenderArea;
+import org.trinity.foundation.input.api.event.KeyNotifyEvent;
 import org.trinity.shell.input.api.ManagedKeyboard;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
@@ -33,14 +31,11 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ManagedKeyboardImpl extends AbstractInputDevice implements
 		ManagedKeyboard {
 
-	private final RenderArea root;
-
 	private final Keyboard keyboard;
 
 	@Inject
-	protected ManagedKeyboardImpl(	@Named("root") final RenderArea root,
-									final Keyboard keyboard) {
-		this.root = root;
+	protected ManagedKeyboardImpl(final Keyboard keyboard) {
+
 		this.keyboard = keyboard;
 	}
 
@@ -56,12 +51,11 @@ public class ManagedKeyboardImpl extends AbstractInputDevice implements
 
 	@Override
 	public void release() {
-		this.root.getPlatformRenderArea().stopKeyboardInputCatching();
+		this.keyboard.stopKeyboardInputCatching();
 	}
 
 	@Override
 	protected void delegateInputEventsAndGrab() {
-		this.root.getPlatformRenderArea().catchAllKeyboardInput();
+		this.keyboard.catchAllKeyboardInput();
 	}
-
 }

@@ -20,7 +20,7 @@ import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Paintable;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.RenderEngine;
-import org.trinity.foundation.shared.geometry.api.Coordinates;
+import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.render.paintengine.qt.api.QFRenderEngine;
 import org.trinity.render.paintengine.qt.api.painter.QFPaintCalculationFactory;
 import org.trinity.render.paintengine.qt.api.painter.QFPaintConstruction;
@@ -168,7 +168,7 @@ public class QFPainter implements Painter {
 	}
 
 	@Override
-	public Coordinates translateCoordinates(final Paintable source,
+	public Coordinate translateCoordinates(final Paintable source,
 											final int sourceX,
 											final int sourceY) {
 		return this.qFRenderEngine

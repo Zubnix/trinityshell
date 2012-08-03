@@ -22,7 +22,7 @@
 %typemap(out) CTYPE* {
 	//TODO every method that returns a pointer to memory as a capacity defined somewhere (or at least it should have).
 	//TODO provide a mapping for these methods and create a direct buffer with the correct capacity information.
-	//For now we provide a value that we've just sucked out of our thumb.
+	//For now we provide a value that we've just sucked out of our thumb. (max signed int value).
 	$result = (*jenv)->NewDirectByteBuffer(jenv,result, 2147483647);
 }
 %typemap(freearg) CTYPE* ""

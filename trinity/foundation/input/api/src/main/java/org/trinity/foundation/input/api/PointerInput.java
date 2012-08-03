@@ -1,15 +1,54 @@
 package org.trinity.foundation.input.api;
 
-public interface PointerInput extends Input {
-	Button getButton();
+public class PointerInput extends Input {
 
-	InputModifiers getModifiers();
+	private final Button button;
+	private final InputModifiers inputModifiers;
+	private final int relativeX;
+	private final int relativeY;
+	private final int rootX;
+	private final int rootY;
 
-	int getRelativeX();
+	/*****************************************
+	 * 
+	 ****************************************/
+	public PointerInput(final Momentum momentum,
+						final Button button,
+						final InputModifiers inputModifiers,
+						final int relativeX,
+						final int relativeY,
+						final int rootX,
+						final int rootY) {
+		super(momentum);
+		this.button = button;
+		this.inputModifiers = inputModifiers;
+		this.relativeX = relativeX;
+		this.relativeY = relativeY;
+		this.rootX = rootX;
+		this.rootY = rootY;
+	}
 
-	int getRelativeY();
+	public Button getButton() {
+		return this.button;
+	}
 
-	int getRootX();
+	public InputModifiers getModifiers() {
+		return this.inputModifiers;
+	}
 
-	int getRootY();
+	public int getRelativeX() {
+		return this.relativeX;
+	}
+
+	public int getRelativeY() {
+		return this.relativeY;
+	}
+
+	public int getRootX() {
+		return this.rootX;
+	}
+
+	public int getRootY() {
+		return this.rootY;
+	}
 }

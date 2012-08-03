@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.trinity.input.x11</groupId>
+		<artifactId>input.x11.core</artifactId>
+		<version>0.0.1</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<artifactId>input.x11.core.impl</artifactId>
+	<name>Input X11 core implementation</name>
+	<packaging>jar</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.input.api</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.display.x11</groupId>
+			<artifactId>display.x11.core.impl</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
+</project>

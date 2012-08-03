@@ -13,9 +13,7 @@ package org.trinity.shell.core.impl;
 
 import org.trinity.foundation.display.api.Area;
 import org.trinity.foundation.display.api.AreaManipulator;
-import org.trinity.foundation.display.api.DisplayEventSelector;
-import org.trinity.foundation.shared.geometry.api.Coordinates;
-import org.trinity.foundation.shared.geometry.api.GeometryFactory;
+import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
@@ -43,13 +41,10 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 
 	private final RenderArea root;
-	private final GeometryFactory geometryFactory;
 
 	@Inject
-	protected RenderAreaGeoExecutorImpl(@Named("root") final RenderArea root,
-										final GeometryFactory geometryFactory) {
+	protected RenderAreaGeoExecutorImpl(@Named("root") final RenderArea root) {
 		this.root = root;
-		this.geometryFactory = geometryFactory;
 	}
 
 	@Override
@@ -79,9 +74,9 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 			final int newY = relativeY;
 			final GeoTransformableRectangle currentParent = geoTransformableRectangle
 					.getParent();
-			final Coordinates newRelativePosition = calculatePositionRelativeToTypedArea(	currentParent,
-																							newX,
-																							newY);
+			final Coordinate newRelativePosition = calculatePositionRelativeToTypedArea(currentParent,
+																						newX,
+																						newY);
 
 			final int newRelativeX = newRelativePosition.getX();
 			final int newRelativeY = newRelativePosition.getY();
@@ -114,9 +109,9 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 			final GeoTransformableRectangle currentParent = geoTransformableRectangle
 					.getParent();
 
-			final Coordinates newRelativePosition = calculatePositionRelativeToTypedArea(	currentParent,
-																							newX,
-																							newY);
+			final Coordinate newRelativePosition = calculatePositionRelativeToTypedArea(currentParent,
+																						newX,
+																						newY);
 
 			final int newRelativeX = newRelativePosition.getX();
 			final int newRelativeY = newRelativePosition.getY();
@@ -130,28 +125,27 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 		}
 	}
 
-	protected Coordinates calculatePositionRelativeToTypedArea(	final GeoTransformableRectangle directParent,
+	protected Coordinate calculatePositionRelativeToTypedArea(	final GeoTransformableRectangle directParent,
 																final int directRelativeX,
 																final int directRelativeY) {
 
 		final RenderArea parentRenderArea = findClosestSameTypeArea(directParent);
 
 		if (parentRenderArea == null) {
-			return this.geometryFactory.createCoordinates(	directRelativeX,
-															directRelativeY);
+			return new Coordinate(directRelativeX, directRelativeY);
 		}
 
 		final int newAbsX = directParent.getAbsoluteX() + directRelativeX;
 		final int newAbsY = directParent.getAbsoluteY() + directRelativeY;
 
-		final Coordinates absCorParent = getAreaManipulator(this.root)
+		final Coordinate absCorParent = getAreaManipulator(this.root)
 				.translateCoordinates(getAreaPeer(parentRenderArea), 0, 0);
 
 		final int newRelX = newAbsX - absCorParent.getX();
 		final int newRelY = newAbsY - absCorParent.getY();
 
-		final Coordinates corRelativeToTypedParent = this.geometryFactory
-				.createCoordinates(newRelX, newRelY);
+		final Coordinate corRelativeToTypedParent = new Coordinate(	newRelX,
+																	newRelY);
 
 		return corRelativeToTypedParent;
 	}
@@ -177,9 +171,9 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 	 * @param newParentRenderArea
 	 */
 	protected void preProcesNewSameTypeParent(final RenderArea newParentRenderArea) {
-		newParentRenderArea
-				.getPlatformRenderArea()
-				.selectEvent(DisplayEventSelector.REDIRECT_CHILD_WINDOW_GEOMETRY_CHANGES);
+		// newParentRenderArea
+		// .getPlatformRenderArea()
+		// .selectEvent(DisplayEventSelector.REDIRECT_CHILD_WINDOW_GEOMETRY_CHANGES);
 	}
 
 	@Override
@@ -207,9 +201,9 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 			if (currentRenderArea.equals(newParentRenderArea)) {
 				throw new IllegalArgumentException("Can not reparent to a child of self.");
 			} else {
-				final Coordinates newRelativePosition = calculatePositionRelativeToTypedArea(	newParent,
-																								newX,
-																								newY);
+				final Coordinate newRelativePosition = calculatePositionRelativeToTypedArea(newParent,
+																							newX,
+																							newY);
 
 				final int newRelativeX = newRelativePosition.getX();
 				final int newRelativeY = newRelativePosition.getY();

@@ -25,10 +25,10 @@
 	</developers>
 	<modules>
 		<module>shellapp</module>
-		<module>foundation</module>
 		<module>shell</module>
 		<module>display</module>
 		<module>render</module>
+		<module>foundation</module>
 	</modules>
 
 	<dependencies>

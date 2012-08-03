@@ -12,14 +12,11 @@
 package org.trinity.shell.input.impl;
 
 import org.trinity.foundation.input.api.Mouse;
-import org.trinity.foundation.shared.geometry.api.Coordinates;
-import org.trinity.foundation.shared.geometry.api.GeometryFactory;
+import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.shell.core.api.ManagedDisplayService;
-import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.input.api.ManagedMouse;
 
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
@@ -36,7 +33,6 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ManagedMouseImpl extends AbstractInputDevice implements
 		ManagedMouse {
 
-	private final RenderArea root;
 	private final Mouse mouse;
 
 	/**
@@ -50,25 +46,23 @@ public class ManagedMouseImpl extends AbstractInputDevice implements
 	 *            A {@link ManagedDisplayService}. @ Thrown when the given
 	 *            <code>ManagedDisplay</code> has an illegal state.
 	 */
-	protected ManagedMouseImpl(	@Named("root") final RenderArea root,
-								final GeometryFactory geometryFactory,
-								final Mouse mouse) {
-		this.root = root;
+	protected ManagedMouseImpl(final Mouse mouse) {
+
 		this.mouse = mouse;
 	}
 
 	@Override
 	public void release() {
-		this.root.getPlatformRenderArea().stopMouseInputCatching();
+		this.mouse.stopMouseInputCatching();
 	}
 
 	@Override
 	protected void delegateInputEventsAndGrab() {
-		this.root.getPlatformRenderArea().catchAllMouseInput();
+		this.mouse.catchAllMouseInput();
 	}
 
 	@Override
-	public Coordinates getAbsolutePosition() {
+	public Coordinate getAbsolutePosition() {
 		return this.mouse.getRootCoordinates();
 	}
 }
