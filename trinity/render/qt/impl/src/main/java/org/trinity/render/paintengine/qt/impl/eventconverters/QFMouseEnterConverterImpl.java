@@ -11,10 +11,10 @@
  */
 package org.trinity.render.paintengine.qt.impl.eventconverters;
 
-import org.trinity.foundation.display.api.event.DisplayEventFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.display.api.event.MouseVisitationNotifyEvent;
-import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
+import org.trinity.foundation.display.api.event.PointerEnterNotifyEvent;
+import org.trinity.foundation.display.api.event.PointerVisitationNotifyEvent;
+import org.trinity.render.paintengine.qt.impl.QFRenderEventConverter;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -37,20 +37,18 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public final class QFMouseEnterConverterImpl implements QFRenderEventConverter {
 
-	private final DisplayEventFactory displayEventFactory;
 	private final QEvent.Type qType;
 
 	@Inject
-	protected QFMouseEnterConverterImpl(@Named("Enter") final QEvent.Type qType,
-										final DisplayEventFactory displayEventFactory) {
-		this.displayEventFactory = displayEventFactory;
+	protected QFMouseEnterConverterImpl(@Named("Enter") final QEvent.Type qType) {
+
 		this.qType = qType;
 	}
 
 	@Override
-	public MouseVisitationNotifyEvent convertEvent(	final DisplayEventSource eventSource,
-													final QEvent qEvent) {
-		return this.displayEventFactory.createMouseEnter(eventSource);
+	public PointerVisitationNotifyEvent convertEvent(	final DisplayEventSource eventSource,
+														final QEvent qEvent) {
+		return new PointerEnterNotifyEvent(eventSource);
 	}
 
 	/*

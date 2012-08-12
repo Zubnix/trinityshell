@@ -11,27 +11,19 @@
  */
 package org.trinity.render.paintengine.qt.impl.painter.instructions;
 
+import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Paintable;
 import org.trinity.render.paintengine.qt.api.QFRenderEngine;
-import org.trinity.render.paintengine.qt.api.painter.QFPaintInstruction;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
-public class QFResizeInstruction implements QFPaintInstruction {
+public class QFResizeInstruction implements PaintInstruction<QFRenderEngine> {
 
 	private final int width;
 	private final int height;
 
-	/*****************************************
-	 * 
-	 ****************************************/
-	@Inject
-	protected QFResizeInstruction(	@Assisted("width") final int width,
-									@Assisted("height") final int height) {
+	public QFResizeInstruction(final int width, final int height) {
 		this.width = width;
 		this.height = height;
 	}

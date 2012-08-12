@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.InputModifierName;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
@@ -23,7 +24,6 @@ import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.input.api.Modifier;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.input.api.SpecialKeyName;
-import org.trinity.foundation.input.api.event.KeyNotifyEvent;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.input.api.KeyBinding;
 
@@ -118,10 +118,8 @@ public class KeyBindingImpl implements KeyBinding {
 
 		for (final Key validKey : this.validKeys) {
 			// install a keygrab
-			this.keyboard
-					.catchKeyboardInput(this.root.getPlatformRenderArea(),
-										validKey,
-										this.inputModifiers);
+			this.root.getPlatformRenderArea().grabKey(	validKey,
+														this.inputModifiers);
 		}
 	}
 

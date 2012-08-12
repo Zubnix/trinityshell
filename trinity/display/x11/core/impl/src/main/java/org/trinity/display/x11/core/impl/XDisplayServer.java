@@ -16,8 +16,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 
-import xcbjb.xcb_generic_event_t;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -35,20 +33,32 @@ public class XDisplayServer implements DisplayServer {
 
 	private int time;
 
-	@Inject
-	private XConnection xConnection;
-	@Inject
-	@Named("xEventBus")
-	private EventBus xEventBus;
-	@Inject
-	private DisplayEventConverter displayEventConverter;
+	private final XConnection xConnection;
+	private final EventBus displayEventBus;
 
-	public XDisplayServer() {
-		this.time = 0;
-		this.xEventBus.register(this);
-		// FIXME from configuration
+	@Inject
+	XDisplayServer(	final XConnection xConnection,
+					@Named("displayEventBus") final EventBus displayEventBus) {
+
+		this.displayEventBus = displayEventBus;
+		this.displayEventBus.register(this);
+
+		this.xConnection = xConnection;
+		// FIXME from config
 		final String displayName = System.getenv("DISPLAY");
 		this.xConnection.open(displayName, 0);
+
+		this.time = 0;
+	}
+
+	@Subscribe
+	public void handleDisplayEvent(final DisplayEvent displayEvent) {
+		try {
+			this.displayEvents.put(displayEvent);
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -65,15 +75,6 @@ public class XDisplayServer implements DisplayServer {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	@Subscribe
-	public void handleXEvent(final xcb_generic_event_t event_t) {
-		final DisplayEvent displayEvent = this.displayEventConverter
-				.convert(event_t);
-		if (displayEvent != null) {
-			this.displayEvents.add(displayEvent);
-		}
 	}
 
 	@Override

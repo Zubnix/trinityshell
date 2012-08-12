@@ -12,6 +12,7 @@
 package org.trinity.foundation.display.api;
 
 import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 // TODO documentation
@@ -27,16 +28,6 @@ import org.trinity.foundation.shared.geometry.api.Rectangle;
 public interface DisplayRenderArea extends DisplayResource, Area,
 		AreaManipulator<DisplayRenderArea>, DisplayEventSource {
 
-	// /**
-	// * Select which <code>DisplayEvent</code> types this
-	// * <code> PlatformRenderArea</code> should propagate for further event
-	// * handling.
-	// *
-	// * @param eventMask
-	// * An number of different {@link DisplayEventSelector}s.
-	// */
-	// void selectEvent(DisplayEventSelector... eventMask);
-
 	/**
 	 * Get the current <code>PlatformRenderArea</code> geometry information. The
 	 * returned <code>PlatformRenderAreaGeometry</code> represents this
@@ -47,4 +38,5 @@ public interface DisplayRenderArea extends DisplayResource, Area,
 	 */
 	Rectangle getGeometry();
 
+	Coordinate getPointerCoordinate();
 }

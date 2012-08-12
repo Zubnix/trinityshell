@@ -91,32 +91,6 @@ public interface Painter extends AreaManipulator<Paintable> {
 
 	<R> R calculate(PaintCalculation<R, ? extends RenderEngine> paintCalculation);
 
-	// TODO Should calls that relate to the paintable's input be implemented by
-	// the painter or should a seperate input manipulator be used?
-	/**
-	 * Redirect all keyboard input to the <code>Paintable</code> that is managed
-	 * by this <code>Painter</code>.
-	 */
-	void grabKeyboard();
-
-	/**
-	 * Stop redirecting all keyboard input to the <code>Paintable</code> that is
-	 * managed by this <code>Painter</code>.
-	 */
-	void releaseKeyboard();
-
-	/**
-	 * Redirect all mouse input to the <code>Paintable</code> that is managed by
-	 * this <code>Painter</code>.
-	 */
-	void grabMouse();
-
-	/**
-	 * Stop redirecting all mouse input to the <code>Paintable</code> that is
-	 * managed by this <code>Painter</code>.
-	 */
-	void releaseMouse();
-
 	/**
 	 * The <code>Paintable</code> that is managed by this <code>Painter</code>.
 	 * 

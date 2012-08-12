@@ -11,9 +11,9 @@
  */
 package org.trinity.shell.input.impl;
 
+import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.input.api.KeyboardInput;
-import org.trinity.foundation.input.api.event.KeyNotifyEvent;
 import org.trinity.shell.input.api.ManagedKeyboard;
 
 import com.google.inject.Inject;
@@ -28,8 +28,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  */
 @Bind
 @Singleton
-public class ManagedKeyboardImpl extends AbstractInputDevice implements
-		ManagedKeyboard {
+public class ManagedKeyboardImpl implements ManagedKeyboard {
 
 	private final Keyboard keyboard;
 
@@ -47,15 +46,5 @@ public class ManagedKeyboardImpl extends AbstractInputDevice implements
 				.keyName(keyboardInput.getKey(), keyboardInput.getModifiers());
 
 		return keyName;
-	}
-
-	@Override
-	public void release() {
-		this.keyboard.stopKeyboardInputCatching();
-	}
-
-	@Override
-	protected void delegateInputEventsAndGrab() {
-		this.keyboard.catchAllKeyboardInput();
 	}
 }

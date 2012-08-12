@@ -11,8 +11,8 @@
  */
 package org.trinity.shell.widget.impl;
 
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.input.api.Momentum;
-import org.trinity.foundation.input.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.geo.api.GeoExecutor;

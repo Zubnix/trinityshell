@@ -11,23 +11,25 @@
  */
 package org.trinity.render.paintengine.qt.impl.painter.instructions;
 
+import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Paintable;
 import org.trinity.render.paintengine.qt.api.QFRenderEngine;
-import org.trinity.render.paintengine.qt.api.painter.QFPaintInstruction;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
-public class QFSetParentInstruction implements QFPaintInstruction {
+public class QFSetParentInstruction implements PaintInstruction<QFRenderEngine> {
 
 	private final Paintable parent;
+	private final int x;
+	private final int y;
 
-	@Inject
-	protected QFSetParentInstruction(@Assisted final Paintable parent) {
+	public QFSetParentInstruction(	final Paintable parent,
+									final int x,
+									final int y) {
 		this.parent = parent;
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
@@ -35,5 +37,6 @@ public class QFSetParentInstruction implements QFPaintInstruction {
 						final QFRenderEngine renderEngine) {
 		renderEngine.getVisual(paintable)
 				.setParent(renderEngine.getVisual(this.parent));
+		renderEngine.getVisual(paintable).move(this.x, this.y);
 	}
 }

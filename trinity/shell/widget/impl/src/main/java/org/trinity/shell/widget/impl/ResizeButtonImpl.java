@@ -15,7 +15,6 @@ import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
-import org.trinity.shell.input.api.ManagedMouse;
 import org.trinity.shell.widget.api.DragButton;
 
 import com.google.common.eventbus.EventBus;
@@ -41,14 +40,12 @@ public class ResizeButtonImpl extends DragButtonImpl {
 								final ManagedDisplayService managedDisplay,
 								final PainterFactory painterFactory,
 								@Named("Widget") final GeoExecutor geoExecutor,
-								final ManagedMouse managedMouse,
 								final DragButton.View view) {
 		super(	eventBus,
 				geoEventFactory,
 				managedDisplay,
 				painterFactory,
 				geoExecutor,
-				managedMouse,
 				view);
 	}
 

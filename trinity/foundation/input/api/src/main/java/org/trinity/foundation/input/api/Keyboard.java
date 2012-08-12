@@ -11,7 +11,6 @@
  */
 package org.trinity.foundation.input.api;
 
-import org.trinity.foundation.display.api.DisplayRenderArea;
 
 // TODO documentation
 /**
@@ -23,20 +22,20 @@ public interface Keyboard {
 
 	/**
 	 * 
-	 * @param baseKey
+	 * @param key
 	 * @param baseInputModifiers
 	 * @return
 	 * 
 	 */
-	String keyName(Key baseKey, InputModifiers inputModifiers);
+	String keyName(Key key, InputModifiers inputModifiers);
 
 	/**
 	 * 
-	 * @param keyChar
+	 * @param keyName
 	 * @return
 	 * 
 	 */
-	Key[] keys(String keyChar);
+	Key[] keys(String keyName);
 
 	/**
 	 * 
@@ -51,24 +50,4 @@ public interface Keyboard {
 	 * @return
 	 */
 	InputModifiers modifiers(InputModifierName... modifierKeyNames);
-
-	/**
-	 * @param catchKey
-	 * @param withModifiers
-	 */
-	void catchKeyboardInput(DisplayRenderArea displayRenderArea,
-							Key catchKey,
-							InputModifiers withModifiers);
-
-	/**
-	 * 
-	 * 
-	 */
-	void catchAllKeyboardInput();
-
-	/**
-	 * 
-	 * 
-	 */
-	void stopKeyboardInputCatching();
 }

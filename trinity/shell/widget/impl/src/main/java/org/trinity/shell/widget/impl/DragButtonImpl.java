@@ -11,15 +11,15 @@
  */
 package org.trinity.shell.widget.impl;
 
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.input.api.Momentum;
-import org.trinity.foundation.input.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.shell.core.api.ManagedDisplayService;
+import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 import org.trinity.shell.geo.api.event.GeoEventFactory;
-import org.trinity.shell.input.api.ManagedMouse;
 import org.trinity.shell.widget.api.DragButton;
 
 import com.google.common.eventbus.EventBus;
@@ -46,16 +46,21 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 public class DragButtonImpl extends ButtonImpl implements DragButton {
 
+	@Inject
+	@Named("root")
+	private RenderArea root;
+
 	private final Runnable dragRun = new Runnable() {
 		@Override
 		public void run() {
-			final Coordinate mousePos = DragButtonImpl.this.managedMouse
-					.getAbsolutePosition();
+
+			final Coordinate mousePos = DragButtonImpl.this.root
+					.getPlatformRenderArea().getPointerCoordinate();
 			DragButtonImpl.this.x0 = mousePos.getX();
 			DragButtonImpl.this.y0 = mousePos.getY();
 			while (!Thread.interrupted()) {
-				final Coordinate mousePosition = DragButtonImpl.this.managedMouse
-						.getAbsolutePosition();
+				final Coordinate mousePosition = DragButtonImpl.this.root
+						.getPlatformRenderArea().getPointerCoordinate();
 				final int x1 = mousePosition.getX();
 				final int y1 = mousePosition.getY();
 
@@ -83,7 +88,6 @@ public class DragButtonImpl extends ButtonImpl implements DragButton {
 	private int x0;
 	private int y0;
 
-	private final ManagedMouse managedMouse;
 	private final ManagedDisplayService managedDisplay;
 
 	private final DragButton.View view;
@@ -97,7 +101,6 @@ public class DragButtonImpl extends ButtonImpl implements DragButton {
 								final ManagedDisplayService managedDisplay,
 								final PainterFactory painterFactory,
 								@Named("Widget") final GeoExecutor geoExecutor,
-								final ManagedMouse managedMouse,
 								final DragButton.View view) {
 		super(	eventBus,
 				geoEventFactory,
@@ -105,7 +108,6 @@ public class DragButtonImpl extends ButtonImpl implements DragButton {
 				painterFactory,
 				geoExecutor,
 				view);
-		this.managedMouse = managedMouse;
 		this.managedDisplay = managedDisplay;
 		stopDragClient();
 		this.view = view;

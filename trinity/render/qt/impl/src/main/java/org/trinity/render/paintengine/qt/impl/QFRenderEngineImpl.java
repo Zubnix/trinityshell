@@ -26,7 +26,6 @@ import org.trinity.foundation.render.api.PaintConstruction;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Paintable;
 import org.trinity.render.paintengine.qt.api.QFRenderEngine;
-import org.trinity.render.paintengine.qt.api.QFRenderEventBridge;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -61,20 +60,15 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class QFRenderEngineImpl extends QApplication implements QFRenderEngine,
 		DisplayEventProducer {
 
-	private final ResourceHandleFactory resourceHandleFactory;
-	private final QFRenderEventBridge renderEventBridge;
+	@Inject
+	private ResourceHandleFactory resourceHandleFactory;
+	@Inject
+	private QFRenderEventBridge renderEventBridge;
+
 	private final Map<Paintable, QWidget> paintableToPaintPeer = new HashMap<Paintable, QWidget>();
 
-	/**
-	 * @param display
-	 * @param backEndProperties
-	 */
-	@Inject
-	protected QFRenderEngineImpl(	final ResourceHandleFactory resourceHandleFactory,
-									final QFRenderEventBridge renderEventBridge) {
-		super(new String[] {});
-		this.resourceHandleFactory = resourceHandleFactory;
-		this.renderEventBridge = renderEventBridge;
+	public QFRenderEngineImpl(final String[] args) {
+		super(args);
 	}
 
 	@Override
@@ -88,20 +82,12 @@ public class QFRenderEngineImpl extends QApplication implements QFRenderEngine,
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fusion.paintengine.api.RenderEngine#start()
-	 */
 	@Override
 	public void start() {
 		QApplication.setQuitOnLastWindowClosed(false);
 		QApplication.exec();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fusion.paintengine.api.RenderEngine#stop()
-	 */
 	@Override
 	public void stop() {
 		QCoreApplication.invokeLater(new Runnable() {
@@ -113,12 +99,6 @@ public class QFRenderEngineImpl extends QApplication implements QFRenderEngine,
 		});
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.hydrogen.paint.api.RenderEngine#invoke(org.hydrogen.paint.api.Paintable
-	 * , org.hydrogen.paint.api.PaintInstruction)
-	 */
 	@Override
 	public void invoke(	final Paintable paintable,
 						@SuppressWarnings("rawtypes") final PaintInstruction paintInstruction) {
@@ -131,12 +111,6 @@ public class QFRenderEngineImpl extends QApplication implements QFRenderEngine,
 		});
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.hydrogen.paint.api.RenderEngine#invoke(org.hydrogen.paint.api.Paintable
-	 * , org.hydrogen.paint.api.PaintConstruction)
-	 */
 	@Override
 	public ResourceHandle invoke(	final Paintable paintable,
 									@SuppressWarnings("rawtypes") final PaintConstruction paintConstruction) {
@@ -162,24 +136,12 @@ public class QFRenderEngineImpl extends QApplication implements QFRenderEngine,
 		return resourceHandle;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.fusion.paintengine.api.QFusionRenderEngine#getVisual(org.hydrogen
-	 * .paint.api.Paintable)
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends QWidget> T getVisual(final Paintable paintable) {
 		return (T) this.paintableToPaintPeer.get(paintable);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.fusion.paintengine.api.QFusionRenderEngine#putVisual(org.hydrogen
-	 * .paint.api.Paintable, com.trolltech.qt.gui.QWidget)
-	 */
 	@Override
 	public ResourceHandle putVisual(final DisplayEventSource displayEventSource,
 									final Paintable paintable,
@@ -193,12 +155,6 @@ public class QFRenderEngineImpl extends QApplication implements QFRenderEngine,
 				.valueOf(winId));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.hydrogen.paint.api.RenderEngine#invoke(org.hydrogen.paint.api.Paintable
-	 * , org.hydrogen.paint.api.PaintCalculation)
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object invoke(	final Paintable paintable,

@@ -20,11 +20,8 @@ package org.trinity.foundation.display.api.event;
  * @since 1.0
  * 
  */
-public class FocusNotifyEvent extends DisplayEvent {
+public abstract class FocusNotifyEvent extends DisplayEvent {
 
-	/*****************************************
-	 * @param displayEventSource
-	 ****************************************/
 	public FocusNotifyEvent(final DisplayEventSource displayEventSource) {
 		super(displayEventSource);
 	}

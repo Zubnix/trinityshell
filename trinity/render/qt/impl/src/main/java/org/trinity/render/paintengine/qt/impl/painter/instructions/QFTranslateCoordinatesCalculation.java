@@ -11,14 +11,11 @@
  */
 package org.trinity.render.paintengine.qt.impl.painter.instructions;
 
+import org.trinity.foundation.render.api.PaintCalculation;
 import org.trinity.foundation.render.api.Paintable;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
-import org.trinity.foundation.shared.geometry.api.GeometryFactory;
 import org.trinity.render.paintengine.qt.api.QFRenderEngine;
-import org.trinity.render.paintengine.qt.api.painter.QFPaintCalculation;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 import com.trolltech.qt.core.QPoint;
 import com.trolltech.qt.gui.QWidget;
 
@@ -26,20 +23,15 @@ import com.trolltech.qt.gui.QWidget;
  * @author Erik De Rijcke
  ****************************************/
 public class QFTranslateCoordinatesCalculation implements
-		QFPaintCalculation<Coordinate> {
-
-	private final GeometryFactory geometryFactory;
+		PaintCalculation<Coordinate, QFRenderEngine> {
 
 	private final Paintable source;
 	private final int sourceX;
 	private final int sourceY;
 
-	@Inject
-	protected QFTranslateCoordinatesCalculation(final GeometryFactory geometryFactory,
-												@Assisted final Paintable source,
-												@Assisted("sourceX") final int sourceX,
-												@Assisted("sourceY") final int sourceY) {
-		this.geometryFactory = geometryFactory;
+	public QFTranslateCoordinatesCalculation(	final Paintable source,
+												final int sourceX,
+												final int sourceY) {
 
 		this.source = source;
 		this.sourceX = sourceX;
@@ -47,16 +39,16 @@ public class QFTranslateCoordinatesCalculation implements
 	}
 
 	@Override
-	public Coordinate calculate(	final Paintable paintable,
-									final QFRenderEngine renderEngine) {
+	public Coordinate calculate(final Paintable paintable,
+								final QFRenderEngine renderEngine) {
 		final QWidget sourcePaintPeer = renderEngine.getVisual(this.source);
 		final QWidget targetPaintPeer = renderEngine.getVisual(paintable);
 
 		final QPoint translatedPoint = sourcePaintPeer
 				.mapTo(targetPaintPeer, new QPoint(this.sourceX, this.sourceY));
-		final Coordinate coordinates = this.geometryFactory
-				.createCoordinates(translatedPoint.x(), translatedPoint.y());
-		return coordinates;
+		final Coordinate coordinate = new Coordinate(	translatedPoint.x(),
+														translatedPoint.y());
+		return coordinate;
 	}
 
 }

@@ -26,14 +26,19 @@ import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind
-@To(value = Type.CUSTOM)
+@To(value = Type.IMPLEMENTATION)
 @Singleton
 public class XWindowCache {
 
+	private final ResourceHandleFactory resourceHandleFactory;
+	private final DisplayResourceFactory displayResourceFactory;
+
 	@Inject
-	private ResourceHandleFactory resourceHandleFactory;
-	@Inject
-	private DisplayResourceFactory displayResourceFactory;
+	XWindowCache(	final ResourceHandleFactory resourceHandleFactory,
+					final DisplayResourceFactory displayResourceFactory) {
+		this.resourceHandleFactory = resourceHandleFactory;
+		this.displayResourceFactory = displayResourceFactory;
+	}
 
 	public Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
 
@@ -50,6 +55,5 @@ public class XWindowCache {
 			}
 			return window;
 		}
-
 	}
 }

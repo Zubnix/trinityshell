@@ -11,41 +11,55 @@
  */
 package org.trinity.display.x11.core.impl;
 
-import java.awt.Button;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.display.api.ResourceHandle;
+import org.trinity.foundation.input.api.Button;
+import org.trinity.foundation.input.api.InputModifiers;
+import org.trinity.foundation.input.api.Key;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.foundation.shared.geometry.api.ImmutableRectangle;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 import xcbjb.LibXcb;
+import xcbjb.LibXcbConstants;
 import xcbjb.SWIGTYPE_p_xcb_connection_t;
 import xcbjb.xcb_config_window_t;
+import xcbjb.xcb_event_mask_t;
 import xcbjb.xcb_generic_error_t;
 import xcbjb.xcb_get_geometry_cookie_t;
 import xcbjb.xcb_get_geometry_reply_t;
 import xcbjb.xcb_grab_keyboard_cookie_t;
+import xcbjb.xcb_grab_mode_t;
+import xcbjb.xcb_grab_pointer_cookie_t;
 import xcbjb.xcb_input_focus_t;
+import xcbjb.xcb_query_pointer_cookie_t;
+import xcbjb.xcb_query_pointer_reply_t;
 import xcbjb.xcb_stack_mode_t;
 import xcbjb.xcb_translate_coordinates_cookie_t;
 import xcbjb.xcb_translate_coordinates_reply_t;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 public class XWindow implements DisplayRenderArea {
 
-	@Inject
-	@Assisted
-	private ResourceHandle resourceHandle;
+	private final ResourceHandle resourceHandle;
+	private final XConnection xConnection;
+	private final XDisplayServer displayServer;
 
 	@Inject
-	private XConnection xConnection;
-	@Inject
-	private XDisplayServer displayServer;
+	@AssistedInject
+	XWindow(final XDisplayServer displayServer,
+			final XConnection xConnection,
+			@Assisted final ResourceHandle resourceHandle) {
+		this.displayServer = displayServer;
+		this.xConnection = xConnection;
+		this.resourceHandle = resourceHandle;
+	}
 
 	@Override
 	public ResourceHandle getResourceHandle() {
@@ -193,7 +207,7 @@ public class XWindow implements DisplayRenderArea {
 	}
 
 	@Override
-	public Coordinate translateCoordinates(final DisplayRenderArea source,
+	public Coordinate translateCoordinates(	final DisplayRenderArea source,
 											final int sourceX,
 											final int sourceY) {
 		final int sourceId = ((XResourceHandle) source.getResourceHandle())
@@ -239,97 +253,130 @@ public class XWindow implements DisplayRenderArea {
 	}
 
 	@Override
-	public void catchKeyboardInput(	final Key catchKey,
-									final InputModifiers withModifiers) {
-		final int keyCode = catchKey.getKeyCode();
-		final int modifiers = withModifiers.getInputModifiersMask();
-		LibXcb.xcb_grab_key(getConnectionRef(),
-							owner_events,
-							getWindowId(),
-							modifiers,
-							keyCode,
-							pointer_mode,
-							keyboard_mode);
-	}
-
-	@Override
-	public void catchAllKeyboardInput() {
-		final xcb_grab_keyboard_cookie_t cookie_t = LibXcb
-				.xcb_grab_keyboard(	getConnectionRef(),
-									owner_events,
-									getWindowId(),
-									this.displayServer.getTime(),
-									pointer_mode,
-									keyboard_mode);
-		final xcb_generic_error_t e = new xcb_generic_error_t();
-		LibXcb.xcb_grab_keyboard_reply(getConnectionRef(), cookie_t, e);
-		checkError(e);
-	}
-
-	@Override
-	public void stopKeyboardInputCatching() {
-		LibXcb.xcb_ungrab_keyboard(	getConnectionRef(),
-									this.displayServer.getTime());
-	}
-
-	@Override
-	public void catchMouseInput(final Button catchButton,
-								final InputModifiers withModifiers) {
+	public void grabButton(	final Button catchButton,
+							final InputModifiers withModifiers) {
 		final int buttonCode = catchButton.getButtonCode();
 		final int modifiers = withModifiers.getInputModifiersMask();
+		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS
+				.swigValue()
+				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE.swigValue();
+		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC
+				.swigValue();
+		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC
+				.swigValue();
+		final int confine_to = LibXcbConstants.XCB_NONE;
+		final int cursor = LibXcbConstants.XCB_NONE;
 		LibXcb.xcb_grab_button(	getConnectionRef(),
-								owner_events,
+								(short) 0,
 								getWindowId(),
 								event_mask,
-								pointer_mode,
-								keyboard_mode,
+								(short) pointer_mode,
+								(short) keyboard_mode,
 								confine_to,
 								cursor,
-								buttonCode,
+								(short) buttonCode,
 								modifiers);
 	}
 
 	@Override
-	public void catchAllMouseInput() {
-		LibXcb.xcb_grab_pointer(getConnectionRef(),
-								owner_events,
-								getWindowId(),
-								event_mask,
-								pointer_mode,
-								keyboard_mode,
-								confine_to,
-								cursor,
-								this.displayServer.getTime());
-	}
-
-	@Override
-	public void stopMouseInputCatching() {
-		LibXcb.xcb_ungrab_pointer(	getConnectionRef(),
+	public void grabPointer() {
+		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS
+				.swigValue()
+				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE.swigValue();
+		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC
+				.swigValue();
+		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC
+				.swigValue();
+		final int confine_to = LibXcbConstants.XCB_NONE;
+		final int cursor = LibXcbConstants.XCB_NONE;
+		final xcb_grab_pointer_cookie_t cookie_t = LibXcb
+				.xcb_grab_pointer(	getConnectionRef(),
+									(short) 0,
+									getWindowId(),
+									event_mask,
+									(short) pointer_mode,
+									(short) keyboard_mode,
+									confine_to,
+									cursor,
 									this.displayServer.getTime());
 	}
 
 	@Override
-	public void disableKeyboardInputCatching(	final Key likeKey,
-												final InputModifiers withModifiers) {
-		final int key = likeKey.getKeyCode();
-		final int modifiers = withModifiers.getInputModifiersMask();
-		LibXcb.xcb_ungrab_key(	getConnectionRef(),
-								(short) key,
-								getWindowId(),
-								modifiers);
-
+	public void ungrabPointer() {
+		LibXcb.xcb_ungrab_pointer(	this.xConnection.getConnectionReference(),
+									this.displayServer.getTime());
 	}
 
 	@Override
-	public void disableMouseInputCatching(	final Button likeButton,
-											final InputModifiers withModifiers) {
+	public void ungrabButton(	final Button likeButton,
+								final InputModifiers withModifiers) {
 		final int button = likeButton.getButtonCode();
 		final int modifiers = withModifiers.getInputModifiersMask();
 		LibXcb.xcb_ungrab_button(	getConnectionRef(),
 									(short) button,
 									getWindowId(),
 									modifiers);
+	}
+
+	@Override
+	public void grabKey(final Key catchKey, final InputModifiers withModifiers) {
+		final int keyCode = catchKey.getKeyCode();
+		final int modifiers = withModifiers.getInputModifiersMask();
+		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC
+				.swigValue();
+		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC
+				.swigValue();
+		LibXcb.xcb_grab_key(getConnectionRef(),
+							(short) 0,
+							getWindowId(),
+							modifiers,
+							(short) keyCode,
+							(short) pointer_mode,
+							(short) keyboard_mode);
 
 	}
 
+	@Override
+	public void ungrabKey(final Key catchKey, final InputModifiers withModifiers) {
+		final int key = catchKey.getKeyCode();
+		final int modifiers = withModifiers.getInputModifiersMask();
+		LibXcb.xcb_ungrab_key(	getConnectionRef(),
+								(short) key,
+								getWindowId(),
+								modifiers);
+	}
+
+	@Override
+	public void ungrabKeyboard() {
+		LibXcb.xcb_ungrab_keyboard(	getConnectionRef(),
+									this.displayServer.getTime());
+	}
+
+	@Override
+	public void grabKeyboard() {
+		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC
+				.swigValue();
+		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC
+				.swigValue();
+		final xcb_grab_keyboard_cookie_t cookie_t = LibXcb
+				.xcb_grab_keyboard(	getConnectionRef(),
+									(short) 0,
+									getWindowId(),
+									this.displayServer.getTime(),
+									(short) pointer_mode,
+									(short) keyboard_mode);
+	}
+
+	@Override
+	public Coordinate getPointerCoordinate() {
+		final xcb_query_pointer_cookie_t cookie_t = LibXcb
+				.xcb_query_pointer(getConnectionRef(), getWindowId());
+		final xcb_generic_error_t e = new xcb_generic_error_t();
+		final xcb_query_pointer_reply_t reply_t = LibXcb
+				.xcb_query_pointer_reply(getConnectionRef(), cookie_t, e);
+		checkError(e);
+		final int x = reply_t.getWin_x();
+		final int y = reply_t.getWin_y();
+		return new Coordinate(x, y);
+	}
 }

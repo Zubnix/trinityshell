@@ -11,16 +11,13 @@
  */
 package org.trinity.render.paintengine.qt.impl.eventconverters;
 
-import org.trinity.foundation.display.api.event.DisplayEventFactory;
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.input.api.Button;
-import org.trinity.foundation.input.api.ButtonFactory;
 import org.trinity.foundation.input.api.InputModifiers;
-import org.trinity.foundation.input.api.InputModifiersFactory;
+import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.input.api.PointerInput;
-import org.trinity.foundation.input.api.PointerInputFactory;
-import org.trinity.foundation.input.api.event.ButtonNotifyEvent;
-import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
+import org.trinity.render.paintengine.qt.impl.QFRenderEventConverter;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -31,38 +28,14 @@ import com.trolltech.qt.gui.QMouseEvent;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
-// TODO documentation
-/**
- * A <code>QFusionMouseButtonPressConverter</code> takes a
- * <code>QMouseEvent</code> and it's <code>DisplayEventSource</code> as input
- * and converts it to a <code>ButtonNotifyEvent</code>.
- * 
- * @author Erik De Rijcke
- * @since 1.0
- */
 @Bind(multiple = true)
 @Singleton
 public final class QFButtonPressedConverterImpl implements
 		QFRenderEventConverter {
 
-	private final ButtonFactory buttonFactory;
-	private final InputModifiersFactory inputModifiersFactory;
-	private final DisplayEventFactory displayEventFactory;
-	private final PointerInputFactory mouseInputFactory;
-	private final QEvent.Type qType;
-
 	@Inject
-	protected QFButtonPressedConverterImpl(	@Named("MouseButtonPress") final QEvent.Type qType,
-											final DisplayEventFactory displayEventFactory,
-											final ButtonFactory buttonFactory,
-											final InputModifiersFactory inputModifiersFactory,
-											final PointerInputFactory mouseInputFactory) {
-		this.buttonFactory = buttonFactory;
-		this.inputModifiersFactory = inputModifiersFactory;
-		this.mouseInputFactory = mouseInputFactory;
-		this.displayEventFactory = displayEventFactory;
-		this.qType = qType;
-	}
+	@Named("MouseButtonPress")
+	private QEvent.Type qType;
 
 	@Override
 	public ButtonNotifyEvent convertEvent(	final DisplayEventSource source,
@@ -79,18 +52,17 @@ public final class QFButtonPressedConverterImpl implements
 		final int relativeX = qMouseEvent.x();
 		final int relativeY = qMouseEvent.y();
 
-		final Button button = this.buttonFactory.createButton(buttonCode);
-		final InputModifiers inputModifiers = this.inputModifiersFactory
-				.createInputModifiers(state);
-		final PointerInput mouseInput = this.mouseInputFactory
-				.createPointerInputStarted(	button,
-											inputModifiers,
-											rootX,
-											rootY,
-											relativeX,
-											relativeY);
+		final Button button = new Button(buttonCode);
+		final InputModifiers inputModifiers = new InputModifiers(state);
+		final PointerInput mouseInput = new PointerInput(	Momentum.STARTED,
+															button,
+															inputModifiers,
+															relativeX,
+															relativeY,
+															rootX,
+															rootY);
 
-		return this.displayEventFactory.createButtonPressed(source, mouseInput);
+		return new ButtonNotifyEvent(source, mouseInput);
 	}
 
 	/*

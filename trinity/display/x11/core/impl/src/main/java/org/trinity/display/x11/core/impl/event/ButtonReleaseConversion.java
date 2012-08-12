@@ -11,15 +11,15 @@
  */
 package org.trinity.display.x11.core.impl.event;
 
-import org.trinity.display.x11.core.impl.EventConversion;
+import org.trinity.display.x11.core.impl.XEventConversion;
 import org.trinity.display.x11.core.impl.XWindow;
 import org.trinity.display.x11.core.impl.XWindowCache;
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.input.api.Button;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.input.api.PointerInput;
-import org.trinity.foundation.input.api.event.ButtonNotifyEvent;
 
 import xcbjb.LibXcbConstants;
 import xcbjb.xcb_button_press_event_t;
@@ -27,15 +27,24 @@ import xcbjb.xcb_generic_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-public class ButtonReleaseConversion implements EventConversion {
+import de.devsurf.injection.guice.annotations.Bind;
+
+@Bind(multiple = true)
+@Singleton
+public class ButtonReleaseConversion implements XEventConversion {
+
+	private final XWindowCache windowCache;
+	private final EventBus xEventBus;
 
 	@Inject
-	private XWindowCache windowCache;
-	@Inject
-	@Named("xEventBus")
-	private EventBus xEventBus;
+	ButtonReleaseConversion(final XWindowCache windowCache,
+							@Named("xEventBus") final EventBus xEventBus) {
+		this.windowCache = windowCache;
+		this.xEventBus = xEventBus;
+	}
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {

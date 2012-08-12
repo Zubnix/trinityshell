@@ -12,9 +12,8 @@
 package org.trinity.render.paintengine.qt.impl.eventconverters;
 
 import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
-import org.trinity.foundation.display.api.event.DisplayEventFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
+import org.trinity.render.paintengine.qt.impl.QFRenderEventConverter;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,20 +35,14 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public final class QFDestroyConverterImpl implements QFRenderEventConverter {
 
-	private final DisplayEventFactory displayEventFactory;
-	private final QEvent.Type qType;
-
 	@Inject
-	protected QFDestroyConverterImpl(	@Named("Close") final QEvent.Type qType,
-										final DisplayEventFactory displayEventFactory) {
-		this.displayEventFactory = displayEventFactory;
-		this.qType = qType;
-	}
+	@Named("Close")
+	private QEvent.Type qType;
 
 	@Override
 	public DestroyNotifyEvent convertEvent(	final DisplayEventSource eventSource,
 											final QEvent qEvent) {
-		return this.displayEventFactory.createDestroyNotify(eventSource);
+		return new DestroyNotifyEvent(eventSource);
 	}
 
 	/*

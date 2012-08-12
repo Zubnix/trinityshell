@@ -11,16 +11,13 @@
  */
 package org.trinity.render.paintengine.qt.impl.eventconverters;
 
-import org.trinity.foundation.display.api.event.DisplayEventFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.InputModifiers;
-import org.trinity.foundation.input.api.InputModifiersFactory;
 import org.trinity.foundation.input.api.Key;
-import org.trinity.foundation.input.api.KeyFactory;
 import org.trinity.foundation.input.api.KeyboardInput;
-import org.trinity.foundation.input.api.KeyboardInputFactory;
-import org.trinity.foundation.input.api.event.KeyNotifyEvent;
-import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
+import org.trinity.foundation.input.api.Momentum;
+import org.trinity.render.paintengine.qt.impl.QFRenderEventConverter;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -44,22 +41,10 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public final class QFKeyPressedConverterImpl implements QFRenderEventConverter {
 
-	private final DisplayEventFactory displayEventFactory;
-	private final KeyFactory keyFactory;
-	private final InputModifiersFactory inputModifiersFactory;
-	private final KeyboardInputFactory keyboardInputFactory;
 	private final QEvent.Type qType;
 
 	@Inject
-	protected QFKeyPressedConverterImpl(@Named("KeyPress") final QEvent.Type qType,
-										final DisplayEventFactory displayEventFactory,
-										final KeyFactory keyFactory,
-										final InputModifiersFactory inputModifiersFactory,
-										final KeyboardInputFactory keyboardInputFactory) {
-		this.displayEventFactory = displayEventFactory;
-		this.keyFactory = keyFactory;
-		this.inputModifiersFactory = inputModifiersFactory;
-		this.keyboardInputFactory = keyboardInputFactory;
+	protected QFKeyPressedConverterImpl(@Named("KeyPress") final QEvent.Type qType) {
 		this.qType = qType;
 	}
 
@@ -78,13 +63,13 @@ public final class QFKeyPressedConverterImpl implements QFRenderEventConverter {
 
 		final int state = keyEvent.nativeModifiers();
 
-		final Key key = this.keyFactory.createKey(keyCode);
-		final InputModifiers inputModifiers = this.inputModifiersFactory
-				.createInputModifiers(state);
-		final KeyboardInput input = this.keyboardInputFactory
-				.createKeyboardInputStarted(key, inputModifiers);
+		final Key key = new Key(keyCode);
+		final InputModifiers inputModifiers = new InputModifiers(state);
+		final KeyboardInput input = new KeyboardInput(	Momentum.STARTED,
+														key,
+														inputModifiers);
 
-		return this.displayEventFactory.createKeyPressed(source, input);
+		return new KeyNotifyEvent(source, input);
 	}
 
 	/*

@@ -11,10 +11,10 @@
  */
 package org.trinity.render.paintengine.qt.impl.eventconverters;
 
-import org.trinity.foundation.display.api.event.DisplayEventFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.FocusLostNotifyEvent;
 import org.trinity.foundation.display.api.event.FocusNotifyEvent;
-import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
+import org.trinity.render.paintengine.qt.impl.QFRenderEventConverter;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,20 +36,17 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public final class QFFocusLostConverterImpl implements QFRenderEventConverter {
 
-	private final DisplayEventFactory displayEventFactory;
 	private final QEvent.Type qType;
 
 	@Inject
-	protected QFFocusLostConverterImpl(	@Named("FocusOut") final QEvent.Type qType,
-										final DisplayEventFactory displayEventFactory) {
-		this.displayEventFactory = displayEventFactory;
+	protected QFFocusLostConverterImpl(@Named("FocusOut") final QEvent.Type qType) {
 		this.qType = qType;
 	}
 
 	@Override
 	public FocusNotifyEvent convertEvent(	final DisplayEventSource eventSource,
 											final QEvent qEvent) {
-		return this.displayEventFactory.createFocusLost(eventSource);
+		return new FocusLostNotifyEvent(eventSource);
 	}
 
 	/*

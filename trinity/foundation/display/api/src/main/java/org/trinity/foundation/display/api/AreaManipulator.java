@@ -11,6 +11,9 @@
  */
 package org.trinity.foundation.display.api;
 
+import org.trinity.foundation.input.api.Button;
+import org.trinity.foundation.input.api.InputModifiers;
+import org.trinity.foundation.input.api.Key;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
 
 /**
@@ -124,4 +127,46 @@ public interface AreaManipulator<AREATYPE extends Area> {
 	void hide();
 
 	Coordinate translateCoordinates(AREATYPE source, int sourceX, int sourceY);
+
+	/**
+	 * @param likeButton
+	 * @param withModifiers
+	 */
+	void grabButton(Button grabButton, InputModifiers withModifiers);
+
+	/**
+	 * 
+	 */
+	void grabPointer();
+
+	/**
+	 * 
+	 */
+	void ungrabPointer();
+
+	/*****************************************
+	 * @param displayRenderArea
+	 * @param likeButton
+	 * @param withModifiers
+	 ****************************************/
+	void ungrabButton(Button ungrabButton, InputModifiers withModifiers);
+
+	/**
+	 * @param catchKey
+	 * @param withModifiers
+	 */
+	void grabKey(Key grabKey, InputModifiers withModifiers);
+
+	void ungrabKey(Key ungrabKey, InputModifiers withModifiers);
+
+	/**
+	 * 
+	 * 
+	 */
+	void ungrabKeyboard();
+
+	/*****************************************
+	 * @param displayRenderArea
+	 ****************************************/
+	void grabKeyboard();
 }

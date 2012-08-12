@@ -11,16 +11,13 @@
  */
 package org.trinity.render.paintengine.qt.impl.eventconverters;
 
-import org.trinity.foundation.display.api.event.DisplayEventFactory;
+import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.input.api.Button;
-import org.trinity.foundation.input.api.ButtonFactory;
 import org.trinity.foundation.input.api.InputModifiers;
-import org.trinity.foundation.input.api.InputModifiersFactory;
+import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.input.api.PointerInput;
-import org.trinity.foundation.input.api.PointerInputFactory;
-import org.trinity.foundation.input.api.event.ButtonNotifyEvent;
-import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
+import org.trinity.render.paintengine.qt.impl.QFRenderEventConverter;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -45,24 +42,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 public final class QFButtonReleasedConverterImpl implements
 		QFRenderEventConverter {
 
-	private final ButtonFactory buttonFactory;
-	private final InputModifiersFactory inputModifiersFactory;
-	private final DisplayEventFactory displayEventFactory;
-	private final PointerInputFactory mouseInputFactory;
-	private final QEvent.Type qType;
-
 	@Inject
-	protected QFButtonReleasedConverterImpl(@Named("MouseButtonRelease") final QEvent.Type qType,
-											final DisplayEventFactory displayEventFactory,
-											final ButtonFactory buttonFactory,
-											final InputModifiersFactory inputModifiersFactory,
-											final PointerInputFactory mouseInputFactory) {
-		this.buttonFactory = buttonFactory;
-		this.inputModifiersFactory = inputModifiersFactory;
-		this.mouseInputFactory = mouseInputFactory;
-		this.displayEventFactory = displayEventFactory;
-		this.qType = qType;
-	}
+	@Named("MouseButtonRelease")
+	private QEvent.Type qType;
 
 	@Override
 	public ButtonNotifyEvent convertEvent(	final DisplayEventSource source,
@@ -79,25 +61,19 @@ public final class QFButtonReleasedConverterImpl implements
 		final int relativeX = qMouseEvent.x();
 		final int relativeY = qMouseEvent.y();
 
-		final Button button = this.buttonFactory.createButton(buttonCode);
-		final InputModifiers inputModifiers = this.inputModifiersFactory
-				.createInputModifiers(state);
-		final PointerInput mouseInput = this.mouseInputFactory
-				.createMouseInputStopped(	button,
-											inputModifiers,
-											rootX,
-											rootY,
-											relativeX,
-											relativeY);
+		final Button button = new Button(buttonCode);
+		final InputModifiers inputModifiers = new InputModifiers(state);
+		final PointerInput mouseInput = new PointerInput(	Momentum.STOPPED,
+															button,
+															inputModifiers,
+															relativeX,
+															relativeY,
+															rootX,
+															rootY);
 
-		return this.displayEventFactory
-				.createButtonReleased(source, mouseInput);
+		return new ButtonNotifyEvent(source, mouseInput);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fusion.qt.paintengine.QFusionEventConverter#getFromType()
-	 */
 	@Override
 	public Type getQEventType() {
 		return this.qType;

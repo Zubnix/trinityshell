@@ -104,12 +104,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>org.trinity.display.x11</groupId>
-			<artifactId>XcbJb</artifactId>
-			<version>0.0.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 </project>

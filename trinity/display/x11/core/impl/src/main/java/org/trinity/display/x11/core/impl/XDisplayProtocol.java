@@ -38,23 +38,30 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class XDisplayProtocol implements DisplayProtocols {
 
+	// FIXME + TODO seperate into xpropertycache & displayprotocol mapping
+	// classes.
+
 	private final Map<DisplayRenderArea, Map<String, Map<String, Object>>> nativeProtocolsValuesCache = new HashMap<DisplayRenderArea, Map<String, Map<String, Object>>>();
 	private final Map<DisplayRenderArea, Set<String>> nativeProtocolValidityCache = new HashMap<DisplayRenderArea, Set<String>>();
 
 	private final Map<DisplayProtocol, String[]> nativeProtocolMapping = new HashMap<DisplayProtocol, String[]>();
 	private final Map<String, DisplayProtocol[]> nativeInverseProtocolMapping = new HashMap<String, DisplayProtocol[]>();
 
-	@Inject
-	private XConnection xConnection;
-	@Inject
-	@Named("xEventBus")
-	private EventBus xEventBus;
-	@Inject
-	private XWindowCache windowCache;
-	@Inject
-	private XAtomCache atomCache;
+	private final XConnection xConnection;
+	private final EventBus xEventBus;
+	private final XWindowCache windowCache;
+	private final XAtomCache atomCache;
 
-	public XDisplayProtocol() {
+	@Inject
+	XDisplayProtocol(	final XConnection xConnection,
+						@Named("xEventBus") final EventBus xEventBus,
+						final XWindowCache windowCache,
+						final XAtomCache atomCache) {
+		this.xConnection = xConnection;
+		this.xEventBus = xEventBus;
+		this.windowCache = windowCache;
+		this.atomCache = atomCache;
+
 		this.xEventBus.register(this);
 		fillNativeProtocolMapping();
 	}
@@ -62,12 +69,15 @@ public class XDisplayProtocol implements DisplayProtocols {
 	private void fillNativeProtocolMapping() {
 		this.nativeProtocolMapping.put(	DisplayProtocol.FRIENDLY_NAME,
 										new String[] { "WM_NAME" });
+		this.nativeProtocolMapping.put(	DisplayProtocol.REQUEST_CLOSE,
+										new String[] { "WM_PROTOCOLS" });
+
 		this.nativeInverseProtocolMapping
 				.put(	"WM_NAME",
 						new DisplayProtocol[] { DisplayProtocol.FRIENDLY_NAME });
-
-		this.nativeProtocolMapping.put(	DisplayProtocol.REQUEST_CLOSE,
-										new String[] { "WM_PROTOCOLS" });
+		this.nativeInverseProtocolMapping
+				.put(	"WM_PROTOCOLS",
+						new DisplayProtocol[] { DisplayProtocol.REQUEST_CLOSE });
 
 	}
 
@@ -78,10 +88,10 @@ public class XDisplayProtocol implements DisplayProtocols {
 		final int atomId = event_t.getAtom();
 		final String atom = this.atomCache.getAtom(atomId);
 
-		getAllInvalidProtocols(window).add(atom);
+		getAllInvalidNativeProtocols(window).add(atom);
 	}
 
-	public Set<String> getAllInvalidProtocols(final DisplayRenderArea displayRenderArea) {
+	private Set<String> getAllInvalidNativeProtocols(final DisplayRenderArea displayRenderArea) {
 		Set<String> changedNativeProtocols = this.nativeProtocolValidityCache
 				.get(displayRenderArea);
 		if (changedNativeProtocols == null) {
@@ -98,8 +108,8 @@ public class XDisplayProtocol implements DisplayProtocols {
 		return queryProtocol(displayRenderArea, displayProtocol, null);
 	}
 
-	public Map<String, Map<String, Object>> getNativeProtocolsValues(	final DisplayRenderArea displayRenderArea,
-																		final DisplayProtocol displayProtocol) {
+	Map<String, Map<String, Object>> getNativeProtocolsValues(	final DisplayRenderArea displayRenderArea,
+																final DisplayProtocol displayProtocol) {
 		final String[] nativeProtocols = this.nativeProtocolMapping
 				.get(displayProtocol);
 
@@ -112,11 +122,10 @@ public class XDisplayProtocol implements DisplayProtocols {
 													nativeProtocol));
 		}
 		return nativeProtocolsValues;
-
 	}
 
-	public Map<String, Object> getNativeProcolValue(final DisplayRenderArea displayRenderArea,
-													final String nativeProtocol) {
+	Map<String, Object> getNativeProcolValue(	final DisplayRenderArea displayRenderArea,
+												final String nativeProtocol) {
 
 		final Map<String, Map<String, Object>> allValues = getAllValues(displayRenderArea);
 		Map<String, Object> values = allValues.get(nativeProtocol);
@@ -124,7 +133,7 @@ public class XDisplayProtocol implements DisplayProtocols {
 		if (values == null) {
 			values = new HashMap<String, Object>();
 			allValues.put(nativeProtocol, values);
-			getAllInvalidProtocols(displayRenderArea).add(nativeProtocol);
+			getAllInvalidNativeProtocols(displayRenderArea).add(nativeProtocol);
 			return getNativeProcolValue(displayRenderArea, nativeProtocol);
 		}
 

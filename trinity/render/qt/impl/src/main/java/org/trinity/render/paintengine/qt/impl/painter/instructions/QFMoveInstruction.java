@@ -11,24 +11,19 @@
  */
 package org.trinity.render.paintengine.qt.impl.painter.instructions;
 
+import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Paintable;
 import org.trinity.render.paintengine.qt.api.QFRenderEngine;
-import org.trinity.render.paintengine.qt.api.painter.QFPaintInstruction;
-
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
-public class QFMoveInstruction implements QFPaintInstruction {
+public class QFMoveInstruction implements PaintInstruction<QFRenderEngine> {
 
 	private final int x;
 	private final int y;
 
-	@Inject
-	protected QFMoveInstruction(@Assisted("x") final int x,
-								@Assisted("y") final int y) {
+	public QFMoveInstruction(final int x, final int y) {
 		this.x = x;
 		this.y = y;
 	}

@@ -21,7 +21,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import xcbcustom.LibXcbLoader;
 import xcbjb.LibXcb;
 import xcbjb.LibXcbConstants;
 import xcbjb.xcb_screen_iterator_t;
@@ -29,6 +33,7 @@ import xcbjb.xcb_screen_t;
 import xcbjb.xcb_setup_t;
 import xcbjb.xcb_window_class_t;
 
+@RunWith(MockitoJUnitRunner.class)
 public class XWindowTest {
 
 	private static final String displayName = ":99";
@@ -41,18 +46,33 @@ public class XWindowTest {
 	private XWindow xWindow;
 	private int windowId;
 
-	// for injection
+	// injection
 	private static Field xConnectionField;
 	private static Field nativeHandleField;
 	private static Field resourceHandleField;
+	private static Field xDisplayServerField;
+
+	// mocks
+	@Mock
+	private XDisplayServer xDisplayServer;
 
 	@BeforeClass
 	public static void startup() throws IOException, SecurityException,
 			NoSuchFieldException {
+		LibXcbLoader.load();
 
-		xConnectionField = XWindow.class.getField("xConnection");
-		nativeHandleField = XResourceHandle.class.getField("nativeHandle");
-		resourceHandleField = XWindow.class.getField("resourceHandle");
+		xConnectionField = XWindow.class.getDeclaredField("xConnection");
+		xConnectionField.setAccessible(true);
+
+		nativeHandleField = XResourceHandle.class
+				.getDeclaredField("nativeHandle");
+		nativeHandleField.setAccessible(true);
+
+		resourceHandleField = XWindow.class.getDeclaredField("resourceHandle");
+		resourceHandleField.setAccessible(true);
+
+		xDisplayServerField = XWindow.class.getDeclaredField("displayServer");
+		xDisplayServerField.setAccessible(true);
 
 		xvfb = new ProcessBuilder("Xvfb", "-ac", displayName).start();
 
@@ -67,7 +87,7 @@ public class XWindowTest {
 	}
 
 	@AfterClass
-	public void closedown() {
+	public static void closedown() {
 
 		xConnection.close();
 		xvfb.destroy();
@@ -102,7 +122,7 @@ public class XWindowTest {
 		this.xWindow = new XWindow();
 		xConnectionField.set(this.xWindow, xConnection);
 		resourceHandleField.set(this.xWindow, xResourceHandle);
-
+		xDisplayServerField.set(this.xWindow, this.xDisplayServer);
 	}
 
 	@After

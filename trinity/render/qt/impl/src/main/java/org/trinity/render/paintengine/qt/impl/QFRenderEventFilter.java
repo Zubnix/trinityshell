@@ -12,7 +12,6 @@
 package org.trinity.render.paintengine.qt.impl;
 
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.render.paintengine.qt.api.QFRenderEventBridge;
 
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;

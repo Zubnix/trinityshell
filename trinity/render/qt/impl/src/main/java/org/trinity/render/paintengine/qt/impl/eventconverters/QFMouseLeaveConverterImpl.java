@@ -11,10 +11,10 @@
  */
 package org.trinity.render.paintengine.qt.impl.eventconverters;
 
-import org.trinity.foundation.display.api.event.DisplayEventFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.display.api.event.MouseVisitationNotifyEvent;
-import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
+import org.trinity.foundation.display.api.event.PointerLeaveNotifyEvent;
+import org.trinity.foundation.display.api.event.PointerVisitationNotifyEvent;
+import org.trinity.render.paintengine.qt.impl.QFRenderEventConverter;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -37,20 +37,17 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public final class QFMouseLeaveConverterImpl implements QFRenderEventConverter {
 
-	private final DisplayEventFactory displayEventFactory;
 	private final QEvent.Type qType;
 
 	@Inject
-	protected QFMouseLeaveConverterImpl(@Named("Leave") final QEvent.Type qType,
-										final DisplayEventFactory displayEventFactory) {
-		this.displayEventFactory = displayEventFactory;
+	protected QFMouseLeaveConverterImpl(@Named("Leave") final QEvent.Type qType) {
 		this.qType = qType;
 	}
 
 	@Override
-	public MouseVisitationNotifyEvent convertEvent(	final DisplayEventSource eventSource,
-													final QEvent qEvent) {
-		return this.displayEventFactory.createMouseLeave(eventSource);
+	public PointerVisitationNotifyEvent convertEvent(	final DisplayEventSource eventSource,
+														final QEvent qEvent) {
+		return new PointerLeaveNotifyEvent(eventSource);
 	}
 
 	/*

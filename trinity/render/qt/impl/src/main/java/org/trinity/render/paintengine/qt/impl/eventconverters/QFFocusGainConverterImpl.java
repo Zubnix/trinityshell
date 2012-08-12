@@ -11,10 +11,10 @@
  */
 package org.trinity.render.paintengine.qt.impl.eventconverters;
 
-import org.trinity.foundation.display.api.event.DisplayEventFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.FocusGainNotifyEvent;
 import org.trinity.foundation.display.api.event.FocusNotifyEvent;
-import org.trinity.render.paintengine.qt.api.QFRenderEventConverter;
+import org.trinity.render.paintengine.qt.impl.QFRenderEventConverter;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,26 +36,16 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public final class QFFocusGainConverterImpl implements QFRenderEventConverter {
 
-	private final DisplayEventFactory displayEventFactory;
-	private final QEvent.Type qType;
-
 	@Inject
-	protected QFFocusGainConverterImpl(	@Named("FocusIn") final QEvent.Type qType,
-										final DisplayEventFactory displayEventFactory) {
-		this.displayEventFactory = displayEventFactory;
-		this.qType = qType;
-	}
+	@Named("FocusIn")
+	private QEvent.Type qType;
 
 	@Override
 	public FocusNotifyEvent convertEvent(	final DisplayEventSource eventSource,
 											final QEvent qEvent) {
-		return this.displayEventFactory.createFocusGained(eventSource);
+		return new FocusGainNotifyEvent(eventSource);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fusion.qt.paintengine.QFusionEventConverter#getFromType()
-	 */
 	@Override
 	public Type getQEventType() {
 		return this.qType;

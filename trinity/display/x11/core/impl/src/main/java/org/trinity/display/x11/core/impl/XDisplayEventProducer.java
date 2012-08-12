@@ -22,24 +22,29 @@ import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
+import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(multiple = true)
-@To(customs = DisplayEventProducer.class)
+@To(value = Type.CUSTOM, customs = DisplayEventProducer.class)
 public class XDisplayEventProducer implements DisplayEventProducer, Runnable {
 
-	@Inject
-	private XConnection connection;
-	@Inject
-	private DisplayEventConverter displayEventConverter;
-	@Inject
-	@Named("xEventBus")
-	private EventBus xEventBus;
+	private final XConnection connection;
+	private final EventBus xEventBus;
 
-	private Thread producerThread;
+	private final Thread producerThread;
+
+	@Inject
+	XDisplayEventProducer(	final XConnection connection,
+							@Named("xEventBus") final EventBus xEventBus) {
+		this.connection = connection;
+		this.xEventBus = xEventBus;
+
+		this.producerThread = new Thread(this);
+	}
 
 	@Override
 	public void start() {
-		this.producerThread = new Thread(this);
+		this.producerThread.start();
 	}
 
 	@Override

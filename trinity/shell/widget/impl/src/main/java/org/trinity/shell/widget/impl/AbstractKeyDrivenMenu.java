@@ -14,9 +14,9 @@ package org.trinity.shell.widget.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.input.api.SpecialKeyName;
-import org.trinity.foundation.input.api.event.KeyNotifyEvent;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ManagedDisplayService;
 import org.trinity.shell.geo.api.GeoExecutor;

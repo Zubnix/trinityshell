@@ -11,9 +11,9 @@
  */
 package org.trinity.render.paintengine.qt.impl.painter.instructions;
 
+import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Paintable;
 import org.trinity.render.paintengine.qt.api.QFRenderEngine;
-import org.trinity.render.paintengine.qt.api.painter.QFPaintInstruction;
 
 import com.google.inject.Singleton;
 
@@ -21,7 +21,7 @@ import com.google.inject.Singleton;
  * @author Erik De Rijcke
  ****************************************/
 @Singleton
-public class QFGiveFocusInstruction implements QFPaintInstruction {
+public class QFGiveFocusInstruction implements PaintInstruction<QFRenderEngine> {
 
 	@Override
 	public void call(	final Paintable paintable,

@@ -21,13 +21,23 @@ import xcbjb.xcb_intern_atom_reply_t;
 
 import com.google.inject.Inject;
 
+import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
+import de.devsurf.injection.guice.annotations.To.Type;
+
+@Bind
+@To(Type.IMPLEMENTATION)
 public class XAtomCache {
 
-	@Inject
-	private XConnection xConnection;
+	private final XConnection xConnection;
 
 	private final Map<Integer, String> atomNameCodes = new HashMap<Integer, String>();
 	private final Map<String, Integer> atomCodeNames = new HashMap<String, Integer>();
+
+	@Inject
+	XAtomCache(final XConnection xConnection) {
+		this.xConnection = xConnection;
+	}
 
 	public int getAtom(final String atomName) {
 		synchronized (this.atomCodeNames) {
