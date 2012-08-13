@@ -25,8 +25,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
-@Bind
-@To(value = Type.IMPLEMENTATION)
+@Bind(to = @To(value = Type.IMPLEMENTATION))
 @Singleton
 public class XWindowCache {
 

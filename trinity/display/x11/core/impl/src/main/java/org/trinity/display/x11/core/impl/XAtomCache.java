@@ -20,13 +20,14 @@ import xcbjb.xcb_intern_atom_cookie_t;
 import xcbjb.xcb_intern_atom_reply_t;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
-@Bind
-@To(Type.IMPLEMENTATION)
+@Bind(to = @To(Type.IMPLEMENTATION))
+@Singleton
 public class XAtomCache {
 
 	private final XConnection xConnection;
@@ -70,10 +71,10 @@ public class XAtomCache {
 		return atomId;
 	}
 
-	public String getAtom(final int atomCode) {
+	public String getAtom(final int atomId) {
 		synchronized (this.atomCodeNames) {
 			synchronized (this.atomNameCodes) {
-				return this.atomNameCodes.get(Integer.valueOf(atomCode));
+				return this.atomNameCodes.get(Integer.valueOf(atomId));
 			}
 		}
 	}

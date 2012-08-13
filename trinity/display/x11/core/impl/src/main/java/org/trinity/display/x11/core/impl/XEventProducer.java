@@ -24,9 +24,8 @@ import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
-@Bind(multiple = true)
-@To(value = Type.CUSTOM, customs = DisplayEventProducer.class)
-public class XDisplayEventProducer implements DisplayEventProducer, Runnable {
+@Bind(multiple = true, to = @To(value = Type.CUSTOM, customs = DisplayEventProducer.class))
+public class XEventProducer implements DisplayEventProducer, Runnable {
 
 	private final XConnection connection;
 	private final EventBus xEventBus;
@@ -34,8 +33,8 @@ public class XDisplayEventProducer implements DisplayEventProducer, Runnable {
 	private final Thread producerThread;
 
 	@Inject
-	XDisplayEventProducer(	final XConnection connection,
-							@Named("xEventBus") final EventBus xEventBus) {
+	XEventProducer(	final XConnection connection,
+					@Named("xEventBus") final EventBus xEventBus) {
 		this.connection = connection;
 		this.xEventBus = xEventBus;
 

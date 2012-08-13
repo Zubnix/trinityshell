@@ -16,12 +16,15 @@ import java.nio.ByteOrder;
 
 import xcbjb.LibXcb;
 import xcbjb.SWIGTYPE_p_xcb_connection_t;
+
+import com.google.inject.Singleton;
+
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
-@Bind
-@To(Type.IMPLEMENTATION)
+@Bind(to = @To(Type.IMPLEMENTATION))
+@Singleton
 public class XConnection {
 
 	private SWIGTYPE_p_xcb_connection_t connection_t;

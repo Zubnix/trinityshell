@@ -15,15 +15,15 @@ import org.trinity.foundation.display.api.DisplayProtocol;
 
 public class ProtocolNotifyEvent extends DisplayEvent {
 
-	private final DisplayProtocol displayProtocol;
+	private final DisplayProtocol[] displayProtocols;
 
 	public ProtocolNotifyEvent(	final DisplayEventSource displayEventSource,
-								final DisplayProtocol displayProtocol) {
+								final DisplayProtocol[] displayProtocols) {
 		super(displayEventSource);
-		this.displayProtocol = displayProtocol;
+		this.displayProtocols = displayProtocols;
 	}
 
-	public DisplayProtocol getDisplayProtocol() {
-		return this.displayProtocol;
+	public DisplayProtocol[] getDisplayProtocols() {
+		return this.displayProtocols;
 	}
 }

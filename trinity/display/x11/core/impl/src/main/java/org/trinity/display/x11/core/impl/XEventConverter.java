@@ -29,10 +29,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
-@Bind
-@To(Type.IMPLEMENTATION)
+@Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
-public final class XDisplayEventConverter {
+public final class XEventConverter {
 
 	private final Map<Integer, XEventConversion> conversionMap = new HashMap<Integer, XEventConversion>();
 
@@ -40,9 +39,9 @@ public final class XDisplayEventConverter {
 	private final EventBus displayEventBus;
 
 	@Inject
-	XDisplayEventConverter(	final Set<XEventConversion> eventConversions,
-							@Named("xEventBus") final EventBus xEventBus,
-							@Named("displayEventBus") final EventBus displayEventBus) {
+	XEventConverter(final Set<XEventConversion> eventConversions,
+					@Named("xEventBus") final EventBus xEventBus,
+					@Named("displayEventBus") final EventBus displayEventBus) {
 		this.xEventBus = xEventBus;
 		this.displayEventBus = displayEventBus;
 
