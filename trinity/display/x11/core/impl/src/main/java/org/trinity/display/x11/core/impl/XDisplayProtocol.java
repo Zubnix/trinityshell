@@ -27,11 +27,11 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class XDisplayProtocol implements DisplayProtocols {
 
 	private final XPropertyCache xPropertyCache;
-	private final XPropertyMapping xPropertyMapping;
+	private final XPropertyDisplayProtocolMapping xPropertyMapping;
 
 	@Inject
 	XDisplayProtocol(	final XPropertyCache xPropertyCache,
-						final XPropertyMapping xPropertyMapping) {
+						final XPropertyDisplayProtocolMapping xPropertyMapping) {
 		this.xPropertyCache = xPropertyCache;
 		this.xPropertyMapping = xPropertyMapping;
 	}

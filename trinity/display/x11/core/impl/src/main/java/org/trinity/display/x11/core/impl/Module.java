@@ -12,5 +12,7 @@ public class Module extends AbstractModule {
 				.asEagerSingleton();
 		bind(EventBus.class).annotatedWith(Names.named("displayEventBus"))
 				.asEagerSingleton();
+		// TODO xwindow factory
+		// TODO xresource factory
 	}
 }

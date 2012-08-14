@@ -31,24 +31,17 @@ public class XDisplayServer implements DisplayServer {
 	private static final int QUEUE_SIZE = 32;
 	private final ArrayBlockingQueue<DisplayEvent> displayEvents = new ArrayBlockingQueue<DisplayEvent>(QUEUE_SIZE);
 
-	private int time;
-
 	private final XConnection xConnection;
-	private final EventBus displayEventBus;
 
 	@Inject
 	XDisplayServer(	final XConnection xConnection,
 					@Named("displayEventBus") final EventBus displayEventBus) {
 
-		this.displayEventBus = displayEventBus;
-		this.displayEventBus.register(this);
-
+		displayEventBus.register(this);
 		this.xConnection = xConnection;
 		// FIXME from config
 		final String displayName = System.getenv("DISPLAY");
 		this.xConnection.open(displayName, 0);
-
-		this.time = 0;
 	}
 
 	@Subscribe
@@ -82,13 +75,4 @@ public class XDisplayServer implements DisplayServer {
 		this.xConnection.close();
 		this.displayEvents.clear();
 	}
-
-	public int getTime() {
-		return this.time;
-	}
-
-	public void setTime(final int time) {
-		this.time = time;
-	}
-
 }

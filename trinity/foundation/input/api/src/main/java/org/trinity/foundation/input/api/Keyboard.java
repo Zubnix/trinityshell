@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.input.api;
 
+import java.util.List;
 
 // TODO documentation
 /**
@@ -20,6 +21,45 @@ package org.trinity.foundation.input.api;
  */
 public interface Keyboard {
 
+	String L_SHIFT = "L_SHIFT";
+	String R_SHIFT = "R_SHIFT";
+	String L_CTRL = "L_CTRL";
+	String R_CTRL = "R_CTRL";
+	String CAPS_LOCK = "CAPS_LOCK";
+	String SHIFT_LOCK = "SHIFT_LOCK";
+	String L_META = "L_META";
+	String R_META = "R_META";
+	String L_ALT = "L_ALT";
+	String R_ALT = "R_ALT";
+	String L_SUPER = "L_SUPER";
+	String R_SUPER = "R_SUPER";
+	String L_HYPER = "L_HYPER";
+	String R_HYPER = "R_HYPER";
+	String HOME = "HOME";
+	String LEFT = "LEFT";
+	String UP = "UP";
+	String RIGHT = "RIGHT";
+	String DOWN = "DOWN";
+	String PREV = "PREV";
+	String PG_UP = "PG_UP";
+	String NEXT = "NEXT";
+	String PG_DOWN = "PG_DOWN";
+	String END = "END";
+	String BEGIN = "BEGIN";
+	String ESCAPE = "ESCAPE";
+	String ENTER = "ENTER";
+	String BACKSPACE = "BACKSPACE";
+	String TAB = "TAB";
+	String LINEFEED = "LINEFEED";
+	String CLEAR = "CLEAR";
+	String PAUSE = "PAUSE";
+	String SCRL_LOCK = "SCRL_LOCK";
+	String SYS_REQ = "SYS_REQ";
+	String DELETE = "DELETE";
+	String PRINT = "PRINT";
+	String INSERT = "INSERT";
+	String NUM_LOCK = "NUM_LOCK";
+
 	/**
 	 * 
 	 * @param key
@@ -27,27 +67,27 @@ public interface Keyboard {
 	 * @return
 	 * 
 	 */
-	String keyName(Key key, InputModifiers inputModifiers);
+	String asKeySymbolName(Key key, InputModifiers inputModifiers);
 
 	/**
 	 * 
-	 * @param keyName
+	 * @param keySymbolName
 	 * @return
 	 * 
 	 */
-	Key[] keys(String keyName);
+	List<Key> asKeys(String keySymbolName);
 
 	/**
 	 * 
 	 * @param modifierKeyName
 	 * @return
 	 */
-	Modifier modifier(InputModifierName modifierKeyName);
+	InputModifier modifier(String modifierName);
 
 	/**
 	 * 
 	 * @param modifierKeyNames
 	 * @return
 	 */
-	InputModifiers modifiers(InputModifierName... modifierKeyNames);
+	InputModifiers modifiers(String... modifierNames);
 }

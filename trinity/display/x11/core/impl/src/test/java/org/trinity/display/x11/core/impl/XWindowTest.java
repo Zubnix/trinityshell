@@ -12,7 +12,6 @@
 package org.trinity.display.x11.core.impl;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -34,45 +33,25 @@ import xcbjb.xcb_setup_t;
 import xcbjb.xcb_window_class_t;
 
 @RunWith(MockitoJUnitRunner.class)
-public class XWindowTest {
+public class XWindowTest // extends AbstractXTest
+{
+
+	private XWindow xWindow;
+	private int windowId;
 
 	private static final String displayName = ":99";
 	private static final int screenNr = 0;
 
 	private static Process xvfb;
-	private static XConnection xConnection;
-	private static xcb_screen_t screen;
 
-	private XWindow xWindow;
-	private int windowId;
+	public static XConnection xConnection;
 
-	// injection
-	private static Field xConnectionField;
-	private static Field nativeHandleField;
-	private static Field resourceHandleField;
-	private static Field xDisplayServerField;
-
-	// mocks
-	@Mock
-	private XDisplayServer xDisplayServer;
+	public static xcb_screen_t screen;
 
 	@BeforeClass
 	public static void startup() throws IOException, SecurityException,
 			NoSuchFieldException {
 		LibXcbLoader.load();
-
-		xConnectionField = XWindow.class.getDeclaredField("xConnection");
-		xConnectionField.setAccessible(true);
-
-		nativeHandleField = XResourceHandle.class
-				.getDeclaredField("nativeHandle");
-		nativeHandleField.setAccessible(true);
-
-		resourceHandleField = XWindow.class.getDeclaredField("resourceHandle");
-		resourceHandleField.setAccessible(true);
-
-		xDisplayServerField = XWindow.class.getDeclaredField("displayServer");
-		xDisplayServerField.setAccessible(true);
 
 		xvfb = new ProcessBuilder("Xvfb", "-ac", displayName).start();
 
@@ -92,6 +71,10 @@ public class XWindowTest {
 		xConnection.close();
 		xvfb.destroy();
 	}
+
+	// mocks
+	@Mock
+	private XDisplayServer xDisplayServer;
 
 	@Before
 	public void setup() throws SecurityException, NoSuchFieldException,
@@ -117,12 +100,10 @@ public class XWindowTest {
 									value_list);
 
 		final XResourceHandle xResourceHandle = new XResourceHandle();
-		nativeHandleField.set(xResourceHandle, Integer.valueOf(this.windowId));
 
-		this.xWindow = new XWindow();
-		xConnectionField.set(this.xWindow, xConnection);
-		resourceHandleField.set(this.xWindow, xResourceHandle);
-		xDisplayServerField.set(this.xWindow, this.xDisplayServer);
+		this.xWindow = new XWindow(	this.xDisplayServer,
+									xConnection,
+									xResourceHandle);
 	}
 
 	@After

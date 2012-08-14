@@ -5,23 +5,6 @@ package org.trinity.foundation.input.api;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public enum InputModifierName {
-	// TODO merge with specialkeyname?
+public interface InputModifierName {
 
-	/**
-	 * shift key
-	 */
-	MOD_SHIFT, MOD_LOCK, MOD_CTRL,
-	/**
-	 * Alt
-	 */
-	MOD_1,
-	/**
-	 * numlock
-	 */
-	MOD_2, MOD_3,
-	/**
-	 * Meta key (windows, cmd, ..)
-	 */
-	MOD_4, MOD_5, MOD_ANY;
 }

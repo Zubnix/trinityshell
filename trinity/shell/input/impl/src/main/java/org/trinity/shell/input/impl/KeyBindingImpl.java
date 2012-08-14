@@ -21,7 +21,7 @@ import org.trinity.foundation.input.api.InputModifierName;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
 import org.trinity.foundation.input.api.Keyboard;
-import org.trinity.foundation.input.api.Modifier;
+import org.trinity.foundation.input.api.InputModifier;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.input.api.SpecialKeyName;
 import org.trinity.shell.core.api.RenderArea;
@@ -36,7 +36,7 @@ import com.google.inject.name.Named;
 // TODO documentation
 /**
  * A <code>KeyBinding</code> binds a {@link BaseKey} with an optional
- * {@link Modifier} to an action. A <code>Key</code> is identified by it's name.
+ * {@link InputModifier} to an action. A <code>Key</code> is identified by it's name.
  * <code>Key</code> names are the same as the unmodified character they produce
  * when pressed. A list of special <code>Key</code> names can be found in
  * {@link SpecialKeyName} . A list of <code>Modifier</code>s can be found in
@@ -88,7 +88,7 @@ public class KeyBindingImpl implements KeyBinding {
 		this.runnable = runnable;
 
 		// translate keyname and modkeynames to keys and modmask
-		this.validKeys = this.keyboard.keys(getKeyName());
+		this.validKeys = this.keyboard.asKeys(getKeyName());
 
 		final List<InputModifiers> validInputModifiersCombinations = new LinkedList<InputModifiers>();
 
@@ -101,11 +101,11 @@ public class KeyBindingImpl implements KeyBinding {
 			// item from the IGNORED_MODIFIERS array.
 			// FIXME do a full permutation
 			for (final InputModifierName ignoredModifier : KeyBindingImpl.IGNORED_MODIFIERS) {
-				final Modifier modifier = this.keyboard
+				final InputModifier modifier = this.keyboard
 						.modifier(ignoredModifier);
 
 				final int modifierMaskWithExtraModifier = this.inputModifiers
-						.getInputModifiersMask() & modifier.getModifierMask();
+						.getInputModifiersState() & modifier.getMask();
 				final InputModifiers inputModifiersWithExtraModifier = new InputModifiers(modifierMaskWithExtraModifier);
 				validInputModifiersCombinations
 						.add(inputModifiersWithExtraModifier);
@@ -143,9 +143,9 @@ public class KeyBindingImpl implements KeyBinding {
 		final boolean gotValidKey = eventKeyCode == validKeyCode;
 
 		final int eventModifiersMask = event.getInput().getModifiers()
-				.getInputModifiersMask();
+				.getInputModifiersState();
 		final int validEventModifiersMask = inputModifiers
-				.getInputModifiersMask();
+				.getInputModifiersState();
 
 		final boolean gotValidModifiers = eventModifiersMask == validEventModifiersMask;
 

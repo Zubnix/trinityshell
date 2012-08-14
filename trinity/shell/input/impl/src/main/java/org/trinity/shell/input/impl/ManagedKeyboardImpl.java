@@ -43,7 +43,7 @@ public class ManagedKeyboardImpl implements ManagedKeyboard {
 
 		final KeyboardInput keyboardInput = keyNotifyEvent.getInput();
 		final String keyName = this.keyboard
-				.keyName(keyboardInput.getKey(), keyboardInput.getModifiers());
+				.asKeySymbolName(keyboardInput.getKey(), keyboardInput.getModifiers());
 
 		return keyName;
 	}

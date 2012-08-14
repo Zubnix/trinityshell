@@ -31,9 +31,7 @@ import xcbjb.xcb_event_mask_t;
 import xcbjb.xcb_generic_error_t;
 import xcbjb.xcb_get_geometry_cookie_t;
 import xcbjb.xcb_get_geometry_reply_t;
-import xcbjb.xcb_grab_keyboard_cookie_t;
 import xcbjb.xcb_grab_mode_t;
-import xcbjb.xcb_grab_pointer_cookie_t;
 import xcbjb.xcb_input_focus_t;
 import xcbjb.xcb_query_pointer_cookie_t;
 import xcbjb.xcb_query_pointer_reply_t;
@@ -49,14 +47,14 @@ public class XWindow implements DisplayRenderArea {
 
 	private final ResourceHandle resourceHandle;
 	private final XConnection xConnection;
-	private final XDisplayServer displayServer;
+	private final XTime xTime;
 
 	@Inject
 	@AssistedInject
-	XWindow(final XDisplayServer displayServer,
+	XWindow(final XTime xTime,
 			final XConnection xConnection,
 			@Assisted final ResourceHandle resourceHandle) {
-		this.displayServer = displayServer;
+		this.xTime = xTime;
 		this.xConnection = xConnection;
 		this.resourceHandle = resourceHandle;
 	}
@@ -91,7 +89,7 @@ public class XWindow implements DisplayRenderArea {
 									(short) xcb_input_focus_t.XCB_INPUT_FOCUS_NONE
 											.swigValue(),
 									getWindowId(),
-									this.displayServer.getTime());
+									this.xTime.getTime());
 
 	}
 
@@ -256,7 +254,7 @@ public class XWindow implements DisplayRenderArea {
 	public void grabButton(	final Button catchButton,
 							final InputModifiers withModifiers) {
 		final int buttonCode = catchButton.getButtonCode();
-		final int modifiers = withModifiers.getInputModifiersMask();
+		final int modifiers = withModifiers.getInputModifiersState();
 		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS
 				.swigValue()
 				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE.swigValue();
@@ -289,29 +287,29 @@ public class XWindow implements DisplayRenderArea {
 				.swigValue();
 		final int confine_to = LibXcbConstants.XCB_NONE;
 		final int cursor = LibXcbConstants.XCB_NONE;
-		final xcb_grab_pointer_cookie_t cookie_t = LibXcb
-				.xcb_grab_pointer(	getConnectionRef(),
-									(short) 0,
-									getWindowId(),
-									event_mask,
-									(short) pointer_mode,
-									(short) keyboard_mode,
-									confine_to,
-									cursor,
-									this.displayServer.getTime());
+		// TODO check if grab was successful and return boolean
+		LibXcb.xcb_grab_pointer(getConnectionRef(),
+								(short) 0,
+								getWindowId(),
+								event_mask,
+								(short) pointer_mode,
+								(short) keyboard_mode,
+								confine_to,
+								cursor,
+								this.xTime.getTime());
 	}
 
 	@Override
 	public void ungrabPointer() {
 		LibXcb.xcb_ungrab_pointer(	this.xConnection.getConnectionReference(),
-									this.displayServer.getTime());
+									this.xTime.getTime());
 	}
 
 	@Override
 	public void ungrabButton(	final Button likeButton,
 								final InputModifiers withModifiers) {
 		final int button = likeButton.getButtonCode();
-		final int modifiers = withModifiers.getInputModifiersMask();
+		final int modifiers = withModifiers.getInputModifiersState();
 		LibXcb.xcb_ungrab_button(	getConnectionRef(),
 									(short) button,
 									getWindowId(),
@@ -321,7 +319,7 @@ public class XWindow implements DisplayRenderArea {
 	@Override
 	public void grabKey(final Key catchKey, final InputModifiers withModifiers) {
 		final int keyCode = catchKey.getKeyCode();
-		final int modifiers = withModifiers.getInputModifiersMask();
+		final int modifiers = withModifiers.getInputModifiersState();
 		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC
 				.swigValue();
 		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC
@@ -339,7 +337,7 @@ public class XWindow implements DisplayRenderArea {
 	@Override
 	public void ungrabKey(final Key catchKey, final InputModifiers withModifiers) {
 		final int key = catchKey.getKeyCode();
-		final int modifiers = withModifiers.getInputModifiersMask();
+		final int modifiers = withModifiers.getInputModifiersState();
 		LibXcb.xcb_ungrab_key(	getConnectionRef(),
 								(short) key,
 								getWindowId(),
@@ -348,8 +346,7 @@ public class XWindow implements DisplayRenderArea {
 
 	@Override
 	public void ungrabKeyboard() {
-		LibXcb.xcb_ungrab_keyboard(	getConnectionRef(),
-									this.displayServer.getTime());
+		LibXcb.xcb_ungrab_keyboard(getConnectionRef(), this.xTime.getTime());
 	}
 
 	@Override
@@ -358,11 +355,11 @@ public class XWindow implements DisplayRenderArea {
 				.swigValue();
 		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC
 				.swigValue();
-		final xcb_grab_keyboard_cookie_t cookie_t = LibXcb
-				.xcb_grab_keyboard(	getConnectionRef(),
+		// TODO check if grab was successful and return boolean
+		LibXcb.xcb_grab_keyboard(	getConnectionRef(),
 									(short) 0,
 									getWindowId(),
-									this.displayServer.getTime(),
+									this.xTime.getTime(),
 									(short) pointer_mode,
 									(short) keyboard_mode);
 	}
@@ -378,5 +375,19 @@ public class XWindow implements DisplayRenderArea {
 		final int x = reply_t.getWin_x();
 		final int y = reply_t.getWin_y();
 		return new Coordinate(x, y);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof XWindow) {
+			final XWindow otherWindow = (XWindow) obj;
+			return otherWindow.getResourceHandle().equals(getResourceHandle());
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return getResourceHandle().hashCode();
 	}
 }
