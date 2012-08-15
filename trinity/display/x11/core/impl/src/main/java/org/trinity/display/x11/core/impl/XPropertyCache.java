@@ -1,7 +1,10 @@
 package org.trinity.display.x11.core.impl;
 
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,6 +14,7 @@ import xcbjb.LibXcb;
 import xcbjb.xcb_generic_error_t;
 import xcbjb.xcb_get_property_cookie_t;
 import xcbjb.xcb_icccm_get_text_property_reply_t;
+import xcbjb.xcb_icccm_get_wm_protocols_reply_t;
 import xcbjb.xcb_property_notify_event_t;
 
 import com.google.common.eventbus.EventBus;
@@ -83,15 +87,54 @@ public class XPropertyCache {
 
 			final xcb_generic_error_t e = new xcb_generic_error_t();
 			final xcb_icccm_get_text_property_reply_t prop = new xcb_icccm_get_text_property_reply_t();
-			LibXcb.xcb_icccm_get_wm_name_reply(this.xConnection
-					.getConnectionReference(), cookie_t, prop, e);
-
-			final String name = prop.getName();
-			valueMap.put("name", name);
-
-		} else if (nativeProperty.equals("WM_PROTOCOLS")) {
-			// ...
+			final int success = LibXcb
+					.xcb_icccm_get_wm_name_reply(this.xConnection
+							.getConnectionReference(), cookie_t, prop, e);
+			if (success != 0) {
+				final String name = prop.getName();
+				valueMap.put("STRING", name);
+			}
 		}
+
+		else if (nativeProperty.equals("_NET_WM_NAME")) {
+
+		}
+
+		else if (nativeProperty.equals("WM_CLASS")) {
+
+		}
+
+		else if (nativeProperty.equals("WM_PROTOCOLS")) {
+			final int wmProtocolsAtomId = this.atomCache
+					.getAtom(nativeProperty);
+
+			final xcb_get_property_cookie_t cookie = LibXcb
+					.xcb_icccm_get_wm_protocols(this.xConnection
+														.getConnectionReference(),
+												windowId,
+												wmProtocolsAtomId);
+
+			final xcb_icccm_get_wm_protocols_reply_t protocols = new xcb_icccm_get_wm_protocols_reply_t();
+			final xcb_generic_error_t e = new xcb_generic_error_t();
+
+			final int success = LibXcb
+					.xcb_icccm_get_wm_protocols_reply(this.xConnection
+							.getConnectionReference(), cookie, protocols, e);
+
+			if (success != 0) {
+				final ByteBuffer atomsBuf = protocols.getAtoms();
+				int nroAtoms = protocols.getAtoms_len();
+				final List<String> protocolNames = new ArrayList<String>(nroAtoms);
+				while (nroAtoms > 0) {
+					nroAtoms--;
+					final int atomId = atomsBuf.getInt();
+					final String atom = this.atomCache.getAtom(atomId);
+					protocolNames.add(atom);
+				}
+				valueMap.put("ATOM", protocolNames);
+			}
+		}
+
 		return valueMap;
 	}
 

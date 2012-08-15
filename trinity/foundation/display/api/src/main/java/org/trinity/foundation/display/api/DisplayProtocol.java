@@ -18,17 +18,21 @@ package org.trinity.foundation.display.api;
 public class DisplayProtocol {
 
 	/**
-	 * args:
+	 * query response:
 	 * <p>
-	 * "name":String
+	 * <ul>
+	 * <li>"name":String</li>
+	 * <li>"friendlyName":String</li>
+	 * <li>"programName":String</li>
+	 * </ul>
 	 */
-	public static final DisplayProtocol FRIENDLY_NAME = new DisplayProtocol();
+	public static final DisplayProtocol NAMES = new DisplayProtocol();
 
 	/**
-	 * args:
+	 * query response:
 	 * <p>
 	 * none
 	 */
-	public static final DisplayProtocol REQUEST_CLOSE = new DisplayProtocol();
+	public static final DisplayProtocol CLOSE_REQUEST = new DisplayProtocol();
 
 }

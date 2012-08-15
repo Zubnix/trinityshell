@@ -80,13 +80,10 @@ public class XKeySymbolCache {
 	}
 
 	private int resolveKeySymbol(final int key, final int modifiers) {
-
 		int k0, k1;
-		/*
-		 * 'col' (third parameter) is used to get the proper KeySym according to
-		 * modifier (XCB doesn't provide an equivalent to XLookupString()). If
-		 * Mod5 is ON we look into second group.
-		 */
+		// 'col' (third parameter) is used to get the proper KeySym according to
+		// modifier (XCB doesn't provide an equivalent to XLookupString()). If
+		// Mod5 is ON we look into second group.
 		if ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_5.swigValue()) != 0) {
 			k0 = LibXcb.xcb_key_symbols_get_keysym(	this.xcbKeySymbols,
 													(short) key,
@@ -102,21 +99,15 @@ public class XKeySymbolCache {
 													(short) key,
 													1);
 		}
-
-		/* If the second column does not exists use the first one. */
+		// If the second column does not exists use the first one.
 		if (k1 == 0) {
 			k1 = k0;
 		}
-
-		/*
-		 * The numlock modifier is on and the second KeySym is a keypad KeySym
-		 */
+		// The numlock modifier is on and the second KeySym is a keypad KeySym
 		if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_2.swigValue()) != 0)
 				&& (LibXcb.xcb_is_keypad_key(k1) != 0)) {
-			/*
-			 * The Shift modifier is on, or if the Lock modifier is on and is
-			 * interpreted as ShiftLock, use the first KeySym
-			 */
+			// The Shift modifier is on, or if the Lock modifier is on and is
+			// interpreted as ShiftLock, use the first KeySym
 			if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT.swigValue()) != 0)
 					|| ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK
 							.swigValue()) != 0)) {
@@ -125,34 +116,26 @@ public class XKeySymbolCache {
 				return k1;
 			}
 		}
-
-		/*
-		 * The Shift and Lock modifers are both off, use the first KeySym
-		 */
+		// The Shift and Lock modifers are both off, use the first KeySym
 		else if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT.swigValue()) == 0)
 				&& ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK.swigValue()) == 0)) {
 			return k0;
 		} else if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT.swigValue()) == 0)
 				&& ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK.swigValue()) != 0)) {
-			/*
-			 * The first Keysym is used but if that KeySym is lowercase
-			 * alphabetic, then the corresponding uppercase KeySym is used
-			 * instead
-			 */
+			// The first Keysym is used but if that KeySym is lowercase
+			// alphabetic, then the corresponding uppercase KeySym is used
+			// instead
 			return k1;
 		} else if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT.swigValue()) != 0)
 				&& ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK.swigValue()) != 0)) {
-			/*
-			 * The second Keysym is used but if that KeySym is lowercase
-			 * alphabetic, then the corresponding uppercase KeySym is used
-			 * instead
-			 */
+			// The second Keysym is used but if that KeySym is lowercase
+			// alphabetic, then the corresponding uppercase KeySym is used
+			// instead
 			return k1;
 		} else if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT.swigValue()) != 0)
 				|| ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK.swigValue()) != 0)) {
 			return k1;
 		}
-
 		// unknown
 		return 0;
 	}

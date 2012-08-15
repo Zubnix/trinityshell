@@ -11,7 +11,9 @@
  */
 package org.trinity.display.x11.core.impl;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.trinity.foundation.display.api.DisplayProtocol;
 import org.trinity.foundation.display.api.DisplayProtocols;
@@ -24,28 +26,33 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton
-public class XDisplayProtocol implements DisplayProtocols {
+public class XDisplayProtocols implements DisplayProtocols {
 
-	private final XPropertyCache xPropertyCache;
-	private final XPropertyDisplayProtocolMapping xPropertyMapping;
+	private final Map<DisplayProtocol, XDisplayProtocolHandler> xDisplayProtocolHandlers = new HashMap<DisplayProtocol, XDisplayProtocolHandler>();
 
 	@Inject
-	XDisplayProtocol(	final XPropertyCache xPropertyCache,
-						final XPropertyDisplayProtocolMapping xPropertyMapping) {
-		this.xPropertyCache = xPropertyCache;
-		this.xPropertyMapping = xPropertyMapping;
+	XDisplayProtocols(final Set<XDisplayProtocolHandler> xPropertyConversions) {
+		for (final XDisplayProtocolHandler xPropertyConversion : xPropertyConversions) {
+			this.xDisplayProtocolHandlers.put(xPropertyConversion
+					.getDisplayProtocol(), xPropertyConversion);
+		}
 	}
 
 	@Override
 	public Map<String, Object> queryProtocol(	final DisplayRenderArea displayRenderArea,
 												final DisplayProtocol displayProtocol) {
-
+		return queryProtocol(displayRenderArea, displayProtocol, null);
 	}
 
 	@Override
 	public Map<String, Object> queryProtocol(	final DisplayRenderArea displayRenderArea,
 												final DisplayProtocol displayProtocol,
 												final Map<String, Object> arguments) {
-
+		final Map<String, Object> result = this.xDisplayProtocolHandlers
+				.get(displayProtocol)
+				.handleDipslayProtocol((XWindow) displayRenderArea,
+								displayProtocol,
+								arguments);
+		return result;
 	}
 }

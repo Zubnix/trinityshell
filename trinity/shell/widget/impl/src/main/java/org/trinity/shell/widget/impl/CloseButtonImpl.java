@@ -93,7 +93,7 @@ public class CloseButtonImpl extends ButtonImpl implements CloseButton {
 	@Override
 	public void closeClient() {
 		this.desktopProtocol.queryProtocol(	getPlatformRenderArea(),
-											DisplayProtocol.REQUEST_CLOSE);
+											DisplayProtocol.CLOSE_REQUEST);
 		this.view.closeClient(getClient());
 	}
 }

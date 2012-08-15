@@ -74,7 +74,7 @@ public class XWindowTest // extends AbstractXTest
 
 	// mocks
 	@Mock
-	private XDisplayServer xDisplayServer;
+	private XTime xTime;
 
 	@Before
 	public void setup() throws SecurityException, NoSuchFieldException,
@@ -99,11 +99,9 @@ public class XWindowTest // extends AbstractXTest
 									0,
 									value_list);
 
-		final XResourceHandle xResourceHandle = new XResourceHandle();
+		final XResourceHandle xResourceHandle = new XResourceHandle(this.windowId);
 
-		this.xWindow = new XWindow(	this.xDisplayServer,
-									xConnection,
-									xResourceHandle);
+		this.xWindow = new XWindow(this.xTime, xConnection, xResourceHandle);
 	}
 
 	@After
