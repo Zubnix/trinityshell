@@ -11,8 +11,8 @@
  */
 package org.trinity.shell.geo.impl;
 
-import org.trinity.foundation.display.api.Area;
-import org.trinity.foundation.display.api.AreaManipulator;
+import org.trinity.foundation.display.api.DisplayArea;
+import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.shell.geo.api.GeoExecutor;
 import org.trinity.shell.geo.api.GeoTransformableRectangle;
 
@@ -26,8 +26,8 @@ public abstract class AbstractGeoExecutor implements GeoExecutor {
 	 * @return
 	 */
 	public abstract
-			<T extends Area>
-			AreaManipulator<T>
+			<T extends DisplayArea>
+			DisplayAreaManipulator<T>
 			getAreaManipulator(GeoTransformableRectangle geoTransformableRectangle);
 
 	@Override
@@ -70,7 +70,7 @@ public abstract class AbstractGeoExecutor implements GeoExecutor {
 	protected
 			void
 			reparent(	final GeoTransformableRectangle geoTransformableRectangle,
-						final Area newParentArea,
+						final DisplayArea newParentArea,
 						final int newX,
 						final int newY) {
 		getAreaManipulator(geoTransformableRectangle).setParent(newParentArea,

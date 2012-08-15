@@ -11,18 +11,19 @@
  */
 package org.trinity.render.paintengine.qt.impl.painter;
 
-import org.trinity.foundation.display.api.ResourceHandle;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 import org.trinity.foundation.input.api.Button;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
-import org.trinity.foundation.render.api.PaintCalculation;
-import org.trinity.foundation.render.api.PaintConstruction;
+import org.trinity.foundation.render.api.PaintContext;
 import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.Paintable;
+import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.foundation.render.api.Painter;
-import org.trinity.foundation.render.api.RenderEngine;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
-import org.trinity.render.paintengine.qt.api.QFRenderEngine;
+import org.trinity.render.paintengine.qt.api.QFPaintContext;
+import org.trinity.render.paintengine.qt.impl.QFRenderEngineImpl;
 import org.trinity.render.paintengine.qt.impl.painter.instructions.QFDestroyInstruction;
 import org.trinity.render.paintengine.qt.impl.painter.instructions.QFGiveFocusInstruction;
 import org.trinity.render.paintengine.qt.impl.painter.instructions.QFGrabKeyboardInstruction;
@@ -44,56 +45,57 @@ import com.google.inject.assistedinject.Assisted;
 
 public class QFPainter implements Painter {
 
-	private final PaintInstruction<QFRenderEngine> lower = new QFLowerInstruction();
-	private final PaintInstruction<QFRenderEngine> raise = new QFRaiseInstruction();
-	private final PaintInstruction<QFRenderEngine> hide = new QFHideInstruction();
-	private final PaintInstruction<QFRenderEngine> show = new QFShowInstruction();
-	private final PaintInstruction<QFRenderEngine> grabKeyboard = new QFGrabKeyboardInstruction();
-	private final PaintInstruction<QFRenderEngine> releaseKeyboard = new QFReleaseKeyboardInstruction();
-	private final PaintInstruction<QFRenderEngine> grabPointer = new QFGrabPointer();
-	private final PaintInstruction<QFRenderEngine> releaseMouse = new QFReleaseMouseInstruction();
-	private final PaintInstruction<QFRenderEngine> destroy = new QFDestroyInstruction();
-	private final PaintInstruction<QFRenderEngine> giveFocus = new QFGiveFocusInstruction();
+	private final PaintInstruction<Void, QFPaintContext> lower = new QFLowerInstruction();
+	private final PaintInstruction<Void, QFPaintContext> raise = new QFRaiseInstruction();
+	private final PaintInstruction<Void, QFPaintContext> hide = new QFHideInstruction();
+	private final PaintInstruction<Void, QFPaintContext> show = new QFShowInstruction();
+	private final PaintInstruction<Void, QFPaintContext> grabKeyboard = new QFGrabKeyboardInstruction();
+	private final PaintInstruction<Void, QFPaintContext> releaseKeyboard = new QFReleaseKeyboardInstruction();
+	private final PaintInstruction<Void, QFPaintContext> grabPointer = new QFGrabPointer();
+	private final PaintInstruction<Void, QFPaintContext> releaseMouse = new QFReleaseMouseInstruction();
+	private final PaintInstruction<Void, QFPaintContext> destroy = new QFDestroyInstruction();
+	private final PaintInstruction<Void, QFPaintContext> giveFocus = new QFGiveFocusInstruction();
 
-	private final QFRenderEngine qFRenderEngine;
-	private final Paintable paintable;
+	private final QFRenderEngineImpl qFRenderEngine;
+	private final PaintableRenderNode paintableRenderNode;
 
 	@Inject
-	protected QFPainter(final QFRenderEngine qFRenderEngine,
-						@Assisted final Paintable paintable) {
+	protected QFPainter(final QFRenderEngineImpl qFRenderEngine,
+						@Assisted final PaintableRenderNode paintableRenderNode) {
 
 		this.qFRenderEngine = qFRenderEngine;
-		this.paintable = paintable;
+		this.paintableRenderNode = paintableRenderNode;
 	}
 
 	@Override
-	public Paintable getPaintable() {
-		return this.paintable;
+	public PaintableRenderNode getPaintableRenderNode() {
+		return this.paintableRenderNode;
 	}
 
 	@Override
 	public void destroy() {
-		this.qFRenderEngine.invoke(this.paintable, this.destroy);
+		this.qFRenderEngine.invoke(this.paintableRenderNode, this.destroy);
 	}
 
 	@Override
 	public void setInputFocus() {
-		this.qFRenderEngine.invoke(this.paintable, this.giveFocus);
+		this.qFRenderEngine.invoke(this.paintableRenderNode, this.giveFocus);
 	}
 
 	@Override
 	public void lower() {
-		this.qFRenderEngine.invoke(this.paintable, this.lower);
+		this.qFRenderEngine.invoke(this.paintableRenderNode, this.lower);
 	}
 
 	@Override
 	public void show() {
-		this.qFRenderEngine.invoke(this.paintable, this.show);
+		this.qFRenderEngine.invoke(this.paintableRenderNode, this.show);
 	}
 
 	@Override
 	public void move(final int x, final int y) {
-		this.qFRenderEngine.invoke(this.paintable, new QFMoveInstruction(x, y));
+		this.qFRenderEngine.invoke(	this.paintableRenderNode,
+									new QFMoveInstruction(x, y));
 	}
 
 	@Override
@@ -101,7 +103,7 @@ public class QFPainter implements Painter {
 							final int y,
 							final int width,
 							final int height) {
-		this.qFRenderEngine.invoke(	this.paintable,
+		this.qFRenderEngine.invoke(	this.paintableRenderNode,
 									new QFMoveResizeInstruction(x,
 																y,
 																width,
@@ -110,55 +112,61 @@ public class QFPainter implements Painter {
 
 	@Override
 	public void raise() {
-		this.qFRenderEngine.invoke(this.paintable, this.raise);
+		this.qFRenderEngine.invoke(this.paintableRenderNode, this.raise);
 	}
 
 	@Override
-	public void setParent(final Paintable parent, final int x, final int y) {
-		this.qFRenderEngine.invoke(	this.paintable,
+	public void setParent(	final PaintableRenderNode parent,
+							final int x,
+							final int y) {
+		this.qFRenderEngine.invoke(	this.paintableRenderNode,
 									new QFSetParentInstruction(parent, x, y));
 	}
 
 	@Override
 	public void resize(final int width, final int height) {
-		this.qFRenderEngine.invoke(	this.paintable,
+		this.qFRenderEngine.invoke(	this.paintableRenderNode,
 									new QFResizeInstruction(width, height));
 	}
 
 	@Override
 	public void hide() {
-		this.qFRenderEngine.invoke(this.paintable, this.hide);
+		this.qFRenderEngine.invoke(this.paintableRenderNode, this.hide);
 	}
 
 	@Override
 	public void grabKeyboard() {
-		this.qFRenderEngine.invoke(this.paintable, this.grabKeyboard);
+		this.qFRenderEngine.invoke(this.paintableRenderNode, this.grabKeyboard);
 	}
 
 	@Override
-	public Coordinate translateCoordinates(	final Paintable source,
+	public Coordinate translateCoordinates(	final PaintableRenderNode source,
 											final int sourceX,
 											final int sourceY) {
+		try {
+			return this.qFRenderEngine
+					.invoke(this.paintableRenderNode,
+							new QFTranslateCoordinatesCalculation(	source,
+																	sourceX,
+																	sourceY))
+					.get();
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (final ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <R> Future<R> instruct(final PaintInstruction<R, ? extends PaintContext> paintInstruction) {
 		return this.qFRenderEngine
-				.invoke(this.paintable,
-						new QFTranslateCoordinatesCalculation(	source,
-																sourceX,
-																sourceY));
-	}
-
-	@Override
-	public void instruct(final PaintInstruction<? extends RenderEngine> paintInstruction) {
-		this.qFRenderEngine.invoke(this.paintable, paintInstruction);
-	}
-
-	@Override
-	public ResourceHandle construct(final PaintConstruction<? extends RenderEngine> paintConstruction) {
-		return this.qFRenderEngine.invoke(this.paintable, paintConstruction);
-	}
-
-	@Override
-	public <R> R calculate(final PaintCalculation<R, ? extends RenderEngine> paintCalculation) {
-		return this.qFRenderEngine.invoke(this.paintable, paintCalculation);
+				.invoke(this.paintableRenderNode,
+						(PaintInstruction<R, ? extends QFPaintContext>) paintInstruction);
 	}
 
 	@Override
@@ -170,12 +178,12 @@ public class QFPainter implements Painter {
 
 	@Override
 	public void grabPointer() {
-		this.qFRenderEngine.invoke(this.paintable, this.grabPointer);
+		this.qFRenderEngine.invoke(this.paintableRenderNode, this.grabPointer);
 	}
 
 	@Override
 	public void ungrabPointer() {
-		this.qFRenderEngine.invoke(this.paintable, this.releaseMouse);
+		this.qFRenderEngine.invoke(this.paintableRenderNode, this.releaseMouse);
 
 	}
 
@@ -201,7 +209,8 @@ public class QFPainter implements Painter {
 
 	@Override
 	public void ungrabKeyboard() {
-		this.qFRenderEngine.invoke(this.paintable, this.releaseKeyboard);
+		this.qFRenderEngine.invoke(	this.paintableRenderNode,
+									this.releaseKeyboard);
 
 	}
 }

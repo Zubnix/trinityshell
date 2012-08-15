@@ -7,6 +7,7 @@ import xcbjb.xcb_property_notify_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
@@ -20,6 +21,7 @@ public class XTime {
 
 	private volatile int time = 0;
 
+	@Inject
 	XTime(@Named("xEventBus") final EventBus xEventBus) {
 		xEventBus.register(this);
 	}

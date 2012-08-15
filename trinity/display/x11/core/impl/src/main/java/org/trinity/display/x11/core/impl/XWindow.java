@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import org.trinity.foundation.display.api.DisplayRenderArea;
-import org.trinity.foundation.display.api.ResourceHandle;
+import org.trinity.foundation.display.api.DisplayResourceHandle;
 import org.trinity.foundation.input.api.Button;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
@@ -45,7 +45,7 @@ import com.google.inject.assistedinject.AssistedInject;
 
 public class XWindow implements DisplayRenderArea {
 
-	private final ResourceHandle resourceHandle;
+	private final DisplayResourceHandle resourceHandle;
 	private final XConnection xConnection;
 	private final XTime xTime;
 
@@ -53,14 +53,14 @@ public class XWindow implements DisplayRenderArea {
 	@AssistedInject
 	XWindow(final XTime xTime,
 			final XConnection xConnection,
-			@Assisted final ResourceHandle resourceHandle) {
+			@Assisted final DisplayResourceHandle resourceHandle) {
 		this.xTime = xTime;
 		this.xConnection = xConnection;
 		this.resourceHandle = resourceHandle;
 	}
 
 	@Override
-	public ResourceHandle getResourceHandle() {
+	public DisplayResourceHandle getResourceHandle() {
 		return this.resourceHandle;
 	}
 

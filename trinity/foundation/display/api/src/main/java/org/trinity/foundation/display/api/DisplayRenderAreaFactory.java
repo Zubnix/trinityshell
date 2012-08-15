@@ -9,28 +9,12 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.render.paintengine.qt.api;
-
-import org.trinity.foundation.display.api.ResourceHandle;
-import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.render.api.Paintable;
-import org.trinity.foundation.render.api.RenderEngine;
-
-import com.trolltech.qt.gui.QWidget;
+package org.trinity.foundation.display.api;
 
 /*****************************************
  * @author Erik De Rijcke
+ * 
  ****************************************/
-public interface QFRenderEngine extends RenderEngine {
-	<T extends QWidget> T getVisual(Paintable paintable);
-
-	/*****************************************
-	 * @param displayEventSource
-	 * @param paintable
-	 * @param visual
-	 * @return
-	 ****************************************/
-	ResourceHandle putVisual(	DisplayEventSource displayEventSource,
-								Paintable paintable,
-								QWidget visual);
+public interface DisplayRenderAreaFactory {
+	DisplayRenderArea createDisplayRenderArea(DisplayResourceHandle resourceHandle);
 }

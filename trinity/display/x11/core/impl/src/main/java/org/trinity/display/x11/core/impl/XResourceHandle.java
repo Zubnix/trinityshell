@@ -1,11 +1,11 @@
 package org.trinity.display.x11.core.impl;
 
-import org.trinity.foundation.display.api.ResourceHandle;
+import org.trinity.foundation.display.api.DisplayResourceHandle;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-public class XResourceHandle implements ResourceHandle {
+public class XResourceHandle implements DisplayResourceHandle {
 
 	private final int nativeHandle;
 

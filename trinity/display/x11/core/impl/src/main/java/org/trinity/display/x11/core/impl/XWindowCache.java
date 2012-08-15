@@ -14,9 +14,9 @@ package org.trinity.display.x11.core.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.trinity.foundation.display.api.DisplayResourceFactory;
-import org.trinity.foundation.display.api.ResourceHandle;
-import org.trinity.foundation.display.api.ResourceHandleFactory;
+import org.trinity.foundation.display.api.DisplayRenderAreaFactory;
+import org.trinity.foundation.display.api.DisplayResourceHandle;
+import org.trinity.foundation.display.api.DisplayResourceHandleFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -29,12 +29,12 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Singleton
 public class XWindowCache {
 
-	private final ResourceHandleFactory resourceHandleFactory;
-	private final DisplayResourceFactory displayResourceFactory;
+	private final DisplayResourceHandleFactory resourceHandleFactory;
+	private final DisplayRenderAreaFactory displayResourceFactory;
 
 	@Inject
-	XWindowCache(	final ResourceHandleFactory resourceHandleFactory,
-					final DisplayResourceFactory displayResourceFactory) {
+	XWindowCache(	final DisplayResourceHandleFactory resourceHandleFactory,
+					final DisplayRenderAreaFactory displayResourceFactory) {
 		this.resourceHandleFactory = resourceHandleFactory;
 		this.displayResourceFactory = displayResourceFactory;
 	}
@@ -46,7 +46,7 @@ public class XWindowCache {
 			XWindow window = this.windows.get(Integer.valueOf(windowId));
 			if (window == null) {
 				final Integer windowID = Integer.valueOf(windowId);
-				final ResourceHandle resourceHandle = this.resourceHandleFactory
+				final DisplayResourceHandle resourceHandle = this.resourceHandleFactory
 						.createResourceHandle(windowID);
 				window = (XWindow) this.displayResourceFactory
 						.createDisplayRenderArea(resourceHandle);

@@ -31,6 +31,6 @@ public interface DisplayResource {
 	 * 
 	 * @return a unique {@link DisplayResourceHandle}
 	 */
-	ResourceHandle getResourceHandle();
+	DisplayResourceHandle getResourceHandle();
 
 }

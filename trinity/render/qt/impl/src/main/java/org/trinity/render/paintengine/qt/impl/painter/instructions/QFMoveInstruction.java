@@ -12,13 +12,11 @@
 package org.trinity.render.paintengine.qt.impl.painter.instructions;
 
 import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.Paintable;
-import org.trinity.render.paintengine.qt.api.QFRenderEngine;
+import org.trinity.foundation.render.api.PaintableRenderNode;
+import org.trinity.render.paintengine.qt.api.QFPaintContext;
 
-/*****************************************
- * @author Erik De Rijcke
- ****************************************/
-public class QFMoveInstruction implements PaintInstruction<QFRenderEngine> {
+public class QFMoveInstruction implements
+		PaintInstruction<Void, QFPaintContext> {
 
 	private final int x;
 	private final int y;
@@ -29,8 +27,9 @@ public class QFMoveInstruction implements PaintInstruction<QFRenderEngine> {
 	}
 
 	@Override
-	public void call(	final Paintable paintable,
-						final QFRenderEngine renderEngine) {
-		renderEngine.getVisual(paintable).move(this.x, this.y);
+	public Void call(	final PaintableRenderNode paintableRenderNode,
+						final QFPaintContext paintContext) {
+		paintContext.getVisual().move(this.x, this.y);
+		return null;
 	}
 }

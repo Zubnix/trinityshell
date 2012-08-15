@@ -13,13 +13,13 @@ package org.trinity.shell.widget.api;
 
 import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.render.api.Paintable;
+import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.shell.core.api.RenderArea;
 
-public interface Widget extends Paintable, DisplayEventSource, RenderArea {
+public interface Widget extends PaintableRenderNode, DisplayEventSource, RenderArea {
 
 	interface View {
-		DisplayRenderArea create(Paintable paintable);
+		DisplayRenderArea create(PaintableRenderNode paintableRenderNode);
 
 		void destroy();
 	}

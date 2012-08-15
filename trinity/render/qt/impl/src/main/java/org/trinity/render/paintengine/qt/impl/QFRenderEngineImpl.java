@@ -14,18 +14,16 @@ package org.trinity.render.paintengine.qt.impl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.trinity.foundation.display.api.DisplayEventProducer;
-import org.trinity.foundation.display.api.ResourceHandle;
-import org.trinity.foundation.display.api.ResourceHandleFactory;
+import org.trinity.foundation.display.api.DisplayResourceHandle;
+import org.trinity.foundation.display.api.DisplayResourceHandleFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.render.api.PaintCalculation;
-import org.trinity.foundation.render.api.PaintConstruction;
 import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.Paintable;
-import org.trinity.render.paintengine.qt.api.QFRenderEngine;
+import org.trinity.foundation.render.api.PaintableRenderNode;
+import org.trinity.render.paintengine.qt.api.QFPaintContext;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,6 +34,7 @@ import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
 
 // TODO documentation
 /**
@@ -44,9 +43,10 @@ import de.devsurf.injection.guice.annotations.Bind;
  * related operations to a <code>QFusionRenderEngine</code>. It's the
  * <code>QFusionRenderEngine</code>'s job to correctly handle these requests. To
  * do this, a <code>QFusionRenderEngine</code> holds a reference to every
- * registered <code>Paintable</code> and it's corresponding <code>QWidget</code>
- * paint peer. A registered <code>Paintable</code> is a <code>Paintable</code>
- * that was initially visualized by a <code>QFusionRenderEngine</code>.
+ * registered <code>PaintableRenderNode</code> and it's corresponding
+ * <code>QWidget</code> paint peer. A registered
+ * <code>PaintableRenderNode</code> is a <code>PaintableRenderNode</code> that
+ * was initially visualized by a <code>QFusionRenderEngine</code>.
  * <p>
  * A <code>QFusionRenderEngine</code> runs in a separate GUI <code>Thread</code>
  * . It is this <code>Thread</code> that will perform all visualization and
@@ -55,17 +55,17 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind
+@Bind(to = @To(value = To.Type.CUSTOM, customs = DisplayEventProducer.class))
 @Singleton
-public class QFRenderEngineImpl extends QApplication implements QFRenderEngine,
+public class QFRenderEngineImpl extends QApplication implements
 		DisplayEventProducer {
 
 	@Inject
-	private ResourceHandleFactory resourceHandleFactory;
+	private DisplayResourceHandleFactory resourceHandleFactory;
 	@Inject
 	private QFRenderEventBridge renderEventBridge;
 
-	private final Map<Paintable, QWidget> paintableToPaintPeer = new HashMap<Paintable, QWidget>();
+	private final Map<PaintableRenderNode, QWidget> paintableToPaintPeer = new HashMap<PaintableRenderNode, QWidget>();
 
 	public QFRenderEngineImpl(final String[] args) {
 		super(args);
@@ -99,85 +99,32 @@ public class QFRenderEngineImpl extends QApplication implements QFRenderEngine,
 		});
 	}
 
-	@Override
-	public void invoke(	final Paintable paintable,
-						@SuppressWarnings("rawtypes") final PaintInstruction paintInstruction) {
-		QCoreApplication.invokeLater(new Runnable() {
-			@SuppressWarnings("unchecked")
+	public <R> Future<R> invoke(final PaintableRenderNode paintableRenderNode,
+								final PaintInstruction<R, ? extends QFPaintContext> paintInstruction) {
+		final FutureTask<R> futureTask = new FutureTask<R>(new Callable<R>() {
 			@Override
-			public void run() {
-				paintInstruction.call(paintable, QFRenderEngineImpl.this);
+			public R call() throws Exception {
+				return paintInstruction.call(paintableRenderNode, paintContext);
 			}
 		});
-	}
-
-	@Override
-	public ResourceHandle invoke(	final Paintable paintable,
-									@SuppressWarnings("rawtypes") final PaintConstruction paintConstruction) {
-		final FutureTask<ResourceHandle> constructionTask = new FutureTask<ResourceHandle>(new Callable<ResourceHandle>() {
-			@SuppressWarnings("unchecked")
-			@Override
-			public ResourceHandle call() throws Exception {
-				return paintConstruction.construct(	paintable,
-													QFRenderEngineImpl.this);
-			}
-		});
-		QCoreApplication.invokeLater(constructionTask);
-		ResourceHandle resourceHandle = null;
-		try {
-			resourceHandle = constructionTask.get();
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (final ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return resourceHandle;
+		QCoreApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public <T extends QWidget> T getVisual(final Paintable paintable) {
-		return (T) this.paintableToPaintPeer.get(paintable);
+	public <T extends QWidget> T getVisual(final PaintableRenderNode paintableRenderNode) {
+		return (T) this.paintableToPaintPeer.get(paintableRenderNode);
 	}
 
-	@Override
-	public ResourceHandle putVisual(final DisplayEventSource displayEventSource,
-									final Paintable paintable,
-									final QWidget visual) {
-		this.paintableToPaintPeer.put(paintable, visual);
+	public DisplayResourceHandle putVisual(	final DisplayEventSource displayEventSource,
+											final PaintableRenderNode paintableRenderNode,
+											final QWidget visual) {
+		this.paintableToPaintPeer.put(paintableRenderNode, visual);
 		visual.installEventFilter(new QFRenderEventFilter(	this.renderEventBridge,
 															displayEventSource,
 															visual));
 		final long winId = visual.winId();
 		return this.resourceHandleFactory.createResourceHandle(Long
 				.valueOf(winId));
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Object invoke(	final Paintable paintable,
-							@SuppressWarnings("rawtypes") final PaintCalculation paintCalculation) {
-		@SuppressWarnings("rawtypes")
-		final FutureTask constructionTask = new FutureTask(new Callable() {
-			@Override
-			public Object call() throws Exception {
-				return paintCalculation.calculate(	paintable,
-													QFRenderEngineImpl.this);
-			}
-		});
-		QCoreApplication.invokeLater(constructionTask);
-		Object result = null;
-		try {
-			result = constructionTask.get();
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (final ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
 	}
 }

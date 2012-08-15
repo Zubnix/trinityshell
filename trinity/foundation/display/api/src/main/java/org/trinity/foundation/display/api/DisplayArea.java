@@ -13,20 +13,21 @@
  * You should have received a copy of the GNU General Public License along with
  * Hydrogen. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.trinity.foundation.display.api;
 
-// TODO documentation
 /**
+ * An <code>Area</code> describes a visible part of the screen. It is the base
+ * interface of all objects wishing to describe an on-screen area.
+ * <p>
+ * Implementation advice:
+ * <p>
+ * <code>Area</code> implementations should have a corresponding
+ * {@link DisplayAreaManipulator} to provide interaction.
  * 
  * @author Erik De Rijcke
  * @since 1.0
+ * 
  */
-public interface PlatformRenderAreaRelation {
+public interface DisplayArea {
 
-	/**
-	 * 
-	 * @return
-	 */
-	DisplayRenderArea getRelatedRenderArea();
 }

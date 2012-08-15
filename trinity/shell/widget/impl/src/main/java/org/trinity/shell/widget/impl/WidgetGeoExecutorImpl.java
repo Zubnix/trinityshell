@@ -13,8 +13,8 @@ package org.trinity.shell.widget.impl;
 
 import javax.inject.Named;
 
-import org.trinity.foundation.display.api.Area;
-import org.trinity.foundation.display.api.AreaManipulator;
+import org.trinity.foundation.display.api.DisplayArea;
+import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.core.impl.RenderAreaGeoExecutorImpl;
@@ -52,15 +52,15 @@ public class WidgetGeoExecutorImpl extends RenderAreaGeoExecutorImpl {
 	}
 
 	@Override
-	public AreaManipulator<Area> getAreaManipulator(final GeoTransformableRectangle geoTransformableRectangle) {
+	public DisplayAreaManipulator<DisplayArea> getAreaManipulator(final GeoTransformableRectangle geoTransformableRectangle) {
 		return getAreaManipulator(geoTransformableRectangle);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected <T extends Area> AreaManipulator<T> getAreaManipulator(final RenderArea renderArea) {
-		AreaManipulator<T> manip = null;
-		manip = (AreaManipulator<T>) ((Widget) renderArea).getPainter();
+	protected <T extends DisplayArea> DisplayAreaManipulator<T> getAreaManipulator(final RenderArea renderArea) {
+		DisplayAreaManipulator<T> manip = null;
+		manip = (DisplayAreaManipulator<T>) ((Widget) renderArea).getPainter();
 		return manip;
 	}
 
@@ -77,7 +77,7 @@ public class WidgetGeoExecutorImpl extends RenderAreaGeoExecutorImpl {
 	}
 
 	@Override
-	protected Area getAreaPeer(final RenderArea renderArea) {
+	protected DisplayArea getAreaPeer(final RenderArea renderArea) {
 		return renderArea;
 	}
 

@@ -11,25 +11,22 @@
  */
 package org.trinity.render.paintengine.qt.impl.painter.instructions;
 
-import org.trinity.foundation.render.api.PaintCalculation;
-import org.trinity.foundation.render.api.Paintable;
+import org.trinity.foundation.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
-import org.trinity.render.paintengine.qt.api.QFRenderEngine;
+import org.trinity.render.paintengine.qt.api.QFPaintContext;
 
 import com.trolltech.qt.core.QPoint;
 import com.trolltech.qt.gui.QWidget;
 
-/*****************************************
- * @author Erik De Rijcke
- ****************************************/
 public class QFTranslateCoordinatesCalculation implements
-		PaintCalculation<Coordinate, QFRenderEngine> {
+		PaintInstruction<Coordinate, QFPaintContext> {
 
-	private final Paintable source;
+	private final PaintableRenderNode source;
 	private final int sourceX;
 	private final int sourceY;
 
-	public QFTranslateCoordinatesCalculation(	final Paintable source,
+	public QFTranslateCoordinatesCalculation(	final PaintableRenderNode source,
 												final int sourceX,
 												final int sourceY) {
 
@@ -39,10 +36,10 @@ public class QFTranslateCoordinatesCalculation implements
 	}
 
 	@Override
-	public Coordinate calculate(final Paintable paintable,
-								final QFRenderEngine renderEngine) {
-		final QWidget sourcePaintPeer = renderEngine.getVisual(this.source);
-		final QWidget targetPaintPeer = renderEngine.getVisual(paintable);
+	public Coordinate call(	final PaintableRenderNode paintableRenderNode,
+							final QFPaintContext renderEngine) {
+		final QWidget sourcePaintPeer = renderEngine.queryVisual(this.source);
+		final QWidget targetPaintPeer = renderEngine.getVisual();
 
 		final QPoint translatedPoint = sourcePaintPeer
 				.mapTo(targetPaintPeer, new QPoint(this.sourceX, this.sourceY));

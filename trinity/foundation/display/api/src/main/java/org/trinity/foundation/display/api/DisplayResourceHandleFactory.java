@@ -9,12 +9,11 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.foundation.render.api;
+package org.trinity.foundation.display.api;
 
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
-public interface PaintCalculation<R, T extends RenderEngine> {
-
-	R calculate(Paintable paintable, T renderEngine);
+public interface DisplayResourceHandleFactory {
+	DisplayResourceHandle createResourceHandle(Object nativeHandle);
 }

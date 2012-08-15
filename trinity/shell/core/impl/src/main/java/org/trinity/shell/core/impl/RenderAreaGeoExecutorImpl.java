@@ -11,8 +11,8 @@
  */
 package org.trinity.shell.core.impl;
 
-import org.trinity.foundation.display.api.Area;
-import org.trinity.foundation.display.api.AreaManipulator;
+import org.trinity.foundation.display.api.DisplayArea;
+import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.shell.core.api.RenderArea;
 import org.trinity.shell.geo.api.GeoExecutor;
@@ -48,13 +48,13 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 	}
 
 	@Override
-	public AreaManipulator<Area> getAreaManipulator(final GeoTransformableRectangle geoTransformableRectangle) {
+	public DisplayAreaManipulator<DisplayArea> getAreaManipulator(final GeoTransformableRectangle geoTransformableRectangle) {
 		return this.getAreaManipulator(geoTransformableRectangle);
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T extends Area> AreaManipulator<T> getAreaManipulator(final RenderArea renderArea) {
-		return (AreaManipulator<T>) renderArea.getPlatformRenderArea();
+	protected <T extends DisplayArea> DisplayAreaManipulator<T> getAreaManipulator(final RenderArea renderArea) {
+		return (DisplayAreaManipulator<T>) renderArea.getPlatformRenderArea();
 	}
 
 	protected boolean isAreaInitialized(final RenderArea renderArea) {
@@ -116,7 +116,7 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 			final int newRelativeX = newRelativePosition.getX();
 			final int newRelativeY = newRelativePosition.getY();
 
-			final AreaManipulator<Area> areaManipulator = this
+			final DisplayAreaManipulator<DisplayArea> areaManipulator = this
 					.getAreaManipulator(geoTransformableRectangle);
 			areaManipulator.moveResize(	newRelativeX,
 										newRelativeY,
@@ -230,7 +230,7 @@ public class RenderAreaGeoExecutorImpl extends AbstractGeoExecutor {
 	 * @param renderArea
 	 * @return
 	 */
-	protected Area getAreaPeer(final RenderArea renderArea) {
+	protected DisplayArea getAreaPeer(final RenderArea renderArea) {
 		return renderArea.getPlatformRenderArea();
 	}
 

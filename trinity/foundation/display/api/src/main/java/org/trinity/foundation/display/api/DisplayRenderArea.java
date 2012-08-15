@@ -25,8 +25,8 @@ import org.trinity.foundation.shared.geometry.api.Rectangle;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public interface DisplayRenderArea extends DisplayResource, Area,
-		AreaManipulator<DisplayRenderArea>, DisplayEventSource {
+public interface DisplayRenderArea extends DisplayResource, DisplayArea,
+		DisplayAreaManipulator<DisplayRenderArea>, DisplayEventSource {
 
 	/**
 	 * Get the current <code>PlatformRenderArea</code> geometry information. The

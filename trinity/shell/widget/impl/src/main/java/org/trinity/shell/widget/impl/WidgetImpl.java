@@ -31,7 +31,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 // TODO documentation
 // TODO list emitted events
 /**
- * An <code>AbstractRenderArea</code> with a <code>Paintable</code>
+ * An <code>AbstractRenderArea</code> with a <code>PaintableRenderNode</code>
  * implementation. A <code>Widget</code> is ment to provide a visual interface
  * for the user so it can manipulate the hyperdrive library at runtime.
  * <p>

@@ -11,13 +11,7 @@
  */
 package org.trinity.foundation.render.api;
 
-/*****************************************
- * @author Erik De Rijcke
- ****************************************/
 public interface PainterFactory {
-	/****************************************
-	 * @param paintable
-	 * @return
-	 ***************************************/
-	Painter createPainter(Paintable paintable);
+
+	Painter createPainter(PaintableRenderNode paintableRenderNode);
 }

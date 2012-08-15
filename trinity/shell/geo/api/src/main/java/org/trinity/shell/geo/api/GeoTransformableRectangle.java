@@ -11,10 +11,10 @@
  */
 package org.trinity.shell.geo.api;
 
-import org.trinity.foundation.render.api.HierarchicalRectangle;
+import org.trinity.foundation.render.api.RenderNode;
 import org.trinity.shell.geo.api.manager.GeoManager;
 
-public interface GeoTransformableRectangle extends HierarchicalRectangle,
+public interface GeoTransformableRectangle extends RenderNode,
 		GeoTransformable {
 
 	void cancelPendingMove();
