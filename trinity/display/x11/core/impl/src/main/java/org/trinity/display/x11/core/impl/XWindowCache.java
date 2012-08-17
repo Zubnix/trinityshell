@@ -11,12 +11,18 @@
  */
 package org.trinity.display.x11.core.impl;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.trinity.foundation.display.api.DisplayRenderAreaFactory;
 import org.trinity.foundation.display.api.DisplayResourceHandle;
 import org.trinity.foundation.display.api.DisplayResourceHandleFactory;
+
+import xcbjb.LibXcb;
+import xcbjb.xcb_cw_t;
+import xcbjb.xcb_event_mask_t;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -29,17 +35,20 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Singleton
 public class XWindowCache {
 
+	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
+
 	private final DisplayResourceHandleFactory resourceHandleFactory;
 	private final DisplayRenderAreaFactory displayResourceFactory;
+	private final XConnection xConnection;
 
 	@Inject
-	XWindowCache(	final DisplayResourceHandleFactory resourceHandleFactory,
+	XWindowCache(	final XConnection xConnection,
+					final DisplayResourceHandleFactory resourceHandleFactory,
 					final DisplayRenderAreaFactory displayResourceFactory) {
+		this.xConnection = xConnection;
 		this.resourceHandleFactory = resourceHandleFactory;
 		this.displayResourceFactory = displayResourceFactory;
 	}
-
-	public Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
 
 	public XWindow getWindow(final int windowId) {
 		synchronized (this.windows) {
@@ -51,8 +60,27 @@ public class XWindowCache {
 				window = (XWindow) this.displayResourceFactory
 						.createDisplayRenderArea(resourceHandle);
 				this.windows.put(windowID, window);
+				configureClientEvents(windowID);
 			}
 			return window;
 		}
+	}
+
+	private void configureClientEvents(final Integer windowId) {
+		final ByteBuffer values = ByteBuffer.allocateDirect(4 + 4 + 4 + 4)
+				.order(ByteOrder.nativeOrder());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE
+				.swigValue());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW.swigValue());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW.swigValue());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY
+				.swigValue());
+
+		LibXcb.xcb_change_window_attributes(this.xConnection
+													.getConnectionReference(),
+											windowId.intValue(),
+											xcb_cw_t.XCB_CW_EVENT_MASK
+													.swigValue(),
+											values);
 	}
 }
