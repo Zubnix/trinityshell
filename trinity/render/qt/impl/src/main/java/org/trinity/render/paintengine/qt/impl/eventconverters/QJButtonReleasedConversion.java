@@ -19,9 +19,7 @@ import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.input.api.PointerInput;
 import org.trinity.render.paintengine.qt.impl.QJRenderEventConversion;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.gui.QMouseEvent;
@@ -41,11 +39,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class QJButtonReleasedConversion implements QJRenderEventConversion {
 
-	private final QEvent.Type qType;
-
-	@Inject
-	QJButtonReleasedConversion(@Named("MouseButtonRelease") final QEvent.Type qType) {
-		this.qType = qType;
+	QJButtonReleasedConversion() {
 	}
 
 	@Override
@@ -78,6 +72,6 @@ public class QJButtonReleasedConversion implements QJRenderEventConversion {
 
 	@Override
 	public Type getQEventType() {
-		return this.qType;
+		return QEvent.Type.MouseButtonRelease;
 	}
 }

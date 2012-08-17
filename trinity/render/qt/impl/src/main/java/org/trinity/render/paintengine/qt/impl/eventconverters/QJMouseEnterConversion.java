@@ -16,9 +16,7 @@ import org.trinity.foundation.display.api.event.PointerEnterNotifyEvent;
 import org.trinity.foundation.display.api.event.PointerVisitationNotifyEvent;
 import org.trinity.render.paintengine.qt.impl.QJRenderEventConversion;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 
@@ -37,12 +35,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class QJMouseEnterConversion implements QJRenderEventConversion {
 
-	private final QEvent.Type qType;
-
-	@Inject
-	protected QJMouseEnterConversion(@Named("Enter") final QEvent.Type qType) {
-
-		this.qType = qType;
+	QJMouseEnterConversion() {
 	}
 
 	@Override
@@ -53,6 +46,6 @@ public class QJMouseEnterConversion implements QJRenderEventConversion {
 
 	@Override
 	public Type getQEventType() {
-		return this.qType;
+		return QEvent.Type.Enter;
 	}
 }

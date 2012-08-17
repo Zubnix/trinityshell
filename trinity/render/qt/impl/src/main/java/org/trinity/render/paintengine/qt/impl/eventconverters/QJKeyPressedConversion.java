@@ -19,9 +19,7 @@ import org.trinity.foundation.input.api.KeyboardInput;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.render.paintengine.qt.impl.QJRenderEventConversion;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.gui.QKeyEvent;
@@ -41,11 +39,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class QJKeyPressedConversion implements QJRenderEventConversion {
 
-	private final QEvent.Type qType;
-
-	@Inject
-	QJKeyPressedConversion(@Named("KeyPress") final QEvent.Type qType) {
-		this.qType = qType;
+	QJKeyPressedConversion() {
 	}
 
 	@Override
@@ -74,6 +68,6 @@ public class QJKeyPressedConversion implements QJRenderEventConversion {
 
 	@Override
 	public Type getQEventType() {
-		return this.qType;
+		return QEvent.Type.KeyPress;
 	}
 }

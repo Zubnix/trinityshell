@@ -15,9 +15,7 @@ import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.render.paintengine.qt.impl.QJRenderEventConversion;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 
@@ -35,11 +33,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class QJDestroyConversion implements QJRenderEventConversion {
 
-	private final QEvent.Type qType;
-
-	@Inject
-	QJDestroyConversion(@Named("Close") final QEvent.Type qType) {
-		this.qType = qType;
+	QJDestroyConversion() {
 	}
 
 	@Override
@@ -50,6 +44,6 @@ public class QJDestroyConversion implements QJRenderEventConversion {
 
 	@Override
 	public Type getQEventType() {
-		return this.qType;
+		return QEvent.Type.Close;
 	}
 }

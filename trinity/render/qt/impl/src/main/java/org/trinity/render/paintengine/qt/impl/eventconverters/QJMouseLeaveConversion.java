@@ -16,9 +16,7 @@ import org.trinity.foundation.display.api.event.PointerLeaveNotifyEvent;
 import org.trinity.foundation.display.api.event.PointerVisitationNotifyEvent;
 import org.trinity.render.paintengine.qt.impl.QJRenderEventConversion;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 
@@ -37,11 +35,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class QJMouseLeaveConversion implements QJRenderEventConversion {
 
-	private final QEvent.Type qType;
-
-	@Inject
-	QJMouseLeaveConversion(@Named("Leave") final QEvent.Type qType) {
-		this.qType = qType;
+	QJMouseLeaveConversion() {
 	}
 
 	@Override
@@ -52,6 +46,6 @@ public class QJMouseLeaveConversion implements QJRenderEventConversion {
 
 	@Override
 	public Type getQEventType() {
-		return this.qType;
+		return QEvent.Type.Leave;
 	}
 }

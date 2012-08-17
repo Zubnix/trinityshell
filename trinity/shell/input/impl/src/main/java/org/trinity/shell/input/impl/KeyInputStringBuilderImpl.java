@@ -16,10 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.trinity.foundation.display.api.event.KeyNotifyEvent;
-import org.trinity.foundation.input.api.InputModifierName;
-import org.trinity.foundation.input.api.SpecialKeyName;
+import org.trinity.foundation.input.api.Keyboard;
+import org.trinity.foundation.input.api.KeyboardInput;
 import org.trinity.shell.input.api.KeyInputStringBuilder;
-import org.trinity.shell.input.api.ManagedKeyboard;
 
 import com.google.inject.Inject;
 
@@ -36,25 +35,36 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 
+	private final String[] ignoreKeys = { Keyboard.BACKSPACE, Keyboard.BEGIN,
+			Keyboard.CAPS_LOCK, Keyboard.CLEAR, Keyboard.DELETE, Keyboard.DOWN,
+			Keyboard.END, Keyboard.ENTER, Keyboard.ESCAPE, Keyboard.HOME,
+			Keyboard.INSERT, Keyboard.L_ALT, Keyboard.L_CTRL, Keyboard.L_HYPER,
+			Keyboard.L_META, Keyboard.L_SHIFT, Keyboard.L_SUPER, Keyboard.LEFT,
+			Keyboard.LINEFEED, Keyboard.NEXT, Keyboard.NUM_LOCK,
+			Keyboard.PAUSE, Keyboard.PG_DOWN, Keyboard.PG_UP, Keyboard.PREV,
+			Keyboard.PRINT, Keyboard.R_ALT, Keyboard.R_CTRL, Keyboard.R_HYPER,
+			Keyboard.R_META, Keyboard.R_SHIFT, Keyboard.R_SUPER,
+			Keyboard.RIGHT, Keyboard.SCRL_LOCK, Keyboard.SHIFT_LOCK,
+			Keyboard.SYS_REQ, Keyboard.TAB, Keyboard.UP };
+
 	/**
 	 * @author Erik De Rijcke
 	 * @since 1.0
 	 */
-	public static interface StringMutatorOnInput {
-		void mutate(StringBuffer stringBuffer, KeyNotifyEvent input);
+	interface StringMutatorOnInput {
+		void mutate(String keyName);
 	}
 
-	private final ManagedKeyboard managedKeyboard;
-	private final StringBuffer stringBuffer;
+	private final Keyboard keyboard;
+	private StringBuffer stringBuffer = new StringBuffer();
 	private final Map<String, StringMutatorOnInput> specialBuildActions;
 
 	/**
 	 * 
 	 */
 	@Inject
-	protected KeyInputStringBuilderImpl(final ManagedKeyboard managedKeyboard) {
-		this.managedKeyboard = managedKeyboard;
-		this.stringBuffer = new StringBuffer();
+	KeyInputStringBuilderImpl(final Keyboard keyboard) {
+		this.keyboard = keyboard;
 		this.specialBuildActions = new HashMap<String, KeyInputStringBuilderImpl.StringMutatorOnInput>();
 		initSpecialBuildActions();
 	}
@@ -66,40 +76,28 @@ public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 		// first we fill the special build actions with with empty operations
 		// for all known special keys & modifiers, that way we make sure nothing
 		// fancy happens when a special key or modifier is pressed.
-		for (final SpecialKeyName specialKeyName : SpecialKeyName.values()) {
-			getSpecialBuildActions().put(	specialKeyName.name(),
+		for (final String specialKeyName : this.ignoreKeys) {
+			getSpecialBuildActions().put(	specialKeyName,
 											new StringMutatorOnInput() {
 												@Override
-												public void mutate(	final StringBuffer stringBuffer,
-																	final KeyNotifyEvent input) {
-													// do nothing;
-												}
-											});
-		}
-		for (final InputModifierName inputModifierName : InputModifierName
-				.values()) {
-			getSpecialBuildActions().put(	inputModifierName.name(),
-											new StringMutatorOnInput() {
-												@Override
-												public void mutate(	final StringBuffer stringBuffer,
-																	final KeyNotifyEvent input) {
+												public void mutate(final String keyName) {
 													// do nothing;
 												}
 											});
 		}
 
 		// next we initialize special keys that do need a specific action
-		getSpecialBuildActions().put(	SpecialKeyName.BACKSPACE.name(),
+
+		getSpecialBuildActions().put(	Keyboard.BACKSPACE,
 										new StringMutatorOnInput() {
 											@Override
-											public void mutate(	final StringBuffer stringBuffer,
-																final KeyNotifyEvent input) {
-												final int length = stringBuffer
+											public void mutate(final String keyName) {
+												final int length = KeyInputStringBuilderImpl.this.stringBuffer
 														.length();
 												if (length > 0) {
 													// backspace => delete
 													// last char
-													stringBuffer
+													KeyInputStringBuilderImpl.this.stringBuffer
 															.deleteCharAt(length - 1);
 												}
 											}
@@ -110,16 +108,18 @@ public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 	 * @param input
 	 */
 	@Override
-	public void build(final KeyNotifyEvent input) {
-		final String keyName = this.managedKeyboard.keyEventToString(input);
+	public void append(final KeyNotifyEvent input) {
+		final KeyboardInput keyboardInput = input.getInput();
+		final String keyName = this.keyboard.asKeySymbolName(keyboardInput
+				.getKey(), keyboardInput.getModifiers());
 		final StringMutatorOnInput stringMutatorOnInput = getSpecialBuildActions()
 				.get(keyName);
 
 		if (stringMutatorOnInput != null) {
-			stringMutatorOnInput.mutate(getStringBuffer(), input);
+			stringMutatorOnInput.mutate(keyName);
 		} else {
 			// key is not a special key, append it.
-			getStringBuffer().append(keyName);
+			this.stringBuffer.append(keyName);
 		}
 	}
 
@@ -127,11 +127,8 @@ public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 	 * 
 	 */
 	@Override
-	public void clearBuffer() {
-		final int lenght = getStringBuffer().length();
-		if (lenght > 0) {
-			getStringBuffer().delete(0, lenght);
-		}
+	public void clear() {
+		this.stringBuffer = new StringBuffer();
 	}
 
 	/**
@@ -141,11 +138,13 @@ public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 		return this.specialBuildActions;
 	}
 
-	/**
-	 * @return
-	 */
 	@Override
-	public StringBuffer getStringBuffer() {
-		return this.stringBuffer;
+	public void append(final String string) {
+		this.stringBuffer.append(string);
+	}
+
+	@Override
+	public String toString() {
+		return this.stringBuffer.toString();
 	}
 }

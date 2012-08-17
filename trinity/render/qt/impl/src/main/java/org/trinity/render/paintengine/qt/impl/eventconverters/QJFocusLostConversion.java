@@ -16,9 +16,7 @@ import org.trinity.foundation.display.api.event.FocusLostNotifyEvent;
 import org.trinity.foundation.display.api.event.FocusNotifyEvent;
 import org.trinity.render.paintengine.qt.impl.QJRenderEventConversion;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 
@@ -36,11 +34,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class QJFocusLostConversion implements QJRenderEventConversion {
 
-	private final QEvent.Type qType;
-
-	@Inject
-	QJFocusLostConversion(@Named("FocusOut") final QEvent.Type qType) {
-		this.qType = qType;
+	QJFocusLostConversion() {
 	}
 
 	@Override
@@ -51,6 +45,6 @@ public class QJFocusLostConversion implements QJRenderEventConversion {
 
 	@Override
 	public Type getQEventType() {
-		return this.qType;
+		return QEvent.Type.FocusOut;
 	}
 }

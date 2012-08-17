@@ -62,18 +62,20 @@ import de.devsurf.injection.guice.annotations.To;
 public class QJRenderEngine extends QApplication implements
 		DisplayEventProducer {
 
-	@Inject
-	private DisplayResourceHandleFactory resourceHandleFactory;
-	@Inject
-	private QJRenderEventConverter renderEventConverter;
-	@Inject
-	@Named("displayEventBus")
-	private EventBus displayEventBus;
+	private final DisplayResourceHandleFactory resourceHandleFactory;
+	private final QJRenderEventConverter renderEventConverter;
+	private final EventBus displayEventBus;
 
 	private final Map<PaintableRenderNode, QWidget> paintableToPaintPeer = new HashMap<PaintableRenderNode, QWidget>();
 
-	public QJRenderEngine(final String[] args) {
-		super(args);
+	@Inject
+	QJRenderEngine(	final DisplayResourceHandleFactory resourceHandleFactory,
+					final QJRenderEventConverter renderEventConverter,
+					@Named("displayEventBus") final EventBus displayEventBus) {
+		super(new String[] {});
+		this.resourceHandleFactory = resourceHandleFactory;
+		this.renderEventConverter = renderEventConverter;
+		this.displayEventBus = displayEventBus;
 	}
 
 	@Override

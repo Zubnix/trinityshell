@@ -24,6 +24,6 @@
  * @author Erik De Rijcke
  * @since 1.0
  * 
- * @see org.trinity.shell.widget.api.Widget
+ * @see org.trinity.shell.widget.api.ShellWidget
  */
 package org.trinity.shell.widget.impl;

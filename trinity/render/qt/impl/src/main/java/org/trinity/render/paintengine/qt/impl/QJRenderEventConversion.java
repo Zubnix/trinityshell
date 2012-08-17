@@ -18,17 +18,8 @@ import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 
 public interface QJRenderEventConversion {
-
-	/*****************************************
-	 * @param source
-	 * @param qEvent
-	 * @return
-	 ****************************************/
 	DisplayEvent convertEvent(DisplayEventSource source, QEvent qEvent);
 
-	/*****************************************
-	 * @return
-	 ****************************************/
 	Type getQEventType();
 
 }

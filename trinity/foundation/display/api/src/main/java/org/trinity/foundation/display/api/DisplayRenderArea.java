@@ -15,28 +15,19 @@ import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
-// TODO documentation
 /**
- * A <code>PlatformRenderArea</code> is represents a native isolated graphical
+ * A <code>DisplayRenderArea</code> is represents a native isolated graphical
  * area created by a <code>Display</code>. Usually a
  * <code>PlatformRenderArea</code> manages a native window from a native
  * display.
  * 
- * @author Erik De Rijcke
- * @since 1.0
  */
-public interface DisplayRenderArea extends DisplayResource, DisplayArea,
+public interface DisplayRenderArea extends DisplayArea,
 		DisplayAreaManipulator<DisplayRenderArea>, DisplayEventSource {
 
-	/**
-	 * Get the current <code>PlatformRenderArea</code> geometry information. The
-	 * returned <code>PlatformRenderAreaGeometry</code> represents this
-	 * <code>PlatformRenderArea</code> native geometry at the time of the call.
-	 * 
-	 * @return This <code>PlatformRenderArea</code>'s
-	 *         {@link PlatformRenderAreaGeometry}.
-	 */
 	Rectangle getGeometry();
 
 	Coordinate getPointerCoordinate();
+
+	DisplayResourceHandle getResourceHandle();
 }

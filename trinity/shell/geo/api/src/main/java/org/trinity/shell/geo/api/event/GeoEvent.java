@@ -11,11 +11,25 @@
  */
 package org.trinity.shell.geo.api.event;
 
-import org.trinity.shell.geo.api.GeoTransformableRectangle;
-import org.trinity.shell.geo.api.GeoTransformation;
+import org.trinity.shell.geo.api.ShellGeoNode;
+import org.trinity.shell.geo.api.ShellGeoTransformation;
 
-public interface GeoEvent {
-	GeoTransformableRectangle getSource();
+public class GeoEvent {
 
-	GeoTransformation getSourceTransformation();
+	private final ShellGeoNode shellGeoNode;
+	private final ShellGeoTransformation shellGeoTransformation;
+
+	public GeoEvent(final ShellGeoNode shellGeoNode,
+					final ShellGeoTransformation shellGeoTransformation) {
+		this.shellGeoNode = shellGeoNode;
+		this.shellGeoTransformation = shellGeoTransformation;
+	}
+
+	public ShellGeoNode getSource() {
+		return this.shellGeoNode;
+	}
+
+	public ShellGeoTransformation getSourceTransformation() {
+		return this.shellGeoTransformation;
+	}
 }

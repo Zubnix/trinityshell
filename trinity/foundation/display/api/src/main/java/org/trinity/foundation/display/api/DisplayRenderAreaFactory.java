@@ -11,10 +11,6 @@
  */
 package org.trinity.foundation.display.api;
 
-/*****************************************
- * @author Erik De Rijcke
- * 
- ****************************************/
 public interface DisplayRenderAreaFactory {
 	DisplayRenderArea createDisplayRenderArea(DisplayResourceHandle resourceHandle);
 }

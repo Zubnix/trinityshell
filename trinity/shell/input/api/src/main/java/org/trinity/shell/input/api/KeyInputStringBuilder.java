@@ -4,10 +4,9 @@ import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 
 public interface KeyInputStringBuilder {
 
-	void build(KeyNotifyEvent input);
+	void append(String string);
 
-	void clearBuffer();
+	void append(KeyNotifyEvent input);
 
-	StringBuffer getStringBuffer();
-
+	void clear();
 }
