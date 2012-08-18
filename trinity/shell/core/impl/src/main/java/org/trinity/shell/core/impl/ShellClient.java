@@ -16,6 +16,7 @@ import org.trinity.foundation.display.api.event.GeometryRequestEvent;
 import org.trinity.foundation.display.api.event.HideNotifyEvent;
 import org.trinity.foundation.display.api.event.ShowRequestEvent;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
+import org.trinity.shell.core.api.AbstractShellRenderArea;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
 import org.trinity.shell.core.api.ShellRenderArea;
 import org.trinity.shell.geo.api.ShellGeoExecutor;
@@ -55,8 +56,8 @@ public class ShellClient extends AbstractShellRenderArea {
 	@Inject
 	ShellClient(final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 				final EventBus eventBus,
-				@Named("root") final ShellRenderArea root,
-				@Named("ShellRenderArea") final ShellGeoExecutor shellGeoExecutor,
+				@Named("shellRootRenderArea") final ShellRenderArea root,
+				@Named("ShellRenderAreaGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
 				@Assisted final DisplayRenderArea platformRenderArea) {
 		super(eventBus, shellDisplayEventDispatcher);
 		this.renderAreaGeoExecutor = shellGeoExecutor;

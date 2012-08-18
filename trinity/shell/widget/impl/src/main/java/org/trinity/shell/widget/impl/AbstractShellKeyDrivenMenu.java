@@ -52,8 +52,8 @@ public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl
 
 	private final EventBus displayEventBus;
 
-	protected AbstractShellKeyDrivenMenu(	final EventBus displayEventBus,
-											final EventBus eventBus,
+	protected AbstractShellKeyDrivenMenu(	final EventBus shellEventBus,
+											final EventBus nodeEventBus,
 											final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 											final PainterFactory painterFactory,
 											final ShellGeoExecutor shellGeoExecutor,
@@ -61,12 +61,12 @@ public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl
 											final ShellRenderArea root,
 											final KeyInputStringBuilder keyInputStringBuilder,
 											final ShellKeyDrivenMenuView view) {
-		super(	eventBus,
+		super(	nodeEventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
 				shellGeoExecutor,
 				view);
-		this.displayEventBus = displayEventBus;
+		this.displayEventBus = shellEventBus;
 		this.view = view;
 		this.keyboard = keyboard;
 		this.root = root;

@@ -9,7 +9,7 @@
  * copy of the GNU General Public License along with HyperDrive. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.trinity.shell.geo.impl.manager;
+package org.trinity.shell.geo.api.manager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,9 +27,6 @@ import org.trinity.shell.geo.api.event.GeoRaiseRequestEvent;
 import org.trinity.shell.geo.api.event.GeoReparentRequestEvent;
 import org.trinity.shell.geo.api.event.GeoResizeRequestEvent;
 import org.trinity.shell.geo.api.event.GeoShowRequestEvent;
-import org.trinity.shell.geo.api.manager.ShellLayoutManager;
-import org.trinity.shell.geo.api.manager.ShellLayoutProperty;
-import org.trinity.shell.geo.api.manager.ShellLayoutPropertyLine;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -43,17 +40,10 @@ import com.google.common.eventbus.Subscribe;
  * @since 1.0
  * @param <T>
  */
-public abstract class AbstractShellGeoManager implements ShellLayoutManager {
+public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	private final Map<ShellGeoNode, ShellLayoutProperty> childrenWithLayoutProperty = new LinkedHashMap<ShellGeoNode, ShellLayoutProperty>();
-	private final ShellGeoNode container;
-
-	/**
-	 * 
-	 */
-	public AbstractShellGeoManager(final ShellGeoNode container) {
-		this.container = container;
-	}
+	private ShellGeoNode container;
 
 	/**
 	 * @return
@@ -61,6 +51,11 @@ public abstract class AbstractShellGeoManager implements ShellLayoutManager {
 	@Override
 	public ShellGeoNode getLayoutContainer() {
 		return this.container;
+	}
+
+	@Override
+	public void setLayoutContainer(final ShellGeoNode layoutContainer) {
+		this.container = layoutContainer;
 	}
 
 	/**
@@ -75,8 +70,10 @@ public abstract class AbstractShellGeoManager implements ShellLayoutManager {
 
 	@Override
 	public void addChild(final ShellGeoNode child) {
-		addChild(child, newLayoutProperty());
+		addChild(child, defaultLayoutProperty());
 	}
+
+	protected abstract ShellLayoutProperty defaultLayoutProperty();
 
 	/**
 	 * @param child

@@ -58,7 +58,7 @@ public class ShellCloseButton extends ShellButton {
 	protected ShellCloseButton(	final EventBus eventBus,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("ShellWidget") final ShellGeoExecutor shellGeoExecutor,
+								@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
 								final DisplayProtocols desktopProtocol,
 								final ShellButtonView view) {
 		super(	eventBus,

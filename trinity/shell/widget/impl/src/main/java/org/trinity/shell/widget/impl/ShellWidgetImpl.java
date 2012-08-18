@@ -17,8 +17,8 @@ import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
+import org.trinity.shell.core.api.AbstractShellRenderArea;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.core.impl.AbstractShellRenderArea;
 import org.trinity.shell.geo.api.ShellGeoExecutor;
 import org.trinity.shell.geo.api.ShellGeoNode;
 import org.trinity.shell.widget.api.ShellWidget;
@@ -30,8 +30,7 @@ import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
-// TODO documentation
-// TODO list emitted events
+// TODO split into abstract widget & move to api
 /**
  * An <code>AbstractShellRenderArea</code> with a
  * <code>PaintableRenderNode</code> implementation. A <code>ShellWidget</code>
@@ -91,7 +90,7 @@ public class ShellWidgetImpl extends AbstractShellRenderArea implements
 	public ShellWidgetImpl(	final EventBus eventBus,
 							final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 							final PainterFactory painterFactory,
-							@Named("ShellWidget") final ShellGeoExecutor shellGeoExecutor,
+							@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
 							final ShellWidgetView view) {
 		super(eventBus, shellDisplayEventDispatcher);
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;

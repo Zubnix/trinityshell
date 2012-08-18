@@ -15,7 +15,7 @@ package org.trinity.shell.core.api;
  * @author Erik De Rijcke
  * 
  ****************************************/
-public interface ShellService {
+public interface ShellPlugin {
 	void start();
 
 	void stop();

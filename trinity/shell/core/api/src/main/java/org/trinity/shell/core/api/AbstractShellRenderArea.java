@@ -9,22 +9,21 @@
  * copy of the GNU General Public License along with HyperDrive. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.trinity.shell.core.impl;
+package org.trinity.shell.core.api;
 
 import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
-import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.core.api.ShellRenderArea;
+import org.trinity.shell.geo.api.AbstractShellGeoNode;
 import org.trinity.shell.geo.api.ShellGeoNode;
-import org.trinity.shell.geo.impl.AbstractShellGeoNode;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-
+// TODO move to api?
 // TODO documentation
 // TODO redesign/evaluate input manager integration/method delegation.
+
 /**
  * An <code>AbstractShellRenderArea</code> provides a basic abstract
  * implementation of an on-screen area. It wraps a {@link DisplayRenderArea} and
@@ -78,10 +77,10 @@ public abstract class AbstractShellRenderArea extends AbstractShellGeoNode
 	/**
 	 * Create new <code>AbstractShellRenderArea</code>
 	 */
-	protected AbstractShellRenderArea(	final EventBus eventBus,
+	protected AbstractShellRenderArea(	final EventBus nodeEventBus,
 										final ShellDisplayEventDispatcher shellDisplayEventDispatcher) {
-		super(eventBus);
-		this.eventBus = eventBus;
+		super(nodeEventBus);
+		this.eventBus = nodeEventBus;
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		initBasics();
 	}

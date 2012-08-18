@@ -11,7 +11,9 @@
  */
 package org.trinity.shell.geo.impl;
 
+import org.trinity.shell.geo.api.AbstractShellGeoNode;
 import org.trinity.shell.geo.api.ShellGeoExecutor;
+import org.trinity.shell.geo.api.ShellGeoNode;
 import org.trinity.shell.geo.api.manager.ShellLayoutManager;
 
 import com.google.common.eventbus.EventBus;
@@ -19,6 +21,8 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
+import de.devsurf.injection.guice.annotations.To.Type;
 
 // TODO documentation
 /**
@@ -35,15 +39,14 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind
-@javax.inject.Named("GeoVirt")
+@Bind(value = @Named("ShellGeoVNode"), to = @To(value = Type.CUSTOM, customs = ShellGeoNode.class))
 public class ShellGeoVNode extends AbstractShellGeoNode {
 	private final ShellGeoExecutor shellGeoExecutor;
 	private ShellLayoutManager shellLayoutManager;
 
 	@Inject
 	protected ShellGeoVNode(final EventBus eventBus,
-							@Named("GeoVirt") final ShellGeoExecutor shellGeoExecutor) {
+							@Named("ShellGeoVExecutor") final ShellGeoExecutor shellGeoExecutor) {
 		super(eventBus);
 		this.shellGeoExecutor = shellGeoExecutor;
 	}

@@ -13,29 +13,26 @@ package org.trinity.shell.core.impl;
 
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.core.api.ShellService;
+import org.trinity.shell.core.api.ShellPlugin;
 
-import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
-@Bind(multiple = true, to = @To(value = Type.CUSTOM, customs = ShellService.class))
+@Bind(multiple = true, to = @To(value = Type.CUSTOM, customs = ShellPlugin.class))
 @Singleton
-public class ShellDisplayService implements ShellService, Runnable {
+public class ShellDisplayPlugin implements ShellPlugin, Runnable {
 
 	private final DisplayServer display;
 	private final ShellDisplayEventDispatcher shellDisplayEventDispatcherImpl;
 	private Thread shellThread;
 
 	@Inject
-	protected ShellDisplayService(	final DisplayServer display,
-									final ShellDisplayEventDispatcher shellDisplayEventDispatcherImpl,
-									@Named("display") final EventBus eventBus) {
+	ShellDisplayPlugin(	final DisplayServer display,
+						final ShellDisplayEventDispatcher shellDisplayEventDispatcherImpl) {
 		this.display = display;
 		this.shellDisplayEventDispatcherImpl = shellDisplayEventDispatcherImpl;
 	}

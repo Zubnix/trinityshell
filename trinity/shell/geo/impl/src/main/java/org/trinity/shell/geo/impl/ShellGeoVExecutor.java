@@ -11,13 +11,12 @@
  */
 package org.trinity.shell.geo.impl;
 
-import javax.inject.Named;
-
 import org.trinity.shell.geo.api.ShellGeoExecutor;
 import org.trinity.shell.geo.api.ShellGeoNode;
 import org.trinity.shell.geo.api.ShellGeoTransformation;
 
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
@@ -29,23 +28,17 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @author Erik De Rijcke
  * @since 1.0
  */
+
+@Bind(value = @Named("ShellGeoVExecutor"))
 @Singleton
-@Bind
-@Named("GeoVirt")
 public class ShellGeoVExecutor implements ShellGeoExecutor {
 
-	/**
-	 * @param virtSquare
-	 *            The <code>ShellGeoVNode</code> who's geometry will be
-	 *            executed by this <code>ShellGeoVExecutor</code>.
-	 */
-	protected ShellGeoVExecutor() {
+	ShellGeoVExecutor() {
 	}
 
 	@Override
 	public void lower(final ShellGeoNode shellGeoNode) {
-		final ShellGeoNode[] children = shellGeoNode
-				.getChildren();
+		final ShellGeoNode[] children = shellGeoNode.getChildren();
 		for (final ShellGeoNode child : children) {
 			child.getGeoExecutor().lower(child);
 		}
@@ -53,17 +46,16 @@ public class ShellGeoVExecutor implements ShellGeoExecutor {
 
 	@Override
 	public void raise(final ShellGeoNode shellGeoNode) {
-		final ShellGeoNode[] children = shellGeoNode
-				.getChildren();
+		final ShellGeoNode[] children = shellGeoNode.getChildren();
 		for (final ShellGeoNode child : children) {
 			child.getGeoExecutor().raise(child);
 		}
 	}
 
 	@Override
-	public void move(final ShellGeoNode shellGeoNode,
-							final int relativeX,
-							final int relativeY) {
+	public void move(	final ShellGeoNode shellGeoNode,
+						final int relativeX,
+						final int relativeY) {
 
 		final ShellGeoTransformation shellGeoTransformation = shellGeoNode
 				.toGeoTransformation();
@@ -71,8 +63,7 @@ public class ShellGeoVExecutor implements ShellGeoExecutor {
 		final int deltaX = shellGeoTransformation.getDeltaX();
 		final int deltaY = shellGeoTransformation.getDeltaY();
 
-		final ShellGeoNode[] children = shellGeoNode
-				.getChildren();
+		final ShellGeoNode[] children = shellGeoNode.getChildren();
 		for (final ShellGeoNode child : children) {
 			final int oldRelX = child.getX();
 			final int oldRelY = child.getY();
@@ -88,24 +79,23 @@ public class ShellGeoVExecutor implements ShellGeoExecutor {
 
 	@Override
 	public void resize(	final ShellGeoNode shellGeoNode,
-							final int width,
-							final int height) {
+						final int width,
+						final int height) {
 		// do nothing
 	}
 
 	@Override
-	public void moveResize(final ShellGeoNode shellGeoNode,
-								final int relativeX,
-								final int relativeY,
-								final int width,
-								final int height) {
+	public void moveResize(	final ShellGeoNode shellGeoNode,
+							final int relativeX,
+							final int relativeY,
+							final int width,
+							final int height) {
 		move(shellGeoNode, relativeX, relativeY);
 	}
 
 	@Override
 	public void show(final ShellGeoNode shellGeoNode) {
-		final ShellGeoNode[] children = shellGeoNode
-				.getChildren();
+		final ShellGeoNode[] children = shellGeoNode.getChildren();
 		for (final ShellGeoNode child : children) {
 			updateChildVisibility(child, true);
 		}
@@ -113,8 +103,7 @@ public class ShellGeoVExecutor implements ShellGeoExecutor {
 
 	@Override
 	public void hide(final ShellGeoNode shellGeoNode) {
-		final ShellGeoNode[] children = shellGeoNode
-				.getChildren();
+		final ShellGeoNode[] children = shellGeoNode.getChildren();
 		for (final ShellGeoNode child : children) {
 			updateChildVisibility(child, false);
 		}
@@ -138,16 +127,14 @@ public class ShellGeoVExecutor implements ShellGeoExecutor {
 
 	@Override
 	public void reparent(	final ShellGeoNode shellGeoNode,
-								final ShellGeoNode parent) {
-		final ShellGeoNode[] children = shellGeoNode
-				.getChildren();
+							final ShellGeoNode parent) {
+		final ShellGeoNode[] children = shellGeoNode.getChildren();
 
 		final boolean parentVisible = parent.isVisible();
 		for (final ShellGeoNode child : children) {
 			// directly update underlying platform specific parent of
 			// the child
-			child.getGeoExecutor().reparent(child,
-												shellGeoNode);
+			child.getGeoExecutor().reparent(child, shellGeoNode);
 			updateChildVisibility(child, parentVisible);
 		}
 	}

@@ -34,7 +34,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind
+@Bind(@Named("shellVRoot"))
 public final class ShellVRoot extends ShellWidgetImpl {
 
 	@Inject
@@ -42,7 +42,7 @@ public final class ShellVRoot extends ShellWidgetImpl {
 							final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 							final PainterFactory painterFactory,
 							@Named("ShellWidget") final ShellGeoExecutor shellGeoExecutor,
-							@Named("ShellRoot") final ShellRenderArea root,
+							@Named("shellRootRenderArea") final ShellRenderArea root,
 							final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,

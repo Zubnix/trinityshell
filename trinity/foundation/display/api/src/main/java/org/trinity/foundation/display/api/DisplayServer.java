@@ -12,6 +12,7 @@
 package org.trinity.foundation.display.api;
 
 import org.trinity.foundation.display.api.event.DisplayEvent;
+import org.trinity.foundation.input.api.Keyboard;
 
 /**
  * A <code>Display</code> provides a basic contract to talk to the underlying
@@ -36,6 +37,8 @@ import org.trinity.foundation.display.api.event.DisplayEvent;
  * @see BaseDisplay
  */
 public interface DisplayServer {
+
+	DisplayRenderArea getRootDisplayArea();
 
 	/**
 	 * Indicates if there are any pending <code>DisplayEvent</code>s on the

@@ -78,4 +78,8 @@ public class XConnection {
 	public SWIGTYPE_p_xcb_connection_t getConnectionReference() {
 		return this.connection_t;
 	}
+
+	public xcb_screen_t getScreenReference() {
+		return this.screen_t;
+	}
 }

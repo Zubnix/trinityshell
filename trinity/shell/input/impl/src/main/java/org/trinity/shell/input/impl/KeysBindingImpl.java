@@ -24,7 +24,7 @@ public class KeysBindingImpl implements KeysBinding {
 	private final Runnable action;
 
 	@Inject
-	public KeysBindingImpl(	@Named("root") final ShellRenderArea root,
+	public KeysBindingImpl(	@Named("shellRootRenderArea") final ShellRenderArea root,
 							@Named("shellEventBus") final EventBus shellEventBus,
 							@Assisted final List<Key> keys,
 							@Assisted final InputModifiers inputModifiers,

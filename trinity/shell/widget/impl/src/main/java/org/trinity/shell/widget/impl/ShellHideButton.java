@@ -51,7 +51,7 @@ public class ShellHideButton extends ShellButton {
 	protected ShellHideButton(	final EventBus eventBus,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("ShellWidget") final ShellGeoExecutor shellGeoExecutor,
+								@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
 								final ShellButtonView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,

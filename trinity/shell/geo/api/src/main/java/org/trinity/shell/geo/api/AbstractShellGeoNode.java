@@ -9,14 +9,11 @@
  * copy of the GNU General Public License along with HyperDrive. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.trinity.shell.geo.impl;
+package org.trinity.shell.geo.api;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.trinity.shell.geo.api.ShellGeoExecutor;
-import org.trinity.shell.geo.api.ShellGeoNode;
-import org.trinity.shell.geo.api.ShellGeoTransformation;
 import org.trinity.shell.geo.api.event.GeoChildAddedEvent;
 import org.trinity.shell.geo.api.event.GeoChildLeftEvent;
 import org.trinity.shell.geo.api.event.GeoDestroyEvent;
@@ -44,6 +41,8 @@ import com.google.common.eventbus.Subscribe;
 
 // TODO Let geo events travel downwards to children to notify them that one of
 // their parents has changed
+
+// TODO move to api?
 public abstract class AbstractShellGeoNode implements ShellGeoNode {
 
 	private int x;
@@ -72,24 +71,24 @@ public abstract class AbstractShellGeoNode implements ShellGeoNode {
 
 	private final EventBus eventBus;
 
-	protected AbstractShellGeoNode(final EventBus eventBus) {
-		this.eventBus = eventBus;
+	protected AbstractShellGeoNode(final EventBus nodeEventBus) {
+		this.eventBus = nodeEventBus;
 	}
 
 	@Override
 	public ShellGeoTransformation toGeoTransformation() {
-		return new ShellGeoTransformationImpl(	getX(),
-												getY(),
-												getWidth(),
-												getHeight(),
-												isVisible(),
-												getParent(),
-												getDesiredX(),
-												getDesiredY(),
-												getDesiredWidth(),
-												getDesiredHeight(),
-												getDesiredVisibility(),
-												getDesiredParent());
+		return new ShellGeoTransformation(	getX(),
+											getY(),
+											getWidth(),
+											getHeight(),
+											isVisible(),
+											getParent(),
+											getDesiredX(),
+											getDesiredY(),
+											getDesiredWidth(),
+											getDesiredHeight(),
+											getDesiredVisibility(),
+											getDesiredParent());
 	}
 
 	@Override

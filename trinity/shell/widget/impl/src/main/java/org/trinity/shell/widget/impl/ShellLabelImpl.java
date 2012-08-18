@@ -38,7 +38,7 @@ public class ShellLabelImpl extends ShellWidgetImpl implements ShellLabel {
 	protected ShellLabelImpl(	final EventBus eventBus,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("ShellWidget") final ShellGeoExecutor shellGeoExecutor,
+								@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
 								final ShellLabelView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,

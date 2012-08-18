@@ -38,15 +38,11 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @see ShellGeoExecutor
  */
 @Bind
-@Named("ShellWidget")
+@Named("shellWidgetGeoExecutor")
 public class ShellWidgetGeoExecutor extends ShellRenderAreaGeoExecutor {
 
-	/*****************************************
-	 * @param shellRoot
-	 * @param geometryFactory
-	 ****************************************/
 	@Inject
-	protected ShellWidgetGeoExecutor(final ShellRoot shellRoot) {
+	protected ShellWidgetGeoExecutor(@Named("shellRootRenderArea") final ShellRenderArea shellRoot) {
 		super(shellRoot);
 	}
 

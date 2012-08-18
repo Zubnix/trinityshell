@@ -50,17 +50,17 @@ public class ShellAppLauncher extends AbstractShellKeyDrivenMenu {
 	 * @param keyInputStringBuilder
 	 ****************************************/
 	@Inject
-	protected ShellAppLauncher(	@Named("display") final EventBus displayEventBus,
-								final EventBus eventBus,
+	protected ShellAppLauncher(	@Named("shellEventBus") final EventBus shellEventBus,
+								final EventBus nodeEventBus,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("ShellWidget") final ShellGeoExecutor shellGeoExecutor,
+								@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
 								final Keyboard keyboard,
-								@Named("root") final ShellRenderArea root,
+								@Named("shellRootRenderArea") final ShellRenderArea root,
 								final KeyInputStringBuilder keyInputStringBuilder,
 								final ShellKeyDrivenMenuView view) {
-		super(	displayEventBus,
-				eventBus,
+		super(	shellEventBus,
+				nodeEventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
 				shellGeoExecutor,

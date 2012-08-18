@@ -24,8 +24,7 @@ import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
-// TODO documentation
-// TODO shutdown logic
+// TODO override binding
 // TODO implement resizing+moving? (with XRANDR extension in x11)
 /**
  * A <code>RealRoot</code> represents a <code>ShellWidget</code> that is backed
@@ -40,8 +39,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind
-@javax.inject.Named("root")
+@Bind(@Named("shellRootRenderArea"))
 @Singleton
 public final class ShellRoot extends ShellWidgetImpl {
 

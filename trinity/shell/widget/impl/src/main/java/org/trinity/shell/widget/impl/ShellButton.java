@@ -38,7 +38,7 @@ public class ShellButton extends ShellWidgetImpl {
 	protected ShellButton(	final EventBus eventBus,
 							final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 							final PainterFactory painterFactory,
-							@Named("ShellWidget") final ShellGeoExecutor shellGeoExecutor,
+							@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
 							final ShellButtonView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,

@@ -26,6 +26,4 @@ public interface ShellLayoutManager {
 	void removeChild(final int index);
 
 	void layout();
-
-	ShellLayoutProperty newLayoutProperty();
 }

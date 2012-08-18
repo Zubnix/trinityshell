@@ -13,6 +13,7 @@ package org.trinity.display.x11.core.impl;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
+import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 
@@ -32,12 +33,15 @@ public class XDisplayServer implements DisplayServer {
 	private final ArrayBlockingQueue<DisplayEvent> displayEvents = new ArrayBlockingQueue<DisplayEvent>(QUEUE_SIZE);
 
 	private final XConnection xConnection;
+	private final XWindowCache xWindowCache;
 
 	@Inject
 	XDisplayServer(	final XConnection xConnection,
+					final XWindowCache xWindowCache,
 					@Named("displayEventBus") final EventBus displayEventBus) {
 
 		displayEventBus.register(this);
+		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
 		// FIXME from config
 		final String displayName = System.getenv("DISPLAY");
@@ -74,5 +78,11 @@ public class XDisplayServer implements DisplayServer {
 	public void shutDown() {
 		this.xConnection.close();
 		this.displayEvents.clear();
+	}
+
+	@Override
+	public DisplayRenderArea getRootDisplayArea() {
+		return this.xWindowCache.getWindow(this.xConnection
+				.getScreenReference().getRoot());
 	}
 }

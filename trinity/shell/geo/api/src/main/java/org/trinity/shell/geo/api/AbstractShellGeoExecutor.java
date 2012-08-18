@@ -9,13 +9,12 @@
  * copy of the GNU General Public License along with HyperDrive. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-package org.trinity.shell.geo.impl;
+package org.trinity.shell.geo.api;
 
 import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
-import org.trinity.shell.geo.api.ShellGeoExecutor;
-import org.trinity.shell.geo.api.ShellGeoNode;
 
+// TODO move to api?
 public abstract class AbstractShellGeoExecutor implements ShellGeoExecutor {
 
 	protected AbstractShellGeoExecutor() {

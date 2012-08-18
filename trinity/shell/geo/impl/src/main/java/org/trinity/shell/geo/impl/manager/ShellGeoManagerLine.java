@@ -13,6 +13,7 @@ package org.trinity.shell.geo.impl.manager;
 
 import java.util.List;
 
+import org.trinity.foundation.shared.geometry.api.Margins;
 import org.trinity.shell.geo.api.ShellGeoNode;
 import org.trinity.shell.geo.api.event.GeoDestroyEvent;
 import org.trinity.shell.geo.api.event.GeoHideRequestEvent;
@@ -22,12 +23,17 @@ import org.trinity.shell.geo.api.event.GeoMoveResizeRequestEvent;
 import org.trinity.shell.geo.api.event.GeoRaiseRequestEvent;
 import org.trinity.shell.geo.api.event.GeoReparentRequestEvent;
 import org.trinity.shell.geo.api.event.GeoShowRequestEvent;
+import org.trinity.shell.geo.api.manager.AbstractShellLayoutManager;
+import org.trinity.shell.geo.api.manager.ShellLayoutManager;
 import org.trinity.shell.geo.api.manager.ShellLayoutProperty;
 import org.trinity.shell.geo.api.manager.ShellLayoutPropertyLine;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
+
+import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
+import de.devsurf.injection.guice.annotations.To.Type;
 
 // TODO documentation
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
@@ -44,10 +50,13 @@ import com.google.inject.assistedinject.Assisted;
  * @since 1.0
  * 
  */
-public class ShellGeoManagerLine extends AbstractShellGeoManager {
+@Bind(value = @Named("ShellGeoManagerLine"), to = @To(value = Type.CUSTOM, customs = ShellLayoutManager.class))
+public class ShellGeoManagerLine extends AbstractShellLayoutManager {
+
+	private final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(0,
+																								new Margins(0));
 
 	private class ChildGeoListener {
-		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildMoveResizeRequest(final GeoMoveResizeRequestEvent geoMoveResizeRequestEvent) {
 			final ShellGeoNode child = geoMoveResizeRequestEvent.getSource();
@@ -59,38 +68,32 @@ public class ShellGeoManagerLine extends AbstractShellGeoManager {
 			}
 		}
 
-		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildDestroyed(final GeoDestroyEvent geoDestroyEvent) {
 			removeChild(geoDestroyEvent.getSource());
 		}
 
-		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildReparentRequest(final GeoReparentRequestEvent geoReparentRequestEvent) {
 			geoReparentRequestEvent.getSource().doReparent();
 			layout();
 		}
 
-		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildShowRequest(final GeoShowRequestEvent geoShowRequestEvent) {
 			geoShowRequestEvent.getSource().doShow();
 		}
 
-		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildHideRequest(final GeoHideRequestEvent geoHideRequestEvent) {
 			geoHideRequestEvent.getSource().doHide();
 		}
 
-		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildLowerRequest(final GeoLowerRequestEvent geoLowerRequestEvent) {
 			geoLowerRequestEvent.getSource().doLower();
 		}
 
-		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildRaiseRequest(final GeoRaiseRequestEvent geoRaiseRequestEvent) {
 			geoRaiseRequestEvent.getSource().doRaise();
@@ -113,13 +116,9 @@ public class ShellGeoManagerLine extends AbstractShellGeoManager {
 	 * @param horizontalDirection
 	 * @param inverseDirection
 	 */
-	@Inject
-	public ShellGeoManagerLine(	@Assisted final ShellGeoNode container,
-								@Assisted("horiz") final boolean horizontalDirection,
-								@Assisted("inverse") final boolean inverseDirection) {
-		super(container);
-		setHorizontalDirection(horizontalDirection);
-		setInverseDirection(inverseDirection);
+	ShellGeoManagerLine() {
+		setHorizontalDirection(true);
+		setInverseDirection(false);
 	}
 
 	/**
@@ -322,6 +321,9 @@ public class ShellGeoManagerLine extends AbstractShellGeoManager {
 
 	@Override
 	public void layout() {
+		if (getLayoutContainer() == null) {
+			return;
+		}
 		if (this.horizontalDirection) {
 			layoutHorizontal();
 		} else {
@@ -332,5 +334,10 @@ public class ShellGeoManagerLine extends AbstractShellGeoManager {
 	@Subscribe
 	public void handleContainerMoveReize(final GeoMoveResizeEvent moveResizeEvent) {
 		layout();
+	}
+
+	@Override
+	public ShellLayoutProperty defaultLayoutProperty() {
+		return this.DEFAULT_LAYOUT_PROPERTY;
 	}
 }

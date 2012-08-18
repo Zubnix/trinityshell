@@ -15,16 +15,18 @@ import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.shell.core.api.ShellRenderArea;
+import org.trinity.shell.geo.api.AbstractShellGeoExecutor;
 import org.trinity.shell.geo.api.ShellGeoExecutor;
 import org.trinity.shell.geo.api.ShellGeoNode;
 import org.trinity.shell.geo.api.ShellGeoTransformation;
-import org.trinity.shell.geo.impl.AbstractShellGeoExecutor;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
+import de.devsurf.injection.guice.annotations.To.Type;
 
 // TODO documentation
 /**
@@ -35,15 +37,14 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @since 1.0
  * @see ShellGeoExecutor
  */
+@Bind(value = @Named("ShellRenderAreaGeoExecutor"), to = @To(value = Type.CUSTOM, customs = ShellGeoExecutor.class))
 @Singleton
-@Bind
-@javax.inject.Named("ShellRenderArea")
 public class ShellRenderAreaGeoExecutor extends AbstractShellGeoExecutor {
 
 	private final ShellRenderArea root;
 
 	@Inject
-	protected ShellRenderAreaGeoExecutor(@Named("root") final ShellRenderArea root) {
+	protected ShellRenderAreaGeoExecutor(@Named("shellRootRenderArea") final ShellRenderArea root) {
 		this.root = root;
 	}
 

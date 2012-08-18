@@ -88,10 +88,10 @@ public class ShellDragButton extends ShellButton {
 	 */
 	@Inject
 	protected ShellDragButton(	final EventBus eventBus,
-								@Named("root") final ShellRenderArea root,
+								@Named("shellRootRenderArea") final ShellRenderArea root,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("ShellWidget") final ShellGeoExecutor shellGeoExecutor,
+								@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
 								final ShellButtonView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
