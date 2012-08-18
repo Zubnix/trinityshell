@@ -5,9 +5,10 @@
 	<artifactId>trinity</artifactId>
 	<packaging>pom</packaging>
 	<name>Trinity</name>
-	<version>0.0.1</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<description>A Java based window manager.</description>
 	<url>http://code.google.com/p/ewm</url>
+
 	<inceptionYear>2009-11-06</inceptionYear>
 	<developers>
 		<developer>
@@ -24,11 +25,11 @@
 		</developer>
 	</developers>
 	<modules>
-		<module>shellapp</module>
-		<module>shell</module>
+		<module>foundation</module>
 		<module>display</module>
 		<module>render</module>
-		<module>foundation</module>
+		<module>shell</module>
+		<module>shellplugin</module>
 	</modules>
 
 	<dependencies>
@@ -52,6 +53,7 @@
 			<artifactId>de.devsurf.injection.guice.core</artifactId>
 			<version>0.8.7</version>
 		</dependency>
+
 		<!-- START TEST DEP -->
 		<dependency>
 			<groupId>junit</groupId>

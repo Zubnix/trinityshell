@@ -4,12 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.trinity.shellapp</groupId>
+		<groupId>org.trinity.shellplugin</groupId>
 		<artifactId>shellapp.wm</artifactId>
-		<version>0.0.1</version>
-		<relativePath>..</relativePath>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>shellapp.wm.impl</artifactId>
+	<artifactId>shellplugin.wm.impl</artifactId>
 	<name>Shell Window Manager implementation</name>
 </project>
