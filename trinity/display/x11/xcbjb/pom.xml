@@ -3,9 +3,9 @@
 	<parent>
 		<groupId>org.trinity.display.x11</groupId>
 		<artifactId>display.x11</artifactId>
-		<version>0.0.1</version>
-		<relativePath>..</relativePath>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>XcbJb</artifactId>
 	<name>X c bindings Java bindings</name>
@@ -14,6 +14,7 @@
 		<swig.package>xcbjb</swig.package>
 		<swig.outdir>${project.build.directory}/generated-sources/swig/${swig.package}</swig.outdir>
 	</properties>
+
 	<profiles>
 		<profile>
 			<id>unix_i386</id>

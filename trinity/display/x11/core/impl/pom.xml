@@ -6,8 +6,7 @@
 	<parent>
 		<groupId>org.trinity.display.x11</groupId>
 		<artifactId>display.x11.core</artifactId>
-		<version>0.0.1</version>
-		<relativePath>..</relativePath>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>display.x11.core.impl</artifactId>
@@ -17,12 +16,12 @@
 		<dependency>
 			<groupId>org.trinity.display.x11</groupId>
 			<artifactId>XcbJb</artifactId>
-			<version>0.0.1</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.trinity.foundation</groupId>
 			<artifactId>foundation.display.api</artifactId>
-			<version>0.0.1</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>

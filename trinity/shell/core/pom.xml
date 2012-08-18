@@ -3,8 +3,7 @@
 	<parent>
 		<artifactId>shell</artifactId>
 		<groupId>org.trinity.shell</groupId>
-		<version>0.0.1</version>
-		<relativePath>..</relativePath>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
