@@ -38,7 +38,7 @@ import org.trinity.foundation.input.api.Keyboard;
  */
 public interface DisplayServer {
 
-	DisplayRenderArea getRootDisplayArea();
+	DisplaySurface getRootDisplayArea();
 
 	/**
 	 * Indicates if there are any pending <code>DisplayEvent</code>s on the

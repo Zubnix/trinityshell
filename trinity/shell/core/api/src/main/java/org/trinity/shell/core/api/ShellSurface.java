@@ -13,7 +13,7 @@
  */
 package org.trinity.shell.core.api;
 
-import org.trinity.foundation.display.api.DisplayRenderArea;
+import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.shell.geo.api.ShellNode;
 
 public interface ShellSurface extends ShellNode {
@@ -27,7 +27,7 @@ public interface ShellSurface extends ShellNode {
 
 	int getMinWidth();
 
-	DisplayRenderArea getDisplayRenderArea();
+	DisplaySurface getDisplayRenderArea();
 
 	int getWidthIncrement();
 

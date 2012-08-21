@@ -14,8 +14,8 @@ package org.trinity.display.x11.core.impl;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import org.trinity.foundation.display.api.DisplayRenderArea;
-import org.trinity.foundation.display.api.DisplayResourceHandle;
+import org.trinity.foundation.display.api.DisplaySurface;
+import org.trinity.foundation.display.api.DisplaySurfaceHandle;
 import org.trinity.foundation.input.api.Button;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
@@ -44,9 +44,9 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
-public class XWindow implements DisplayRenderArea {
+public class XWindow implements DisplaySurface {
 
-	private final DisplayResourceHandle resourceHandle;
+	private final DisplaySurfaceHandle resourceHandle;
 	private final XConnection xConnection;
 	private final XTime xTime;
 
@@ -54,14 +54,14 @@ public class XWindow implements DisplayRenderArea {
 	@AssistedInject
 	XWindow(final XTime xTime,
 			final XConnection xConnection,
-			@Assisted final DisplayResourceHandle resourceHandle) {
+			@Assisted final DisplaySurfaceHandle resourceHandle) {
 		this.xTime = xTime;
 		this.xConnection = xConnection;
 		this.resourceHandle = resourceHandle;
 	}
 
 	@Override
-	public DisplayResourceHandle getResourceHandle() {
+	public DisplaySurfaceHandle getDisplaySurfaceHandle() {
 		return this.resourceHandle;
 	}
 
@@ -72,7 +72,7 @@ public class XWindow implements DisplayRenderArea {
 	}
 
 	private int getWindowId() {
-		final int windowId = ((XResourceHandle) this.resourceHandle)
+		final int windowId = ((XWindowHandle) this.resourceHandle)
 				.getNativeHandle();
 		return windowId;
 	}
@@ -170,10 +170,10 @@ public class XWindow implements DisplayRenderArea {
 	}
 
 	@Override
-	public void setParent(	final DisplayRenderArea parent,
+	public void setParent(	final DisplaySurface parent,
 							final int x,
 							final int y) {
-		final int parentId = ((XResourceHandle) parent.getResourceHandle())
+		final int parentId = ((XWindowHandle) parent.getDisplaySurfaceHandle())
 				.getNativeHandle();
 		LibXcb.xcb_reparent_window(	getConnectionRef(),
 									getWindowId(),
@@ -206,10 +206,10 @@ public class XWindow implements DisplayRenderArea {
 	}
 
 	@Override
-	public Coordinate translateCoordinates(	final DisplayRenderArea source,
+	public Coordinate translateCoordinates(	final DisplaySurface source,
 											final int sourceX,
 											final int sourceY) {
-		final int sourceId = ((XResourceHandle) source.getResourceHandle())
+		final int sourceId = ((XWindowHandle) source.getDisplaySurfaceHandle())
 				.getNativeHandle();
 		final xcb_translate_coordinates_cookie_t cookie_t = LibXcb
 				.xcb_translate_coordinates(	getConnectionRef(),
@@ -382,14 +382,14 @@ public class XWindow implements DisplayRenderArea {
 	public boolean equals(final Object obj) {
 		if (obj instanceof XWindow) {
 			final XWindow otherWindow = (XWindow) obj;
-			return otherWindow.getResourceHandle().equals(getResourceHandle());
+			return otherWindow.getDisplaySurfaceHandle().equals(getDisplaySurfaceHandle());
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return getResourceHandle().hashCode();
+		return getDisplaySurfaceHandle().hashCode();
 	}
 
 	public void configureClientEvents() {
@@ -404,7 +404,7 @@ public class XWindow implements DisplayRenderArea {
 
 		LibXcb.xcb_change_window_attributes(this.xConnection
 													.getConnectionReference(),
-											((XResourceHandle) this.resourceHandle)
+											((XWindowHandle) this.resourceHandle)
 													.getNativeHandle(),
 											xcb_cw_t.XCB_CW_EVENT_MASK
 													.swigValue(),

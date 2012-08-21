@@ -13,7 +13,7 @@ package org.trinity.shell.widget.impl;
 
 import javax.swing.text.View;
 
-import org.trinity.foundation.display.api.DisplayRenderArea;
+import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
@@ -54,7 +54,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  * <code>getPlatformRenderArea</code> is called. Calls to
  * <code>getPainter</code> will also fail.
  * <p>
- * An initialized <code>ShellWidget</code> will have a {@link DisplayRenderArea}
+ * An initialized <code>ShellWidget</code> will have a {@link DisplaySurface}
  * . This is the native window that the <code>ShellWidget</code> will be draw
  * on. Note that multiple <code>ShellWidget</code>s can share the same
  * <code>PlatformRenderArea</code>. A <code>ShellWidget</code> who's parent has
@@ -112,7 +112,7 @@ public class ShellWidgetImpl extends AbstractShellSurface implements
 	 *            data from its paintable parent at the paint back-end level.
 	 */
 	protected void init(final ShellWidget paintableParent) {
-		setDisplayRenderArea(this.view.create(this));
+		setDisplaySurface(this.view.create(this));
 		this.shellDisplayEventDispatcher
 				.registerDisplayEventSource(this.eventBus, this);
 	}
@@ -131,7 +131,7 @@ public class ShellWidgetImpl extends AbstractShellSurface implements
 	}
 
 	@Override
-	public ShellWidget getParentPaintable() {
+	public ShellWidget getParentPaintableRenderNode() {
 		return findParentPaintable(getParent());
 	}
 
@@ -155,8 +155,8 @@ public class ShellWidgetImpl extends AbstractShellSurface implements
 	}
 
 	@Override
-	protected void setDisplayRenderArea(final DisplayRenderArea platformRenderArea) {
+	protected void setDisplaySurface(final DisplaySurface platformRenderArea) {
 		// repeated for package visibility
-		super.setDisplayRenderArea(platformRenderArea);
+		super.setDisplaySurface(platformRenderArea);
 	}
 }

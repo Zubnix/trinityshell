@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.trinity.foundation.display.api.DisplayProtocol;
 import org.trinity.foundation.display.api.DisplayProtocols;
-import org.trinity.foundation.display.api.DisplayRenderArea;
+import org.trinity.foundation.display.api.DisplaySurface;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -39,18 +39,18 @@ public class XDisplayProtocols implements DisplayProtocols {
 	}
 
 	@Override
-	public Map<String, Object> queryProtocol(	final DisplayRenderArea displayRenderArea,
+	public Map<String, Object> queryProtocol(	final DisplaySurface displaySurface,
 												final DisplayProtocol displayProtocol) {
-		return queryProtocol(displayRenderArea, displayProtocol, null);
+		return queryProtocol(displaySurface, displayProtocol, null);
 	}
 
 	@Override
-	public Map<String, Object> queryProtocol(	final DisplayRenderArea displayRenderArea,
+	public Map<String, Object> queryProtocol(	final DisplaySurface displaySurface,
 												final DisplayProtocol displayProtocol,
 												final Map<String, Object> arguments) {
 		final Map<String, Object> result = this.xDisplayProtocolHandlers
 				.get(displayProtocol)
-				.handleDipslayProtocol((XWindow) displayRenderArea,
+				.handleDipslayProtocol((XWindow) displaySurface,
 								displayProtocol,
 								arguments);
 		return result;

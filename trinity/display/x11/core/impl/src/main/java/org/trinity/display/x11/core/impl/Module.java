@@ -1,9 +1,9 @@
 package org.trinity.display.x11.core.impl;
 
-import org.trinity.foundation.display.api.DisplayRenderArea;
-import org.trinity.foundation.display.api.DisplayRenderAreaFactory;
-import org.trinity.foundation.display.api.DisplayResourceHandle;
-import org.trinity.foundation.display.api.DisplayResourceHandleFactory;
+import org.trinity.foundation.display.api.DisplaySurface;
+import org.trinity.foundation.display.api.DisplaySurfaceFactory;
+import org.trinity.foundation.display.api.DisplaySurfaceHandle;
+import org.trinity.foundation.display.api.DisplaySurfaceHandleFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
@@ -23,10 +23,10 @@ public class Module extends AbstractModule {
 				.asEagerSingleton();
 
 		install(new FactoryModuleBuilder()
-				.implement(DisplayRenderArea.class, XWindow.class)
-				.build(DisplayRenderAreaFactory.class));
-		install(new FactoryModuleBuilder().implement(	DisplayResourceHandle.class,
-														XResourceHandle.class)
-				.build(DisplayResourceHandleFactory.class));
+				.implement(DisplaySurface.class, XWindow.class)
+				.build(DisplaySurfaceFactory.class));
+		install(new FactoryModuleBuilder().implement(	DisplaySurfaceHandle.class,
+														XWindowHandle.class)
+				.build(DisplaySurfaceHandleFactory.class));
 	}
 }

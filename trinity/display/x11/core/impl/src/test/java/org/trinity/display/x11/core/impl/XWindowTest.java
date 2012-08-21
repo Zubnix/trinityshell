@@ -99,9 +99,9 @@ public class XWindowTest // extends AbstractXTest
 									0,
 									value_list);
 
-		final XResourceHandle xResourceHandle = new XResourceHandle(this.windowId);
+		final XWindowHandle xWindowHandle = new XWindowHandle(this.windowId);
 
-		this.xWindow = new XWindow(this.xTime, xConnection, xResourceHandle);
+		this.xWindow = new XWindow(this.xTime, xConnection, xWindowHandle);
 	}
 
 	@After

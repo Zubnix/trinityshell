@@ -15,7 +15,7 @@ import javax.inject.Named;
 
 import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
-import org.trinity.foundation.display.api.DisplayRenderArea;
+import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.shell.core.api.ShellSurface;
 import org.trinity.shell.core.impl.ShellSurfaceGeoExecutor;
 import org.trinity.shell.geo.api.ShellNodeExecutor;
@@ -103,17 +103,17 @@ public class ShellWidgetGeoExecutor extends ShellSurfaceGeoExecutor {
 		// If the old parent is null, we don't need to update the platform
 		// render area.
 		if (shellNode.toGeoTransformation().getParent0() != null) {
-			final DisplayRenderArea parentPlatformRenderArea = shellWidgetImpl
-					.getParentPaintable().getDisplayRenderArea();
-			final DisplayRenderArea platformRenderArea = shellWidgetImpl
+			final DisplaySurface parentPlatformRenderArea = shellWidgetImpl
+					.getParentPaintableRenderNode().getDisplayRenderArea();
+			final DisplaySurface platformRenderArea = shellWidgetImpl
 					.getDisplayRenderArea();
 
 			if (parentPlatformRenderArea.equals(platformRenderArea)) {
 				// we need to update the widget's platform render area
-				final DisplayRenderArea newParentPlatformRenderArea = shellWidgetImpl
-						.getParentPaintable().getDisplayRenderArea();
+				final DisplaySurface newParentPlatformRenderArea = shellWidgetImpl
+						.getParentPaintableRenderNode().getDisplayRenderArea();
 				shellWidgetImpl
-						.setDisplayRenderArea(newParentPlatformRenderArea);
+						.setDisplaySurface(newParentPlatformRenderArea);
 			}
 		}
 	}

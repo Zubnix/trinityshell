@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.core.api;
 
-import org.trinity.foundation.display.api.DisplayRenderArea;
+import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.GeometryNotifyEvent;
@@ -31,7 +31,7 @@ import com.google.common.eventbus.Subscribe;
 
 /**
  * An <code>AbstractShellSurface</code> provides a basic abstract implementation
- * of an on-screen area. It wraps a {@link DisplayRenderArea} and provides and
+ * of an on-screen area. It wraps a {@link DisplaySurface} and provides and
  * implements additional basic functionality like state information, minimum,
  * maximum, current and requested dimensions. It is the the most basic
  * implementation of on on-screen area.
@@ -63,7 +63,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	public static final int DEFAULT_HEIGHT_INC = 1;
 
 	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
-	private DisplayRenderArea platformRenderArea;
+	private DisplaySurface platformRenderArea;
 
 	private boolean movable;
 	private boolean resizable;
@@ -86,6 +86,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 									final ShellDisplayEventDispatcher shellDisplayEventDispatcher) {
 		super(nodeEventBus);
 		this.nodeEventBus = nodeEventBus;
+		this.nodeEventBus.register(this);
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		initBasics();
 	}
@@ -258,10 +259,10 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	 * geometry will reflect the geometry of the returned
 	 * <code>PlatformRenderArea</code>.
 	 * 
-	 * @return A {@link DisplayRenderArea}.
+	 * @return A {@link DisplaySurface}.
 	 */
 	@Override
-	public DisplayRenderArea getDisplayRenderArea() {
+	public DisplaySurface getDisplayRenderArea() {
 		return this.platformRenderArea;
 	}
 
@@ -318,14 +319,14 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
-	 * Set the <code>PlatformRenderArea</code> that will be used as the native
+	 * Set the <code>DisplaySurface</code> that will be used as the native
 	 * visual representation.
 	 * 
 	 * @param platformRenderArea
-	 *            A {@link DisplayRenderArea}.
+	 *            A {@link DisplaySurface}.
 	 * @see AbstractShellSurface#getDisplayRenderArea()
 	 */
-	protected void setDisplayRenderArea(final DisplayRenderArea platformRenderArea) {
+	protected void setDisplaySurface(final DisplaySurface platformRenderArea) {
 		this.platformRenderArea = platformRenderArea;
 		this.shellDisplayEventDispatcher
 				.registerDisplayEventSource(this.nodeEventBus,
@@ -409,11 +410,11 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	/**
 	 * Update the geometric information of this
 	 * <code>AbstractShellSurface</code> so it reflects it's
-	 * <code>DisplayRenderArea</code>.
+	 * <code>DisplaySurface</code>.
 	 * <p>
 	 * This method is only useful if this <code>AbstractShellSurface</code> is
-	 * the embodiment of it's <code>DisplayRenderArea</code>. Extending classes
-	 * that do not represent their entire <code>DisplayRenderArea</code> should
+	 * the embodiment of it's <code>DisplaySurface</code>. Extending classes
+	 * that do not represent their entire <code>DisplaySurface</code> should
 	 * override this method so it has no effect. Failure to do so can result in
 	 * unexpected behavior.
 	 */
@@ -495,6 +496,5 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	public void handleShowRequestEvent(final ShowRequestEvent showRequestEvent) {
 		requestShow();
 	}
-
 	/* end display event handling */
 }

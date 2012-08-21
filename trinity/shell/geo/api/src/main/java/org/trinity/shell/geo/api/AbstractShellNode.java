@@ -69,10 +69,10 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	private ShellLayoutManager shellLayoutManager;
 
-	private final EventBus eventBus;
+	private final EventBus nodeEventBus;
 
 	protected AbstractShellNode(final EventBus nodeEventBus) {
-		this.eventBus = nodeEventBus;
+		this.nodeEventBus = nodeEventBus;
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		// update parent to new parent
 		final ShellNodeEvent event = new ShellNodeReparentRequestEvent(	this,
 															toGeoTransformation());
-		this.eventBus.post(event);
+		this.nodeEventBus.post(event);
 		final ShellLayoutManager shellLayoutManager = getParentGeoManager();
 		if (shellLayoutManager == null) {
 			doReparent();
@@ -211,7 +211,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	public void requestMove() {
 		final ShellNodeMoveRequestEvent event = new ShellNodeMoveRequestEvent(	this,
 																	toGeoTransformation());
-		this.eventBus.post(event);
+		this.nodeEventBus.post(event);
 		final ShellLayoutManager shellLayoutManager = getParentGeoManager();
 		if (shellLayoutManager == null) {
 			doMove();
@@ -222,7 +222,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	public void requestResize() {
 		final ShellNodeEvent event = new ShellNodeResizeRequestEvent(	this,
 															toGeoTransformation());
-		this.eventBus.post(event);
+		this.nodeEventBus.post(event);
 		final ShellLayoutManager shellLayoutManager = getParentGeoManager();
 		if (shellLayoutManager == null) {
 			doResize();
@@ -233,7 +233,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	public void requestMoveResize() {
 		final ShellNodeMoveResizeRequestEvent event = new ShellNodeMoveResizeRequestEvent(	this,
 																				toGeoTransformation());
-		this.eventBus.post(event);
+		this.nodeEventBus.post(event);
 		final ShellLayoutManager shellLayoutManager = getParentGeoManager();
 		if (shellLayoutManager == null) {
 			doMoveResize();
@@ -244,7 +244,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	public void requestRaise() {
 		final ShellNodeEvent event = new ShellNodeRaiseRequestEvent(this,
 														toGeoTransformation());
-		this.eventBus.post(event);
+		this.nodeEventBus.post(event);
 		final ShellLayoutManager shellLayoutManager = getParentGeoManager();
 		if (shellLayoutManager == null) {
 			doRaise();
@@ -255,7 +255,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	public void requestLower() {
 		final ShellNodeLowerRequestEvent event = new ShellNodeLowerRequestEvent(this,
 																	toGeoTransformation());
-		this.eventBus.post(event);
+		this.nodeEventBus.post(event);
 		if (getParentGeoManager() == null) {
 			doLower();
 		}
@@ -266,7 +266,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		doMove(true);
 		final ShellNodeMoveEvent geoEvent = new ShellNodeMoveEvent(	this,
 														toGeoTransformation());
-		this.eventBus.post(geoEvent);
+		this.nodeEventBus.post(geoEvent);
 	}
 
 	protected void doMove(final boolean execute) {
@@ -297,7 +297,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		doResize(true);
 		final ShellNodeResizeEvent geoEvent = new ShellNodeResizeEvent(	this,
 															toGeoTransformation());
-		this.eventBus.post(geoEvent);
+		this.nodeEventBus.post(geoEvent);
 	}
 
 	protected void doResize(final boolean execute) {
@@ -321,7 +321,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		doMoveResize(true);
 		final ShellNodeMoveResizeEvent geoEvent = new ShellNodeMoveResizeEvent(	this,
 																	toGeoTransformation());
-		this.eventBus.post(geoEvent);
+		this.nodeEventBus.post(geoEvent);
 	}
 
 	protected void doMoveResize(final boolean execute) {
@@ -352,7 +352,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		this.doDestroy(true);
 		final ShellNodeDestroyEvent geoEvent = new ShellNodeDestroyEvent(	this,
 																toGeoTransformation());
-		this.eventBus.post(geoEvent);
+		this.nodeEventBus.post(geoEvent);
 	}
 
 	protected void doDestroy(final boolean execute) {
@@ -371,7 +371,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		doRaise(true);
 		final ShellNodeRaiseEvent geoEvent = new ShellNodeRaiseEvent(	this,
 															toGeoTransformation());
-		this.eventBus.post(geoEvent);
+		this.nodeEventBus.post(geoEvent);
 	}
 
 	protected void doRaise(final boolean execute) {
@@ -389,7 +389,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		doLower(true);
 		final ShellNodeLowerEvent geoEvent = new ShellNodeLowerEvent(	this,
 															toGeoTransformation());
-		this.eventBus.post(geoEvent);
+		this.nodeEventBus.post(geoEvent);
 	}
 
 	protected void doLower(final boolean execute) {
@@ -407,7 +407,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		doReparent(true);
 		final ShellNodeReparentEvent geoEvent = new ShellNodeReparentEvent(	this,
 																toGeoTransformation());
-		this.eventBus.post(geoEvent);
+		this.nodeEventBus.post(geoEvent);
 	}
 
 	protected void doReparent(final boolean execute) {
@@ -435,7 +435,7 @@ public abstract class AbstractShellNode implements ShellNode {
 			this.children.add(child);
 			shellNodeEvent = new ShellNodeChildAddedEvent(this, toGeoTransformation());
 		}
-		this.eventBus.post(shellNodeEvent);
+		this.nodeEventBus.post(shellNodeEvent);
 	}
 
 	protected void execReparent() {
@@ -460,12 +460,12 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	@Override
 	public void addShellNodeEventHandler(final Object geoEventHandler) {
-		this.eventBus.register(geoEventHandler);
+		this.nodeEventBus.register(geoEventHandler);
 	}
 
 	@Override
 	public void removeShellNodeEventHandler(final Object geoEventHandler) {
-		this.eventBus.unregister(geoEventHandler);
+		this.nodeEventBus.unregister(geoEventHandler);
 	}
 
 	@Override
@@ -476,7 +476,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	@Override
 	public void setLayoutManager(final ShellLayoutManager shellLayoutManager) {
 		this.shellLayoutManager = shellLayoutManager;
-		this.eventBus.register(shellLayoutManager);
+		this.nodeEventBus.register(shellLayoutManager);
 	}
 
 	protected int getDesiredHeight() {
@@ -508,7 +508,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		doShow(true);
 		final ShellNodeShowEvent geoEvent = new ShellNodeShowEvent(	this,
 														toGeoTransformation());
-		this.eventBus.post(geoEvent);
+		this.nodeEventBus.post(geoEvent);
 	}
 
 	protected void doShow(final boolean execute) {
@@ -527,7 +527,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		doHide(true);
 		final ShellNodeHideEvent geoEvent = new ShellNodeHideEvent(	this,
 														toGeoTransformation());
-		this.eventBus.post(geoEvent);
+		this.nodeEventBus.post(geoEvent);
 	}
 
 	protected void doHide(final boolean execute) {
@@ -545,7 +545,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	public void requestShow() {
 		final ShellNodeShowRequestEvent event = new ShellNodeShowRequestEvent(	this,
 																	toGeoTransformation());
-		this.eventBus.post(event);
+		this.nodeEventBus.post(event);
 		if (getParentGeoManager() == null) {
 			doShow();
 		}
@@ -555,7 +555,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	public void requestHide() {
 		final ShellNodeHideRequestEvent event = new ShellNodeHideRequestEvent(	this,
 																	toGeoTransformation());
-		this.eventBus.post(event);
+		this.nodeEventBus.post(event);
 		if (getParentGeoManager() == null) {
 			doHide();
 		}

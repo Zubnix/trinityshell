@@ -21,6 +21,6 @@ package org.trinity.foundation.display.api;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public interface DisplayResourceHandle {
+public interface DisplaySurfaceHandle {
 
 }

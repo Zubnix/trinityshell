@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.trinity.foundation.display.api.DisplayRenderArea;
+import org.trinity.foundation.display.api.DisplaySurface;
 
 import xcbjb.LibXcb;
 import xcbjb.xcb_generic_error_t;
@@ -29,8 +29,8 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
 public class XPropertyCache {
-	private final Map<DisplayRenderArea, Map<String, Map<String, Object>>> nativeProtocolsValuesCache = new HashMap<DisplayRenderArea, Map<String, Map<String, Object>>>();
-	private final Map<DisplayRenderArea, Set<String>> nativeProtocolValidityCache = new HashMap<DisplayRenderArea, Set<String>>();
+	private final Map<DisplaySurface, Map<String, Map<String, Object>>> nativeProtocolsValuesCache = new HashMap<DisplaySurface, Map<String, Map<String, Object>>>();
+	private final Map<DisplaySurface, Set<String>> nativeProtocolValidityCache = new HashMap<DisplaySurface, Set<String>>();
 
 	private final XConnection xConnection;
 	private final EventBus xEventBus;
@@ -59,23 +59,23 @@ public class XPropertyCache {
 		getAllInvalidNativeProtocols(window).add(atom);
 	}
 
-	private Set<String> getAllInvalidNativeProtocols(final DisplayRenderArea displayRenderArea) {
+	private Set<String> getAllInvalidNativeProtocols(final DisplaySurface displaySurface) {
 		Set<String> changedNativeProtocols = this.nativeProtocolValidityCache
-				.get(displayRenderArea);
+				.get(displaySurface);
 		if (changedNativeProtocols == null) {
 			changedNativeProtocols = new HashSet<String>();
-			this.nativeProtocolValidityCache.put(	displayRenderArea,
+			this.nativeProtocolValidityCache.put(	displaySurface,
 													changedNativeProtocols);
 		}
 		return changedNativeProtocols;
 	}
 
-	private Map<String, Object> queryNativeProperty(final DisplayRenderArea displayRenderArea,
+	private Map<String, Object> queryNativeProperty(final DisplaySurface displaySurface,
 													final String nativeProperty) {
 		// TODO rewrite this method. Move lookup logic to separate classes.
 
-		final int windowId = ((XResourceHandle) displayRenderArea
-				.getResourceHandle()).getNativeHandle();
+		final int windowId = ((XWindowHandle) displaySurface
+				.getDisplaySurfaceHandle()).getNativeHandle();
 
 		final Map<String, Object> valueMap = new HashMap<String, Object>();
 
@@ -138,24 +138,24 @@ public class XPropertyCache {
 		return valueMap;
 	}
 
-	public Map<String, Object> getXProperty(final DisplayRenderArea displayRenderArea,
+	public Map<String, Object> getXProperty(final DisplaySurface displaySurface,
 											final String xProperty) {
 
-		final Map<String, Map<String, Object>> allProperties = getAllProperties(displayRenderArea);
+		final Map<String, Map<String, Object>> allProperties = getAllProperties(displaySurface);
 		Map<String, Object> propertyValues = allProperties.get(xProperty);
 
 		if (propertyValues == null) {
 			propertyValues = new HashMap<String, Object>();
 			allProperties.put(xProperty, propertyValues);
-			getAllInvalidNativeProtocols(displayRenderArea).add(xProperty);
-			return getXProperty(displayRenderArea, xProperty);
+			getAllInvalidNativeProtocols(displaySurface).add(xProperty);
+			return getXProperty(displaySurface, xProperty);
 		}
 
 		final Set<String> changedNativeProtocols = this.nativeProtocolValidityCache
-				.get(displayRenderArea);
+				.get(displaySurface);
 
 		if (changedNativeProtocols.remove(xProperty)) {
-			final Map<String, Object> nativePropertyVaue = queryNativeProperty(	displayRenderArea,
+			final Map<String, Object> nativePropertyVaue = queryNativeProperty(	displaySurface,
 																				xProperty);
 			propertyValues.putAll(nativePropertyVaue);
 		}
@@ -163,12 +163,12 @@ public class XPropertyCache {
 		return propertyValues;
 	}
 
-	private Map<String, Map<String, Object>> getAllProperties(final DisplayRenderArea displayRenderArea) {
+	private Map<String, Map<String, Object>> getAllProperties(final DisplaySurface displaySurface) {
 		Map<String, Map<String, Object>> allValues = this.nativeProtocolsValuesCache
-				.get(displayRenderArea);
+				.get(displaySurface);
 		if (allValues == null) {
 			allValues = new HashMap<String, Map<String, Object>>();
-			this.nativeProtocolsValuesCache.put(displayRenderArea, allValues);
+			this.nativeProtocolsValuesCache.put(displaySurface, allValues);
 		}
 		return allValues;
 	}

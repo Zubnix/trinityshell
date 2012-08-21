@@ -16,18 +16,17 @@ import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 /**
- * A <code>DisplayRenderArea</code> is represents a native isolated graphical
- * area created by a <code>Display</code>. Usually a
- * <code>PlatformRenderArea</code> manages a native window from a native
- * display.
+ * A <code>DisplaySurface</code> is represents a native isolated graphical area
+ * created by a <code>Display</code>. Usually a <code>PlatformRenderArea</code>
+ * manages a native window from a native display.
  * 
  */
-public interface DisplayRenderArea extends DisplayArea,
-		DisplayAreaManipulator<DisplayRenderArea>, DisplayEventSource {
+public interface DisplaySurface extends DisplayArea,
+		DisplayAreaManipulator<DisplaySurface>, DisplayEventSource {
 
 	Rectangle getGeometry();
 
 	Coordinate getPointerCoordinate();
 
-	DisplayResourceHandle getResourceHandle();
+	DisplaySurfaceHandle getDisplaySurfaceHandle();
 }

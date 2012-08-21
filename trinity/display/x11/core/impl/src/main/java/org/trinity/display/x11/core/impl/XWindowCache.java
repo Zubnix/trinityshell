@@ -14,9 +14,9 @@ package org.trinity.display.x11.core.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.trinity.foundation.display.api.DisplayRenderAreaFactory;
-import org.trinity.foundation.display.api.DisplayResourceHandle;
-import org.trinity.foundation.display.api.DisplayResourceHandleFactory;
+import org.trinity.foundation.display.api.DisplaySurfaceFactory;
+import org.trinity.foundation.display.api.DisplaySurfaceHandle;
+import org.trinity.foundation.display.api.DisplaySurfaceHandleFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -31,15 +31,12 @@ public class XWindowCache {
 
 	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
 
-	private final DisplayResourceHandleFactory resourceHandleFactory;
-	private final DisplayRenderAreaFactory displayResourceFactory;
-	private final XConnection xConnection;
+	private final DisplaySurfaceHandleFactory resourceHandleFactory;
+	private final DisplaySurfaceFactory displayResourceFactory;
 
 	@Inject
-	XWindowCache(	final XConnection xConnection,
-					final DisplayResourceHandleFactory resourceHandleFactory,
-					final DisplayRenderAreaFactory displayResourceFactory) {
-		this.xConnection = xConnection;
+	XWindowCache(	final DisplaySurfaceHandleFactory resourceHandleFactory,
+					final DisplaySurfaceFactory displayResourceFactory) {
 		this.resourceHandleFactory = resourceHandleFactory;
 		this.displayResourceFactory = displayResourceFactory;
 	}
@@ -49,10 +46,10 @@ public class XWindowCache {
 			XWindow window = this.windows.get(Integer.valueOf(windowId));
 			if (window == null) {
 				final Integer windowID = Integer.valueOf(windowId);
-				final DisplayResourceHandle resourceHandle = this.resourceHandleFactory
-						.createResourceHandle(windowID);
+				final DisplaySurfaceHandle resourceHandle = this.resourceHandleFactory
+						.createDisplaySurfaceHandle(windowID);
 				window = (XWindow) this.displayResourceFactory
-						.createDisplayRenderArea(resourceHandle);
+						.createDisplaySurface(resourceHandle);
 				this.windows.put(windowID, window);
 			}
 			return window;

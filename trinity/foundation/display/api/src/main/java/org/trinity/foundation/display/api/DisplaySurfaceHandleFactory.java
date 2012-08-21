@@ -14,6 +14,6 @@ package org.trinity.foundation.display.api;
 /*****************************************
  * @author Erik De Rijcke
  ****************************************/
-public interface DisplayResourceHandleFactory {
-	DisplayResourceHandle createResourceHandle(Object nativeHandle);
+public interface DisplaySurfaceHandleFactory {
+	DisplaySurfaceHandle createDisplaySurfaceHandle(Object nativeHandle);
 }

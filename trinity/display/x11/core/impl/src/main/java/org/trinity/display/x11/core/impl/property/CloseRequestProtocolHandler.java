@@ -7,7 +7,7 @@ import org.trinity.display.x11.core.impl.XAtomCache;
 import org.trinity.display.x11.core.impl.XConnection;
 import org.trinity.display.x11.core.impl.XDisplayProtocolHandler;
 import org.trinity.display.x11.core.impl.XPropertyCache;
-import org.trinity.display.x11.core.impl.XResourceHandle;
+import org.trinity.display.x11.core.impl.XWindowHandle;
 import org.trinity.display.x11.core.impl.XWindow;
 import org.trinity.foundation.display.api.DisplayProtocol;
 
@@ -51,7 +51,7 @@ public class CloseRequestProtocolHandler implements XDisplayProtocolHandler {
 		final List<String> protocols = (List<String>) wmProtocolsValue
 				.get("ATOM");
 
-		final int windowId = ((XResourceHandle) xWindow.getResourceHandle())
+		final int windowId = ((XWindowHandle) xWindow.getDisplaySurfaceHandle())
 				.getNativeHandle();
 		if (protocols.contains("WM_DELETE_WINDOW")) {
 			final xcb_client_message_event_t client_message_event_t = new xcb_client_message_event_t();

@@ -18,8 +18,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.trinity.foundation.display.api.DisplayEventProducer;
-import org.trinity.foundation.display.api.DisplayResourceHandle;
-import org.trinity.foundation.display.api.DisplayResourceHandleFactory;
+import org.trinity.foundation.display.api.DisplaySurfaceHandle;
+import org.trinity.foundation.display.api.DisplaySurfaceHandleFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableRenderNode;
@@ -62,14 +62,14 @@ import de.devsurf.injection.guice.annotations.To;
 public class QJRenderEngine extends QApplication implements
 		DisplayEventProducer {
 
-	private final DisplayResourceHandleFactory resourceHandleFactory;
+	private final DisplaySurfaceHandleFactory resourceHandleFactory;
 	private final QJRenderEventConverter renderEventConverter;
 	private final EventBus displayEventBus;
 
 	private final Map<PaintableRenderNode, QWidget> paintableToPaintPeer = new HashMap<PaintableRenderNode, QWidget>();
 
 	@Inject
-	QJRenderEngine(	final DisplayResourceHandleFactory resourceHandleFactory,
+	QJRenderEngine(	final DisplaySurfaceHandleFactory resourceHandleFactory,
 					final QJRenderEventConverter renderEventConverter,
 					@Named("displayEventBus") final EventBus displayEventBus) {
 		super(new String[] {});
@@ -128,7 +128,7 @@ public class QJRenderEngine extends QApplication implements
 		return (T) this.paintableToPaintPeer.get(paintableRenderNode);
 	}
 
-	public DisplayResourceHandle putVisual(	final DisplayEventSource displayEventSource,
+	public DisplaySurfaceHandle putVisual(	final DisplayEventSource displayEventSource,
 											final PaintableRenderNode paintableRenderNode,
 											final QWidget visual) {
 		this.paintableToPaintPeer.put(paintableRenderNode, visual);
@@ -137,7 +137,7 @@ public class QJRenderEngine extends QApplication implements
 															displayEventSource,
 															visual));
 		final long winId = visual.winId();
-		return this.resourceHandleFactory.createResourceHandle(Long
+		return this.resourceHandleFactory.createDisplaySurfaceHandle(Long
 				.valueOf(winId));
 	}
 }

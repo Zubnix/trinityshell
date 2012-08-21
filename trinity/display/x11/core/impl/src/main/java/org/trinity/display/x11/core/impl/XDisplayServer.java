@@ -13,7 +13,7 @@ package org.trinity.display.x11.core.impl;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
-import org.trinity.foundation.display.api.DisplayRenderArea;
+import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 
@@ -83,7 +83,7 @@ public class XDisplayServer implements DisplayServer {
 	}
 
 	@Override
-	public DisplayRenderArea getRootDisplayArea() {
+	public DisplaySurface getRootDisplayArea() {
 		return this.xWindowCache.getWindow(this.xConnection
 				.getScreenReference().getRoot());
 	}

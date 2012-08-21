@@ -1,16 +1,16 @@
 package org.trinity.display.x11.core.impl;
 
-import org.trinity.foundation.display.api.DisplayResourceHandle;
+import org.trinity.foundation.display.api.DisplaySurfaceHandle;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
-public class XResourceHandle implements DisplayResourceHandle {
+public class XWindowHandle implements DisplaySurfaceHandle {
 
 	private final int nativeHandle;
 
 	@Inject
-	XResourceHandle(@Assisted final int nativeHandle) {
+	XWindowHandle(@Assisted final int nativeHandle) {
 		this.nativeHandle = nativeHandle;
 	}
 
@@ -25,8 +25,8 @@ public class XResourceHandle implements DisplayResourceHandle {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof XResourceHandle) {
-			final XResourceHandle otherXResourceHandle = (XResourceHandle) obj;
+		if (obj instanceof XWindowHandle) {
+			final XWindowHandle otherXResourceHandle = (XWindowHandle) obj;
 			return otherXResourceHandle.getNativeHandle() == getNativeHandle();
 		}
 		return false;

@@ -11,19 +11,20 @@
  */
 package org.trinity.shell.core.impl;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
-import org.trinity.foundation.display.api.DisplayRenderArea;
+import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
 import org.trinity.shell.core.api.event.ShellSurfaceCreatedEvent;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -56,7 +57,9 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 
 	// TODO this is basically the same mechanism as used in EventBus. Find a way
 	// to seperate and uniform this mechanism.
-	private final Map<DisplayEventSource, List<WeakReference<EventBus>>> eventRecipients = new WeakHashMap<DisplayEventSource, List<WeakReference<EventBus>>>();
+	private final Cache<DisplayEventSource, Cache<EventBus, EventBus>> eventRecipients = CacheBuilder
+			.newBuilder().concurrencyLevel(4).weakKeys().build();
+
 	private final DisplayServer display;
 	private final Provider<ShellClientSurface> shellClientProvider;
 	private final EventBus shellEventBus;
@@ -86,43 +89,76 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 
 		final DisplayEvent displayEvent = this.display.getNextDisplayEvent();
 
-		if (displayEvent != null) {
-			newShellClientIfNeeded(displayEvent);
-			this.shellEventBus.post(displayEvent);
+		if (displayEvent == null) {
+			return;
+		}
+
+		newShellSurfaceClientIfNeeded(displayEvent);
+		this.shellEventBus.post(displayEvent);
+
+		final Cache<EventBus, EventBus> eventBusses = this.eventRecipients
+				.getIfPresent(displayEvent.getEventSource());
+		if (eventBusses == null) {
+			return;
+		}
+
+		final Set<Entry<EventBus, EventBus>> eventBussesEntries = eventBusses
+				.asMap().entrySet();
+		for (final Entry<EventBus, EventBus> eventBusEntry : eventBussesEntries) {
+			final EventBus eventBus = eventBusEntry.getKey();
+			eventBus.post(displayEvent);
 		}
 	}
 
-	private void newShellClientIfNeeded(final DisplayEvent event) {
-		final List<WeakReference<EventBus>> eventManagersByEventSource = this.eventRecipients
-				.get(event.getEventSource());
+	private void newShellSurfaceClientIfNeeded(final DisplayEvent event) {
+		final Cache<EventBus, EventBus> eventBusses = this.eventRecipients
+				.getIfPresent(event.getEventSource());
 
 		final DisplayEventSource eventSource = event.getEventSource();
 
-		if (((eventManagersByEventSource == null) || eventManagersByEventSource
-				.isEmpty()) && (eventSource instanceof DisplayRenderArea)) {
-
-			createShellClient((DisplayRenderArea) eventSource);
+		if (((eventBusses == null) || (eventBusses.size() == 0))
+				&& (eventSource instanceof DisplaySurface)) {
+			createShellSurfaceClient((DisplaySurface) eventSource);
 		}
 	}
 
-	private void createShellClient(final DisplayRenderArea clientDisplayRenderArea) {
+	private void createShellSurfaceClient(final DisplaySurface clientDisplayRenderArea) {
 		final ShellClientSurface clientShellRenderArea = this.shellClientProvider
 				.get();
-		clientShellRenderArea.setDisplayRenderArea(clientDisplayRenderArea);
+		clientShellRenderArea.setDisplaySurface(clientDisplayRenderArea);
 		this.shellEventBus
 				.post(new ShellSurfaceCreatedEvent(clientShellRenderArea));
 	}
 
 	@Override
 	public void registerDisplayEventSource(	final EventBus nodeEventBus,
-											final DisplayEventSource forSource) {
-		final WeakReference<EventBus> eventManagerReference = new WeakReference<EventBus>(nodeEventBus);
-		if (this.eventRecipients.containsKey(forSource)) {
-			this.eventRecipients.get(forSource).add(eventManagerReference);
-		} else {
-			final CopyOnWriteArrayList<WeakReference<EventBus>> list = new CopyOnWriteArrayList<WeakReference<EventBus>>();
-			list.add(eventManagerReference);
-			this.eventRecipients.put(forSource, list);
+											final DisplayEventSource displayEventSource) {
+
+		try {
+			final Cache<EventBus, EventBus> nodeEventBusses = this.eventRecipients
+					.get(	displayEventSource,
+							new Callable<Cache<EventBus, EventBus>>() {
+								@Override
+								public Cache<EventBus, EventBus> call()
+										throws Exception {
+									return CacheBuilder.newBuilder()
+											.concurrencyLevel(4).weakKeys()
+											.build();
+								}
+							});
+			nodeEventBusses.put(nodeEventBus, nodeEventBus);
+		} catch (final ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public void unregisterDisplayEventSource(	final EventBus nodeEventBus,
+												final DisplayEventSource displayEventSource) {
+		final Cache<EventBus, EventBus> nodeEventBusses = this.eventRecipients
+				.getIfPresent(displayEventSource);
+		if (nodeEventBusses != null) {
+			nodeEventBusses.invalidate(nodeEventBus);
 		}
 	}
 }
