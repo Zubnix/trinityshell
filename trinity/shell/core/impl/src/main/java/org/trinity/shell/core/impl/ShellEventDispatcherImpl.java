@@ -16,8 +16,8 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.DisplayServer;
+import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
@@ -141,8 +141,7 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 								@Override
 								public Cache<EventBus, EventBus> call()
 										throws Exception {
-									return CacheBuilder.newBuilder()
-											.concurrencyLevel(4).weakKeys()
+									return CacheBuilder.newBuilder().weakKeys()
 											.build();
 								}
 							});

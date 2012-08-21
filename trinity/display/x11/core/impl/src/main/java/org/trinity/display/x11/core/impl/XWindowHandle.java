@@ -7,20 +7,26 @@ import com.google.inject.assistedinject.Assisted;
 
 public class XWindowHandle implements DisplaySurfaceHandle {
 
-	private final int nativeHandle;
+	private final Integer nativeHandle;
 
 	@Inject
-	XWindowHandle(@Assisted final int nativeHandle) {
-		this.nativeHandle = nativeHandle;
+	XWindowHandle(@Assisted final Object nativeHandle) {
+		if (nativeHandle instanceof Integer) {
+			this.nativeHandle = (Integer) nativeHandle;
+		} else {
+			throw new Error("Can only handle handle native X window handle of type 'Integer'. Got native handle of type: "
+					+ nativeHandle.getClass().getName());
+		}
 	}
 
-	public int getNativeHandle() {
+	@Override
+	public Integer getNativeHandle() {
 		return this.nativeHandle;
 	}
 
 	@Override
 	public int hashCode() {
-		return getNativeHandle();
+		return getNativeHandle().hashCode();
 	}
 
 	@Override

@@ -29,6 +29,8 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
 public class XPropertyCache {
+	// TODO make use of guava cache?
+
 	private final Map<DisplaySurface, Map<String, Map<String, Object>>> nativeProtocolsValuesCache = new HashMap<DisplaySurface, Map<String, Map<String, Object>>>();
 	private final Map<DisplaySurface, Set<String>> nativeProtocolValidityCache = new HashMap<DisplaySurface, Set<String>>();
 
@@ -75,7 +77,7 @@ public class XPropertyCache {
 		// TODO rewrite this method. Move lookup logic to separate classes.
 
 		final int windowId = ((XWindowHandle) displaySurface
-				.getDisplaySurfaceHandle()).getNativeHandle();
+				.getDisplaySurfaceHandle()).getNativeHandle().intValue();
 
 		final Map<String, Object> valueMap = new HashMap<String, Object>();
 

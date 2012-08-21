@@ -13,11 +13,16 @@ package org.trinity.display.x11.core.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.display.api.DisplaySurfaceFactory;
 import org.trinity.foundation.display.api.DisplaySurfaceHandle;
 import org.trinity.foundation.display.api.DisplaySurfaceHandleFactory;
 
+import com.google.common.base.Throwables;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -29,30 +34,42 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Singleton
 public class XWindowCache {
 
+	// TODO make use of guava cache?
+
+	private final Cache<Integer, XWindow> xWindows = CacheBuilder.newBuilder()
+			.softValues().build();
+
 	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
 
-	private final DisplaySurfaceHandleFactory resourceHandleFactory;
-	private final DisplaySurfaceFactory displayResourceFactory;
+	private final DisplaySurfaceHandleFactory displaySurfaceHandleFactory;
+	private final DisplaySurfaceFactory displaySurfaceFactory;
 
 	@Inject
 	XWindowCache(	final DisplaySurfaceHandleFactory resourceHandleFactory,
 					final DisplaySurfaceFactory displayResourceFactory) {
-		this.resourceHandleFactory = resourceHandleFactory;
-		this.displayResourceFactory = displayResourceFactory;
+		this.displaySurfaceHandleFactory = resourceHandleFactory;
+		this.displaySurfaceFactory = displayResourceFactory;
 	}
 
 	public XWindow getWindow(final int windowId) {
-		synchronized (this.windows) {
-			XWindow window = this.windows.get(Integer.valueOf(windowId));
-			if (window == null) {
-				final Integer windowID = Integer.valueOf(windowId);
-				final DisplaySurfaceHandle resourceHandle = this.resourceHandleFactory
-						.createDisplaySurfaceHandle(windowID);
-				window = (XWindow) this.displayResourceFactory
-						.createDisplaySurface(resourceHandle);
-				this.windows.put(windowID, window);
-			}
-			return window;
+
+		XWindow window = null;
+		final Integer windowID = Integer.valueOf(windowId);
+		final DisplaySurfaceHandle resourceHandle = XWindowCache.this.displaySurfaceHandleFactory
+				.createDisplaySurfaceHandle(windowID);
+		try {
+			window = this.xWindows.get(	Integer.valueOf(windowId),
+										new Callable<XWindow>() {
+											@Override
+											public XWindow call()
+													throws Exception {
+												return (XWindow) XWindowCache.this.displaySurfaceFactory
+														.createDisplaySurface(resourceHandle);
+											}
+										});
+		} catch (final ExecutionException e) {
+			Throwables.propagate(e);
 		}
+		return window;
 	}
 }
