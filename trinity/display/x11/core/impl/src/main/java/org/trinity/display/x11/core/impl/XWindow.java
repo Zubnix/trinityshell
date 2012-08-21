@@ -27,6 +27,7 @@ import xcbjb.LibXcb;
 import xcbjb.LibXcbConstants;
 import xcbjb.SWIGTYPE_p_xcb_connection_t;
 import xcbjb.xcb_config_window_t;
+import xcbjb.xcb_cw_t;
 import xcbjb.xcb_event_mask_t;
 import xcbjb.xcb_generic_error_t;
 import xcbjb.xcb_get_geometry_cookie_t;
@@ -389,5 +390,24 @@ public class XWindow implements DisplayRenderArea {
 	@Override
 	public int hashCode() {
 		return getResourceHandle().hashCode();
+	}
+
+	public void configureClientEvents() {
+		final ByteBuffer values = ByteBuffer.allocateDirect(4 + 4 + 4 + 4)
+				.order(ByteOrder.nativeOrder());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE
+				.swigValue());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW.swigValue());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW.swigValue());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY
+				.swigValue());
+
+		LibXcb.xcb_change_window_attributes(this.xConnection
+													.getConnectionReference(),
+											((XResourceHandle) this.resourceHandle)
+													.getNativeHandle(),
+											xcb_cw_t.XCB_CW_EVENT_MASK
+													.swigValue(),
+											values);
 	}
 }

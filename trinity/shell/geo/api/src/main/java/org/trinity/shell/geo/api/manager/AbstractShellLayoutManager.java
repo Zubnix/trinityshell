@@ -18,15 +18,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.trinity.shell.geo.api.ShellGeoNode;
-import org.trinity.shell.geo.api.event.GeoHideRequestEvent;
-import org.trinity.shell.geo.api.event.GeoLowerRequestEvent;
-import org.trinity.shell.geo.api.event.GeoMoveRequestEvent;
-import org.trinity.shell.geo.api.event.GeoMoveResizeRequestEvent;
-import org.trinity.shell.geo.api.event.GeoRaiseRequestEvent;
-import org.trinity.shell.geo.api.event.GeoReparentRequestEvent;
-import org.trinity.shell.geo.api.event.GeoResizeRequestEvent;
-import org.trinity.shell.geo.api.event.GeoShowRequestEvent;
+import org.trinity.shell.geo.api.ShellNode;
+import org.trinity.shell.geo.api.event.ShellNodeHideRequestEvent;
+import org.trinity.shell.geo.api.event.ShellNodeLowerRequestEvent;
+import org.trinity.shell.geo.api.event.ShellNodeMoveRequestEvent;
+import org.trinity.shell.geo.api.event.ShellNodeMoveResizeRequestEvent;
+import org.trinity.shell.geo.api.event.ShellNodeRaiseRequestEvent;
+import org.trinity.shell.geo.api.event.ShellNodeReparentRequestEvent;
+import org.trinity.shell.geo.api.event.ShellNodeResizeRequestEvent;
+import org.trinity.shell.geo.api.event.ShellNodeShowRequestEvent;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -42,19 +42,19 @@ import com.google.common.eventbus.Subscribe;
  */
 public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
-	private final Map<ShellGeoNode, ShellLayoutProperty> childrenWithLayoutProperty = new LinkedHashMap<ShellGeoNode, ShellLayoutProperty>();
-	private ShellGeoNode container;
+	private final Map<ShellNode, ShellLayoutProperty> childrenWithLayoutProperty = new LinkedHashMap<ShellNode, ShellLayoutProperty>();
+	private ShellNode container;
 
 	/**
 	 * @return
 	 */
 	@Override
-	public ShellGeoNode getLayoutContainer() {
+	public ShellNode getLayoutContainer() {
 		return this.container;
 	}
 
 	@Override
-	public void setLayoutContainer(final ShellGeoNode layoutContainer) {
+	public void setLayoutContainer(final ShellNode layoutContainer) {
 		this.container = layoutContainer;
 	}
 
@@ -63,13 +63,13 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	 * @param layoutProperty
 	 */
 	@Override
-	public void addChild(	final ShellGeoNode child,
+	public void addChild(	final ShellNode child,
 							final ShellLayoutProperty layoutProperty) {
 		this.childrenWithLayoutProperty.put(child, layoutProperty);
 	}
 
 	@Override
-	public void addChild(final ShellGeoNode child) {
+	public void addChild(final ShellNode child) {
 		addChild(child, defaultLayoutProperty());
 	}
 
@@ -79,7 +79,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	 * @param child
 	 */
 	@Override
-	public void removeChild(final ShellGeoNode child) {
+	public void removeChild(final ShellNode child) {
 		this.childrenWithLayoutProperty.remove(child);
 	}
 
@@ -89,12 +89,12 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	@Override
 	public void removeChild(final int index) {
 
-		final Iterator<Entry<ShellGeoNode, ShellLayoutProperty>> it = this.childrenWithLayoutProperty
+		final Iterator<Entry<ShellNode, ShellLayoutProperty>> it = this.childrenWithLayoutProperty
 				.entrySet().iterator();
 
 		final int i = 0;
 		while (it.hasNext()) {
-			final Entry<ShellGeoNode, ShellLayoutProperty> entry = it.next();
+			final Entry<ShellNode, ShellLayoutProperty> entry = it.next();
 			if (i == index) {
 				removeChild(entry.getKey());
 				break;
@@ -106,8 +106,8 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	 * @return
 	 */
 	@Override
-	public List<ShellGeoNode> getChildren() {
-		return new ArrayList<ShellGeoNode>(this.childrenWithLayoutProperty.keySet());
+	public List<ShellNode> getChildren() {
+		return new ArrayList<ShellNode>(this.childrenWithLayoutProperty.keySet());
 	}
 
 	/**
@@ -115,11 +115,11 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	 * @return
 	 */
 	@Override
-	public ShellGeoNode getChild(final int index) {
-		final Iterator<Entry<ShellGeoNode, ShellLayoutProperty>> it = this.childrenWithLayoutProperty
+	public ShellNode getChild(final int index) {
+		final Iterator<Entry<ShellNode, ShellLayoutProperty>> it = this.childrenWithLayoutProperty
 				.entrySet().iterator();
 
-		ShellGeoNode child = null;
+		ShellNode child = null;
 		for (int i = 0; it.hasNext(); i++, child = it.next().getKey()) {
 			if (i == index) {
 				break;
@@ -133,48 +133,48 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	 * @return
 	 */
 	@Override
-	public ShellLayoutPropertyLine getLayoutProperty(final ShellGeoNode child) {
+	public ShellLayoutPropertyLine getLayoutProperty(final ShellNode child) {
 		return (ShellLayoutPropertyLine) this.childrenWithLayoutProperty
 				.get(child);
 	}
 
 	@Subscribe
-	public void onResizeRequest(final GeoResizeRequestEvent geoEvent) {
+	public void onResizeRequest(final ShellNodeResizeRequestEvent geoEvent) {
 		geoEvent.getSource().doResize();
 	}
 
 	@Subscribe
-	public void onMoveRequest(final GeoMoveRequestEvent geoEvent) {
+	public void onMoveRequest(final ShellNodeMoveRequestEvent geoEvent) {
 		geoEvent.getSource().doMove();
 	}
 
 	@Subscribe
-	public void onMoveResizeRequest(final GeoMoveResizeRequestEvent geoEvent) {
+	public void onMoveResizeRequest(final ShellNodeMoveResizeRequestEvent geoEvent) {
 		geoEvent.getSource().doMoveResize();
 	}
 
 	@Subscribe
-	public void onLowerRequest(final GeoLowerRequestEvent geoEvent) {
+	public void onLowerRequest(final ShellNodeLowerRequestEvent geoEvent) {
 		geoEvent.getSource().doLower();
 	}
 
 	@Subscribe
-	public void onRaiseRequest(final GeoRaiseRequestEvent geoEvent) {
+	public void onRaiseRequest(final ShellNodeRaiseRequestEvent geoEvent) {
 		geoEvent.getSource().doRaise();
 	}
 
 	@Subscribe
-	public void onShowRequest(final GeoShowRequestEvent geoEvent) {
+	public void onShowRequest(final ShellNodeShowRequestEvent geoEvent) {
 		geoEvent.getSource().doShow();
 	}
 
 	@Subscribe
-	public void onHideRequest(final GeoHideRequestEvent geoEvent) {
+	public void onHideRequest(final ShellNodeHideRequestEvent geoEvent) {
 		geoEvent.getSource().doHide();
 	}
 
 	@Subscribe
-	public void onChangeParentRequest(final GeoReparentRequestEvent geoEvent) {
+	public void onChangeParentRequest(final ShellNodeReparentRequestEvent geoEvent) {
 		geoEvent.getSource().doReparent();
 	}
 }

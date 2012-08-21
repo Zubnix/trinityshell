@@ -19,7 +19,22 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.trinity.shell</groupId>
-			<artifactId>shell</artifactId>
+			<artifactId>shell.core.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.geo.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.input.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.widget.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

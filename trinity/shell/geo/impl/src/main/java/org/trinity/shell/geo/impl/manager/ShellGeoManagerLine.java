@@ -14,15 +14,15 @@ package org.trinity.shell.geo.impl.manager;
 import java.util.List;
 
 import org.trinity.foundation.shared.geometry.api.Margins;
-import org.trinity.shell.geo.api.ShellGeoNode;
-import org.trinity.shell.geo.api.event.GeoDestroyEvent;
-import org.trinity.shell.geo.api.event.GeoHideRequestEvent;
-import org.trinity.shell.geo.api.event.GeoLowerRequestEvent;
-import org.trinity.shell.geo.api.event.GeoMoveResizeEvent;
-import org.trinity.shell.geo.api.event.GeoMoveResizeRequestEvent;
-import org.trinity.shell.geo.api.event.GeoRaiseRequestEvent;
-import org.trinity.shell.geo.api.event.GeoReparentRequestEvent;
-import org.trinity.shell.geo.api.event.GeoShowRequestEvent;
+import org.trinity.shell.geo.api.ShellNode;
+import org.trinity.shell.geo.api.event.ShellNodeDestroyEvent;
+import org.trinity.shell.geo.api.event.ShellNodeHideRequestEvent;
+import org.trinity.shell.geo.api.event.ShellNodeLowerRequestEvent;
+import org.trinity.shell.geo.api.event.ShellNodeMoveResizeEvent;
+import org.trinity.shell.geo.api.event.ShellNodeMoveResizeRequestEvent;
+import org.trinity.shell.geo.api.event.ShellNodeRaiseRequestEvent;
+import org.trinity.shell.geo.api.event.ShellNodeReparentRequestEvent;
+import org.trinity.shell.geo.api.event.ShellNodeShowRequestEvent;
 import org.trinity.shell.geo.api.manager.AbstractShellLayoutManager;
 import org.trinity.shell.geo.api.manager.ShellLayoutManager;
 import org.trinity.shell.geo.api.manager.ShellLayoutProperty;
@@ -58,8 +58,8 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 
 	private class ChildGeoListener {
 		@Subscribe
-		public void handleChildMoveResizeRequest(final GeoMoveResizeRequestEvent geoMoveResizeRequestEvent) {
-			final ShellGeoNode child = geoMoveResizeRequestEvent.getSource();
+		public void handleChildMoveResizeRequest(final ShellNodeMoveResizeRequestEvent shellNodeMoveResizeRequestEvent) {
+			final ShellNode child = shellNodeMoveResizeRequestEvent.getSource();
 			if (getLayoutProperty(child).getWeight() == 0) {
 				child.doResize();
 				layout();
@@ -69,34 +69,34 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 		}
 
 		@Subscribe
-		public void handleChildDestroyed(final GeoDestroyEvent geoDestroyEvent) {
-			removeChild(geoDestroyEvent.getSource());
+		public void handleChildDestroyed(final ShellNodeDestroyEvent shellNodeDestroyEvent) {
+			removeChild(shellNodeDestroyEvent.getSource());
 		}
 
 		@Subscribe
-		public void handleChildReparentRequest(final GeoReparentRequestEvent geoReparentRequestEvent) {
-			geoReparentRequestEvent.getSource().doReparent();
+		public void handleChildReparentRequest(final ShellNodeReparentRequestEvent shellNodeReparentRequestEvent) {
+			shellNodeReparentRequestEvent.getSource().doReparent();
 			layout();
 		}
 
 		@Subscribe
-		public void handleChildShowRequest(final GeoShowRequestEvent geoShowRequestEvent) {
-			geoShowRequestEvent.getSource().doShow();
+		public void handleChildShowRequest(final ShellNodeShowRequestEvent shellNodeShowRequestEvent) {
+			shellNodeShowRequestEvent.getSource().doShow();
 		}
 
 		@Subscribe
-		public void handleChildHideRequest(final GeoHideRequestEvent geoHideRequestEvent) {
-			geoHideRequestEvent.getSource().doHide();
+		public void handleChildHideRequest(final ShellNodeHideRequestEvent shellNodeHideRequestEvent) {
+			shellNodeHideRequestEvent.getSource().doHide();
 		}
 
 		@Subscribe
-		public void handleChildLowerRequest(final GeoLowerRequestEvent geoLowerRequestEvent) {
-			geoLowerRequestEvent.getSource().doLower();
+		public void handleChildLowerRequest(final ShellNodeLowerRequestEvent shellNodeLowerRequestEvent) {
+			shellNodeLowerRequestEvent.getSource().doLower();
 		}
 
 		@Subscribe
-		public void handleChildRaiseRequest(final GeoRaiseRequestEvent geoRaiseRequestEvent) {
-			geoRaiseRequestEvent.getSource().doRaise();
+		public void handleChildRaiseRequest(final ShellNodeRaiseRequestEvent shellNodeRaiseRequestEvent) {
+			shellNodeRaiseRequestEvent.getSource().doRaise();
 		}
 	}
 
@@ -109,7 +109,7 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 	 * Create a new <code>ShellGeoManagerLine</code> that will use the geometry
 	 * of the given container to determine the layout of the managed children.
 	 * Ideally, the given container should be the same as the
-	 * <code>ShellGeoNode</code> that returns this
+	 * <code>ShellNode</code> that returns this
 	 * <code>ShellLayoutManager</code>.
 	 * 
 	 * @param container
@@ -141,7 +141,7 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 	 * 
 	 * @param square
 	 */
-	protected void cancelMoveResize(final ShellGeoNode square) {
+	protected void cancelMoveResize(final ShellNode square) {
 		// make sure the square doesn't move or resizes
 		square.cancelPendingMove();
 		square.cancelPendingResize();
@@ -162,7 +162,7 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 		// total size of all children
 		double totalWeightedChildSizes = 0;
 
-		for (final ShellGeoNode child : getChildren()) {
+		for (final ShellNode child : getChildren()) {
 			final int childWeight = getLayoutProperty(child).getWeight();
 			// we don't want to include children with 0 weight in the scale
 			// calculation since they are treated as constants
@@ -185,8 +185,8 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 			newPlace = getLayoutContainer().getWidth();
 		}
 
-		final List<ShellGeoNode> children = getChildren();
-		for (final ShellGeoNode child : children) {
+		final List<ShellNode> children = getChildren();
+		for (final ShellNode child : children) {
 			final ShellLayoutPropertyLine layoutProperty = getLayoutProperty(child);
 			int childWeight = layoutProperty.getWeight();
 
@@ -242,7 +242,7 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 		// total size of all children
 		double totalWeightedChildSizes = 0;
 
-		for (final ShellGeoNode child : getChildren()) {
+		for (final ShellNode child : getChildren()) {
 			final int childWeight = getLayoutProperty(child).getWeight();
 			// we don't want to include children with 0 weight in the scale
 			// calculation since they are treated as constants
@@ -265,8 +265,8 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 			newPlace = getLayoutContainer().getHeight();
 		}
 
-		final List<ShellGeoNode> children = getChildren();
-		for (final ShellGeoNode child : children) {
+		final List<ShellNode> children = getChildren();
+		for (final ShellNode child : children) {
 			final ShellLayoutPropertyLine layoutProperty = getLayoutProperty(child);
 			int childWeight = layoutProperty.getWeight();
 
@@ -307,15 +307,15 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 	}
 
 	@Override
-	public void addChild(	final ShellGeoNode child,
+	public void addChild(	final ShellNode child,
 							final ShellLayoutProperty layoutProperty) {
-		child.addGeoEventHandler(this.childGeoListener);
+		child.addShellNodeEventHandler(this.childGeoListener);
 		super.addChild(child, layoutProperty);
 	}
 
 	@Override
-	public void removeChild(final ShellGeoNode child) {
-		child.removeGeoEventHandler(this.childGeoListener);
+	public void removeChild(final ShellNode child) {
+		child.removeShellNodeEventHandler(this.childGeoListener);
 		super.removeChild(child);
 	}
 
@@ -332,7 +332,7 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 	}
 
 	@Subscribe
-	public void handleContainerMoveReize(final GeoMoveResizeEvent moveResizeEvent) {
+	public void handleContainerMoveReize(final ShellNodeMoveResizeEvent moveResizeEvent) {
 		layout();
 	}
 

@@ -11,11 +11,8 @@
  */
 package org.trinity.shell.core.impl;
 
-import org.trinity.shell.core.api.ShellRenderArea;
-
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
 import de.devsurf.injection.guice.annotations.GuiceModule;
@@ -27,8 +24,5 @@ public class Module extends AbstractModule {
 	protected void configure() {
 		bind(EventBus.class).annotatedWith(Names.named("shellEventBus"))
 				.asEagerSingleton();
-		install(new FactoryModuleBuilder().implement(	ShellRenderArea.class,
-														ShellClient.class)
-				.build(ShellClientFactory.class));
 	}
 }

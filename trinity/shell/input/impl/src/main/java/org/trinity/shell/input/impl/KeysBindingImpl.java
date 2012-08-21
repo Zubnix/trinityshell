@@ -6,7 +6,7 @@ import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
 import org.trinity.foundation.input.api.KeyboardInput;
-import org.trinity.shell.core.api.ShellRenderArea;
+import org.trinity.shell.core.api.ShellSurface;
 import org.trinity.shell.input.api.KeysBinding;
 
 import com.google.common.eventbus.EventBus;
@@ -17,14 +17,14 @@ import com.google.inject.name.Named;
 
 public class KeysBindingImpl implements KeysBinding {
 
-	private final ShellRenderArea root;
+	private final ShellSurface root;
 	private final EventBus shellEventBus;
 	private final List<Key> keys;
 	private final InputModifiers inputModifiers;
 	private final Runnable action;
 
 	@Inject
-	public KeysBindingImpl(	@Named("shellRootRenderArea") final ShellRenderArea root,
+	public KeysBindingImpl(	@Named("shellRootRenderArea") final ShellSurface root,
 							@Named("shellEventBus") final EventBus shellEventBus,
 							@Assisted final List<Key> keys,
 							@Assisted final InputModifiers inputModifiers,

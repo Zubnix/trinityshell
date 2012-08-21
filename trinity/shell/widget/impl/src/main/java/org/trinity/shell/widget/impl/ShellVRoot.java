@@ -13,8 +13,8 @@ package org.trinity.shell.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.core.api.ShellRenderArea;
-import org.trinity.shell.geo.api.ShellGeoExecutor;
+import org.trinity.shell.core.api.ShellSurface;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.widget.api.view.ShellWidgetView;
 
 import com.google.common.eventbus.EventBus;
@@ -41,13 +41,13 @@ public final class ShellVRoot extends ShellWidgetImpl {
 	protected ShellVRoot(	final EventBus eventBus,
 							final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 							final PainterFactory painterFactory,
-							@Named("ShellWidget") final ShellGeoExecutor shellGeoExecutor,
-							@Named("shellRootRenderArea") final ShellRenderArea root,
+							@Named("ShellWidget") final ShellNodeExecutor shellNodeExecutor,
+							@Named("shellRootRenderArea") final ShellSurface root,
 							final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellGeoExecutor,
+				shellNodeExecutor,
 				view);
 		setParent(root);
 		setX(root.getX());

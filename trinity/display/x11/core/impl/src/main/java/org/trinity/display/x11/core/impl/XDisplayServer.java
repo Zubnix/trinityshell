@@ -17,6 +17,7 @@ import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 
+import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -49,6 +50,7 @@ public class XDisplayServer implements DisplayServer {
 	}
 
 	@Subscribe
+	@AllowConcurrentEvents
 	public void handleDisplayEvent(final DisplayEvent displayEvent) {
 		try {
 			this.displayEvents.put(displayEvent);

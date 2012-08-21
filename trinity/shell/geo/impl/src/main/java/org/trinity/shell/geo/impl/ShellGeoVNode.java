@@ -11,9 +11,9 @@
  */
 package org.trinity.shell.geo.impl;
 
-import org.trinity.shell.geo.api.AbstractShellGeoNode;
-import org.trinity.shell.geo.api.ShellGeoExecutor;
-import org.trinity.shell.geo.api.ShellGeoNode;
+import org.trinity.shell.geo.api.AbstractShellNode;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
+import org.trinity.shell.geo.api.ShellNode;
 import org.trinity.shell.geo.api.manager.ShellLayoutManager;
 
 import com.google.common.eventbus.EventBus;
@@ -29,7 +29,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
  * A <code>ShellGeoVNode</code> is a 'virtual', invisible rectangle with a size,
  * place and visibility and has no visual representation on-screen. A
  * <code>ShellGeoVNode</code> has the same behavior as a
- * <code>ShellGeoNode</code>. This means that when a <code>ShellGeoVNode</code>
+ * <code>ShellNode</code>. This means that when a <code>ShellGeoVNode</code>
  * moves, all it's children will move with the same offset. When a
  * <code>ShellGeoVNode</code> visibility changes, all it's children's visibility
  * will change as well. A <code>ShellGeoVNode</code> can also have an optional
@@ -39,25 +39,25 @@ import de.devsurf.injection.guice.annotations.To.Type;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(value = @Named("ShellGeoVNode"), to = @To(value = Type.CUSTOM, customs = ShellGeoNode.class))
-public class ShellGeoVNode extends AbstractShellGeoNode {
-	private final ShellGeoExecutor shellGeoExecutor;
+@Bind(value = @Named("ShellGeoVNode"), to = @To(value = Type.CUSTOM, customs = ShellNode.class))
+public class ShellGeoVNode extends AbstractShellNode {
+	private final ShellNodeExecutor shellNodeExecutor;
 	private ShellLayoutManager shellLayoutManager;
 
 	@Inject
 	protected ShellGeoVNode(final EventBus eventBus,
-							@Named("ShellGeoVExecutor") final ShellGeoExecutor shellGeoExecutor) {
+							@Named("ShellGeoVExecutor") final ShellNodeExecutor shellNodeExecutor) {
 		super(eventBus);
-		this.shellGeoExecutor = shellGeoExecutor;
+		this.shellNodeExecutor = shellNodeExecutor;
 	}
 
 	@Override
-	public ShellGeoExecutor getGeoExecutor() {
-		return this.shellGeoExecutor;
+	public ShellNodeExecutor getNodeExecutor() {
+		return this.shellNodeExecutor;
 	}
 
 	@Override
-	public ShellLayoutManager getGeoManager() {
+	public ShellLayoutManager getLayoutManager() {
 		return this.shellLayoutManager;
 	}
 
@@ -65,7 +65,7 @@ public class ShellGeoVNode extends AbstractShellGeoNode {
 	 * @param shellLayoutManager
 	 */
 	@Override
-	public void setGeoManager(final ShellLayoutManager shellLayoutManager) {
+	public void setLayoutManager(final ShellLayoutManager shellLayoutManager) {
 		this.shellLayoutManager = shellLayoutManager;
 	}
 }

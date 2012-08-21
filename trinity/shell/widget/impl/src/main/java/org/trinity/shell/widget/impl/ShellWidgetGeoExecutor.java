@@ -16,10 +16,10 @@ import javax.inject.Named;
 import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.foundation.display.api.DisplayRenderArea;
-import org.trinity.shell.core.api.ShellRenderArea;
-import org.trinity.shell.core.impl.ShellRenderAreaGeoExecutor;
-import org.trinity.shell.geo.api.ShellGeoExecutor;
-import org.trinity.shell.geo.api.ShellGeoNode;
+import org.trinity.shell.core.api.ShellSurface;
+import org.trinity.shell.core.impl.ShellSurfaceGeoExecutor;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
+import org.trinity.shell.geo.api.ShellNode;
 import org.trinity.shell.widget.api.ShellWidget;
 
 import com.google.inject.Inject;
@@ -35,33 +35,33 @@ import de.devsurf.injection.guice.annotations.Bind;
  * 
  * @author Erik De Rijcke
  * @since 1.0
- * @see ShellGeoExecutor
+ * @see ShellNodeExecutor
  */
 @Bind
 @Named("shellWidgetGeoExecutor")
-public class ShellWidgetGeoExecutor extends ShellRenderAreaGeoExecutor {
+public class ShellWidgetGeoExecutor extends ShellSurfaceGeoExecutor {
 
 	@Inject
-	protected ShellWidgetGeoExecutor(@Named("shellRootRenderArea") final ShellRenderArea shellRoot) {
+	protected ShellWidgetGeoExecutor(@Named("shellRootRenderArea") final ShellSurface shellRoot) {
 		super(shellRoot);
 	}
 
 	@Override
-	public DisplayAreaManipulator<DisplayArea> getAreaManipulator(final ShellGeoNode shellGeoNode) {
-		return getAreaManipulator(shellGeoNode);
+	public DisplayAreaManipulator<DisplayArea> getAreaManipulator(final ShellNode shellNode) {
+		return getAreaManipulator(shellNode);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected <T extends DisplayArea> DisplayAreaManipulator<T> getAreaManipulator(final ShellRenderArea shellRenderArea) {
+	protected <T extends DisplayArea> DisplayAreaManipulator<T> getAreaManipulator(final ShellSurface shellSurface) {
 		DisplayAreaManipulator<T> manip = null;
-		manip = (DisplayAreaManipulator<T>) ((ShellWidget) shellRenderArea)
+		manip = (DisplayAreaManipulator<T>) ((ShellWidget) shellSurface)
 				.getPainter();
 		return manip;
 	}
 
 	@Override
-	protected ShellWidget findClosestSameTypeArea(final ShellGeoNode square) {
+	protected ShellWidget findClosestSameTypeArea(final ShellNode square) {
 		if (square == null) {
 			return null;
 		}
@@ -73,13 +73,13 @@ public class ShellWidgetGeoExecutor extends ShellRenderAreaGeoExecutor {
 	}
 
 	@Override
-	protected DisplayArea getAreaPeer(final ShellRenderArea shellRenderArea) {
-		return shellRenderArea;
+	protected DisplayArea getAreaPeer(final ShellSurface shellSurface) {
+		return shellSurface;
 	}
 
 	@Override
-	protected void initializeGeoTransformableSquare(final ShellGeoNode parent,
-													final ShellGeoNode area) {
+	protected void initializeGeoTransformableSquare(final ShellNode parent,
+													final ShellNode area) {
 		// initialize the area with the closest typed parent.
 		if (area instanceof ShellWidgetImpl) {
 			final ShellWidgetImpl shellWidgetImpl = (ShellWidgetImpl) area;
@@ -89,20 +89,20 @@ public class ShellWidgetGeoExecutor extends ShellRenderAreaGeoExecutor {
 	}
 
 	@Override
-	protected void preProcesNewSameTypeParent(final ShellRenderArea newParentRenderArea) {
+	protected void preProcesNewSameTypeParent(final ShellSurface newParentRenderArea) {
 		// we don't want any processing done on our new same type parent.
 	}
 
 	@Override
-	public void reparent(	final ShellGeoNode shellGeoNode,
-							final ShellGeoNode parent) {
-		final ShellWidgetImpl shellWidgetImpl = (ShellWidgetImpl) shellGeoNode;
+	public void reparent(	final ShellNode shellNode,
+							final ShellNode parent) {
+		final ShellWidgetImpl shellWidgetImpl = (ShellWidgetImpl) shellNode;
 		// reparent the widget
-		super.reparent(shellGeoNode, parent);
+		super.reparent(shellNode, parent);
 
 		// If the old parent is null, we don't need to update the platform
 		// render area.
-		if (shellGeoNode.toGeoTransformation().getParent0() != null) {
+		if (shellNode.toGeoTransformation().getParent0() != null) {
 			final DisplayRenderArea parentPlatformRenderArea = shellWidgetImpl
 					.getParentPaintable().getDisplayRenderArea();
 			final DisplayRenderArea platformRenderArea = shellWidgetImpl
@@ -113,7 +113,7 @@ public class ShellWidgetGeoExecutor extends ShellRenderAreaGeoExecutor {
 				final DisplayRenderArea newParentPlatformRenderArea = shellWidgetImpl
 						.getParentPaintable().getDisplayRenderArea();
 				shellWidgetImpl
-						.setPlatformRenderArea(newParentPlatformRenderArea);
+						.setDisplayRenderArea(newParentPlatformRenderArea);
 			}
 		}
 	}

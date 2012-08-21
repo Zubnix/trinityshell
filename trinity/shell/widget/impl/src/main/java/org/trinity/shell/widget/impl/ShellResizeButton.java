@@ -13,8 +13,8 @@ package org.trinity.shell.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.core.api.ShellRenderArea;
-import org.trinity.shell.geo.api.ShellGeoExecutor;
+import org.trinity.shell.core.api.ShellSurface;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.widget.api.view.ShellButtonView;
 
 import com.google.common.eventbus.EventBus;
@@ -36,16 +36,16 @@ public class ShellResizeButton extends ShellDragButton {
 
 	@Inject
 	protected ShellResizeButton(final EventBus eventBus,
-								@Named("shellRootRenderArea") final ShellRenderArea root,
+								@Named("shellRootRenderArea") final ShellSurface root,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
+								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								final ShellButtonView view) {
 		super(	eventBus,
 				root,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellGeoExecutor,
+				shellNodeExecutor,
 				view);
 	}
 

@@ -21,8 +21,8 @@ import java.util.StringTokenizer;
 import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.core.api.ShellRenderArea;
-import org.trinity.shell.geo.api.ShellGeoExecutor;
+import org.trinity.shell.core.api.ShellSurface;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.input.api.KeyInputStringBuilder;
 import org.trinity.shell.widget.api.view.ShellKeyDrivenMenuView;
 
@@ -45,7 +45,7 @@ public class ShellAppLauncher extends AbstractShellKeyDrivenMenu {
 
 	/*****************************************
 	 * @param painterFactory
-	 * @param shellGeoExecutor
+	 * @param shellNodeExecutor
 	 * @param managedKeyboard
 	 * @param keyInputStringBuilder
 	 ****************************************/
@@ -54,16 +54,16 @@ public class ShellAppLauncher extends AbstractShellKeyDrivenMenu {
 								final EventBus nodeEventBus,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
+								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								final Keyboard keyboard,
-								@Named("shellRootRenderArea") final ShellRenderArea root,
+								@Named("shellRootRenderArea") final ShellSurface root,
 								final KeyInputStringBuilder keyInputStringBuilder,
 								final ShellKeyDrivenMenuView view) {
 		super(	shellEventBus,
 				nodeEventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellGeoExecutor,
+				shellNodeExecutor,
 				keyboard,
 				root,
 				keyInputStringBuilder,

@@ -16,9 +16,9 @@ import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.core.api.ShellRenderArea;
-import org.trinity.shell.geo.api.ShellGeoExecutor;
-import org.trinity.shell.geo.api.ShellGeoNode;
+import org.trinity.shell.core.api.ShellSurface;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
+import org.trinity.shell.geo.api.ShellNode;
 import org.trinity.shell.widget.api.view.ShellButtonView;
 
 import com.google.common.eventbus.EventBus;
@@ -30,12 +30,12 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 /**
  * A <code>DragButton</code> can move another
- * <code>ShellGeoNode</cod>, defined by the target renderarea.
+ * <code>ShellNode</cod>, defined by the target renderarea.
  * <p>
  * A <code>DragButton</code> monitors a <code>ManagedMouse</code> when the
  * <code>DragButton</code> is activated. Should the <code>ManagedMouse</code>
  * change it's position, the <code>DragButton</code> will move the target
- * <code>ShellGeoNode</code> accordingly. A <code>DragButton</code> will stop
+ * <code>ShellNode</code> accordingly. A <code>DragButton</code> will stop
  * monitoring the <code>ManagedMouse</code> as soon as it is deactivated.
  * 
  * @author Erik De Rijcke
@@ -78,8 +78,8 @@ public class ShellDragButton extends ShellButton {
 	private Thread dragThread;
 
 	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
-	private final ShellRenderArea root;
-	private ShellGeoNode client;
+	private final ShellSurface root;
+	private ShellNode client;
 	private int x0;
 	private int y0;
 
@@ -88,15 +88,15 @@ public class ShellDragButton extends ShellButton {
 	 */
 	@Inject
 	protected ShellDragButton(	final EventBus eventBus,
-								@Named("shellRootRenderArea") final ShellRenderArea root,
+								@Named("shellRootRenderArea") final ShellSurface root,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
+								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								final ShellButtonView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellGeoExecutor,
+				shellNodeExecutor,
 				view);
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		this.root = root;
@@ -104,7 +104,7 @@ public class ShellDragButton extends ShellButton {
 	}
 
 	/**
-	 * Mutate the target <code>ShellGeoNode</code> with the given delta values.
+	 * Mutate the target <code>ShellNode</code> with the given delta values.
 	 * <p>
 	 * The given delta values indicate the movement of the
 	 * <code>ManagedMouse</code>.
@@ -115,7 +115,7 @@ public class ShellDragButton extends ShellButton {
 	 * @param deltaY
 	 *            The vertical movement of the <code>ManagedMouse</code> in
 	 *            pixels. @ Thrown when the target
-	 *            <code>AbstractShellRenderArea</code> has an illegal state.
+	 *            <code>AbstractShellSurface</code> has an illegal state.
 	 */
 	protected void mutate(final int deltaX, final int deltaY) {
 		getClient().setX(getClient().getX() + deltaX);
@@ -141,11 +141,11 @@ public class ShellDragButton extends ShellButton {
 		}
 	}
 
-	public ShellGeoNode getClient() {
+	public ShellNode getClient() {
 		return this.client;
 	}
 
-	public void setClient(final ShellGeoNode client) {
+	public void setClient(final ShellNode client) {
 		this.client = client;
 	}
 

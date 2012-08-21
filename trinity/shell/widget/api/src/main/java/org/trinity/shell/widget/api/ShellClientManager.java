@@ -13,13 +13,13 @@ package org.trinity.shell.widget.api;
 
 import java.util.List;
 
-import org.trinity.shell.core.api.ShellRenderArea;
+import org.trinity.shell.core.api.ShellSurface;
 
 public interface ShellClientManager extends ShellWidget {
 
-	void removeClient(ShellRenderArea client);
+	void removeClient(ShellSurface client);
 
-	void addClient(final ShellRenderArea client);
+	void addClient(final ShellSurface client);
 
-	List<ShellRenderArea> getClients();
+	List<ShellSurface> getClients();
 }

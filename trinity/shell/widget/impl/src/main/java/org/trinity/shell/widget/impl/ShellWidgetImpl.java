@@ -17,10 +17,10 @@ import org.trinity.foundation.display.api.DisplayRenderArea;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.core.api.AbstractShellRenderArea;
+import org.trinity.shell.core.api.AbstractShellSurface;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.geo.api.ShellGeoExecutor;
-import org.trinity.shell.geo.api.ShellGeoNode;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
+import org.trinity.shell.geo.api.ShellNode;
 import org.trinity.shell.widget.api.ShellWidget;
 import org.trinity.shell.widget.api.view.ShellWidgetView;
 
@@ -32,7 +32,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO split into abstract widget & move to api
 /**
- * An <code>AbstractShellRenderArea</code> with a
+ * An <code>AbstractShellSurface</code> with a
  * <code>PaintableRenderNode</code> implementation. A <code>ShellWidget</code>
  * is ment to provide a visual interface for the user so it can manipulate the
  * hyperdrive library at runtime.
@@ -72,11 +72,11 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @since 1.0
  */
 @Bind
-public class ShellWidgetImpl extends AbstractShellRenderArea implements
+public class ShellWidgetImpl extends AbstractShellSurface implements
 		ShellWidget {
 
 	private final Painter painter;
-	private final ShellGeoExecutor shellGeoExecutor;
+	private final ShellNodeExecutor shellNodeExecutor;
 	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
 	private final EventBus eventBus;
 	private final ShellWidgetView view;
@@ -90,12 +90,12 @@ public class ShellWidgetImpl extends AbstractShellRenderArea implements
 	public ShellWidgetImpl(	final EventBus eventBus,
 							final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 							final PainterFactory painterFactory,
-							@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
+							@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 							final ShellWidgetView view) {
 		super(eventBus, shellDisplayEventDispatcher);
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		this.eventBus = eventBus;
-		this.shellGeoExecutor = shellGeoExecutor;
+		this.shellNodeExecutor = shellNodeExecutor;
 		this.painter = painterFactory.createPainter(this);
 		this.view = view;
 	}
@@ -112,7 +112,7 @@ public class ShellWidgetImpl extends AbstractShellRenderArea implements
 	 *            data from its paintable parent at the paint back-end level.
 	 */
 	protected void init(final ShellWidget paintableParent) {
-		setPlatformRenderArea(this.view.create(this));
+		setDisplayRenderArea(this.view.create(this));
 		this.shellDisplayEventDispatcher
 				.registerDisplayEventSource(this.eventBus, this);
 	}
@@ -126,8 +126,8 @@ public class ShellWidgetImpl extends AbstractShellRenderArea implements
 	}
 
 	@Override
-	public ShellGeoExecutor getGeoExecutor() {
-		return this.shellGeoExecutor;
+	public ShellNodeExecutor getNodeExecutor() {
+		return this.shellNodeExecutor;
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public class ShellWidgetImpl extends AbstractShellRenderArea implements
 	 * @param square
 	 * @return
 	 */
-	private ShellWidget findParentPaintable(final ShellGeoNode square) {
+	private ShellWidget findParentPaintable(final ShellNode square) {
 		if (square instanceof ShellWidgetImpl) {
 			return (ShellWidget) square;
 		} else {
@@ -155,8 +155,8 @@ public class ShellWidgetImpl extends AbstractShellRenderArea implements
 	}
 
 	@Override
-	protected void setPlatformRenderArea(final DisplayRenderArea platformRenderArea) {
+	protected void setDisplayRenderArea(final DisplayRenderArea platformRenderArea) {
 		// repeated for package visibility
-		super.setPlatformRenderArea(platformRenderArea);
+		super.setDisplayRenderArea(platformRenderArea);
 	}
 }

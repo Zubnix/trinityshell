@@ -20,8 +20,8 @@ import org.trinity.foundation.input.api.KeyboardInput;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.core.api.ShellRenderArea;
-import org.trinity.shell.geo.api.ShellGeoExecutor;
+import org.trinity.shell.core.api.ShellSurface;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.input.api.KeyInputStringBuilder;
 import org.trinity.shell.widget.api.ShellKeyDrivenMenu;
 import org.trinity.shell.widget.api.view.ShellKeyDrivenMenuView;
@@ -45,28 +45,28 @@ public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl
 	private final ShellKeyDrivenMenuView view;
 	private final List<String> filteredChoices = new ArrayList<String>(25);
 	private final Keyboard keyboard;
-	private final ShellRenderArea root;
+	private final ShellSurface root;
 	private final KeyInputStringBuilder keyInputStringBuilder;
 
 	private int activeChoiceIdx = 0;
 
-	private final EventBus displayEventBus;
+	private final EventBus shellEventBus;
 
 	protected AbstractShellKeyDrivenMenu(	final EventBus shellEventBus,
 											final EventBus nodeEventBus,
 											final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 											final PainterFactory painterFactory,
-											final ShellGeoExecutor shellGeoExecutor,
+											final ShellNodeExecutor shellNodeExecutor,
 											final Keyboard keyboard,
-											final ShellRenderArea root,
+											final ShellSurface root,
 											final KeyInputStringBuilder keyInputStringBuilder,
 											final ShellKeyDrivenMenuView view) {
 		super(	nodeEventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellGeoExecutor,
+				shellNodeExecutor,
 				view);
-		this.displayEventBus = shellEventBus;
+		this.shellEventBus = shellEventBus;
 		this.view = view;
 		this.keyboard = keyboard;
 		this.root = root;
@@ -221,7 +221,7 @@ public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl
 
 	@Override
 	public void activate() {
-		this.displayEventBus.register(this);
+		this.shellEventBus.register(this);
 		this.root.getDisplayRenderArea().grabKeyboard();
 		this.view.activate();
 	}
@@ -230,7 +230,7 @@ public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl
 	public void deactivate() {
 		// release root?
 		this.root.getDisplayRenderArea().ungrabKeyboard();
-		this.displayEventBus.unregister(this);
+		this.shellEventBus.unregister(this);
 		this.view.deactivate();
 	}
 

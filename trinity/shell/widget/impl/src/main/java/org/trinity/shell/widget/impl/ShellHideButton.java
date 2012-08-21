@@ -15,8 +15,8 @@ import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.geo.api.ShellGeoExecutor;
-import org.trinity.shell.geo.api.ShellGeoNode;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
+import org.trinity.shell.geo.api.ShellNode;
 import org.trinity.shell.widget.api.view.ShellButtonView;
 
 import com.google.common.eventbus.EventBus;
@@ -29,8 +29,8 @@ import de.devsurf.injection.guice.annotations.Bind;
 // TODO create abstract push button class
 /**
  * A <code>HideButton</code> can hide (unmap) another target
- * <code>ShellGeoNode</code>. The target is specified by a call to
- * {@link ShellHideButton#setTargetRenderArea(ShellGeoNode)}. A hide is
+ * <code>ShellNode</code>. The target is specified by a call to
+ * {@link ShellHideButton#setTargetRenderArea(ShellNode)}. A hide is
  * initiated when a (any) mouse button is pressed on the <code>HideButton</code>
  * . This behaviour can be changed by overriding the
  * {@link ShellHideButton#onMouseInput(BaseMouseInput)} method.
@@ -41,7 +41,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 public class ShellHideButton extends ShellButton {
 
-	private ShellGeoNode client;
+	private ShellNode client;
 
 	/*****************************************
 	 * @param painterFactory
@@ -51,12 +51,12 @@ public class ShellHideButton extends ShellButton {
 	protected ShellHideButton(	final EventBus eventBus,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
+								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								final ShellButtonView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellGeoExecutor,
+				shellNodeExecutor,
 				view);
 	}
 
@@ -67,11 +67,11 @@ public class ShellHideButton extends ShellButton {
 		}
 	}
 
-	public ShellGeoNode getClient() {
+	public ShellNode getClient() {
 		return this.client;
 	}
 
-	public void setClient(final ShellGeoNode client) {
+	public void setClient(final ShellNode client) {
 		this.client = client;
 	}
 

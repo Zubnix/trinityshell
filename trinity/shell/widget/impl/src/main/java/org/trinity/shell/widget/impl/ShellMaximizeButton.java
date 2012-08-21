@@ -16,8 +16,8 @@ import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.geo.api.ShellGeoExecutor;
-import org.trinity.shell.geo.api.ShellGeoNode;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
+import org.trinity.shell.geo.api.ShellNode;
 import org.trinity.shell.widget.api.view.ShellButtonView;
 
 import com.google.common.eventbus.EventBus;
@@ -32,7 +32,7 @@ import com.google.inject.name.Named;
  */
 public class ShellMaximizeButton extends ShellButton {
 
-	private ShellGeoNode client;
+	private ShellNode client;
 	private Rectangle maximize;
 
 	private int oldRelX;
@@ -45,12 +45,12 @@ public class ShellMaximizeButton extends ShellButton {
 	protected ShellMaximizeButton(	final EventBus eventBus,
 									final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 									final PainterFactory painterFactory,
-									@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
+									@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 									final ShellButtonView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellGeoExecutor,
+				shellNodeExecutor,
 				view);
 	}
 
@@ -65,7 +65,7 @@ public class ShellMaximizeButton extends ShellButton {
 		}
 	}
 
-	public ShellGeoNode getClient() {
+	public ShellNode getClient() {
 		return this.client;
 	}
 
@@ -98,7 +98,7 @@ public class ShellMaximizeButton extends ShellButton {
 		this.maximized = false;
 	}
 
-	public void setClient(final ShellGeoNode client) {
+	public void setClient(final ShellNode client) {
 		this.client = client;
 	}
 

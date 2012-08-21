@@ -66,6 +66,8 @@ public class ConfigureRequestConversion implements XEventConversion {
 		final boolean configureHeight = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT
 				.swigValue()) != 0;
 
+		displayEventSource.configureClientEvents();
+
 		final DisplayEvent displayEvent = new GeometryRequestEvent(	displayEventSource,
 																	geometry,
 																	configureX,

@@ -13,7 +13,7 @@ package org.trinity.shell.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.geo.api.ShellGeoExecutor;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.widget.api.ShellLabel;
 import org.trinity.shell.widget.api.view.ShellLabelView;
 
@@ -38,12 +38,12 @@ public class ShellLabelImpl extends ShellWidgetImpl implements ShellLabel {
 	protected ShellLabelImpl(	final EventBus eventBus,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("shellWidgetGeoExecutor") final ShellGeoExecutor shellGeoExecutor,
+								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								final ShellLabelView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellGeoExecutor,
+				shellNodeExecutor,
 				view);
 		this.view = view;
 	}

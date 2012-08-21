@@ -1,9 +1,9 @@
 package org.trinity.shell.widget.api.view;
 
-import org.trinity.shell.core.api.ShellRenderArea;
+import org.trinity.shell.core.api.ShellSurface;
 
 public interface ShellClientManagerView extends ShellWidgetView {
-	void addClient(ShellRenderArea client);
+	void addClient(ShellSurface client);
 
-	void removeClient(ShellRenderArea client);
+	void removeClient(ShellSurface client);
 }

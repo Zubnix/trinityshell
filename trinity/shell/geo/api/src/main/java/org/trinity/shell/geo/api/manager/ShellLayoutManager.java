@@ -2,26 +2,26 @@ package org.trinity.shell.geo.api.manager;
 
 import java.util.List;
 
-import org.trinity.shell.geo.api.ShellGeoNode;
+import org.trinity.shell.geo.api.ShellNode;
 
 public interface ShellLayoutManager {
 
-	ShellGeoNode getLayoutContainer();
+	ShellNode getLayoutContainer();
 
-	void setLayoutContainer(ShellGeoNode layoutContainer);
+	void setLayoutContainer(ShellNode layoutContainer);
 
-	void addChild(ShellGeoNode child);
+	void addChild(ShellNode child);
 
-	void addChild(	final ShellGeoNode child,
+	void addChild(	final ShellNode child,
 					final ShellLayoutProperty layoutProperty);
 
-	ShellLayoutProperty getLayoutProperty(final ShellGeoNode child);
+	ShellLayoutProperty getLayoutProperty(final ShellNode child);
 
-	ShellGeoNode getChild(final int index);
+	ShellNode getChild(final int index);
 
-	List<ShellGeoNode> getChildren();
+	List<ShellNode> getChildren();
 
-	void removeChild(final ShellGeoNode child);
+	void removeChild(final ShellNode child);
 
 	void removeChild(final int index);
 

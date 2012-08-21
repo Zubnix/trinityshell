@@ -45,6 +45,8 @@ public class MapRequestConversion implements XEventConversion {
 		final XWindow displayEventSource = this.xWindowCache
 				.getWindow(windowId);
 
+		displayEventSource.configureClientEvents();
+
 		final DisplayEvent displayEvent = new ShowRequestEvent(displayEventSource);
 
 		return displayEvent;

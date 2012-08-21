@@ -13,8 +13,8 @@ package org.trinity.shell.widget.api;
 
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.render.api.PaintableRenderNode;
-import org.trinity.shell.core.api.ShellRenderArea;
+import org.trinity.shell.core.api.ShellSurface;
 
 public interface ShellWidget extends PaintableRenderNode, DisplayEventSource,
-		ShellRenderArea {
+		ShellSurface {
 }
