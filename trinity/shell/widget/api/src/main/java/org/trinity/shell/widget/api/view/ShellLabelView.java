@@ -1,5 +1,7 @@
 package org.trinity.shell.widget.api.view;
 
+import java.util.concurrent.Future;
+
 public interface ShellLabelView extends ShellWidgetView {
-	void update(String text);
+	Future<Void> update(String text);
 }

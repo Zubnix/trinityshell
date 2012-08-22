@@ -1,15 +1,16 @@
 package org.trinity.shell.widget.api.view;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 public interface ShellKeyDrivenMenuView extends ShellWidgetView {
-	void clear();
+	Future<Void> clear();
 
-	void activate();
+	Future<Void> activate();
 
-	void deactivate();
+	Future<Void> deactivate();
 
-	void update(String input,
-				List<String> filteredChoices,
-				int activeChoiceIdx);
+	Future<Void> update(String input,
+						List<String> filteredChoices,
+						int activeChoiceIdx);
 }

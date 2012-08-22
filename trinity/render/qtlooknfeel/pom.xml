@@ -2,18 +2,16 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>trinity</artifactId>
-		<groupId>org.trinity.root</groupId>
+		<groupId>org.trinity.render</groupId>
+		<artifactId>render</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.trinity.render</groupId>
-	<artifactId>render</artifactId>
-	<name>Render</name>
+	<artifactId>render.qtlooknfeel</artifactId>
+	<name>Render Qt Look and Feel</name>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>qt</module>
-		<module>qtlooknfeel</module>
+		<module>impl</module>
 	</modules>
 </project>

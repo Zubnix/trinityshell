@@ -1,7 +1,9 @@
 package org.trinity.shell.widget.api.view;
 
-public interface ShellButtonView extends ShellWidgetView {
-	void pressed();
+import java.util.concurrent.Future;
 
-	void released();
+public interface ShellButtonView extends ShellWidgetView {
+	Future<Void> pressed();
+
+	Future<Void> released();
 }

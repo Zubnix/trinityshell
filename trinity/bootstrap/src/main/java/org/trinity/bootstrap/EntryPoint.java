@@ -18,6 +18,7 @@ public class EntryPoint {
 	public EntryPoint(final String[] args) {
 
 		// TODO command line args parsing
+
 		final Injector injector = Guice.createInjector(StartupModule
 				.create(ASMClasspathScanner.class,
 						PackageFilter.create("org.trinity")));
