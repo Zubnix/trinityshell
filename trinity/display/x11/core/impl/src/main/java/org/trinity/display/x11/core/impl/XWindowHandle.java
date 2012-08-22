@@ -25,16 +25,16 @@ public class XWindowHandle implements DisplaySurfaceHandle {
 	}
 
 	@Override
-	public int hashCode() {
-		return getNativeHandle().hashCode();
+	public boolean equals(final Object obj) {
+		if (obj instanceof DisplaySurfaceHandle) {
+			final DisplaySurfaceHandle otherObj = (DisplaySurfaceHandle) obj;
+			return otherObj.getNativeHandle().equals(getNativeHandle());
+		}
+		return false;
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
-		if (obj instanceof XWindowHandle) {
-			final XWindowHandle otherXResourceHandle = (XWindowHandle) obj;
-			return otherXResourceHandle.getNativeHandle() == getNativeHandle();
-		}
-		return false;
+	public int hashCode() {
+		return getNativeHandle().hashCode();
 	}
 }

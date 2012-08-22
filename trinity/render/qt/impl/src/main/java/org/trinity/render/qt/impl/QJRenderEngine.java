@@ -123,9 +123,8 @@ public class QJRenderEngine extends QApplication implements
 		return futureTask;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T extends QWidget> T getVisual(final PaintableRenderNode paintableRenderNode) {
-		return (T) this.paintableToPaintPeer.get(paintableRenderNode);
+	public QWidget getVisual(final PaintableRenderNode paintableRenderNode) {
+		return this.paintableToPaintPeer.get(paintableRenderNode);
 	}
 
 	public DisplaySurfaceHandle putVisual(	final DisplayEventSource displayEventSource,
