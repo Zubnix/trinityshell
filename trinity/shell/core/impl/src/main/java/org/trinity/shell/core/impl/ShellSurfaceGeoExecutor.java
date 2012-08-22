@@ -16,8 +16,8 @@ import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.shell.core.api.ShellSurface;
 import org.trinity.shell.geo.api.AbstractShellNodeExecutor;
-import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.geo.api.ShellNode;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.geo.api.ShellNodeTransformation;
 
 import com.google.inject.Inject;
@@ -37,7 +37,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
  * @since 1.0
  * @see ShellNodeExecutor
  */
-@Bind(value = @Named("ShellSurfaceGeoExecutor"), to = @To(value = Type.CUSTOM, customs = ShellNodeExecutor.class))
+@Bind(value = @Named("shellSurfaceGeoExecutor"), to = @To(value = Type.CUSTOM, customs = ShellNodeExecutor.class))
 @Singleton
 public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 
@@ -55,8 +55,7 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 
 	@SuppressWarnings("unchecked")
 	protected <T extends DisplayArea> DisplayAreaManipulator<T> getAreaManipulator(final ShellSurface shellSurface) {
-		return (DisplayAreaManipulator<T>) shellSurface
-				.getDisplayRenderArea();
+		return (DisplayAreaManipulator<T>) shellSurface.getDisplayRenderArea();
 	}
 
 	protected boolean isAreaInitialized(final ShellSurface shellSurface) {
@@ -81,8 +80,7 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 
 			final int newRelativeX = newRelativePosition.getX();
 			final int newRelativeY = newRelativePosition.getY();
-			this.getAreaManipulator(shellNode).move(	newRelativeX,
-														newRelativeY);
+			this.getAreaManipulator(shellNode).move(newRelativeX, newRelativeY);
 		}
 	}
 
@@ -176,8 +174,7 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 	}
 
 	@Override
-	public void reparent(	final ShellNode shellNode,
-							final ShellNode parent) {
+	public void reparent(final ShellNode shellNode, final ShellNode parent) {
 		final ShellSurface currentRenderArea = (ShellSurface) shellNode;
 		final ShellNode newParent = parent;
 		final ShellSurface newParentRenderArea = findClosestSameTypeArea(newParent);
@@ -239,8 +236,8 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 	 * from the given square.
 	 * 
 	 * @param square
-	 *            The {@link ShellNode} to start searching from upwards in
-	 *            the tree hierarchy.
+	 *            The {@link ShellNode} to start searching from upwards in the
+	 *            tree hierarchy.
 	 * @return The closest parent with type {@link ShellSurface}.
 	 */
 	protected ShellSurface findClosestSameTypeArea(final ShellNode square) {

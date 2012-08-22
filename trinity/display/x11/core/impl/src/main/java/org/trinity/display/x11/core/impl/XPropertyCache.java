@@ -19,6 +19,7 @@ import xcbjb.xcb_property_notify_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
@@ -39,6 +40,7 @@ public class XPropertyCache {
 	private final XWindowCache windowCache;
 	private final XAtomCache atomCache;
 
+	@Inject
 	XPropertyCache(	final XConnection xConnection,
 					@Named("xEventBus") final EventBus xEventBus,
 					final XWindowCache windowCache,

@@ -41,7 +41,7 @@ public final class ShellVRoot extends ShellWidgetImpl {
 	protected ShellVRoot(	final EventBus eventBus,
 							final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 							final PainterFactory painterFactory,
-							@Named("ShellWidget") final ShellNodeExecutor shellNodeExecutor,
+							@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 							@Named("shellRootRenderArea") final ShellSurface root,
 							final ShellWidgetView view) {
 		super(	eventBus,

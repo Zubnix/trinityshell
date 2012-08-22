@@ -23,6 +23,6 @@ public class Module extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(EventBus.class).annotatedWith(Names.named("shellEventBus"))
-				.asEagerSingleton();
+				.toInstance(new EventBus());
 	}
 }

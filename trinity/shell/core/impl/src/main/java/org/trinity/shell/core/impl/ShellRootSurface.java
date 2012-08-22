@@ -22,7 +22,7 @@ public class ShellRootSurface extends AbstractShellSurface {
 	private final ShellNodeExecutor shellNodeExecutor;
 
 	@Inject
-	ShellRootSurface(@Named("shellRenderAreaGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
+	ShellRootSurface(	@Named("shellSurfaceGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 						final DisplayServer displayServer,
 						final EventBus nodeEventBus,
 						final ShellDisplayEventDispatcher shellDisplayEventDispatcher) {

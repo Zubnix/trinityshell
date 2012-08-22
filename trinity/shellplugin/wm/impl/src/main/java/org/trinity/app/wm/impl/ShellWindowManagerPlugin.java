@@ -13,14 +13,13 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
-public class WindowManager implements ShellPlugin {
+public class ShellWindowManagerPlugin implements ShellPlugin {
 
 	private final EventBus shellEventBus;
 
 	@Inject
-	WindowManager(@Named("shellEventBus") final EventBus shellEventBus) {
+	ShellWindowManagerPlugin(@Named("shellEventBus") final EventBus shellEventBus) {
 		this.shellEventBus = shellEventBus;
-
 	}
 
 	@Subscribe

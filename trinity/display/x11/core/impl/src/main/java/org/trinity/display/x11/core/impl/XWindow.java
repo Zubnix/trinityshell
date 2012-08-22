@@ -42,7 +42,6 @@ import xcbjb.xcb_translate_coordinates_reply_t;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 
 public class XWindow implements DisplaySurface {
 
@@ -51,7 +50,6 @@ public class XWindow implements DisplaySurface {
 	private final XTime xTime;
 
 	@Inject
-	@AssistedInject
 	XWindow(final XTime xTime,
 			final XConnection xConnection,
 			@Assisted final DisplaySurfaceHandle resourceHandle) {

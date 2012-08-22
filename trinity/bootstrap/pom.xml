@@ -1,0 +1,117 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>trinity</artifactId>
+		<groupId>org.trinity.root</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<groupId>org.trinity.bootstrap</groupId>
+	<artifactId>bootstrap</artifactId>
+	<name>Trinitry Bootstrap</name>
+
+	<dependencies>
+		<!-- foundation -->
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.display.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.render.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.input.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- display -->
+		<dependency>
+			<groupId>org.trinity.display.x11</groupId>
+			<artifactId>display.x11.core.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+
+		<!-- render -->
+		<dependency>
+			<groupId>org.trinity.render</groupId>
+			<artifactId>render.qt.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.render</groupId>
+			<artifactId>render.qt.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- shell -->
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.core.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.core.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.geo.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.geo.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.input.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.input.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.widget.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.widget.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- shellplugin -->
+		<dependency>
+			<groupId>org.trinity.shellplugin</groupId>
+			<artifactId>shellplugin.wm.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shellplugin</groupId>
+			<artifactId>shellplugin.wm.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- classpath scanner -->
+		<dependency>
+			<groupId>de.devsurf.injection.guice.scanner</groupId>
+			<artifactId>
+				de.devsurf.injection.guice.scanner.asm
+			</artifactId>
+			<version>0.8.7</version>
+		</dependency>
+	</dependencies>
+</project>

@@ -18,15 +18,15 @@ public class Module extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(EventBus.class).annotatedWith(Names.named("xEventBus"))
-				.asEagerSingleton();
+				.toInstance(new EventBus());
 		bind(EventBus.class).annotatedWith(Names.named("displayEventBus"))
-				.asEagerSingleton();
+				.toInstance(new EventBus());
 
-		install(new FactoryModuleBuilder()
-				.implement(DisplaySurface.class, XWindow.class)
+		install(new FactoryModuleBuilder().implement(	DisplaySurface.class,
+														XWindow.class)
 				.build(DisplaySurfaceFactory.class));
-		install(new FactoryModuleBuilder().implement(	DisplaySurfaceHandle.class,
-														XWindowHandle.class)
+		install(new FactoryModuleBuilder()
+				.implement(DisplaySurfaceHandle.class, XWindowHandle.class)
 				.build(DisplaySurfaceHandleFactory.class));
 	}
 }

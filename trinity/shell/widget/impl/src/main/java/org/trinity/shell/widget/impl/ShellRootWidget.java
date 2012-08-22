@@ -28,11 +28,10 @@ import de.devsurf.injection.guice.annotations.Bind;
 // TODO implement resizing+moving? (with XRANDR extension in x11)
 /**
  * A <code>RealRoot</code> represents a <code>ShellWidget</code> that is backed
- * by the native root window. It is the base of the <code>ShellNode</code>
- * tree hierarchy for a <code>ManagedDisplay</code>. Multiple
- * <code>RealRoot</code> widgets can be constructed from the same
- * <code>ManagedDisplay</code> but will represent the same on-screen drawable,
- * it is thus recommended to use the
+ * by the native root window. It is the base of the <code>ShellNode</code> tree
+ * hierarchy for a <code>ManagedDisplay</code>. Multiple <code>RealRoot</code>
+ * widgets can be constructed from the same <code>ManagedDisplay</code> but will
+ * represent the same on-screen drawable, it is thus recommended to use the
  * {@link ShellDisplay#getRealRootRenderArea()} method to reference the real
  * root.
  * 
@@ -47,7 +46,7 @@ public final class ShellRootWidget extends ShellWidgetImpl {
 	protected ShellRootWidget(	final EventBus eventBus,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("ShellWidget") final ShellNodeExecutor shellNodeExecutor,
+								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								final ShellRootView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
