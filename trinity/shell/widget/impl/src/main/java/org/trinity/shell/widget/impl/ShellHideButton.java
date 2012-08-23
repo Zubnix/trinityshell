@@ -15,9 +15,9 @@ import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.geo.api.ShellNode;
-import org.trinity.shell.widget.api.view.ShellButtonView;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
+import org.trinity.shell.widget.api.view.ShellWidgetView;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -30,9 +30,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 /**
  * A <code>HideButton</code> can hide (unmap) another target
  * <code>ShellNode</code>. The target is specified by a call to
- * {@link ShellHideButton#setTargetRenderArea(ShellNode)}. A hide is
- * initiated when a (any) mouse button is pressed on the <code>HideButton</code>
- * . This behaviour can be changed by overriding the
+ * {@link ShellHideButton#setTargetRenderArea(ShellNode)}. A hide is initiated
+ * when a (any) mouse button is pressed on the <code>HideButton</code> . This
+ * behaviour can be changed by overriding the
  * {@link ShellHideButton#onMouseInput(BaseMouseInput)} method.
  * 
  * @author Erik De Rijcke
@@ -52,7 +52,7 @@ public class ShellHideButton extends ShellButton {
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
 								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
-								final ShellButtonView view) {
+								final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,

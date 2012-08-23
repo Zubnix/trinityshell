@@ -19,7 +19,7 @@ import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
 import org.trinity.shell.core.api.ShellSurface;
 import org.trinity.shell.geo.api.ShellNodeExecutor;
-import org.trinity.shell.widget.api.view.ShellButtonView;
+import org.trinity.shell.widget.api.view.ShellWidgetView;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -35,13 +35,13 @@ import de.devsurf.injection.guice.annotations.Bind;
  * <p>
  * In case that the target <code>AbstractShellSurface</code> is a
  * <code>ShellClientSurface</code>, the <code>CloseButton</code> will ask the
- * <code>ShellClientSurface</code> to shut down itself. This does not guaranty that the
- * <code>ShellClientSurface</code> will actually shut down since most
- * <code>ShellClientSurface</code>s will present the user with a dialog to confirm if
- * the <code>ShellClientSurface</code> should shut down.
+ * <code>ShellClientSurface</code> to shut down itself. This does not guaranty
+ * that the <code>ShellClientSurface</code> will actually shut down since most
+ * <code>ShellClientSurface</code>s will present the user with a dialog to
+ * confirm if the <code>ShellClientSurface</code> should shut down.
  * <p>
- * If the <code>AbstractShellSurface</code> is a <code>ShellWidget</code>,
- * the <code>AbstractShellSurface</code> will simply be destroyed or other as
+ * If the <code>AbstractShellSurface</code> is a <code>ShellWidget</code>, the
+ * <code>AbstractShellSurface</code> will simply be destroyed or other as
  * defined by the <code>ShellLayoutManager</code> of the
  * <code>ShellWidget</code>.
  * 
@@ -60,7 +60,7 @@ public class ShellCloseButton extends ShellButton {
 								final PainterFactory painterFactory,
 								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								final DisplayProtocols desktopProtocol,
-								final ShellButtonView view) {
+								final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,

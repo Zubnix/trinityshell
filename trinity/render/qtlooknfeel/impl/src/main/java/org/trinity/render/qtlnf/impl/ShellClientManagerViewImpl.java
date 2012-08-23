@@ -13,7 +13,8 @@ import com.google.inject.Inject;
 import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
-public class ShellClientManagerViewImpl implements ShellClientManagerView {
+public class ShellClientManagerViewImpl extends ShellWidgetViewImpl implements
+		ShellClientManagerView {
 
 	private final DisplaySurfaceFactory displaySurfaceFactory;
 
@@ -21,30 +22,31 @@ public class ShellClientManagerViewImpl implements ShellClientManagerView {
 
 	@Inject
 	ShellClientManagerViewImpl(final DisplaySurfaceFactory displaySurfaceFactory) {
+		super(displaySurfaceFactory);
 		this.displaySurfaceFactory = displaySurfaceFactory;
 	}
 
 	@Override
 	public Future<DisplaySurface> create(final Painter painter) {
 		this.painter = painter;
+		return super.create(painter);
 	}
 
 	@Override
 	public Future<Void> destroy() {
 		// TODO Auto-generated method stub
-
+		return super.destroy();
 	}
 
 	@Override
 	public Future<Void> addClient(final ShellSurface client) {
-		// TODO Auto-generated method stub
+		return null;
 
 	}
 
 	@Override
 	public Future<Void> removeClient(final ShellSurface client) {
-		// TODO Auto-generated method stub
-
+		return null;
 	}
 
 }

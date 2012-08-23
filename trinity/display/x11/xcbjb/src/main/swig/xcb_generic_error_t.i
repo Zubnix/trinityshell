@@ -21,7 +21,7 @@
 %}
 %typemap(argout) xcb_generic_error_t ** {
   // Give Java proxy the C pointer (of newly created object)
-  jclass clazz = (*jenv)->FindClass(jenv, "xcb_generic_error_t");
+  jclass clazz = (*jenv)->FindClass(jenv, "xcbjb/xcb_generic_error_t");
   jfieldID fid = (*jenv)->GetFieldID(jenv, clazz, "swigCPtr", "J");
   jlong cPtr = 0;
   *(xcb_generic_error_t **)&cPtr = *$1;

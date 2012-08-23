@@ -51,6 +51,13 @@
 			<version>${project.version}</version>
 		</dependency>
 
+		<!-- render look and feel -->
+		<dependency>
+			<groupId>org.trinity.render</groupId>
+			<artifactId>render.qtlooknfeel.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 		<!-- shell -->
 		<dependency>
 			<groupId>org.trinity.shell</groupId>
@@ -105,7 +112,7 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<!-- classpath scanner -->
+		<!-- bootstrap -->
 		<dependency>
 			<groupId>de.devsurf.injection.guice.scanner</groupId>
 			<artifactId>

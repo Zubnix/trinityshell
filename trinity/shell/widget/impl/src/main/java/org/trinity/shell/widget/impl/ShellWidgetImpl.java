@@ -11,6 +11,9 @@
  */
 package org.trinity.shell.widget.impl;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 import javax.swing.text.View;
 
 import org.trinity.foundation.display.api.DisplaySurface;
@@ -19,8 +22,8 @@ import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.AbstractShellSurface;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.geo.api.ShellNode;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.widget.api.ShellWidget;
 import org.trinity.shell.widget.api.view.ShellWidgetView;
 
@@ -32,10 +35,10 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO split into abstract widget & move to api
 /**
- * An <code>AbstractShellSurface</code> with a
- * <code>PaintableRenderNode</code> implementation. A <code>ShellWidget</code>
- * is ment to provide a visual interface for the user so it can manipulate the
- * hyperdrive library at runtime.
+ * An <code>AbstractShellSurface</code> with a <code>PaintableRenderNode</code>
+ * implementation. A <code>ShellWidget</code> is ment to provide a visual
+ * interface for the user so it can manipulate the hyperdrive library at
+ * runtime.
  * <p>
  * A <code>ShellWidget</code> is manipulated through a {@link Painter} that
  * talks to a paint back-end. This is done by the <code>ShellWidget</code>'s
@@ -54,9 +57,9 @@ import de.devsurf.injection.guice.annotations.Bind;
  * <code>getPlatformRenderArea</code> is called. Calls to
  * <code>getPainter</code> will also fail.
  * <p>
- * An initialized <code>ShellWidget</code> will have a {@link DisplaySurface}
- * . This is the native window that the <code>ShellWidget</code> will be draw
- * on. Note that multiple <code>ShellWidget</code>s can share the same
+ * An initialized <code>ShellWidget</code> will have a {@link DisplaySurface} .
+ * This is the native window that the <code>ShellWidget</code> will be draw on.
+ * Note that multiple <code>ShellWidget</code>s can share the same
  * <code>PlatformRenderArea</code>. A <code>ShellWidget</code> who's parent has
  * a different <code>PlatformRenderArea</code>, is called the owner of the
  * <code>PlatformRenderArea</code>. As a consequence the owning
@@ -112,9 +115,24 @@ public class ShellWidgetImpl extends AbstractShellSurface implements
 	 *            data from its paintable parent at the paint back-end level.
 	 */
 	protected void init(final ShellWidget paintableParent) {
-		setDisplaySurface(this.view.create(this));
-		this.shellDisplayEventDispatcher
-				.registerDisplayEventSource(this.eventBus, this);
+		final Future<DisplaySurface> displaySurfaceFuture = this.view
+				.create(getPainter());
+
+		try {
+			this.shellDisplayEventDispatcher
+					.registerDisplayEventSource(this.eventBus, this);
+			final DisplaySurface visualDisplaySurface = displaySurfaceFuture
+					.get();
+			setDisplaySurface(visualDisplaySurface);
+		} catch (final ExecutionException e) {
+			this.shellDisplayEventDispatcher
+					.unregisterDisplayEventSource(this.eventBus, this);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -1,9 +1,11 @@
 package org.trinity.bootstrap;
 
+import xcbcustom.LibXcbLoader;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Stage;
 
-import de.devsurf.injection.guice.DynamicModule;
 import de.devsurf.injection.guice.scanner.PackageFilter;
 import de.devsurf.injection.guice.scanner.StartupModule;
 import de.devsurf.injection.guice.scanner.asm.ASMClasspathScanner;
@@ -12,6 +14,7 @@ public class EntryPoint {
 
 	public static void main(final String[] args) {
 
+		LibXcbLoader.load();
 		new EntryPoint(args);
 	}
 
@@ -19,16 +22,14 @@ public class EntryPoint {
 
 		// TODO command line args parsing
 
-		final Injector injector = Guice.createInjector(StartupModule
-				.create(ASMClasspathScanner.class,
-						PackageFilter.create("org.trinity")));
-		final DynamicModule dynamicModule = injector
-				.getInstance(DynamicModule.class);
-		final Injector annotationBindingsInjector = injector
-				.createChildInjector(dynamicModule);
+		final Injector injector = Guice
+				.createInjector(Stage.PRODUCTION, StartupModule
+						.create(ASMClasspathScanner.class,
+								PackageFilter.create("org.trinity")));
 
-		final ShellPluginsRunner shellPluginsRunner = annotationBindingsInjector
+		final ShellPluginsRunner shellPluginsRunner = injector
 				.getInstance(ShellPluginsRunner.class);
+
 		shellPluginsRunner.startAllShellPlugins();
 	}
 }

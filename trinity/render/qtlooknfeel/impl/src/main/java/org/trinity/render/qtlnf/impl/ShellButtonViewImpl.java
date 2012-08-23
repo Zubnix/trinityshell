@@ -4,18 +4,20 @@ import java.util.concurrent.Future;
 
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.DisplaySurfaceFactory;
+import org.trinity.foundation.display.api.DisplaySurfaceHandle;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
-import org.trinity.shell.widget.api.view.ShellButtonView;
 
 import com.google.inject.Inject;
+import com.trolltech.qt.gui.QPushButton;
+import com.trolltech.qt.gui.QWidget;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
-public class ShellButtonViewImpl implements ShellButtonView {
+public class ShellButtonViewImpl extends ShellWidgetViewImpl {
 
 	private final DisplaySurfaceFactory displaySurfaceFactory;
 
@@ -23,6 +25,7 @@ public class ShellButtonViewImpl implements ShellButtonView {
 
 	@Inject
 	ShellButtonViewImpl(final DisplaySurfaceFactory displaySurfaceFactory) {
+		super(displaySurfaceFactory);
 		this.displaySurfaceFactory = displaySurfaceFactory;
 	}
 
@@ -34,26 +37,17 @@ public class ShellButtonViewImpl implements ShellButtonView {
 					@Override
 					public DisplaySurface call(	final PaintableRenderNode paintableRenderNode,
 												final QJPaintContext paintContext) {
+						final QWidget parent = paintContext
+								.queryVisual(paintableRenderNode
+										.getParentPaintableRenderNode());
+						final QPushButton visual = new QPushButton(parent);
+
+						final DisplaySurfaceHandle displaySurfaceHandle = paintContext
+								.getDisplaySurfaceHandle(visual);
+						final DisplaySurface visualDisplaySurface = ShellButtonViewImpl.this.displaySurfaceFactory
+								.createDisplaySurface(displaySurfaceHandle);
+						return visualDisplaySurface;
 					}
 				});
 	}
-
-	@Override
-	public Future<Void> destroy() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Future<Void> pressed() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Future<Void> released() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

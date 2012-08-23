@@ -44,7 +44,7 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 						final QWidget visual = new QWidget(parentVisual);
 
 						final DisplaySurfaceHandle visualDisplaySurfaceHandle = paintContext
-								.createDisplaySurfaceHandle(visual);
+								.getDisplaySurfaceHandle(visual);
 
 						final DisplaySurface displaySurface = ShellWidgetViewImpl.this.displaySurfaceFactory
 								.createDisplaySurface(visualDisplaySurfaceHandle);

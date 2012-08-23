@@ -13,5 +13,5 @@ public interface QJPaintContext extends PaintContext {
 
 	QWidget queryVisual(PaintableRenderNode paintableRenderNode);
 
-	DisplaySurfaceHandle createDisplaySurfaceHandle(QWidget visual);
+	DisplaySurfaceHandle getDisplaySurfaceHandle(QWidget visual);
 }
