@@ -18,8 +18,8 @@ import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.shell.core.api.ShellSurface;
 import org.trinity.shell.core.impl.ShellSurfaceGeoExecutor;
-import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.geo.api.ShellNode;
+import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.widget.api.ShellWidget;
 
 import com.google.inject.Inject;
@@ -47,16 +47,14 @@ public class ShellWidgetGeoExecutor extends ShellSurfaceGeoExecutor {
 	}
 
 	@Override
-	public DisplayAreaManipulator<DisplayArea> getAreaManipulator(final ShellNode shellNode) {
-		return getAreaManipulator(shellNode);
+	public DisplayAreaManipulator<DisplayArea> getShellNodeManipulator(final ShellNode shellNode) {
+		return getAreaManipulator((ShellSurface) shellNode);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected <T extends DisplayArea> DisplayAreaManipulator<T> getAreaManipulator(final ShellSurface shellSurface) {
-		DisplayAreaManipulator<T> manip = null;
-		manip = (DisplayAreaManipulator<T>) ((ShellWidget) shellSurface)
-				.getPainter();
+		final DisplayAreaManipulator<T> manip = (DisplayAreaManipulator<T>) ((ShellWidget) shellSurface).getPainter();
 		return manip;
 	}
 
@@ -98,22 +96,21 @@ public class ShellWidgetGeoExecutor extends ShellSurfaceGeoExecutor {
 							final ShellNode parent) {
 		final ShellWidgetImpl shellWidgetImpl = (ShellWidgetImpl) shellNode;
 		// reparent the widget
-		super.reparent(shellNode, parent);
+		super.reparent(	shellNode,
+						parent);
 
 		// If the old parent is null, we don't need to update the platform
 		// render area.
 		if (shellNode.toGeoTransformation().getParent0() != null) {
-			final DisplaySurface parentPlatformRenderArea = shellWidgetImpl
-					.getParentPaintableRenderNode().getDisplayRenderArea();
-			final DisplaySurface platformRenderArea = shellWidgetImpl
+			final DisplaySurface parentPlatformRenderArea = shellWidgetImpl.getParentPaintableRenderNode()
 					.getDisplayRenderArea();
+			final DisplaySurface platformRenderArea = shellWidgetImpl.getDisplayRenderArea();
 
 			if (parentPlatformRenderArea.equals(platformRenderArea)) {
 				// we need to update the widget's platform render area
-				final DisplaySurface newParentPlatformRenderArea = shellWidgetImpl
-						.getParentPaintableRenderNode().getDisplayRenderArea();
-				shellWidgetImpl
-						.setDisplaySurface(newParentPlatformRenderArea);
+				final DisplaySurface newParentPlatformRenderArea = shellWidgetImpl.getParentPaintableRenderNode()
+						.getDisplayRenderArea();
+				shellWidgetImpl.setDisplaySurface(newParentPlatformRenderArea);
 			}
 		}
 	}

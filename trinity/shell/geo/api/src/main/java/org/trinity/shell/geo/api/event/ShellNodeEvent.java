@@ -19,8 +19,7 @@ public class ShellNodeEvent {
 	private final ShellNode shellNode;
 	private final ShellNodeTransformation shellNodeTransformation;
 
-	public ShellNodeEvent(final ShellNode shellNode,
-					final ShellNodeTransformation shellNodeTransformation) {
+	public ShellNodeEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
 		this.shellNode = shellNode;
 		this.shellNodeTransformation = shellNodeTransformation;
 	}

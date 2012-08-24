@@ -37,20 +37,17 @@ public class KeyPressConversion implements XEventConversion {
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_key_press_event_t key_press_event_t = new xcb_key_press_event_t(	xcb_generic_event_t
-																							.getCPtr(event_t),
+		final xcb_key_press_event_t key_press_event_t = new xcb_key_press_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																					true);
 		this.xEventBus.post(key_press_event_t);
 
 		final int windowId = key_press_event_t.getEvent();
-		final XWindow displayEventSource = this.xWindowCache
-				.getWindow(windowId);
+		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int keyCode = key_press_event_t.getDetail();
 		final Key key = new Key(keyCode);
 
-		final InputModifiers inputModifiers = new InputModifiers(key_press_event_t
-				.getState());
+		final InputModifiers inputModifiers = new InputModifiers(key_press_event_t.getState());
 
 		final KeyboardInput input = new KeyboardInput(	Momentum.STARTED,
 														key,

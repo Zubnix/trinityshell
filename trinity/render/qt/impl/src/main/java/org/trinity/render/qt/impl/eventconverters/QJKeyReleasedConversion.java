@@ -60,7 +60,8 @@ public class QJKeyReleasedConversion implements QJRenderEventConversion {
 														key,
 														inputModifiers);
 
-		return new KeyNotifyEvent(source, input);
+		return new KeyNotifyEvent(	source,
+									input);
 	}
 
 	@Override

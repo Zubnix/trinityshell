@@ -40,8 +40,7 @@ public class ButtonReleaseConversion implements XEventConversion {
 	private final EventBus xEventBus;
 
 	@Inject
-	ButtonReleaseConversion(final XWindowCache windowCache,
-							@Named("xEventBus") final EventBus xEventBus) {
+	ButtonReleaseConversion(final XWindowCache windowCache, @Named("xEventBus") final EventBus xEventBus) {
 		this.windowCache = windowCache;
 		this.xEventBus = xEventBus;
 	}
@@ -50,8 +49,7 @@ public class ButtonReleaseConversion implements XEventConversion {
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
 		// press has same structure as release
-		final xcb_button_press_event_t button_release_event_t = new xcb_button_press_event_t(	xcb_generic_event_t
-																										.getCPtr(event_t),
+		final xcb_button_press_event_t button_release_event_t = new xcb_button_press_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																								true);
 		this.xEventBus.post(button_release_event_t);
 

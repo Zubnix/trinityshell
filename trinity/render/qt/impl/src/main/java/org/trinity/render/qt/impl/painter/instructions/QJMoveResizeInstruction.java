@@ -15,18 +15,14 @@ import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
 
-public class QJMoveResizeInstruction implements
-		PaintInstruction<Void, QJPaintContext> {
+public class QJMoveResizeInstruction implements PaintInstruction<Void, QJPaintContext> {
 
 	private final int x;
 	private final int y;
 	private final int width;
 	private final int height;
 
-	public QJMoveResizeInstruction(	final int x,
-									final int y,
-									final int width,
-									final int height) {
+	public QJMoveResizeInstruction(final int x, final int y, final int width, final int height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;

@@ -21,15 +21,13 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class CirculateNotifyConversion implements XEventConversion {
 
-	private final Integer eventCode = Integer
-			.valueOf(LibXcb.XCB_CIRCULATE_NOTIFY);
+	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_CIRCULATE_NOTIFY);
 
 	private final EventBus xEventBus;
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	CirculateNotifyConversion(	@Named("xEventBus") final EventBus xEventBus,
-								final XWindowCache xWindowCache) {
+	CirculateNotifyConversion(@Named("xEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -43,8 +41,7 @@ public class CirculateNotifyConversion implements XEventConversion {
 		this.xEventBus.post(circulate_notify_event_t);
 
 		final int windowId = circulate_notify_event_t.getEvent();
-		final XWindow displayEventSource = this.xWindowCache
-				.getWindow(windowId);
+		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final DisplayEvent displayEvent = new StackingChangedNotifyEvent(displayEventSource);
 

@@ -31,8 +31,7 @@ public class KeyReleaseConversion implements XEventConversion {
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	KeyReleaseConversion(	@Named("xEventBus") final EventBus xEventBus,
-							final XWindowCache xWindowCache) {
+	KeyReleaseConversion(@Named("xEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -41,14 +40,12 @@ public class KeyReleaseConversion implements XEventConversion {
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
 		// press has same structure as release.
-		final xcb_key_press_event_t press_event_t = new xcb_key_press_event_t(	xcb_generic_event_t
-																						.getCPtr(event_t),
+		final xcb_key_press_event_t press_event_t = new xcb_key_press_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																				true);
 		this.xEventBus.post(press_event_t);
 
 		final int windowId = press_event_t.getEvent();
-		final XWindow displayEventSource = this.xWindowCache
-				.getWindow(windowId);
+		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int keyCode = press_event_t.getDetail();
 		final Key key = new Key(keyCode);

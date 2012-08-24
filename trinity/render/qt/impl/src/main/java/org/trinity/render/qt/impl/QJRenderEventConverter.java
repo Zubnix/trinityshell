@@ -60,11 +60,10 @@ public class QJRenderEventConverter {
 											final QEvent event) {
 
 		if ((event != null) && (eventSource != null)) {
-			final QJRenderEventConversion eventConverter = this.converterByQEventType
-					.get(event.type());
+			final QJRenderEventConversion eventConverter = this.converterByQEventType.get(event.type());
 			if (eventConverter != null) {
-				final DisplayEvent convertedEvent = eventConverter
-						.convertEvent(eventSource, event);
+				final DisplayEvent convertedEvent = eventConverter.convertEvent(eventSource,
+																				event);
 
 				return convertedEvent;
 			}

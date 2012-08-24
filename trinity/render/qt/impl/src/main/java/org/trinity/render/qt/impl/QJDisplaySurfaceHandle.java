@@ -1,7 +1,12 @@
 package org.trinity.render.qt.impl;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+
 import org.trinity.foundation.display.api.DisplaySurfaceHandle;
 
+import com.trolltech.qt.core.QCoreApplication;
 import com.trolltech.qt.gui.QWidget;
 
 public class QJDisplaySurfaceHandle implements DisplaySurfaceHandle {
@@ -28,7 +33,23 @@ public class QJDisplaySurfaceHandle implements DisplaySurfaceHandle {
 
 	@Override
 	public Integer getNativeHandle() {
-
-		return Integer.valueOf((int) this.visual.effectiveWinId());
+		final FutureTask<Integer> getHandleTask = new FutureTask<Integer>(new Callable<Integer>() {
+			@Override
+			public Integer call() throws Exception {
+				return Integer.valueOf((int) QJDisplaySurfaceHandle.this.visual.effectiveWinId());
+			}
+		});
+		QCoreApplication.invokeLater(getHandleTask);
+		Integer handle = null;
+		try {
+			handle = getHandleTask.get();
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return handle;
 	}
 }

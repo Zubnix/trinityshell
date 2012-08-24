@@ -19,16 +19,13 @@ import org.trinity.render.paintengine.qt.api.QJPaintContext;
 import com.trolltech.qt.core.QPoint;
 import com.trolltech.qt.gui.QWidget;
 
-public class QJTranslateCoordinatesCalculation implements
-		PaintInstruction<Coordinate, QJPaintContext> {
+public class QJTranslateCoordinatesCalculation implements PaintInstruction<Coordinate, QJPaintContext> {
 
 	private final PaintableRenderNode source;
 	private final int sourceX;
 	private final int sourceY;
 
-	public QJTranslateCoordinatesCalculation(	final PaintableRenderNode source,
-												final int sourceX,
-												final int sourceY) {
+	public QJTranslateCoordinatesCalculation(final PaintableRenderNode source, final int sourceX, final int sourceY) {
 
 		this.source = source;
 		this.sourceX = sourceX;
@@ -41,8 +38,9 @@ public class QJTranslateCoordinatesCalculation implements
 		final QWidget sourcePaintPeer = renderEngine.queryVisual(this.source);
 		final QWidget targetPaintPeer = renderEngine.getVisual();
 
-		final QPoint translatedPoint = sourcePaintPeer
-				.mapTo(targetPaintPeer, new QPoint(this.sourceX, this.sourceY));
+		final QPoint translatedPoint = sourcePaintPeer.mapTo(	targetPaintPeer,
+																new QPoint(	this.sourceX,
+																			this.sourceY));
 		final Coordinate coordinate = new Coordinate(	translatedPoint.x(),
 														translatedPoint.y());
 		return coordinate;

@@ -28,8 +28,8 @@ public class KeyNotifyEvent extends InputNotifyEvent<KeyboardInput> {
 	 * @param displayEventSource
 	 * @param input
 	 ****************************************/
-	public KeyNotifyEvent(	final DisplayEventSource displayEventSource,
-							final KeyboardInput input) {
-		super(displayEventSource, input);
+	public KeyNotifyEvent(final DisplayEventSource displayEventSource, final KeyboardInput input) {
+		super(	displayEventSource,
+				input);
 	}
 }

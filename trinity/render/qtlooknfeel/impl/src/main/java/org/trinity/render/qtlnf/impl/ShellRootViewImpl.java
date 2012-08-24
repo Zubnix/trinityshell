@@ -2,6 +2,8 @@ package org.trinity.render.qtlnf.impl;
 
 import java.util.concurrent.Future;
 
+import javax.inject.Named;
+
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.DisplaySurfaceFactory;
 import org.trinity.foundation.display.api.DisplaySurfaceHandle;
@@ -12,43 +14,35 @@ import org.trinity.render.paintengine.qt.api.QJPaintContext;
 import org.trinity.shell.widget.api.view.ShellWidgetView;
 
 import com.google.inject.Inject;
-import com.trolltech.qt.gui.QWidget;
+import com.trolltech.qt.gui.QApplication;
+import com.trolltech.qt.gui.QDesktopWidget;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
-public class ShellWidgetViewImpl implements ShellWidgetView {
-
-	private final DisplaySurfaceFactory displaySurfaceFactory;
+@Named("shellRootWidgetView")
+public class ShellRootViewImpl implements ShellWidgetView {
 
 	private Painter painter;
+	private final DisplaySurfaceFactory displaySurfaceFactory;
 
 	@Inject
-	ShellWidgetViewImpl(final DisplaySurfaceFactory displaySurfaceFactory) {
+	ShellRootViewImpl(final DisplaySurfaceFactory displaySurfaceFactory) {
 		this.displaySurfaceFactory = displaySurfaceFactory;
 	}
 
 	@Override
 	public Future<DisplaySurface> create(final Painter painter) {
 		this.painter = painter;
-
-		return this.painter.instruct(new PaintInstruction<DisplaySurface, QJPaintContext>() {
+		return painter.instruct(new PaintInstruction<DisplaySurface, QJPaintContext>() {
 			@Override
 			public DisplaySurface call(	final PaintableRenderNode paintableRenderNode,
 										final QJPaintContext paintContext) {
-
-				final QWidget parentVisual = paintContext.queryVisual(paintableRenderNode
-						.getParentPaintableRenderNode());
-				final QWidget visual = new QWidget(parentVisual);
-
-				paintContext.syncVisualGeometryToNode(	visual,
-														paintableRenderNode);
-
-				final DisplaySurfaceHandle visualDisplaySurfaceHandle = paintContext.getDisplaySurfaceHandle(visual);
-
-				final DisplaySurface displaySurface = ShellWidgetViewImpl.this.displaySurfaceFactory
-						.createDisplaySurface(visualDisplaySurfaceHandle);
-				return displaySurface;
+				final QDesktopWidget visual = QApplication.desktop();
+				final DisplaySurfaceHandle displaySurfaceHandle = paintContext.getDisplaySurfaceHandle(visual);
+				final DisplaySurface visualDisplaySurface = ShellRootViewImpl.this.displaySurfaceFactory
+						.createDisplaySurface(displaySurfaceHandle);
+				return visualDisplaySurface;
 			}
 		});
 	}
@@ -59,11 +53,9 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 			@Override
 			public Void call(	final PaintableRenderNode paintableRenderNode,
 								final QJPaintContext paintContext) {
-				final QWidget visual = paintContext.getVisual();
-				visual.close();
-				paintContext.evictVisual();
 				return null;
 			}
 		});
 	}
+
 }

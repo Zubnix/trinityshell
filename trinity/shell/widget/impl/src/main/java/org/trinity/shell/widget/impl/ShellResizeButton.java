@@ -57,7 +57,8 @@ public class ShellResizeButton extends ShellDragButton {
 	}
 
 	@Override
-	protected void mutate(final int vectX, final int vectY) {
+	protected void mutate(	final int vectX,
+							final int vectY) {
 		this.desiredWidth += vectX;
 		this.desiredHeight += vectY;
 

@@ -31,15 +31,15 @@ public class ShellDisplayPlugin implements ShellPlugin, Runnable {
 	private Thread shellThread;
 
 	@Inject
-	ShellDisplayPlugin(	final DisplayServer display,
-						final ShellDisplayEventDispatcher shellDisplayEventDispatcherImpl) {
+	ShellDisplayPlugin(final DisplayServer display, final ShellDisplayEventDispatcher shellDisplayEventDispatcherImpl) {
 		this.display = display;
 		this.shellDisplayEventDispatcherImpl = shellDisplayEventDispatcherImpl;
 	}
 
 	@Override
 	public void start() {
-		this.shellThread = new Thread(this);
+		this.shellThread = new Thread(	this,
+										"Shell Core Plugin Thread");
 		this.shellThread.start();
 	}
 
@@ -57,11 +57,6 @@ public class ShellDisplayPlugin implements ShellPlugin, Runnable {
 			this.shellThread.stop();
 		}
 		this.display.shutDown();
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Display: %s", this.display);
 	}
 
 	@Override

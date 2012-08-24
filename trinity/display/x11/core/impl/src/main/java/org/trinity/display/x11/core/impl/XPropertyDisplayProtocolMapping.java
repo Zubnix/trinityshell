@@ -20,15 +20,17 @@ public class XPropertyDisplayProtocolMapping {
 	private final Map<String, List<DisplayProtocol>> nativeInverseProtocolMapping = new HashMap<String, List<DisplayProtocol>>();
 
 	XPropertyDisplayProtocolMapping() {
-		this.nativeProtocolMapping.put(DisplayProtocol.NAMES, Arrays
-				.asList("WM_NAME", "_NET_WM_NAME", "WM_CLASS"));
+		this.nativeProtocolMapping.put(	DisplayProtocol.NAMES,
+										Arrays.asList(	"WM_NAME",
+														"_NET_WM_NAME",
+														"WM_CLASS"));
 		this.nativeProtocolMapping.put(	DisplayProtocol.CLOSE_REQUEST,
 										Arrays.asList("WM_PROTOCOLS"));
 
-		this.nativeInverseProtocolMapping.put("WM_NAME", Arrays
-				.asList(DisplayProtocol.NAMES));
-		this.nativeInverseProtocolMapping.put("WM_PROTOCOLS", Arrays
-				.asList(DisplayProtocol.CLOSE_REQUEST));
+		this.nativeInverseProtocolMapping.put(	"WM_NAME",
+												Arrays.asList(DisplayProtocol.NAMES));
+		this.nativeInverseProtocolMapping.put(	"WM_PROTOCOLS",
+												Arrays.asList(DisplayProtocol.CLOSE_REQUEST));
 	}
 
 	public List<String> toXProperties(final DisplayProtocol displayProtocol) {

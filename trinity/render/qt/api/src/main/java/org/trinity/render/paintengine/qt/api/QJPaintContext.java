@@ -11,7 +11,12 @@ public interface QJPaintContext extends PaintContext {
 
 	void setVisual(QWidget qWidget);
 
+	void evictVisual();
+
 	QWidget queryVisual(PaintableRenderNode paintableRenderNode);
 
 	DisplaySurfaceHandle getDisplaySurfaceHandle(QWidget visual);
+
+	void syncVisualGeometryToNode(	QWidget visual,
+									PaintableRenderNode paintableRenderNode);
 }

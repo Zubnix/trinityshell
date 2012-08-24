@@ -51,7 +51,7 @@ public interface ShellSurface extends ShellNode {
 
 	void setWidthIncrement(final int widthIncrement);
 
-	void syncGeoToDisplayRenderArea();
+	void syncGeoToDisplaySurface();
 
 	void setInputFocus();
 }

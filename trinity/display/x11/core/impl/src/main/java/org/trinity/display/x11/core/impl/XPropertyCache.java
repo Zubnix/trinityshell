@@ -64,8 +64,7 @@ public class XPropertyCache {
 	}
 
 	private Set<String> getAllInvalidNativeProtocols(final DisplaySurface displaySurface) {
-		Set<String> changedNativeProtocols = this.nativeProtocolValidityCache
-				.get(displaySurface);
+		Set<String> changedNativeProtocols = this.nativeProtocolValidityCache.get(displaySurface);
 		if (changedNativeProtocols == null) {
 			changedNativeProtocols = new HashSet<String>();
 			this.nativeProtocolValidityCache.put(	displaySurface,
@@ -78,25 +77,26 @@ public class XPropertyCache {
 													final String nativeProperty) {
 		// TODO rewrite this method. Move lookup logic to separate classes.
 
-		final int windowId = ((XWindowHandle) displaySurface
-				.getDisplaySurfaceHandle()).getNativeHandle().intValue();
+		final int windowId = ((XWindowHandle) displaySurface.getDisplaySurfaceHandle()).getNativeHandle().intValue();
 
 		final Map<String, Object> valueMap = new HashMap<String, Object>();
 
 		if (nativeProperty.equals("WM_NAME")) {
 
-			final xcb_get_property_cookie_t cookie_t = LibXcb
-					.xcb_icccm_get_wm_name(this.xConnection
-							.getConnectionReference(), windowId);
+			final xcb_get_property_cookie_t cookie_t = LibXcb.xcb_icccm_get_wm_name(this.xConnection
+																							.getConnectionReference(),
+																					windowId);
 
 			final xcb_generic_error_t e = new xcb_generic_error_t();
 			final xcb_icccm_get_text_property_reply_t prop = new xcb_icccm_get_text_property_reply_t();
-			final int success = LibXcb
-					.xcb_icccm_get_wm_name_reply(this.xConnection
-							.getConnectionReference(), cookie_t, prop, e);
+			final int success = LibXcb.xcb_icccm_get_wm_name_reply(	this.xConnection.getConnectionReference(),
+																	cookie_t,
+																	prop,
+																	e);
 			if (success != 0) {
 				final String name = prop.getName();
-				valueMap.put("STRING", name);
+				valueMap.put(	"STRING",
+								name);
 			}
 		}
 
@@ -109,21 +109,20 @@ public class XPropertyCache {
 		}
 
 		else if (nativeProperty.equals("WM_PROTOCOLS")) {
-			final int wmProtocolsAtomId = this.atomCache
-					.getAtom(nativeProperty);
+			final int wmProtocolsAtomId = this.atomCache.getAtom(nativeProperty);
 
 			final xcb_get_property_cookie_t cookie = LibXcb
-					.xcb_icccm_get_wm_protocols(this.xConnection
-														.getConnectionReference(),
+					.xcb_icccm_get_wm_protocols(this.xConnection.getConnectionReference(),
 												windowId,
 												wmProtocolsAtomId);
 
 			final xcb_icccm_get_wm_protocols_reply_t protocols = new xcb_icccm_get_wm_protocols_reply_t();
 			final xcb_generic_error_t e = new xcb_generic_error_t();
 
-			final int success = LibXcb
-					.xcb_icccm_get_wm_protocols_reply(this.xConnection
-							.getConnectionReference(), cookie, protocols, e);
+			final int success = LibXcb.xcb_icccm_get_wm_protocols_reply(this.xConnection.getConnectionReference(),
+																		cookie,
+																		protocols,
+																		e);
 
 			if (success != 0) {
 				final ByteBuffer atomsBuf = protocols.getAtoms();
@@ -135,7 +134,8 @@ public class XPropertyCache {
 					final String atom = this.atomCache.getAtom(atomId);
 					protocolNames.add(atom);
 				}
-				valueMap.put("ATOM", protocolNames);
+				valueMap.put(	"ATOM",
+								protocolNames);
 			}
 		}
 
@@ -150,13 +150,14 @@ public class XPropertyCache {
 
 		if (propertyValues == null) {
 			propertyValues = new HashMap<String, Object>();
-			allProperties.put(xProperty, propertyValues);
+			allProperties.put(	xProperty,
+								propertyValues);
 			getAllInvalidNativeProtocols(displaySurface).add(xProperty);
-			return getXProperty(displaySurface, xProperty);
+			return getXProperty(displaySurface,
+								xProperty);
 		}
 
-		final Set<String> changedNativeProtocols = this.nativeProtocolValidityCache
-				.get(displaySurface);
+		final Set<String> changedNativeProtocols = this.nativeProtocolValidityCache.get(displaySurface);
 
 		if (changedNativeProtocols.remove(xProperty)) {
 			final Map<String, Object> nativePropertyVaue = queryNativeProperty(	displaySurface,
@@ -168,11 +169,11 @@ public class XPropertyCache {
 	}
 
 	private Map<String, Map<String, Object>> getAllProperties(final DisplaySurface displaySurface) {
-		Map<String, Map<String, Object>> allValues = this.nativeProtocolsValuesCache
-				.get(displaySurface);
+		Map<String, Map<String, Object>> allValues = this.nativeProtocolsValuesCache.get(displaySurface);
 		if (allValues == null) {
 			allValues = new HashMap<String, Map<String, Object>>();
-			this.nativeProtocolsValuesCache.put(displaySurface, allValues);
+			this.nativeProtocolsValuesCache.put(displaySurface,
+												allValues);
 		}
 		return allValues;
 	}

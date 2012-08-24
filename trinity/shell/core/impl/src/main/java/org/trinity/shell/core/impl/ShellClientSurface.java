@@ -57,7 +57,8 @@ public class ShellClientSurface extends AbstractShellSurface {
 						final EventBus nodeEventBus,
 						@Named("shellRootRenderArea") final ShellSurface root,
 						@Named("shellSurfaceGeoExecutor") final ShellNodeExecutor shellNodeExecutor) {
-		super(nodeEventBus, shellDisplayEventDispatcher);
+		super(	nodeEventBus,
+				shellDisplayEventDispatcher);
 		this.renderAreaGeoExecutor = shellNodeExecutor;
 		setParent(root);
 		doReparent(false);
@@ -71,6 +72,6 @@ public class ShellClientSurface extends AbstractShellSurface {
 	@Override
 	protected void setDisplaySurface(final DisplaySurface displaySurface) {
 		super.setDisplaySurface(displaySurface);
-		syncGeoToDisplayRenderArea();
+		syncGeoToDisplaySurface();
 	}
 }

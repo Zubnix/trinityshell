@@ -109,8 +109,7 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 	 * Create a new <code>ShellGeoManagerLine</code> that will use the geometry
 	 * of the given container to determine the layout of the managed children.
 	 * Ideally, the given container should be the same as the
-	 * <code>ShellNode</code> that returns this
-	 * <code>ShellLayoutManager</code>.
+	 * <code>ShellNode</code> that returns this <code>ShellLayoutManager</code>.
 	 * 
 	 * @param container
 	 * @param horizontalDirection
@@ -200,15 +199,13 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 				childWeight = child.toGeoTransformation().getWidth1();
 			}
 
-			final int vMargins = layoutProperty.getMargins().getTop()
-					+ layoutProperty.getMargins().getBottom();
+			final int vMargins = layoutProperty.getMargins().getTop() + layoutProperty.getMargins().getBottom();
 			child.setHeight(fixedSize - vMargins);
 			// calculate new width
 			final double desiredChildWidth = childWeight * resizeFactor;
 			final int newChildWidth = (int) Math.round(desiredChildWidth);
 
-			final int hMargins = layoutProperty.getMargins().getLeft()
-					+ layoutProperty.getMargins().getRight();
+			final int hMargins = layoutProperty.getMargins().getLeft() + layoutProperty.getMargins().getRight();
 			child.setWidth(newChildWidth - hMargins);
 
 			final int leftMargin = layoutProperty.getMargins().getLeft();
@@ -279,16 +276,14 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 				resizeFactor = 1;
 				childWeight = child.toGeoTransformation().getHeight1();
 			}
-			final int hMargins = layoutProperty.getMargins().getLeft()
-					+ layoutProperty.getMargins().getRight();
+			final int hMargins = layoutProperty.getMargins().getLeft() + layoutProperty.getMargins().getRight();
 			child.setWidth(fixedSize - hMargins);
 			// calculate new height
 			final double desiredChildHeight = childWeight * resizeFactor;
 
 			final int newChildHeight = (int) Math.round(desiredChildHeight);
 
-			final int vMargins = layoutProperty.getMargins().getTop()
-					+ layoutProperty.getMargins().getBottom();
+			final int vMargins = layoutProperty.getMargins().getTop() + layoutProperty.getMargins().getBottom();
 			child.setHeight(newChildHeight - vMargins);
 
 			final int topMargin = layoutProperty.getMargins().getTop();
@@ -310,7 +305,8 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 	public void addChild(	final ShellNode child,
 							final ShellLayoutProperty layoutProperty) {
 		child.addShellNodeEventHandler(this.childGeoListener);
-		super.addChild(child, layoutProperty);
+		super.addChild(	child,
+						layoutProperty);
 	}
 
 	@Override

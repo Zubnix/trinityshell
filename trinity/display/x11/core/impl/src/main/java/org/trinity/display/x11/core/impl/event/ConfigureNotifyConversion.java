@@ -23,15 +23,13 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class ConfigureNotifyConversion implements XEventConversion {
 
-	private final Integer eventCode = Integer
-			.valueOf(LibXcb.XCB_CONFIGURE_NOTIFY);
+	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_CONFIGURE_NOTIFY);
 
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
 
 	@Inject
-	ConfigureNotifyConversion(	final XWindowCache xWindowCache,
-								@Named("xEventBus") final EventBus xEventBus) {
+	ConfigureNotifyConversion(final XWindowCache xWindowCache, @Named("xEventBus") final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -44,14 +42,16 @@ public class ConfigureNotifyConversion implements XEventConversion {
 		this.xEventBus.post(configure_notify_event_t);
 
 		final int windowId = configure_notify_event_t.getEvent();
-		final XWindow displayEventSource = this.xWindowCache
-				.getWindow(windowId);
+		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int x = configure_notify_event_t.getX();
 		final int y = configure_notify_event_t.getY();
 		final int width = configure_notify_event_t.getWidth();
 		final int height = configure_notify_event_t.getHeight();
-		final Rectangle geometry = new ImmutableRectangle(x, y, width, height);
+		final Rectangle geometry = new ImmutableRectangle(	x,
+															y,
+															width,
+															height);
 
 		final DisplayEvent displayEvent = new GeometryNotifyEvent(	displayEventSource,
 																	geometry);

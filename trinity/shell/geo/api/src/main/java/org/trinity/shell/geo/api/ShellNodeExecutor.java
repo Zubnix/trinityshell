@@ -15,8 +15,8 @@ package org.trinity.shell.geo.api;
 /**
  * A <code>ShellNodeExecutor</code> is responsible for executing the actual
  * geometry changes for a <code>ShellNode</code>. In essence a
- * <code>ShellNodeExecutor</code> is a delegate for a <code>ShellNode</code>
- * to execute the requested geometry changes.
+ * <code>ShellNodeExecutor</code> is a delegate for a <code>ShellNode</code> to
+ * execute the requested geometry changes.
  * <p>
  * A <code>ShellNodeExecutor</code> is needed because a tree structure of
  * different <code>ShellNode</code> subclasses can have non-uniform and
@@ -46,7 +46,9 @@ public interface ShellNodeExecutor {
 	 * @param relativeX
 	 * @param relativeY
 	 */
-	void move(ShellNode shellNode, int relativeX, int relativeY);
+	void move(	ShellNode shellNode,
+				int relativeX,
+				int relativeY);
 
 	/**
 	 * Execute the actual resizing of the handled <code>ShellNode</code>.
@@ -54,7 +56,9 @@ public interface ShellNodeExecutor {
 	 * @param width
 	 * @param height
 	 */
-	void resize(ShellNode shellNode, int width, int height);
+	void resize(ShellNode shellNode,
+				int width,
+				int height);
 
 	/**
 	 * Execute the actual resizing and moving of the handled
@@ -76,16 +80,15 @@ public interface ShellNodeExecutor {
 	void hide(ShellNode shellNode);
 
 	/**
-	 * Execute the actual parent update of the handled <code>ShellNode</code>
-	 * .
+	 * Execute the actual parent update of the handled <code>ShellNode</code> .
 	 * 
 	 * @param parent
 	 */
-	void reparent(ShellNode shellNode, ShellNode parent);
+	void reparent(	ShellNode shellNode,
+					ShellNode parent);
 
 	/**
-	 * Execute the actual destroy process of the handled
-	 * <code>ShellNode</code>.
+	 * Execute the actual destroy process of the handled <code>ShellNode</code>.
 	 */
 	void destroy(ShellNode shellNode);
 }

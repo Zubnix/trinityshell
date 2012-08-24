@@ -44,12 +44,14 @@ final class QJRenderEventFilter extends QObject {
 	}
 
 	@Override
-	public boolean eventFilter(final QObject qObject, final QEvent qEvent) {
+	public boolean eventFilter(	final QObject qObject,
+								final QEvent qEvent) {
 		// Make sure we are interested in the event we receive.
-		if (isEventSourceAndTypeValid(qObject, qEvent)) {
+		if (isEventSourceAndTypeValid(	qObject,
+										qEvent)) {
 			// We are interested and thus convert the event.
-			final DisplayEvent displayEvent = this.renderEventConverter
-					.convertRenderEvent(this.eventSource, qEvent);
+			final DisplayEvent displayEvent = this.renderEventConverter.convertRenderEvent(	this.eventSource,
+																							qEvent);
 			this.displayEventBus.post(displayEvent);
 			return true;
 		}
@@ -58,12 +60,9 @@ final class QJRenderEventFilter extends QObject {
 
 	private boolean isEventSourceAndTypeValid(	final QObject qObject,
 												final QEvent qEvent) {
-		return (qObject.isWidgetType() && ((qEvent.type() == Type.KeyPress)
-				|| (qEvent.type() == Type.KeyRelease)
-				|| (qEvent.type() == Type.MouseButtonPress)
-				|| (qEvent.type() == Type.MouseButtonRelease)
-				|| (qEvent.type() == Type.Enter)
-				|| (qEvent.type() == Type.Leave)
-				|| (qEvent.type() == Type.FocusIn) || (qEvent.type() == Type.FocusOut)));
+		return (qObject.isWidgetType() && ((qEvent.type() == Type.KeyPress) || (qEvent.type() == Type.KeyRelease)
+				|| (qEvent.type() == Type.MouseButtonPress) || (qEvent.type() == Type.MouseButtonRelease)
+				|| (qEvent.type() == Type.Enter) || (qEvent.type() == Type.Leave) || (qEvent.type() == Type.FocusIn) || (qEvent
+					.type() == Type.FocusOut)));
 	}
 }

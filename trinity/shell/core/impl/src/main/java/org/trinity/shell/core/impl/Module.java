@@ -22,7 +22,6 @@ public class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(EventBus.class).annotatedWith(Names.named("shellEventBus"))
-				.toInstance(new EventBus());
+		bind(EventBus.class).annotatedWith(Names.named("shellEventBus")).toInstance(new EventBus());
 	}
 }

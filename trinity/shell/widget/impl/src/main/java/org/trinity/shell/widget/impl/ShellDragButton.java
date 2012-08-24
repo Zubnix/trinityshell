@@ -48,13 +48,12 @@ public class ShellDragButton extends ShellButton {
 		@Override
 		public void run() {
 
-			final Coordinate mousePos = ShellDragButton.this.root
-					.getDisplayRenderArea().getPointerCoordinate();
+			final Coordinate mousePos = ShellDragButton.this.root.getDisplayRenderArea().getPointerCoordinate();
 			ShellDragButton.this.x0 = mousePos.getX();
 			ShellDragButton.this.y0 = mousePos.getY();
 			while (!Thread.interrupted()) {
-				final Coordinate mousePosition = ShellDragButton.this.root
-						.getDisplayRenderArea().getPointerCoordinate();
+				final Coordinate mousePosition = ShellDragButton.this.root.getDisplayRenderArea()
+						.getPointerCoordinate();
 				final int x1 = mousePosition.getX();
 				final int y1 = mousePosition.getY();
 
@@ -64,13 +63,13 @@ public class ShellDragButton extends ShellButton {
 				if ((deltaX != 0) || (deltaY != 0)) {
 					ShellDragButton.this.x0 = x1;
 					ShellDragButton.this.y0 = y1;
-					mutate(deltaX, deltaY);
+					mutate(	deltaX,
+							deltaY);
 				}
 
 				// Process the next event without blocking, else we will never
 				// receive the mouse button released event.
-				ShellDragButton.this.shellDisplayEventDispatcher
-						.dispatchDisplayEvent(false);
+				ShellDragButton.this.shellDisplayEventDispatcher.dispatchDisplayEvent(false);
 			}
 		}
 	};
@@ -117,7 +116,8 @@ public class ShellDragButton extends ShellButton {
 	 *            pixels. @ Thrown when the target
 	 *            <code>AbstractShellSurface</code> has an illegal state.
 	 */
-	protected void mutate(final int deltaX, final int deltaY) {
+	protected void mutate(	final int deltaX,
+							final int deltaY) {
 		getClient().setX(getClient().getX() + deltaX);
 		getClient().setY(getClient().getY() + deltaY);
 		getClient().requestMove();

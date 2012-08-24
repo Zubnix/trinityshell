@@ -21,8 +21,7 @@ import org.trinity.foundation.shared.geometry.api.Rectangle;
  * manages a native window from a native display.
  * 
  */
-public interface DisplaySurface extends DisplayArea,
-		DisplayAreaManipulator<DisplaySurface>, DisplayEventSource {
+public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator<DisplaySurface>, DisplayEventSource {
 
 	Rectangle getGeometry();
 

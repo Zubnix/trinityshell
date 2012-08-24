@@ -23,33 +23,34 @@ public abstract class AbstractShellNodeExecutor implements ShellNodeExecutor {
 	/**
 	 * @return
 	 */
-	public abstract <T extends DisplayArea> DisplayAreaManipulator<T> getAreaManipulator(ShellNode shellNode);
+	public abstract <T extends DisplayArea> DisplayAreaManipulator<T> getShellNodeManipulator(ShellNode shellNode);
 
 	@Override
 	public void lower(final ShellNode shellNode) {
-		this.getAreaManipulator(shellNode).lower();
+		this.getShellNodeManipulator(shellNode).lower();
 	}
 
 	@Override
 	public void raise(final ShellNode shellNode) {
-		this.getAreaManipulator(shellNode).raise();
+		this.getShellNodeManipulator(shellNode).raise();
 	}
 
 	@Override
 	public void resize(	final ShellNode shellNode,
 						final int width,
 						final int height) {
-		this.getAreaManipulator(shellNode).resize(width, height);
+		this.getShellNodeManipulator(shellNode).resize(	width,
+													height);
 	}
 
 	@Override
 	public void show(final ShellNode shellNode) {
-		this.getAreaManipulator(shellNode).show();
+		this.getShellNodeManipulator(shellNode).show();
 	}
 
 	@Override
 	public void hide(final ShellNode shellNode) {
-		this.getAreaManipulator(shellNode).hide();
+		this.getShellNodeManipulator(shellNode).hide();
 	}
 
 	/**
@@ -61,6 +62,8 @@ public abstract class AbstractShellNodeExecutor implements ShellNodeExecutor {
 							final DisplayArea newParentArea,
 							final int newX,
 							final int newY) {
-		getAreaManipulator(shellNode).setParent(newParentArea, newX, newY);
+		getShellNodeManipulator(shellNode).setParent(newParentArea,
+												newX,
+												newY);
 	}
 }

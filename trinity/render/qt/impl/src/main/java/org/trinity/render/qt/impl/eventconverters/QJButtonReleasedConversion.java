@@ -67,7 +67,8 @@ public class QJButtonReleasedConversion implements QJRenderEventConversion {
 															rootX,
 															rootY);
 
-		return new ButtonNotifyEvent(source, mouseInput);
+		return new ButtonNotifyEvent(	source,
+										mouseInput);
 	}
 
 	@Override

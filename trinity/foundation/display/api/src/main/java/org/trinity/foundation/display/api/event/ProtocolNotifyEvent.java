@@ -20,8 +20,7 @@ public class ProtocolNotifyEvent extends DisplayEvent {
 
 	private final List<DisplayProtocol> displayProtocols;
 
-	public ProtocolNotifyEvent(	final DisplayEventSource displayEventSource,
-								final List<DisplayProtocol> displayProtocols) {
+	public ProtocolNotifyEvent(final DisplayEventSource displayEventSource, final List<DisplayProtocol> displayProtocols) {
 		super(displayEventSource);
 		this.displayProtocols = Collections.unmodifiableList(displayProtocols);
 	}

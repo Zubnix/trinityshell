@@ -5,8 +5,8 @@ import org.trinity.shell.geo.api.ShellNodeTransformation;
 
 public class ShellNodeChildAddedEvent extends ShellNodeChildEvent {
 
-	public ShellNodeChildAddedEvent(	final ShellNode shellNode,
-								final ShellNodeTransformation shellNodeTransformation) {
-		super(shellNode, shellNodeTransformation);
+	public ShellNodeChildAddedEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
+		super(	shellNode,
+				shellNodeTransformation);
 	}
 }

@@ -5,8 +5,8 @@ import org.trinity.shell.geo.api.ShellNodeTransformation;
 
 public class ShellNodeHideRequestEvent extends ShellNodeVisibilityRequestEvent {
 
-	public ShellNodeHideRequestEvent(	final ShellNode shellNode,
-								final ShellNodeTransformation shellNodeTransformation) {
-		super(shellNode, shellNodeTransformation);
+	public ShellNodeHideRequestEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
+		super(	shellNode,
+				shellNodeTransformation);
 	}
 }

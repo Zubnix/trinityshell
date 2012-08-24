@@ -26,8 +26,8 @@ public class ButtonNotifyEvent extends InputNotifyEvent<PointerInput> {
 	/*****************************************
  * 
  ****************************************/
-	public ButtonNotifyEvent(	final DisplayEventSource displayEventSource,
-								final PointerInput pointerInput) {
-		super(displayEventSource, pointerInput);
+	public ButtonNotifyEvent(final DisplayEventSource displayEventSource, final PointerInput pointerInput) {
+		super(	displayEventSource,
+				pointerInput);
 	}
 }

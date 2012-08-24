@@ -67,7 +67,8 @@ public interface Keyboard {
 	 * @return
 	 * 
 	 */
-	String asKeySymbolName(Key key, InputModifiers inputModifiers);
+	String asKeySymbolName(	Key key,
+							InputModifiers inputModifiers);
 
 	/**
 	 * 

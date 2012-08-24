@@ -6,7 +6,8 @@ import org.trinity.shell.geo.api.ShellNodeTransformation;
 public class ShellNodeReparentRequestEvent extends ShellNodeEvent {
 
 	public ShellNodeReparentRequestEvent(	final ShellNode shellNode,
-									final ShellNodeTransformation shellNodeTransformation) {
-		super(shellNode, shellNodeTransformation);
+											final ShellNodeTransformation shellNodeTransformation) {
+		super(	shellNode,
+				shellNodeTransformation);
 	}
 }

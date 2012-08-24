@@ -29,8 +29,7 @@ public class InputNotifyEvent<I extends Input> extends DisplayEvent {
 	/*****************************************
 	 * 
 	 ****************************************/
-	public InputNotifyEvent(final DisplayEventSource displayEventSource,
-							final I input) {
+	public InputNotifyEvent(final DisplayEventSource displayEventSource, final I input) {
 		super(displayEventSource);
 		this.input = input;
 	}

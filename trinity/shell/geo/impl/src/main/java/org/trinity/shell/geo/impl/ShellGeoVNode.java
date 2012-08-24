@@ -28,11 +28,11 @@ import de.devsurf.injection.guice.annotations.To.Type;
 /**
  * A <code>ShellGeoVNode</code> is a 'virtual', invisible rectangle with a size,
  * place and visibility and has no visual representation on-screen. A
- * <code>ShellGeoVNode</code> has the same behavior as a
- * <code>ShellNode</code>. This means that when a <code>ShellGeoVNode</code>
- * moves, all it's children will move with the same offset. When a
- * <code>ShellGeoVNode</code> visibility changes, all it's children's visibility
- * will change as well. A <code>ShellGeoVNode</code> can also have an optional
+ * <code>ShellGeoVNode</code> has the same behavior as a <code>ShellNode</code>.
+ * This means that when a <code>ShellGeoVNode</code> moves, all it's children
+ * will move with the same offset. When a <code>ShellGeoVNode</code> visibility
+ * changes, all it's children's visibility will change as well. A
+ * <code>ShellGeoVNode</code> can also have an optional
  * <code>ShellLayoutManager</code> which means it can manage it's children's
  * geometry requests if necessary.
  * 

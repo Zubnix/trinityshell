@@ -62,8 +62,7 @@ public final class XEventConverter {
 	}
 
 	private DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final XEventConversion eventConversion = this.conversionMap.get(Integer
-				.valueOf(event_t.getResponse_type()));
+		final XEventConversion eventConversion = this.conversionMap.get(Integer.valueOf(event_t.getResponse_type()));
 		if (eventConversion != null) {
 			return eventConversion.convert(event_t);
 		}

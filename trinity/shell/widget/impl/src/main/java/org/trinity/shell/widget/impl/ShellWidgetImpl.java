@@ -75,8 +75,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @since 1.0
  */
 @Bind
-public class ShellWidgetImpl extends AbstractShellSurface implements
-		ShellWidget {
+public class ShellWidgetImpl extends AbstractShellSurface implements ShellWidget {
 
 	private final Painter painter;
 	private final ShellNodeExecutor shellNodeExecutor;
@@ -95,7 +94,8 @@ public class ShellWidgetImpl extends AbstractShellSurface implements
 							final PainterFactory painterFactory,
 							@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 							final ShellWidgetView view) {
-		super(eventBus, shellDisplayEventDispatcher);
+		super(	eventBus,
+				shellDisplayEventDispatcher);
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		this.eventBus = eventBus;
 		this.shellNodeExecutor = shellNodeExecutor;
@@ -115,18 +115,16 @@ public class ShellWidgetImpl extends AbstractShellSurface implements
 	 *            data from its paintable parent at the paint back-end level.
 	 */
 	protected void init(final ShellWidget paintableParent) {
-		final Future<DisplaySurface> displaySurfaceFuture = this.view
-				.create(getPainter());
+		final Future<DisplaySurface> displaySurfaceFuture = this.view.create(getPainter());
 
 		try {
-			this.shellDisplayEventDispatcher
-					.registerDisplayEventSource(this.eventBus, this);
-			final DisplaySurface visualDisplaySurface = displaySurfaceFuture
-					.get();
+			this.shellDisplayEventDispatcher.registerDisplayEventSource(this.eventBus,
+																		this);
+			final DisplaySurface visualDisplaySurface = displaySurfaceFuture.get();
 			setDisplaySurface(visualDisplaySurface);
 		} catch (final ExecutionException e) {
-			this.shellDisplayEventDispatcher
-					.unregisterDisplayEventSource(this.eventBus, this);
+			this.shellDisplayEventDispatcher.unregisterDisplayEventSource(	this.eventBus,
+																			this);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (final InterruptedException e) {
@@ -137,9 +135,6 @@ public class ShellWidgetImpl extends AbstractShellSurface implements
 
 	@Override
 	public Painter getPainter() {
-		if (this.painter == null) {
-			throw new IllegalStateException("ShellWidget not initialized.");
-		}
 		return this.painter;
 	}
 

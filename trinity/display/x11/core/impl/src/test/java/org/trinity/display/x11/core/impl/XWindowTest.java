@@ -49,19 +49,19 @@ public class XWindowTest // extends AbstractXTest
 	public static xcb_screen_t screen;
 
 	@BeforeClass
-	public static void startup() throws IOException, SecurityException,
-			NoSuchFieldException {
+	public static void startup() throws IOException, SecurityException, NoSuchFieldException {
 		LibXcbLoader.load();
 
-		xvfb = new ProcessBuilder("Xvfb", "-ac", displayName).start();
+		xvfb = new ProcessBuilder(	"Xvfb",
+									"-ac",
+									displayName).start();
 
 		xConnection = new XConnection();
-		xConnection.open(displayName, screenNr);
+		xConnection.open(	displayName,
+							screenNr);
 
-		final xcb_setup_t setup = LibXcb.xcb_get_setup(xConnection
-				.getConnectionReference());
-		final xcb_screen_iterator_t iter = LibXcb
-				.xcb_setup_roots_iterator(setup);
+		final xcb_setup_t setup = LibXcb.xcb_get_setup(xConnection.getConnectionReference());
+		final xcb_screen_iterator_t iter = LibXcb.xcb_setup_roots_iterator(setup);
 		screen = iter.getData();
 	}
 
@@ -77,13 +77,11 @@ public class XWindowTest // extends AbstractXTest
 	private XTime xTime;
 
 	@Before
-	public void setup() throws SecurityException, NoSuchFieldException,
-			IllegalArgumentException, IllegalAccessException {
+	public void setup() throws SecurityException, NoSuchFieldException, IllegalArgumentException,
+			IllegalAccessException {
 
-		this.windowId = LibXcb.xcb_generate_id(xConnection
-				.getConnectionReference());
-		final ByteBuffer value_list = ByteBuffer.allocateDirect(4)
-				.order(ByteOrder.nativeOrder());
+		this.windowId = LibXcb.xcb_generate_id(xConnection.getConnectionReference());
+		final ByteBuffer value_list = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 		LibXcb.xcb_create_window(	xConnection.getConnectionReference(),
 									(short) LibXcbConstants.XCB_COPY_FROM_PARENT,
 									this.windowId,
@@ -93,15 +91,16 @@ public class XWindowTest // extends AbstractXTest
 									200,
 									200,
 									5,
-									xcb_window_class_t.XCB_WINDOW_CLASS_INPUT_OUTPUT
-											.swigValue(),
+									xcb_window_class_t.XCB_WINDOW_CLASS_INPUT_OUTPUT.swigValue(),
 									screen.getRoot_visual(),
 									0,
 									value_list);
 
 		final XWindowHandle xWindowHandle = new XWindowHandle(this.windowId);
 
-		this.xWindow = new XWindow(this.xTime, xConnection, xWindowHandle);
+		this.xWindow = new XWindow(	this.xTime,
+									xConnection,
+									xWindowHandle);
 	}
 
 	@After
@@ -136,7 +135,8 @@ public class XWindowTest // extends AbstractXTest
 
 	@Test
 	public void testMove() {
-		this.xWindow.move(10, 10);
+		this.xWindow.move(	10,
+							10);
 		// TODO verify
 	}
 }

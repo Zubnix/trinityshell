@@ -91,7 +91,8 @@ public class ShellAppLauncher extends AbstractShellKeyDrivenMenu {
 	public List<String> getAllChoices() {
 		final List<String> apps = new ArrayList<String>(250);
 		final String pathValue = System.getenv().get(ShellAppLauncher.PATH);
-		final StringTokenizer pathParser = new StringTokenizer(pathValue, ":");
+		final StringTokenizer pathParser = new StringTokenizer(	pathValue,
+																":");
 
 		while (pathParser.hasMoreTokens()) {
 			final String pathName = pathParser.nextToken();

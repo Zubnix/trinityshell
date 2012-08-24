@@ -39,8 +39,7 @@ import com.google.common.eventbus.Subscribe;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl
-		implements ShellKeyDrivenMenu {
+public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl implements ShellKeyDrivenMenu {
 
 	private final ShellKeyDrivenMenuView view;
 	private final List<String> filteredChoices = new ArrayList<String>(25);
@@ -98,8 +97,8 @@ public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl
 			return;
 		}
 		final KeyboardInput input = event.getInput();
-		final String keyName = this.keyboard
-				.asKeySymbolName(input.getKey(), input.getModifiers());
+		final String keyName = this.keyboard.asKeySymbolName(	input.getKey(),
+																input.getModifiers());
 
 		if (keyName.equals(getCancelKey())) {
 			// cancel key
@@ -122,8 +121,7 @@ public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl
 				this.activeChoiceIdx--;
 				this.keyInputStringBuilder.clear();
 
-				final String desired = getFilteredChoices()
-						.get(AbstractShellKeyDrivenMenu.this.activeChoiceIdx);
+				final String desired = getFilteredChoices().get(AbstractShellKeyDrivenMenu.this.activeChoiceIdx);
 				this.keyInputStringBuilder.append(desired);
 
 				// update view
@@ -138,8 +136,7 @@ public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl
 			// righ arrow key
 			if ((this.activeChoiceIdx + 1) < getFilteredChoices().size()) {
 				this.activeChoiceIdx++;
-				final String desired = getFilteredChoices()
-						.get(this.activeChoiceIdx);
+				final String desired = getFilteredChoices().get(this.activeChoiceIdx);
 
 				this.keyInputStringBuilder.clear();
 				this.keyInputStringBuilder.append(desired);
@@ -160,7 +157,9 @@ public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl
 		updatePossibleChoices(desired);
 
 		// update view
-		this.view.update(desired, getFilteredChoices(), this.activeChoiceIdx);
+		this.view.update(	desired,
+							getFilteredChoices(),
+							this.activeChoiceIdx);
 	}
 
 	/**
@@ -178,8 +177,8 @@ public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl
 		if (i != -1) {
 			final int nroChoices = getAllChoices().size();
 
-			final List<String> possibleDesiredChoices = getAllChoices()
-					.subList(i, nroChoices - 1);
+			final List<String> possibleDesiredChoices = getAllChoices().subList(i,
+																				nroChoices - 1);
 
 			this.filteredChoices.addAll(possibleDesiredChoices);
 		}

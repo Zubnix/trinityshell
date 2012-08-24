@@ -32,22 +32,18 @@ public class ShellButtonViewImpl extends ShellWidgetViewImpl {
 	@Override
 	public Future<DisplaySurface> create(final Painter painter) {
 		this.painter = painter;
-		return this.painter
-				.instruct(new PaintInstruction<DisplaySurface, QJPaintContext>() {
-					@Override
-					public DisplaySurface call(	final PaintableRenderNode paintableRenderNode,
-												final QJPaintContext paintContext) {
-						final QWidget parent = paintContext
-								.queryVisual(paintableRenderNode
-										.getParentPaintableRenderNode());
-						final QPushButton visual = new QPushButton(parent);
+		return this.painter.instruct(new PaintInstruction<DisplaySurface, QJPaintContext>() {
+			@Override
+			public DisplaySurface call(	final PaintableRenderNode paintableRenderNode,
+										final QJPaintContext paintContext) {
+				final QWidget parent = paintContext.queryVisual(paintableRenderNode.getParentPaintableRenderNode());
+				final QPushButton visual = new QPushButton(parent);
 
-						final DisplaySurfaceHandle displaySurfaceHandle = paintContext
-								.getDisplaySurfaceHandle(visual);
-						final DisplaySurface visualDisplaySurface = ShellButtonViewImpl.this.displaySurfaceFactory
-								.createDisplaySurface(displaySurfaceHandle);
-						return visualDisplaySurface;
-					}
-				});
+				final DisplaySurfaceHandle displaySurfaceHandle = paintContext.getDisplaySurfaceHandle(visual);
+				final DisplaySurface visualDisplaySurface = ShellButtonViewImpl.this.displaySurfaceFactory
+						.createDisplaySurface(displaySurfaceHandle);
+				return visualDisplaySurface;
+			}
+		});
 	}
 }

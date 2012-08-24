@@ -25,7 +25,6 @@ public class Module extends AbstractModule {
 	@Override
 	protected void configure() {
 		install(new FactoryModuleBuilder().implement(	Painter.class,
-														QJPainter.class)
-				.build(PainterFactory.class));
+														QJPainter.class).build(PainterFactory.class));
 	}
 }

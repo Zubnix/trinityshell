@@ -22,13 +22,11 @@ public class EntryPoint {
 
 		// TODO command line args parsing
 
-		final Injector injector = Guice
-				.createInjector(Stage.PRODUCTION, StartupModule
-						.create(ASMClasspathScanner.class,
-								PackageFilter.create("org.trinity")));
+		final Injector injector = Guice.createInjector(	Stage.PRODUCTION,
+														StartupModule.create(	ASMClasspathScanner.class,
+																				PackageFilter.create("org.trinity")));
 
-		final ShellPluginsRunner shellPluginsRunner = injector
-				.getInstance(ShellPluginsRunner.class);
+		final ShellPluginsRunner shellPluginsRunner = injector.getInstance(ShellPluginsRunner.class);
 
 		shellPluginsRunner.startAllShellPlugins();
 	}

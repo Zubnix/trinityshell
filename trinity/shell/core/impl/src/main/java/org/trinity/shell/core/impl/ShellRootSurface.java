@@ -26,10 +26,11 @@ public class ShellRootSurface extends AbstractShellSurface {
 						final DisplayServer displayServer,
 						final EventBus nodeEventBus,
 						final ShellDisplayEventDispatcher shellDisplayEventDispatcher) {
-		super(nodeEventBus, shellDisplayEventDispatcher);
+		super(	nodeEventBus,
+				shellDisplayEventDispatcher);
 		this.shellNodeExecutor = shellNodeExecutor;
 		setDisplaySurface(displayServer.getRootDisplayArea());
-		syncGeoToDisplayRenderArea();
+		syncGeoToDisplaySurface();
 	}
 
 	@Override

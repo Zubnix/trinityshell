@@ -16,8 +16,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
-public class NamesProtocolHandler implements
-		XDisplayProtocolHandler {
+public class NamesProtocolHandler implements XDisplayProtocolHandler {
 
 	private final XPropertyCache xPropertyCache;
 
@@ -28,15 +27,15 @@ public class NamesProtocolHandler implements
 
 	@Override
 	public Map<String, Object> handleDipslayProtocol(	final XWindow xWindow,
-												final DisplayProtocol displayProtocol,
-												final Map<String, Object> arguments) {
-		final Map<String, Object> wmNameValue = this.xPropertyCache
-				.getXProperty(xWindow, "WM_NAME");
+														final DisplayProtocol displayProtocol,
+														final Map<String, Object> arguments) {
+		final Map<String, Object> wmNameValue = this.xPropertyCache.getXProperty(	xWindow,
+																					"WM_NAME");
 		final String name = (String) wmNameValue.get("STRING");
 
-		final Map<String, Object> result = Collections
-				.unmodifiableMap(new HashMap<String, Object>());
-		result.put("name", name);
+		final Map<String, Object> result = Collections.unmodifiableMap(new HashMap<String, Object>());
+		result.put(	"name",
+					name);
 
 		return result;
 	}

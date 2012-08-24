@@ -50,8 +50,7 @@ import com.google.common.eventbus.Subscribe;
  * @see ShellClient
  * @see BaseWidget
  */
-public abstract class AbstractShellSurface extends AbstractShellNode implements
-		ShellSurface {
+public abstract class AbstractShellSurface extends AbstractShellNode implements ShellSurface {
 
 	public static final boolean DEFAULT_IS_RESIZABLE = true;
 	public static final boolean DEFAULT_IS_MOVABLE = true;
@@ -328,9 +327,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	 */
 	protected void setDisplaySurface(final DisplaySurface platformRenderArea) {
 		this.platformRenderArea = platformRenderArea;
-		this.shellDisplayEventDispatcher
-				.registerDisplayEventSource(this.nodeEventBus,
-											platformRenderArea);
+		this.shellDisplayEventDispatcher.registerDisplayEventSource(this.nodeEventBus,
+																	platformRenderArea);
 	}
 
 	/**
@@ -343,8 +341,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	 */
 	protected int normalizedWidth(final int newWidth) {
 
-		int normalizedWidth = newWidth < getMinWidth() ? getMinWidth()
-				: newWidth > getMaxWidth() ? getMaxWidth() : newWidth;
+		int normalizedWidth = newWidth < getMinWidth() ? getMinWidth() : newWidth > getMaxWidth() ? getMaxWidth()
+				: newWidth;
 
 		normalizedWidth -= (normalizedWidth - getWidth()) % getWidthIncrement();
 
@@ -363,8 +361,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 		int normalizedHeight = newHeight < getMinHeight() ? getMinHeight()
 				: newHeight > getMaxHeight() ? getMaxHeight() : newHeight;
 
-		normalizedHeight -= (normalizedHeight - getHeight())
-				% getHeightIncrement();
+		normalizedHeight -= (normalizedHeight - getHeight()) % getHeightIncrement();
 
 		return normalizedHeight;
 	}
@@ -419,7 +416,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	 * unexpected behavior.
 	 */
 	@Override
-	public void syncGeoToDisplayRenderArea() {
+	public void syncGeoToDisplaySurface() {
 		final Rectangle rectangle = getDisplayRenderArea().getGeometry();
 		setX(rectangle.getX());
 		setY(rectangle.getY());

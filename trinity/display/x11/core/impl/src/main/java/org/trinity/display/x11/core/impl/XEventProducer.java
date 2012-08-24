@@ -30,33 +30,40 @@ public class XEventProducer implements DisplayEventProducer, Runnable {
 	private final XConnection connection;
 	private final EventBus xEventBus;
 
-	private final Thread producerThread;
+	private Thread producerThread;
 
 	@Inject
-	XEventProducer(	final XConnection connection,
-					@Named("xEventBus") final EventBus xEventBus) {
+	XEventProducer(final XConnection connection, @Named("xEventBus") final EventBus xEventBus) {
 		this.connection = connection;
 		this.xEventBus = xEventBus;
-
-		this.producerThread = new Thread(this);
 	}
 
 	@Override
-	public void start() {
+	public void startDisplayEventProduction() {
+		this.producerThread = new Thread(	this,
+											"X11 Display Thread");
 		this.producerThread.start();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void stop() {
+	public void stopDisplayEventProduction() {
 		this.producerThread.interrupt();
+		try {
+			this.producerThread.join(3000);
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (this.producerThread.isAlive()) {
+			this.producerThread.stop();
+		}
 	}
 
 	@Override
 	public void run() {
 		while (!Thread.interrupted()) {
-			final xcb_generic_event_t event_t = LibXcb
-					.xcb_wait_for_event(this.connection
-							.getConnectionReference());
+			final xcb_generic_event_t event_t = LibXcb.xcb_wait_for_event(this.connection.getConnectionReference());
 			this.xEventBus.post(event_t);
 			Thread.yield();
 		}

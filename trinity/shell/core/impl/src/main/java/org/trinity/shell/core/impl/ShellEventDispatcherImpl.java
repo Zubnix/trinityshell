@@ -46,7 +46,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  * The <code>EventDispatcher</code> implements the main hyperdrive even loop in
  * it's run method. This method is activated by the <code>ManagedDisplay</code>
  * that created the <code>EventDispatcher</code>. See
- * {@link ShellDisplay#start()}.
+ * {@link ShellDisplay#startDisplayEventProduction()}.
  * 
  * @author Erik De Rijcke
  * @since 1.0
@@ -57,8 +57,8 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 
 	// TODO this is basically the same mechanism as used in EventBus. Find a way
 	// to seperate and uniform this mechanism.
-	private final Cache<DisplayEventSource, Cache<EventBus, EventBus>> eventRecipients = CacheBuilder
-			.newBuilder().concurrencyLevel(4).weakKeys().build();
+	private final Cache<DisplayEventSource, Cache<EventBus, EventBus>> eventRecipients = CacheBuilder.newBuilder()
+			.concurrencyLevel(4).weakKeys().build();
 
 	private final DisplayServer display;
 	private final Provider<ShellClientSurface> shellClientProvider;
@@ -96,14 +96,12 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 		newShellSurfaceClientIfNeeded(displayEvent);
 		this.shellEventBus.post(displayEvent);
 
-		final Cache<EventBus, EventBus> eventBusses = this.eventRecipients
-				.getIfPresent(displayEvent.getEventSource());
+		final Cache<EventBus, EventBus> eventBusses = this.eventRecipients.getIfPresent(displayEvent.getEventSource());
 		if (eventBusses == null) {
 			return;
 		}
 
-		final Set<Entry<EventBus, EventBus>> eventBussesEntries = eventBusses
-				.asMap().entrySet();
+		final Set<Entry<EventBus, EventBus>> eventBussesEntries = eventBusses.asMap().entrySet();
 		for (final Entry<EventBus, EventBus> eventBusEntry : eventBussesEntries) {
 			final EventBus eventBus = eventBusEntry.getKey();
 			eventBus.post(displayEvent);
@@ -111,23 +109,19 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 	}
 
 	private void newShellSurfaceClientIfNeeded(final DisplayEvent event) {
-		final Cache<EventBus, EventBus> eventBusses = this.eventRecipients
-				.getIfPresent(event.getEventSource());
+		final Cache<EventBus, EventBus> eventBusses = this.eventRecipients.getIfPresent(event.getEventSource());
 
 		final DisplayEventSource eventSource = event.getEventSource();
 
-		if (((eventBusses == null) || (eventBusses.size() == 0))
-				&& (eventSource instanceof DisplaySurface)) {
+		if (((eventBusses == null) || (eventBusses.size() == 0)) && (eventSource instanceof DisplaySurface)) {
 			createShellSurfaceClient((DisplaySurface) eventSource);
 		}
 	}
 
 	private void createShellSurfaceClient(final DisplaySurface clientDisplayRenderArea) {
-		final ShellClientSurface clientShellRenderArea = this.shellClientProvider
-				.get();
+		final ShellClientSurface clientShellRenderArea = this.shellClientProvider.get();
 		clientShellRenderArea.setDisplaySurface(clientDisplayRenderArea);
-		this.shellEventBus
-				.post(new ShellSurfaceCreatedEvent(clientShellRenderArea));
+		this.shellEventBus.post(new ShellSurfaceCreatedEvent(clientShellRenderArea));
 	}
 
 	@Override
@@ -139,13 +133,12 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 					.get(	displayEventSource,
 							new Callable<Cache<EventBus, EventBus>>() {
 								@Override
-								public Cache<EventBus, EventBus> call()
-										throws Exception {
-									return CacheBuilder.newBuilder().weakKeys()
-											.build();
+								public Cache<EventBus, EventBus> call() throws Exception {
+									return CacheBuilder.newBuilder().weakKeys().build();
 								}
 							});
-			nodeEventBusses.put(nodeEventBus, nodeEventBus);
+			nodeEventBusses.put(nodeEventBus,
+								nodeEventBus);
 		} catch (final ExecutionException e) {
 			throw new RuntimeException(e);
 		}
@@ -154,8 +147,7 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 	@Override
 	public void unregisterDisplayEventSource(	final EventBus nodeEventBus,
 												final DisplayEventSource displayEventSource) {
-		final Cache<EventBus, EventBus> nodeEventBusses = this.eventRecipients
-				.getIfPresent(displayEventSource);
+		final Cache<EventBus, EventBus> nodeEventBusses = this.eventRecipients.getIfPresent(displayEventSource);
 		if (nodeEventBusses != null) {
 			nodeEventBusses.invalidate(nodeEventBus);
 		}

@@ -48,8 +48,8 @@ public class XKeyboard implements Keyboard {
 		final int keyCode = key.getKeyCode();
 		final int inputModifiersState = inputModifiers.getInputModifiersState();
 
-		final Integer keySymbol = this.xKeySymbolCache
-				.getKeySymbol(keyCode, inputModifiersState);
+		final Integer keySymbol = this.xKeySymbolCache.getKeySymbol(keyCode,
+																	inputModifiersState);
 
 		final String keySymbolName = this.xKeySymbolMapping.toString(keySymbol);
 		return keySymbolName;
@@ -57,10 +57,8 @@ public class XKeyboard implements Keyboard {
 
 	@Override
 	public List<Key> asKeys(final String keySymbolName) {
-		final Integer keySymbol = this.xKeySymbolMapping
-				.toKeySymbol(keySymbolName);
-		final List<Integer> keyCodes = this.xKeySymbolCache
-				.getKeyCodes(keySymbol);
+		final Integer keySymbol = this.xKeySymbolMapping.toKeySymbol(keySymbolName);
+		final List<Integer> keyCodes = this.xKeySymbolCache.getKeyCodes(keySymbol);
 
 		final List<Key> keys = new ArrayList<Key>(keyCodes.size());
 		for (final Integer keyCode : keyCodes) {
@@ -72,8 +70,7 @@ public class XKeyboard implements Keyboard {
 
 	@Override
 	public InputModifier modifier(final String modifierName) {
-		final int mask = this.xInputModifierMaskMapping
-				.getXInputModifierMask(modifierName);
+		final int mask = this.xInputModifierMaskMapping.getXInputModifierMask(modifierName);
 		final XInputModifier xInputModifier = new XInputModifier(	mask,
 																	modifierName);
 		return xInputModifier;
@@ -83,8 +80,7 @@ public class XKeyboard implements Keyboard {
 	public InputModifiers modifiers(final String... modifierNames) {
 		int inputModifiersState = 0;
 		for (final String modifierName : modifierNames) {
-			inputModifiersState |= this.xInputModifierMaskMapping
-					.getXInputModifierMask(modifierName);
+			inputModifiersState |= this.xInputModifierMaskMapping.getXInputModifierMask(modifierName);
 		}
 		return new InputModifiers(inputModifiersState);
 	}

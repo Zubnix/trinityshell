@@ -34,16 +34,15 @@ public class XConnection {
 	private SWIGTYPE_p_xcb_connection_t connection_t;
 	private xcb_screen_t screen_t;
 
-	public void open(final String displayName, final int screen) {
-		final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4)
-				.order(ByteOrder.nativeOrder());
+	public void open(	final String displayName,
+						final int screen) {
+		final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 		screenBuf.putInt(screen);
-		this.connection_t = LibXcb.xcb_connect(displayName, screenBuf);
+		this.connection_t = LibXcb.xcb_connect(	displayName,
+												screenBuf);
 
 		int targetScreen = screen;
-		final xcb_screen_iterator_t iter = LibXcb
-				.xcb_setup_roots_iterator(LibXcb
-						.xcb_get_setup(this.connection_t));
+		final xcb_screen_iterator_t iter = LibXcb.xcb_setup_roots_iterator(LibXcb.xcb_get_setup(this.connection_t));
 		for (; iter.getRem() != 0; --targetScreen, LibXcb.xcb_screen_next(iter)) {
 			if (targetScreen == 0) {
 				this.screen_t = iter.getData();
@@ -57,17 +56,13 @@ public class XConnection {
 	private void configureRootEvents() {
 		final int rootId = this.screen_t.getRoot();
 
-		final ByteBuffer values = ByteBuffer.allocateDirect(4 + 4)
-				.order(ByteOrder.nativeOrder());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
-				.swigValue());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY
-				.swigValue());
+		final ByteBuffer values = ByteBuffer.allocateDirect(4 + 4).order(ByteOrder.nativeOrder());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT.swigValue());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY.swigValue());
 
 		LibXcb.xcb_change_window_attributes(this.connection_t,
 											rootId,
-											xcb_cw_t.XCB_CW_EVENT_MASK
-													.swigValue(),
+											xcb_cw_t.XCB_CW_EVENT_MASK.swigValue(),
 											values);
 	}
 

@@ -27,8 +27,7 @@ public class GeometryNotifyEvent extends DisplayEvent {
 
 	private final Rectangle geometry;
 
-	public GeometryNotifyEvent(	final DisplayEventSource displayEventSource,
-								final Rectangle geometry) {
+	public GeometryNotifyEvent(final DisplayEventSource displayEventSource, final Rectangle geometry) {
 
 		super(displayEventSource);
 		this.geometry = geometry;

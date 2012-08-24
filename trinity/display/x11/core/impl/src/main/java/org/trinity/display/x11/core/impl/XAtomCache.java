@@ -46,8 +46,10 @@ public class XAtomCache {
 				Integer atomCode = this.atomCodeNames.get(atomName);
 				if (atomCode == null) {
 					atomCode = Integer.valueOf(internAtom(atomName));
-					this.atomCodeNames.put(atomName, atomCode);
-					this.atomNameCodes.put(atomCode, atomName);
+					this.atomCodeNames.put(	atomName,
+											atomCode);
+					this.atomNameCodes.put(	atomCode,
+											atomName);
 				}
 				return atomCode;
 			}
@@ -55,15 +57,15 @@ public class XAtomCache {
 	}
 
 	private int internAtom(final String atomName) {
-		final xcb_intern_atom_cookie_t cookie_t = LibXcb
-				.xcb_intern_atom(	this.xConnection.getConnectionReference(),
-									(short) 0,
-									atomName.length(),
-									atomName);
+		final xcb_intern_atom_cookie_t cookie_t = LibXcb.xcb_intern_atom(	this.xConnection.getConnectionReference(),
+																			(short) 0,
+																			atomName.length(),
+																			atomName);
 		final xcb_generic_error_t e = new xcb_generic_error_t();
-		final xcb_intern_atom_reply_t reply_t = LibXcb
-				.xcb_intern_atom_reply(this.xConnection
-						.getConnectionReference(), cookie_t, e);
+		final xcb_intern_atom_reply_t reply_t = LibXcb.xcb_intern_atom_reply(	this.xConnection
+																						.getConnectionReference(),
+																				cookie_t,
+																				e);
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
 			throw new RuntimeException("xcb error");
 		}

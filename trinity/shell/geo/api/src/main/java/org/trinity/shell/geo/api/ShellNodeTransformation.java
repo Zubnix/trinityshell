@@ -46,8 +46,8 @@ public class ShellNodeTransformation {
 	private final ShellNode parent1;
 
 	/**
-	 * Create a new <code>ShellNodeTransformation</code> with a number of current
-	 * and new geometric values.
+	 * Create a new <code>ShellNodeTransformation</code> with a number of
+	 * current and new geometric values.
 	 * 
 	 * @param x0
 	 *            The current relative X coordinate in pixels.

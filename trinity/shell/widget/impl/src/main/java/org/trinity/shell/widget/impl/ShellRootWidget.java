@@ -14,6 +14,7 @@ package org.trinity.shell.widget.impl;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
 import org.trinity.shell.geo.api.ShellNodeExecutor;
+import org.trinity.shell.geo.api.manager.ShellLayoutManager;
 import org.trinity.shell.widget.api.ShellWidget;
 import org.trinity.shell.widget.api.view.ShellWidgetView;
 
@@ -43,25 +44,30 @@ import de.devsurf.injection.guice.annotations.Bind;
 public final class ShellRootWidget extends ShellWidgetImpl {
 
 	@Inject
-	protected ShellRootWidget(	final EventBus eventBus,
-								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-								final PainterFactory painterFactory,
-								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
-								final ShellWidgetView view) {
+	ShellRootWidget(final EventBus eventBus,
+					final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
+					final PainterFactory painterFactory,
+					@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
+					@Named("shellRootWidgetView") final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
 				shellNodeExecutor,
 				view);
+		doShow(false);
 		init(getParent());
-		requestShow();
-		syncGeoToDisplayRenderArea();
+		syncGeoToDisplaySurface();
 	}
 
 	@Override
 	protected void init(final ShellWidget paintableParent) {
 		super.init(paintableParent);
-		syncGeoToDisplayRenderArea();
+		syncGeoToDisplaySurface();
+	}
+
+	@Override
+	public ShellLayoutManager getParentGeoManager() {
+		return null;
 	}
 
 	@Override

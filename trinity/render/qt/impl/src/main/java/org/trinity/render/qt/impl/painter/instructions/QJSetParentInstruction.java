@@ -15,16 +15,13 @@ import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
 
-public class QJSetParentInstruction implements
-		PaintInstruction<Void, QJPaintContext> {
+public class QJSetParentInstruction implements PaintInstruction<Void, QJPaintContext> {
 
 	private final PaintableRenderNode parent;
 	private final int x;
 	private final int y;
 
-	public QJSetParentInstruction(	final PaintableRenderNode parent,
-									final int x,
-									final int y) {
+	public QJSetParentInstruction(final PaintableRenderNode parent, final int x, final int y) {
 		this.parent = parent;
 		this.x = x;
 		this.y = y;
@@ -33,9 +30,9 @@ public class QJSetParentInstruction implements
 	@Override
 	public Void call(	final PaintableRenderNode paintableRenderNode,
 						final QJPaintContext renderEngine) {
-		renderEngine.getVisual()
-				.setParent(renderEngine.queryVisual(this.parent));
-		renderEngine.getVisual().move(this.x, this.y);
+		renderEngine.getVisual().setParent(renderEngine.queryVisual(this.parent));
+		renderEngine.getVisual().move(	this.x,
+										this.y);
 		return null;
 	}
 }

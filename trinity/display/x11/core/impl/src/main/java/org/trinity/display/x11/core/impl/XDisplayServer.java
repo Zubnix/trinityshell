@@ -11,10 +11,12 @@
  */
 package org.trinity.display.x11.core.impl;
 
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import org.trinity.foundation.display.api.DisplaySurface;
+import org.trinity.foundation.display.api.DisplayEventProducer;
 import org.trinity.foundation.display.api.DisplayServer;
+import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
@@ -35,18 +37,24 @@ public class XDisplayServer implements DisplayServer {
 
 	private final XConnection xConnection;
 	private final XWindowCache xWindowCache;
+	private final Set<DisplayEventProducer> displayEventProducers;
 
 	@Inject
 	XDisplayServer(	final XConnection xConnection,
 					final XWindowCache xWindowCache,
-					@Named("displayEventBus") final EventBus displayEventBus) {
+					@Named("displayEventBus") final EventBus displayEventBus,
+					final Set<DisplayEventProducer> displayEventProducers) {
 
 		displayEventBus.register(this);
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
+		this.displayEventProducers = displayEventProducers;
+
 		// FIXME from config
 		final String displayName = System.getenv("DISPLAY");
-		this.xConnection.open(displayName, 0);
+		this.xConnection.open(	displayName,
+								0);
+		startUp();
 	}
 
 	@Subscribe
@@ -78,13 +86,21 @@ public class XDisplayServer implements DisplayServer {
 
 	@Override
 	public void shutDown() {
+		for (final DisplayEventProducer displayEventProducer : this.displayEventProducers) {
+			displayEventProducer.stopDisplayEventProduction();
+		}
 		this.xConnection.close();
 		this.displayEvents.clear();
 	}
 
 	@Override
 	public DisplaySurface getRootDisplayArea() {
-		return this.xWindowCache.getWindow(this.xConnection
-				.getScreenReference().getRoot());
+		return this.xWindowCache.getWindow(this.xConnection.getScreenReference().getRoot());
+	}
+
+	public void startUp() {
+		for (final DisplayEventProducer displayEventProducer : this.displayEventProducers) {
+			displayEventProducer.startDisplayEventProduction();
+		}
 	}
 }

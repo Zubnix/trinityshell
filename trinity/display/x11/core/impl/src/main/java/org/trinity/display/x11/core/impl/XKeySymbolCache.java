@@ -31,10 +31,8 @@ public class XKeySymbolCache {
 	private final SWIGTYPE_p__XCBKeySymbols xcbKeySymbols;
 
 	@Inject
-	XKeySymbolCache(final XConnection xConnection,
-					@Named("xEventBus") final EventBus xEventBus) {
-		this.xcbKeySymbols = LibXcb.xcb_key_symbols_alloc(xConnection
-				.getConnectionReference());
+	XKeySymbolCache(final XConnection xConnection, @Named("xEventBus") final EventBus xEventBus) {
+		this.xcbKeySymbols = LibXcb.xcb_key_symbols_alloc(xConnection.getConnectionReference());
 		xEventBus.register(this);
 	}
 
@@ -43,7 +41,8 @@ public class XKeySymbolCache {
 		this.resolvedKeySymbols.clear();
 	}
 
-	public Integer getKeySymbol(final int keyCode, final int inputModifiersState) {
+	public Integer getKeySymbol(final int keyCode,
+								final int inputModifiersState) {
 		final Integer key = Integer.valueOf(keyCode);
 		final Map<Integer, Integer> keyResolutions = getResolutionsForKey(key);
 
@@ -51,17 +50,17 @@ public class XKeySymbolCache {
 		Integer keySymbol = keyResolutions.get(inputModifiersCode);
 
 		if (keySymbol == null) {
-			keySymbol = Integer
-					.valueOf(resolveKeySymbol(key, inputModifiersState));
-			keyResolutions.put(inputModifiersCode, keySymbol);
+			keySymbol = Integer.valueOf(resolveKeySymbol(	key,
+															inputModifiersState));
+			keyResolutions.put(	inputModifiersCode,
+								keySymbol);
 		}
 		return keySymbol;
 	}
 
 	public List<Integer> getKeyCodes(final Integer keySymbol) {
-		final ByteBuffer keys = LibXcb
-				.xcb_key_symbols_get_keycode(	this.xcbKeySymbols,
-												keySymbol.intValue());
+		final ByteBuffer keys = LibXcb.xcb_key_symbols_get_keycode(	this.xcbKeySymbols,
+																	keySymbol.intValue());
 		final List<Integer> keyCodes = new LinkedList<Integer>();
 		final Integer keyCode = null;
 		while (Integer.valueOf(keys.getInt()).intValue() != LibXcbConstants.XCB_NO_SYMBOL) {
@@ -74,12 +73,14 @@ public class XKeySymbolCache {
 		Map<Integer, Integer> keyResolutions = this.resolvedKeySymbols.get(key);
 		if (keyResolutions == null) {
 			keyResolutions = new HashMap<Integer, Integer>();
-			this.resolvedKeySymbols.put(key, keyResolutions);
+			this.resolvedKeySymbols.put(key,
+										keyResolutions);
 		}
 		return keyResolutions;
 	}
 
-	private int resolveKeySymbol(final int key, final int modifiers) {
+	private int resolveKeySymbol(	final int key,
+									final int modifiers) {
 		int k0, k1;
 		// 'col' (third parameter) is used to get the proper KeySym according to
 		// modifier (XCB doesn't provide an equivalent to XLookupString()). If
@@ -104,13 +105,11 @@ public class XKeySymbolCache {
 			k1 = k0;
 		}
 		// The numlock modifier is on and the second KeySym is a keypad KeySym
-		if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_2.swigValue()) != 0)
-				&& (LibXcb.xcb_is_keypad_key(k1) != 0)) {
+		if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_2.swigValue()) != 0) && (LibXcb.xcb_is_keypad_key(k1) != 0)) {
 			// The Shift modifier is on, or if the Lock modifier is on and is
 			// interpreted as ShiftLock, use the first KeySym
 			if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT.swigValue()) != 0)
-					|| ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK
-							.swigValue()) != 0)) {
+					|| ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK.swigValue()) != 0)) {
 				return k0;
 			} else {
 				return k1;

@@ -57,8 +57,7 @@ public class ShellGeoVExecutor implements ShellNodeExecutor {
 						final int relativeX,
 						final int relativeY) {
 
-		final ShellNodeTransformation shellNodeTransformation = shellNode
-				.toGeoTransformation();
+		final ShellNodeTransformation shellNodeTransformation = shellNode.toGeoTransformation();
 
 		final int deltaX = shellNodeTransformation.getDeltaX();
 		final int deltaY = shellNodeTransformation.getDeltaY();
@@ -73,7 +72,9 @@ public class ShellGeoVExecutor implements ShellNodeExecutor {
 
 			// directly manipulated underlying platform specific geometry of the
 			// child
-			child.getNodeExecutor().move(child, newRelX, newRelY);
+			child.getNodeExecutor().move(	child,
+											newRelX,
+											newRelY);
 		}
 	}
 
@@ -90,14 +91,17 @@ public class ShellGeoVExecutor implements ShellNodeExecutor {
 							final int relativeY,
 							final int width,
 							final int height) {
-		move(shellNode, relativeX, relativeY);
+		move(	shellNode,
+				relativeX,
+				relativeY);
 	}
 
 	@Override
 	public void show(final ShellNode shellNode) {
 		final ShellNode[] children = shellNode.getChildren();
 		for (final ShellNode child : children) {
-			updateChildVisibility(child, true);
+			updateChildVisibility(	child,
+									true);
 		}
 	}
 
@@ -105,7 +109,8 @@ public class ShellGeoVExecutor implements ShellNodeExecutor {
 	public void hide(final ShellNode shellNode) {
 		final ShellNode[] children = shellNode.getChildren();
 		for (final ShellNode child : children) {
-			updateChildVisibility(child, false);
+			updateChildVisibility(	child,
+									false);
 		}
 	}
 
@@ -134,8 +139,10 @@ public class ShellGeoVExecutor implements ShellNodeExecutor {
 		for (final ShellNode child : children) {
 			// directly update underlying platform specific parent of
 			// the child
-			child.getNodeExecutor().reparent(child, shellNode);
-			updateChildVisibility(child, parentVisible);
+			child.getNodeExecutor().reparent(	child,
+												shellNode);
+			updateChildVisibility(	child,
+									parentVisible);
 		}
 	}
 

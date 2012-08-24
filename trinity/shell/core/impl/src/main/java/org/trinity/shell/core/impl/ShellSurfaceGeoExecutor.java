@@ -49,8 +49,8 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 	}
 
 	@Override
-	public DisplayAreaManipulator<DisplayArea> getAreaManipulator(final ShellNode shellNode) {
-		return this.getAreaManipulator(shellNode);
+	public DisplayAreaManipulator<DisplayArea> getShellNodeManipulator(final ShellNode shellNode) {
+		return getAreaManipulator((ShellSurface) shellNode);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -80,7 +80,8 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 
 			final int newRelativeX = newRelativePosition.getX();
 			final int newRelativeY = newRelativePosition.getY();
-			this.getAreaManipulator(shellNode).move(newRelativeX, newRelativeY);
+			getShellNodeManipulator(shellNode).move(newRelativeX,
+													newRelativeY);
 		}
 	}
 
@@ -89,7 +90,9 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 						final int width,
 						final int height) {
 		if (isAreaInitialized((ShellSurface) shellNode)) {
-			super.resize(shellNode, width, height);
+			super.resize(	shellNode,
+							width,
+							height);
 		}
 	}
 
@@ -114,8 +117,7 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 			final int newRelativeX = newRelativePosition.getX();
 			final int newRelativeY = newRelativePosition.getY();
 
-			final DisplayAreaManipulator<DisplayArea> areaManipulator = this
-					.getAreaManipulator(shellNode);
+			final DisplayAreaManipulator<DisplayArea> areaManipulator = getShellNodeManipulator(shellNode);
 			areaManipulator.moveResize(	newRelativeX,
 										newRelativeY,
 										newWidth,
@@ -130,14 +132,17 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 		final ShellSurface parentRenderArea = findClosestSameTypeArea(directParent);
 
 		if (parentRenderArea == null) {
-			return new Coordinate(directRelativeX, directRelativeY);
+			return new Coordinate(	directRelativeX,
+									directRelativeY);
 		}
 
 		final int newAbsX = directParent.getAbsoluteX() + directRelativeX;
 		final int newAbsY = directParent.getAbsoluteY() + directRelativeY;
 
 		final Coordinate absCorParent = getAreaManipulator(this.root)
-				.translateCoordinates(getAreaPeer(parentRenderArea), 0, 0);
+				.translateCoordinates(	getAreaPeer(parentRenderArea),
+										0,
+										0);
 
 		final int newRelX = newAbsX - absCorParent.getX();
 		final int newRelY = newAbsY - absCorParent.getY();
@@ -148,10 +153,13 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 		return corRelativeToTypedParent;
 	}
 
-	protected void initialize(final ShellNode parent, final ShellNode area) {
-		initializeGeoTransformableSquare(parent, area);
+	protected void initialize(	final ShellNode parent,
+								final ShellNode area) {
+		initializeGeoTransformableSquare(	parent,
+											area);
 		for (final ShellNode child : area.getChildren()) {
-			initialize(area, child);
+			initialize(	area,
+						child);
 		}
 	}
 
@@ -174,7 +182,8 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 	}
 
 	@Override
-	public void reparent(final ShellNode shellNode, final ShellNode parent) {
+	public void reparent(	final ShellNode shellNode,
+							final ShellNode parent) {
 		final ShellSurface currentRenderArea = (ShellSurface) shellNode;
 		final ShellNode newParent = parent;
 		final ShellSurface newParentRenderArea = findClosestSameTypeArea(newParent);
@@ -185,7 +194,8 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 		if (newParentInitialized && !currentRenderAreaInitialized) {
 			// parent is ready but we are not. we initialize ourself with
 			// our ready parent as argument.
-			initialize(newParent, currentRenderArea);
+			initialize(	newParent,
+						currentRenderArea);
 		} else if (newParentInitialized && currentRenderAreaInitialized) {
 			// we are ready and our new parent is ready. we start the
 			// procedure to change to our new ready parent.
@@ -214,7 +224,7 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 			// we are ready but our new parent isn't. we hide ourself.
 
 			// call back-end to hide current manipulated area
-			this.getAreaManipulator(shellNode).hide();
+			getShellNodeManipulator(shellNode).hide();
 		} else {
 			// If both the new parent and the current render area are
 			// not initialized, there isn't much we can do. We don't want to
@@ -248,8 +258,7 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 			return (ShellSurface) square;
 
 		} else {
-			final ShellNodeTransformation transformation = square
-					.toGeoTransformation();
+			final ShellNodeTransformation transformation = square.toGeoTransformation();
 			final ShellNode currentParent = transformation.getParent0();
 			final ShellNode newParent = transformation.getParent1();
 			if (currentParent == null) {
@@ -280,6 +289,6 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 
 	@Override
 	public void destroy(final ShellNode shellNode) {
-		this.getAreaManipulator(shellNode).destroy();
+		getShellNodeManipulator(shellNode).destroy();
 	}
 }

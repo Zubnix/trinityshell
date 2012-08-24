@@ -27,8 +27,7 @@ public class UnmapNotifyConversion implements XEventConversion {
 	private final EventBus xEventBus;
 
 	@Inject
-	UnmapNotifyConversion(	@Named("xEventBus") final EventBus xEventBus,
-							final XWindowCache xWindowCache) {
+	UnmapNotifyConversion(@Named("xEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -36,14 +35,12 @@ public class UnmapNotifyConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
-		final xcb_unmap_notify_event_t unmap_notify_event_t = new xcb_unmap_notify_event_t(	xcb_generic_event_t
-																									.getCPtr(event_t),
+		final xcb_unmap_notify_event_t unmap_notify_event_t = new xcb_unmap_notify_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																							true);
 		this.xEventBus.post(unmap_notify_event_t);
 
 		final int windowId = unmap_notify_event_t.getEvent();
-		final XWindow displayEventSource = this.xWindowCache
-				.getWindow(windowId);
+		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final DisplayEvent displayEvent = new HideNotifyEvent(displayEventSource);
 

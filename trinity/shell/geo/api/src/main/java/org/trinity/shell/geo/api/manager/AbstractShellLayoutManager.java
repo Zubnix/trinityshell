@@ -65,12 +65,14 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	@Override
 	public void addChild(	final ShellNode child,
 							final ShellLayoutProperty layoutProperty) {
-		this.childrenWithLayoutProperty.put(child, layoutProperty);
+		this.childrenWithLayoutProperty.put(child,
+											layoutProperty);
 	}
 
 	@Override
 	public void addChild(final ShellNode child) {
-		addChild(child, defaultLayoutProperty());
+		addChild(	child,
+					defaultLayoutProperty());
 	}
 
 	protected abstract ShellLayoutProperty defaultLayoutProperty();
@@ -89,8 +91,8 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	@Override
 	public void removeChild(final int index) {
 
-		final Iterator<Entry<ShellNode, ShellLayoutProperty>> it = this.childrenWithLayoutProperty
-				.entrySet().iterator();
+		final Iterator<Entry<ShellNode, ShellLayoutProperty>> it = this.childrenWithLayoutProperty.entrySet()
+				.iterator();
 
 		final int i = 0;
 		while (it.hasNext()) {
@@ -116,8 +118,8 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	 */
 	@Override
 	public ShellNode getChild(final int index) {
-		final Iterator<Entry<ShellNode, ShellLayoutProperty>> it = this.childrenWithLayoutProperty
-				.entrySet().iterator();
+		final Iterator<Entry<ShellNode, ShellLayoutProperty>> it = this.childrenWithLayoutProperty.entrySet()
+				.iterator();
 
 		ShellNode child = null;
 		for (int i = 0; it.hasNext(); i++, child = it.next().getKey()) {
@@ -134,8 +136,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	 */
 	@Override
 	public ShellLayoutPropertyLine getLayoutProperty(final ShellNode child) {
-		return (ShellLayoutPropertyLine) this.childrenWithLayoutProperty
-				.get(child);
+		return (ShellLayoutPropertyLine) this.childrenWithLayoutProperty.get(child);
 	}
 
 	@Subscribe

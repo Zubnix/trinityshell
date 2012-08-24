@@ -13,5 +13,6 @@ package org.trinity.foundation.render.api;
 
 public interface PaintInstruction<R, P extends PaintContext> {
 
-	R call(PaintableRenderNode paintableRenderNode, P paintContext);
+	R call(	PaintableRenderNode paintableRenderNode,
+			P paintContext);
 }

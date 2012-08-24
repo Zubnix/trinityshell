@@ -26,7 +26,8 @@ public class XKeySymbolMapping {
 		String keySymbolName = this.keySymbolToName.get(keySymbol);
 		if (keySymbolName == null) {
 			keySymbolName = findKeySymbolName(keySymbol.intValue());
-			storeMapping(keySymbol, keySymbolName);
+			storeMapping(	keySymbol,
+							keySymbolName);
 		}
 		return keySymbolName;
 	}
@@ -50,7 +51,8 @@ public class XKeySymbolMapping {
 		Integer keySymbol = this.nameToKeySymbol.get(keySymbolName);
 		if (keySymbol == null) {
 			keySymbol = findKeySymbol(keySymbolName);
-			storeMapping(keySymbol, keySymbolName);
+			storeMapping(	keySymbol,
+							keySymbolName);
 		}
 		return keySymbol;
 	}
@@ -83,8 +85,10 @@ public class XKeySymbolMapping {
 
 	private void storeMapping(	final Integer keySymbol,
 								final String keySymbolName) {
-		this.keySymbolToName.put(keySymbol, keySymbolName);
-		this.nameToKeySymbol.put(keySymbolName, keySymbol);
+		this.keySymbolToName.put(	keySymbol,
+									keySymbolName);
+		this.nameToKeySymbol.put(	keySymbolName,
+									keySymbol);
 	}
 
 	private void staticMappings() {
@@ -101,60 +105,85 @@ public class XKeySymbolMapping {
 		{
 			/* InputModifiers */
 			// #define XK_Shift_L 0xFFE1 /* Left shift */
-			storeMapping(Integer.valueOf(0xFFE1), Keyboard.L_SHIFT);
+			storeMapping(	Integer.valueOf(0xFFE1),
+							Keyboard.L_SHIFT);
 			// #define XK_Shift_R 0xFFE2 /* Right shift */
-			storeMapping(Integer.valueOf(0xFFE2), Keyboard.R_SHIFT);
+			storeMapping(	Integer.valueOf(0xFFE2),
+							Keyboard.R_SHIFT);
 			// #define XK_Control_L 0xFFE3 /* Left control */
-			storeMapping(Integer.valueOf(0xFFE3), Keyboard.L_CTRL);
+			storeMapping(	Integer.valueOf(0xFFE3),
+							Keyboard.L_CTRL);
 			// #define XK_Control_R 0xFFE4 /* Right control */
-			storeMapping(Integer.valueOf(0xFFE4), Keyboard.R_CTRL);
+			storeMapping(	Integer.valueOf(0xFFE4),
+							Keyboard.R_CTRL);
 			// #define XK_Caps_Lock 0xFFE5 /* Caps lock */
-			storeMapping(Integer.valueOf(0xFFE5), Keyboard.CAPS_LOCK);
+			storeMapping(	Integer.valueOf(0xFFE5),
+							Keyboard.CAPS_LOCK);
 			// #define XK_Shift_Lock 0xFFE6 /* Shift lock */
-			storeMapping(Integer.valueOf(0xFFE6), Keyboard.SHIFT_LOCK);
+			storeMapping(	Integer.valueOf(0xFFE6),
+							Keyboard.SHIFT_LOCK);
 			//
 			// #define XK_Meta_L 0xFFE7 /* Left meta */
-			storeMapping(Integer.valueOf(0xFFE7), Keyboard.L_META);
+			storeMapping(	Integer.valueOf(0xFFE7),
+							Keyboard.L_META);
 			// #define XK_Meta_R 0xFFE8 /* Right meta */
-			storeMapping(Integer.valueOf(0xFFE8), Keyboard.R_META);
+			storeMapping(	Integer.valueOf(0xFFE8),
+							Keyboard.R_META);
 			// #define XK_Alt_L 0xFFE9 /* Left alt */
-			storeMapping(Integer.valueOf(0xFFE9), Keyboard.L_ALT);
+			storeMapping(	Integer.valueOf(0xFFE9),
+							Keyboard.L_ALT);
 			// #define XK_Alt_R 0xFFEA /* Right alt */
-			storeMapping(Integer.valueOf(0xFFEA), Keyboard.R_ALT);
+			storeMapping(	Integer.valueOf(0xFFEA),
+							Keyboard.R_ALT);
 			// #define XK_Super_L 0xFFEB /* Left super */
-			storeMapping(Integer.valueOf(0xFFEB), Keyboard.L_SUPER);
+			storeMapping(	Integer.valueOf(0xFFEB),
+							Keyboard.L_SUPER);
 			// #define XK_Super_R 0xFFEC /* Right super */
-			storeMapping(Integer.valueOf(0xFFEC), Keyboard.R_SUPER);
+			storeMapping(	Integer.valueOf(0xFFEC),
+							Keyboard.R_SUPER);
 			// #define XK_Hyper_L 0xFFED /* Left hyper */
-			storeMapping(Integer.valueOf(0xFFED), Keyboard.L_HYPER);
+			storeMapping(	Integer.valueOf(0xFFED),
+							Keyboard.L_HYPER);
 			// #define XK_Hyper_R 0xFFEE /* Right hyper */
-			storeMapping(Integer.valueOf(0xFFEE), Keyboard.R_HYPER);
+			storeMapping(	Integer.valueOf(0xFFEE),
+							Keyboard.R_HYPER);
 		}
 		{
 			/* Cursor control & motion */
 			// #define XK_Home 0xFF50
-			storeMapping(Integer.valueOf(0xFF50), Keyboard.HOME);
+			storeMapping(	Integer.valueOf(0xFF50),
+							Keyboard.HOME);
 			// #define XK_Left 0xFF51 /* Move left, left arrow */
-			storeMapping(Integer.valueOf(0xFF51), Keyboard.LEFT);
+			storeMapping(	Integer.valueOf(0xFF51),
+							Keyboard.LEFT);
 			// #define XK_Up 0xFF52 /* Move up, up arrow */
-			storeMapping(Integer.valueOf(0xFF52), Keyboard.UP);
+			storeMapping(	Integer.valueOf(0xFF52),
+							Keyboard.UP);
 
 			// #define XK_Right 0xFF53 /* Move right, right arrow */
-			storeMapping(Integer.valueOf(0xFF53), Keyboard.RIGHT);
+			storeMapping(	Integer.valueOf(0xFF53),
+							Keyboard.RIGHT);
 			// #define XK_Down 0xFF54 /* Move down, down arrow */
-			storeMapping(Integer.valueOf(0xFF52), Keyboard.DOWN);
+			storeMapping(	Integer.valueOf(0xFF52),
+							Keyboard.DOWN);
 			// #define XK_Prior 0xFF55 /* Prior, previous */
-			storeMapping(Integer.valueOf(0xFF55), Keyboard.PREV);
+			storeMapping(	Integer.valueOf(0xFF55),
+							Keyboard.PREV);
 			// #define XK_Page_Up 0xFF55
-			storeMapping(Integer.valueOf(0xFF56), Keyboard.PG_UP);
+			storeMapping(	Integer.valueOf(0xFF56),
+							Keyboard.PG_UP);
 			// #define XK_Next 0xFF56 /* Next */
-			storeMapping(Integer.valueOf(0xFF56), Keyboard.NEXT);
+			storeMapping(	Integer.valueOf(0xFF56),
+							Keyboard.NEXT);
 			// #define XK_Page_Down 0xFF56
-			storeMapping(Integer.valueOf(0xFF56), Keyboard.PG_DOWN);
+			storeMapping(	Integer.valueOf(0xFF56),
+							Keyboard.PG_DOWN);
 			// #define XK_End 0xFF57 /* EOL */
-			storeMapping(Integer.valueOf(0xFF57), Keyboard.END);
+			storeMapping(	Integer.valueOf(0xFF57),
+							Keyboard.END);
 			// #define XK_Begin 0xFF58 /* BOL *
-			storeMapping(Integer.valueOf(0xFF58), Keyboard.BEGIN);
+			storeMapping(	Integer.valueOf(0xFF58),
+							Keyboard.BEGIN);
 		}
 		{
 			/*
@@ -163,34 +192,46 @@ public class XKeySymbolMapping {
 			 * lookup tables in client code.
 			 */
 			// #define XK_BackSpace 0xFF08 /* back space, back char */
-			storeMapping(Integer.valueOf(0xFF08), Keyboard.BACKSPACE);
+			storeMapping(	Integer.valueOf(0xFF08),
+							Keyboard.BACKSPACE);
 			// #define XK_Tab 0xFF09
-			storeMapping(Integer.valueOf(0xFF09), Keyboard.TAB);
+			storeMapping(	Integer.valueOf(0xFF09),
+							Keyboard.TAB);
 			// #define XK_Linefeed 0xFF0A /* Linefeed, LF */
-			storeMapping(Integer.valueOf(0xFF0A), Keyboard.LINEFEED);
+			storeMapping(	Integer.valueOf(0xFF0A),
+							Keyboard.LINEFEED);
 			// #define XK_Clear 0xFF0B
-			storeMapping(Integer.valueOf(0xFF0B), Keyboard.CLEAR);
+			storeMapping(	Integer.valueOf(0xFF0B),
+							Keyboard.CLEAR);
 			// #define XK_Return 0xFF0D /* Return, enter */
-			storeMapping(Integer.valueOf(0xFF0D), Keyboard.ENTER);
+			storeMapping(	Integer.valueOf(0xFF0D),
+							Keyboard.ENTER);
 			// #define XK_Pause 0xFF13 /* Pause, hold */
-			storeMapping(Integer.valueOf(0xFF13), Keyboard.PAUSE);
+			storeMapping(	Integer.valueOf(0xFF13),
+							Keyboard.PAUSE);
 			// #define XK_Scroll_Lock 0xFF14
-			storeMapping(Integer.valueOf(0xFF14), Keyboard.SCRL_LOCK);
+			storeMapping(	Integer.valueOf(0xFF14),
+							Keyboard.SCRL_LOCK);
 			// #define XK_Sys_Req 0xFF15
-			storeMapping(Integer.valueOf(0xFF15), Keyboard.SYS_REQ);
+			storeMapping(	Integer.valueOf(0xFF15),
+							Keyboard.SYS_REQ);
 			// #define XK_Escape 0xFF1B
-			storeMapping(Integer.valueOf(0xFF1B), Keyboard.ESCAPE);
+			storeMapping(	Integer.valueOf(0xFF1B),
+							Keyboard.ESCAPE);
 			// #define XK_Delete 0xFFFF /* Delete, rubout */
-			storeMapping(Integer.valueOf(0xFFFF), Keyboard.DELETE);
+			storeMapping(	Integer.valueOf(0xFFFF),
+							Keyboard.DELETE);
 		}
 		{
 			/* Misc Functions */
 			// #define XK_Select 0xFF60 /* Select, mark */
 			// #define XK_Print 0xFF61
-			storeMapping(Integer.valueOf(0xFF61), Keyboard.PRINT);
+			storeMapping(	Integer.valueOf(0xFF61),
+							Keyboard.PRINT);
 			// #define XK_Execute 0xFF62 /* Execute, run, do */
 			// #define XK_Insert 0xFF63 /* Insert, insert here */
-			storeMapping(Integer.valueOf(0xFF63), Keyboard.INSERT);
+			storeMapping(	Integer.valueOf(0xFF63),
+							Keyboard.INSERT);
 			// #define XK_Undo 0xFF65 /* Undo, oops */
 			// #define XK_Redo 0xFF66 /* redo, again */
 			// #define XK_Menu 0xFF67
@@ -201,7 +242,8 @@ public class XKeySymbolMapping {
 			// #define XK_Mode_switch 0xFF7E /* Character set switch */
 			// #define XK_script_switch 0xFF7E /* Alias for mode_switch */
 			// #define XK_Num_Lock 0xFF7F
-			storeMapping(Integer.valueOf(0xFF7F), Keyboard.NUM_LOCK);
+			storeMapping(	Integer.valueOf(0xFF7F),
+							Keyboard.NUM_LOCK);
 		}
 		{
 			/*

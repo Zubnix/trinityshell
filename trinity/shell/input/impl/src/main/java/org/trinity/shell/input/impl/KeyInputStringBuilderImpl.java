@@ -35,17 +35,13 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 
-	private final String[] ignoreKeys = { Keyboard.BACKSPACE, Keyboard.BEGIN,
-			Keyboard.CAPS_LOCK, Keyboard.CLEAR, Keyboard.DELETE, Keyboard.DOWN,
-			Keyboard.END, Keyboard.ENTER, Keyboard.ESCAPE, Keyboard.HOME,
-			Keyboard.INSERT, Keyboard.L_ALT, Keyboard.L_CTRL, Keyboard.L_HYPER,
-			Keyboard.L_META, Keyboard.L_SHIFT, Keyboard.L_SUPER, Keyboard.LEFT,
-			Keyboard.LINEFEED, Keyboard.NEXT, Keyboard.NUM_LOCK,
-			Keyboard.PAUSE, Keyboard.PG_DOWN, Keyboard.PG_UP, Keyboard.PREV,
-			Keyboard.PRINT, Keyboard.R_ALT, Keyboard.R_CTRL, Keyboard.R_HYPER,
-			Keyboard.R_META, Keyboard.R_SHIFT, Keyboard.R_SUPER,
-			Keyboard.RIGHT, Keyboard.SCRL_LOCK, Keyboard.SHIFT_LOCK,
-			Keyboard.SYS_REQ, Keyboard.TAB, Keyboard.UP };
+	private final String[] ignoreKeys = { Keyboard.BACKSPACE, Keyboard.BEGIN, Keyboard.CAPS_LOCK, Keyboard.CLEAR,
+			Keyboard.DELETE, Keyboard.DOWN, Keyboard.END, Keyboard.ENTER, Keyboard.ESCAPE, Keyboard.HOME,
+			Keyboard.INSERT, Keyboard.L_ALT, Keyboard.L_CTRL, Keyboard.L_HYPER, Keyboard.L_META, Keyboard.L_SHIFT,
+			Keyboard.L_SUPER, Keyboard.LEFT, Keyboard.LINEFEED, Keyboard.NEXT, Keyboard.NUM_LOCK, Keyboard.PAUSE,
+			Keyboard.PG_DOWN, Keyboard.PG_UP, Keyboard.PREV, Keyboard.PRINT, Keyboard.R_ALT, Keyboard.R_CTRL,
+			Keyboard.R_HYPER, Keyboard.R_META, Keyboard.R_SHIFT, Keyboard.R_SUPER, Keyboard.RIGHT, Keyboard.SCRL_LOCK,
+			Keyboard.SHIFT_LOCK, Keyboard.SYS_REQ, Keyboard.TAB, Keyboard.UP };
 
 	/**
 	 * @author Erik De Rijcke
@@ -92,8 +88,7 @@ public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 										new StringMutatorOnInput() {
 											@Override
 											public void mutate(final String keyName) {
-												final int length = KeyInputStringBuilderImpl.this.stringBuffer
-														.length();
+												final int length = KeyInputStringBuilderImpl.this.stringBuffer.length();
 												if (length > 0) {
 													// backspace => delete
 													// last char
@@ -110,10 +105,9 @@ public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 	@Override
 	public void append(final KeyNotifyEvent input) {
 		final KeyboardInput keyboardInput = input.getInput();
-		final String keyName = this.keyboard.asKeySymbolName(keyboardInput
-				.getKey(), keyboardInput.getModifiers());
-		final StringMutatorOnInput stringMutatorOnInput = getSpecialBuildActions()
-				.get(keyName);
+		final String keyName = this.keyboard.asKeySymbolName(	keyboardInput.getKey(),
+																keyboardInput.getModifiers());
+		final StringMutatorOnInput stringMutatorOnInput = getSpecialBuildActions().get(keyName);
 
 		if (stringMutatorOnInput != null) {
 			stringMutatorOnInput.mutate(keyName);

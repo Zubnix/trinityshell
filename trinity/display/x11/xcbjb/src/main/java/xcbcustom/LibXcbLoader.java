@@ -13,11 +13,9 @@ public class LibXcbLoader {
 		final String jreArch = System.getProperty("os.arch");
 		final String libName = LIBXCB_BASE_NAME + "_" + jreArch + ".so";
 
-		final URL libUrl = LibXcbLoader.class.getClassLoader()
-				.getResource(libName);
+		final URL libUrl = LibXcbLoader.class.getClassLoader().getResource(libName);
 		try {
-			final String path = new File(new URI(libUrl.toString()))
-					.getAbsolutePath();
+			final String path = new File(new URI(libUrl.toString())).getAbsolutePath();
 
 			System.load(path);
 		} catch (final URISyntaxException e) {

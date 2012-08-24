@@ -36,31 +36,44 @@ public interface DisplayAreaManipulator<AREATYPE extends DisplayArea> {
 
 	void show();
 
-	void move(int x, int y);
+	void move(	int x,
+				int y);
 
-	void moveResize(int x, int y, int width, int height);
+	void moveResize(int x,
+					int y,
+					int width,
+					int height);
 
 	void raise();
 
-	void setParent(AREATYPE parent, int x, int y);
+	void setParent(	AREATYPE parent,
+					int x,
+					int y);
 
-	void resize(int width, int height);
+	void resize(int width,
+				int height);
 
 	void hide();
 
-	Coordinate translateCoordinates(AREATYPE source, int sourceX, int sourceY);
+	Coordinate translateCoordinates(AREATYPE source,
+									int sourceX,
+									int sourceY);
 
-	void grabButton(Button grabButton, InputModifiers withModifiers);
+	void grabButton(Button grabButton,
+					InputModifiers withModifiers);
 
 	void grabPointer();
 
 	void ungrabPointer();
 
-	void ungrabButton(Button ungrabButton, InputModifiers withModifiers);
+	void ungrabButton(	Button ungrabButton,
+						InputModifiers withModifiers);
 
-	void grabKey(Key grabKey, InputModifiers withModifiers);
+	void grabKey(	Key grabKey,
+					InputModifiers withModifiers);
 
-	void ungrabKey(Key ungrabKey, InputModifiers withModifiers);
+	void ungrabKey(	Key ungrabKey,
+					InputModifiers withModifiers);
 
 	void ungrabKeyboard();
 

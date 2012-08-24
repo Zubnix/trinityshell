@@ -27,8 +27,7 @@ public class LeaveNotifyConversion implements XEventConversion {
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	LeaveNotifyConversion(	@Named("xEventBus") final EventBus xEventBus,
-							final XWindowCache xWindowCache) {
+	LeaveNotifyConversion(@Named("xEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -36,14 +35,12 @@ public class LeaveNotifyConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 		// enter has same structure as leave
-		final xcb_enter_notify_event_t enter_notify_event_t = new xcb_enter_notify_event_t(	xcb_generic_event_t
-																									.getCPtr(event_t),
+		final xcb_enter_notify_event_t enter_notify_event_t = new xcb_enter_notify_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																							true);
 		this.xEventBus.post(enter_notify_event_t);
 
 		final int windowId = enter_notify_event_t.getEvent();
-		final XWindow displayEventSource = this.xWindowCache
-				.getWindow(windowId);
+		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final DisplayEvent displayEvent = new PointerLeaveNotifyEvent(displayEventSource);
 

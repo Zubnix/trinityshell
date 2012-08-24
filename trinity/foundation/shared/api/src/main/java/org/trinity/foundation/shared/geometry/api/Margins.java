@@ -8,17 +8,18 @@ public class Margins {
 	 * 
 	 ****************************************/
 	public Margins(final int margins) {
-		this(margins, margins);
+		this(	margins,
+				margins);
 	}
 
 	public Margins(final int horiz, final int vert) {
-		this(horiz, horiz, vert, vert);
+		this(	horiz,
+				horiz,
+				vert,
+				vert);
 	}
 
-	public Margins(	final int left,
-					final int right,
-					final int bottom,
-					final int top) {
+	public Margins(final int left, final int right, final int bottom, final int top) {
 		this.bottom = bottom;
 		this.right = right;
 		this.left = left;

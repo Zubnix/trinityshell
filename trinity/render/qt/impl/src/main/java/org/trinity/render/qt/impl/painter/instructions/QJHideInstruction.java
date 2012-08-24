@@ -15,8 +15,7 @@ import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
 
-public class QJHideInstruction implements
-		PaintInstruction<Void, QJPaintContext> {
+public class QJHideInstruction implements PaintInstruction<Void, QJPaintContext> {
 
 	@Override
 	public Void call(	final PaintableRenderNode paintableRenderNode,

@@ -18,8 +18,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.trinity.foundation.display.api.DisplayEventProducer;
-import org.trinity.foundation.display.api.DisplaySurfaceHandle;
-import org.trinity.foundation.display.api.DisplaySurfaceHandleFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableRenderNode;
@@ -30,8 +28,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.trolltech.qt.core.QCoreApplication;
-import com.trolltech.qt.core.QEvent;
-import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
@@ -57,46 +53,44 @@ import de.devsurf.injection.guice.annotations.To;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(to = @To(value = To.Type.CUSTOM, customs = DisplayEventProducer.class))
+@Bind(multiple = true, to = @To(value = To.Type.CUSTOM, customs = DisplayEventProducer.class))
 @Singleton
-public class QJRenderEngine extends QApplication implements
-		DisplayEventProducer {
+public class QJRenderEngine implements DisplayEventProducer, Runnable {
 
-	private final DisplaySurfaceHandleFactory resourceHandleFactory;
+	private final Map<PaintableRenderNode, QWidget> paintableToPaintPeer = new HashMap<PaintableRenderNode, QWidget>();
+	private Thread renderThread;
+
 	private final QJRenderEventConverter renderEventConverter;
 	private final EventBus displayEventBus;
 
-	private final Map<PaintableRenderNode, QWidget> paintableToPaintPeer = new HashMap<PaintableRenderNode, QWidget>();
-
 	@Inject
-	QJRenderEngine(	final DisplaySurfaceHandleFactory resourceHandleFactory,
-					final QJRenderEventConverter renderEventConverter,
+	QJRenderEngine(	final QJRenderEventConverter renderEventConverter,
 					@Named("displayEventBus") final EventBus displayEventBus) {
-		super(new String[] {});
-		this.resourceHandleFactory = resourceHandleFactory;
 		this.renderEventConverter = renderEventConverter;
 		this.displayEventBus = displayEventBus;
 	}
 
+	public void removeVisual(final PaintableRenderNode paintableRenderNode) {
+		this.paintableToPaintPeer.remove(paintableRenderNode);
+	}
+
 	@Override
-	public boolean eventFilter(final QObject widget, final QEvent event) {
-		if (widget.isWidgetType()) {
-			if (event.type().equals(QEvent.Type.Destroy)) {
-				// TODO check if this actually works.
-				this.paintableToPaintPeer.values().remove(widget);
-			}
+	public void startDisplayEventProduction() {
+		this.renderThread = new Thread(	this,
+										"Qt Jambi Render Thread");
+		this.renderThread.start();
+
+		// bug workaround, give the qapplication some time to set up
+		try {
+			Thread.sleep(500);
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return false;
 	}
 
 	@Override
-	public void start() {
-		QApplication.setQuitOnLastWindowClosed(false);
-		QApplication.exec();
-	}
-
-	@Override
-	public void stop() {
+	public void stopDisplayEventProduction() {
 		QCoreApplication.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -108,7 +102,6 @@ public class QJRenderEngine extends QApplication implements
 	public <R> Future<R> invoke(final PaintableRenderNode paintableRenderNode,
 								final PaintInstruction<R, QJPaintContext> paintInstruction) {
 		final FutureTask<R> futureTask = new FutureTask<R>(new Callable<R>() {
-
 			@Override
 			public R call() throws Exception {
 				final QWidget visual = getVisual(paintableRenderNode);
@@ -127,16 +120,22 @@ public class QJRenderEngine extends QApplication implements
 		return this.paintableToPaintPeer.get(paintableRenderNode);
 	}
 
-	public DisplaySurfaceHandle putVisual(	final DisplayEventSource displayEventSource,
-											final PaintableRenderNode paintableRenderNode,
-											final QWidget visual) {
-		this.paintableToPaintPeer.put(paintableRenderNode, visual);
+	public void putVisual(	final DisplayEventSource displayEventSource,
+							final PaintableRenderNode paintableRenderNode,
+							final QWidget visual) {
 		visual.installEventFilter(new QJRenderEventFilter(	this.displayEventBus,
 															this.renderEventConverter,
 															displayEventSource,
 															visual));
-		final long winId = visual.winId();
-		return this.resourceHandleFactory.createDisplaySurfaceHandle(Long
-				.valueOf(winId));
+		this.paintableToPaintPeer.put(	paintableRenderNode,
+										visual);
+	}
+
+	@Override
+	public void run() {
+
+		QApplication.initialize(new String[] {});
+		QApplication.setQuitOnLastWindowClosed(false);
+		final int r = QApplication.exec();
 	}
 }

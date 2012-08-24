@@ -30,10 +30,9 @@ public class QJPaintContextImpl implements QJPaintContext {
 
 	@Override
 	public void setVisual(final QWidget qWidget) {
-		this.qjRenderEngine
-				.putVisual(	(DisplayEventSource) this.paintableRenderNode,
-							this.paintableRenderNode,
-							qWidget);
+		this.qjRenderEngine.putVisual(	(DisplayEventSource) this.paintableRenderNode,
+										this.paintableRenderNode,
+										qWidget);
 	}
 
 	@Override
@@ -44,8 +43,32 @@ public class QJPaintContextImpl implements QJPaintContext {
 	@Override
 	public DisplaySurfaceHandle getDisplaySurfaceHandle(final QWidget visual) {
 		visual.setWindowFlags(WindowType.X11BypassWindowManagerHint);
-		visual.setAttribute(WidgetAttribute.WA_DeleteOnClose, true);
-		visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors, true);
+		visual.setAttribute(WidgetAttribute.WA_DeleteOnClose,
+							true);
+		visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
+							true);
 		return new QJDisplaySurfaceHandle(visual);
+	}
+
+	@Override
+	public void syncVisualGeometryToNode(	final QWidget visual,
+											final PaintableRenderNode paintableRenderNode) {
+		final int x = paintableRenderNode.getX();
+		final int y = paintableRenderNode.getY();
+		final int width = paintableRenderNode.getWidth();
+		final int height = paintableRenderNode.getHeight();
+
+		final boolean visible = paintableRenderNode.isVisible();
+
+		visual.setGeometry(	x,
+							y,
+							width,
+							height);
+		visual.setVisible(visible);
+	}
+
+	@Override
+	public void evictVisual() {
+		this.qjRenderEngine.removeVisual(this.paintableRenderNode);
 	}
 }

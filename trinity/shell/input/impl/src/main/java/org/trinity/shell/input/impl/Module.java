@@ -14,7 +14,6 @@ public class Module extends AbstractModule {
 	@Override
 	protected void configure() {
 		install(new FactoryModuleBuilder().implement(	KeysBinding.class,
-														KeysBindingImpl.class)
-				.build(KeysBindingFactory.class));
+														KeysBindingImpl.class).build(KeysBindingFactory.class));
 	}
 }

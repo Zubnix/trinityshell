@@ -33,26 +33,27 @@ public class XDisplayProtocols implements DisplayProtocols {
 	@Inject
 	XDisplayProtocols(final Set<XDisplayProtocolHandler> xPropertyConversions) {
 		for (final XDisplayProtocolHandler xPropertyConversion : xPropertyConversions) {
-			this.xDisplayProtocolHandlers.put(xPropertyConversion
-					.getDisplayProtocol(), xPropertyConversion);
+			this.xDisplayProtocolHandlers.put(	xPropertyConversion.getDisplayProtocol(),
+												xPropertyConversion);
 		}
 	}
 
 	@Override
 	public Map<String, Object> queryProtocol(	final DisplaySurface displaySurface,
 												final DisplayProtocol displayProtocol) {
-		return queryProtocol(displaySurface, displayProtocol, null);
+		return queryProtocol(	displaySurface,
+								displayProtocol,
+								null);
 	}
 
 	@Override
 	public Map<String, Object> queryProtocol(	final DisplaySurface displaySurface,
 												final DisplayProtocol displayProtocol,
 												final Map<String, Object> arguments) {
-		final Map<String, Object> result = this.xDisplayProtocolHandlers
-				.get(displayProtocol)
-				.handleDipslayProtocol((XWindow) displaySurface,
-								displayProtocol,
-								arguments);
+		final Map<String, Object> result = this.xDisplayProtocolHandlers.get(displayProtocol)
+				.handleDipslayProtocol(	(XWindow) displaySurface,
+										displayProtocol,
+										arguments);
 		return result;
 	}
 }

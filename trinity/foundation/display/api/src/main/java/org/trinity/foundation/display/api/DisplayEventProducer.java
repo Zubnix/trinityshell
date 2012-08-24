@@ -11,13 +11,12 @@
  */
 package org.trinity.foundation.display.api;
 
-
 /**
  * An <code>EventProducer</code> is a source of <code>DisplayEvent</code>s. A
  * <code>DisplayEvent</code> can be fetched by a call to
  * <code>getNextEvent</code>. An <code>EventProducter</code> can be registered
- * with a {@link DisplayServer}. The <code>Display</code> will fetch any events and
- * place them on the <code>Display</code>'s event queue. An
+ * with a {@link DisplayServer}. The <code>Display</code> will fetch any events
+ * and place them on the <code>Display</code>'s event queue. An
  * <code>EventProducer</code> can thus be seen as an "injector" of
  * <code>DisplayEvent</code>s.
  * <p>
@@ -31,7 +30,7 @@ package org.trinity.foundation.display.api;
  */
 public interface DisplayEventProducer {
 
-	void start();
+	void startDisplayEventProduction();
 
-	void stop();
+	void stopDisplayEventProduction();
 }

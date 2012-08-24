@@ -21,8 +21,7 @@ import com.google.inject.Singleton;
  * @author Erik De Rijcke
  ****************************************/
 @Singleton
-public class QJRaiseInstruction implements
-		PaintInstruction<Void, QJPaintContext> {
+public class QJRaiseInstruction implements PaintInstruction<Void, QJPaintContext> {
 
 	@Override
 	public Void call(	final PaintableRenderNode paintableRenderNode,
