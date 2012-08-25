@@ -61,6 +61,9 @@ public class XDisplayServer implements DisplayServer {
 	@AllowConcurrentEvents
 	public void handleDisplayEvent(final DisplayEvent displayEvent) {
 		try {
+			if (displayEvent == null) {
+				return;
+			}
 			this.displayEvents.put(displayEvent);
 		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -76,7 +79,7 @@ public class XDisplayServer implements DisplayServer {
 	@Override
 	public DisplayEvent getNextDisplayEvent() {
 		try {
-			this.displayEvents.take();
+			return this.displayEvents.take();
 		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

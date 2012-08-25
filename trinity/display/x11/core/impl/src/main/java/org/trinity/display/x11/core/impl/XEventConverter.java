@@ -55,17 +55,10 @@ public final class XEventConverter {
 
 	@Subscribe
 	public void handleXEvent(final xcb_generic_event_t event_t) {
-		final DisplayEvent displayEvent = convert(event_t);
-		if (displayEvent != null) {
-			this.displayEventBus.post(displayEvent);
-		}
-	}
-
-	private DisplayEvent convert(final xcb_generic_event_t event_t) {
 		final XEventConversion eventConversion = this.conversionMap.get(Integer.valueOf(event_t.getResponse_type()));
 		if (eventConversion != null) {
-			return eventConversion.convert(event_t);
+			final DisplayEvent displayEvent = eventConversion.convert(event_t);
+			this.displayEventBus.post(displayEvent);
 		}
-		return null;
 	}
 }

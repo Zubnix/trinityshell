@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.trinity.foundation.display.api.DisplayEventProducer;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
@@ -58,10 +59,12 @@ import de.devsurf.injection.guice.annotations.To;
 public class QJRenderEngine implements DisplayEventProducer, Runnable {
 
 	private final Map<PaintableRenderNode, QWidget> paintableToPaintPeer = new HashMap<PaintableRenderNode, QWidget>();
-	private Thread renderThread;
+	private final AtomicBoolean initialized = new AtomicBoolean(false);
 
 	private final QJRenderEventConverter renderEventConverter;
 	private final EventBus displayEventBus;
+
+	private Thread renderThread;
 
 	@Inject
 	QJRenderEngine(	final QJRenderEventConverter renderEventConverter,
@@ -79,14 +82,6 @@ public class QJRenderEngine implements DisplayEventProducer, Runnable {
 		this.renderThread = new Thread(	this,
 										"Qt Jambi Render Thread");
 		this.renderThread.start();
-
-		// bug workaround, give the qapplication some time to set up
-		try {
-			Thread.sleep(500);
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -95,12 +90,26 @@ public class QJRenderEngine implements DisplayEventProducer, Runnable {
 			@Override
 			public void run() {
 				QCoreApplication.quit();
+				QJRenderEngine.this.initialized.set(false);
 			}
 		});
 	}
 
 	public <R> Future<R> invoke(final PaintableRenderNode paintableRenderNode,
 								final PaintInstruction<R, QJPaintContext> paintInstruction) {
+		// make sure qapplication.initialize() is finished before submitting any
+		// runnables, else they get lost.
+		while (!this.initialized.get()) {
+			synchronized (this) {
+				try {
+					wait();
+				} catch (final InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
 		final FutureTask<R> futureTask = new FutureTask<R>(new Callable<R>() {
 			@Override
 			public R call() throws Exception {
@@ -133,9 +142,12 @@ public class QJRenderEngine implements DisplayEventProducer, Runnable {
 
 	@Override
 	public void run() {
-
 		QApplication.initialize(new String[] {});
+		this.initialized.set(true);
+		synchronized (this) {
+			notifyAll();
+		}
 		QApplication.setQuitOnLastWindowClosed(false);
-		final int r = QApplication.exec();
+		QApplication.exec();
 	}
 }
