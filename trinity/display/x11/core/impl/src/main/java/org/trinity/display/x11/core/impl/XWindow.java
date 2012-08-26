@@ -159,7 +159,7 @@ public class XWindow implements DisplaySurface {
 	public void setParent(	final DisplaySurface parent,
 							final int x,
 							final int y) {
-		final int parentId = ((XWindowHandle) parent.getDisplaySurfaceHandle()).getNativeHandle().intValue();
+		final int parentId = ((Integer) (parent.getDisplaySurfaceHandle()).getNativeHandle()).intValue();
 		LibXcb.xcb_reparent_window(	getConnectionRef(),
 									getWindowId(),
 									parentId,
@@ -194,7 +194,7 @@ public class XWindow implements DisplaySurface {
 	public Coordinate translateCoordinates(	final DisplaySurface source,
 											final int sourceX,
 											final int sourceY) {
-		final int sourceId = ((XWindowHandle) source.getDisplaySurfaceHandle()).getNativeHandle().intValue();
+		final int sourceId = ((Integer) (source.getDisplaySurfaceHandle()).getNativeHandle()).intValue();
 		final xcb_translate_coordinates_cookie_t cookie_t = LibXcb.xcb_translate_coordinates(	getConnectionRef(),
 																								sourceId,
 																								getWindowId(),
@@ -364,14 +364,15 @@ public class XWindow implements DisplaySurface {
 	public boolean equals(final Object obj) {
 		if (obj instanceof XWindow) {
 			final XWindow otherWindow = (XWindow) obj;
-			return otherWindow.getDisplaySurfaceHandle().equals(getDisplaySurfaceHandle());
+			return otherWindow.getDisplaySurfaceHandle().getNativeHandle()
+					.equals(getDisplaySurfaceHandle().getNativeHandle());
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return getDisplaySurfaceHandle().hashCode();
+		return getDisplaySurfaceHandle().getNativeHandle().hashCode();
 	}
 
 	public void configureClientEvents() {

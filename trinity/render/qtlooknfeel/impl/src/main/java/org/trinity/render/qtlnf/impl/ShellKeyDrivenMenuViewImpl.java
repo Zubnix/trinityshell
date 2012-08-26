@@ -3,7 +3,6 @@ package org.trinity.render.qtlnf.impl;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.foundation.render.api.Painter;
@@ -22,12 +21,12 @@ public class ShellKeyDrivenMenuViewImpl extends ShellWidgetViewImpl implements S
 	private Painter painter;
 
 	@Override
-	public Future<DisplaySurface> create(final Painter painter) {
+	public Future<Void> createDisplaySurface(final Painter painter) {
 		this.painter = painter;
-		return painter.instruct(new PaintInstruction<DisplaySurface, QJPaintContext>() {
+		return painter.instruct(new PaintInstruction<Void, QJPaintContext>() {
 			@Override
-			public DisplaySurface call(	final PaintableRenderNode paintableRenderNode,
-										final QJPaintContext paintContext) {
+			public Void call(	final PaintableRenderNode paintableRenderNode,
+								final QJPaintContext paintContext) {
 				final QWidget parentVisual = paintContext.queryVisual(paintableRenderNode
 						.getParentPaintableRenderNode());
 				final QWidget visual = new QWidget(parentVisual);
@@ -40,8 +39,7 @@ public class ShellKeyDrivenMenuViewImpl extends ShellWidgetViewImpl implements S
 				paintContext.syncVisualGeometryToNode(	visual,
 														paintableRenderNode);
 
-				final DisplaySurface displaySurface = paintContext.getDisplaySurface(visual);
-				return displaySurface;
+				return null;
 			}
 		});
 	}

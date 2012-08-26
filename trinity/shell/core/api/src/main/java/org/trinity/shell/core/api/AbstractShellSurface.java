@@ -61,9 +61,6 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	public static final int DEFAULT_WIDTH_INC = 1;
 	public static final int DEFAULT_HEIGHT_INC = 1;
 
-	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
-	private DisplaySurface platformRenderArea;
-
 	private boolean movable;
 	private boolean resizable;
 
@@ -76,17 +73,11 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	private int widthIncrement;
 	private int heightIncrement;
 
-	private final EventBus nodeEventBus;
-
 	/**
 	 * Create new <code>AbstractShellSurface</code>
 	 */
-	protected AbstractShellSurface(	final EventBus nodeEventBus,
-									final ShellDisplayEventDispatcher shellDisplayEventDispatcher) {
+	protected AbstractShellSurface(final EventBus nodeEventBus) {
 		super(nodeEventBus);
-		this.nodeEventBus = nodeEventBus;
-		this.nodeEventBus.register(this);
-		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		initBasics();
 	}
 
@@ -260,10 +251,10 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * 
 	 * @return A {@link DisplaySurface}.
 	 */
-	@Override
-	public DisplaySurface getDisplaySurface() {
-		return this.platformRenderArea;
-	}
+	// @Override
+	// public DisplaySurface getDisplaySurface() {
+	// return this.displaySurface;
+	// }
 
 	/**
 	 * Indicates if this object can movedor not. A non movable object can have a
@@ -325,11 +316,12 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 *            A {@link DisplaySurface}.
 	 * @see AbstractShellSurface#getDisplaySurface()
 	 */
-	protected void setDisplaySurface(final DisplaySurface displaySurface) {
-		this.platformRenderArea = displaySurface;
-		this.shellDisplayEventDispatcher.registerDisplayEventSource(this.nodeEventBus,
-																	displaySurface);
-	}
+	// protected void setDisplaySurface(final DisplaySurface platformRenderArea)
+	// {
+	// this.displaySurface = platformRenderArea;
+	// this.shellDisplayEventDispatcher.registerDisplayEventSource(this.nodeEventBus,
+	// platformRenderArea);
+	// }
 
 	/**
 	 * A new width that lies within the interval of a minimum and maximum width
@@ -462,6 +454,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 
 	@Subscribe
 	public void handleGeometryRequestEvent(final GeometryRequestEvent geometryRequestEvent) {
+
 		final Rectangle geometry = geometryRequestEvent.getGeometry();
 		if (geometryRequestEvent.configureX()) {
 			setX(geometry.getX());

@@ -37,7 +37,6 @@ import org.trinity.shell.geo.api.event.ShellNodeShowRequestEvent;
 import org.trinity.shell.geo.api.manager.ShellLayoutManager;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 
 // TODO Let geo events travel downwards to children to notify them that one of
 // their parents has changed
@@ -73,6 +72,7 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	protected AbstractShellNode(final EventBus nodeEventBus) {
 		this.nodeEventBus = nodeEventBus;
+		this.nodeEventBus.register(this);
 	}
 
 	@Override
@@ -279,9 +279,11 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	protected void updateChildrenPosition() {
 		for (final ShellNode child : getChildren()) {
-			child.getNodeExecutor().move(	this,
-											child.getX(),
-											child.getY());
+			final int childX = child.getX();
+			final int childY = child.getY();
+			child.getNodeExecutor().move(	child,
+											childX,
+											childY);
 		}
 	}
 
@@ -413,7 +415,9 @@ public abstract class AbstractShellNode implements ShellNode {
 		doReparent(true);
 		final ShellNodeReparentEvent geoEvent = new ShellNodeReparentEvent(	this,
 																			toGeoTransformation());
+
 		this.nodeEventBus.post(geoEvent);
+		getParent().handleChildReparentEvent(this);
 	}
 
 	protected void doReparent(final boolean execute) {
@@ -421,17 +425,14 @@ public abstract class AbstractShellNode implements ShellNode {
 			execReparent();
 		}
 		flushParentValue();
-		// make sure the new parent gets notified
-		addShellNodeEventHandler(getParent());
 		// Make sure we have the same size
 		// and place in our new parent
 		// as in our old parent.
 		doMoveResize();
 	}
 
-	@Subscribe
-	public void handleChildReparentEvent(final ShellNodeReparentEvent shellNodeReparentEvent) {
-		final ShellNode child = shellNodeReparentEvent.getSource();
+	@Override
+	public void handleChildReparentEvent(final ShellNode child) {
 		ShellNodeEvent shellNodeEvent;
 		if (this.children.contains(child)) {
 			this.children.remove(child);

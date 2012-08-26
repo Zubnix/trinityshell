@@ -85,4 +85,6 @@ public interface ShellNode extends RenderNode, ShellNodeTransformable {
 	void addShellNodeEventHandler(Object shellNodeEventHandler);
 
 	void removeShellNodeEventHandler(Object shellNodeEventHandler);
+
+	void handleChildReparentEvent(ShellNode child);
 }

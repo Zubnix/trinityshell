@@ -1,6 +1,7 @@
 package org.trinity.render.qtlnf.impl;
 
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintInstruction;
@@ -18,16 +19,23 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 public class ShellWidgetViewImpl implements ShellWidgetView {
 
-	private Painter painter;
+	private final AtomicReference<Painter> painterRef = new AtomicReference<Painter>();
+
+	public AtomicReference<Painter> getPainterRef() {
+		return this.painterRef;
+	}
 
 	@Override
-	public Future<DisplaySurface> create(final Painter painter) {
-		this.painter = painter;
+	public Future<Void> createDisplaySurface(final Painter painter) {
+		if (!getPainterRef().compareAndSet(	null,
+											painter)) {
+			return null;
+		}
 
-		return this.painter.instruct(new PaintInstruction<DisplaySurface, QJPaintContext>() {
+		return getPainterRef().get().instruct(new PaintInstruction<Void, QJPaintContext>() {
 			@Override
-			public DisplaySurface call(	final PaintableRenderNode paintableRenderNode,
-										final QJPaintContext paintContext) {
+			public Void call(	final PaintableRenderNode paintableRenderNode,
+								final QJPaintContext paintContext) {
 
 				final QWidget parentVisual = paintContext.queryVisual(paintableRenderNode
 						.getParentPaintableRenderNode());
@@ -40,16 +48,16 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 
 				paintContext.syncVisualGeometryToNode(	visual,
 														paintableRenderNode);
-
-				final DisplaySurface displaySurface = paintContext.getDisplaySurface(visual);
-				return displaySurface;
+				paintContext.setVisual(visual);
+				return null;
 			}
 		});
 	}
 
 	@Override
 	public Future<Void> destroy() {
-		return this.painter.instruct(new PaintInstruction<Void, QJPaintContext>() {
+		final Painter painter = getPainterRef().get();
+		return painter.instruct(new PaintInstruction<Void, QJPaintContext>() {
 			@Override
 			public Void call(	final PaintableRenderNode paintableRenderNode,
 								final QJPaintContext paintContext) {
@@ -57,6 +65,19 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 				visual.close();
 				paintContext.evictVisual();
 				return null;
+			}
+		});
+	}
+
+	@Override
+	public Future<DisplaySurface> getDislaySurface() {
+		final Painter painter = getPainterRef().get();
+
+		return painter.instruct(new PaintInstruction<DisplaySurface, QJPaintContext>() {
+			@Override
+			public DisplaySurface call(	final PaintableRenderNode paintableRenderNode,
+										final QJPaintContext paintContext) {
+				return paintContext.getDisplaySurface(paintContext.getVisual());
 			}
 		});
 	}

@@ -19,11 +19,8 @@ import org.trinity.shell.geo.api.ShellNodeExecutor;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
 
 // TODO documentation
 /**
@@ -37,10 +34,10 @@ import de.devsurf.injection.guice.annotations.To.Type;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(to = @To(value = Type.IMPLEMENTATION))
 public class ShellClientSurface extends AbstractShellSurface {
 
 	private final ShellNodeExecutor renderAreaGeoExecutor;
+	private final DisplaySurface displaySurface;
 
 	/**
 	 * Create a new <code>ShellClientSurface</code> from a foreign
@@ -53,15 +50,19 @@ public class ShellClientSurface extends AbstractShellSurface {
 	 *            The foreign {@link DisplaySurface}.
 	 */
 	@Inject
-	ShellClientSurface(	final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-						final EventBus nodeEventBus,
+	ShellClientSurface(	final EventBus eventBus,
+						final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 						@Named("ShellRootSurface") final ShellSurface root,
-						@Named("shellSurfaceGeoExecutor") final ShellNodeExecutor shellNodeExecutor) {
-		super(	nodeEventBus,
-				shellDisplayEventDispatcher);
+						@Named("shellSurfaceGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
+						@Assisted final DisplaySurface displaySurface) {
+		super(eventBus);
+		this.displaySurface = displaySurface;
 		this.renderAreaGeoExecutor = shellNodeExecutor;
 		setParent(root);
 		doReparent(false);
+		syncGeoToDisplaySurface();
+		shellDisplayEventDispatcher.registerDisplayEventSource(	eventBus,
+																displaySurface);
 	}
 
 	@Override
@@ -70,8 +71,7 @@ public class ShellClientSurface extends AbstractShellSurface {
 	}
 
 	@Override
-	protected void setDisplaySurface(final DisplaySurface displaySurface) {
-		super.setDisplaySurface(displaySurface);
-		syncGeoToDisplaySurface();
+	public DisplaySurface getDisplaySurface() {
+		return this.displaySurface;
 	}
 }

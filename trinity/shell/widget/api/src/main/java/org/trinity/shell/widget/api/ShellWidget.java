@@ -16,4 +16,9 @@ import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.shell.core.api.ShellSurface;
 
 public interface ShellWidget extends PaintableRenderNode, DisplayEventSource, ShellSurface {
+
+	void init(ShellWidget closestParentWidget);
+
+	// @Override
+	// public ShellWidget getParentPaintableRenderNode();
 }

@@ -2,7 +2,6 @@ package org.trinity.render.qtlnf.impl;
 
 import java.util.concurrent.Future;
 
-import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.foundation.render.api.Painter;
@@ -21,12 +20,12 @@ public class ShellButtonViewImpl extends ShellWidgetViewImpl {
 	private Painter painter;
 
 	@Override
-	public Future<DisplaySurface> create(final Painter painter) {
+	public Future<Void> createDisplaySurface(final Painter painter) {
 		this.painter = painter;
-		return this.painter.instruct(new PaintInstruction<DisplaySurface, QJPaintContext>() {
+		return this.painter.instruct(new PaintInstruction<Void, QJPaintContext>() {
 			@Override
-			public DisplaySurface call(	final PaintableRenderNode paintableRenderNode,
-										final QJPaintContext paintContext) {
+			public Void call(	final PaintableRenderNode paintableRenderNode,
+								final QJPaintContext paintContext) {
 				final QWidget parent = paintContext.queryVisual(paintableRenderNode.getParentPaintableRenderNode());
 				final QPushButton visual = new QPushButton(parent);
 				visual.setWindowFlags(WindowType.X11BypassWindowManagerHint);
@@ -35,8 +34,7 @@ public class ShellButtonViewImpl extends ShellWidgetViewImpl {
 				visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
 									true);
 
-				final DisplaySurface visualDisplaySurface = paintContext.getDisplaySurface(visual);
-				return visualDisplaySurface;
+				return null;
 			}
 		});
 	}

@@ -15,7 +15,6 @@ import javax.inject.Named;
 
 import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
-import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.shell.core.api.ShellSurface;
 import org.trinity.shell.core.impl.ShellSurfaceGeoExecutor;
 import org.trinity.shell.geo.api.ShellNode;
@@ -60,14 +59,14 @@ public class ShellWidgetGeoExecutor extends ShellSurfaceGeoExecutor {
 
 	@Override
 	protected ShellWidget findClosestSameTypeSurface(final ShellNode square) {
-		if (square == null) {
+		if ((square == null) || (square.getParent() == square)) {
 			return null;
 		}
 		if (square instanceof ShellWidgetImpl) {
 			return (ShellWidget) square;
-		} else {
-			return findClosestSameTypeSurface(square.getParent());
 		}
+
+		return findClosestSameTypeSurface(square.getParent());
 	}
 
 	@Override
@@ -77,36 +76,37 @@ public class ShellWidgetGeoExecutor extends ShellSurfaceGeoExecutor {
 
 	@Override
 	protected void initializeShellSurface(	final ShellNode parent,
-											final ShellNode area) {
+											final ShellNode shellNode) {
 		// initialize the area with the closest typed parent.
-		if (area instanceof ShellWidgetImpl) {
-			final ShellWidgetImpl shellWidgetImpl = (ShellWidgetImpl) area;
+		if (shellNode instanceof ShellWidget) {
+			final ShellWidget shellWidgetImpl = (ShellWidget) shellNode;
 			final ShellWidget closestParentWidget = findClosestSameTypeSurface(parent);
 			shellWidgetImpl.init(closestParentWidget);
 		}
 	}
 
-	@Override
-	public void reparent(	final ShellNode shellNode,
-							final ShellNode parent) {
-		final ShellWidgetImpl shellWidgetImpl = (ShellWidgetImpl) shellNode;
-		// reparent the widget
-		super.reparent(	shellNode,
-						parent);
-
-		// If the old parent is null, we don't need to update the platform
-		// render area.
-		if (shellNode.toGeoTransformation().getParent0() != null) {
-			final DisplaySurface parentDisplaySurface = shellWidgetImpl.getParentPaintableRenderNode()
-					.getDisplaySurface();
-			final DisplaySurface displaysurface = shellWidgetImpl.getDisplaySurface();
-
-			if (parentDisplaySurface.equals(displaysurface)) {
-				// we need to update the widget's platform render area
-				final DisplaySurface newParentPlatformRenderArea = shellWidgetImpl.getParentPaintableRenderNode()
-						.getDisplaySurface();
-				shellWidgetImpl.setDisplaySurface(newParentPlatformRenderArea);
-			}
-		}
-	}
+	// @Override
+	// public void reparent( final ShellNode shellNode,
+	// final ShellNode parent) {
+	// final ShellWidget shellWidget = (ShellWidget) shellNode;
+	// // reparent the widget
+	// super.reparent( shellNode,
+	// parent);
+	//
+	// // If the old parent is null, we don't need to update the platform
+	// // render area.
+	// if (shellNode.toGeoTransformation().getParent0() != null) {
+	// final DisplaySurface parentDisplaySurface =
+	// shellWidget.getParentPaintableRenderNode().getDisplaySurface();
+	// final DisplaySurface displaysurface = shellWidget.getDisplaySurface();
+	//
+	// if (parentDisplaySurface.equals(displaysurface)) {
+	// // we need to update the widget's platform render area
+	// final DisplaySurface newParentPlatformRenderArea =
+	// shellWidget.getParentPaintableRenderNode()
+	// .getDisplaySurface();
+	// shellWidget.setDisplaySurface(newParentPlatformRenderArea);
+	// }
+	// }
+	// }
 }

@@ -1,6 +1,7 @@
 package org.trinity.shell.core.impl;
 
 import org.trinity.foundation.display.api.DisplayServer;
+import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.shell.core.api.AbstractShellSurface;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
 import org.trinity.shell.core.api.ShellSurface;
@@ -20,17 +21,19 @@ import de.devsurf.injection.guice.annotations.To;
 public class ShellRootSurface extends AbstractShellSurface {
 
 	private final ShellNodeExecutor shellNodeExecutor;
+	private final DisplaySurface displaySurface;
 
 	@Inject
-	ShellRootSurface(	@Named("shellSurfaceGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
+	ShellRootSurface(	final EventBus eventBus,
+						@Named("shellSurfaceGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 						final DisplayServer displayServer,
-						final EventBus nodeEventBus,
 						final ShellDisplayEventDispatcher shellDisplayEventDispatcher) {
-		super(	nodeEventBus,
-				shellDisplayEventDispatcher);
+		super(eventBus);
 		this.shellNodeExecutor = shellNodeExecutor;
-		setDisplaySurface(displayServer.getRootDisplayArea());
+		this.displaySurface = displayServer.getRootDisplayArea();
 		syncGeoToDisplaySurface();
+		shellDisplayEventDispatcher.registerDisplayEventSource(	eventBus,
+																this.displaySurface);
 	}
 
 	@Override
@@ -56,5 +59,10 @@ public class ShellRootSurface extends AbstractShellSurface {
 	@Override
 	public ShellNodeExecutor getNodeExecutor() {
 		return this.shellNodeExecutor;
+	}
+
+	@Override
+	public DisplaySurface getDisplaySurface() {
+		return this.displaySurface;
 	}
 }

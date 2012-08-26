@@ -21,13 +21,13 @@ import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
+import org.trinity.shell.core.api.ShellSurface;
 import org.trinity.shell.core.api.event.ShellSurfaceCreatedEvent;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
@@ -61,15 +61,15 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 			.concurrencyLevel(4).weakKeys().build();
 
 	private final DisplayServer display;
-	private final Provider<ShellClientSurface> shellClientProvider;
+	private final ShellClientSurfaceFactory shellClientSurfaceFactory;
 	private final EventBus shellEventBus;
 
 	@Inject
 	ShellEventDispatcherImpl(	@Named("shellEventBus") final EventBus shellEventBus,
-								final Provider<ShellClientSurface> shellClientProvider,
+								final ShellClientSurfaceFactory shellClientSurfaceFactory,
 								final DisplayServer display) {
 		this.shellEventBus = shellEventBus;
-		this.shellClientProvider = shellClientProvider;
+		this.shellClientSurfaceFactory = shellClientSurfaceFactory;
 		this.display = display;
 		this.shellEventBus.register(this);
 	}
@@ -114,14 +114,14 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 		final DisplayEventSource eventSource = event.getEventSource();
 
 		if (((eventBusses == null) || (eventBusses.size() == 0)) && (eventSource instanceof DisplaySurface)) {
-			createShellSurfaceClient((DisplaySurface) eventSource);
+			createClientShellSurface((DisplaySurface) eventSource);
 		}
 	}
 
-	private void createShellSurfaceClient(final DisplaySurface clientDisplayRenderArea) {
-		final ShellClientSurface clientShellRenderArea = this.shellClientProvider.get();
-		clientShellRenderArea.setDisplaySurface(clientDisplayRenderArea);
-		this.shellEventBus.post(new ShellSurfaceCreatedEvent(clientShellRenderArea));
+	private void createClientShellSurface(final DisplaySurface clientDisplaySurface) {
+		final ShellSurface clientShellSurace = this.shellClientSurfaceFactory
+				.createShellClientSurface(clientDisplaySurface);
+		this.shellEventBus.post(new ShellSurfaceCreatedEvent(clientShellSurace));
 	}
 
 	@Override

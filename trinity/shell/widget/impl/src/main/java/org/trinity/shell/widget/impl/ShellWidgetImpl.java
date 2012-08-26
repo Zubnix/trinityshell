@@ -94,8 +94,7 @@ public class ShellWidgetImpl extends AbstractShellSurface implements ShellWidget
 							final PainterFactory painterFactory,
 							@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 							final ShellWidgetView view) {
-		super(	eventBus,
-				shellDisplayEventDispatcher);
+		super(eventBus);
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		this.eventBus = eventBus;
 		this.shellNodeExecutor = shellNodeExecutor;
@@ -114,23 +113,11 @@ public class ShellWidgetImpl extends AbstractShellSurface implements ShellWidget
 	 *            <code>ShellWidget</code> needs to be directly initialized with
 	 *            data from its paintable parent at the paint back-end level.
 	 */
-	protected void init(final ShellWidget paintableParent) {
-		final Future<DisplaySurface> displaySurfaceFuture = this.view.create(getPainter());
-
-		try {
-			this.shellDisplayEventDispatcher.registerDisplayEventSource(this.eventBus,
-																		this);
-			final DisplaySurface visualDisplaySurface = displaySurfaceFuture.get();
-			setDisplaySurface(visualDisplaySurface);
-		} catch (final ExecutionException e) {
-			this.shellDisplayEventDispatcher.unregisterDisplayEventSource(	this.eventBus,
-																			this);
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	@Override
+	public void init(final ShellWidget paintableParent) {
+		this.shellDisplayEventDispatcher.registerDisplayEventSource(this.eventBus,
+																	this);
+		this.view.createDisplaySurface(getPainter());
 	}
 
 	@Override
@@ -164,12 +151,23 @@ public class ShellWidgetImpl extends AbstractShellSurface implements ShellWidget
 
 	@Override
 	public void setInputFocus() {
+
 		getPainter().setInputFocus();
 	}
 
 	@Override
-	protected void setDisplaySurface(final DisplaySurface platformRenderArea) {
-		// repeated for package visibility
-		super.setDisplaySurface(platformRenderArea);
+	public DisplaySurface getDisplaySurface() {
+		final Future<DisplaySurface> displaySurfaceFuture = this.view.getDislaySurface();
+		DisplaySurface displaySurface = null;
+		try {
+			displaySurface = displaySurfaceFuture.get();
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return displaySurface;
 	}
 }
