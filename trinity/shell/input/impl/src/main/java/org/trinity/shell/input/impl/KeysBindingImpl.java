@@ -24,7 +24,7 @@ public class KeysBindingImpl implements KeysBinding {
 	private final Runnable action;
 
 	@Inject
-	public KeysBindingImpl(	@Named("shellRootRenderArea") final ShellSurface root,
+	public KeysBindingImpl(	@Named("ShellRootSurface") final ShellSurface root,
 							@Named("shellEventBus") final EventBus shellEventBus,
 							@Assisted final List<Key> keys,
 							@Assisted final InputModifiers inputModifiers,
@@ -55,7 +55,7 @@ public class KeysBindingImpl implements KeysBinding {
 	public void bind() {
 		this.shellEventBus.register(this);
 		for (final Key grabKey : this.keys) {
-			this.root.getDisplayRenderArea().grabKey(	grabKey,
+			this.root.getDisplaySurface().grabKey(	grabKey,
 														this.inputModifiers);
 		}
 	}
@@ -71,7 +71,7 @@ public class KeysBindingImpl implements KeysBinding {
 	@Override
 	public void unbind() {
 		for (final Key grabKey : this.keys) {
-			this.root.getDisplayRenderArea().ungrabKey(	grabKey,
+			this.root.getDisplaySurface().ungrabKey(	grabKey,
 														this.inputModifiers);
 		}
 		this.shellEventBus.unregister(this);

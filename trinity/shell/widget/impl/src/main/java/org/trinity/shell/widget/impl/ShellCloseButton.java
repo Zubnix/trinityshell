@@ -85,7 +85,7 @@ public class ShellCloseButton extends ShellButton {
 	}
 
 	public void closeClient() {
-		this.desktopProtocol.queryProtocol(	getDisplayRenderArea(),
+		this.desktopProtocol.queryProtocol(	getDisplaySurface(),
 											DisplayProtocol.CLOSE_REQUEST);
 	}
 }

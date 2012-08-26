@@ -73,7 +73,7 @@ public interface ShellNode extends RenderNode, ShellNodeTransformable {
 
 	void setWidth(final int width);
 
-	ShellLayoutManager getParentGeoManager();
+	ShellLayoutManager getParentLayoutManager();
 
 	@Override
 	ShellNode getParent();

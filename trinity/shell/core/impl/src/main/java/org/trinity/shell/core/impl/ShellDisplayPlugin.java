@@ -61,6 +61,7 @@ public class ShellDisplayPlugin implements ShellPlugin, Runnable {
 
 	@Override
 	public void run() {
+
 		while (!Thread.interrupted()) {
 			try {
 				this.shellDisplayEventDispatcherImpl.dispatchDisplayEvent(true);

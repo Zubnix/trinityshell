@@ -48,11 +48,11 @@ public class ShellDragButton extends ShellButton {
 		@Override
 		public void run() {
 
-			final Coordinate mousePos = ShellDragButton.this.root.getDisplayRenderArea().getPointerCoordinate();
+			final Coordinate mousePos = ShellDragButton.this.root.getDisplaySurface().getPointerCoordinate();
 			ShellDragButton.this.x0 = mousePos.getX();
 			ShellDragButton.this.y0 = mousePos.getY();
 			while (!Thread.interrupted()) {
-				final Coordinate mousePosition = ShellDragButton.this.root.getDisplayRenderArea()
+				final Coordinate mousePosition = ShellDragButton.this.root.getDisplaySurface()
 						.getPointerCoordinate();
 				final int x1 = mousePosition.getX();
 				final int y1 = mousePosition.getY();
@@ -87,7 +87,7 @@ public class ShellDragButton extends ShellButton {
 	 */
 	@Inject
 	protected ShellDragButton(	final EventBus eventBus,
-								@Named("shellRootRenderArea") final ShellSurface root,
+								@Named("ShellRootSurface") final ShellSurface root,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
 								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,

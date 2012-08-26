@@ -36,7 +36,7 @@ public class ShellResizeButton extends ShellDragButton {
 
 	@Inject
 	protected ShellResizeButton(final EventBus eventBus,
-								@Named("shellRootRenderArea") final ShellSurface root,
+								@Named("ShellRootSurface") final ShellSurface root,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
 								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,

@@ -56,7 +56,7 @@ public class ShellAppLauncher extends AbstractShellKeyDrivenMenu {
 								final PainterFactory painterFactory,
 								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								final Keyboard keyboard,
-								@Named("shellRootRenderArea") final ShellSurface root,
+								@Named("ShellRootSurface") final ShellSurface root,
 								final KeyInputStringBuilder keyInputStringBuilder,
 								final ShellKeyDrivenMenuView view) {
 		super(	shellEventBus,

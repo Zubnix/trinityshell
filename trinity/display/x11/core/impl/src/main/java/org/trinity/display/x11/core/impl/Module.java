@@ -2,8 +2,6 @@ package org.trinity.display.x11.core.impl;
 
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.DisplaySurfaceFactory;
-import org.trinity.foundation.display.api.DisplaySurfaceHandle;
-import org.trinity.foundation.display.api.DisplaySurfaceHandleFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
@@ -22,7 +20,5 @@ public class Module extends AbstractModule {
 
 		install(new FactoryModuleBuilder().implement(	DisplaySurface.class,
 														XWindow.class).build(DisplaySurfaceFactory.class));
-		install(new FactoryModuleBuilder().implement(	DisplaySurfaceHandle.class,
-														XWindowHandle.class).build(DisplaySurfaceHandleFactory.class));
 	}
 }

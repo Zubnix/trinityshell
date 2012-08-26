@@ -1,12 +1,12 @@
 package org.trinity.render.qt.impl;
 
+import org.trinity.foundation.display.api.DisplaySurface;
+import org.trinity.foundation.display.api.DisplaySurfaceFactory;
 import org.trinity.foundation.display.api.DisplaySurfaceHandle;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
 
-import com.trolltech.qt.core.Qt.WidgetAttribute;
-import com.trolltech.qt.core.Qt.WindowType;
 import com.trolltech.qt.gui.QWidget;
 
 public class QJPaintContextImpl implements QJPaintContext {
@@ -14,13 +14,16 @@ public class QJPaintContextImpl implements QJPaintContext {
 	private final PaintableRenderNode paintableRenderNode;
 	private final QWidget visual;
 	private final QJRenderEngine qjRenderEngine;
+	private final DisplaySurfaceFactory displaySurfaceFactory;
 
 	public QJPaintContextImpl(	final PaintableRenderNode paintableRenderNode,
 								final QWidget visual,
-								final QJRenderEngine qjRenderEngineImpl) {
+								final QJRenderEngine qjRenderEngineImpl,
+								final DisplaySurfaceFactory displaySurfaceFactory) {
 		this.paintableRenderNode = paintableRenderNode;
 		this.visual = visual;
 		this.qjRenderEngine = qjRenderEngineImpl;
+		this.displaySurfaceFactory = displaySurfaceFactory;
 	}
 
 	@Override
@@ -41,13 +44,16 @@ public class QJPaintContextImpl implements QJPaintContext {
 	}
 
 	@Override
-	public DisplaySurfaceHandle getDisplaySurfaceHandle(final QWidget visual) {
-		visual.setWindowFlags(WindowType.X11BypassWindowManagerHint);
-		visual.setAttribute(WidgetAttribute.WA_DeleteOnClose,
-							true);
-		visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
-							true);
-		return new QJDisplaySurfaceHandle(visual);
+	public DisplaySurface getDisplaySurface(final QWidget visual) {
+		// visual.setWindowFlags(WindowType.X11BypassWindowManagerHint);
+		// visual.setAttribute(WidgetAttribute.WA_DeleteOnClose,
+		// true);
+		// visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
+		// true);
+		final DisplaySurfaceHandle displaySurfaceHandle = new QJDisplaySurfaceHandle(visual);
+		final DisplaySurface displaySurface = this.displaySurfaceFactory.createDisplaySurface(displaySurfaceHandle);
+
+		return displaySurface;
 	}
 
 	@Override

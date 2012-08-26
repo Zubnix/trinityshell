@@ -15,7 +15,6 @@ import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
 import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.geo.api.manager.ShellLayoutManager;
-import org.trinity.shell.widget.api.ShellWidget;
 import org.trinity.shell.widget.api.view.ShellWidgetView;
 
 import com.google.common.eventbus.EventBus;
@@ -39,9 +38,9 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(@Named("shellRootRenderArea"))
+@Bind(@Named("ShellRootWidget"))
 @Singleton
-public final class ShellRootWidget extends ShellWidgetImpl {
+public class ShellRootWidget extends ShellWidgetImpl {
 
 	@Inject
 	ShellRootWidget(final EventBus eventBus,
@@ -54,34 +53,17 @@ public final class ShellRootWidget extends ShellWidgetImpl {
 				painterFactory,
 				shellNodeExecutor,
 				view);
-		doShow(false);
-		init(getParent());
-		syncGeoToDisplaySurface();
+		// doShow(false);
 	}
 
-	@Override
-	protected void init(final ShellWidget paintableParent) {
-		super.init(paintableParent);
-		syncGeoToDisplaySurface();
-	}
+	// @Override
+	// protected void init(final ShellWidget paintableParent) {
+	// super.init(paintableParent);
+	// syncGeoToDisplaySurface();
+	// }
 
 	@Override
-	public ShellLayoutManager getParentGeoManager() {
-		return null;
-	}
-
-	@Override
-	public int getAbsoluteX() {
-		return getX();
-	}
-
-	@Override
-	public int getAbsoluteY() {
-		return getY();
-	}
-
-	@Override
-	public ShellRootWidget getParent() {
-		return this;
+	public ShellLayoutManager getParentLayoutManager() {
+		return getLayoutManager();
 	}
 }

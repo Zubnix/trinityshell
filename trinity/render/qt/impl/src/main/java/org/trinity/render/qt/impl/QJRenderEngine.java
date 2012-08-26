@@ -19,6 +19,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.trinity.foundation.display.api.DisplayEventProducer;
+import org.trinity.foundation.display.api.DisplaySurfaceFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableRenderNode;
@@ -62,14 +63,17 @@ public class QJRenderEngine implements DisplayEventProducer, Runnable {
 	private final AtomicBoolean initialized = new AtomicBoolean(false);
 
 	private final QJRenderEventConverter renderEventConverter;
+	private final DisplaySurfaceFactory displaySurfaceFactory;
 	private final EventBus displayEventBus;
 
 	private Thread renderThread;
 
 	@Inject
 	QJRenderEngine(	final QJRenderEventConverter renderEventConverter,
+					final DisplaySurfaceFactory displaySurfaceFactory,
 					@Named("displayEventBus") final EventBus displayEventBus) {
 		this.renderEventConverter = renderEventConverter;
+		this.displaySurfaceFactory = displaySurfaceFactory;
 		this.displayEventBus = displayEventBus;
 	}
 
@@ -116,9 +120,11 @@ public class QJRenderEngine implements DisplayEventProducer, Runnable {
 				final QWidget visual = getVisual(paintableRenderNode);
 				final QJPaintContext qjPaintContext = new QJPaintContextImpl(	paintableRenderNode,
 																				visual,
-																				QJRenderEngine.this);
-				return paintInstruction.call(	paintableRenderNode,
-												qjPaintContext);
+																				QJRenderEngine.this,
+																				QJRenderEngine.this.displaySurfaceFactory);
+				final R result = paintInstruction.call(	paintableRenderNode,
+														qjPaintContext);
+				return result;
 			}
 		});
 		QCoreApplication.invokeLater(futureTask);
@@ -143,11 +149,14 @@ public class QJRenderEngine implements DisplayEventProducer, Runnable {
 	@Override
 	public void run() {
 		QApplication.initialize(new String[] {});
+		QApplication.setQuitOnLastWindowClosed(false);
 		this.initialized.set(true);
 		synchronized (this) {
 			notifyAll();
 		}
-		QApplication.setQuitOnLastWindowClosed(false);
-		QApplication.exec();
+		final int r = QApplication.exec();
+		if (r != 0) {
+			throw new RuntimeException("Qt Jambi exited with error: " + r);
+		}
 	}
 }

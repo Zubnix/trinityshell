@@ -18,7 +18,6 @@ import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.display.api.DisplaySurfaceFactory;
 import org.trinity.foundation.display.api.DisplaySurfaceHandle;
-import org.trinity.foundation.display.api.DisplaySurfaceHandleFactory;
 
 import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
@@ -40,22 +39,18 @@ public class XWindowCache {
 
 	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
 
-	private final DisplaySurfaceHandleFactory displaySurfaceHandleFactory;
 	private final DisplaySurfaceFactory displaySurfaceFactory;
 
 	@Inject
-	XWindowCache(	final DisplaySurfaceHandleFactory resourceHandleFactory,
-					final DisplaySurfaceFactory displayResourceFactory) {
-		this.displaySurfaceHandleFactory = resourceHandleFactory;
-		this.displaySurfaceFactory = displayResourceFactory;
+	XWindowCache(final DisplaySurfaceFactory displaySurfaceFactory) {
+		this.displaySurfaceFactory = displaySurfaceFactory;
 	}
 
 	public XWindow getWindow(final int windowId) {
 
 		XWindow window = null;
 		final Integer windowID = Integer.valueOf(windowId);
-		final DisplaySurfaceHandle resourceHandle = XWindowCache.this.displaySurfaceHandleFactory
-				.createDisplaySurfaceHandle(windowID);
+		final DisplaySurfaceHandle resourceHandle = new XWindowHandle(windowID);
 		try {
 			window = this.xWindows.get(	Integer.valueOf(windowId),
 										new Callable<XWindow>() {

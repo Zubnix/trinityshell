@@ -3,8 +3,6 @@ package org.trinity.render.qtlnf.impl;
 import java.util.concurrent.Future;
 
 import org.trinity.foundation.display.api.DisplaySurface;
-import org.trinity.foundation.display.api.DisplaySurfaceFactory;
-import org.trinity.foundation.display.api.DisplaySurfaceHandle;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.foundation.render.api.Painter;
@@ -12,7 +10,8 @@ import org.trinity.render.paintengine.qt.api.QJPaintContext;
 import org.trinity.shell.core.api.ShellSurface;
 import org.trinity.shell.widget.api.view.ShellClientManagerView;
 
-import com.google.inject.Inject;
+import com.trolltech.qt.core.Qt.WidgetAttribute;
+import com.trolltech.qt.core.Qt.WindowType;
 import com.trolltech.qt.gui.QWidget;
 
 import de.devsurf.injection.guice.annotations.Bind;
@@ -20,15 +19,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 public class ShellClientManagerViewImpl extends ShellWidgetViewImpl implements ShellClientManagerView {
 
-	private final DisplaySurfaceFactory displaySurfaceFactory;
-
 	private Painter painter;
-
-	@Inject
-	ShellClientManagerViewImpl(final DisplaySurfaceFactory displaySurfaceFactory) {
-		super(displaySurfaceFactory);
-		this.displaySurfaceFactory = displaySurfaceFactory;
-	}
 
 	@Override
 	public Future<DisplaySurface> create(final Painter painter) {
@@ -41,14 +32,16 @@ public class ShellClientManagerViewImpl extends ShellWidgetViewImpl implements S
 				final QWidget parentVisual = paintContext.queryVisual(paintableRenderNode
 						.getParentPaintableRenderNode());
 				final QWidget visual = new QWidget(parentVisual);
+				visual.setWindowFlags(WindowType.X11BypassWindowManagerHint);
+				visual.setAttribute(WidgetAttribute.WA_DeleteOnClose,
+									true);
+				visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
+									true);
 
 				paintContext.syncVisualGeometryToNode(	visual,
 														paintableRenderNode);
 
-				final DisplaySurfaceHandle visualDisplaySurfaceHandle = paintContext.getDisplaySurfaceHandle(visual);
-
-				final DisplaySurface displaySurface = ShellClientManagerViewImpl.this.displaySurfaceFactory
-						.createDisplaySurface(visualDisplaySurfaceHandle);
+				final DisplaySurface displaySurface = paintContext.getDisplaySurface(visual);
 				return displaySurface;
 			}
 		});

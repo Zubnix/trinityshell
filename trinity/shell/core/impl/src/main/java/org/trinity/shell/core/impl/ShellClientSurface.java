@@ -55,7 +55,7 @@ public class ShellClientSurface extends AbstractShellSurface {
 	@Inject
 	ShellClientSurface(	final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 						final EventBus nodeEventBus,
-						@Named("shellRootRenderArea") final ShellSurface root,
+						@Named("ShellRootSurface") final ShellSurface root,
 						@Named("shellSurfaceGeoExecutor") final ShellNodeExecutor shellNodeExecutor) {
 		super(	nodeEventBus,
 				shellDisplayEventDispatcher);

@@ -116,7 +116,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 
 	@Override
 	public void setInputFocus() {
-		getDisplayRenderArea().setInputFocus();
+		getDisplaySurface().setInputFocus();
 	}
 
 	/**
@@ -261,7 +261,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * @return A {@link DisplaySurface}.
 	 */
 	@Override
-	public DisplaySurface getDisplayRenderArea() {
+	public DisplaySurface getDisplaySurface() {
 		return this.platformRenderArea;
 	}
 
@@ -321,14 +321,14 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * Set the <code>DisplaySurface</code> that will be used as the native
 	 * visual representation.
 	 * 
-	 * @param platformRenderArea
+	 * @param displaySurface
 	 *            A {@link DisplaySurface}.
-	 * @see AbstractShellSurface#getDisplayRenderArea()
+	 * @see AbstractShellSurface#getDisplaySurface()
 	 */
-	protected void setDisplaySurface(final DisplaySurface platformRenderArea) {
-		this.platformRenderArea = platformRenderArea;
+	protected void setDisplaySurface(final DisplaySurface displaySurface) {
+		this.platformRenderArea = displaySurface;
 		this.shellDisplayEventDispatcher.registerDisplayEventSource(this.nodeEventBus,
-																	platformRenderArea);
+																	displaySurface);
 	}
 
 	/**
@@ -397,7 +397,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	@Override
 	public String toString() {
 		return String.format(	"AbstractShellSurface <%s>: %d+%d : %dx%d",
-								getDisplayRenderArea(),
+								getDisplaySurface(),
 								getX(),
 								getX(),
 								getWidth(),
@@ -417,7 +417,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 */
 	@Override
 	public void syncGeoToDisplaySurface() {
-		final Rectangle rectangle = getDisplayRenderArea().getGeometry();
+		final Rectangle rectangle = getDisplaySurface().getGeometry();
 		setX(rectangle.getX());
 		setY(rectangle.getY());
 

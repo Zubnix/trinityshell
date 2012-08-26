@@ -27,7 +27,7 @@ public interface ShellSurface extends ShellNode {
 
 	int getMinWidth();
 
-	DisplaySurface getDisplayRenderArea();
+	DisplaySurface getDisplaySurface();
 
 	int getWidthIncrement();
 

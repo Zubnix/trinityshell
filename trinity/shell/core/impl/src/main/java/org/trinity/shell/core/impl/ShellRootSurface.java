@@ -5,6 +5,7 @@ import org.trinity.shell.core.api.AbstractShellSurface;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
 import org.trinity.shell.core.api.ShellSurface;
 import org.trinity.shell.geo.api.ShellNodeExecutor;
+import org.trinity.shell.geo.api.manager.ShellLayoutManager;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -13,9 +14,8 @@ import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
 
-@Bind(value = @Named("shellRootRenderArea"), to = @To(value = Type.CUSTOM, customs = ShellSurface.class))
+@Bind(value = @Named("ShellRootSurface"), to = @To(value = To.Type.CUSTOM, customs = ShellSurface.class))
 @Singleton
 public class ShellRootSurface extends AbstractShellSurface {
 
@@ -41,6 +41,11 @@ public class ShellRootSurface extends AbstractShellSurface {
 	@Override
 	public int getAbsoluteY() {
 		return getY();
+	}
+
+	@Override
+	public ShellLayoutManager getParentLayoutManager() {
+		return getLayoutManager();
 	}
 
 	@Override

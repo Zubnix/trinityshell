@@ -44,7 +44,7 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 	private final ShellSurface root;
 
 	@Inject
-	protected ShellSurfaceGeoExecutor(@Named("shellRootRenderArea") final ShellSurface root) {
+	protected ShellSurfaceGeoExecutor(@Named("ShellRootSurface") final ShellSurface root) {
 		this.root = root;
 	}
 
@@ -55,14 +55,14 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 
 	@SuppressWarnings("unchecked")
 	protected <T extends DisplayArea> DisplayAreaManipulator<T> getAreaManipulator(final ShellSurface shellSurface) {
-		return (DisplayAreaManipulator<T>) shellSurface.getDisplayRenderArea();
+		return (DisplayAreaManipulator<T>) shellSurface.getDisplaySurface();
 	}
 
 	protected boolean isAreaInitialized(final ShellSurface shellSurface) {
 		if (shellSurface == null) {
 			return false;
 		}
-		final boolean initialized = shellSurface.getDisplayRenderArea() != null;
+		final boolean initialized = shellSurface.getDisplaySurface() != null;
 		return initialized;
 	}
 
@@ -129,7 +129,7 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 																final int directRelativeX,
 																final int directRelativeY) {
 
-		final ShellSurface parentRenderArea = findClosestSameTypeArea(directParent);
+		final ShellSurface parentRenderArea = findClosestSameTypeSurface(directParent);
 
 		if (parentRenderArea == null) {
 			return new Coordinate(	directRelativeX,
@@ -154,58 +154,44 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 	}
 
 	protected void initialize(	final ShellNode parent,
-								final ShellNode area) {
-		initializeGeoTransformableSquare(	parent,
-											area);
-		for (final ShellNode child : area.getChildren()) {
-			initialize(	area,
+								final ShellNode nodeToInit) {
+		initializeShellSurface(	parent,
+								nodeToInit);
+		for (final ShellNode child : nodeToInit.getChildren()) {
+			initialize(	nodeToInit,
 						child);
 		}
 	}
 
-	protected void initializeGeoTransformableSquare(final ShellNode parent,
-													final ShellNode area) {
+	protected void initializeShellSurface(	final ShellNode parent,
+											final ShellNode area) {
 		// Sublcasses should override & implement this method to make sure the
-		// given area is ready to make back-end calls.
-	}
-
-	/**
-	 * Perform any required operations on the parent before the manipulated
-	 * render area is reparented.
-	 * 
-	 * @param newParentRenderArea
-	 */
-	protected void preProcesNewSameTypeParent(final ShellSurface newParentRenderArea) {
-		// newParentRenderArea
-		// .getPlatformRenderArea()
-		// .selectEvent(DisplayEventSelector.REDIRECT_CHILD_WINDOW_GEOMETRY_CHANGES);
+		// given area is ready.
 	}
 
 	@Override
 	public void reparent(	final ShellNode shellNode,
 							final ShellNode parent) {
-		final ShellSurface currentRenderArea = (ShellSurface) shellNode;
+		final ShellSurface currentSurface = (ShellSurface) shellNode;
 		final ShellNode newParent = parent;
-		final ShellSurface newParentRenderArea = findClosestSameTypeArea(newParent);
+		final ShellSurface newParentSurface = findClosestSameTypeSurface(newParent);
 
-		final boolean newParentInitialized = isAreaInitialized(newParentRenderArea);
-		final boolean currentRenderAreaInitialized = isAreaInitialized(currentRenderArea);
+		final boolean newParentInitialized = isAreaInitialized(newParentSurface);
+		final boolean currentShellSurfaceInitialized = isAreaInitialized(currentSurface);
 
-		if (newParentInitialized && !currentRenderAreaInitialized) {
+		if (newParentInitialized && !currentShellSurfaceInitialized) {
 			// parent is ready but we are not. we initialize ourself with
 			// our ready parent as argument.
 			initialize(	newParent,
-						currentRenderArea);
-		} else if (newParentInitialized && currentRenderAreaInitialized) {
+						currentSurface);
+		} else if (newParentInitialized && currentShellSurfaceInitialized) {
 			// we are ready and our new parent is ready. we start the
 			// procedure to change to our new ready parent.
-
-			// call back-end to reparent current manipulated area
 			final int newX = shellNode.getX();
 			final int newY = shellNode.getY();
 
-			if (currentRenderArea.equals(newParentRenderArea)) {
-				throw new IllegalArgumentException("Can not reparent to a child of self.");
+			if (currentSurface.equals(newParentSurface)) {
+				throw new IllegalArgumentException("Can not reparent to self.");
 			} else {
 				final Coordinate newRelativePosition = calculatePositionRelativeToTypedArea(newParent,
 																							newX,
@@ -214,21 +200,14 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 				final int newRelativeX = newRelativePosition.getX();
 				final int newRelativeY = newRelativePosition.getY();
 
-				preProcesNewSameTypeParent(newParentRenderArea);
 				reparent(	shellNode,
-							getAreaPeer(newParentRenderArea),
+							getAreaPeer(newParentSurface),
 							newRelativeX,
 							newRelativeY);
 			}
-		} else if (currentRenderAreaInitialized && !newParentInitialized) {
+		} else if (currentShellSurfaceInitialized && !newParentInitialized) {
 			// we are ready but our new parent isn't. we hide ourself.
-
-			// call back-end to hide current manipulated area
 			getShellNodeManipulator(shellNode).hide();
-		} else {
-			// If both the new parent and the current render area are
-			// not initialized, there isn't much we can do. We don't want to
-			// call any back-end.
 		}
 	}
 
@@ -237,7 +216,7 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 	 * @return
 	 */
 	protected DisplayArea getAreaPeer(final ShellSurface shellSurface) {
-		return shellSurface.getDisplayRenderArea();
+		return shellSurface.getDisplaySurface();
 	}
 
 	/**
@@ -250,7 +229,7 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 	 *            tree hierarchy.
 	 * @return The closest parent with type {@link ShellSurface}.
 	 */
-	protected ShellSurface findClosestSameTypeArea(final ShellNode square) {
+	protected ShellSurface findClosestSameTypeSurface(final ShellNode square) {
 
 		// find the closest ancestor that is of type ShellSurface
 		if (square instanceof ShellSurface) {
@@ -265,10 +244,10 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 				if (newParent == null) {
 					return null;
 				} else {
-					return findClosestSameTypeArea(newParent);
+					return findClosestSameTypeSurface(newParent);
 				}
 			} else {
-				return findClosestSameTypeArea(currentParent);
+				return findClosestSameTypeSurface(currentParent);
 			}
 		}
 	}

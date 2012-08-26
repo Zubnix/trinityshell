@@ -42,7 +42,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ShellWidgetGeoExecutor extends ShellSurfaceGeoExecutor {
 
 	@Inject
-	protected ShellWidgetGeoExecutor(@Named("shellRootRenderArea") final ShellSurface shellRoot) {
+	protected ShellWidgetGeoExecutor(@Named("ShellRootSurface") final ShellSurface shellRoot) {
 		super(shellRoot);
 	}
 
@@ -59,14 +59,14 @@ public class ShellWidgetGeoExecutor extends ShellSurfaceGeoExecutor {
 	}
 
 	@Override
-	protected ShellWidget findClosestSameTypeArea(final ShellNode square) {
+	protected ShellWidget findClosestSameTypeSurface(final ShellNode square) {
 		if (square == null) {
 			return null;
 		}
 		if (square instanceof ShellWidgetImpl) {
 			return (ShellWidget) square;
 		} else {
-			return findClosestSameTypeArea(square.getParent());
+			return findClosestSameTypeSurface(square.getParent());
 		}
 	}
 
@@ -76,19 +76,14 @@ public class ShellWidgetGeoExecutor extends ShellSurfaceGeoExecutor {
 	}
 
 	@Override
-	protected void initializeGeoTransformableSquare(final ShellNode parent,
-													final ShellNode area) {
+	protected void initializeShellSurface(	final ShellNode parent,
+											final ShellNode area) {
 		// initialize the area with the closest typed parent.
 		if (area instanceof ShellWidgetImpl) {
 			final ShellWidgetImpl shellWidgetImpl = (ShellWidgetImpl) area;
-			final ShellWidget closestParentWidget = findClosestSameTypeArea(parent);
+			final ShellWidget closestParentWidget = findClosestSameTypeSurface(parent);
 			shellWidgetImpl.init(closestParentWidget);
 		}
-	}
-
-	@Override
-	protected void preProcesNewSameTypeParent(final ShellSurface newParentRenderArea) {
-		// we don't want any processing done on our new same type parent.
 	}
 
 	@Override
@@ -102,14 +97,14 @@ public class ShellWidgetGeoExecutor extends ShellSurfaceGeoExecutor {
 		// If the old parent is null, we don't need to update the platform
 		// render area.
 		if (shellNode.toGeoTransformation().getParent0() != null) {
-			final DisplaySurface parentPlatformRenderArea = shellWidgetImpl.getParentPaintableRenderNode()
-					.getDisplayRenderArea();
-			final DisplaySurface platformRenderArea = shellWidgetImpl.getDisplayRenderArea();
+			final DisplaySurface parentDisplaySurface = shellWidgetImpl.getParentPaintableRenderNode()
+					.getDisplaySurface();
+			final DisplaySurface displaysurface = shellWidgetImpl.getDisplaySurface();
 
-			if (parentPlatformRenderArea.equals(platformRenderArea)) {
+			if (parentDisplaySurface.equals(displaysurface)) {
 				// we need to update the widget's platform render area
 				final DisplaySurface newParentPlatformRenderArea = shellWidgetImpl.getParentPaintableRenderNode()
-						.getDisplayRenderArea();
+						.getDisplaySurface();
 				shellWidgetImpl.setDisplaySurface(newParentPlatformRenderArea);
 			}
 		}

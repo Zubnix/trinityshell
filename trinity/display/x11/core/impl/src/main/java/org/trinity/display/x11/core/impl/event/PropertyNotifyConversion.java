@@ -57,6 +57,9 @@ public class PropertyNotifyConversion implements XEventConversion {
 		final String xProperty = this.xAtomCache.getAtom(atomId);
 
 		final List<DisplayProtocol> displayProtocols = this.xPropertyMapping.toDisplayProtocols(xProperty);
+		if (displayProtocols == null) {
+			return null;
+		}
 
 		final DisplayEvent displayEvent = new ProtocolNotifyEvent(	displayEventSource,
 																	displayProtocols);

@@ -221,14 +221,14 @@ public abstract class AbstractShellKeyDrivenMenu extends ShellWidgetImpl impleme
 	@Override
 	public void activate() {
 		this.shellEventBus.register(this);
-		this.root.getDisplayRenderArea().grabKeyboard();
+		this.root.getDisplaySurface().grabKeyboard();
 		this.view.activate();
 	}
 
 	@Override
 	public void deactivate() {
 		// release root?
-		this.root.getDisplayRenderArea().ungrabKeyboard();
+		this.root.getDisplaySurface().ungrabKeyboard();
 		this.shellEventBus.unregister(this);
 		this.view.deactivate();
 	}
