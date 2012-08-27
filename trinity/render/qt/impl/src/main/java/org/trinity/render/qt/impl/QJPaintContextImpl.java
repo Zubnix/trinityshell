@@ -45,11 +45,6 @@ public class QJPaintContextImpl implements QJPaintContext {
 
 	@Override
 	public DisplaySurface getDisplaySurface(final QWidget visual) {
-		// visual.setWindowFlags(WindowType.X11BypassWindowManagerHint);
-		// visual.setAttribute(WidgetAttribute.WA_DeleteOnClose,
-		// true);
-		// visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
-		// true);
 		final DisplaySurfaceHandle displaySurfaceHandle = new QJDisplaySurfaceHandle(visual);
 		final DisplaySurface displaySurface = this.displaySurfaceFactory.createDisplaySurface(displaySurfaceHandle);
 

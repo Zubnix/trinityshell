@@ -19,6 +19,8 @@ import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 
+import xcbjb.LibXcb;
+
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -54,6 +56,9 @@ public class XDisplayServer implements DisplayServer {
 		final String displayName = System.getenv("DISPLAY");
 		this.xConnection.open(	displayName,
 								0);
+		if (LibXcb.xcb_connection_has_error(this.xConnection.getConnectionReference()) != 0) {
+			throw new Error("Cannot open display\n");
+		}
 		startUp();
 	}
 

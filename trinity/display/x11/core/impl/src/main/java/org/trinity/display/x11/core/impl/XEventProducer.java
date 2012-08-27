@@ -64,6 +64,9 @@ public class XEventProducer implements DisplayEventProducer, Runnable {
 	public void run() {
 		while (!Thread.interrupted()) {
 			final xcb_generic_event_t event_t = LibXcb.xcb_wait_for_event(this.connection.getConnectionReference());
+			if (LibXcb.xcb_connection_has_error(this.connection.getConnectionReference()) != 0) {
+				throw new Error("X11 connection was closed unexpectedly - maybe your X server terminated / crashed?\n");
+			}
 			this.xEventBus.post(event_t);
 			Thread.yield();
 		}

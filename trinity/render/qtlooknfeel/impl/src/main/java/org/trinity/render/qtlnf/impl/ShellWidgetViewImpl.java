@@ -77,7 +77,9 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 			@Override
 			public DisplaySurface call(	final PaintableRenderNode paintableRenderNode,
 										final QJPaintContext paintContext) {
-				return paintContext.getDisplaySurface(paintContext.getVisual());
+				final QWidget visual = paintContext.getVisual();
+				final DisplaySurface displaySurface = paintContext.getDisplaySurface(visual);
+				return displaySurface;
 			}
 		});
 	}

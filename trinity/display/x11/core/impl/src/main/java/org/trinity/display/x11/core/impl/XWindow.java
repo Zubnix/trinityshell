@@ -103,8 +103,9 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public void show() {
+		final int windowId = getWindowId();
 		LibXcb.xcb_map_window(	getConnectionRef(),
-								getWindowId());
+								windowId);
 	}
 
 	@Override
@@ -116,8 +117,9 @@ public class XWindow implements DisplaySurface {
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder());
 		value_list.putInt(x).putInt(y);
 
+		final int windowId = getWindowId();
 		LibXcb.xcb_configure_window(getConnectionRef(),
-									getWindowId(),
+									windowId,
 									value_mask,
 									value_list);
 	}
@@ -135,8 +137,9 @@ public class XWindow implements DisplaySurface {
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(16).order(ByteOrder.nativeOrder());
 		value_list.putInt(x).putInt(y).putInt(width).putInt(height);
 
+		final int windowId = getWindowId();
 		LibXcb.xcb_configure_window(getConnectionRef(),
-									getWindowId(),
+									windowId,
 									value_mask,
 									value_list);
 	}

@@ -18,7 +18,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ShellWindowManagerPlugin implements ShellPlugin {
 
 	private final ShellSurface shellRootSurface;
-	private final ShellWidget shellRootWidget;
+	// private final ShellWidget shellRootWidget;
 	private final EventBus shellEventBus;
 
 	@Inject
@@ -26,7 +26,7 @@ public class ShellWindowManagerPlugin implements ShellPlugin {
 								@Named("ShellRootWidget") final ShellWidget shellRootWidget,
 								@Named("shellEventBus") final EventBus shellEventBus) {
 		this.shellRootSurface = shellRootSurface;
-		this.shellRootWidget = shellRootWidget;
+		// this.shellRootWidget = shellRootWidget;
 		this.shellEventBus = shellEventBus;
 	}
 
@@ -34,15 +34,15 @@ public class ShellWindowManagerPlugin implements ShellPlugin {
 	public void handleShellClientCreated(final ShellSurfaceCreatedEvent shellSurfaceCreatedEvent) {
 		// TODO create widget to move/resize/close client
 		final ShellSurface client = shellSurfaceCreatedEvent.getClient();
-		client.setParent(this.shellRootWidget);
-		client.doReparent();
+		// client.setParent(this.shellRootWidget);
+		// client.doReparent();
 	}
 
 	public void setupRootWidget() {
-		this.shellRootWidget.init(null);
-		this.shellRootWidget.doShow();
-		this.shellRootWidget.setParent(this.shellRootSurface);
-		this.shellRootWidget.doReparent();
+		// this.shellRootWidget.init(null);
+		// this.shellRootWidget.doShow();
+		// this.shellRootWidget.setParent(this.shellRootSurface);
+		// this.shellRootWidget.doReparent();
 	}
 
 	@Override

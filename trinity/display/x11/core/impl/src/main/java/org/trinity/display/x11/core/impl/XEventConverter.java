@@ -55,7 +55,11 @@ public final class XEventConverter {
 
 	@Subscribe
 	public void handleXEvent(final xcb_generic_event_t event_t) {
-		final XEventConversion eventConversion = this.conversionMap.get(Integer.valueOf(event_t.getResponse_type()));
+		final short responseType = event_t.getResponse_type();
+
+		final int eventCode = responseType & 0x7f;
+
+		final XEventConversion eventConversion = this.conversionMap.get(Integer.valueOf(eventCode));
 		if (eventConversion == null) {
 			return;
 		}
