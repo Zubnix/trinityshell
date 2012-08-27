@@ -39,12 +39,12 @@ import de.devsurf.injection.guice.annotations.To.Type;
  */
 @Bind(value = @Named("shellSurfaceGeoExecutor"), to = @To(value = Type.CUSTOM, customs = ShellNodeExecutor.class))
 @Singleton
-public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
+public class ShellSurfaceExecutor extends AbstractShellNodeExecutor {
 
 	private final ShellSurface root;
 
 	@Inject
-	protected ShellSurfaceGeoExecutor(@Named("ShellRootSurface") final ShellSurface root) {
+	protected ShellSurfaceExecutor(@Named("ShellRootSurface") final ShellSurface root) {
 		this.root = root;
 	}
 
@@ -221,7 +221,7 @@ public class ShellSurfaceGeoExecutor extends AbstractShellNodeExecutor {
 
 	/**
 	 * Find the the closest parent in the area tree hierarchy that matches the
-	 * type of {@link ShellSurfaceGeoExecutor#getManipulatedArea()}, starting
+	 * type of {@link ShellSurfaceExecutor#getManipulatedArea()}, starting
 	 * from the given square.
 	 * 
 	 * @param square

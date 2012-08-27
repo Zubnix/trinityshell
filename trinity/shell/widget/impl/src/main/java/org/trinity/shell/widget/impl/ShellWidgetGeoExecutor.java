@@ -16,7 +16,7 @@ import javax.inject.Named;
 import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.shell.core.api.ShellSurface;
-import org.trinity.shell.core.impl.ShellSurfaceGeoExecutor;
+import org.trinity.shell.core.impl.ShellSurfaceExecutor;
 import org.trinity.shell.geo.api.ShellNode;
 import org.trinity.shell.geo.api.ShellNodeExecutor;
 import org.trinity.shell.widget.api.ShellWidget;
@@ -38,7 +38,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  */
 @Bind
 @Named("shellWidgetGeoExecutor")
-public class ShellWidgetGeoExecutor extends ShellSurfaceGeoExecutor {
+public class ShellWidgetGeoExecutor extends ShellSurfaceExecutor {
 
 	@Inject
 	protected ShellWidgetGeoExecutor(@Named("ShellRootSurface") final ShellSurface shellRoot) {

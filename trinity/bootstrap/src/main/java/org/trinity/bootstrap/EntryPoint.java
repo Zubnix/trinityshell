@@ -1,5 +1,7 @@
 package org.trinity.bootstrap;
 
+import org.trinity.shell.core.api.ShellPluginsRunner;
+
 import xcbcustom.LibXcbLoader;
 
 import com.google.inject.Guice;
@@ -19,15 +21,11 @@ public class EntryPoint {
 	}
 
 	public EntryPoint(final String[] args) {
-
-		// TODO command line args parsing
-
 		final Injector injector = Guice.createInjector(	Stage.PRODUCTION,
 														StartupModule.create(	ASMClasspathScanner.class,
 																				PackageFilter.create("org.trinity")));
 
 		final ShellPluginsRunner shellPluginsRunner = injector.getInstance(ShellPluginsRunner.class);
-
-		shellPluginsRunner.startAllShellPlugins();
+		shellPluginsRunner.startAll();
 	}
 }

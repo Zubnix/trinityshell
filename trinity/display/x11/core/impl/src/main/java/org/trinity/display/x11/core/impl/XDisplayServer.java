@@ -84,6 +84,7 @@ public class XDisplayServer implements DisplayServer {
 	@Override
 	public DisplayEvent getNextDisplayEvent() {
 		try {
+			LibXcb.xcb_flush(this.xConnection.getConnectionReference());
 			return this.displayEvents.take();
 		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block

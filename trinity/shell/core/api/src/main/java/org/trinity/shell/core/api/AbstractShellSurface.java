@@ -466,7 +466,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 			setWidth(geometry.getWidth());
 		}
 		if (geometryRequestEvent.configureHeight()) {
-			setHeight(geometry.getWidth());
+			setHeight(geometry.getHeight());
 		}
 
 		requestMoveResize();
