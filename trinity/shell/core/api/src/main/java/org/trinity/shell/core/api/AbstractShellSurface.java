@@ -198,13 +198,6 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 		return this.maxWidth;
 	}
 
-	@Subscribe
-	public void handleDestroyNotify(final DestroyNotifyEvent event) {
-		if (!isDestroyed()) {
-			doDestroy(false);
-		}
-	}
-
 	@Override
 	public int getWidthIncrement() {
 		return this.widthIncrement;

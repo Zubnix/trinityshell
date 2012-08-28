@@ -40,7 +40,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
 // be negative. childs with size 0, ...)
 // TODO refactor to reuse code and for cleaner reading
 /**
- * A <code>ShellGeoManagerLine</code> provides a layout for children in a
+ * A <code>ShellLayoutManagerLine</code> provides a layout for children in a
  * horizontal or vertical line. All children will have the same height or width
  * for a horizontal or vertical layout respectively and are placed directly next
  * to each other with no overlap or spacing. The other child dimensions are
@@ -50,8 +50,8 @@ import de.devsurf.injection.guice.annotations.To.Type;
  * @since 1.0
  * 
  */
-@Bind(value = @Named("ShellGeoManagerLine"), to = @To(value = Type.CUSTOM, customs = ShellLayoutManager.class))
-public class ShellGeoManagerLine extends AbstractShellLayoutManager {
+@Bind(value = @Named("ShellLayoutManagerLine"), to = @To(value = Type.CUSTOM, customs = ShellLayoutManager.class))
+public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 
 	private final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(0,
 																								new Margins(0));
@@ -106,7 +106,7 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 	private boolean inverseDirection;
 
 	/**
-	 * Create a new <code>ShellGeoManagerLine</code> that will use the geometry
+	 * Create a new <code>ShellLayoutManagerLine</code> that will use the geometry
 	 * of the given container to determine the layout of the managed children.
 	 * Ideally, the given container should be the same as the
 	 * <code>ShellNode</code> that returns this <code>ShellLayoutManager</code>.
@@ -115,7 +115,7 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 	 * @param horizontalDirection
 	 * @param inverseDirection
 	 */
-	ShellGeoManagerLine() {
+	ShellLayoutManagerLine() {
 		setHorizontalDirection(true);
 		setInverseDirection(false);
 	}
@@ -302,10 +302,10 @@ public class ShellGeoManagerLine extends AbstractShellLayoutManager {
 	}
 
 	@Override
-	public void addChild(	final ShellNode child,
+	public void addChildShellSurface(	final ShellNode child,
 							final ShellLayoutProperty layoutProperty) {
 		child.addShellNodeEventHandler(this.childGeoListener);
-		super.addChild(	child,
+		super.addChildShellSurface(	child,
 						layoutProperty);
 	}
 

@@ -376,14 +376,12 @@ public class XWindow implements DisplaySurface {
 	}
 
 	public void configureClientEvents() {
-		final ByteBuffer values = ByteBuffer.allocateDirect(4 + 4 + 4 + 4).order(ByteOrder.nativeOrder());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE);
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW);
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW);
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY);
+		final ByteBuffer values = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE | xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW
+				| xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW | xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY);
 
 		LibXcb.xcb_change_window_attributes(this.xConnection.getConnectionReference(),
-											((XWindowHandle) this.resourceHandle).getNativeHandle().intValue(),
+											((Integer) (this.resourceHandle).getNativeHandle()).intValue(),
 											xcb_cw_t.XCB_CW_EVENT_MASK,
 											values);
 	}

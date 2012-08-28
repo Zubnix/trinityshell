@@ -8,11 +8,11 @@ public interface ShellLayoutManager {
 
 	ShellNode getLayoutContainer();
 
-	void setLayoutContainer(ShellNode layoutContainer);
+	void setContainerShellSurface(ShellNode layoutContainer);
 
 	void addChild(ShellNode child);
 
-	void addChild(	final ShellNode child,
+	void addChildShellSurface(	final ShellNode child,
 					final ShellLayoutProperty layoutProperty);
 
 	ShellLayoutProperty getLayoutProperty(final ShellNode child);

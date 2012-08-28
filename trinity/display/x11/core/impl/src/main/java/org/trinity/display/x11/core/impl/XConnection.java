@@ -56,9 +56,9 @@ public class XConnection {
 	private void configureRootEvents() {
 		final int rootId = this.screen_t.getRoot();
 
-		final ByteBuffer values = ByteBuffer.allocateDirect(4 + 4).order(ByteOrder.nativeOrder());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY);
+		final ByteBuffer values = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
+				| xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY);
 
 		LibXcb.xcb_change_window_attributes(this.connection_t,
 											rootId,

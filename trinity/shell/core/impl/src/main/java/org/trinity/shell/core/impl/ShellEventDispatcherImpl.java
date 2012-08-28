@@ -119,9 +119,9 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 	}
 
 	private void createClientShellSurface(final DisplaySurface clientDisplaySurface) {
-		final ShellSurface clientShellSurace = this.shellClientSurfaceFactory
+		final ShellSurface clientShellSurface = this.shellClientSurfaceFactory
 				.createShellClientSurface(clientDisplaySurface);
-		this.shellEventBus.post(new ShellSurfaceCreatedEvent(clientShellSurace));
+		this.shellEventBus.post(new ShellSurfaceCreatedEvent(clientShellSurface));
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	}
 
 	@Override
-	public void setLayoutContainer(final ShellNode layoutContainer) {
+	public void setContainerShellSurface(final ShellNode layoutContainer) {
 		this.container = layoutContainer;
 	}
 
@@ -63,7 +63,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	 * @param layoutProperty
 	 */
 	@Override
-	public void addChild(	final ShellNode child,
+	public void addChildShellSurface(	final ShellNode child,
 							final ShellLayoutProperty layoutProperty) {
 		this.childrenWithLayoutProperty.put(child,
 											layoutProperty);
@@ -71,7 +71,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	@Override
 	public void addChild(final ShellNode child) {
-		addChild(	child,
+		addChildShellSurface(	child,
 					defaultLayoutProperty());
 	}
 

@@ -358,9 +358,6 @@ public abstract class AbstractShellNode implements ShellNode {
 	@Override
 	public void doDestroy() {
 		this.doDestroy(true);
-		final ShellNodeDestroyEvent geoEvent = new ShellNodeDestroyEvent(	this,
-																			toGeoTransformation());
-		this.nodeEventBus.post(geoEvent);
 	}
 
 	protected void doDestroy(final boolean execute) {
@@ -368,6 +365,9 @@ public abstract class AbstractShellNode implements ShellNode {
 			execDestroy();
 		}
 		this.destroyed = true;
+		final ShellNodeDestroyEvent geoEvent = new ShellNodeDestroyEvent(	this,
+																			toGeoTransformation());
+		this.nodeEventBus.post(geoEvent);
 	}
 
 	protected void execDestroy() {

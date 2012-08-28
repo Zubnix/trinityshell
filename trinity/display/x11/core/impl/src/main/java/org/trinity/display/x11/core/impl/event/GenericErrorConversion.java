@@ -30,7 +30,7 @@ public class GenericErrorConversion implements XEventConversion {
 																			true);
 		this.xEventBus.post(request_error_t);
 
-		throw new Error("xcb error");
+		throw new Error("xcb error: " + request_error_t.getError_code());
 	}
 
 	@Override

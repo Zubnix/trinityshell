@@ -12,12 +12,14 @@
 package org.trinity.shell.core.impl;
 
 import org.trinity.foundation.display.api.DisplaySurface;
+import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
 import org.trinity.shell.core.api.AbstractShellSurface;
 import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
 import org.trinity.shell.core.api.ShellSurface;
 import org.trinity.shell.geo.api.ShellNodeExecutor;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
@@ -36,8 +38,10 @@ import com.google.inject.name.Named;
  */
 public class ShellClientSurface extends AbstractShellSurface {
 
+	private final EventBus nodeEventBus;
 	private final ShellNodeExecutor renderAreaGeoExecutor;
 	private final DisplaySurface displaySurface;
+	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
 
 	/**
 	 * Create a new <code>ShellClientSurface</code> from a foreign
@@ -56,13 +60,24 @@ public class ShellClientSurface extends AbstractShellSurface {
 						@Named("shellSurfaceGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 						@Assisted final DisplaySurface displaySurface) {
 		super(eventBus);
+		this.nodeEventBus = eventBus;
+		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		this.displaySurface = displaySurface;
 		this.renderAreaGeoExecutor = shellNodeExecutor;
+
 		setParent(root);
 		doReparent(false);
 		syncGeoToDisplaySurface();
 		shellDisplayEventDispatcher.registerDisplayEventSource(	eventBus,
 																displaySurface);
+	}
+
+	@Override
+	@Subscribe
+	public void handleDestroyNotifyEvent(final DestroyNotifyEvent destroyNotifyEvent) {
+		super.handleDestroyNotifyEvent(destroyNotifyEvent);
+		this.shellDisplayEventDispatcher.unregisterDisplayEventSource(	this.nodeEventBus,
+																		getDisplaySurface());
 	}
 
 	@Override
