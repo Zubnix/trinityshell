@@ -4,6 +4,8 @@
 %include "typemaps.i";
 %include "arrays_java.i";
 %include "various.i";
+%include "enumtypeunsafe.swg";
+
 
 //own lib
 %include "primitives_xcb.i";

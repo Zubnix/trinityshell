@@ -221,8 +221,8 @@ public class ShellSurfaceExecutor extends AbstractShellNodeExecutor {
 
 	/**
 	 * Find the the closest parent in the area tree hierarchy that matches the
-	 * type of {@link ShellSurfaceExecutor#getManipulatedArea()}, starting
-	 * from the given square.
+	 * type of {@link ShellSurfaceExecutor#getManipulatedArea()}, starting from
+	 * the given square.
 	 * 
 	 * @param square
 	 *            The {@link ShellNode} to start searching from upwards in the

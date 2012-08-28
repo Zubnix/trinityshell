@@ -85,7 +85,7 @@ public class XKeySymbolCache {
 		// 'col' (third parameter) is used to get the proper KeySym according to
 		// modifier (XCB doesn't provide an equivalent to XLookupString()). If
 		// Mod5 is ON we look into second group.
-		if ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_5.swigValue()) != 0) {
+		if ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_5) != 0) {
 			k0 = LibXcb.xcb_key_symbols_get_keysym(	this.xcbKeySymbols,
 													(short) key,
 													4);
@@ -105,34 +105,34 @@ public class XKeySymbolCache {
 			k1 = k0;
 		}
 		// The numlock modifier is on and the second KeySym is a keypad KeySym
-		if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_2.swigValue()) != 0) && (LibXcb.xcb_is_keypad_key(k1) != 0)) {
+		if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_2) != 0) && (LibXcb.xcb_is_keypad_key(k1) != 0)) {
 			// The Shift modifier is on, or if the Lock modifier is on and is
 			// interpreted as ShiftLock, use the first KeySym
-			if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT.swigValue()) != 0)
-					|| ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK.swigValue()) != 0)) {
+			if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT) != 0)
+					|| ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK) != 0)) {
 				return k0;
 			} else {
 				return k1;
 			}
 		}
 		// The Shift and Lock modifers are both off, use the first KeySym
-		else if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT.swigValue()) == 0)
-				&& ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK.swigValue()) == 0)) {
+		else if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT) == 0)
+				&& ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK) == 0)) {
 			return k0;
-		} else if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT.swigValue()) == 0)
-				&& ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK.swigValue()) != 0)) {
+		} else if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT) == 0)
+				&& ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK) != 0)) {
 			// The first Keysym is used but if that KeySym is lowercase
 			// alphabetic, then the corresponding uppercase KeySym is used
 			// instead
 			return k1;
-		} else if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT.swigValue()) != 0)
-				&& ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK.swigValue()) != 0)) {
+		} else if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT) != 0)
+				&& ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK) != 0)) {
 			// The second Keysym is used but if that KeySym is lowercase
 			// alphabetic, then the corresponding uppercase KeySym is used
 			// instead
 			return k1;
-		} else if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT.swigValue()) != 0)
-				|| ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK.swigValue()) != 0)) {
+		} else if (((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT) != 0)
+				|| ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK) != 0)) {
 			return k1;
 		}
 		// unknown

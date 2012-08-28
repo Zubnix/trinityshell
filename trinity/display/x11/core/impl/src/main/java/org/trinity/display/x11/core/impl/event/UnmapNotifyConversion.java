@@ -39,7 +39,7 @@ public class UnmapNotifyConversion implements XEventConversion {
 																							true);
 		this.xEventBus.post(unmap_notify_event_t);
 
-		final int windowId = unmap_notify_event_t.getEvent();
+		final int windowId = (int) unmap_notify_event_t.getEvent();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final DisplayEvent displayEvent = new HideNotifyEvent(displayEventSource);

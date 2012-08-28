@@ -20,23 +20,23 @@ public class XInputModifierMaskMapping {
 
 	XInputModifierMaskMapping() {
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_1,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1.swigValue()));
+											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_2,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1.swigValue()));
+											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_3,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1.swigValue()));
+											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_4,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1.swigValue()));
+											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_5,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1.swigValue()));
+											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_ANY,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1.swigValue()));
+											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_CTRL,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1.swigValue()));
+											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_LOCK,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1.swigValue()));
+											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_SHIFT,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1.swigValue()));
+											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
 	}
 
 	public int getXInputModifierMask(final String inputModifierName) {

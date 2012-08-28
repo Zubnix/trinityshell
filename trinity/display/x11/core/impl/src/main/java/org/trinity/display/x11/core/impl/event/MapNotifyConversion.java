@@ -38,7 +38,7 @@ public class MapNotifyConversion implements XEventConversion {
 																						true);
 		this.xEventBus.post(map_notify_event_t);
 
-		final int windowId = map_notify_event_t.getEvent();
+		final int windowId = (int) map_notify_event_t.getEvent();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final DisplayEvent displayEvent = new HideNotifyEvent(displayEventSource);

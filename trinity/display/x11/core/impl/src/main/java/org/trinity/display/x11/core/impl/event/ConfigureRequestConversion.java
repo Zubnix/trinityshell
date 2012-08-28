@@ -43,7 +43,7 @@ public class ConfigureRequestConversion implements XEventConversion {
 
 		this.xEventBus.post(request_event_t);
 
-		final int windowId = request_event_t.getWindow();
+		final int windowId = (int) request_event_t.getWindow();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int x = request_event_t.getX();
@@ -56,10 +56,10 @@ public class ConfigureRequestConversion implements XEventConversion {
 															height);
 
 		final int valueMask = request_event_t.getValue_mask();
-		final boolean configureX = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_X.swigValue()) != 0;
-		final boolean configureY = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_Y.swigValue()) != 0;
-		final boolean configureWidth = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH.swigValue()) != 0;
-		final boolean configureHeight = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT.swigValue()) != 0;
+		final boolean configureX = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_X) != 0;
+		final boolean configureY = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_Y) != 0;
+		final boolean configureWidth = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH) != 0;
+		final boolean configureHeight = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT) != 0;
 
 		displayEventSource.configureClientEvents();
 

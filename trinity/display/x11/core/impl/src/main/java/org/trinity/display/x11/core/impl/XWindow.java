@@ -82,7 +82,7 @@ public class XWindow implements DisplaySurface {
 	public void setInputFocus() {
 
 		LibXcb.xcb_set_input_focus(	getConnectionRef(),
-									(short) xcb_input_focus_t.XCB_INPUT_FOCUS_NONE.swigValue(),
+									(short) xcb_input_focus_t.XCB_INPUT_FOCUS_NONE,
 									getWindowId(),
 									this.xTime.getTime());
 
@@ -90,9 +90,9 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public void lower() {
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE.swigValue();
+		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
-		final int xcb_stack_mode_above = xcb_stack_mode_t.XCB_STACK_MODE_BELOW.swigValue();
+		final int xcb_stack_mode_above = xcb_stack_mode_t.XCB_STACK_MODE_BELOW;
 		value_list.putInt(xcb_stack_mode_above);
 
 		LibXcb.xcb_configure_window(getConnectionRef(),
@@ -111,8 +111,7 @@ public class XWindow implements DisplaySurface {
 	@Override
 	public void move(	final int x,
 						final int y) {
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X.swigValue()
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_Y.swigValue();
+		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X | xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder());
 		value_list.putInt(x).putInt(y);
@@ -129,10 +128,8 @@ public class XWindow implements DisplaySurface {
 							final int y,
 							final int width,
 							final int height) {
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X.swigValue()
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_Y.swigValue()
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH.swigValue()
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT.swigValue();
+		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X | xcb_config_window_t.XCB_CONFIG_WINDOW_Y
+				| xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH | xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
 
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(16).order(ByteOrder.nativeOrder());
 		value_list.putInt(x).putInt(y).putInt(width).putInt(height);
@@ -147,9 +144,9 @@ public class XWindow implements DisplaySurface {
 	@Override
 	public void raise() {
 
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE.swigValue();
+		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
-		final int xcb_stack_mode_above = xcb_stack_mode_t.XCB_STACK_MODE_ABOVE.swigValue();
+		final int xcb_stack_mode_above = xcb_stack_mode_t.XCB_STACK_MODE_ABOVE;
 		value_list.putInt(xcb_stack_mode_above);
 
 		LibXcb.xcb_configure_window(getConnectionRef(),
@@ -175,8 +172,8 @@ public class XWindow implements DisplaySurface {
 	public void resize(	final int width,
 						final int height) {
 
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH.swigValue()
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT.swigValue();
+		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
+				| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
 
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder());
 		value_list.putInt(width).putInt(height);
@@ -246,10 +243,10 @@ public class XWindow implements DisplaySurface {
 							final InputModifiers withModifiers) {
 		final int buttonCode = catchButton.getButtonCode();
 		final int modifiers = withModifiers.getInputModifiersState();
-		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS.swigValue()
-				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE.swigValue();
-		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC.swigValue();
-		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC.swigValue();
+		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS
+				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE;
+		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
+		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 		final int confine_to = LibXcbConstants.XCB_NONE;
 		final int cursor = LibXcbConstants.XCB_NONE;
 		LibXcb.xcb_grab_button(	getConnectionRef(),
@@ -266,10 +263,10 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public void grabPointer() {
-		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS.swigValue()
-				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE.swigValue();
-		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC.swigValue();
-		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC.swigValue();
+		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS
+				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE;
+		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
+		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 		final int confine_to = LibXcbConstants.XCB_NONE;
 		final int cursor = LibXcbConstants.XCB_NONE;
 		// TODO check if grab was successful and return boolean
@@ -306,8 +303,8 @@ public class XWindow implements DisplaySurface {
 						final InputModifiers withModifiers) {
 		final int keyCode = catchKey.getKeyCode();
 		final int modifiers = withModifiers.getInputModifiersState();
-		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC.swigValue();
-		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC.swigValue();
+		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
+		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 		LibXcb.xcb_grab_key(getConnectionRef(),
 							(short) 0,
 							getWindowId(),
@@ -337,8 +334,8 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public void grabKeyboard() {
-		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC.swigValue();
-		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC.swigValue();
+		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
+		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 		// TODO check if grab was successful and return boolean
 		LibXcb.xcb_grab_keyboard(	getConnectionRef(),
 									(short) 0,
@@ -380,14 +377,14 @@ public class XWindow implements DisplaySurface {
 
 	public void configureClientEvents() {
 		final ByteBuffer values = ByteBuffer.allocateDirect(4 + 4 + 4 + 4).order(ByteOrder.nativeOrder());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE.swigValue());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW.swigValue());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW.swigValue());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY.swigValue());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE);
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW);
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW);
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY);
 
 		LibXcb.xcb_change_window_attributes(this.xConnection.getConnectionReference(),
 											((XWindowHandle) this.resourceHandle).getNativeHandle().intValue(),
-											xcb_cw_t.XCB_CW_EVENT_MASK.swigValue(),
+											xcb_cw_t.XCB_CW_EVENT_MASK,
 											values);
 	}
 }

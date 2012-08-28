@@ -56,7 +56,7 @@ public class KeysBindingImpl implements KeysBinding {
 		this.shellEventBus.register(this);
 		for (final Key grabKey : this.keys) {
 			this.root.getDisplaySurface().grabKey(	grabKey,
-														this.inputModifiers);
+													this.inputModifiers);
 		}
 	}
 
@@ -71,8 +71,8 @@ public class KeysBindingImpl implements KeysBinding {
 	@Override
 	public void unbind() {
 		for (final Key grabKey : this.keys) {
-			this.root.getDisplaySurface().ungrabKey(	grabKey,
-														this.inputModifiers);
+			this.root.getDisplaySurface().ungrabKey(grabKey,
+													this.inputModifiers);
 		}
 		this.shellEventBus.unregister(this);
 	}

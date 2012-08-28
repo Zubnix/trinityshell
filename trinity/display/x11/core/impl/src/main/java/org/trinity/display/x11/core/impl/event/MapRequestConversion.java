@@ -39,7 +39,7 @@ public class MapRequestConversion implements XEventConversion {
 																						true);
 		this.xEventBus.post(map_request_event_t);
 
-		final int windowId = map_request_event_t.getWindow();
+		final int windowId = (int) map_request_event_t.getWindow();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		displayEventSource.configureClientEvents();

@@ -104,7 +104,7 @@ public class XDisplayServer implements DisplayServer {
 
 	@Override
 	public DisplaySurface getRootDisplayArea() {
-		return this.xWindowCache.getWindow(this.xConnection.getScreenReference().getRoot());
+		return this.xWindowCache.getWindow((int) this.xConnection.getScreenReference().getRoot());
 	}
 
 	public void startUp() {

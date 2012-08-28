@@ -39,7 +39,7 @@ public class FocusOutConversion implements XEventConversion {
 																				true);
 		this.xEventBus.post(focus_in_event_t);
 
-		final XWindow xWindow = this.xWindowCache.getWindow(focus_in_event_t.getEvent());
+		final XWindow xWindow = this.xWindowCache.getWindow((int) focus_in_event_t.getEvent());
 		final DisplayEvent displayEvent = new FocusLostNotifyEvent(xWindow);
 
 		return displayEvent;

@@ -52,8 +52,7 @@ public class ShellDragButton extends ShellButton {
 			ShellDragButton.this.x0 = mousePos.getX();
 			ShellDragButton.this.y0 = mousePos.getY();
 			while (!Thread.interrupted()) {
-				final Coordinate mousePosition = ShellDragButton.this.root.getDisplaySurface()
-						.getPointerCoordinate();
+				final Coordinate mousePosition = ShellDragButton.this.root.getDisplaySurface().getPointerCoordinate();
 				final int x1 = mousePosition.getX();
 				final int y1 = mousePosition.getY();
 

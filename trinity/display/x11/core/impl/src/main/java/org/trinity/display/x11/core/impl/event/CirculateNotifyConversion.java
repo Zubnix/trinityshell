@@ -40,7 +40,7 @@ public class CirculateNotifyConversion implements XEventConversion {
 																										true);
 		this.xEventBus.post(circulate_notify_event_t);
 
-		final int windowId = circulate_notify_event_t.getEvent();
+		final int windowId = (int) circulate_notify_event_t.getEvent();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final DisplayEvent displayEvent = new StackingChangedNotifyEvent(displayEventSource);

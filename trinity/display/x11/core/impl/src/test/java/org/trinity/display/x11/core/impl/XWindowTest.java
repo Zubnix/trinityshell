@@ -80,7 +80,7 @@ public class XWindowTest // extends AbstractXTest
 	public void setup() throws SecurityException, NoSuchFieldException, IllegalArgumentException,
 			IllegalAccessException {
 
-		this.windowId = LibXcb.xcb_generate_id(xConnection.getConnectionReference());
+		this.windowId = (int) LibXcb.xcb_generate_id(xConnection.getConnectionReference());
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 		LibXcb.xcb_create_window(	xConnection.getConnectionReference(),
 									(short) LibXcbConstants.XCB_COPY_FROM_PARENT,
@@ -91,7 +91,7 @@ public class XWindowTest // extends AbstractXTest
 									200,
 									200,
 									5,
-									xcb_window_class_t.XCB_WINDOW_CLASS_INPUT_OUTPUT.swigValue(),
+									xcb_window_class_t.XCB_WINDOW_CLASS_INPUT_OUTPUT,
 									screen.getRoot_visual(),
 									0,
 									value_list);

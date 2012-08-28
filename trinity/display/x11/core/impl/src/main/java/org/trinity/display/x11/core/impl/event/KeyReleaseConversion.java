@@ -44,7 +44,7 @@ public class KeyReleaseConversion implements XEventConversion {
 																				true);
 		this.xEventBus.post(press_event_t);
 
-		final int windowId = press_event_t.getEvent();
+		final int windowId = (int) press_event_t.getEvent();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int keyCode = press_event_t.getDetail();

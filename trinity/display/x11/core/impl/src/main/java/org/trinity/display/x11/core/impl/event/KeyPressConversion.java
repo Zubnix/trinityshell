@@ -41,7 +41,7 @@ public class KeyPressConversion implements XEventConversion {
 																					true);
 		this.xEventBus.post(key_press_event_t);
 
-		final int windowId = key_press_event_t.getEvent();
+		final int windowId = (int) key_press_event_t.getEvent();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int keyCode = key_press_event_t.getDetail();

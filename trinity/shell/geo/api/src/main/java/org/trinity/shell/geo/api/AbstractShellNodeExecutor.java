@@ -40,7 +40,7 @@ public abstract class AbstractShellNodeExecutor implements ShellNodeExecutor {
 						final int width,
 						final int height) {
 		this.getShellNodeManipulator(shellNode).resize(	width,
-													height);
+														height);
 	}
 
 	@Override
@@ -62,8 +62,8 @@ public abstract class AbstractShellNodeExecutor implements ShellNodeExecutor {
 							final DisplayArea newParentArea,
 							final int newX,
 							final int newY) {
-		getShellNodeManipulator(shellNode).setParent(newParentArea,
-												newX,
-												newY);
+		getShellNodeManipulator(shellNode).setParent(	newParentArea,
+														newX,
+														newY);
 	}
 }

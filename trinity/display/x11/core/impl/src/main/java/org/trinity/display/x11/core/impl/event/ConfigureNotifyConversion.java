@@ -41,7 +41,7 @@ public class ConfigureNotifyConversion implements XEventConversion {
 																										true);
 		this.xEventBus.post(configure_notify_event_t);
 
-		final int windowId = configure_notify_event_t.getEvent();
+		final int windowId = (int) configure_notify_event_t.getEvent();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int x = configure_notify_event_t.getX();

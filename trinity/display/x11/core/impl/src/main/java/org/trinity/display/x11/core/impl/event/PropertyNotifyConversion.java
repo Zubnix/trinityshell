@@ -50,10 +50,10 @@ public class PropertyNotifyConversion implements XEventConversion {
 																									true);
 		this.xEventBus.post(property_notify_event_t);
 
-		final int windowId = property_notify_event_t.getWindow();
+		final int windowId = (int) property_notify_event_t.getWindow();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
-		final int atomId = property_notify_event_t.getAtom();
+		final int atomId = (int) property_notify_event_t.getAtom();
 		final String xProperty = this.xAtomCache.getAtom(atomId);
 
 		final List<DisplayProtocol> displayProtocols = this.xPropertyMapping.toDisplayProtocols(xProperty);

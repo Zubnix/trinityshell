@@ -39,7 +39,7 @@ public class EnterNotifyConversion implements XEventConversion {
 																							true);
 		this.xEventBus.post(enter_notify_event_t);
 
-		final int windowId = enter_notify_event_t.getEvent();
+		final int windowId = (int) enter_notify_event_t.getEvent();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final DisplayEvent displayEvent = new PointerLeaveNotifyEvent(displayEventSource);

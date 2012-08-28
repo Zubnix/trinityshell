@@ -39,7 +39,7 @@ public class DestroyNotifyConversion implements XEventConversion {
 																									true);
 		this.xEventBus.post(destroy_notify_event_t);
 
-		final int eventWindow = destroy_notify_event_t.getEvent();
+		final int eventWindow = (int) destroy_notify_event_t.getEvent();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(eventWindow);
 
 		final DisplayEvent displayEvent = new DestroyNotifyEvent(displayEventSource);

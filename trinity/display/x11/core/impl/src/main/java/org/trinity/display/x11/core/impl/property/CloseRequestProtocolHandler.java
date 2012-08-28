@@ -7,8 +7,8 @@ import org.trinity.display.x11.core.impl.XAtomCache;
 import org.trinity.display.x11.core.impl.XConnection;
 import org.trinity.display.x11.core.impl.XDisplayProtocolHandler;
 import org.trinity.display.x11.core.impl.XPropertyCache;
-import org.trinity.display.x11.core.impl.XWindowHandle;
 import org.trinity.display.x11.core.impl.XWindow;
+import org.trinity.display.x11.core.impl.XWindowHandle;
 import org.trinity.foundation.display.api.DisplayProtocol;
 
 import xcbjb.LibXcb;
@@ -67,7 +67,7 @@ public class CloseRequestProtocolHandler implements XDisplayProtocolHandler {
 			LibXcb.xcb_send_event(	this.xConnection.getConnectionReference(),
 									(short) 0,
 									windowId,
-									xcb_event_mask_t.XCB_EVENT_MASK_NO_EVENT.swigValue(),
+									xcb_event_mask_t.XCB_EVENT_MASK_NO_EVENT,
 									new xcb_generic_event_t(xcb_client_message_event_t.getCPtr(client_message_event_t),
 															true));
 		} else {

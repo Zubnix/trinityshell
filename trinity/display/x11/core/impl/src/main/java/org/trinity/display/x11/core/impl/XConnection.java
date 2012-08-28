@@ -57,12 +57,12 @@ public class XConnection {
 		final int rootId = this.screen_t.getRoot();
 
 		final ByteBuffer values = ByteBuffer.allocateDirect(4 + 4).order(ByteOrder.nativeOrder());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT.swigValue());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY.swigValue());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY);
 
 		LibXcb.xcb_change_window_attributes(this.connection_t,
 											rootId,
-											xcb_cw_t.XCB_CW_EVENT_MASK.swigValue(),
+											xcb_cw_t.XCB_CW_EVENT_MASK,
 											values);
 	}
 

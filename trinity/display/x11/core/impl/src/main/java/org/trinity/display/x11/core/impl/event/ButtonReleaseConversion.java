@@ -53,7 +53,7 @@ public class ButtonReleaseConversion implements XEventConversion {
 																								true);
 		this.xEventBus.post(button_release_event_t);
 
-		final int windowId = button_release_event_t.getEvent();
+		final int windowId = (int) button_release_event_t.getEvent();
 		final XWindow window = this.windowCache.getWindow(windowId);
 
 		final int buttonCode = button_release_event_t.getDetail();
