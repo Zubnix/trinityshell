@@ -1,20 +1,8 @@
-package org.trinity.shell.geo.impl;
+package org.trinity.shell.geo.impl.manager;
 
 import org.junit.Test;
 
-public class AbstractGeoTransRectGeoExecutorDelegationTest {
-
-	@Test
-	public void testFindDominantGeomanager() {
-		// TODO
-		throw new RuntimeException("Not yet implemented");
-	}
-
-	@Test
-	public void testCancelPendings() {
-		// TODO
-		throw new RuntimeException("Not yet implemented");
-	}
+public class GeoVirtRectGeoExecutorTest {
 
 	@Test
 	public void testDestroy() {
@@ -23,13 +11,31 @@ public class AbstractGeoTransRectGeoExecutorDelegationTest {
 	}
 
 	@Test
-	public void testChangeVisibility() {
+	public void testUpdateParent() {
 		// TODO
 		throw new RuntimeException("Not yet implemented");
 	}
 
 	@Test
-	public void testLower() {
+	public void testUpdatePlace() {
+		// TODO
+		throw new RuntimeException("Not yet implemented");
+	}
+
+	@Test
+	public void testUpdateSize() {
+		// TODO
+		throw new RuntimeException("Not yet implemented");
+	}
+
+	@Test
+	public void testUpdateSizePlace() {
+		// TODO
+		throw new RuntimeException("Not yet implemented");
+	}
+
+	@Test
+	public void testUpdateVisibility() {
 		// TODO
 		throw new RuntimeException("Not yet implemented");
 	}
@@ -41,25 +47,7 @@ public class AbstractGeoTransRectGeoExecutorDelegationTest {
 	}
 
 	@Test
-	public void testResize() {
-		// TODO
-		throw new RuntimeException("Not yet implemented");
-	}
-
-	@Test
-	public void testMoveResize() {
-		// TODO
-		throw new RuntimeException("Not yet implemented");
-	}
-
-	@Test
-	public void testMove() {
-		// TODO
-		throw new RuntimeException("Not yet implemented");
-	}
-
-	@Test
-	public void testReparent() {
+	public void testLower() {
 		// TODO
 		throw new RuntimeException("Not yet implemented");
 	}

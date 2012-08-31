@@ -6,14 +6,10 @@ import org.trinity.shell.geo.api.ShellNode;
 
 public interface ShellLayoutManager {
 
-	ShellNode getLayoutContainer();
+	void addChildNode(ShellNode child);
 
-	void setContainerShellSurface(ShellNode layoutContainer);
-
-	void addChild(ShellNode child);
-
-	void addChildShellSurface(	final ShellNode child,
-					final ShellLayoutProperty layoutProperty);
+	void addChildNode(	final ShellNode child,
+						final ShellLayoutProperty layoutProperty);
 
 	ShellLayoutProperty getLayoutProperty(final ShellNode child);
 
@@ -25,5 +21,5 @@ public interface ShellLayoutManager {
 
 	void removeChild(final int index);
 
-	void layout();
+	void layout(ShellNode containerNode);
 }

@@ -45,34 +45,31 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	private final Map<ShellNode, ShellLayoutProperty> childrenWithLayoutProperty = new LinkedHashMap<ShellNode, ShellLayoutProperty>();
 	private ShellNode container;
 
-	/**
-	 * @return
-	 */
-	@Override
-	public ShellNode getLayoutContainer() {
-		return this.container;
-	}
+	// @Override
+	// public ShellNode getLayoutContainer() {
+	// return this.container;
+	// }
 
-	@Override
-	public void setContainerShellSurface(final ShellNode layoutContainer) {
-		this.container = layoutContainer;
-	}
+	// @Override
+	// public void setContainerNode(final ShellNode layoutContainer) {
+	// this.container = layoutContainer;
+	// }
 
 	/**
 	 * @param child
 	 * @param layoutProperty
 	 */
 	@Override
-	public void addChildShellSurface(	final ShellNode child,
-							final ShellLayoutProperty layoutProperty) {
+	public void addChildNode(	final ShellNode child,
+								final ShellLayoutProperty layoutProperty) {
 		this.childrenWithLayoutProperty.put(child,
 											layoutProperty);
 	}
 
 	@Override
-	public void addChild(final ShellNode child) {
-		addChildShellSurface(	child,
-					defaultLayoutProperty());
+	public void addChildNode(final ShellNode child) {
+		addChildNode(	child,
+						defaultLayoutProperty());
 	}
 
 	protected abstract ShellLayoutProperty defaultLayoutProperty();

@@ -45,10 +45,10 @@ public class ShellWindowManagerPlugin implements ShellPlugin {
 		// client.setParent(this.shellRootWidget);
 		// client.doReparent();
 
-		this.shellLayoutManager.addChildShellSurface(	client,
-														new ShellLayoutPropertyLine(1,
-																					new Margins(5)));
-		this.shellLayoutManager.layout();
+		this.shellLayoutManager.addChildNode(	client,
+												new ShellLayoutPropertyLine(1,
+																			new Margins(5)));
+		this.shellLayoutManager.layout(this.shellRootSurface);
 	}
 
 	public void setupRootWidget() {

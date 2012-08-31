@@ -62,7 +62,7 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 			final ShellNode child = shellNodeMoveResizeRequestEvent.getSource();
 			if (getLayoutProperty(child).getWeight() == 0) {
 				child.doResize();
-				layout();
+				layout(child.getParent());
 			} else {
 				cancelMoveResize(child);
 			}
@@ -75,8 +75,9 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 
 		@Subscribe
 		public void handleChildReparentRequest(final ShellNodeReparentRequestEvent shellNodeReparentRequestEvent) {
+			final ShellNode oldParent = shellNodeReparentRequestEvent.getSource().getParent();
 			shellNodeReparentRequestEvent.getSource().doReparent();
-			layout();
+			layout(oldParent);
 		}
 
 		@Subscribe
@@ -106,9 +107,9 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 	private boolean inverseDirection;
 
 	/**
-	 * Create a new <code>ShellLayoutManagerLine</code> that will use the geometry
-	 * of the given container to determine the layout of the managed children.
-	 * Ideally, the given container should be the same as the
+	 * Create a new <code>ShellLayoutManagerLine</code> that will use the
+	 * geometry of the given container to determine the layout of the managed
+	 * children. Ideally, the given container should be the same as the
 	 * <code>ShellNode</code> that returns this <code>ShellLayoutManager</code>.
 	 * 
 	 * @param container
@@ -146,13 +147,13 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 		square.cancelPendingResize();
 	}
 
-	protected void layoutHorizontal() {
+	protected void layoutHorizontal(final ShellNode containerNode) {
 		// total available size of the container
 		int newSize = 0;
 		int fixedSize = 0;
 
-		newSize = getLayoutContainer().getWidth();
-		fixedSize = getLayoutContainer().getHeight();
+		newSize = containerNode.getWidth();
+		fixedSize = containerNode.getHeight();
 
 		if (newSize == 0) {
 			return;
@@ -181,7 +182,7 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 		// new place of the next child
 		int newPlace = 0;
 		if (this.inverseDirection) {
-			newPlace = getLayoutContainer().getWidth();
+			newPlace = containerNode.getWidth();
 		}
 
 		final List<ShellNode> children = getChildren();
@@ -225,12 +226,12 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 		}
 	}
 
-	protected void layoutVertical() {
+	protected void layoutVertical(final ShellNode containerNode) {
 		int newSize = 0;
 		int fixedSize = 0;
 
-		newSize = getLayoutContainer().getHeight();
-		fixedSize = getLayoutContainer().getWidth();
+		newSize = containerNode.getHeight();
+		fixedSize = containerNode.getWidth();
 
 		if (newSize == 0) {
 			return;
@@ -259,7 +260,7 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 		// new place of the next child
 		int newPlace = 0;
 		if (this.inverseDirection) {
-			newPlace = getLayoutContainer().getHeight();
+			newPlace = containerNode.getHeight();
 		}
 
 		final List<ShellNode> children = getChildren();
@@ -302,11 +303,11 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 	}
 
 	@Override
-	public void addChildShellSurface(	final ShellNode child,
-							final ShellLayoutProperty layoutProperty) {
+	public void addChildNode(	final ShellNode child,
+								final ShellLayoutProperty layoutProperty) {
 		child.addShellNodeEventHandler(this.childGeoListener);
-		super.addChildShellSurface(	child,
-						layoutProperty);
+		super.addChildNode(	child,
+							layoutProperty);
 	}
 
 	@Override
@@ -316,20 +317,20 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 	}
 
 	@Override
-	public void layout() {
-		if (getLayoutContainer() == null) {
+	public void layout(final ShellNode containerNode) {
+		if (containerNode == null) {
 			return;
 		}
 		if (this.horizontalDirection) {
-			layoutHorizontal();
+			layoutHorizontal(containerNode);
 		} else {
-			layoutVertical();
+			layoutVertical(containerNode);
 		}
 	}
 
 	@Subscribe
 	public void handleContainerMoveReize(final ShellNodeMoveResizeEvent moveResizeEvent) {
-		layout();
+		layout(moveResizeEvent.getSource());
 	}
 
 	@Override
