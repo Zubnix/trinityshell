@@ -206,8 +206,8 @@ public class ShellSurfaceExecutor extends AbstractShellNodeExecutor {
 							newRelativeY);
 			}
 		} else if (currentShellSurfaceInitialized && !newParentInitialized) {
-			// we are ready but our new parent isn't. we hide ourself.
-			getShellNodeManipulator(shellNode).hide();
+			// we are ready but our new parent isn't.
+			// getShellNodeManipulator(shellNode).hide();
 		}
 	}
 

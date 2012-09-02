@@ -118,6 +118,8 @@ public class ShellWidgetImpl extends AbstractShellSurface implements ShellWidget
 		this.shellDisplayEventDispatcher.registerDisplayEventSource(this.eventBus,
 																	this);
 		this.view.createDisplaySurface(getPainter());
+		this.shellDisplayEventDispatcher.registerDisplayEventSource(this.eventBus,
+																	getDisplaySurface());
 	}
 
 	@Override
@@ -158,6 +160,9 @@ public class ShellWidgetImpl extends AbstractShellSurface implements ShellWidget
 	@Override
 	public DisplaySurface getDisplaySurface() {
 		final Future<DisplaySurface> displaySurfaceFuture = this.view.getDislaySurface();
+		if (displaySurfaceFuture == null) {
+			return null;
+		}
 		DisplaySurface displaySurface = null;
 		try {
 			displaySurface = displaySurfaceFuture.get();

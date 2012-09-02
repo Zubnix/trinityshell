@@ -11,10 +11,10 @@
  */
 package org.trinity.shell.core.impl;
 
-import java.util.Map.Entry;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.WeakHashMap;
 
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.DisplaySurface;
@@ -24,8 +24,6 @@ import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
 import org.trinity.shell.core.api.ShellSurface;
 import org.trinity.shell.core.api.event.ShellSurfaceCreatedEvent;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -57,20 +55,19 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 
 	// TODO this is basically the same mechanism as used in EventBus. Find a way
 	// to seperate and uniform this mechanism.
-	private final Cache<DisplayEventSource, Cache<EventBus, EventBus>> eventRecipients = CacheBuilder.newBuilder()
-			.concurrencyLevel(4).weakKeys().build();
+	private final Map<DisplayEventSource, Set<EventBus>> eventRecipients = new WeakHashMap<DisplayEventSource, Set<EventBus>>();
 
-	private final DisplayServer display;
+	private final DisplayServer displayServer;
 	private final ShellClientSurfaceFactory shellClientSurfaceFactory;
 	private final EventBus shellEventBus;
 
 	@Inject
 	ShellEventDispatcherImpl(	@Named("shellEventBus") final EventBus shellEventBus,
 								final ShellClientSurfaceFactory shellClientSurfaceFactory,
-								final DisplayServer display) {
+								final DisplayServer displayServer) {
 		this.shellEventBus = shellEventBus;
 		this.shellClientSurfaceFactory = shellClientSurfaceFactory;
-		this.display = display;
+		this.displayServer = displayServer;
 		this.shellEventBus.register(this);
 	}
 
@@ -83,11 +80,11 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 	 */
 	@Override
 	public void dispatchDisplayEvent(final boolean block) {
-		if (!block && this.display.hasNextDisplayEvent()) {
+		if (!block && this.displayServer.hasNextDisplayEvent()) {
 			return;
 		}
 
-		final DisplayEvent displayEvent = this.display.getNextDisplayEvent();
+		final DisplayEvent displayEvent = this.displayServer.getNextDisplayEvent();
 
 		if (displayEvent == null) {
 			return;
@@ -96,25 +93,27 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 		newShellSurfaceClientIfNeeded(displayEvent);
 		this.shellEventBus.post(displayEvent);
 
-		final Cache<EventBus, EventBus> eventBusses = this.eventRecipients.getIfPresent(displayEvent.getEventSource());
-		if (eventBusses == null) {
-			return;
-		}
+		synchronized (this.eventRecipients) {
+			final Set<EventBus> eventBusses = this.eventRecipients.get(displayEvent.getEventSource());
+			if (eventBusses == null) {
+				return;
+			}
 
-		final Set<Entry<EventBus, EventBus>> eventBussesEntries = eventBusses.asMap().entrySet();
-		for (final Entry<EventBus, EventBus> eventBusEntry : eventBussesEntries) {
-			final EventBus eventBus = eventBusEntry.getKey();
-			eventBus.post(displayEvent);
+			for (final EventBus eventBus : eventBusses) {
+				eventBus.post(displayEvent);
+			}
 		}
 	}
 
 	private void newShellSurfaceClientIfNeeded(final DisplayEvent event) {
-		final Cache<EventBus, EventBus> eventBusses = this.eventRecipients.getIfPresent(event.getEventSource());
+		synchronized (this.eventRecipients) {
+			final Set<EventBus> eventBusses = this.eventRecipients.get(event.getEventSource());
 
-		final DisplayEventSource eventSource = event.getEventSource();
+			final DisplayEventSource eventSource = event.getEventSource();
 
-		if (((eventBusses == null) || (eventBusses.size() == 0)) && (eventSource instanceof DisplaySurface)) {
-			createClientShellSurface((DisplaySurface) eventSource);
+			if (((eventBusses == null) || (eventBusses.size() == 0)) && (eventSource instanceof DisplaySurface)) {
+				createClientShellSurface((DisplaySurface) eventSource);
+			}
 		}
 	}
 
@@ -127,29 +126,27 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 	@Override
 	public void registerDisplayEventSource(	final EventBus nodeEventBus,
 											final DisplayEventSource displayEventSource) {
+		synchronized (this.eventRecipients) {
+			Set<EventBus> nodeEventBusses = this.eventRecipients.get(displayEventSource);
 
-		try {
-			final Cache<EventBus, EventBus> nodeEventBusses = this.eventRecipients
-					.get(	displayEventSource,
-							new Callable<Cache<EventBus, EventBus>>() {
-								@Override
-								public Cache<EventBus, EventBus> call() throws Exception {
-									return CacheBuilder.newBuilder().weakKeys().build();
-								}
-							});
-			nodeEventBusses.put(nodeEventBus,
-								nodeEventBus);
-		} catch (final ExecutionException e) {
-			throw new RuntimeException(e);
+			if (nodeEventBusses == null) {
+				nodeEventBusses = Collections.newSetFromMap(new WeakHashMap<EventBus, Boolean>());
+				this.eventRecipients.put(	displayEventSource,
+											nodeEventBusses);
+			}
+
+			nodeEventBusses.add(nodeEventBus);
 		}
 	}
 
 	@Override
 	public void unregisterDisplayEventSource(	final EventBus nodeEventBus,
 												final DisplayEventSource displayEventSource) {
-		final Cache<EventBus, EventBus> nodeEventBusses = this.eventRecipients.getIfPresent(displayEventSource);
-		if (nodeEventBusses != null) {
-			nodeEventBusses.invalidate(nodeEventBus);
+		synchronized (this.eventRecipients) {
+			final Set<EventBus> nodeEventBusses = this.eventRecipients.get(displayEventSource);
+			if (nodeEventBusses != null) {
+				nodeEventBusses.remove(nodeEventBus);
+			}
 		}
 	}
 }

@@ -9,8 +9,11 @@ import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
 
+import com.trolltech.qt.core.Qt.WidgetAttribute;
+import com.trolltech.qt.core.Qt.WindowType;
 import com.trolltech.qt.gui.QApplication;
-import com.trolltech.qt.gui.QDesktopWidget;
+import com.trolltech.qt.gui.QFrame;
+import com.trolltech.qt.gui.QWidget;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
@@ -30,8 +33,16 @@ public class ShellRootViewImpl extends ShellWidgetViewImpl {
 			@Override
 			public Void call(	final PaintableRenderNode paintableRenderNode,
 								final QJPaintContext paintContext) {
-				final QDesktopWidget visual = QApplication.desktop();
-				visual.setFixedSize(visual.frameSize());
+				final QWidget visual = new QFrame(	QApplication.desktop(),
+													WindowType.X11BypassWindowManagerHint);
+				visual.setAttribute(WidgetAttribute.WA_DeleteOnClose,
+									true);
+				visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
+									true);
+				visual.setStyleSheet("background-color:grey;");
+				visual.createWinId();
+				paintContext.syncVisualGeometryToNode(	visual,
+														paintableRenderNode);
 				paintContext.setVisual(visual);
 				return null;
 			}

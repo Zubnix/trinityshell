@@ -42,8 +42,8 @@ public class ShellWindowManagerPlugin implements ShellPlugin {
 	public void handleShellClientCreated(final ShellSurfaceCreatedEvent shellSurfaceCreatedEvent) {
 		// TODO create widget to move/resize/close client
 		final ShellSurface client = shellSurfaceCreatedEvent.getClient();
-		// client.setParent(this.shellRootWidget);
-		// client.doReparent();
+		client.setParent(this.shellRootWidget);
+		client.doReparent();
 
 		this.shellLayoutManager.addChildNode(	client,
 												new ShellLayoutPropertyLine(1,
@@ -52,13 +52,14 @@ public class ShellWindowManagerPlugin implements ShellPlugin {
 	}
 
 	public void setupRootWidget() {
-
-		// this.shellRootWidget.init(null);
-		// this.shellRootWidget.doShow();
-		// this.shellRootWidget.setParent(this.shellRootSurface);
-		// this.shellRootWidget.doReparent();
-
-		this.shellRootSurface.setLayoutManager(this.shellLayoutManager);
+		this.shellRootWidget.init(null);
+		this.shellRootWidget.setWidth(this.shellRootSurface.getWidth());
+		this.shellRootWidget.setHeight(this.shellRootSurface.getHeight());
+		this.shellRootWidget.doResize();
+		this.shellRootWidget.doShow();
+		this.shellRootWidget.setParent(this.shellRootSurface);
+		this.shellRootWidget.doReparent();
+		this.shellRootWidget.setLayoutManager(this.shellLayoutManager);
 	}
 
 	@Override

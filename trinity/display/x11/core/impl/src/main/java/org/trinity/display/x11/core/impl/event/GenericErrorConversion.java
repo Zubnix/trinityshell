@@ -1,6 +1,7 @@
 package org.trinity.display.x11.core.impl.event;
 
 import org.trinity.display.x11.core.impl.XEventConversion;
+import org.trinity.display.x11.core.impl.XcbErrorUtil;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 
 import xcbjb.xcb_generic_error_t;
@@ -30,7 +31,7 @@ public class GenericErrorConversion implements XEventConversion {
 																			true);
 		this.xEventBus.post(request_error_t);
 
-		throw new Error("xcb error: " + request_error_t.getError_code());
+		throw new RuntimeException(XcbErrorUtil.toString(request_error_t));
 	}
 
 	@Override

@@ -72,6 +72,9 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 	@Override
 	public Future<DisplaySurface> getDislaySurface() {
 		final Painter painter = getPainterRef().get();
+		if (painter == null) {
+			return null;
+		}
 
 		return painter.instruct(new PaintInstruction<DisplaySurface, QJPaintContext>() {
 			@Override

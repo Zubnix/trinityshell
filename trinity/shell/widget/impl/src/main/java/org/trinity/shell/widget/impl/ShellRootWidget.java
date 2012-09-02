@@ -53,14 +53,7 @@ public class ShellRootWidget extends ShellWidgetImpl {
 				painterFactory,
 				shellNodeExecutor,
 				view);
-		// doShow(false);
 	}
-
-	// @Override
-	// protected void init(final ShellWidget paintableParent) {
-	// super.init(paintableParent);
-	// syncGeoToDisplaySurface();
-	// }
 
 	@Override
 	public ShellLayoutManager getParentLayoutManager() {
