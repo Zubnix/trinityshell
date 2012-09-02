@@ -305,6 +305,11 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 	@Override
 	public void addChildNode(	final ShellNode child,
 								final ShellLayoutProperty layoutProperty) {
+		// TODO logging
+		System.err.println(String.format(	"Add child: %s to layout manager: %s",
+											child,
+											this));
+
 		child.addShellNodeEventHandler(this.childGeoListener);
 		super.addChildNode(	child,
 							layoutProperty);
