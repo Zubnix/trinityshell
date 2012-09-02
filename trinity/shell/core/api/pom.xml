@@ -18,8 +18,18 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity.shell</groupId>
-			<artifactId>shell.geo.api</artifactId>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.render.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.input.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.foundation</groupId>
+			<artifactId>foundation.shared.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

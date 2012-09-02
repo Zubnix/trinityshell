@@ -1,0 +1,16 @@
+package org.trinity.shell.api.event;
+
+import org.trinity.shell.api.ShellSurface;
+
+public class ShellSurfaceCreatedEvent {
+
+	private final ShellSurface client;
+
+	public ShellSurfaceCreatedEvent(final ShellSurface client) {
+		this.client = client;
+	}
+
+	public ShellSurface getClient() {
+		return this.client;
+	}
+}

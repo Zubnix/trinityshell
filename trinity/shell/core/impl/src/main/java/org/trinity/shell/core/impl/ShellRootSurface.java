@@ -2,11 +2,11 @@ package org.trinity.shell.core.impl;
 
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.DisplaySurface;
-import org.trinity.shell.core.api.AbstractShellSurface;
-import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.core.api.ShellSurface;
-import org.trinity.shell.geo.api.ShellNodeExecutor;
-import org.trinity.shell.geo.api.manager.ShellLayoutManager;
+import org.trinity.shell.api.AbstractShellSurface;
+import org.trinity.shell.api.ShellDisplayEventDispatcher;
+import org.trinity.shell.api.ShellSurface;
+import org.trinity.shell.api.geo.ShellNodeExecutor;
+import org.trinity.shell.api.geo.manager.ShellLayoutManager;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;

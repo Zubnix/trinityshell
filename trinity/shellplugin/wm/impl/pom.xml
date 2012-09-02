@@ -11,4 +11,11 @@
 
 	<artifactId>shellplugin.wm.impl</artifactId>
 	<name>Shell Window Manager implementation</name>
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity.shellplugin</groupId>
+			<artifactId>shellplugin.widget.api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>

@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.core.impl;
 
-import org.trinity.shell.core.api.ShellSurface;
+import org.trinity.shell.api.ShellSurface;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;

@@ -15,8 +15,5 @@
 
 	<modules>
 		<module>core</module>
-		<module>geo</module>
-		<module>input</module>
-		<module>widget</module>
 	</modules>
 </project>

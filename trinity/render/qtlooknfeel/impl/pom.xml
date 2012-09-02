@@ -14,12 +14,10 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<groupId>org.trinity.render</groupId>
 			<artifactId>render.qt.api</artifactId>
 			<version>${project.version}</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.trinity.shell</groupId>
-			<artifactId>shell.widget.api</artifactId>
+			<artifactId>shell.core.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

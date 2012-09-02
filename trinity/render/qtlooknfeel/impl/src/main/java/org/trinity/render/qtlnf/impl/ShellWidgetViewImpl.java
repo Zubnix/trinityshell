@@ -8,7 +8,7 @@ import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableRenderNode;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
-import org.trinity.shell.widget.api.view.ShellWidgetView;
+import org.trinity.shell.api.widget.ShellWidgetView;
 
 import com.trolltech.qt.core.Qt.WidgetAttribute;
 import com.trolltech.qt.core.Qt.WindowType;

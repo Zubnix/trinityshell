@@ -12,8 +12,8 @@
 package org.trinity.shell.core.impl;
 
 import org.trinity.foundation.display.api.DisplayServer;
-import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.core.api.ShellPlugin;
+import org.trinity.shell.api.ShellDisplayEventDispatcher;
+import org.trinity.shell.api.ShellPlugin;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

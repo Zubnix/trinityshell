@@ -20,9 +20,9 @@ import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.shell.core.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.core.api.ShellSurface;
-import org.trinity.shell.core.api.event.ShellSurfaceCreatedEvent;
+import org.trinity.shell.api.ShellDisplayEventDispatcher;
+import org.trinity.shell.api.ShellSurface;
+import org.trinity.shell.api.event.ShellSurfaceCreatedEvent;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;

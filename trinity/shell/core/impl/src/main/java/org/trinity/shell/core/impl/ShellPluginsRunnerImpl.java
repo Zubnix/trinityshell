@@ -2,8 +2,8 @@ package org.trinity.shell.core.impl;
 
 import java.util.Set;
 
-import org.trinity.shell.core.api.ShellPlugin;
-import org.trinity.shell.core.api.ShellPluginsRunner;
+import org.trinity.shell.api.ShellPlugin;
+import org.trinity.shell.api.ShellPluginsRunner;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

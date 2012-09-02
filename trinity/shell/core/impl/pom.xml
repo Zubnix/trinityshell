@@ -17,10 +17,5 @@
 			<artifactId>shell.core.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.trinity.shell</groupId>
-			<artifactId>shell.geo.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 	</dependencies>
 </project>
