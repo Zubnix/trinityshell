@@ -1,6 +1,6 @@
 package org.trinity.shell.api.event;
 
-import org.trinity.shell.api.ShellSurface;
+import org.trinity.shell.api.surface.ShellSurface;
 
 public class ShellSurfaceCreatedEvent {
 

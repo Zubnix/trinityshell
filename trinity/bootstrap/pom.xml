@@ -66,7 +66,27 @@
 		</dependency>
 		<dependency>
 			<groupId>org.trinity.shell</groupId>
-			<artifactId>shell.core.impl</artifactId>
+			<artifactId>shell.core.impl.plugin</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.core.impl.geo</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.core.impl.surface</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.core.impl.input</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity.shell</groupId>
+			<artifactId>shell.core.impl.widget</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

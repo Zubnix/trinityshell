@@ -15,10 +15,10 @@ import javax.inject.Named;
 
 import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
-import org.trinity.shell.api.AbstractShellSurfaceExecutor;
-import org.trinity.shell.api.ShellSurface;
 import org.trinity.shell.api.geo.ShellNode;
 import org.trinity.shell.api.geo.ShellNodeExecutor;
+import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
+import org.trinity.shell.api.surface.ShellSurface;
 
 import com.google.inject.Inject;
 

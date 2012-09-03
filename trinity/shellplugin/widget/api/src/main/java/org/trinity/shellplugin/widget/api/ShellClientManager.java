@@ -13,7 +13,7 @@ package org.trinity.shellplugin.widget.api;
 
 import java.util.List;
 
-import org.trinity.shell.api.ShellSurface;
+import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.widget.ShellWidget;
 
 public interface ShellClientManager extends ShellWidget {

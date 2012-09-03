@@ -19,10 +19,10 @@ import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.input.api.KeyboardInput;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.api.ShellSurface;
 import org.trinity.shell.api.geo.ShellNodeExecutor;
 import org.trinity.shell.api.input.KeyInputStringBuilder;
+import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
+import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
 

@@ -10,12 +10,13 @@
 
 	<artifactId>shell.core.impl</artifactId>
 	<name>Shell core implementation</name>
-	<packaging>jar</packaging>
-	<dependencies>
-		<dependency>
-			<groupId>org.trinity.shell</groupId>
-			<artifactId>shell.core.api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-	</dependencies>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>plugin</module>
+		<module>surface</module>
+		<module>geo</module>
+		<module>input</module>
+		<module>widget</module>
+	</modules>
 </project>

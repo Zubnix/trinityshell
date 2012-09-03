@@ -1,11 +1,11 @@
 package org.trinity.shellplugin.wm.impl;
 
 import org.trinity.foundation.shared.geometry.api.Margins;
-import org.trinity.shell.api.ShellPlugin;
-import org.trinity.shell.api.ShellSurface;
 import org.trinity.shell.api.event.ShellSurfaceCreatedEvent;
 import org.trinity.shell.api.geo.manager.ShellLayoutManager;
 import org.trinity.shell.api.geo.manager.ShellLayoutPropertyLine;
+import org.trinity.shell.api.plugin.ShellPlugin;
+import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.widget.ShellWidget;
 
 import com.google.common.eventbus.EventBus;

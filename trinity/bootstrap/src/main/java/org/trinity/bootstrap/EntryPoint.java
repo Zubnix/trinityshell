@@ -1,6 +1,6 @@
 package org.trinity.bootstrap;
 
-import org.trinity.shell.api.ShellPluginsRunner;
+import org.trinity.shell.api.plugin.ShellPluginsRunner;
 
 import xcbcustom.LibXcbLoader;
 

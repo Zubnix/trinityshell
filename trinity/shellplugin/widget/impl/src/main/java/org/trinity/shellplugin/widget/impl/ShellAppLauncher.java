@@ -20,10 +20,10 @@ import java.util.StringTokenizer;
 
 import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.api.ShellDisplayEventDispatcher;
-import org.trinity.shell.api.ShellSurface;
 import org.trinity.shell.api.geo.ShellNodeExecutor;
 import org.trinity.shell.api.input.KeyInputStringBuilder;
+import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
+import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.widget.ShellWidgetView;
 
 import com.google.common.eventbus.EventBus;

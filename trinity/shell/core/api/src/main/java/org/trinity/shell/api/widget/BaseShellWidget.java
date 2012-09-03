@@ -20,10 +20,10 @@ import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.api.AbstractShellSurface;
-import org.trinity.shell.api.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.geo.ShellNode;
 import org.trinity.shell.api.geo.ShellNodeExecutor;
+import org.trinity.shell.api.surface.AbstractShellSurface;
+import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
