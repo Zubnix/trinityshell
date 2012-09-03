@@ -2,13 +2,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<groupId>org.trinity.render</groupId>
+		<groupId>org.trinity</groupId>
 		<artifactId>render.qt</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>render.qt.api</artifactId>
 	<name>Render Qt Jambi API</name>
+
 	<repositories>
 		<repository>
 			<id>qtjambi</id>
@@ -27,7 +29,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<version>4.6.3.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity.foundation</groupId>
+			<groupId>org.trinity</groupId>
 			<artifactId>foundation.render.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>

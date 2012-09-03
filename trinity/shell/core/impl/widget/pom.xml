@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>shell.core.impl</artifactId>
-		<groupId>org.trinity.shell</groupId>
+		<groupId>org.trinity</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
@@ -10,7 +10,7 @@
 
 	<artifactId>shell.core.impl.widget</artifactId>
 	<name>Shell core widget implementation</name>
-	<packaging>jar</packaging>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.trinity.shell</groupId>

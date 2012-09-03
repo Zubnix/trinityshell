@@ -2,33 +2,33 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>shell.core</artifactId>
-		<groupId>org.trinity.shell</groupId>
+		<groupId>org.trinity</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>shell.core.api</artifactId>
-	<name>Shell core api</name>
-	<packaging>jar</packaging>
+	<name>Shell core API</name>
+
 	<dependencies>
 		<dependency>
-			<groupId>org.trinity.foundation</groupId>
+			<groupId>org.trinity</groupId>
 			<artifactId>foundation.display.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity.foundation</groupId>
+			<groupId>org.trinity</groupId>
 			<artifactId>foundation.render.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity.foundation</groupId>
+			<groupId>org.trinity</groupId>
 			<artifactId>foundation.input.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity.foundation</groupId>
+			<groupId>org.trinity</groupId>
 			<artifactId>foundation.shared.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
