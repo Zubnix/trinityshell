@@ -14,8 +14,8 @@ package org.trinity.shell.api.surface;
 import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
-import org.trinity.shell.api.geo.AbstractShellNodeExecutor;
-import org.trinity.shell.api.geo.ShellNode;
+import org.trinity.shell.api.node.AbstractShellNodeExecutor;
+import org.trinity.shell.api.node.ShellNode;
 
 public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExecutor {
 

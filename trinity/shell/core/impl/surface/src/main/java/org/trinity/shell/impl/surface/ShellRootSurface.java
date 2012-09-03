@@ -2,8 +2,8 @@ package org.trinity.shell.impl.surface;
 
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.DisplaySurface;
-import org.trinity.shell.api.geo.ShellNodeExecutor;
-import org.trinity.shell.api.geo.manager.ShellLayoutManager;
+import org.trinity.shell.api.node.ShellNodeExecutor;
+import org.trinity.shell.api.node.manager.ShellLayoutManager;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
@@ -32,7 +32,7 @@ public class ShellRootSurface extends AbstractShellSurface {
 		this.shellNodeExecutor = shellNodeExecutor;
 		this.displaySurface = displayServer.getRootDisplayArea();
 		syncGeoToDisplaySurface();
-		shellDisplayEventDispatcher.registerDisplayEventSource(	eventBus,
+		shellDisplayEventDispatcher.registerDisplayEventSourceListener(	eventBus,
 																this.displaySurface);
 	}
 

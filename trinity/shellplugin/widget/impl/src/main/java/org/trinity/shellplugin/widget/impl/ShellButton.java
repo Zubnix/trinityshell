@@ -12,7 +12,7 @@
 package org.trinity.shellplugin.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.api.geo.ShellNodeExecutor;
+import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;

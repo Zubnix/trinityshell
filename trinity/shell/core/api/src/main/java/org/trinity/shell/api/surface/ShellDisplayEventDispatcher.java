@@ -7,9 +7,11 @@ import com.google.common.eventbus.EventBus;
 public interface ShellDisplayEventDispatcher {
 	void dispatchDisplayEvent(final boolean block);
 
-	void registerDisplayEventSource(final EventBus nodeEventBus,
-									final DisplayEventSource displayEventSource);
+	void registerDisplayEventSourceListener(final EventBus nodeEventBus,
+											final DisplayEventSource displayEventSource);
 
-	void unregisterDisplayEventSource(	final EventBus nodeEventBus,
-										final DisplayEventSource displayEventSource);
+	void unregisterDisplayEventSourceListener(	EventBus nodeEventBus,
+												DisplayEventSource displayEventSource);
+
+	void unregisterAllDisplayEventSourceListeners(DisplayEventSource displayEventSource);
 }

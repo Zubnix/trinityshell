@@ -12,9 +12,9 @@
 package org.trinity.shell.impl.surface;
 
 import org.trinity.foundation.display.api.DisplayArea;
-import org.trinity.shell.api.geo.ShellNode;
-import org.trinity.shell.api.geo.ShellNodeExecutor;
-import org.trinity.shell.api.geo.ShellNodeTransformation;
+import org.trinity.shell.api.node.ShellNode;
+import org.trinity.shell.api.node.ShellNodeExecutor;
+import org.trinity.shell.api.node.ShellNodeTransformation;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 

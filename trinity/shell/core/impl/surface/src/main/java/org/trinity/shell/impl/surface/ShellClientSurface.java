@@ -13,7 +13,7 @@ package org.trinity.shell.impl.surface;
 
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
-import org.trinity.shell.api.geo.ShellNodeExecutor;
+import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
@@ -37,7 +37,6 @@ import com.google.inject.name.Named;
  */
 public class ShellClientSurface extends AbstractShellSurface {
 
-	private final EventBus nodeEventBus;
 	private final ShellNodeExecutor renderAreaGeoExecutor;
 	private final DisplaySurface displaySurface;
 	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
@@ -59,13 +58,12 @@ public class ShellClientSurface extends AbstractShellSurface {
 						@Named("shellSurfaceGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 						@Assisted final DisplaySurface displaySurface) {
 		super(nodeEventBus);
-		this.nodeEventBus = nodeEventBus;
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		this.displaySurface = displaySurface;
 		this.renderAreaGeoExecutor = shellNodeExecutor;
 
-		shellDisplayEventDispatcher.registerDisplayEventSource(	nodeEventBus,
-																displaySurface);
+		shellDisplayEventDispatcher.registerDisplayEventSourceListener(	nodeEventBus,
+																		displaySurface);
 
 		setParent(root);
 		doReparent(false);
@@ -75,14 +73,7 @@ public class ShellClientSurface extends AbstractShellSurface {
 	@Override
 	public void handleDestroyNotifyEvent(final DestroyNotifyEvent destroyNotifyEvent) {
 		super.handleDestroyNotifyEvent(destroyNotifyEvent);
-		this.shellDisplayEventDispatcher.unregisterDisplayEventSource(	this.nodeEventBus,
-																		getDisplaySurface());
-	}
-
-	@Override
-	public void addShellNodeEventHandler(final Object geoEventHandler) {
-		// TODO Auto-generated method stub
-		super.addShellNodeEventHandler(geoEventHandler);
+		this.shellDisplayEventDispatcher.unregisterAllDisplayEventSourceListeners(getDisplaySurface());
 	}
 
 	@Override

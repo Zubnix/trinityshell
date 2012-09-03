@@ -71,7 +71,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.trinity.shell</groupId>
-			<artifactId>shell.core.impl.geo</artifactId>
+			<artifactId>shell.core.impl.node</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

@@ -20,9 +20,9 @@ import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.shell.api.event.ShellSurfaceCreatedEvent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
+import org.trinity.shell.api.surface.event.ShellSurfaceCreatedEvent;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -127,8 +127,8 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 	}
 
 	@Override
-	public void registerDisplayEventSource(	final EventBus nodeEventBus,
-											final DisplayEventSource displayEventSource) {
+	public void registerDisplayEventSourceListener(	final EventBus nodeEventBus,
+													final DisplayEventSource displayEventSource) {
 		List<EventBus> nodeEventBusses;
 		synchronized (this.eventRecipients) {
 			nodeEventBusses = this.eventRecipients.get(displayEventSource);
@@ -143,13 +143,20 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 	}
 
 	@Override
-	public void unregisterDisplayEventSource(	final EventBus nodeEventBus,
-												final DisplayEventSource displayEventSource) {
+	public void unregisterDisplayEventSourceListener(	final EventBus nodeEventBus,
+														final DisplayEventSource displayEventSource) {
 		synchronized (this.eventRecipients) {
+
 			final List<EventBus> nodeEventBusses = this.eventRecipients.get(displayEventSource);
 			if (nodeEventBusses != null) {
 				nodeEventBusses.remove(nodeEventBus);
 			}
+		}
+	}
+
+	public void unregisterAllDisplayEventSourceListeners(final DisplayEventSource displayEventSource) {
+		synchronized (this.eventRecipients) {
+			this.eventRecipients.remove(displayEventSource);
 		}
 	}
 }

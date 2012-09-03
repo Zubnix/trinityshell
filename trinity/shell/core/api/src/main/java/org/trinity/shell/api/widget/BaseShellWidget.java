@@ -20,8 +20,8 @@ import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.api.geo.ShellNode;
-import org.trinity.shell.api.geo.ShellNodeExecutor;
+import org.trinity.shell.api.node.ShellNode;
+import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
@@ -116,10 +116,10 @@ public class BaseShellWidget extends AbstractShellSurface implements ShellWidget
 	 */
 	@Override
 	public void init(final ShellWidget paintableParent) {
-		this.shellDisplayEventDispatcher.registerDisplayEventSource(this.eventBus,
+		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																	this);
 		this.view.createDisplaySurface(getPainter());
-		this.shellDisplayEventDispatcher.registerDisplayEventSource(this.eventBus,
+		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																	getDisplaySurface());
 	}
 

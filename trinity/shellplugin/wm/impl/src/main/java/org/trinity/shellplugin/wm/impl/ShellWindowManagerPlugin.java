@@ -1,11 +1,11 @@
 package org.trinity.shellplugin.wm.impl;
 
 import org.trinity.foundation.shared.geometry.api.Margins;
-import org.trinity.shell.api.event.ShellSurfaceCreatedEvent;
-import org.trinity.shell.api.geo.manager.ShellLayoutManager;
-import org.trinity.shell.api.geo.manager.ShellLayoutPropertyLine;
+import org.trinity.shell.api.node.manager.ShellLayoutManager;
+import org.trinity.shell.api.node.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.plugin.ShellPlugin;
 import org.trinity.shell.api.surface.ShellSurface;
+import org.trinity.shell.api.surface.event.ShellSurfaceCreatedEvent;
 import org.trinity.shell.api.widget.ShellWidget;
 
 import com.google.common.eventbus.EventBus;
@@ -40,7 +40,7 @@ public class ShellWindowManagerPlugin implements ShellPlugin {
 
 	@Subscribe
 	public void handleShellClientCreated(final ShellSurfaceCreatedEvent shellSurfaceCreatedEvent) {
-		// TODO create widget to move/resize/close client
+		// TODO create widget to move/resize/close client?
 		final ShellSurface client = shellSurfaceCreatedEvent.getClient();
 		client.setParent(this.shellRootWidget);
 		client.doReparent();
@@ -53,25 +53,31 @@ public class ShellWindowManagerPlugin implements ShellPlugin {
 
 	public void setupRootWidget() {
 		this.shellRootWidget.init(null);
+
 		this.shellRootWidget.setWidth(this.shellRootSurface.getWidth());
 		this.shellRootWidget.setHeight(this.shellRootSurface.getHeight());
 		this.shellRootWidget.doResize();
-		this.shellRootWidget.doShow();
+
 		this.shellRootWidget.setParent(this.shellRootSurface);
 		this.shellRootWidget.doReparent();
+
 		this.shellRootWidget.setLayoutManager(this.shellLayoutManager);
+
+		this.shellRootWidget.doShow();
 	}
 
 	@Override
 	public void start() {
 		setupRootWidget();
-		// TODO ask for all known client shell surfaces & manage them
+		// TODO ask for all existing client shell surfaces & manage them
+
 		this.shellEventBus.register(this);
 	}
 
 	@Override
 	public void stop() {
-		// TODO delete all created shell widgets
+		// TODO delete all created shell widgets (if any)
+
 		this.shellEventBus.unregister(this);
 	}
 }

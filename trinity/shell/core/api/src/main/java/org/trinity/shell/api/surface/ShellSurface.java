@@ -14,7 +14,7 @@
 package org.trinity.shell.api.surface;
 
 import org.trinity.foundation.display.api.DisplaySurface;
-import org.trinity.shell.api.geo.ShellNode;
+import org.trinity.shell.api.node.ShellNode;
 
 public interface ShellSurface extends ShellNode {
 	int getHeightIncrement();

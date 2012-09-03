@@ -20,8 +20,8 @@ import org.trinity.foundation.display.api.event.HideNotifyEvent;
 import org.trinity.foundation.display.api.event.ShowNotifyEvent;
 import org.trinity.foundation.display.api.event.ShowRequestEvent;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
-import org.trinity.shell.api.geo.AbstractShellNode;
-import org.trinity.shell.api.geo.ShellNode;
+import org.trinity.shell.api.node.AbstractShellNode;
+import org.trinity.shell.api.node.ShellNode;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
