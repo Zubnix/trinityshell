@@ -43,17 +43,6 @@ import com.google.common.eventbus.Subscribe;
 public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	private final Map<ShellNode, ShellLayoutProperty> childrenWithLayoutProperty = new LinkedHashMap<ShellNode, ShellLayoutProperty>();
-	private ShellNode container;
-
-	// @Override
-	// public ShellNode getLayoutContainer() {
-	// return this.container;
-	// }
-
-	// @Override
-	// public void setContainerNode(final ShellNode layoutContainer) {
-	// this.container = layoutContainer;
-	// }
 
 	/**
 	 * @param child
