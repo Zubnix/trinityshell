@@ -17,15 +17,13 @@ public class EntryPoint {
 	public static void main(final String[] args) {
 
 		LibXcbLoader.load();
-		new EntryPoint(args);
-	}
 
-	public EntryPoint(final String[] args) {
 		final Injector injector = Guice.createInjector(	Stage.PRODUCTION,
 														StartupModule.create(	ASMClasspathScanner.class,
 																				PackageFilter.create("org.trinity")));
 
 		final ShellPluginsRunner shellPluginsRunner = injector.getInstance(ShellPluginsRunner.class);
 		shellPluginsRunner.startAll();
+
 	}
 }

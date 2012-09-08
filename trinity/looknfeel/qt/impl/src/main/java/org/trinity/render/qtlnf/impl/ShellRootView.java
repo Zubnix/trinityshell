@@ -19,7 +19,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Named("shellRootWidgetView")
-public class ShellRootViewImpl extends ShellWidgetViewImpl {
+public class ShellRootView extends ShellWidgetViewImpl {
 
 	@Override
 	public Future<Void> createDisplaySurface(final Painter painter) {

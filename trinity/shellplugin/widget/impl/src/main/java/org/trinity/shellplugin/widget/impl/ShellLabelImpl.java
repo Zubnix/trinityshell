@@ -16,6 +16,10 @@ import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
+import org.trinity.shellplugin.widget.api.ShellLabel;
+import org.trinity.shellplugin.widget.api.mvvm.ViewReference;
+import org.trinity.shellplugin.widget.api.mvvm.ViewSignal;
+import org.trinity.shellplugin.widget.api.mvvm.Visual;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -29,9 +33,11 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @since 1.0
  */
 @Bind
-public class ShellLabelImpl extends BaseShellWidget // implements ShellLabel
-{
+public class ShellLabelImpl extends BaseShellWidget implements ShellLabel {
 
+	@ViewReference
+	private ShellWidgetView view;
+	@Visual("labelText")
 	private String text;
 
 	@Inject
@@ -39,7 +45,7 @@ public class ShellLabelImpl extends BaseShellWidget // implements ShellLabel
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
 								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
-								final ShellWidgetView view) {
+								@Named("ShellLabelView") final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
@@ -47,12 +53,13 @@ public class ShellLabelImpl extends BaseShellWidget // implements ShellLabel
 				view);
 	}
 
-	// @Override
+	@Override
+	@ViewSignal("labelText")
 	public void setText(final String text) {
 		this.text = text;
 	}
 
-	// @Override
+	@Override
 	public String getText() {
 		return this.text;
 	}

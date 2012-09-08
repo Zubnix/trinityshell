@@ -84,9 +84,9 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 	</dependencies>
 
 	<properties>
-		<maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.compiler.executable>javac</maven.compiler.executable>
 	</properties>
 </project>
