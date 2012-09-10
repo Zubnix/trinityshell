@@ -16,9 +16,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.trinity.foundation.display.api.DisplayEventProducer;
 import org.trinity.foundation.display.api.DisplaySurfaceFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.render.api.PaintInstruction;
@@ -31,11 +29,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.trolltech.qt.core.QCoreApplication;
-import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
 import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
 
 // TODO documentation
 /**
@@ -56,18 +52,15 @@ import de.devsurf.injection.guice.annotations.To;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(multiple = true, to = @To(value = To.Type.CUSTOM, customs = { QJRenderEngine.class, DisplayEventProducer.class }))
+@Bind
 @Singleton
-public class QJRenderEngineImpl implements DisplayEventProducer, QJRenderEngine, Runnable {
+public class QJRenderEngineImpl implements QJRenderEngine {
 
 	private final Map<PaintableSurfaceNode, QWidget> paintableToPaintPeer = new HashMap<PaintableSurfaceNode, QWidget>();
-	private final AtomicBoolean initialized = new AtomicBoolean(false);
 
 	private final QJRenderEventConverter renderEventConverter;
 	private final DisplaySurfaceFactory displaySurfaceFactory;
 	private final EventBus displayEventBus;
-
-	private Thread renderThread;
 
 	@Inject
 	QJRenderEngineImpl(	final QJRenderEventConverter renderEventConverter,
@@ -83,32 +76,16 @@ public class QJRenderEngineImpl implements DisplayEventProducer, QJRenderEngine,
 	}
 
 	@Override
-	public void startDisplayEventProduction() {
-		this.renderThread = new Thread(	this,
-										"Qt Jambi Render Thread");
-		this.renderThread.start();
-	}
-
-	@Override
-	public void stopDisplayEventProduction() {
-		QCoreApplication.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				QCoreApplication.quit();
-				QJRenderEngineImpl.this.initialized.set(false);
-			}
-		});
-	}
-
-	@Override
 	public <R> Future<R> invoke(final PaintableSurfaceNode paintableSurfaceNode,
 								final PaintInstruction<R, QJPaintContext> paintInstruction) {
 		// make sure qapplication.initialize() is finished before submitting any
+
 		// runnables, else they get lost.
-		while (!this.initialized.get()) {
+		while (QCoreApplication.startingUp()) {
 			synchronized (this) {
 				try {
-					wait();
+					wait(25);
+					Thread.yield();
 				} catch (final InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -148,17 +125,4 @@ public class QJRenderEngineImpl implements DisplayEventProducer, QJRenderEngine,
 										visual);
 	}
 
-	@Override
-	public void run() {
-		QApplication.initialize(new String[] {});
-		QApplication.setQuitOnLastWindowClosed(false);
-		this.initialized.set(true);
-		synchronized (this) {
-			notifyAll();
-		}
-		final int r = QApplication.exec();
-		if (r != 0) {
-			throw new RuntimeException("Qt Jambi exited with error: " + r);
-		}
-	}
 }

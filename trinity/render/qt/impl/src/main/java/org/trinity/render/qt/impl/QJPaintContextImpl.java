@@ -52,7 +52,7 @@ public class QJPaintContextImpl implements QJPaintContext {
 	}
 
 	@Override
-	public void syncVisualGeometryToNode(	final QWidget visual,
+	public void syncVisualGeometryToSurfaceNode(	final QWidget visual,
 											final PaintableSurfaceNode paintableSurfaceNode) {
 		final int x = paintableSurfaceNode.getX();
 		final int y = paintableSurfaceNode.getY();

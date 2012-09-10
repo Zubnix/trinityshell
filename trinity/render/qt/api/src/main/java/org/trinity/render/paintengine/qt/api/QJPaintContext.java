@@ -17,6 +17,6 @@ public interface QJPaintContext extends PaintContext {
 
 	DisplaySurface getDisplaySurface(QWidget visual);
 
-	void syncVisualGeometryToNode(	QWidget visual,
+	void syncVisualGeometryToSurfaceNode(	QWidget visual,
 									PaintableSurfaceNode paintableSurfaceNode);
 }

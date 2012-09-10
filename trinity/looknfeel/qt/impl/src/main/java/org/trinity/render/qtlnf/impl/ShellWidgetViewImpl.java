@@ -53,7 +53,11 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 
 	protected void createDisplaySurfaceInstruction(	final PaintableSurfaceNode paintableSurfaceNode,
 													final QJPaintContext paintContext) {
-		final QWidget parentVisual = paintContext.queryVisual(paintableSurfaceNode.getParentPaintableSurface());
+		final PaintableSurfaceNode parentSurfaceNode = paintableSurfaceNode.getParentPaintableSurface();
+		QWidget parentVisual = null;
+		if (parentSurfaceNode != null) {
+			parentVisual = paintContext.queryVisual(parentSurfaceNode);
+		}
 		final QWidget visual = createRootVisual(parentVisual);
 		visual.setWindowFlags(WindowType.X11BypassWindowManagerHint);
 		visual.setAttribute(WidgetAttribute.WA_DeleteOnClose,
@@ -61,8 +65,8 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 		visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
 							true);
 
-		paintContext.syncVisualGeometryToNode(	visual,
-												paintableSurfaceNode);
+		paintContext.syncVisualGeometryToSurfaceNode(	visual,
+														paintableSurfaceNode);
 		paintContext.setVisual(visual);
 	}
 

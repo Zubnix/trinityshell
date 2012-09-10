@@ -117,10 +117,10 @@ public class BaseShellWidget extends AbstractShellSurface implements ShellWidget
 	@Override
 	public void init(final ShellWidget paintableParent) {
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
-																	this);
+																			this);
 		this.view.createDisplaySurface(getPainter());
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
-																	getDisplaySurface());
+																			getDisplaySurface());
 	}
 
 	@Override
@@ -145,6 +145,9 @@ public class BaseShellWidget extends AbstractShellSurface implements ShellWidget
 	 * @return
 	 */
 	private BaseShellWidget findParentPaintable(final ShellNode square) {
+		if (square == null) {
+			return null;
+		}
 		if (square instanceof BaseShellWidget) {
 			return (BaseShellWidget) square;
 		} else {
