@@ -1,12 +1,8 @@
 package org.trinity.render.qtlnf.impl;
 
-import java.util.concurrent.Future;
-
 import javax.inject.Named;
 
-import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.PaintableRenderNode;
-import org.trinity.foundation.render.api.Painter;
+import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
 
 import com.trolltech.qt.core.Qt.WidgetAttribute;
@@ -22,43 +18,24 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ShellRootView extends ShellWidgetViewImpl {
 
 	@Override
-	public Future<Void> createDisplaySurface(final Painter painter) {
-
-		if (!getPainterRef().compareAndSet(	null,
-											painter)) {
-			return null;
-		}
-
-		return painter.instruct(new PaintInstruction<Void, QJPaintContext>() {
-			@Override
-			public Void call(	final PaintableRenderNode paintableRenderNode,
-								final QJPaintContext paintContext) {
-				final QWidget visual = new QFrame(	QApplication.desktop(),
-													WindowType.X11BypassWindowManagerHint);
-				visual.setAttribute(WidgetAttribute.WA_DeleteOnClose,
-									true);
-				visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
-									true);
-				visual.setStyleSheet("background-color:grey;");
-				visual.createWinId();
-				paintContext.syncVisualGeometryToNode(	visual,
-														paintableRenderNode);
-				paintContext.setVisual(visual);
-				return null;
-			}
-		});
+	protected void createDisplaySurfaceInstruction(	final PaintableSurfaceNode paintableSurfaceNode,
+													final QJPaintContext paintContext) {
+		final QWidget visual = new QFrame(	QApplication.desktop(),
+											WindowType.X11BypassWindowManagerHint);
+		visual.setAttribute(WidgetAttribute.WA_DeleteOnClose,
+							true);
+		visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
+							true);
+		visual.setStyleSheet("background-color:grey;");
+		visual.createWinId();
+		paintContext.syncVisualGeometryToNode(	visual,
+												paintableSurfaceNode);
+		paintContext.setVisual(visual);
 	}
 
 	@Override
-	public Future<Void> destroy() {
-		final Painter painter = getPainterRef().get();
-		return painter.instruct(new PaintInstruction<Void, QJPaintContext>() {
-			@Override
-			public Void call(	final PaintableRenderNode paintableRenderNode,
-								final QJPaintContext paintContext) {
-				return null;
-			}
-		});
+	protected void destroyInstruction(	final PaintableSurfaceNode paintableSurfaceNode,
+										final QJPaintContext paintContext) {
+		// do nothing
 	}
-
 }

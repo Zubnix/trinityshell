@@ -4,43 +4,43 @@ import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.DisplaySurfaceFactory;
 import org.trinity.foundation.display.api.DisplaySurfaceHandle;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.render.api.PaintableRenderNode;
+import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
 
 import com.trolltech.qt.gui.QWidget;
 
 public class QJPaintContextImpl implements QJPaintContext {
 
-	private final PaintableRenderNode paintableRenderNode;
+	private final PaintableSurfaceNode paintableSurfaceNode;
 	private final QWidget visual;
-	private final QJRenderEngine qjRenderEngine;
+	private final QJRenderEngineImpl qjRenderEngine;
 	private final DisplaySurfaceFactory displaySurfaceFactory;
 
-	public QJPaintContextImpl(	final PaintableRenderNode paintableRenderNode,
+	public QJPaintContextImpl(	final PaintableSurfaceNode paintableSurfaceNode,
 								final QWidget visual,
-								final QJRenderEngine qjRenderEngineImpl,
+								final QJRenderEngineImpl qjRenderEngineImpl,
 								final DisplaySurfaceFactory displaySurfaceFactory) {
-		this.paintableRenderNode = paintableRenderNode;
+		this.paintableSurfaceNode = paintableSurfaceNode;
 		this.visual = visual;
 		this.qjRenderEngine = qjRenderEngineImpl;
 		this.displaySurfaceFactory = displaySurfaceFactory;
 	}
 
 	@Override
-	public QWidget getVisual() {
+	public QWidget getRootVisual() {
 		return this.visual;
 	}
 
 	@Override
 	public void setVisual(final QWidget qWidget) {
-		this.qjRenderEngine.putVisual(	(DisplayEventSource) this.paintableRenderNode,
-										this.paintableRenderNode,
+		this.qjRenderEngine.putVisual(	(DisplayEventSource) this.paintableSurfaceNode,
+										this.paintableSurfaceNode,
 										qWidget);
 	}
 
 	@Override
-	public QWidget queryVisual(final PaintableRenderNode paintableRenderNode) {
-		return this.qjRenderEngine.getVisual(paintableRenderNode);
+	public QWidget queryVisual(final PaintableSurfaceNode paintableSurfaceNode) {
+		return this.qjRenderEngine.getVisual(paintableSurfaceNode);
 	}
 
 	@Override
@@ -53,13 +53,13 @@ public class QJPaintContextImpl implements QJPaintContext {
 
 	@Override
 	public void syncVisualGeometryToNode(	final QWidget visual,
-											final PaintableRenderNode paintableRenderNode) {
-		final int x = paintableRenderNode.getX();
-		final int y = paintableRenderNode.getY();
-		final int width = paintableRenderNode.getWidth();
-		final int height = paintableRenderNode.getHeight();
+											final PaintableSurfaceNode paintableSurfaceNode) {
+		final int x = paintableSurfaceNode.getX();
+		final int y = paintableSurfaceNode.getY();
+		final int width = paintableSurfaceNode.getWidth();
+		final int height = paintableSurfaceNode.getHeight();
 
-		final boolean visible = paintableRenderNode.isVisible();
+		final boolean visible = paintableSurfaceNode.isVisible();
 
 		visual.setGeometry(	x,
 							y,
@@ -70,6 +70,6 @@ public class QJPaintContextImpl implements QJPaintContext {
 
 	@Override
 	public void evictVisual() {
-		this.qjRenderEngine.removeVisual(this.paintableRenderNode);
+		this.qjRenderEngine.removeVisual(this.paintableSurfaceNode);
 	}
 }

@@ -11,10 +11,10 @@
  */
 package org.trinity.shell.api.node;
 
-import org.trinity.foundation.render.api.RenderNode;
+import org.trinity.foundation.render.api.SurfaceNode;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 
-public interface ShellNode extends RenderNode, ShellNodeTransformable {
+public interface ShellNode extends SurfaceNode, ShellNodeTransformable {
 
 	void cancelPendingMove();
 

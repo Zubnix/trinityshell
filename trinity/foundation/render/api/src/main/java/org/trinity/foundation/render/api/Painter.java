@@ -19,10 +19,10 @@ import org.trinity.foundation.display.api.DisplayAreaManipulator;
  * A <code>Painter</code> can be seen as the "gate keeper" to the underlying
  * paint back-end. It talks to a paint back-end by feeding it
  * <code>PaintCall</code>s.It provides the means to manipulate a
- * <code>PaintableRenderNode</code> area.
+ * <code>PaintableSurfaceNode</code> area.
  * <p>
  * A <code>Painter</code> talks to a paint back-end that provides the visual
- * implementation for a <code>PaintableRenderNode</code>. It does this by
+ * implementation for a <code>PaintableSurfaceNode</code>. It does this by
  * passing a paint toolkit specific implementation of a <code>PaintCall</code>
  * object to the paint back-end. This implies that a <code>Painter</code>
  * functions as a "bridge" between the model thread and the gui thread.
@@ -30,15 +30,15 @@ import org.trinity.foundation.display.api.DisplayAreaManipulator;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public interface Painter extends DisplayAreaManipulator<PaintableRenderNode> {
+public interface Painter extends DisplayAreaManipulator<PaintableSurfaceNode> {
 
 	<R> Future<R> instruct(PaintInstruction<R, ? extends PaintContext> paintInstruction);
 
 	/**
-	 * The <code>PaintableRenderNode</code> that is managed by this
+	 * The <code>PaintableSurfaceNode</code> that is managed by this
 	 * <code>Painter</code>.
 	 * 
 	 * @return
 	 */
-	PaintableRenderNode getPaintableRenderNode();
+	PaintableSurfaceNode getPaintableRenderNode();
 }

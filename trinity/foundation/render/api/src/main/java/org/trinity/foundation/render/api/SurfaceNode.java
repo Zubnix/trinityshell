@@ -16,36 +16,36 @@ import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 // TODO documentation
 /**
- * A <code>RenderNode</code> provide a mechanism to implement a tree structure
+ * A <code>SurfaceNode</code> provide a mechanism to implement a tree structure
  * of <code>DisplayArea</code>s. It provides functions to retrieve information
  * about its geometry in the tree. It offers no ways of manipulating its visual
- * state. It represents a node in a tree structure of <code>RenderNode</code>s.
- * A <code>RenderNode</code> lives in an inverted Y-axis orthogonal space. This
+ * state. It represents a node in a tree structure of <code>SurfaceNode</code>s.
+ * A <code>SurfaceNode</code> lives in an inverted Y-axis orthogonal space. This
  * space has its center positioned in the top left corner of the user's screen.
  * This means that a higher Y value indicates a lower geographical position on
  * the user's screen. A higher X value means a positioned more to the right on
  * the user's screen.
  * <p>
- * Each <code>RenderNode</code> has a parent <code>RenderNode</code> . If a
- * <code>RenderNode</code> is repositioned, all it's children will be
+ * Each <code>SurfaceNode</code> has a parent <code>SurfaceNode</code> . If a
+ * <code>SurfaceNode</code> is repositioned, all it's children will be
  * repositioned by the same offset.
  * <p>
- * A <code>RenderNode</code> has an absolute X and a Y coordinate, based on the
- * <code>RenderNode</code>'s top left corner relative to the center of the
+ * A <code>SurfaceNode</code> has an absolute X and a Y coordinate, based on the
+ * <code>SurfaceNode</code>'s top left corner relative to the center of the
  * Y-axis inverted orthogonal space.
  * <p>
- * A <code>RenderNode</code> has a relative X and Y coordinate. This coordinate
- * is based on the <code>RenderNode</code>'s top left corner relative to its
+ * A <code>SurfaceNode</code> has a relative X and Y coordinate. This coordinate
+ * is based on the <code>SurfaceNode</code>'s top left corner relative to its
  * parent top left corner.
  * <p>
- * A <code>RenderNode</code> has a positive, non-zero width and a height.
+ * A <code>SurfaceNode</code> has a positive, non-zero width and a height.
  * <p>
- * A <code>RenderNode</code> has a visibility of visible or invisible.
+ * A <code>SurfaceNode</code> has a visibility of visible or invisible.
  * 
  * @author Erik De Rijcke
  * @since 1.0
  */
-public interface RenderNode extends DisplayArea, Rectangle {
+public interface SurfaceNode extends DisplayArea, Rectangle {
 	/**
 	 * The absolute X value of this <code>HierarchicalArea</code>.
 	 * <p>
@@ -74,5 +74,5 @@ public interface RenderNode extends DisplayArea, Rectangle {
 	/**
 	 * @return
 	 */
-	RenderNode getParent();
+	SurfaceNode getParent();
 }

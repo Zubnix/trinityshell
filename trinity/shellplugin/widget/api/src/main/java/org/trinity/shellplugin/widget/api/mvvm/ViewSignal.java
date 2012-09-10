@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /****************************************
- * Immediately after the invocation of the annotated method, the {@link Visual}s
+ * Immediately after the invocation of the annotated method, the {@link VisualReference}s
  * with the same given {@link #value()} will be updated to reflect their field's
  * state. The most straightforward implementation is thus to place this
  * annotation on setter methods.

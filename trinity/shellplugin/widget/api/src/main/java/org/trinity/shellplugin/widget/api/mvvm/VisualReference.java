@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Visual {
+public @interface VisualReference {
 	/****************************************
 	 * The id of the visual.
 	 * 

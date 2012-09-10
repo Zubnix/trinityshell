@@ -13,5 +13,5 @@ package org.trinity.foundation.render.api;
 
 public interface PainterFactory {
 
-	Painter createPainter(PaintableRenderNode paintableRenderNode);
+	Painter createPainter(PaintableSurfaceNode paintableSurfaceNode);
 }

@@ -2,21 +2,21 @@ package org.trinity.render.paintengine.qt.api;
 
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintContext;
-import org.trinity.foundation.render.api.PaintableRenderNode;
+import org.trinity.foundation.render.api.PaintableSurfaceNode;
 
 import com.trolltech.qt.gui.QWidget;
 
 public interface QJPaintContext extends PaintContext {
-	QWidget getVisual();
+	QWidget getRootVisual();
 
 	void setVisual(QWidget qWidget);
 
 	void evictVisual();
 
-	QWidget queryVisual(PaintableRenderNode paintableRenderNode);
+	QWidget queryVisual(PaintableSurfaceNode paintableSurfaceNode);
 
 	DisplaySurface getDisplaySurface(QWidget visual);
 
 	void syncVisualGeometryToNode(	QWidget visual,
-									PaintableRenderNode paintableRenderNode);
+									PaintableSurfaceNode paintableSurfaceNode);
 }

@@ -22,8 +22,9 @@ import org.trinity.foundation.display.api.DisplayEventProducer;
 import org.trinity.foundation.display.api.DisplaySurfaceFactory;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.PaintableRenderNode;
+import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
+import org.trinity.render.paintengine.qt.api.QJRenderEngine;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -43,9 +44,9 @@ import de.devsurf.injection.guice.annotations.To;
  * related operations to a <code>QFusionRenderEngine</code>. It's the
  * <code>QFusionRenderEngine</code>'s job to correctly handle these requests. To
  * do this, a <code>QFusionRenderEngine</code> holds a reference to every
- * registered <code>PaintableRenderNode</code> and it's corresponding
+ * registered <code>PaintableSurfaceNode</code> and it's corresponding
  * <code>QWidget</code> paint peer. A registered
- * <code>PaintableRenderNode</code> is a <code>PaintableRenderNode</code> that
+ * <code>PaintableSurfaceNode</code> is a <code>PaintableSurfaceNode</code> that
  * was initially visualized by a <code>QFusionRenderEngine</code>.
  * <p>
  * A <code>QFusionRenderEngine</code> runs in a separate GUI <code>Thread</code>
@@ -55,11 +56,11 @@ import de.devsurf.injection.guice.annotations.To;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(multiple = true, to = @To(value = To.Type.CUSTOM, customs = DisplayEventProducer.class))
+@Bind(multiple = true, to = @To(value = To.Type.CUSTOM, customs = { QJRenderEngine.class, DisplayEventProducer.class }))
 @Singleton
-public class QJRenderEngine implements DisplayEventProducer, Runnable {
+public class QJRenderEngineImpl implements DisplayEventProducer, QJRenderEngine, Runnable {
 
-	private final Map<PaintableRenderNode, QWidget> paintableToPaintPeer = new HashMap<PaintableRenderNode, QWidget>();
+	private final Map<PaintableSurfaceNode, QWidget> paintableToPaintPeer = new HashMap<PaintableSurfaceNode, QWidget>();
 	private final AtomicBoolean initialized = new AtomicBoolean(false);
 
 	private final QJRenderEventConverter renderEventConverter;
@@ -69,16 +70,16 @@ public class QJRenderEngine implements DisplayEventProducer, Runnable {
 	private Thread renderThread;
 
 	@Inject
-	QJRenderEngine(	final QJRenderEventConverter renderEventConverter,
-					final DisplaySurfaceFactory displaySurfaceFactory,
-					@Named("displayEventBus") final EventBus displayEventBus) {
+	QJRenderEngineImpl(	final QJRenderEventConverter renderEventConverter,
+						final DisplaySurfaceFactory displaySurfaceFactory,
+						@Named("displayEventBus") final EventBus displayEventBus) {
 		this.renderEventConverter = renderEventConverter;
 		this.displaySurfaceFactory = displaySurfaceFactory;
 		this.displayEventBus = displayEventBus;
 	}
 
-	public void removeVisual(final PaintableRenderNode paintableRenderNode) {
-		this.paintableToPaintPeer.remove(paintableRenderNode);
+	public void removeVisual(final PaintableSurfaceNode paintableSurfaceNode) {
+		this.paintableToPaintPeer.remove(paintableSurfaceNode);
 	}
 
 	@Override
@@ -94,12 +95,13 @@ public class QJRenderEngine implements DisplayEventProducer, Runnable {
 			@Override
 			public void run() {
 				QCoreApplication.quit();
-				QJRenderEngine.this.initialized.set(false);
+				QJRenderEngineImpl.this.initialized.set(false);
 			}
 		});
 	}
 
-	public <R> Future<R> invoke(final PaintableRenderNode paintableRenderNode,
+	@Override
+	public <R> Future<R> invoke(final PaintableSurfaceNode paintableSurfaceNode,
 								final PaintInstruction<R, QJPaintContext> paintInstruction) {
 		// make sure qapplication.initialize() is finished before submitting any
 		// runnables, else they get lost.
@@ -117,12 +119,12 @@ public class QJRenderEngine implements DisplayEventProducer, Runnable {
 		final FutureTask<R> futureTask = new FutureTask<R>(new Callable<R>() {
 			@Override
 			public R call() throws Exception {
-				final QWidget visual = getVisual(paintableRenderNode);
-				final QJPaintContext qjPaintContext = new QJPaintContextImpl(	paintableRenderNode,
+				final QWidget visual = getVisual(paintableSurfaceNode);
+				final QJPaintContext qjPaintContext = new QJPaintContextImpl(	paintableSurfaceNode,
 																				visual,
-																				QJRenderEngine.this,
-																				QJRenderEngine.this.displaySurfaceFactory);
-				final R result = paintInstruction.call(	paintableRenderNode,
+																				QJRenderEngineImpl.this,
+																				QJRenderEngineImpl.this.displaySurfaceFactory);
+				final R result = paintInstruction.call(	paintableSurfaceNode,
 														qjPaintContext);
 				return result;
 			}
@@ -131,18 +133,18 @@ public class QJRenderEngine implements DisplayEventProducer, Runnable {
 		return futureTask;
 	}
 
-	public QWidget getVisual(final PaintableRenderNode paintableRenderNode) {
-		return this.paintableToPaintPeer.get(paintableRenderNode);
+	public QWidget getVisual(final PaintableSurfaceNode paintableSurfaceNode) {
+		return this.paintableToPaintPeer.get(paintableSurfaceNode);
 	}
 
 	public void putVisual(	final DisplayEventSource displayEventSource,
-							final PaintableRenderNode paintableRenderNode,
+							final PaintableSurfaceNode paintableSurfaceNode,
 							final QWidget visual) {
 		visual.installEventFilter(new QJRenderEventFilter(	this.displayEventBus,
 															this.renderEventConverter,
 															displayEventSource,
 															visual));
-		this.paintableToPaintPeer.put(	paintableRenderNode,
+		this.paintableToPaintPeer.put(	paintableSurfaceNode,
 										visual);
 	}
 

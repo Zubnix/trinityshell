@@ -1,11 +1,10 @@
 package org.trinity.render.qtlnf.impl;
 
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.PaintableRenderNode;
+import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
 import org.trinity.shell.api.widget.ShellWidgetView;
@@ -19,71 +18,99 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 public class ShellWidgetViewImpl implements ShellWidgetView {
 
-	private final AtomicReference<Painter> painterRef = new AtomicReference<Painter>();
+	private Painter painter;
 
-	public AtomicReference<Painter> getPainterRef() {
-		return this.painterRef;
+	protected Painter getPainter() {
+		return this.painter;
+	}
+
+	protected <R> Future<R> invokePaintInstruction(final PaintInstruction<R, QJPaintContext> paintInstruction) {
+		final Painter painter = getPainter();
+		if (this.painter == null) {
+			throw new IllegalStateException("Display surface not created!");
+		}
+		return painter.instruct(paintInstruction);
 	}
 
 	@Override
-	public Future<Void> createDisplaySurface(final Painter painter) {
-		if (!getPainterRef().compareAndSet(	null,
-											painter)) {
-			return null;
+	public final Future<Void> createDisplaySurface(final Painter painter) {
+		if (this.painter == null) {
+			this.painter = painter;
+		} else {
+			throw new IllegalStateException("Display surface already created!");
 		}
 
-		return getPainterRef().get().instruct(new PaintInstruction<Void, QJPaintContext>() {
+		return invokePaintInstruction(new PaintInstruction<Void, QJPaintContext>() {
 			@Override
-			public Void call(	final PaintableRenderNode paintableRenderNode,
+			public Void call(	final PaintableSurfaceNode paintableSurfaceNode,
 								final QJPaintContext paintContext) {
-
-				final QWidget parentVisual = paintContext.queryVisual(paintableRenderNode
-						.getParentPaintableRenderNode());
-				final QWidget visual = new QWidget(parentVisual);
-				visual.setWindowFlags(WindowType.X11BypassWindowManagerHint);
-				visual.setAttribute(WidgetAttribute.WA_DeleteOnClose,
-									true);
-				visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
-									true);
-
-				paintContext.syncVisualGeometryToNode(	visual,
-														paintableRenderNode);
-				paintContext.setVisual(visual);
+				createDisplaySurfaceInstruction(paintableSurfaceNode,
+												paintContext);
 				return null;
 			}
 		});
 	}
 
+	protected void createDisplaySurfaceInstruction(	final PaintableSurfaceNode paintableSurfaceNode,
+													final QJPaintContext paintContext) {
+		final QWidget parentVisual = paintContext.queryVisual(paintableSurfaceNode.getParentPaintableSurface());
+		final QWidget visual = createRootVisual(parentVisual);
+		visual.setWindowFlags(WindowType.X11BypassWindowManagerHint);
+		visual.setAttribute(WidgetAttribute.WA_DeleteOnClose,
+							true);
+		visual.setAttribute(WidgetAttribute.WA_DontCreateNativeAncestors,
+							true);
+
+		paintContext.syncVisualGeometryToNode(	visual,
+												paintableSurfaceNode);
+		paintContext.setVisual(visual);
+	}
+
+	protected QWidget createRootVisual(final QWidget parentVisual) {
+		final QWidget visual = new QWidget(parentVisual);
+		return visual;
+	}
+
 	@Override
-	public Future<Void> destroy() {
-		final Painter painter = getPainterRef().get();
-		return painter.instruct(new PaintInstruction<Void, QJPaintContext>() {
+	public final Future<Void> destroy() {
+		return invokePaintInstruction(new PaintInstruction<Void, QJPaintContext>() {
 			@Override
-			public Void call(	final PaintableRenderNode paintableRenderNode,
+			public Void call(	final PaintableSurfaceNode paintableSurfaceNode,
 								final QJPaintContext paintContext) {
-				final QWidget visual = paintContext.getVisual();
-				visual.close();
-				paintContext.evictVisual();
+				destroyInstruction(	paintableSurfaceNode,
+									paintContext);
 				return null;
 			}
 		});
 	}
 
-	@Override
-	public Future<DisplaySurface> getDislaySurface() {
-		final Painter painter = getPainterRef().get();
-		if (painter == null) {
-			return null;
-		}
+	protected void destroyInstruction(	final PaintableSurfaceNode paintableSurfaceNode,
+										final QJPaintContext paintContext) {
+		final QWidget visual = paintContext.getRootVisual();
+		visual.close();
+		paintContext.evictVisual();
+	}
 
+	@Override
+	public final Future<DisplaySurface> getDislaySurface() {
+		final Painter painter = getPainter();
+		if (this.painter == null) {
+			throw new IllegalStateException("Display surface not created!");
+		}
 		return painter.instruct(new PaintInstruction<DisplaySurface, QJPaintContext>() {
 			@Override
-			public DisplaySurface call(	final PaintableRenderNode paintableRenderNode,
+			public DisplaySurface call(	final PaintableSurfaceNode paintableSurfaceNode,
 										final QJPaintContext paintContext) {
-				final QWidget visual = paintContext.getVisual();
-				final DisplaySurface displaySurface = paintContext.getDisplaySurface(visual);
-				return displaySurface;
+				return getDisplaySurfaceInstruction(paintableSurfaceNode,
+													paintContext);
 			}
 		});
+	}
+
+	protected DisplaySurface getDisplaySurfaceInstruction(	final PaintableSurfaceNode paintableSurfaceNode,
+															final QJPaintContext paintContext) {
+		final QWidget visual = paintContext.getRootVisual();
+		final DisplaySurface displaySurface = paintContext.getDisplaySurface(visual);
+		return displaySurface;
 	}
 }

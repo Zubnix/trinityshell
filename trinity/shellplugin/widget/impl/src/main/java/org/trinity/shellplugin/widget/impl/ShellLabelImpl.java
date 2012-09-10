@@ -19,7 +19,7 @@ import org.trinity.shell.api.widget.ShellWidgetView;
 import org.trinity.shellplugin.widget.api.ShellLabel;
 import org.trinity.shellplugin.widget.api.mvvm.ViewReference;
 import org.trinity.shellplugin.widget.api.mvvm.ViewSignal;
-import org.trinity.shellplugin.widget.api.mvvm.Visual;
+import org.trinity.shellplugin.widget.api.mvvm.VisualReference;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -37,7 +37,8 @@ public class ShellLabelImpl extends BaseShellWidget implements ShellLabel {
 
 	@ViewReference
 	private ShellWidgetView view;
-	@Visual("labelText")
+
+	@VisualReference("text")
 	private String text;
 
 	@Inject
@@ -54,7 +55,7 @@ public class ShellLabelImpl extends BaseShellWidget implements ShellLabel {
 	}
 
 	@Override
-	@ViewSignal("labelText")
+	@ViewSignal("text")
 	public void setText(final String text) {
 		this.text = text;
 	}

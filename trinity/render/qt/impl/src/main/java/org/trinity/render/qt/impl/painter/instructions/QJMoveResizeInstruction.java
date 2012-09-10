@@ -12,7 +12,7 @@
 package org.trinity.render.qt.impl.painter.instructions;
 
 import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.PaintableRenderNode;
+import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
 
 public class QJMoveResizeInstruction implements PaintInstruction<Void, QJPaintContext> {
@@ -30,9 +30,9 @@ public class QJMoveResizeInstruction implements PaintInstruction<Void, QJPaintCo
 	}
 
 	@Override
-	public Void call(	final PaintableRenderNode paintableRenderNode,
+	public Void call(	final PaintableSurfaceNode paintableSurfaceNode,
 						final QJPaintContext paintContext) {
-		paintContext.getVisual().setGeometry(	this.x,
+		paintContext.getRootVisual().setGeometry(	this.x,
 												this.y,
 												this.width,
 												this.height);

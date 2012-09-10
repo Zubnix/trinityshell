@@ -33,7 +33,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO split into abstract widget & move to api
 /**
- * An <code>AbstractShellSurface</code> with a <code>PaintableRenderNode</code>
+ * An <code>AbstractShellSurface</code> with a <code>PaintableSurfaceNode</code>
  * implementation. A <code>BaseShellWidget</code> is ment to provide a visual
  * interface for the user so it can manipulate the hyperdrive library at
  * runtime.
@@ -134,7 +134,7 @@ public class BaseShellWidget extends AbstractShellSurface implements ShellWidget
 	}
 
 	@Override
-	public BaseShellWidget getParentPaintableRenderNode() {
+	public BaseShellWidget getParentPaintableSurface() {
 		return findParentPaintable(getParent());
 	}
 

@@ -12,7 +12,7 @@
 package org.trinity.render.qt.impl.painter.instructions;
 
 import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.PaintableRenderNode;
+import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
 
 import com.google.inject.Singleton;
@@ -24,9 +24,9 @@ import com.google.inject.Singleton;
 public class QJRaiseInstruction implements PaintInstruction<Void, QJPaintContext> {
 
 	@Override
-	public Void call(	final PaintableRenderNode paintableRenderNode,
+	public Void call(	final PaintableSurfaceNode paintableSurfaceNode,
 						final QJPaintContext renderEngine) {
-		renderEngine.getVisual().raise();
+		renderEngine.getRootVisual().raise();
 		return null;
 	}
 }

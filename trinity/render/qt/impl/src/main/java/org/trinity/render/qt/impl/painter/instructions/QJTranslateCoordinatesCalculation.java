@@ -12,7 +12,7 @@
 package org.trinity.render.qt.impl.painter.instructions;
 
 import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.PaintableRenderNode;
+import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.render.paintengine.qt.api.QJPaintContext;
 
@@ -21,11 +21,11 @@ import com.trolltech.qt.gui.QWidget;
 
 public class QJTranslateCoordinatesCalculation implements PaintInstruction<Coordinate, QJPaintContext> {
 
-	private final PaintableRenderNode source;
+	private final PaintableSurfaceNode source;
 	private final int sourceX;
 	private final int sourceY;
 
-	public QJTranslateCoordinatesCalculation(final PaintableRenderNode source, final int sourceX, final int sourceY) {
+	public QJTranslateCoordinatesCalculation(final PaintableSurfaceNode source, final int sourceX, final int sourceY) {
 
 		this.source = source;
 		this.sourceX = sourceX;
@@ -33,10 +33,10 @@ public class QJTranslateCoordinatesCalculation implements PaintInstruction<Coord
 	}
 
 	@Override
-	public Coordinate call(	final PaintableRenderNode paintableRenderNode,
+	public Coordinate call(	final PaintableSurfaceNode paintableSurfaceNode,
 							final QJPaintContext renderEngine) {
 		final QWidget sourcePaintPeer = renderEngine.queryVisual(this.source);
-		final QWidget targetPaintPeer = renderEngine.getVisual();
+		final QWidget targetPaintPeer = renderEngine.getRootVisual();
 
 		final QPoint translatedPoint = sourcePaintPeer.mapTo(	targetPaintPeer,
 																new QPoint(	this.sourceX,
