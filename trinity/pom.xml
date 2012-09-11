@@ -10,7 +10,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 	<version>0.0.1-SNAPSHOT</version>
 	<description>A Java based window manager.</description>
 	<url>http://code.google.com/p/ewm</url>
-
 	<inceptionYear>2009-11-06</inceptionYear>
 	<developers>
 		<developer>
@@ -26,6 +25,25 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			</roles>
 		</developer>
 	</developers>
+
+	<properties>
+		<!-- dep versions -->
+		<guice.version>3.0</guice.version>
+		<guava.version>12.0</guava.version>
+		<autobind.version>0.8.7</autobind.version>
+
+		<!-- test dep versions -->
+		<junit.version>4.5</junit.version>
+		<mockito.version>1.8.5</mockito.version>
+		<jukito.version>1.1</jukito.version>
+
+		<!-- java version -->
+		<maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.executable>javac</maven.compiler.executable>
+	</properties>
+
 	<modules>
 		<module>foundation</module>
 		<module>display</module>
@@ -41,52 +59,49 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
-			<version>3.0</version>
+			<version>${guice.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-assistedinject</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>12.0</version>
+			<version>${guice.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-multibindings</artifactId>
-			<version>3.0</version>
+			<version>${guice.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
 		</dependency>
 
-		<!-- binding annotations -->
+		<!--guice binding annotations -->
 		<dependency>
 			<groupId>de.devsurf.injection.guice</groupId>
 			<artifactId>de.devsurf.injection.guice.core</artifactId>
-			<version>0.8.7</version>
+			<version>${autobind.version}</version>
 		</dependency>
 
-		<!-- START TEST DEP -->
+		<!-- test deps -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.7</version>
-			<type>jar</type>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<version>1.9.0-rc1</version>
+			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- END TEST DEP -->
+		<dependency>
+			<groupId>org.jukito</groupId>
+			<artifactId>jukito</artifactId>
+			<version>${jukito.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
-	<properties>
-		<maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
-		<maven.compiler.executable>javac</maven.compiler.executable>
-	</properties>
 </project>
