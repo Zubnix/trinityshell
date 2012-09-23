@@ -2,18 +2,16 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>trinity</artifactId>
 		<groupId>org.trinity</groupId>
+		<artifactId>looknfeel</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>looknfeel</artifactId>
-	<name>Look and feel</name>
+	<artifactId>looknfeel.swt</artifactId>
+	<name>Look and Feel SWT</name>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>qt</module>
-		<module>swt</module>
+		<module>impl</module>
 	</modules>
 </project>
