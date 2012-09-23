@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.widget.api.mvvm;
+package org.trinity.shellplugin.widget.api.binding;
 
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 
@@ -12,10 +12,10 @@ public final class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		final ViewSignalDispatcher viewSignalDispatcher = new ViewSignalDispatcher();
+		final ViewAttributeSignalDispatcher viewSignalDispatcher = new ViewAttributeSignalDispatcher();
 		requestInjection(viewSignalDispatcher);
 		bindInterceptor(Matchers.subclassesOf(PaintableSurfaceNode.class),
-						Matchers.annotatedWith(ViewSignal.class),
+						Matchers.annotatedWith(ViewAttributeChanged.class),
 						viewSignalDispatcher);
 	}
 }

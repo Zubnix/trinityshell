@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.widget.api.mvvm;
+package org.trinity.shellplugin.widget.api.binding;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,7 +13,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.inject.Inject;
 
-final class ViewSignalDispatcher implements MethodInterceptor {
+final class ViewAttributeSignalDispatcher implements MethodInterceptor {
 
 	private final Cache<Class<?>, Cache<String, Field>> visualReferenceFieldBindings = CacheBuilder.newBuilder()
 			.build();
@@ -21,7 +21,7 @@ final class ViewSignalDispatcher implements MethodInterceptor {
 	private final Cache<Class<?>, Method> viewSlotMethodBindings = CacheBuilder.newBuilder().build();
 
 	@Inject
-	private ViewSlotInvocationHandler viewSlotInvocationHandler;
+	private ViewAttributeSlotInvocationHandler viewSlotInvocationHandler;
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
@@ -30,13 +30,13 @@ final class ViewSignalDispatcher implements MethodInterceptor {
 		final Object thisObj = invocation.getThis();
 		final Class<?> thisObjClass = thisObj.getClass();
 
-		final ViewSignal viewSignal = invocation.getMethod().getAnnotation(ViewSignal.class);
-		final String[] visualIds = viewSignal.value();
+		final ViewAttributeChanged viewSignal = invocation.getMethod().getAnnotation(ViewAttributeChanged.class);
+		final String[] viewAttributeIds = viewSignal.value();
 
 		final Field viewField = getViewReferenceField(thisObjClass);
 		final Object view = viewField.get(thisObj);
 
-		for (final String visualId : visualIds) {
+		for (final String viewAttributeId : viewAttributeIds) {
 			final Field field = this.visualReferenceFieldBindings.get(	thisObjClass,
 																		new Callable<Cache<String, Field>>() {
 																			@Override
@@ -45,18 +45,18 @@ final class ViewSignalDispatcher implements MethodInterceptor {
 																				return CacheBuilder.newBuilder()
 																						.build();
 																			}
-																		}).get(	visualId,
+																		}).get(	viewAttributeId,
 																				new Callable<Field>() {
 																					@Override
 																					public Field call()
 																							throws Exception {
 																						return getVisualReferenceField(	thisObjClass,
-																														visualId);
+																														viewAttributeId);
 																					}
 																				});
 
 			final Method viewSlotMethod = getViewSlotMethod(view.getClass(),
-															visualId);
+															viewAttributeId);
 			if (viewSlotMethod == null) {
 				continue;
 			}
@@ -74,13 +74,13 @@ final class ViewSignalDispatcher implements MethodInterceptor {
 											final String visualId) {
 		Field foundField = null;
 		for (final Field field : clazz.getDeclaredFields()) {
-			final VisualReference visual = field.getAnnotation(VisualReference.class);
+			final ViewAttribute visual = field.getAnnotation(ViewAttribute.class);
 			if ((visual != null) && visual.value().equals(visualId)) {
 				if (foundField == null) {
 					foundField = field;
 				} else {
 					throw new IllegalArgumentException(String.format(	"Found multiple %s with value: %s on %s",
-																		VisualReference.class.getName(),
+																		ViewAttribute.class.getName(),
 																		visualId,
 																		clazz.getName()));
 				}
@@ -88,7 +88,7 @@ final class ViewSignalDispatcher implements MethodInterceptor {
 		}
 		if (foundField == null) {
 			throw new IllegalArgumentException(String.format(	"Found no %s with value: %s on %s",
-																VisualReference.class.getName(),
+																ViewAttribute.class.getName(),
 																visualId,
 																clazz.getName()));
 		}
@@ -103,8 +103,8 @@ final class ViewSignalDispatcher implements MethodInterceptor {
 														public Field call() throws Exception {
 															Field foundField = null;
 															for (final Field field : clazz.getDeclaredFields()) {
-																final VisualReference visualReference = field
-																		.getAnnotation(VisualReference.class);
+																final ViewAttribute visualReference = field
+																		.getAnnotation(ViewAttribute.class);
 																if ((visualReference != null) && (foundField != null)) {
 																	throw new IllegalArgumentException(String
 																			.format("Found multiple %s on %s",
@@ -134,15 +134,15 @@ final class ViewSignalDispatcher implements MethodInterceptor {
 													public Method call() throws Exception {
 														Method foundMethod = null;
 														for (final Method method : clazz.getDeclaredMethods()) {
-															final ViewSlot viewSlot = method
-																	.getAnnotation(ViewSlot.class);
+															final ViewAttributeSlot viewSlot = method
+																	.getAnnotation(ViewAttributeSlot.class);
 															if ((viewSlot != null) && viewSlot.value().equals(visualId)) {
 																if ((foundMethod == null)) {
 																	foundMethod = method;
 																} else if ((foundMethod != null)) {
 																	throw new IllegalArgumentException(String
 																			.format("Found multiple %s on %s",
-																					ViewSlot.class.getName(),
+																					ViewAttributeSlot.class.getName(),
 																					clazz.getName()));
 																}
 															}

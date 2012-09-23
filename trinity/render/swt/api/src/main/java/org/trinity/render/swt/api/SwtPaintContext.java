@@ -1,7 +1,6 @@
 package org.trinity.render.swt.api;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Widget;
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintContext;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;

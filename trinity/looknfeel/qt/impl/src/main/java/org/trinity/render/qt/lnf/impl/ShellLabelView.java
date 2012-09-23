@@ -4,7 +4,7 @@ import javax.inject.Named;
 
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.qt.api.QJPaintContext;
-import org.trinity.shellplugin.widget.api.mvvm.ViewSlot;
+import org.trinity.shellplugin.widget.api.binding.ViewAttributeSlot;
 
 import com.trolltech.qt.gui.QLabel;
 import com.trolltech.qt.gui.QWidget;
@@ -20,11 +20,11 @@ public class ShellLabelView extends ShellWidgetViewImpl {
 		return new QLabel(parentVisual);
 	}
 
-	@ViewSlot("text")
-	protected void setTextInstruction(	final PaintableSurfaceNode paintableSurfaceNode,
+	@ViewAttributeSlot("text")
+	protected void handleTextChanged(	final PaintableSurfaceNode paintableSurfaceNode,
 										final QJPaintContext paintContext,
 										final String text) {
-		final QLabel rootVisual = (QLabel) paintContext.getVisual();
-		rootVisual.setText(text);
+		final QLabel visual = (QLabel) paintContext.getVisual();
+		visual.setText(text);
 	}
 }

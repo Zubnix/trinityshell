@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.widget.api.mvvm;
+package org.trinity.shellplugin.widget.api.binding;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,9 +7,9 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface VisualReference {
+public @interface ViewAttribute {
 	/****************************************
-	 * The id of the visual.
+	 * The id of the {@link ViewAttribute}.
 	 * 
 	 * @return
 	 *************************************** 

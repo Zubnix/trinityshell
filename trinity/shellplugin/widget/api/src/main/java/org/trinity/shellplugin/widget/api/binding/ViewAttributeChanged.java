@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.widget.api.mvvm;
+package org.trinity.shellplugin.widget.api.binding;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /****************************************
- * Immediately after the invocation of the annotated method, the {@link VisualReference}s
- * with the same given {@link #value()} will be updated to reflect their field's
- * state. The most straightforward implementation is thus to place this
- * annotation on setter methods.
+ * Immediately after the invocation of the annotated method, the
+ * {@link ViewAttribute}s with the same given {@link #value()} will be updated
+ * to reflect their field's state. The most straightforward implementation is
+ * thus to place this annotation on setter methods.
  * <p>
  * Only declared fields are taken into consideration. Inherited fields will be
  * ignored.
@@ -21,9 +21,9 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
-public @interface ViewSignal {
+public @interface ViewAttributeChanged {
 	/****************************************
-	 * The id(s) of the visual(s) that will be updated.
+	 * The id(s) of the {@link ViewAttribute}(s) that will be updated.
 	 * 
 	 * @return
 	 *************************************** 
