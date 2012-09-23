@@ -13,7 +13,7 @@ package org.trinity.render.qt.impl.painter.instructions;
 
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
-import org.trinity.render.paintengine.qt.api.QJPaintContext;
+import org.trinity.render.qt.api.QJPaintContext;
 
 public class QJResizeInstruction implements PaintInstruction<Void, QJPaintContext> {
 
@@ -28,7 +28,7 @@ public class QJResizeInstruction implements PaintInstruction<Void, QJPaintContex
 	@Override
 	public Void call(	final PaintableSurfaceNode paintableSurfaceNode,
 						final QJPaintContext renderEngine) {
-		renderEngine.getRootVisual().resize(this.width,
+		renderEngine.getVisual().resize(this.width,
 										this.height);
 		return null;
 	}

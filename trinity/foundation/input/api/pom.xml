@@ -11,7 +11,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.trinity.foundation</groupId>
+			<groupId>org.trinity</groupId>
 			<artifactId>foundation.shared.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>

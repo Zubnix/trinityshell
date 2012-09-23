@@ -1,4 +1,4 @@
-package org.trinity.render.paintengine.qt.api;
+package org.trinity.render.qt.api;
 
 import java.util.concurrent.Future;
 

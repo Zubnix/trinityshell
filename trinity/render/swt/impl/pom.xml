@@ -17,5 +17,15 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<artifactId>render.swt.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.trinity</groupId>
+			<artifactId>shell.core.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity</groupId>
+			<artifactId>shellplugin.widget.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 </project>

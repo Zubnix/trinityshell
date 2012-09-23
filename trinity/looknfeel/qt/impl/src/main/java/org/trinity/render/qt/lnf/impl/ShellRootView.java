@@ -1,9 +1,9 @@
-package org.trinity.render.qtlnf.impl;
+package org.trinity.render.qt.lnf.impl;
 
 import javax.inject.Named;
 
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
-import org.trinity.render.paintengine.qt.api.QJPaintContext;
+import org.trinity.render.qt.api.QJPaintContext;
 
 import com.trolltech.qt.core.Qt.WindowType;
 import com.trolltech.qt.gui.QApplication;

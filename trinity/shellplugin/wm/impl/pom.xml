@@ -14,7 +14,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.trinity.shellplugin</groupId>
+			<groupId>org.trinity</groupId>
 			<artifactId>shellplugin.widget.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>

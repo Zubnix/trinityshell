@@ -1,12 +1,12 @@
-package org.trinity.render.qtlnf.impl;
+package org.trinity.render.qt.lnf.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
-import org.trinity.render.paintengine.qt.api.QJPaintContext;
-import org.trinity.render.paintengine.qt.api.QJRenderEngine;
+import org.trinity.render.qt.api.QJPaintContext;
+import org.trinity.render.qt.api.QJRenderEngine;
 import org.trinity.shellplugin.widget.api.mvvm.ViewSlotInvocationHandler;
 
 import com.google.inject.Inject;

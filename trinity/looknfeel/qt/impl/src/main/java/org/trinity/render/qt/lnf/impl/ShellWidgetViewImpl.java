@@ -1,4 +1,4 @@
-package org.trinity.render.qtlnf.impl;
+package org.trinity.render.qt.lnf.impl;
 
 import java.util.concurrent.Future;
 
@@ -6,7 +6,7 @@ import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.foundation.render.api.Painter;
-import org.trinity.render.paintengine.qt.api.QJPaintContext;
+import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.shell.api.widget.ShellWidgetView;
 
 import com.trolltech.qt.core.Qt.WidgetAttribute;
@@ -90,7 +90,7 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 
 	protected void destroyInstruction(	final PaintableSurfaceNode paintableSurfaceNode,
 										final QJPaintContext paintContext) {
-		final QWidget visual = paintContext.getRootVisual();
+		final QWidget visual = paintContext.getVisual();
 		visual.close();
 		paintContext.evictVisual();
 	}
@@ -113,7 +113,7 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 
 	protected DisplaySurface getDisplaySurfaceInstruction(	final PaintableSurfaceNode paintableSurfaceNode,
 															final QJPaintContext paintContext) {
-		final QWidget visual = paintContext.getRootVisual();
+		final QWidget visual = paintContext.getVisual();
 		final DisplaySurface displaySurface = paintContext.getDisplaySurface(visual);
 		return displaySurface;
 	}

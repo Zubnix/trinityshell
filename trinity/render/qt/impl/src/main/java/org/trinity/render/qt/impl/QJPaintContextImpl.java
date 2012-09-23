@@ -5,7 +5,7 @@ import org.trinity.foundation.display.api.DisplaySurfaceFactory;
 import org.trinity.foundation.display.api.DisplaySurfaceHandle;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
-import org.trinity.render.paintengine.qt.api.QJPaintContext;
+import org.trinity.render.qt.api.QJPaintContext;
 
 import com.trolltech.qt.gui.QWidget;
 
@@ -27,7 +27,7 @@ public class QJPaintContextImpl implements QJPaintContext {
 	}
 
 	@Override
-	public QWidget getRootVisual() {
+	public QWidget getVisual() {
 		return this.visual;
 	}
 

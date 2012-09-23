@@ -55,5 +55,10 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<artifactId>${swt.project.artifactId}</artifactId>
 			<version>${swt.project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.trinity</groupId>
+			<artifactId>foundation.render.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 </project>

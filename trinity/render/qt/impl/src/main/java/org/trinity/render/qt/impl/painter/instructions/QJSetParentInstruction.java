@@ -13,7 +13,7 @@ package org.trinity.render.qt.impl.painter.instructions;
 
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
-import org.trinity.render.paintengine.qt.api.QJPaintContext;
+import org.trinity.render.qt.api.QJPaintContext;
 
 public class QJSetParentInstruction implements PaintInstruction<Void, QJPaintContext> {
 
@@ -30,8 +30,8 @@ public class QJSetParentInstruction implements PaintInstruction<Void, QJPaintCon
 	@Override
 	public Void call(	final PaintableSurfaceNode paintableSurfaceNode,
 						final QJPaintContext renderEngine) {
-		renderEngine.getRootVisual().setParent(renderEngine.queryVisual(this.parent));
-		renderEngine.getRootVisual().move(	this.x,
+		renderEngine.getVisual().setParent(renderEngine.queryVisual(this.parent));
+		renderEngine.getVisual().move(	this.x,
 										this.y);
 		return null;
 	}

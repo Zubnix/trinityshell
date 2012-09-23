@@ -1,9 +1,9 @@
-package org.trinity.render.qtlnf.impl;
+package org.trinity.render.qt.lnf.impl;
 
 import javax.inject.Named;
 
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
-import org.trinity.render.paintengine.qt.api.QJPaintContext;
+import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.shellplugin.widget.api.mvvm.ViewSlot;
 
 import com.trolltech.qt.gui.QLabel;
@@ -24,7 +24,7 @@ public class ShellLabelView extends ShellWidgetViewImpl {
 	protected void setTextInstruction(	final PaintableSurfaceNode paintableSurfaceNode,
 										final QJPaintContext paintContext,
 										final String text) {
-		final QLabel rootVisual = (QLabel) paintContext.getRootVisual();
+		final QLabel rootVisual = (QLabel) paintContext.getVisual();
 		rootVisual.setText(text);
 	}
 }
