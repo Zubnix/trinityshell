@@ -184,8 +184,7 @@ public class QJPainter implements Painter {
 		this.qFRenderEngine.invoke(	this.paintableSurfaceNode,
 									new PaintInstruction<Void, QJPaintContext>() {
 										@Override
-										public Void call(	final PaintableSurfaceNode paintableSurfaceNode,
-															final QJPaintContext paintContext) {
+										public Void call(final QJPaintContext paintContext) {
 											// ???
 											return null;
 										}
@@ -211,8 +210,7 @@ public class QJPainter implements Painter {
 		this.qFRenderEngine.invoke(	this.paintableSurfaceNode,
 									new PaintInstruction<Void, QJPaintContext>() {
 										@Override
-										public Void call(	final PaintableSurfaceNode paintableSurfaceNode,
-															final QJPaintContext paintContext) {
+										public Void call(final QJPaintContext paintContext) {
 											// ???
 											return null;
 										}
@@ -226,8 +224,7 @@ public class QJPainter implements Painter {
 		this.qFRenderEngine.invoke(	this.paintableSurfaceNode,
 									new PaintInstruction<Void, QJPaintContext>() {
 										@Override
-										public Void call(	final PaintableSurfaceNode paintableSurfaceNode,
-															final QJPaintContext paintContext) {
+										public Void call(final QJPaintContext paintContext) {
 											// ???
 											return null;
 										}
@@ -240,8 +237,7 @@ public class QJPainter implements Painter {
 		this.qFRenderEngine.invoke(	this.paintableSurfaceNode,
 									new PaintInstruction<Void, QJPaintContext>() {
 										@Override
-										public Void call(	final PaintableSurfaceNode paintableSurfaceNode,
-															final QJPaintContext paintContext) {
+										public Void call(final QJPaintContext paintContext) {
 											// ???
 											return null;
 										}

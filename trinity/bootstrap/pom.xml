@@ -41,32 +41,32 @@
 
 		<!-- render -->
 		<!-- qt-jambi -->
-		<!-- <dependency> <groupId>org.trinity</groupId> <artifactId>render.qt.api</artifactId> 
-			<version>${project.version}</version> </dependency> <dependency> <groupId>org.trinity</groupId> 
-			<artifactId>render.qt.impl</artifactId> <version>${project.version}</version> 
-			</dependency> -->
+		<dependency>
+			<groupId>org.trinity</groupId>
+			<artifactId>render.qt.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.trinity</groupId>
+			<artifactId>render.qt.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- swt -->
-		<dependency>
-			<groupId>org.trinity</groupId>
-			<artifactId>render.swt.api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.trinity</groupId>
-			<artifactId>render.swt.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+		<!-- <dependency> <groupId>org.trinity</groupId> <artifactId>render.swt.api</artifactId> 
+			<version>${project.version}</version> </dependency> <dependency> <groupId>org.trinity</groupId> 
+			<artifactId>render.swt.impl</artifactId> <version>${project.version}</version> 
+			</dependency> -->
 
 		<!-- render look and feel -->
 		<!-- qt-jambi -->
-		<!-- <dependency> <groupId>org.trinity</groupId> <artifactId>looknfeel.qt.impl</artifactId> 
-			<version>${project.version}</version> </dependency> -->
-		<!-- swt -->
 		<dependency>
 			<groupId>org.trinity</groupId>
-			<artifactId>looknfeel.swt.impl</artifactId>
+			<artifactId>looknfeel.qt.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- swt -->
+		<!-- <dependency> <groupId>org.trinity</groupId> <artifactId>looknfeel.swt.impl</artifactId> 
+			<version>${project.version}</version> </dependency> -->
 
 		<!-- shell -->
 		<dependency>

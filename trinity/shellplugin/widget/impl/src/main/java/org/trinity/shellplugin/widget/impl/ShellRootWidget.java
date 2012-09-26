@@ -49,7 +49,7 @@ public class ShellRootWidget extends BaseShellWidget {
 					final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 					final PainterFactory painterFactory,
 					@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
-					@Named("shellRootWidgetView") final ShellWidgetView view) {
+					@Named("ShellRootView") final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,

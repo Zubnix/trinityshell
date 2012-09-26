@@ -33,14 +33,13 @@ public class QJTranslateCoordinatesCalculation implements PaintInstruction<Coord
 	}
 
 	@Override
-	public Coordinate call(	final PaintableSurfaceNode paintableSurfaceNode,
-							final QJPaintContext renderEngine) {
-		final QWidget sourcePaintPeer = renderEngine.queryVisual(this.source);
-		final QWidget targetPaintPeer = renderEngine.getVisual();
+	public Coordinate call(final QJPaintContext paintContext) {
+		final QWidget sourceVisual = paintContext.getVisual(this.source);
+		final QWidget targetVisual = paintContext.getVisual(paintContext.getPaintableSurfaceNode());
 
-		final QPoint translatedPoint = sourcePaintPeer.mapTo(	targetPaintPeer,
-																new QPoint(	this.sourceX,
-																			this.sourceY));
+		final QPoint translatedPoint = sourceVisual.mapTo(	targetVisual,
+															new QPoint(	this.sourceX,
+																		this.sourceY));
 		final Coordinate coordinate = new Coordinate(	translatedPoint.x(),
 														translatedPoint.y());
 		return coordinate;

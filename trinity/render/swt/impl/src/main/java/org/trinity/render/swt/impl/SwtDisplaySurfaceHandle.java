@@ -6,7 +6,6 @@ import java.util.concurrent.FutureTask;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Widget;
 import org.trinity.foundation.display.api.DisplaySurfaceHandle;
 
 public class SwtDisplaySurfaceHandle implements DisplaySurfaceHandle {

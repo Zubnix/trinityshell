@@ -1,12 +1,12 @@
-package org.trinity.render.qt.lnf.impl;
+package org.trinity.render.swt.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
-import org.trinity.render.qt.api.QJPaintContext;
-import org.trinity.render.qt.api.QJRenderEngine;
+import org.trinity.render.swt.api.SwtPaintContext;
+import org.trinity.render.swt.api.SwtRenderEngine;
 import org.trinity.shellplugin.widget.api.binding.ViewAttributeSlotInvocationHandler;
 
 import com.google.inject.Inject;
@@ -16,26 +16,27 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton
-public class ViewSlotInvocationHandlerImpl implements ViewAttributeSlotInvocationHandler {
+public class ViewAttributeSlotInvocationHandlerImpl implements ViewAttributeSlotInvocationHandler {
 
-	private final QJRenderEngine qjRenderEngine;
+	private final SwtRenderEngine renderEngine;
 
 	@Inject
-	ViewSlotInvocationHandlerImpl(final QJRenderEngine qjRenderEngine) {
-		this.qjRenderEngine = qjRenderEngine;
+	ViewAttributeSlotInvocationHandlerImpl(final SwtRenderEngine qjRenderEngine) {
+		this.renderEngine = qjRenderEngine;
 	}
 
 	@Override
-	public void invoke(	PaintableSurfaceNode paintableSurfaceNode,
+	public void invoke(	final PaintableSurfaceNode paintableSurfaceNode,
 						final Object view,
 						final Method viewAttributeSlot,
 						final Object viewAttribute) {
-		this.qjRenderEngine.invoke(	paintableSurfaceNode,
-									new PaintInstruction<Void, QJPaintContext>() {
+		this.renderEngine.invoke(	paintableSurfaceNode,
+									new PaintInstruction<Void, SwtPaintContext>() {
 										@Override
-										public Void call(final QJPaintContext paintContext) {
+										public Void call(final SwtPaintContext paintContext) {
 											try {
 												viewAttributeSlot.invoke(	view,
+																			paintableSurfaceNode,
 																			paintContext,
 																			viewAttribute);
 												return null;
@@ -45,7 +46,5 @@ public class ViewSlotInvocationHandlerImpl implements ViewAttributeSlotInvocatio
 											}
 										};
 									});
-
 	}
-
 }

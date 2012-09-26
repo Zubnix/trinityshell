@@ -7,16 +7,14 @@ import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import com.trolltech.qt.gui.QWidget;
 
 public interface QJPaintContext extends PaintContext {
-	QWidget getVisual();
 
 	void setVisual(QWidget qWidget);
 
-	void evictVisual();
+	void disposeVisual();
 
-	QWidget queryVisual(PaintableSurfaceNode paintableSurfaceNode);
+	QWidget getVisual(PaintableSurfaceNode paintableSurfaceNode);
 
 	DisplaySurface getDisplaySurface(QWidget visual);
 
-	void syncVisualGeometryToSurfaceNode(	QWidget visual,
-									PaintableSurfaceNode paintableSurfaceNode);
+	void syncVisualGeometryToSurfaceNode(QWidget visual);
 }

@@ -12,15 +12,13 @@
 package org.trinity.render.qt.impl.painter.instructions;
 
 import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.qt.api.QJPaintContext;
 
 public class QJGiveFocusInstruction implements PaintInstruction<Void, QJPaintContext> {
 
 	@Override
-	public Void call(	final PaintableSurfaceNode paintableSurfaceNode,
-						final QJPaintContext renderEngine) {
-		renderEngine.getVisual().setFocus();
+	public Void call(final QJPaintContext paintContext) {
+		paintContext.getVisual(paintContext.getPaintableSurfaceNode()).setFocus();
 		return null;
 	}
 }

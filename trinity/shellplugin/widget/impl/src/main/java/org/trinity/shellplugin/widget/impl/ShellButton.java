@@ -40,7 +40,7 @@ public class ShellButton extends BaseShellWidget {
 							final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 							final PainterFactory painterFactory,
 							@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
-							final ShellWidgetView view) {
+							@Named("ShellButtonView") final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,

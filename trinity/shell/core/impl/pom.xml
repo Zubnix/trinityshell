@@ -17,6 +17,5 @@
 		<module>surface</module>
 		<module>node</module>
 		<module>input</module>
-		<module>widget</module>
 	</modules>
 </project>

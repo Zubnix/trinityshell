@@ -35,7 +35,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 /**
  * An <code>AbstractShellSurface</code> with a <code>PaintableSurfaceNode</code>
  * implementation. A <code>BaseShellWidget</code> is ment to provide a visual
- * interface for the user so it can manipulate the hyperdrive library at
+ * interface for the user so it can manipulate the shell core library at
  * runtime.
  * <p>
  * A <code>BaseShellWidget</code> is manipulated through a {@link Painter} that

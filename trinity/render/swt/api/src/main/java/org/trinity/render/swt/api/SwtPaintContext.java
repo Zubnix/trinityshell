@@ -1,22 +1,20 @@
 package org.trinity.render.swt.api;
 
-import org.eclipse.swt.widgets.Composite;
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintContext;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 
 public interface SwtPaintContext extends PaintContext {
 
-	Composite getVisual();
+	Visual getVisual();
 
-	void setVisual(Composite qWidget);
+	void setVisual(Visual visual);
 
 	void evictVisual();
 
-	Composite queryVisual(PaintableSurfaceNode paintableSurfaceNode);
+	Visual queryVisual(PaintableSurfaceNode paintableSurfaceNode);
 
-	DisplaySurface getDisplaySurface(Composite visual);
+	DisplaySurface getDisplaySurface(Visual visual);
 
-	void syncVisualGeometryToSurfaceNode(	Composite visual,
-											PaintableSurfaceNode paintableSurfaceNode);
+	void syncVisualGeometryToSurfaceNode(Visual visual);
 }

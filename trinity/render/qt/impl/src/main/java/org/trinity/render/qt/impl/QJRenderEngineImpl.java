@@ -63,9 +63,9 @@ public class QJRenderEngineImpl implements QJRenderEngine {
 	private final EventBus displayEventBus;
 
 	@Inject
-	QJRenderEngineImpl(final QJRenderEventConverter renderEventConverter,
-			final DisplaySurfaceFactory displaySurfaceFactory,
-			@Named("displayEventBus") final EventBus displayEventBus) {
+	QJRenderEngineImpl(	final QJRenderEventConverter renderEventConverter,
+						final DisplaySurfaceFactory displaySurfaceFactory,
+						@Named("displayEventBus") final EventBus displayEventBus) {
 		this.renderEventConverter = renderEventConverter;
 		this.displaySurfaceFactory = displaySurfaceFactory;
 		this.displayEventBus = displayEventBus;
@@ -76,9 +76,8 @@ public class QJRenderEngineImpl implements QJRenderEngine {
 	}
 
 	@Override
-	public <R> Future<R> invoke(
-			final PaintableSurfaceNode paintableSurfaceNode,
-			final PaintInstruction<R, QJPaintContext> paintInstruction) {
+	public <R> Future<R> invoke(final PaintableSurfaceNode paintableSurfaceNode,
+								final PaintInstruction<R, QJPaintContext> paintInstruction) {
 		// make sure qapplication.initialize() is finished before submitting any
 		// runnables, else they get lost.
 		while (QCoreApplication.startingUp()) {
@@ -96,12 +95,10 @@ public class QJRenderEngineImpl implements QJRenderEngine {
 		final FutureTask<R> futureTask = new FutureTask<R>(new Callable<R>() {
 			@Override
 			public R call() throws Exception {
-				final QWidget visual = getVisual(paintableSurfaceNode);
-				final QJPaintContext qjPaintContext = new QJPaintContextImpl(
-						paintableSurfaceNode, visual, QJRenderEngineImpl.this,
-						QJRenderEngineImpl.this.displaySurfaceFactory);
-				final R result = paintInstruction.call(paintableSurfaceNode,
-						qjPaintContext);
+				final QJPaintContext qjPaintContext = new QJPaintContextImpl(	paintableSurfaceNode,
+																				QJRenderEngineImpl.this,
+																				QJRenderEngineImpl.this.displaySurfaceFactory);
+				final R result = paintInstruction.call(qjPaintContext);
 				return result;
 			}
 		});
@@ -113,12 +110,15 @@ public class QJRenderEngineImpl implements QJRenderEngine {
 		return this.paintableToPaintPeer.get(paintableSurfaceNode);
 	}
 
-	public void putVisual(final DisplayEventSource displayEventSource,
-			final PaintableSurfaceNode paintableSurfaceNode,
-			final QWidget visual) {
-		visual.installEventFilter(new QJRenderEventFilter(this.displayEventBus,
-				this.renderEventConverter, displayEventSource, visual));
-		this.paintableToPaintPeer.put(paintableSurfaceNode, visual);
+	public void putVisual(	final DisplayEventSource displayEventSource,
+							final PaintableSurfaceNode paintableSurfaceNode,
+							final QWidget visual) {
+		visual.installEventFilter(new QJRenderEventFilter(	this.displayEventBus,
+															this.renderEventConverter,
+															displayEventSource,
+															visual));
+		this.paintableToPaintPeer.put(	paintableSurfaceNode,
+										visual);
 	}
 
 }

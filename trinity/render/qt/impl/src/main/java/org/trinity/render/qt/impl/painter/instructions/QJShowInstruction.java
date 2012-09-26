@@ -12,15 +12,13 @@
 package org.trinity.render.qt.impl.painter.instructions;
 
 import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.qt.api.QJPaintContext;
 
 public class QJShowInstruction implements PaintInstruction<Void, QJPaintContext> {
 
 	@Override
-	public Void call(	final PaintableSurfaceNode paintableSurfaceNode,
-						final QJPaintContext paintContext) {
-		paintContext.getVisual().show();
+	public Void call(final QJPaintContext paintContext) {
+		paintContext.getVisual(paintContext.getPaintableSurfaceNode()).show();
 		return null;
 	}
 }

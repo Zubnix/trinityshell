@@ -40,8 +40,8 @@ import de.devsurf.injection.guice.annotations.Bind;
  * <code>ShellClientSurface</code>s will present the user with a dialog to
  * confirm if the <code>ShellClientSurface</code> should shut down.
  * <p>
- * If the <code>AbstractShellSurface</code> is a <code>BaseShellWidget</code>, the
- * <code>AbstractShellSurface</code> will simply be destroyed or other as
+ * If the <code>AbstractShellSurface</code> is a <code>BaseShellWidget</code>,
+ * the <code>AbstractShellSurface</code> will simply be destroyed or other as
  * defined by the <code>ShellLayoutManager</code> of the
  * <code>BaseShellWidget</code>.
  * 
@@ -60,7 +60,7 @@ public class ShellCloseButton extends ShellButton {
 								final PainterFactory painterFactory,
 								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								final DisplayProtocols desktopProtocol,
-								final ShellWidgetView view) {
+								@Named("ShellButtonView") final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
