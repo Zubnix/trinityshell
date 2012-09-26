@@ -2,6 +2,7 @@ package org.trinity.shellplugin.widget.api.binding;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
@@ -28,28 +29,28 @@ final class ViewAttributeSignalDispatcher implements MethodInterceptor {
 		final Object invocationResult = invocation.proceed();
 
 		final Object thisObj = invocation.getThis();
-		final Class<?> thisObjClass = thisObj.getClass();
+		final Class<?> thisObjClass = ((Method) invocation.getStaticPart()).getDeclaringClass();
 
 		final ViewAttributeChanged viewSignal = invocation.getMethod().getAnnotation(ViewAttributeChanged.class);
 		final String[] viewAttributeIds = viewSignal.value();
 
 		final Field viewField = getViewReferenceField(thisObjClass);
+		viewField.setAccessible(true);
 		final Object view = viewField.get(thisObj);
+		viewField.setAccessible(false);
 
 		for (final String viewAttributeId : viewAttributeIds) {
 			final Field field = this.visualReferenceFieldBindings.get(	thisObjClass,
 																		new Callable<Cache<String, Field>>() {
 																			@Override
-																			public Cache<String, Field> call()
-																					throws Exception {
+																			public Cache<String, Field> call() {
 																				return CacheBuilder.newBuilder()
 																						.build();
 																			}
 																		}).get(	viewAttributeId,
 																				new Callable<Field>() {
 																					@Override
-																					public Field call()
-																							throws Exception {
+																					public Field call() {
 																						return getVisualReferenceField(	thisObjClass,
 																														viewAttributeId);
 																					}
@@ -61,7 +62,9 @@ final class ViewAttributeSignalDispatcher implements MethodInterceptor {
 				continue;
 			}
 
+			field.setAccessible(true);
 			final Object argument = field.get(thisObj);
+			field.setAccessible(false);
 			this.viewSlotInvocationHandler.invoke(	(PaintableSurfaceNode) thisObj,
 													view,
 													viewSlotMethod,
@@ -100,17 +103,18 @@ final class ViewAttributeSignalDispatcher implements MethodInterceptor {
 		return this.viewReferenceFieldBindings.get(	clazz,
 													new Callable<Field>() {
 														@Override
-														public Field call() throws Exception {
+														public Field call() {
 															Field foundField = null;
-															for (final Field field : clazz.getDeclaredFields()) {
-																final ViewAttribute visualReference = field
-																		.getAnnotation(ViewAttribute.class);
-																if ((visualReference != null) && (foundField != null)) {
+															final Field[] declaredFields = clazz.getDeclaredFields();
+															for (final Field field : declaredFields) {
+																final ViewReference viewReference = field
+																		.getAnnotation(ViewReference.class);
+																if ((viewReference != null) && (foundField != null)) {
 																	throw new IllegalArgumentException(String
 																			.format("Found multiple %s on %s",
 																					ViewReference.class.getName(),
 																					clazz.getName()));
-																} else if (visualReference != null) {
+																} else if (viewReference != null) {
 																	foundField = field;
 																}
 															}
@@ -131,12 +135,20 @@ final class ViewAttributeSignalDispatcher implements MethodInterceptor {
 		return this.viewSlotMethodBindings.get(	clazz,
 												new Callable<Method>() {
 													@Override
-													public Method call() throws Exception {
+													public Method call() {
 														Method foundMethod = null;
+
 														for (final Method method : clazz.getDeclaredMethods()) {
+
 															final ViewAttributeSlot viewSlot = method
 																	.getAnnotation(ViewAttributeSlot.class);
-															if ((viewSlot != null) && viewSlot.value().equals(visualId)) {
+
+															if (viewSlot == null) {
+																continue;
+															}
+
+															final String[] values = viewSlot.value();
+															if (Arrays.asList(values).contains(visualId)) {
 																if ((foundMethod == null)) {
 																	foundMethod = method;
 																} else if ((foundMethod != null)) {

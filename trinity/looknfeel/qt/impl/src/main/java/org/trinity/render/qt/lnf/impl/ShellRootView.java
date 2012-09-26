@@ -17,7 +17,6 @@ public class ShellRootView extends ShellWidgetViewImpl {
 	protected QWidget createVisual(final QWidget parentVisual) {
 		final QWidget visual = new QFrame(	QApplication.desktop(),
 											WindowType.X11BypassWindowManagerHint);
-		visual.setStyleSheet("background-color:grey;");
 		return visual;
 	}
 }

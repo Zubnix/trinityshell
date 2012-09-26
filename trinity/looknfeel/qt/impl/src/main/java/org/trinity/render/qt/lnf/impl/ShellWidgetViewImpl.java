@@ -11,6 +11,7 @@ import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.shell.api.widget.ShellWidgetView;
+import org.trinity.shellplugin.widget.api.binding.ViewAttributeSlot;
 
 import com.google.common.io.CharStreams;
 import com.trolltech.qt.core.Qt.WidgetAttribute;
@@ -64,7 +65,10 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 		final QWidget visual = createVisual(parentVisual);
 
 		try {
-			visual.setObjectName(getClass().getSimpleName());
+			if (visual.objectName() == null) {
+				setName(paintContext,
+						getClass().getSimpleName());
+			}
 			visual.setStyleSheet(getStyleSheet());
 		} catch (final IOException e) {
 			// TODO Auto-generated catch block
@@ -78,11 +82,19 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 							true);
 
 		paintContext.syncVisualGeometryToSurfaceNode(visual);
+
+		setAllViewAttributes();
 		paintContext.setVisual(visual);
+	}
+
+	private void setAllViewAttributes() {
+		// TODO invoke all @viewattributeslots
+
 	}
 
 	protected QWidget createVisual(final QWidget parentVisual) {
 		final QWidget visual = new QFrame(parentVisual);
+
 		return visual;
 	}
 
@@ -136,5 +148,15 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 		final QWidget visual = paintContext.getVisual(paintContext.getPaintableSurfaceNode());
 		final DisplaySurface displaySurface = paintContext.getDisplaySurface(visual);
 		return displaySurface;
+	}
+
+	@ViewAttributeSlot("name")
+	public void setName(final QJPaintContext paintContext,
+						final String name) {
+		final QWidget visual = paintContext.getVisual(paintContext.getPaintableSurfaceNode());
+		if (visual == null) {
+			return;
+		}
+		visual.setObjectName(name);
 	}
 }

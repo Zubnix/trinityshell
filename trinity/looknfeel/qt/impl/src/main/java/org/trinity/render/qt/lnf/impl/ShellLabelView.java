@@ -25,4 +25,11 @@ public class ShellLabelView extends ShellWidgetViewImpl {
 		final QLabel visual = (QLabel) paintContext.getVisual(paintContext.getPaintableSurfaceNode());
 		visual.setText(text);
 	}
+
+	@Override
+	@ViewAttributeSlot("name")
+	public void setName(	final QJPaintContext paintContext,
+									final String name) {
+		paintContext.getVisual(paintContext.getPaintableSurfaceNode()).setObjectName(name);
+	}
 }
