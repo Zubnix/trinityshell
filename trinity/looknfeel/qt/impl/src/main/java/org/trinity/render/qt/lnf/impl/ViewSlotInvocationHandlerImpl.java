@@ -7,6 +7,7 @@ import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.render.qt.api.QJRenderEngine;
+import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
 import org.trinity.shellplugin.widget.api.binding.ViewAttributeSlotInvocationHandler;
 
 import com.google.inject.Inject;
@@ -26,26 +27,61 @@ public class ViewSlotInvocationHandlerImpl implements ViewAttributeSlotInvocatio
 	}
 
 	@Override
-	public void invoke(	PaintableSurfaceNode paintableSurfaceNode,
-						final Object view,
-						final Method viewAttributeSlot,
-						final Object viewAttribute) {
+	public void invokeSlot(	final PaintableSurfaceNode paintableSurfaceNode,
+							final ViewAttribute viewAttribute,
+							final Object view,
+							final Method viewAttributeSlot,
+							final Object viewAttributeValue) {
 		this.qjRenderEngine.invoke(	paintableSurfaceNode,
 									new PaintInstruction<Void, QJPaintContext>() {
 										@Override
 										public Void call(final QJPaintContext paintContext) {
-											try {
-												viewAttributeSlot.invoke(	view,
-																			paintContext,
-																			viewAttribute);
-												return null;
-											} catch (IllegalAccessException | IllegalArgumentException
-													| InvocationTargetException e) {
-												throw new Error(e);
-											}
+											invokeViewSlot(	paintContext,
+															viewAttribute,
+															view,
+															viewAttributeSlot,
+															viewAttributeValue);
+											return null;
+
 										};
 									});
-
 	}
 
+	private void invokeViewSlot(final QJPaintContext paintContext,
+								final ViewAttribute viewAttribute,
+								final Object view,
+								final Method viewAttributeSlot,
+								final Object viewAttributeValue) {
+		final Class<?>[] parameterTypes = viewAttributeSlot.getParameterTypes();
+		final Object[] parameters = new Object[parameterTypes.length];
+		for (int i = 0; i < parameters.length; i++) {
+			final Class<?> parameterType = parameterTypes[i];
+
+			if (parameterType.isAssignableFrom(QJPaintContext.class)) {
+				parameters[i] = paintContext;
+				continue;
+			}
+
+			if (parameterType.isAssignableFrom(ViewAttribute.class)) {
+				parameters[i] = viewAttribute;
+				continue;
+			}
+
+			if (parameterType.isAssignableFrom(viewAttributeValue.getClass())) {
+				parameters[i] = viewAttribute;
+				continue;
+			}
+		}
+
+		try {
+			viewAttributeSlot.invoke(	view,
+										parameters);
+		} catch (final IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} catch (final IllegalArgumentException e) {
+			throw new RuntimeException(e);
+		} catch (final InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

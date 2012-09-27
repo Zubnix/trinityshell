@@ -16,11 +16,7 @@ import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
-import org.trinity.shell.api.widget.ShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
-import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
-import org.trinity.shellplugin.widget.api.binding.ViewAttributeChanged;
-import org.trinity.shellplugin.widget.api.binding.ViewReference;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -48,12 +44,6 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class ShellRootWidget extends BaseShellWidget {
 
-	@ViewAttribute("name")
-	private String name;
-
-	@ViewReference
-	private final ShellWidgetView view;
-
 	@Inject
 	ShellRootWidget(final EventBus eventBus,
 					final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
@@ -65,23 +55,10 @@ public class ShellRootWidget extends BaseShellWidget {
 				painterFactory,
 				shellNodeExecutor,
 				view);
-		this.view = view;
 	}
 
 	@Override
 	public ShellLayoutManager getParentLayoutManager() {
 		return getLayoutManager();
-	}
-
-	@Override
-	public void init(final ShellWidget paintableParent) {
-		// TODO Auto-generated method stub
-		super.init(paintableParent);
-		setName("blarg");
-	}
-
-	@ViewAttributeChanged("name")
-	public void setName(final String name) {
-		this.name = name;
 	}
 }

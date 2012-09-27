@@ -11,18 +11,15 @@ import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.shell.api.widget.ShellWidgetView;
+import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
 import org.trinity.shellplugin.widget.api.binding.ViewAttributeSlot;
 
 import com.google.common.io.CharStreams;
 import com.trolltech.qt.core.Qt.WidgetAttribute;
 import com.trolltech.qt.core.Qt.WindowType;
-import com.trolltech.qt.gui.QFrame;
 import com.trolltech.qt.gui.QWidget;
 
-import de.devsurf.injection.guice.annotations.Bind;
-
-@Bind
-public class ShellWidgetViewImpl implements ShellWidgetView {
+public abstract class AbstractShellWidgetView implements ShellWidgetView {
 
 	private Painter painter;
 
@@ -65,10 +62,6 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 		final QWidget visual = createVisual(parentVisual);
 
 		try {
-			if (visual.objectName() == null) {
-				setName(paintContext,
-						getClass().getSimpleName());
-			}
 			visual.setStyleSheet(getStyleSheet());
 		} catch (final IOException e) {
 			// TODO Auto-generated catch block
@@ -92,14 +85,10 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 
 	}
 
-	protected QWidget createVisual(final QWidget parentVisual) {
-		final QWidget visual = new QFrame(parentVisual);
-
-		return visual;
-	}
+	protected abstract QWidget createVisual(final QWidget parentVisual);
 
 	protected String getStyleSheet() throws IOException {
-		final Class<? extends ShellWidgetViewImpl> viewClass = getClass();
+		final Class<? extends AbstractShellWidgetView> viewClass = getClass();
 		final String className = viewClass.getName();
 		final InputStream in = viewClass.getClassLoader().getResourceAsStream(className + ".qss");
 		final InputStreamReader inReader = new InputStreamReader(	in,
@@ -119,6 +108,7 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 			@Override
 			public Void call(final QJPaintContext paintContext) {
 				destroyInstruction(paintContext);
+
 				return null;
 			}
 		});
@@ -150,13 +140,16 @@ public class ShellWidgetViewImpl implements ShellWidgetView {
 		return displaySurface;
 	}
 
-	@ViewAttributeSlot("name")
-	public void setName(final QJPaintContext paintContext,
-						final String name) {
+	@ViewAttributeSlot("property")
+	public void setProperty(final ViewAttribute viewAttribute,
+							final QJPaintContext paintContext,
+							final String propVal) {
 		final QWidget visual = paintContext.getVisual(paintContext.getPaintableSurfaceNode());
+
 		if (visual == null) {
 			return;
 		}
-		visual.setObjectName(name);
+		visual.setProperty(	viewAttribute.id(),
+							propVal);
 	}
 }

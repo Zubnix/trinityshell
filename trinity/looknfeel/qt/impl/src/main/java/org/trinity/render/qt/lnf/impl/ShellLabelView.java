@@ -12,7 +12,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Named("ShellLabelView")
-public class ShellLabelView extends ShellWidgetViewImpl {
+public class ShellLabelView extends AbstractShellWidgetView {
 
 	@Override
 	protected QWidget createVisual(final QWidget parentVisual) {
@@ -24,12 +24,5 @@ public class ShellLabelView extends ShellWidgetViewImpl {
 										final String text) {
 		final QLabel visual = (QLabel) paintContext.getVisual(paintContext.getPaintableSurfaceNode());
 		visual.setText(text);
-	}
-
-	@Override
-	@ViewAttributeSlot("name")
-	public void setName(	final QJPaintContext paintContext,
-									final String name) {
-		paintContext.getVisual(paintContext.getPaintableSurfaceNode()).setObjectName(name);
 	}
 }

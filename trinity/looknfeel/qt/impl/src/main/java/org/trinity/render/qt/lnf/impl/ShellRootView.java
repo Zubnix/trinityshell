@@ -11,7 +11,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Named("ShellRootView")
-public class ShellRootView extends ShellWidgetViewImpl {
+public class ShellRootView extends AbstractShellWidgetView {
 
 	@Override
 	protected QWidget createVisual(final QWidget parentVisual) {
