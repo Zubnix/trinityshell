@@ -51,7 +51,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  */
 @Bind
 @Singleton
-public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
+public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatcher {
 
 	// TODO this is basically the same mechanism as used in EventBus. Find a way
 	// to seperate and uniform this mechanism.
@@ -62,9 +62,9 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 	private final EventBus shellEventBus;
 
 	@Inject
-	ShellEventDispatcherImpl(	@Named("shellEventBus") final EventBus shellEventBus,
-								final ShellClientSurfaceFactory shellClientSurfaceFactory,
-								final DisplayServer displayServer) {
+	ShellDisplayEventDispatcherImpl(@Named("shellEventBus") final EventBus shellEventBus,
+									final ShellClientSurfaceFactory shellClientSurfaceFactory,
+									final DisplayServer displayServer) {
 		this.shellEventBus = shellEventBus;
 		this.shellClientSurfaceFactory = shellClientSurfaceFactory;
 		this.displayServer = displayServer;
@@ -94,7 +94,7 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 		this.shellEventBus.post(displayEvent);
 
 		synchronized (this.eventRecipients) {
-			final List<EventBus> eventBusses = this.eventRecipients.get(displayEvent.getEventSource());
+			final List<EventBus> eventBusses = this.eventRecipients.get(displayEvent.getDisplayEventSource());
 			if (eventBusses == null) {
 				return;
 			}
@@ -102,9 +102,8 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 			for (final EventBus eventBus : eventBusses) {
 
 				// TODO logging
-				System.err.println(String.format(	"Dispatching display event: %s to event bus: %s",
-													displayEvent,
-													eventBus));
+				System.err.println(String.format(	"Dispatching: %s",
+													displayEvent));
 
 				eventBus.post(displayEvent);
 			}
@@ -113,7 +112,7 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 
 	private void newShellSurfaceClientIfNeeded(final DisplayEvent event) {
 		synchronized (this.eventRecipients) {
-			final DisplayEventSource displayEventSource = event.getEventSource();
+			final DisplayEventSource displayEventSource = event.getDisplayEventSource();
 			if (!this.eventRecipients.containsKey(displayEventSource) && (displayEventSource instanceof DisplaySurface)) {
 				createClientShellSurface((DisplaySurface) displayEventSource);
 			}
@@ -154,6 +153,7 @@ public class ShellEventDispatcherImpl implements ShellDisplayEventDispatcher {
 		}
 	}
 
+	@Override
 	public void unregisterAllDisplayEventSourceListeners(final DisplayEventSource displayEventSource) {
 		synchronized (this.eventRecipients) {
 			this.eventRecipients.remove(displayEventSource);

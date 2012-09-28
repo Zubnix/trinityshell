@@ -41,9 +41,13 @@ public class ConfigureRequestConversion implements XEventConversion {
 		final xcb_configure_request_event_t request_event_t = new xcb_configure_request_event_t(xcb_generic_event_t.getCPtr(event_t),
 																								true);
 
+		// TODO logging
+		System.err.println(String.format(	"Received %s",
+											request_event_t.getClass().getSimpleName()));
+
 		this.xEventBus.post(request_event_t);
 
-		final int windowId = (int) request_event_t.getWindow();
+		final int windowId = request_event_t.getWindow();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int x = request_event_t.getX();

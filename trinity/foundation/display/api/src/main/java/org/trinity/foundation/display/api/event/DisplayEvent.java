@@ -11,8 +11,6 @@
  */
 package org.trinity.foundation.display.api.event;
 
-import org.trinity.foundation.display.api.DisplaySurface;
-
 /**
  * A <code>DisplayEvent</code> is a piece of information coming from a
  * <code>Display</code>. A <code>DisplayEvent</code> is usually send on the
@@ -26,20 +24,18 @@ public class DisplayEvent {
 
 	private final DisplayEventSource displayEventSource;
 
-	/*****************************************
-	 * 
-	 ****************************************/
 	public DisplayEvent(final DisplayEventSource displayEventSource) {
 		this.displayEventSource = displayEventSource;
 	}
 
-	/**
-	 * The original display resource where this <code>DisplayEven</code>
-	 * originates from.
-	 * 
-	 * @return A {@link DisplaySurface}.
-	 */
-	public DisplayEventSource getEventSource() {
+	public DisplayEventSource getDisplayEventSource() {
 		return this.displayEventSource;
+	}
+
+	@Override
+	public String toString() {
+		return String.format(	"%s=>[%s]",
+								getClass().getSimpleName(),
+								getDisplayEventSource());
 	}
 }

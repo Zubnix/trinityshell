@@ -58,9 +58,6 @@ public final class XEventConverter {
 		final short responseType = event_t.getResponse_type();
 
 		final int eventCode = responseType & 0x7f;
-		// TODO logging
-		System.err.println(String.format(	"converting x event: %d",
-											eventCode));
 
 		final XEventConversion eventConversion = this.conversionMap.get(Integer.valueOf(eventCode));
 		if (eventConversion == null) {

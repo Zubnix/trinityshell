@@ -18,8 +18,10 @@ import xcbjb.LibXcb;
 import xcbjb.SWIGTYPE_p_xcb_connection_t;
 import xcbjb.xcb_cw_t;
 import xcbjb.xcb_event_mask_t;
+import xcbjb.xcb_generic_error_t;
 import xcbjb.xcb_screen_iterator_t;
 import xcbjb.xcb_screen_t;
+import xcbjb.xcb_void_cookie_t;
 
 import com.google.inject.Singleton;
 
@@ -57,13 +59,18 @@ public class XConnection {
 		final int rootId = this.screen_t.getRoot();
 
 		final ByteBuffer values = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
-				| xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY);
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE
+				| xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
 
-		LibXcb.xcb_change_window_attributes(this.connection_t,
-											rootId,
-											xcb_cw_t.XCB_CW_EVENT_MASK,
-											values);
+		final xcb_void_cookie_t void_cookie_t = LibXcb.xcb_change_window_attributes_checked(getConnectionReference(),
+																							rootId,
+																							xcb_cw_t.XCB_CW_EVENT_MASK,
+																							values);
+		final xcb_generic_error_t error_t = LibXcb.xcb_request_check(	getConnectionReference(),
+																		void_cookie_t);
+		if (xcb_generic_error_t.getCPtr(error_t) != 0) {
+			throw new RuntimeException(XcbErrorUtil.toString(error_t));
+		}
 	}
 
 	public void close() {

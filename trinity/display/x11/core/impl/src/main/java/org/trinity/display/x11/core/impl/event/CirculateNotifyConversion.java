@@ -38,6 +38,10 @@ public class CirculateNotifyConversion implements XEventConversion {
 		final xcb_circulate_notify_event_t circulate_notify_event_t = new xcb_circulate_notify_event_t(	xcb_generic_event_t
 																												.getCPtr(event_t),
 																										true);
+		// TODO logging
+		System.err.println(String.format(	"Received %s",
+											circulate_notify_event_t.getClass().getSimpleName()));
+
 		this.xEventBus.post(circulate_notify_event_t);
 
 		final int windowId = circulate_notify_event_t.getWindow();

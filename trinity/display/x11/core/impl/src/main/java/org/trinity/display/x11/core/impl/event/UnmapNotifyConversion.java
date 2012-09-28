@@ -37,9 +37,18 @@ public class UnmapNotifyConversion implements XEventConversion {
 
 		final xcb_unmap_notify_event_t unmap_notify_event_t = new xcb_unmap_notify_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																							true);
+
+		// TODO logging
+		System.err.println(String.format(	"Received %s",
+											unmap_notify_event_t.getClass().getSimpleName()));
+
 		this.xEventBus.post(unmap_notify_event_t);
 
 		final int windowId = unmap_notify_event_t.getWindow();
+		final int reportWindowId = unmap_notify_event_t.getEvent();
+		if (windowId != reportWindowId) {
+			return null;
+		}
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final DisplayEvent displayEvent = new HideNotifyEvent(displayEventSource);

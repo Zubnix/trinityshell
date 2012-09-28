@@ -39,6 +39,11 @@ public class ConfigureNotifyConversion implements XEventConversion {
 		final xcb_configure_notify_event_t configure_notify_event_t = new xcb_configure_notify_event_t(	xcb_generic_event_t
 																												.getCPtr(event_t),
 																										true);
+
+		// TODO logging
+		System.err.println(String.format(	"Received %s",
+											configure_notify_event_t.getClass().getSimpleName()));
+
 		this.xEventBus.post(configure_notify_event_t);
 
 		final int windowId = configure_notify_event_t.getWindow();

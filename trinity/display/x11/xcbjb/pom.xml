@@ -97,7 +97,7 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>${swig.outdir}</source>
+								<source>${project.build.directory}/generated-sources/swig/</source>
 							</sources>
 						</configuration>
 					</execution>

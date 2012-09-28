@@ -381,7 +381,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 
 	@Override
 	public String toString() {
-		return String.format(	"AbstractShellSurface <%s>: %d+%d : %dx%d",
+		return String.format(	"%s<%s>|%d+%d::%dx%d|",
+								getClass().getSimpleName(),
 								getDisplaySurface(),
 								getX(),
 								getX(),

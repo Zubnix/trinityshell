@@ -36,6 +36,11 @@ public class MapNotifyConversion implements XEventConversion {
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 		final xcb_map_notify_event_t map_notify_event_t = new xcb_map_notify_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																						true);
+
+		// TODO logging
+		System.err.println(String.format(	"Received %s",
+											map_notify_event_t.getClass().getSimpleName()));
+
 		this.xEventBus.post(map_notify_event_t);
 
 		final int windowId = map_notify_event_t.getWindow();

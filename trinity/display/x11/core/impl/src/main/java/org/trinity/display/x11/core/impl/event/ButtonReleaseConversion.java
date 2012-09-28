@@ -51,9 +51,13 @@ public class ButtonReleaseConversion implements XEventConversion {
 		// press has same structure as release
 		final xcb_button_press_event_t button_release_event_t = new xcb_button_press_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																								true);
+		// TODO logging
+		System.err.println(String.format(	"Received %s",
+											button_release_event_t.getClass().getSimpleName()));
+
 		this.xEventBus.post(button_release_event_t);
 
-		final int windowId = (int) button_release_event_t.getEvent();
+		final int windowId = button_release_event_t.getEvent();
 		final XWindow window = this.windowCache.getWindow(windowId);
 
 		final int buttonCode = button_release_event_t.getDetail();

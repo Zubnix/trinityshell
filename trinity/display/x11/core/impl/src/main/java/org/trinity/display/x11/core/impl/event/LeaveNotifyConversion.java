@@ -37,6 +37,11 @@ public class LeaveNotifyConversion implements XEventConversion {
 		// enter has same structure as leave
 		final xcb_enter_notify_event_t enter_notify_event_t = new xcb_enter_notify_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																							true);
+
+		// TODO logging
+		System.err.println(String.format(	"Received %s",
+											enter_notify_event_t.getClass().getSimpleName()));
+
 		this.xEventBus.post(enter_notify_event_t);
 
 		final int windowId = enter_notify_event_t.getEvent();

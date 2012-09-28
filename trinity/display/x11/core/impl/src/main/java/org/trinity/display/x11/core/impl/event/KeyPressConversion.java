@@ -39,9 +39,14 @@ public class KeyPressConversion implements XEventConversion {
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 		final xcb_key_press_event_t key_press_event_t = new xcb_key_press_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																					true);
+
+		// TODO logging
+		System.err.println(String.format(	"Received %s",
+											key_press_event_t.getClass().getSimpleName()));
+
 		this.xEventBus.post(key_press_event_t);
 
-		final int windowId = (int) key_press_event_t.getEvent();
+		final int windowId = key_press_event_t.getEvent();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int keyCode = key_press_event_t.getDetail();

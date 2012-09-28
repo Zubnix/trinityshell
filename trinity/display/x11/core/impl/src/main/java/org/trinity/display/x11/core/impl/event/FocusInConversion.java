@@ -36,9 +36,14 @@ public class FocusInConversion implements XEventConversion {
 
 		final xcb_focus_in_event_t focus_in_event_t = new xcb_focus_in_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																				true);
+
+		// TODO logging
+		System.err.println(String.format(	"Received %s",
+											focus_in_event_t.getClass().getSimpleName()));
+
 		this.xEventBus.post(focus_in_event_t);
 
-		final int windowId = (int) focus_in_event_t.getEvent();
+		final int windowId = focus_in_event_t.getEvent();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 		final DisplayEvent displayEvent = new FocusGainNotifyEvent(displayEventSource);
 

@@ -37,6 +37,11 @@ public class DestroyNotifyConversion implements XEventConversion {
 
 		final xcb_destroy_notify_event_t destroy_notify_event_t = new xcb_destroy_notify_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																									true);
+
+		// TODO logging
+		System.err.println(String.format(	"Received %s",
+											destroy_notify_event_t.getClass().getSimpleName()));
+
 		this.xEventBus.post(destroy_notify_event_t);
 
 		final int eventWindow = destroy_notify_event_t.getWindow();
