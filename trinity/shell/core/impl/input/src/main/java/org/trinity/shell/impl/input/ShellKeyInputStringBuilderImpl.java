@@ -18,14 +18,14 @@ import java.util.Map;
 import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.input.api.KeyboardInput;
-import org.trinity.shell.api.input.KeyInputStringBuilder;
+import org.trinity.shell.api.input.ShellKeyInputStringBuilder;
 
 import com.google.inject.Inject;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
-public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
+public class ShellKeyInputStringBuilderImpl implements ShellKeyInputStringBuilder {
 
 	private final String[] ignoreKeys = { Keyboard.BACKSPACE, Keyboard.BEGIN, Keyboard.CAPS_LOCK, Keyboard.CLEAR,
 			Keyboard.DELETE, Keyboard.DOWN, Keyboard.END, Keyboard.ENTER, Keyboard.ESCAPE, Keyboard.HOME,
@@ -47,9 +47,9 @@ public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 	 * 
 	 */
 	@Inject
-	KeyInputStringBuilderImpl(final Keyboard keyboard) {
+	ShellKeyInputStringBuilderImpl(final Keyboard keyboard) {
 		this.keyboard = keyboard;
-		this.specialBuildActions = new HashMap<String, KeyInputStringBuilderImpl.StringMutatorOnInput>();
+		this.specialBuildActions = new HashMap<String, ShellKeyInputStringBuilderImpl.StringMutatorOnInput>();
 		initSpecialBuildActions();
 	}
 
@@ -76,11 +76,12 @@ public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 										new StringMutatorOnInput() {
 											@Override
 											public void mutate(final String keyName) {
-												final int length = KeyInputStringBuilderImpl.this.stringBuffer.length();
+												final int length = ShellKeyInputStringBuilderImpl.this.stringBuffer
+														.length();
 												if (length > 0) {
 													// backspace => delete
 													// last char
-													KeyInputStringBuilderImpl.this.stringBuffer
+													ShellKeyInputStringBuilderImpl.this.stringBuffer
 															.deleteCharAt(length - 1);
 												}
 											}

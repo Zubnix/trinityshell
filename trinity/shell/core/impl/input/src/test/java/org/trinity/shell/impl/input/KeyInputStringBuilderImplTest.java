@@ -46,7 +46,7 @@ public class KeyInputStringBuilderImplTest {
 		when(keyboard.asKeySymbolName(	backspace,
 										inputModifiers)).thenReturn(Keyboard.BACKSPACE);
 
-		final KeyInputStringBuilderImpl keyInputStringBuilderImpl = new KeyInputStringBuilderImpl(keyboard);
+		final ShellKeyInputStringBuilderImpl keyInputStringBuilderImpl = new ShellKeyInputStringBuilderImpl(keyboard);
 
 		keyInputStringBuilderImpl.append("abc");
 		keyInputStringBuilderImpl.append(altInput);

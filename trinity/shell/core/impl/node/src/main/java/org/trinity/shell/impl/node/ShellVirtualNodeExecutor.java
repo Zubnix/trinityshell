@@ -23,7 +23,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 // TODO documentation
 /**
  * A <code>ShellGeoVExecutor</code> executes the actual geometry changes for a
- * {@link ShellGeoVNode}.
+ * {@link ShellVirtualNode}.
  * 
  * @author Erik De Rijcke
  * @since 1.0
@@ -31,9 +31,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(value = @Named("ShellGeoVExecutor"))
 @Singleton
-public class ShellGeoVExecutor implements ShellNodeExecutor {
+public class ShellVirtualNodeExecutor implements ShellNodeExecutor {
 
-	ShellGeoVExecutor() {
+	ShellVirtualNodeExecutor() {
 	}
 
 	@Override

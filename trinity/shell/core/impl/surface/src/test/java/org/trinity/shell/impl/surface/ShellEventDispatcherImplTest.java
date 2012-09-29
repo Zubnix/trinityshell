@@ -46,11 +46,11 @@ public class ShellEventDispatcherImplTest {
 																		displayEvent2);
 
 		final ShellDisplayEventDispatcherImpl shellEventDispatcherImpl = new ShellDisplayEventDispatcherImpl(	new EventBus(),
-																								shellClientSurfaceFactory,
-																								displayServer);
+																												shellClientSurfaceFactory,
+																												displayServer);
 
 		shellEventDispatcherImpl.registerDisplayEventSourceListener(nodeEventBus,
-															displayEventSource);
+																	displayEventSource);
 		shellEventDispatcherImpl.dispatchDisplayEvent(false);
 		shellEventDispatcherImpl.dispatchDisplayEvent(false);
 		shellEventDispatcherImpl.dispatchDisplayEvent(false);

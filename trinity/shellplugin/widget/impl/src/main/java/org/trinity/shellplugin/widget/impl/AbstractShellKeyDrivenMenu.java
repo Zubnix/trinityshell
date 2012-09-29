@@ -19,7 +19,7 @@ import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.input.api.KeyboardInput;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.api.input.KeyInputStringBuilder;
+import org.trinity.shell.api.input.ShellKeyInputStringBuilder;
 import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
@@ -46,7 +46,7 @@ public abstract class AbstractShellKeyDrivenMenu extends BaseShellWidget // impl
 	private final List<String> filteredChoices = new ArrayList<String>(25);
 	private final Keyboard keyboard;
 	private final ShellSurface root;
-	private final KeyInputStringBuilder keyInputStringBuilder;
+	private final ShellKeyInputStringBuilder keyInputStringBuilder;
 
 	private int activeChoiceIdx = 0;
 
@@ -59,7 +59,7 @@ public abstract class AbstractShellKeyDrivenMenu extends BaseShellWidget // impl
 											final ShellNodeExecutor shellNodeExecutor,
 											final Keyboard keyboard,
 											final ShellSurface root,
-											final KeyInputStringBuilder keyInputStringBuilder,
+											final ShellKeyInputStringBuilder keyInputStringBuilder,
 											final ShellWidgetView view) {
 		super(	nodeEventBus,
 				shellDisplayEventDispatcher,

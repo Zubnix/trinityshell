@@ -40,12 +40,12 @@ import de.devsurf.injection.guice.annotations.To.Type;
  * @since 1.0
  */
 @Bind(value = @Named("ShellGeoVNode"), to = @To(value = Type.CUSTOM, customs = ShellNode.class))
-public class ShellGeoVNode extends AbstractShellNode {
+public class ShellVirtualNode extends AbstractShellNode {
 	private final ShellNodeExecutor shellNodeExecutor;
 	private ShellLayoutManager shellLayoutManager;
 
 	@Inject
-	protected ShellGeoVNode(final EventBus eventBus,
+	protected ShellVirtualNode(final EventBus eventBus,
 							@Named("ShellGeoVExecutor") final ShellNodeExecutor shellNodeExecutor) {
 		super(eventBus);
 		this.shellNodeExecutor = shellNodeExecutor;

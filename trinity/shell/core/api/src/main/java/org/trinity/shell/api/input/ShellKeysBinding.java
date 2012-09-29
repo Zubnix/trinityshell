@@ -16,7 +16,7 @@ import java.util.List;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
 
-public interface KeysBinding {
+public interface ShellKeysBinding {
 	Runnable getAction();
 
 	List<Key> getKeys();
