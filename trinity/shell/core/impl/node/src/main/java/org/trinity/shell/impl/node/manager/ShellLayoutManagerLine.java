@@ -35,21 +35,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
-// TODO documentation
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
 // be negative. childs with size 0, ...)
 // TODO refactor to reuse code and for cleaner reading
-/**
- * A <code>ShellLayoutManagerLine</code> provides a layout for children in a
- * horizontal or vertical line. All children will have the same height or width
- * for a horizontal or vertical layout respectively and are placed directly next
- * to each other with no overlap or spacing. The other child dimensions are
- * determined by the child's {@link LayoutPropertyLineImpl}.
- * 
- * @author Erik De Rijcke
- * @since 1.0
- * 
- */
 @Bind(value = @Named("ShellLayoutManagerLine"), to = @To(value = Type.CUSTOM, customs = ShellLayoutManager.class))
 public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 
@@ -108,26 +96,14 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 	private boolean horizontalDirection = true;
 	private boolean inverseDirection = false;
 
-	/**
-	 * 
-	 * @param horizontalDirection
-	 */
 	public void setHorizontalDirection(final boolean horizontalDirection) {
 		this.horizontalDirection = horizontalDirection;
 	}
 
-	/**
-	 * 
-	 * @param inverseDirection
-	 */
 	public void setInverseDirection(final boolean inverseDirection) {
 		this.inverseDirection = inverseDirection;
 	}
 
-	/**
-	 * 
-	 * @param square
-	 */
 	protected void cancelMoveResize(final ShellNode square) {
 		// make sure the square doesn't move or resizes
 		square.cancelPendingMove();
@@ -292,10 +268,6 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 	@Override
 	public void addChildNode(	final ShellNode child,
 								final ShellLayoutProperty layoutProperty) {
-		// TODO logging
-		System.err.println(String.format(	"Add child: %s to layout manager: %s",
-											child,
-											this));
 
 		child.addShellNodeEventHandler(this.childGeoListener);
 		super.addChildNode(	child,

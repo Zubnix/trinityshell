@@ -13,12 +13,6 @@ package org.trinity.foundation.input.api;
 
 import java.util.List;
 
-// TODO documentation
-/**
- * 
- * @author Erik De Rijcke
- * @since 1.0
- */
 public interface Keyboard {
 
 	String L_SHIFT = "L_SHIFT";
@@ -60,35 +54,12 @@ public interface Keyboard {
 	String INSERT = "INSERT";
 	String NUM_LOCK = "NUM_LOCK";
 
-	/**
-	 * 
-	 * @param key
-	 * @param baseInputModifiers
-	 * @return
-	 * 
-	 */
 	String asKeySymbolName(	Key key,
 							InputModifiers inputModifiers);
 
-	/**
-	 * 
-	 * @param keySymbolName
-	 * @return
-	 * 
-	 */
 	List<Key> asKeys(String keySymbolName);
 
-	/**
-	 * 
-	 * @param modifierKeyName
-	 * @return
-	 */
 	InputModifier modifier(String modifierName);
 
-	/**
-	 * 
-	 * @param modifierKeyNames
-	 * @return
-	 */
 	InputModifiers modifiers(String... modifierNames);
 }

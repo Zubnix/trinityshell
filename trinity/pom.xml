@@ -29,7 +29,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 	<properties>
 		<!-- dep versions -->
 		<guice.version>3.0</guice.version>
-		<guava.version>12.0</guava.version>
+		<guava.version>13.0.1</guava.version>
 		<autobind.version>0.8.7</autobind.version>
 
 		<!-- test dep versions -->

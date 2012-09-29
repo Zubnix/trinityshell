@@ -24,14 +24,6 @@ import com.google.inject.Inject;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
-// TODO documentation
-/**
- * A <code>KeyInputStringBuilder</code> builds a Java <code>String</code> based
- * on {@link KeyNotifyEvent}s.
- * 
- * @author Erik De Rijcke
- * @since 1.0
- */
 @Bind
 public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 
@@ -43,10 +35,6 @@ public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 			Keyboard.R_HYPER, Keyboard.R_META, Keyboard.R_SHIFT, Keyboard.R_SUPER, Keyboard.RIGHT, Keyboard.SCRL_LOCK,
 			Keyboard.SHIFT_LOCK, Keyboard.SYS_REQ, Keyboard.TAB, Keyboard.UP };
 
-	/**
-	 * @author Erik De Rijcke
-	 * @since 1.0
-	 */
 	interface StringMutatorOnInput {
 		void mutate(String keyName);
 	}
@@ -99,9 +87,6 @@ public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 										});
 	}
 
-	/**
-	 * @param input
-	 */
 	@Override
 	public void append(final KeyNotifyEvent input) {
 		final KeyboardInput keyboardInput = input.getInput();
@@ -117,17 +102,11 @@ public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 		}
 	}
 
-	/**
-	 * 
-	 */
 	@Override
 	public void clear() {
 		this.stringBuffer = new StringBuffer();
 	}
 
-	/**
-	 * @return
-	 */
 	public Map<String, StringMutatorOnInput> getSpecialBuildActions() {
 		return this.specialBuildActions;
 	}
