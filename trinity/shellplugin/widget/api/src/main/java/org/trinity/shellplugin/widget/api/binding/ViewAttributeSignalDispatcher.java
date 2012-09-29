@@ -17,7 +17,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.inject.Inject;
 
 // TODO make this class more readable
-final class ViewAttributeSignalDispatcher implements MethodInterceptor {
+public class ViewAttributeSignalDispatcher implements MethodInterceptor {
 
 	// yo dawg, I heard you like caches so I put a cache in your cache so you
 	// can cache while you cache!
@@ -33,7 +33,7 @@ final class ViewAttributeSignalDispatcher implements MethodInterceptor {
 		final Object invocationResult = invocation.proceed();
 
 		final Object thisObj = invocation.getThis();
-		final Class<?> thisObjClass = ((Method) invocation.getStaticPart()).getDeclaringClass();
+		final Class<?> thisObjClass = invocation.getMethod().getDeclaringClass();
 
 		final ViewAttributeChanged viewSignal = invocation.getMethod().getAnnotation(ViewAttributeChanged.class);
 		final String[] viewAttributeIds = viewSignal.value();
@@ -95,7 +95,7 @@ final class ViewAttributeSignalDispatcher implements MethodInterceptor {
 			if (viewAttribute == null) {
 				continue;
 			}
-			if (viewAttribute.value().equals(viewAttributeName)) {
+			if (viewAttribute.name().equals(viewAttributeName)) {
 				if (isDuplicateViewAttribute(	viewAttributes,
 												viewAttribute)) {
 					throw new IllegalArgumentException(String.format(	"Found duplicate %s with name=%s and id=%s on %s",

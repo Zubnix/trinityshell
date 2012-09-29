@@ -47,6 +47,7 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 			@Override
 			public Void call(final QJPaintContext paintContext) {
 				createDisplaySurfaceInstruction(paintContext);
+				setAllViewAttributes();
 				return null;
 			}
 		});
@@ -75,12 +76,10 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 							true);
 
 		paintContext.syncVisualGeometryToSurfaceNode(visual);
-
-		setAllViewAttributes();
 		paintContext.setVisual(visual);
 	}
 
-	private void setAllViewAttributes() {
+	protected void setAllViewAttributes() {
 		// TODO invoke all @viewattributeslots
 
 	}

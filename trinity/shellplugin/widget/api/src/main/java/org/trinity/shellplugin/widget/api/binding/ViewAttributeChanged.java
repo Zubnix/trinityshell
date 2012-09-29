@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD })
 public @interface ViewAttributeChanged {
 	/****************************************
-	 * The id(s) of the {@link ViewAttribute}(s) that will be updated.
+	 * The name(s) of the {@link ViewAttribute}(s) that will be updated.
 	 * 
 	 * @return
 	 *************************************** 

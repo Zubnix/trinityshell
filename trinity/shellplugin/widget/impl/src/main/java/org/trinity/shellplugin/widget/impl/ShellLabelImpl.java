@@ -38,7 +38,7 @@ public class ShellLabelImpl extends BaseShellWidget implements ShellLabel {
 	@ViewReference
 	private final ShellWidgetView view;
 
-	@ViewAttribute("text")
+	@ViewAttribute(name = "text")
 	private String labelText;
 
 	@Inject

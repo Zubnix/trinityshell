@@ -24,6 +24,6 @@ public @interface ViewAttribute {
 	 * @return
 	 *************************************** 
 	 */
-	String value();
+	String name();
 
 }
