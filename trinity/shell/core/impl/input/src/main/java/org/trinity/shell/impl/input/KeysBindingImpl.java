@@ -63,7 +63,7 @@ public class KeysBindingImpl implements KeysBinding {
 	@Subscribe
 	public void handleKeyEvent(final KeyNotifyEvent keyNotifyEvent) {
 		final KeyboardInput keyboardInput = keyNotifyEvent.getInput();
-		if (this.keys.contains(keyboardInput.getKey()) && this.inputModifiers.equals(keyboardInput.getModifiers())) {
+		if (this.keys.contains(keyboardInput.getKey()) && this.inputModifiers.equals(keyboardInput.getInputModifiers())) {
 			this.action.run();
 		}
 	}

@@ -98,7 +98,7 @@ public abstract class AbstractShellKeyDrivenMenu extends BaseShellWidget // impl
 		}
 		final KeyboardInput input = event.getInput();
 		final String keyName = this.keyboard.asKeySymbolName(	input.getKey(),
-																input.getModifiers());
+																input.getInputModifiers());
 
 		if (keyName.equals(getCancelKey())) {
 			// cancel key

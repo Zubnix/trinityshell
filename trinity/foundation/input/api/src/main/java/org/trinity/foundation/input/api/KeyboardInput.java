@@ -15,7 +15,7 @@ public class KeyboardInput extends Input {
 		return this.key;
 	}
 
-	public InputModifiers getModifiers() {
+	public InputModifiers getInputModifiers() {
 		return this.inputModifiers;
 	}
 }

@@ -91,7 +91,7 @@ public class KeyInputStringBuilderImpl implements KeyInputStringBuilder {
 	public void append(final KeyNotifyEvent input) {
 		final KeyboardInput keyboardInput = input.getInput();
 		final String keyName = this.keyboard.asKeySymbolName(	keyboardInput.getKey(),
-																keyboardInput.getModifiers());
+																keyboardInput.getInputModifiers());
 		final StringMutatorOnInput stringMutatorOnInput = getSpecialBuildActions().get(keyName);
 
 		if (stringMutatorOnInput != null) {
