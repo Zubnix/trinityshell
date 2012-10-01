@@ -1,4 +1,4 @@
-package org.trinity.render.qt.lnf.impl;
+package org.trinity.render.qt.lnf.impl.binding;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -12,6 +12,8 @@ import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.render.qt.api.QJRenderEngine;
+import org.trinity.render.qt.lnf.impl.DummyView;
+import org.trinity.render.qt.lnf.impl.binding.ViewSlotInvocationHandlerImpl;
 import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
 
 public class ViewSlotInvocationHandlerImplTest {

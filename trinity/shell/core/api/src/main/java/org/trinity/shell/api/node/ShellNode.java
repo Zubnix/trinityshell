@@ -80,6 +80,8 @@ public interface ShellNode extends SurfaceNode, ShellNodeTransformable {
 
 	ShellLayoutManager getLayoutManager();
 
+	void layout();
+
 	void setLayoutManager(ShellLayoutManager shellLayoutManager);
 
 	void addShellNodeEventHandler(Object shellNodeEventHandler);

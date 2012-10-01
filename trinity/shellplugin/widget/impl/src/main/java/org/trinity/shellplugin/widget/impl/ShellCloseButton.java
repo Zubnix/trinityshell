@@ -19,6 +19,7 @@ import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
+import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
 
 import com.google.common.eventbus.EventBus;
@@ -49,7 +50,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @since 1.0
  */
 @Bind
-public class ShellCloseButton extends ShellButton {
+public class ShellCloseButton extends BaseShellWidget {
 
 	private ShellSurface client;
 	private final DisplayProtocols desktopProtocol;

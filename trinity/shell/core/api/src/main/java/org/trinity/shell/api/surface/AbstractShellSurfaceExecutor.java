@@ -106,9 +106,9 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 																final int directRelativeX,
 																final int directRelativeY) {
 
-		final ShellSurface parentRenderArea = findClosestSameTypeSurface(directParent);
+		final ShellSurface parentSameTypeSurface = findClosestSameTypeSurface(directParent);
 
-		if (parentRenderArea == null) {
+		if (parentSameTypeSurface == null) {
 			return new Coordinate(	directRelativeX,
 									directRelativeY);
 		}
@@ -116,10 +116,8 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 		final int newAbsX = directParent.getAbsoluteX() + directRelativeX;
 		final int newAbsY = directParent.getAbsoluteY() + directRelativeY;
 
-		final Coordinate absCorParent = getAreaManipulator(this.root)
-				.translateCoordinates(	getAreaPeer(parentRenderArea),
-										0,
-										0);
+		final Coordinate absCorParent = new Coordinate(	parentSameTypeSurface.getAbsoluteX(),
+														parentSameTypeSurface.getAbsoluteY());
 
 		final int newRelX = newAbsX - absCorParent.getX();
 		final int newRelY = newAbsY - absCorParent.getY();

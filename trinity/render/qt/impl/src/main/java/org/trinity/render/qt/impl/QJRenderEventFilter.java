@@ -52,6 +52,10 @@ final class QJRenderEventFilter extends QObject {
 			// We are interested and thus convert the event.
 			final DisplayEvent displayEvent = this.renderEventConverter.convertRenderEvent(	this.eventSource,
 																							qEvent);
+			if (displayEvent == null) {
+				return false;
+			}
+
 			this.displayEventBus.post(displayEvent);
 			return true;
 		}

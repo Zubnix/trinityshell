@@ -16,6 +16,7 @@ import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
+import org.trinity.shell.api.widget.ShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
 
 import com.google.common.eventbus.EventBus;
@@ -48,6 +49,7 @@ public class ShellRootWidget extends BaseShellWidget {
 	ShellRootWidget(final EventBus eventBus,
 					final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 					final PainterFactory painterFactory,
+
 					@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 					@Named("ShellRootView") final ShellWidgetView view) {
 		super(	eventBus,
@@ -60,5 +62,12 @@ public class ShellRootWidget extends BaseShellWidget {
 	@Override
 	public ShellLayoutManager getParentLayoutManager() {
 		return getLayoutManager();
+	}
+
+	@Override
+	public void init(final ShellWidget paintableParent) {
+		setParent(this);
+		doReparent(false);
+		super.init(paintableParent);
 	}
 }

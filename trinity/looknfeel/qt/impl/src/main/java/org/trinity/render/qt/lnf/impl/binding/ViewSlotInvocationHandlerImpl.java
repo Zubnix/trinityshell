@@ -1,4 +1,4 @@
-package org.trinity.render.qt.lnf.impl;
+package org.trinity.render.qt.lnf.impl.binding;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

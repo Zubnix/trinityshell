@@ -27,9 +27,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 // TODO documentation
 /**
  * A <code>WidgetGeoExecutor</code> is a delegate class for directly
- * manipulating a {@link BaseShellWidget}'s geometry. A <code>BaseShellWidget</code>
- * will ask it's <code>WidgetGeoExecutor</code> to directly perform the
- * requested geometric change.
+ * manipulating a {@link BaseShellWidget}'s geometry. A
+ * <code>BaseShellWidget</code> will ask it's <code>WidgetGeoExecutor</code> to
+ * directly perform the requested geometric change.
  * 
  * @author Erik De Rijcke
  * @since 1.0
@@ -52,13 +52,14 @@ public class ShellWidgetGeoExecutor extends AbstractShellSurfaceExecutor {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected <T extends DisplayArea> DisplayAreaManipulator<T> getAreaManipulator(final ShellSurface shellSurface) {
-		final DisplayAreaManipulator<T> manip = (DisplayAreaManipulator<T>) ((BaseShellWidget) shellSurface).getPainter();
+		final DisplayAreaManipulator<T> manip = (DisplayAreaManipulator<T>) ((BaseShellWidget) shellSurface)
+				.getPainter();
 		return manip;
 	}
 
 	@Override
 	protected BaseShellWidget findClosestSameTypeSurface(final ShellNode square) {
-		if ((square == null) || (square.getParent() == square)) {
+		if ((square == null)) {
 			return null;
 		}
 		if (square instanceof BaseShellWidget) {

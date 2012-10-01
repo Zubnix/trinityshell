@@ -18,6 +18,7 @@ import org.trinity.foundation.shared.geometry.api.Rectangle;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
+import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
 
 import com.google.common.eventbus.EventBus;
@@ -30,7 +31,7 @@ import com.google.inject.name.Named;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ShellMaximizeButton extends ShellButton {
+public class ShellMaximizeButton extends BaseShellWidget {
 
 	private ShellNode client;
 	private Rectangle maximize;

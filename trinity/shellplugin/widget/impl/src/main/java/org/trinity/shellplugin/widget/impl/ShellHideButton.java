@@ -17,6 +17,7 @@ import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
+import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
 
 import com.google.common.eventbus.EventBus;
@@ -39,7 +40,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @since 1.0
  */
 @Bind
-public class ShellHideButton extends ShellButton {
+public class ShellHideButton extends BaseShellWidget {
 
 	private ShellNode client;
 

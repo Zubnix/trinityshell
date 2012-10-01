@@ -123,7 +123,7 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 	public final Future<DisplaySurface> getDislaySurface() {
 		final Painter painter = getPainter();
 		if (this.painter == null) {
-			throw new IllegalStateException("Display surface not created!");
+			return null;
 		}
 		return painter.instruct(new PaintInstruction<DisplaySurface, QJPaintContext>() {
 			@Override

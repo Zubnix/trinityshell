@@ -43,12 +43,6 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 public class ShellAppLauncher extends AbstractShellKeyDrivenMenu {
 
-	/*****************************************
-	 * @param painterFactory
-	 * @param shellNodeExecutor
-	 * @param managedKeyboard
-	 * @param keyInputStringBuilder
-	 ****************************************/
 	@Inject
 	protected ShellAppLauncher(	@Named("shellEventBus") final EventBus shellEventBus,
 								final EventBus nodeEventBus,
