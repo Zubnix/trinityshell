@@ -19,12 +19,6 @@ import org.trinity.shell.api.node.ShellNode;
 
 public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExecutor {
 
-	private final ShellSurface root;
-
-	protected AbstractShellSurfaceExecutor(final ShellSurface root) {
-		this.root = root;
-	}
-
 	@Override
 	public DisplayAreaManipulator<DisplayArea> getShellNodeManipulator(final ShellNode shellNode) {
 		return getAreaManipulator((ShellSurface) shellNode);

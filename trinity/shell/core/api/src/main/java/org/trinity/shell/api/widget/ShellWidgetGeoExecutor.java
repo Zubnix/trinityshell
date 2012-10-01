@@ -20,8 +20,6 @@ import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 
-import com.google.inject.Inject;
-
 import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
@@ -38,11 +36,6 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 @Named("shellWidgetGeoExecutor")
 public class ShellWidgetGeoExecutor extends AbstractShellSurfaceExecutor {
-
-	@Inject
-	ShellWidgetGeoExecutor(@Named("ShellRootSurface") final ShellSurface shellRoot) {
-		super(shellRoot);
-	}
 
 	@Override
 	public DisplayAreaManipulator<DisplayArea> getShellNodeManipulator(final ShellNode shellNode) {

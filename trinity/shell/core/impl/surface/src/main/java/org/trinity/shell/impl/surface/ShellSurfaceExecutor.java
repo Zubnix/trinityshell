@@ -18,7 +18,6 @@ import org.trinity.shell.api.node.ShellNodeTransformation;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
@@ -38,11 +37,6 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Bind(value = @Named("shellSurfaceGeoExecutor"), to = @To(value = Type.CUSTOM, customs = ShellNodeExecutor.class))
 @Singleton
 public class ShellSurfaceExecutor extends AbstractShellSurfaceExecutor {
-
-	@Inject
-	ShellSurfaceExecutor(@Named("ShellRootSurface") final ShellSurface root) {
-		super(root);
-	}
 
 	@Override
 	protected void initializeShellSurface(	final ShellNode parent,
