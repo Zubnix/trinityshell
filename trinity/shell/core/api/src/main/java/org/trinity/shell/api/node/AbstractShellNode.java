@@ -429,7 +429,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		// Make sure we have the same size
 		// and place in our new parent
 		// as in our old parent.
-		doMoveResize();
+		doMoveResize(execute);
 	}
 
 	@Override

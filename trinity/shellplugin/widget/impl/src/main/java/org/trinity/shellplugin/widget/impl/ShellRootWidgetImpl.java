@@ -15,13 +15,13 @@ import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
+import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.widget.BaseShellWidget;
-import org.trinity.shell.api.widget.ShellWidget;
+import org.trinity.shell.api.widget.ShellRootWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
@@ -41,17 +41,15 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(value = @Named("ShellRootWidget"))
-@Singleton
-public class ShellRootWidget extends BaseShellWidget {
+@Bind
+public class ShellRootWidgetImpl extends BaseShellWidget implements ShellRootWidget {
 
 	@Inject
-	ShellRootWidget(final EventBus eventBus,
-					final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-					final PainterFactory painterFactory,
-
-					@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
-					@Named("ShellRootView") final ShellWidgetView view) {
+	ShellRootWidgetImpl(final EventBus eventBus,
+						final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
+						final PainterFactory painterFactory,
+						@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
+						@Named("ShellRootView") final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
@@ -61,13 +59,14 @@ public class ShellRootWidget extends BaseShellWidget {
 
 	@Override
 	public ShellLayoutManager getParentLayoutManager() {
+
 		return getLayoutManager();
 	}
 
 	@Override
-	public void init(final ShellWidget paintableParent) {
-		setParent(this);
+	public void init(final ShellSurface parent) {
+		setParent(parent);
 		doReparent(false);
-		super.init(paintableParent);
+		super.init(parent);
 	}
 }

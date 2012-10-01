@@ -6,6 +6,6 @@ import org.trinity.shell.api.surface.ShellSurface;
 
 public interface ShellWidget extends PaintableSurfaceNode, DisplayEventSource, ShellSurface {
 
-	void init(ShellWidget paintableParent);
+	// void init(ShellWidget paintableParent);
 
 }

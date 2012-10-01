@@ -46,8 +46,12 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 		return invokePaintInstruction(new PaintInstruction<Void, QJPaintContext>() {
 			@Override
 			public Void call(final QJPaintContext paintContext) {
-				createDisplaySurfaceInstruction(paintContext);
-				setAllViewAttributes();
+				try {
+					createDisplaySurfaceInstruction(paintContext);
+					setAllViewAttributes();
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
 				return null;
 			}
 		});

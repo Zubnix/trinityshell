@@ -85,4 +85,5 @@ public class ShellClientSurface extends AbstractShellSurface {
 	public DisplaySurface getDisplaySurface() {
 		return this.displaySurface;
 	}
+
 }

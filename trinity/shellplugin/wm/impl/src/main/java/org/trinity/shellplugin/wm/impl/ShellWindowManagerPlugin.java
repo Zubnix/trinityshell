@@ -7,6 +7,7 @@ import org.trinity.shell.api.node.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.plugin.ShellPlugin;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.event.ShellSurfaceCreatedEvent;
+import org.trinity.shell.api.widget.ShellRootWidget;
 import org.trinity.shell.api.widget.ShellWidget;
 
 import com.google.common.eventbus.EventBus;
@@ -23,7 +24,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ShellWindowManagerPlugin implements ShellPlugin {
 
 	private final ShellSurface shellRootSurface;
-	private final ShellWidget shellRootWidget;
+	private final ShellRootWidget shellRootWidget;
 	private final EventBus shellEventBus;
 
 	private final Provider<ShellLayoutManager> shellLayoutManagerProvider;
@@ -36,7 +37,7 @@ public class ShellWindowManagerPlugin implements ShellPlugin {
 
 	@Inject
 	ShellWindowManagerPlugin(	@Named("ShellRootSurface") final ShellSurface shellRootSurface,
-								@Named("ShellRootWidget") final ShellWidget shellRootWidget,
+								final ShellRootWidget shellRootWidget,
 								@Named("shellEventBus") final EventBus shellEventBus,
 								@Named("ShellLayoutManagerLine") final Provider<ShellLayoutManager> shellLayoutManagerProvider,
 								@Named("ShellWidgetContainer") final Provider<ShellWidget> shellWidgetContainerProvider,
@@ -66,7 +67,7 @@ public class ShellWindowManagerPlugin implements ShellPlugin {
 	}
 
 	public void setupRootWidget() {
-		this.shellRootWidget.init(null);
+		this.shellRootWidget.init(this.shellRootSurface);
 
 		this.shellRootWidget.setWidth(this.shellRootSurface.getWidth());
 		this.shellRootWidget.setHeight(this.shellRootSurface.getHeight());

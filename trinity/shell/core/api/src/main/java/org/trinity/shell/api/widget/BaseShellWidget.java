@@ -24,6 +24,7 @@ import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
+import org.trinity.shell.api.surface.ShellSurface;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -114,8 +115,8 @@ public class BaseShellWidget extends AbstractShellSurface implements ShellWidget
 	 *            with data from its paintable parent at the paint back-end
 	 *            level.
 	 */
-	@Override
-	public void init(final ShellWidget paintableParent) {
+
+	protected void init(final ShellSurface paintableParent) {
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			this);
 		this.view.createDisplaySurface(getPainter());
@@ -150,9 +151,13 @@ public class BaseShellWidget extends AbstractShellSurface implements ShellWidget
 		}
 		if (square instanceof BaseShellWidget) {
 			return (BaseShellWidget) square;
-		} else {
-			return findParentPaintable(square.getParent());
 		}
+
+		if (square.getParent().equals(square)) {
+			return null;
+		}
+		return findParentPaintable(square.getParent());
+
 	}
 
 	@Override

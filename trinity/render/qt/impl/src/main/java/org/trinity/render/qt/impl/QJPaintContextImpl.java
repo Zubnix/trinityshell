@@ -37,6 +37,9 @@ public class QJPaintContextImpl implements QJPaintContext {
 
 	@Override
 	public DisplaySurface getDisplaySurface(final QWidget visual) {
+		if (visual == null) {
+			return null;
+		}
 		final DisplaySurfaceHandle displaySurfaceHandle = new QJDisplaySurfaceHandle(visual);
 		final DisplaySurface displaySurface = this.displaySurfaceFactory.createDisplaySurface(displaySurfaceHandle);
 
@@ -45,12 +48,12 @@ public class QJPaintContextImpl implements QJPaintContext {
 
 	@Override
 	public void syncVisualGeometryToSurfaceNode(final QWidget visual) {
-		final int x = paintableSurfaceNode.getX();
-		final int y = paintableSurfaceNode.getY();
-		final int width = paintableSurfaceNode.getWidth();
-		final int height = paintableSurfaceNode.getHeight();
+		final int x = this.paintableSurfaceNode.getX();
+		final int y = this.paintableSurfaceNode.getY();
+		final int width = this.paintableSurfaceNode.getWidth();
+		final int height = this.paintableSurfaceNode.getHeight();
 
-		final boolean visible = paintableSurfaceNode.isVisible();
+		final boolean visible = this.paintableSurfaceNode.isVisible();
 
 		visual.setGeometry(	x,
 							y,
@@ -66,6 +69,6 @@ public class QJPaintContextImpl implements QJPaintContext {
 
 	@Override
 	public PaintableSurfaceNode getPaintableSurfaceNode() {
-		return paintableSurfaceNode;
+		return this.paintableSurfaceNode;
 	}
 }
