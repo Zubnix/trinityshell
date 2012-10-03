@@ -11,11 +11,6 @@
  */
 package org.trinity.shell.api.node;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.trinity.shell.api.node.event.ShellNodeChildAddedEvent;
-import org.trinity.shell.api.node.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.node.event.ShellNodeDestroyEvent;
 import org.trinity.shell.api.node.event.ShellNodeEvent;
 import org.trinity.shell.api.node.event.ShellNodeHideEvent;
@@ -59,14 +54,10 @@ public abstract class AbstractShellNode implements ShellNode {
 	private boolean visible;
 	private boolean desiredVisibility;
 
-	private ShellNode parent;
-	private ShellNode desiredParent;
+	private ShellNodeParent parent;
+	private ShellNodeParent desiredParent;
 
 	private boolean destroyed;
-
-	private final Set<ShellNode> children = new HashSet<ShellNode>();
-
-	private ShellLayoutManager shellLayoutManager;
 
 	private final EventBus nodeEventBus;
 
@@ -100,12 +91,12 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	@Override
-	public ShellNode getParent() {
+	public ShellNodeParent getParent() {
 		return this.parent;
 	}
 
 	@Override
-	public void setParent(final ShellNode parent) {
+	public void setParent(final ShellNodeParent parent) {
 		this.desiredParent = parent;
 	}
 
@@ -119,11 +110,6 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (shellLayoutManager == null) {
 			doReparent();
 		}
-	}
-
-	@Override
-	public ShellNode[] getChildren() {
-		return this.children.toArray(new ShellNode[this.children.size()]);
 	}
 
 	@Override
@@ -194,7 +180,7 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	@Override
 	public ShellLayoutManager getParentLayoutManager() {
-		final ShellNode parent = getParent();
+		final ShellNodeParent parent = getParent();
 		if (parent == null) {
 			return null;
 		}
@@ -274,17 +260,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (execute) {
 			execMove();
 		}
-		updateChildrenPosition();
-	}
 
-	protected void updateChildrenPosition() {
-		for (final ShellNode child : getChildren()) {
-			final int childX = child.getX();
-			final int childY = child.getY();
-			child.getNodeExecutor().move(	child,
-											childX,
-											childY);
-		}
 	}
 
 	protected void execMove() {
@@ -337,7 +313,6 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (execute) {
 			execMoveResize();
 		}
-		updateChildrenPosition();
 
 	}
 
@@ -432,27 +407,6 @@ public abstract class AbstractShellNode implements ShellNode {
 		doMoveResize(execute);
 	}
 
-	@Override
-	public void handleChildReparentEvent(final ShellNode child) {
-		ShellNodeEvent shellNodeEvent;
-		if (this.children.contains(child)) {
-			this.children.remove(child);
-			// child.removeShellNodeEventHandler(this);
-			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
-															toGeoTransformation());
-			this.nodeEventBus.post(shellNodeEvent);
-			// if ((this.shellLayoutManager != null) &&
-			// this.shellLayoutManager.getChildren().contains(child)) {
-			// this.shellLayoutManager.layout(this);
-			// }
-		} else {
-			this.children.add(child);
-			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
-															toGeoTransformation());
-			this.nodeEventBus.post(shellNodeEvent);
-		}
-	}
-
 	protected void execReparent() {
 		getNodeExecutor().reparent(	this,
 									getDesiredParent());
@@ -484,17 +438,6 @@ public abstract class AbstractShellNode implements ShellNode {
 		this.nodeEventBus.unregister(geoEventHandler);
 	}
 
-	@Override
-	public ShellLayoutManager getLayoutManager() {
-		return this.shellLayoutManager;
-	}
-
-	@Override
-	public void setLayoutManager(final ShellLayoutManager shellLayoutManager) {
-		this.shellLayoutManager = shellLayoutManager;
-		this.nodeEventBus.register(shellLayoutManager);
-	}
-
 	protected int getDesiredHeight() {
 		return this.desiredHeight;
 	}
@@ -515,7 +458,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		return this.desiredVisibility;
 	}
 
-	protected ShellNode getDesiredParent() {
+	protected ShellNodeParent getDesiredParent() {
 		return this.desiredParent;
 	}
 
@@ -576,15 +519,5 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (getParentLayoutManager() == null) {
 			doHide();
 		}
-	}
-
-	@Override
-	public void layout() {
-		final ShellLayoutManager layoutManager = getLayoutManager();
-		if (layoutManager == null) {
-			return;
-		}
-
-		layoutManager.layout(this);
 	}
 }

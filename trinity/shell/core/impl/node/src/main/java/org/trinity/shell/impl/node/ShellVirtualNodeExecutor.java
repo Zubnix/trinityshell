@@ -31,13 +31,13 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(value = @Named("ShellGeoVExecutor"))
 @Singleton
-public class ShellVirtualNodeExecutor implements ShellNodeExecutor {
+public class ShellVirtualNodeExecutor implements ShellNodeExecutor<ShellVirtualNode> {
 
 	ShellVirtualNodeExecutor() {
 	}
 
 	@Override
-	public void lower(final ShellNode shellNode) {
+	public void lower(final ShellVirtualNode shellNode) {
 		final ShellNode[] children = shellNode.getChildren();
 		for (final ShellNode child : children) {
 			child.getNodeExecutor().lower(child);

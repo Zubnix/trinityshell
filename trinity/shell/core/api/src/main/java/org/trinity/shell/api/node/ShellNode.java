@@ -38,9 +38,7 @@ public interface ShellNode extends SurfaceNode, ShellNodeTransformable {
 
 	void doHide();
 
-	ShellNode[] getChildren();
-
-	ShellNodeExecutor getNodeExecutor();
+	ShellNodeExecutor<? extends ShellNode> getNodeExecutor();
 
 	boolean isDestroyed();
 
@@ -65,7 +63,7 @@ public interface ShellNode extends SurfaceNode, ShellNodeTransformable {
 
 	void setHeight(final int height);
 
-	void setParent(final ShellNode parent);
+	void setParent(final ShellNodeParent parent);
 
 	void setX(final int x);
 
@@ -76,17 +74,9 @@ public interface ShellNode extends SurfaceNode, ShellNodeTransformable {
 	ShellLayoutManager getParentLayoutManager();
 
 	@Override
-	ShellNode getParent();
-
-	ShellLayoutManager getLayoutManager();
-
-	void layout();
-
-	void setLayoutManager(ShellLayoutManager shellLayoutManager);
+	ShellNodeParent getParent();
 
 	void addShellNodeEventHandler(Object shellNodeEventHandler);
 
 	void removeShellNodeEventHandler(Object shellNodeEventHandler);
-
-	void handleChildReparentEvent(ShellNode child);
 }

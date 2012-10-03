@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.impl.node;
 
-import org.trinity.shell.api.node.AbstractShellNode;
+import org.trinity.shell.api.node.AbstractShellNodeParent;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
@@ -40,8 +40,8 @@ import de.devsurf.injection.guice.annotations.To.Type;
  * @since 1.0
  */
 @Bind(value = @Named("ShellVirtualNode"), to = @To(value = Type.CUSTOM, customs = ShellNode.class))
-public class ShellVirtualNode extends AbstractShellNode {
-	private final ShellNodeExecutor shellNodeExecutor;
+public class ShellVirtualNode extends AbstractShellNodeParent {
+	private final ShellNodeExecutor<ShellVirtualNode> shellNodeExecutor;
 	private ShellLayoutManager shellLayoutManager;
 
 	@Inject
@@ -52,7 +52,7 @@ public class ShellVirtualNode extends AbstractShellNode {
 	}
 
 	@Override
-	public ShellNodeExecutor getNodeExecutor() {
+	public ShellNodeExecutor<ShellVirtualNode> getNodeExecutor() {
 		return this.shellNodeExecutor;
 	}
 

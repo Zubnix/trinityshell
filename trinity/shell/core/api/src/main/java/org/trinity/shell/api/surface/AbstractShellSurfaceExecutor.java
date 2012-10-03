@@ -16,6 +16,7 @@ import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.shell.api.node.AbstractShellNodeExecutor;
 import org.trinity.shell.api.node.ShellNode;
+import org.trinity.shell.api.node.ShellNodeParent;
 
 public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExecutor {
 
@@ -126,9 +127,12 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 								final ShellNode nodeToInit) {
 		initializeShellSurface(	parent,
 								nodeToInit);
-		for (final ShellNode child : nodeToInit.getChildren()) {
-			initialize(	nodeToInit,
-						child);
+		if (nodeToInit instanceof ShellNodeParent) {
+			final ShellNode[] children = ((ShellNodeParent) nodeToInit).getChildren();
+			for (final ShellNode child : children) {
+				initialize(	nodeToInit,
+							child);
+			}
 		}
 	}
 
@@ -137,7 +141,7 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 
 	@Override
 	public void reparent(	final ShellNode shellNode,
-							final ShellNode parent) {
+							final ShellNodeParent parent) {
 		final ShellSurface currentSurface = (ShellSurface) shellNode;
 		final ShellNode newParent = parent;
 		final ShellSurface newParentSurface = findClosestSameTypeSurface(newParent);

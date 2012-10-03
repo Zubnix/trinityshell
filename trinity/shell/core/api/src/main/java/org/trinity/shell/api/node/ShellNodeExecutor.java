@@ -28,17 +28,17 @@ package org.trinity.shell.api.node;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public interface ShellNodeExecutor {
+public interface ShellNodeExecutor<T extends ShellNode> {
 
 	/**
 	 * Execute the actual lowering of the handled <code>ShellNode</code>.
 	 */
-	void lower(ShellNode shellNode);
+	void lower(T shellNode);
 
 	/**
 	 * Execute the actual raising the handled <code>ShellNode</code>.
 	 */
-	void raise(ShellNode shellNode);
+	void raise(T shellNode);
 
 	/**
 	 * Execute the actual moving of the handled <code>ShellNode</code>.
@@ -46,7 +46,7 @@ public interface ShellNodeExecutor {
 	 * @param relativeX
 	 * @param relativeY
 	 */
-	void move(	ShellNode shellNode,
+	void move(	T shellNode,
 				int relativeX,
 				int relativeY);
 
@@ -56,7 +56,7 @@ public interface ShellNodeExecutor {
 	 * @param width
 	 * @param height
 	 */
-	void resize(ShellNode shellNode,
+	void resize(T shellNode,
 				int width,
 				int height);
 
@@ -69,26 +69,26 @@ public interface ShellNodeExecutor {
 	 * @param width
 	 * @param height
 	 */
-	void moveResize(ShellNode shellNode,
+	void moveResize(T shellNode,
 					int relativeX,
 					int relativeY,
 					int width,
 					int height);
 
-	void show(ShellNode shellNode);
+	void show(T shellNode);
 
-	void hide(ShellNode shellNode);
+	void hide(T shellNode);
 
 	/**
 	 * Execute the actual parent update of the handled <code>ShellNode</code> .
 	 * 
 	 * @param parent
 	 */
-	void reparent(	ShellNode shellNode,
-					ShellNode parent);
+	void reparent(	T shellNode,
+					ShellNodeParent parent);
 
 	/**
 	 * Execute the actual destroy process of the handled <code>ShellNode</code>.
 	 */
-	void destroy(ShellNode shellNode);
+	void destroy(T shellNode);
 }
