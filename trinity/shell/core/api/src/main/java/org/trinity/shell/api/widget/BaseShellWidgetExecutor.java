@@ -17,6 +17,7 @@ import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
+import org.trinity.shell.api.surface.ShellSurface;
 
 // TODO documentation
 /**
@@ -62,6 +63,13 @@ public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 	@Override
 	public PaintableSurfaceNode getSurfacePeer() {
 		return getShellNode();
+	}
+
+	@Override
+	protected PaintableSurfaceNode getSurfacePeer(final ShellSurface shellSurface) {
+		// if the cast fails then somebody is trying to combine a non
+		// PaintableSurfaceNode with one that is which shouldn'be a allowed.
+		return (PaintableSurfaceNode) shellSurface;
 	}
 
 	@Override

@@ -12,7 +12,6 @@
 package org.trinity.shellplugin.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
@@ -45,12 +44,10 @@ public class ShellLabelImpl extends BaseShellWidget implements ShellLabel {
 	protected ShellLabelImpl(	final EventBus eventBus,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								@Named("ShellLabelView") final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellNodeExecutor,
 				view);
 		this.view = view;
 	}

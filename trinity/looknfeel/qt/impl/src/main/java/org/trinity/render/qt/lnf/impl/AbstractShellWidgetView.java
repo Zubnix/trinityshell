@@ -7,9 +7,9 @@ import java.util.concurrent.Future;
 
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.render.qt.api.QJPaintContext;
+import org.trinity.shell.api.widget.ShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
 import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
 import org.trinity.shellplugin.widget.api.binding.ViewAttributeSlot;
@@ -36,7 +36,8 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 	}
 
 	@Override
-	public final Future<Void> createDisplaySurface(final Painter painter) {
+	public final Future<Void> createDisplaySurface(	final Painter painter,
+													final ShellWidget parent) {
 		if (this.painter == null) {
 			this.painter = painter;
 		} else {
@@ -47,7 +48,8 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 			@Override
 			public Void call(final QJPaintContext paintContext) {
 				try {
-					createDisplaySurfaceInstruction(paintContext);
+					createDisplaySurfaceInstruction(paintContext,
+													parent);
 					setAllViewAttributes();
 				} catch (final Exception e) {
 					e.printStackTrace();
@@ -57,12 +59,11 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 		});
 	}
 
-	protected void createDisplaySurfaceInstruction(final QJPaintContext paintContext) {
-		final PaintableSurfaceNode paintableSurfaceNode = paintContext.getPaintableSurfaceNode();
-		final PaintableSurfaceNode parentSurfaceNode = paintableSurfaceNode.getParentPaintableSurface();
+	protected void createDisplaySurfaceInstruction(	final QJPaintContext paintContext,
+													final ShellWidget parent) {
 		QWidget parentVisual = null;
-		if (parentSurfaceNode != null) {
-			parentVisual = paintContext.getVisual(parentSurfaceNode);
+		if (parent != null) {
+			parentVisual = paintContext.getVisual(parent);
 		}
 		final QWidget visual = createVisual(parentVisual);
 

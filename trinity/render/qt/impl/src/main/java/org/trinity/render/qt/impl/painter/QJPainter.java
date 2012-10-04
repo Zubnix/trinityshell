@@ -14,6 +14,7 @@ package org.trinity.render.qt.impl.painter;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.input.api.Button;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
@@ -122,11 +123,11 @@ public class QJPainter implements Painter {
 	}
 
 	@Override
-	public void setParent(	final PaintableSurfaceNode parent,
+	public void setParent(	final DisplayArea parent,
 							final int x,
 							final int y) {
 		this.qFRenderEngine.invoke(	this.paintableSurfaceNode,
-									new QJSetParentInstruction(	parent,
+									new QJSetParentInstruction(	(PaintableSurfaceNode) parent,
 																x,
 																y));
 	}
@@ -152,12 +153,12 @@ public class QJPainter implements Painter {
 	}
 
 	@Override
-	public Coordinate translateCoordinates(	final PaintableSurfaceNode source,
+	public Coordinate translateCoordinates(	final DisplayArea source,
 											final int sourceX,
 											final int sourceY) {
 		try {
 			return this.qFRenderEngine.invoke(	this.paintableSurfaceNode,
-												new QJTranslateCoordinatesCalculation(	source,
+												new QJTranslateCoordinatesCalculation(	(PaintableSurfaceNode) source,
 																						sourceX,
 																						sourceY)).get();
 		} catch (final InterruptedException e) {

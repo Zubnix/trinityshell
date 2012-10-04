@@ -6,7 +6,8 @@ import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.Painter;
 
 public interface ShellWidgetView {
-	Future<Void> createDisplaySurface(Painter painter);
+	Future<Void> createDisplaySurface(	Painter painter,
+										ShellWidget closestParentWidget);
 
 	Future<DisplaySurface> getDislaySurface();
 

@@ -16,7 +16,6 @@ import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.widget.BaseShellWidget;
@@ -90,12 +89,10 @@ public class ShellDragButton extends BaseShellWidget {
 								@Named("ShellRootSurface") final ShellSurface root,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								@Named("ShellButtonView") final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellNodeExecutor,
 				view);
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		this.root = root;

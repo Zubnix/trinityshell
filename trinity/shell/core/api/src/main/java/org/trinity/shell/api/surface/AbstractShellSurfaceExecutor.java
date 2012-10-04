@@ -162,7 +162,8 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 				final int newRelativeX = newRelativePosition.getX();
 				final int newRelativeY = newRelativePosition.getY();
 
-				final DisplayArea parentAreaPeer = newParentSurface.getShellNodeExecutor().getSurfacePeer();
+				final DisplayArea parentAreaPeer = getSurfacePeer(newParentSurface);
+
 				getShellNodeManipulator().setParent(parentAreaPeer,
 													newRelativeX,
 													newRelativeY);
@@ -174,6 +175,13 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 	}
 
 	protected abstract ShellSurface findClosestSameTypeSurface(final ShellNode square);
+
+	@Override
+	public DisplayArea getSurfacePeer() {
+		return getSurfacePeer(getShellNode());
+	}
+
+	protected abstract DisplayArea getSurfacePeer(final ShellSurface shellSurface);
 
 	@Override
 	public void hide() {

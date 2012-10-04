@@ -14,6 +14,7 @@ package org.trinity.shell.impl.node;
 import org.trinity.shell.api.node.AbstractShellNodeParent;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeExecutor;
+import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 
 import com.google.common.eventbus.EventBus;
@@ -39,16 +40,16 @@ import de.devsurf.injection.guice.annotations.To.Type;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(value = @Named("ShellVirtualNode"), to = @To(value = Type.CUSTOM, customs = ShellNode.class))
+@Bind(value = @Named("ShellVirtualNode"), to = @To(value = Type.CUSTOM, customs = { ShellNode.class,
+		ShellNodeParent.class }))
 public class ShellVirtualNode extends AbstractShellNodeParent {
 	private final ShellNodeExecutor shellNodeExecutor;
 	private ShellLayoutManager shellLayoutManager;
 
 	@Inject
-	protected ShellVirtualNode(	final EventBus eventBus,
-								@Named("ShellGeoVExecutor") final ShellNodeExecutor shellNodeExecutor) {
+	protected ShellVirtualNode(final EventBus eventBus) {
 		super(eventBus);
-		this.shellNodeExecutor = shellNodeExecutor;
+		this.shellNodeExecutor = new ShellVirtualNodeExecutor(this);
 	}
 
 	@Override

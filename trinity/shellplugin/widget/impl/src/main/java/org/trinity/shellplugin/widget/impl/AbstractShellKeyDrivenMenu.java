@@ -20,7 +20,6 @@ import org.trinity.foundation.input.api.KeyboardInput;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.api.input.ShellKeyInputStringBuilder;
-import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.widget.BaseShellWidget;
@@ -56,7 +55,6 @@ public abstract class AbstractShellKeyDrivenMenu extends BaseShellWidget // impl
 											final EventBus nodeEventBus,
 											final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 											final PainterFactory painterFactory,
-											final ShellNodeExecutor shellNodeExecutor,
 											final Keyboard keyboard,
 											final ShellSurface root,
 											final ShellKeyInputStringBuilder keyInputStringBuilder,
@@ -64,7 +62,6 @@ public abstract class AbstractShellKeyDrivenMenu extends BaseShellWidget // impl
 		super(	nodeEventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellNodeExecutor,
 				view);
 		this.shellEventBus = shellEventBus;
 		this.keyboard = keyboard;

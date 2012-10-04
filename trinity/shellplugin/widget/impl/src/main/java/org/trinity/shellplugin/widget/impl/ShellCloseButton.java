@@ -16,7 +16,6 @@ import org.trinity.foundation.display.api.DisplayProtocols;
 import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.input.api.Momentum;
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.widget.BaseShellWidget;
@@ -59,13 +58,11 @@ public class ShellCloseButton extends BaseShellWidget {
 	protected ShellCloseButton(	final EventBus eventBus,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								final DisplayProtocols desktopProtocol,
 								@Named("ShellButtonView") final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellNodeExecutor,
 				view);
 		this.desktopProtocol = desktopProtocol;
 	}

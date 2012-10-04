@@ -23,7 +23,6 @@ import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
-import org.trinity.shell.api.surface.ShellSurface;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -99,24 +98,11 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 		this.view = view;
 	}
 
-	/**
-	 * Initialize the <code>BaseShellWidget</code> with the closest paintable
-	 * parent <code>BaseShellWidget</code>. The parent
-	 * <code>BaseShellWidget</code> can either be a direct or indirect parent of
-	 * this <code>BaseShellWidget</code>.
-	 * 
-	 * @param paintableParent
-	 *            The <code>BaseShellWidget</code>s closest parent
-	 *            <code>BaseShellWidget</code>. This is needed if a
-	 *            <code>BaseShellWidget</code> needs to be directly initialized
-	 *            with data from its paintable parent at the paint back-end
-	 *            level.
-	 */
-
-	protected void init(final ShellSurface paintableParent) {
+	protected void init(final BaseShellWidget closestParentWidget) {
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			this);
-		this.view.createDisplaySurface(getPainter());
+		this.view.createDisplaySurface(	getPainter(),
+										closestParentWidget);
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			getDisplaySurface());
 	}

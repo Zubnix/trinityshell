@@ -14,6 +14,7 @@ package org.trinity.display.x11.core.impl;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.DisplaySurfaceHandle;
 import org.trinity.foundation.input.api.Button;
@@ -223,10 +224,11 @@ public class XWindow implements DisplaySurface {
 	}
 
 	@Override
-	public void setParent(	final DisplaySurface parent,
+	public void setParent(	final DisplayArea parent,
 							final int x,
 							final int y) {
-		final int parentId = ((Integer) (parent.getDisplaySurfaceHandle()).getNativeHandle()).intValue();
+		final int parentId = ((Integer) (((DisplaySurface) parent).getDisplaySurfaceHandle()).getNativeHandle())
+				.intValue();
 
 		if (XWindow.checked) {
 			final xcb_void_cookie_t void_cookie_t = LibXcb.xcb_reparent_window_checked(	getConnectionRef(),
@@ -287,11 +289,12 @@ public class XWindow implements DisplaySurface {
 	}
 
 	@Override
-	public Coordinate translateCoordinates(	final DisplaySurface source,
+	public Coordinate translateCoordinates(	final DisplayArea source,
 											final int sourceX,
 											final int sourceY) {
 
-		final int sourceId = ((Integer) (source.getDisplaySurfaceHandle()).getNativeHandle()).intValue();
+		final int sourceId = ((Integer) (((DisplaySurface) source).getDisplaySurfaceHandle()).getNativeHandle())
+				.intValue();
 		final xcb_translate_coordinates_cookie_t cookie_t = LibXcb.xcb_translate_coordinates(	getConnectionRef(),
 																								sourceId,
 																								getWindowId(),

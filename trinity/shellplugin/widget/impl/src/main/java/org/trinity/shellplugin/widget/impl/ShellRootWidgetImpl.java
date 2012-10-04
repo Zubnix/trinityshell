@@ -12,10 +12,9 @@
 package org.trinity.shellplugin.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
-import org.trinity.shell.api.surface.ShellSurface;
+import org.trinity.shell.api.surface.ShellSurfaceParent;
 import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shell.api.widget.ShellRootWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
@@ -44,17 +43,19 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 public class ShellRootWidgetImpl extends BaseShellWidget implements ShellRootWidget {
 
+	private final ShellSurfaceParent shellRootSurface;
+
 	@Inject
 	ShellRootWidgetImpl(final EventBus eventBus,
 						final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 						final PainterFactory painterFactory,
-						@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
+						@Named("ShellRootSurface") final ShellSurfaceParent shellRootSurface,
 						@Named("ShellRootView") final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellNodeExecutor,
 				view);
+		this.shellRootSurface = shellRootSurface;
 	}
 
 	@Override
@@ -64,9 +65,12 @@ public class ShellRootWidgetImpl extends BaseShellWidget implements ShellRootWid
 	}
 
 	@Override
-	public void init(final ShellSurface parent) {
-		setParent(parent);
+	public void construct() {
+		setParent(this.shellRootSurface);
 		doReparent(false);
-		super.init(parent);
+		init(null);
+		setWidth(this.shellRootSurface.getWidth());
+		setHeight(this.shellRootSurface.getHeight());
+		doResize();
 	}
 }

@@ -11,29 +11,25 @@
  */
 package org.trinity.shell.impl.surface;
 
-import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
+import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 
-public class ShellClientSurfaceExecutor extends AbstractShellSurfaceExecutor {
+public class ShellSurfaceExecutorImpl extends AbstractShellSurfaceExecutor {
 
 	private final ShellSurface abstractShellSurface;
 
-	public ShellClientSurfaceExecutor(final ShellSurface abstractShellSurface) {
-		this.abstractShellSurface = abstractShellSurface;
+	public ShellSurfaceExecutorImpl(final ShellSurface shellSurface) {
+		this.abstractShellSurface = shellSurface;
 	}
 
-	/**
-	 * @param shellSurface
-	 * @return
-	 */
 	@Override
-	public DisplayArea getSurfacePeer() {
-		return getShellNode().getDisplaySurface();
+	protected DisplaySurface getSurfacePeer(final ShellSurface shellSurface) {
+		return shellSurface.getDisplaySurface();
 	}
 
 	/**

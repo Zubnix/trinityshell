@@ -21,7 +21,6 @@ import java.util.StringTokenizer;
 import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.api.input.ShellKeyInputStringBuilder;
-import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.widget.ShellWidgetView;
@@ -48,7 +47,6 @@ public class ShellAppLauncher extends AbstractShellKeyDrivenMenu {
 								final EventBus nodeEventBus,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								final Keyboard keyboard,
 								@Named("ShellRootSurface") final ShellSurface root,
 								final ShellKeyInputStringBuilder keyInputStringBuilder,
@@ -57,7 +55,6 @@ public class ShellAppLauncher extends AbstractShellKeyDrivenMenu {
 				nodeEventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellNodeExecutor,
 				keyboard,
 				root,
 				keyInputStringBuilder,

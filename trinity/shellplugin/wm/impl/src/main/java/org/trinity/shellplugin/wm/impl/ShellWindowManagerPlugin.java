@@ -1,7 +1,7 @@
 package org.trinity.shellplugin.wm.impl;
 
 import org.trinity.foundation.shared.geometry.api.Margins;
-import org.trinity.shell.api.node.ShellNode;
+import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 import org.trinity.shell.api.node.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.plugin.ShellPlugin;
@@ -23,26 +23,24 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class ShellWindowManagerPlugin implements ShellPlugin {
 
-	private final ShellSurface shellRootSurface;
 	private final ShellRootWidget shellRootWidget;
 	private final EventBus shellEventBus;
 
 	private final Provider<ShellLayoutManager> shellLayoutManagerProvider;
-	private final Provider<ShellNode> shellNodeProvider;
+	private final Provider<ShellNodeParent> shellNodeProvider;
 	private final Provider<ShellWidget> shellWidgetContainerProvider;
 
 	private final ShellLayoutManager shellLayoutManager;
 
-	private ShellNode virtualNode;
+	private ShellNodeParent virtualNode;
 
 	@Inject
-	ShellWindowManagerPlugin(	@Named("ShellRootSurface") final ShellSurface shellRootSurface,
-								final ShellRootWidget shellRootWidget,
+	ShellWindowManagerPlugin(	final ShellRootWidget shellRootWidget,
 								@Named("shellEventBus") final EventBus shellEventBus,
 								@Named("ShellLayoutManagerLine") final Provider<ShellLayoutManager> shellLayoutManagerProvider,
 								@Named("ShellWidgetContainer") final Provider<ShellWidget> shellWidgetContainerProvider,
-								@Named("ShellVirtualNode") final Provider<ShellNode> shellNodeProvider) {
-		this.shellRootSurface = shellRootSurface;
+								@Named("ShellVirtualNode") final Provider<ShellNodeParent> shellNodeProvider) {
+
 		this.shellRootWidget = shellRootWidget;
 		this.shellEventBus = shellEventBus;
 
@@ -67,11 +65,7 @@ public class ShellWindowManagerPlugin implements ShellPlugin {
 	}
 
 	public void setupRootWidget() {
-		this.shellRootWidget.init(this.shellRootSurface);
-
-		this.shellRootWidget.setWidth(this.shellRootSurface.getWidth());
-		this.shellRootWidget.setHeight(this.shellRootSurface.getHeight());
-		this.shellRootWidget.doResize();
+		this.shellRootWidget.construct();
 
 		final ShellLayoutManager rootLayoutManager = this.shellLayoutManagerProvider.get();
 		this.shellRootWidget.setLayoutManager(rootLayoutManager);

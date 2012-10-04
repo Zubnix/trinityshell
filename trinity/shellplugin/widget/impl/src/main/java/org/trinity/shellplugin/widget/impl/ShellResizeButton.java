@@ -12,7 +12,6 @@
 package org.trinity.shellplugin.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
-import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.widget.ShellWidgetView;
@@ -39,13 +38,11 @@ public class ShellResizeButton extends ShellDragButton {
 								@Named("ShellRootSurface") final ShellSurface root,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory,
-								@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 								@Named("ShellButtonView") final ShellWidgetView view) {
 		super(	eventBus,
 				root,
 				shellDisplayEventDispatcher,
 				painterFactory,
-				shellNodeExecutor,
 				view);
 	}
 

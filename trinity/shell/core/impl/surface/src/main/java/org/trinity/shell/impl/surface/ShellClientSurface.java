@@ -36,7 +36,7 @@ import com.google.inject.name.Named;
  */
 public class ShellClientSurface extends AbstractShellSurface {
 
-	private final ShellClientSurfaceExecutor shellClientSurfaceExecutor;
+	private final ShellSurfaceExecutorImpl shellSurfaceExecutorImpl;
 	private final DisplaySurface displaySurface;
 	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
 
@@ -58,7 +58,7 @@ public class ShellClientSurface extends AbstractShellSurface {
 		super(nodeEventBus);
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		this.displaySurface = displaySurface;
-		this.shellClientSurfaceExecutor = new ShellClientSurfaceExecutor(this);
+		this.shellSurfaceExecutorImpl = new ShellSurfaceExecutorImpl(this);
 
 		shellDisplayEventDispatcher.registerDisplayEventSourceListener(	nodeEventBus,
 																		displaySurface);
@@ -75,8 +75,8 @@ public class ShellClientSurface extends AbstractShellSurface {
 	}
 
 	@Override
-	public ShellClientSurfaceExecutor getShellNodeExecutor() {
-		return this.shellClientSurfaceExecutor;
+	public ShellSurfaceExecutorImpl getShellNodeExecutor() {
+		return this.shellSurfaceExecutorImpl;
 	}
 
 	@Override

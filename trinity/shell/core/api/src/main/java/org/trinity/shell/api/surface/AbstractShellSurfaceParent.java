@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.node.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.node.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.node.event.ShellNodeEvent;
@@ -12,7 +11,7 @@ import org.trinity.shell.api.node.manager.ShellLayoutManager;
 
 import com.google.common.eventbus.EventBus;
 
-public abstract class AbstractShellSurfaceParent extends AbstractShellSurface implements ShellNodeParent {
+public abstract class AbstractShellSurfaceParent extends AbstractShellSurface implements ShellSurfaceParent {
 
 	private final EventBus nodeEventBus;
 
