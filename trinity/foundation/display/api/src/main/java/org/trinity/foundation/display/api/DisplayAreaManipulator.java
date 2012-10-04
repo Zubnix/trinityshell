@@ -26,7 +26,7 @@ import org.trinity.foundation.shared.geometry.api.Coordinate;
  * @since 1.0
  * 
  */
-public interface DisplayAreaManipulator<AREATYPE extends DisplayArea> {
+public interface DisplayAreaManipulator {
 
 	void destroy();
 
@@ -46,7 +46,7 @@ public interface DisplayAreaManipulator<AREATYPE extends DisplayArea> {
 
 	void raise();
 
-	void setParent(	AREATYPE parent,
+	void setParent(	DisplayArea parent,
 					int x,
 					int y);
 
@@ -55,7 +55,7 @@ public interface DisplayAreaManipulator<AREATYPE extends DisplayArea> {
 
 	void hide();
 
-	Coordinate translateCoordinates(AREATYPE source,
+	Coordinate translateCoordinates(DisplayArea source,
 									int sourceX,
 									int sourceY);
 

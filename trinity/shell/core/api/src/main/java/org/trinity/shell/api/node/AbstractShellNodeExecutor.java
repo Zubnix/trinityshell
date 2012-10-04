@@ -11,47 +11,44 @@
  */
 package org.trinity.shell.api.node;
 
-import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
 
 public abstract class AbstractShellNodeExecutor implements ShellNodeExecutor {
 
-	public abstract <T extends DisplayArea> DisplayAreaManipulator<T> getShellNodeManipulator(ShellNode shellNode);
+	public abstract DisplayAreaManipulator getShellNodeManipulator();
 
 	@Override
-	public void lower(final ShellNode shellNode) {
-		this.getShellNodeManipulator(shellNode).lower();
+	public abstract ShellNode getShellNode();
+
+	@Override
+	public void lower() {
+		getShellNodeManipulator().lower();
 	}
 
 	@Override
-	public void raise(final ShellNode shellNode) {
-		this.getShellNodeManipulator(shellNode).raise();
+	public void raise() {
+		getShellNodeManipulator().raise();
 	}
 
 	@Override
-	public void resize(	final ShellNode shellNode,
-						final int width,
+	public void resize(	final int width,
 						final int height) {
-		this.getShellNodeManipulator(shellNode).resize(	width,
-														height);
+		getShellNodeManipulator().resize(	width,
+											height);
 	}
 
 	@Override
-	public void show(final ShellNode shellNode) {
-		this.getShellNodeManipulator(shellNode).show();
+	public void show() {
+		getShellNodeManipulator().show();
 	}
 
 	@Override
-	public void hide(final ShellNode shellNode) {
-		this.getShellNodeManipulator(shellNode).hide();
+	public void hide() {
+		getShellNodeManipulator().hide();
 	}
 
-	protected void reparent(final ShellNode shellNode,
-							final DisplayArea newParentArea,
-							final int newX,
-							final int newY) {
-		getShellNodeManipulator(shellNode).setParent(	newParentArea,
-														newX,
-														newY);
+	@Override
+	public void destroy() {
+		getShellNodeManipulator().destroy();
 	}
 }

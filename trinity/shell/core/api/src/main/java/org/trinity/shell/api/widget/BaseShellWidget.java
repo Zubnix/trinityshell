@@ -21,14 +21,12 @@ import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.ShellNodeExecutor;
-import org.trinity.shell.api.surface.AbstractShellSurface;
+import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
@@ -75,10 +73,10 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @since 1.0
  */
 @Bind
-public class BaseShellWidget extends AbstractShellSurface implements ShellWidget {
+public class BaseShellWidget extends AbstractShellSurfaceParent implements ShellWidget {
 
 	private final Painter painter;
-	private final ShellNodeExecutor shellNodeExecutor;
+	private final BaseShellWidgetExecutor shellNodeExecutor;
 	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
 	private final EventBus eventBus;
 	private final ShellWidgetView view;
@@ -92,12 +90,11 @@ public class BaseShellWidget extends AbstractShellSurface implements ShellWidget
 	public BaseShellWidget(	final EventBus eventBus,
 							final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 							final PainterFactory painterFactory,
-							@Named("shellWidgetGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 							final ShellWidgetView view) {
 		super(eventBus);
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		this.eventBus = eventBus;
-		this.shellNodeExecutor = shellNodeExecutor;
+		this.shellNodeExecutor = new BaseShellWidgetExecutor(this);
 		this.painter = painterFactory.createPainter(this);
 		this.view = view;
 	}
@@ -130,7 +127,7 @@ public class BaseShellWidget extends AbstractShellSurface implements ShellWidget
 	}
 
 	@Override
-	public ShellNodeExecutor getNodeExecutor() {
+	public BaseShellWidgetExecutor getShellNodeExecutor() {
 		return this.shellNodeExecutor;
 	}
 

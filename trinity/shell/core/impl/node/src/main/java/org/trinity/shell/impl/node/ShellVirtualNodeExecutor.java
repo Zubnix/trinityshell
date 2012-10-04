@@ -13,12 +13,8 @@ package org.trinity.shell.impl.node;
 
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeExecutor;
+import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.node.ShellNodeTransformation;
-
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
 /**
@@ -28,35 +24,39 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @author Erik De Rijcke
  * @since 1.0
  */
+public class ShellVirtualNodeExecutor implements ShellNodeExecutor {
 
-@Bind(value = @Named("ShellGeoVExecutor"))
-@Singleton
-public class ShellVirtualNodeExecutor implements ShellNodeExecutor<ShellVirtualNode> {
+	private final ShellVirtualNode shellVirtualNode;
 
-	ShellVirtualNodeExecutor() {
+	public ShellVirtualNodeExecutor(final ShellVirtualNode shellVirtualNode) {
+		this.shellVirtualNode = shellVirtualNode;
 	}
 
 	@Override
-	public void lower(final ShellVirtualNode shellNode) {
-		final ShellNode[] children = shellNode.getChildren();
+	public ShellVirtualNode getShellNode() {
+		return this.shellVirtualNode;
+	}
+
+	@Override
+	public void lower() {
+		final ShellNode[] children = getShellNode().getChildren();
 		for (final ShellNode child : children) {
-			child.getNodeExecutor().lower(child);
+			child.getShellNodeExecutor().lower();
 		}
 	}
 
 	@Override
-	public void raise(final ShellNode shellNode) {
-		final ShellNode[] children = shellNode.getChildren();
+	public void raise() {
+		final ShellNode[] children = getShellNode().getChildren();
 		for (final ShellNode child : children) {
-			child.getNodeExecutor().raise(child);
+			child.getShellNodeExecutor().raise();
 		}
 	}
 
 	@Override
-	public void move(	final ShellNode shellNode,
-						final int relativeX,
+	public void move(	final int relativeX,
 						final int relativeY) {
-
+		final ShellVirtualNode shellNode = getShellNode();
 		final ShellNodeTransformation shellNodeTransformation = shellNode.toGeoTransformation();
 
 		final int deltaX = shellNodeTransformation.getDeltaX();
@@ -72,33 +72,29 @@ public class ShellVirtualNodeExecutor implements ShellNodeExecutor<ShellVirtualN
 
 			// directly manipulated underlying platform specific geometry of the
 			// child
-			child.getNodeExecutor().move(	child,
-											newRelX,
-											newRelY);
+			child.getShellNodeExecutor().move(	newRelX,
+												newRelY);
 		}
 	}
 
 	@Override
-	public void resize(	final ShellNode shellNode,
-						final int width,
+	public void resize(	final int width,
 						final int height) {
 		// do nothing
 	}
 
 	@Override
-	public void moveResize(	final ShellNode shellNode,
-							final int relativeX,
+	public void moveResize(	final int relativeX,
 							final int relativeY,
 							final int width,
 							final int height) {
-		move(	shellNode,
-				relativeX,
+		move(	relativeX,
 				relativeY);
 	}
 
 	@Override
-	public void show(final ShellNode shellNode) {
-		final ShellNode[] children = shellNode.getChildren();
+	public void show() {
+		final ShellNode[] children = getShellNode().getChildren();
 		for (final ShellNode child : children) {
 			updateChildVisibility(	child,
 									true);
@@ -106,8 +102,8 @@ public class ShellVirtualNodeExecutor implements ShellNodeExecutor<ShellVirtualN
 	}
 
 	@Override
-	public void hide(final ShellNode shellNode) {
-		final ShellNode[] children = shellNode.getChildren();
+	public void hide() {
+		final ShellNode[] children = getShellNode().getChildren();
 		for (final ShellNode child : children) {
 			updateChildVisibility(	child,
 									false);
@@ -124,31 +120,36 @@ public class ShellVirtualNodeExecutor implements ShellNodeExecutor<ShellVirtualN
 		// directly update underlying platform specific visibility of
 		// the child
 		if (childVisible & parentVisible) {
-			child.getNodeExecutor().show(child);
+			child.getShellNodeExecutor().show();
 		} else {
-			child.getNodeExecutor().hide(child);
+			child.getShellNodeExecutor().hide();
 		}
 	}
 
 	@Override
-	public void reparent(	final ShellNode shellNode,
-							final ShellNode parent) {
+	public void reparent(final ShellNodeParent parent) {
+		final ShellVirtualNode shellNode = getShellNode();
+
 		final ShellNode[] children = shellNode.getChildren();
 
 		final boolean parentVisible = parent.isVisible();
 		for (final ShellNode child : children) {
-			// directly update underlying platform specific parent of
+			// update underlying platform specific parent of
 			// the child
-			child.getNodeExecutor().reparent(	child,
-												shellNode);
+			child.getShellNodeExecutor().reparent(shellNode);
 			updateChildVisibility(	child,
 									parentVisible);
 		}
 	}
 
 	@Override
-	public void destroy(final ShellNode shellNode) {
+	public void destroy() {
 		// TODO destroy all children? (Will somebody *please* think of the
-		// children! :'( )
+		// children! D: )
+	}
+
+	@Override
+	public void init(final ShellNodeParent parent) {
+		reparent(parent);
 	}
 }

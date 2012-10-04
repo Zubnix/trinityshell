@@ -13,10 +13,9 @@ package org.trinity.shell.impl.surface;
 
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
-import org.trinity.shell.api.node.ShellNodeExecutor;
+import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
-import org.trinity.shell.api.surface.ShellSurface;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -37,7 +36,7 @@ import com.google.inject.name.Named;
  */
 public class ShellClientSurface extends AbstractShellSurface {
 
-	private final ShellNodeExecutor renderAreaGeoExecutor;
+	private final ShellClientSurfaceExecutor shellClientSurfaceExecutor;
 	private final DisplaySurface displaySurface;
 	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
 
@@ -54,13 +53,12 @@ public class ShellClientSurface extends AbstractShellSurface {
 	@Inject
 	ShellClientSurface(	final EventBus nodeEventBus,
 						final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-						@Named("ShellRootSurface") final ShellSurface root,
-						@Named("shellSurfaceGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
+						@Named("ShellRootSurface") final ShellNodeParent root,
 						@Assisted final DisplaySurface displaySurface) {
 		super(nodeEventBus);
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		this.displaySurface = displaySurface;
-		this.renderAreaGeoExecutor = shellNodeExecutor;
+		this.shellClientSurfaceExecutor = new ShellClientSurfaceExecutor(this);
 
 		shellDisplayEventDispatcher.registerDisplayEventSourceListener(	nodeEventBus,
 																		displaySurface);
@@ -77,8 +75,8 @@ public class ShellClientSurface extends AbstractShellSurface {
 	}
 
 	@Override
-	public ShellNodeExecutor getNodeExecutor() {
-		return this.renderAreaGeoExecutor;
+	public ShellClientSurfaceExecutor getShellNodeExecutor() {
+		return this.shellClientSurfaceExecutor;
 	}
 
 	@Override

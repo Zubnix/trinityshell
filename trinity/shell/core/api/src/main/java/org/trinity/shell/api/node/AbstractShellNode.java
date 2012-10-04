@@ -83,7 +83,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	@Override
-	public abstract ShellNodeExecutor getNodeExecutor();
+	public abstract ShellNodeExecutor getShellNodeExecutor();
 
 	@Override
 	public boolean isDestroyed() {
@@ -264,9 +264,8 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	protected void execMove() {
-		getNodeExecutor().move(	this,
-								getDesiredX(),
-								getDesiredY());
+		getShellNodeExecutor().move(getDesiredX(),
+									getDesiredY());
 	}
 
 	private void flushPlaceValues() {
@@ -290,9 +289,8 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	protected void execResize() {
-		getNodeExecutor().resize(	this,
-									getDesiredWidth(),
-									getDesiredHeight());
+		getShellNodeExecutor().resize(	getDesiredWidth(),
+										getDesiredHeight());
 	}
 
 	private void flushSizeValues() {
@@ -317,12 +315,10 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	protected void execMoveResize() {
-		final ShellNodeExecutor shellNodeExecutor = getNodeExecutor();
-		shellNodeExecutor.moveResize(	this,
-										getDesiredX(),
-										getDesiredY(),
-										getDesiredWidth(),
-										getDesiredHeight());
+		getShellNodeExecutor().moveResize(	getDesiredX(),
+											getDesiredY(),
+											getDesiredWidth(),
+											getDesiredHeight());
 	}
 
 	private void flushSizePlaceValues() {
@@ -346,7 +342,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	protected void execDestroy() {
-		getNodeExecutor().destroy(this);
+		getShellNodeExecutor().destroy();
 	}
 
 	@Override
@@ -364,7 +360,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	protected void execRaise() {
-		getNodeExecutor().raise(this);
+		getShellNodeExecutor().raise();
 	}
 
 	@Override
@@ -382,7 +378,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	protected void execLower() {
-		getNodeExecutor().lower(this);
+		getShellNodeExecutor().lower();
 	}
 
 	@Override
@@ -408,8 +404,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	protected void execReparent() {
-		getNodeExecutor().reparent(	this,
-									getDesiredParent());
+		getShellNodeExecutor().reparent(getDesiredParent());
 	}
 
 	private void flushParentValue() {
@@ -479,7 +474,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	protected void execShow() {
-		getNodeExecutor().show(this);
+		getShellNodeExecutor().show();
 	}
 
 	@Override
@@ -498,7 +493,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	protected void execHide() {
-		getNodeExecutor().hide(this);
+		getShellNodeExecutor().hide();
 	}
 
 	@Override

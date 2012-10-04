@@ -30,7 +30,7 @@ import org.trinity.foundation.display.api.DisplayAreaManipulator;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public interface Painter extends DisplayAreaManipulator<PaintableSurfaceNode> {
+public interface Painter extends DisplayAreaManipulator {
 
 	<R> Future<R> instruct(PaintInstruction<R, ? extends PaintContext> paintInstruction);
 

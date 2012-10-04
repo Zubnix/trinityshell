@@ -38,7 +38,7 @@ public interface ShellNode extends SurfaceNode, ShellNodeTransformable {
 
 	void doHide();
 
-	ShellNodeExecutor<? extends ShellNode> getNodeExecutor();
+	ShellNodeExecutor getShellNodeExecutor();
 
 	boolean isDestroyed();
 

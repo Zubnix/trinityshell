@@ -17,6 +17,9 @@ import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.shell.api.node.ShellNode;
 
 public interface ShellSurface extends ShellNode {
+	@Override
+	ShellSurfaceExecutor getShellNodeExecutor();
+
 	int getHeightIncrement();
 
 	int getMaxHeight();

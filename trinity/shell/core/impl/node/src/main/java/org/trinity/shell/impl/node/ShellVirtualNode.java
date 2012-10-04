@@ -41,7 +41,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
  */
 @Bind(value = @Named("ShellVirtualNode"), to = @To(value = Type.CUSTOM, customs = ShellNode.class))
 public class ShellVirtualNode extends AbstractShellNodeParent {
-	private final ShellNodeExecutor<ShellVirtualNode> shellNodeExecutor;
+	private final ShellNodeExecutor shellNodeExecutor;
 	private ShellLayoutManager shellLayoutManager;
 
 	@Inject
@@ -52,7 +52,7 @@ public class ShellVirtualNode extends AbstractShellNodeParent {
 	}
 
 	@Override
-	public ShellNodeExecutor<ShellVirtualNode> getNodeExecutor() {
+	public ShellNodeExecutor getShellNodeExecutor() {
 		return this.shellNodeExecutor;
 	}
 

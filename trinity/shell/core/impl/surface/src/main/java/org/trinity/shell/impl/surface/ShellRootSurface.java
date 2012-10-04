@@ -3,8 +3,10 @@ package org.trinity.shell.impl.surface;
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.shell.api.node.ShellNodeExecutor;
+import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
-import org.trinity.shell.api.surface.AbstractShellSurface;
+import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
+import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 
@@ -18,22 +20,21 @@ import de.devsurf.injection.guice.annotations.To;
 
 @Bind(value = @Named("ShellRootSurface"), to = @To(value = To.Type.CUSTOM, customs = ShellSurface.class))
 @Singleton
-public class ShellRootSurface extends AbstractShellSurface {
+public class ShellRootSurface extends AbstractShellSurfaceParent implements ShellNodeParent {
 
 	private final ShellNodeExecutor shellNodeExecutor;
 	private final DisplaySurface displaySurface;
 
 	@Inject
 	ShellRootSurface(	final EventBus eventBus,
-						@Named("shellSurfaceGeoExecutor") final ShellNodeExecutor shellNodeExecutor,
 						final DisplayServer displayServer,
 						final ShellDisplayEventDispatcher shellDisplayEventDispatcher) {
 		super(eventBus);
-		this.shellNodeExecutor = shellNodeExecutor;
+		this.shellNodeExecutor = this.shellNodeExecutor;
 		this.displaySurface = displayServer.getRootDisplayArea();
 		syncGeoToDisplaySurface();
 		shellDisplayEventDispatcher.registerDisplayEventSourceListener(	eventBus,
-																this.displaySurface);
+																		this.displaySurface);
 	}
 
 	@Override
@@ -57,8 +58,9 @@ public class ShellRootSurface extends AbstractShellSurface {
 	}
 
 	@Override
-	public ShellNodeExecutor getNodeExecutor() {
-		return this.shellNodeExecutor;
+	public AbstractShellSurfaceExecutor getShellNodeExecutor() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

@@ -1,8 +1,10 @@
-package org.trinity.shell.api.node;
+package org.trinity.shell.api.surface;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.trinity.shell.api.node.ShellNode;
+import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.node.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.node.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.node.event.ShellNodeEvent;
@@ -10,7 +12,7 @@ import org.trinity.shell.api.node.manager.ShellLayoutManager;
 
 import com.google.common.eventbus.EventBus;
 
-public abstract class AbstractShellNodeParent extends AbstractShellNode implements ShellNodeParent {
+public abstract class AbstractShellSurfaceParent extends AbstractShellSurface implements ShellNodeParent {
 
 	private final EventBus nodeEventBus;
 
@@ -18,7 +20,7 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 
 	private ShellLayoutManager shellLayoutManager;
 
-	public AbstractShellNodeParent(final EventBus nodeEventBus) {
+	public AbstractShellSurfaceParent(final EventBus nodeEventBus) {
 		super(nodeEventBus);
 		this.nodeEventBus = nodeEventBus;
 	}
@@ -86,4 +88,5 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 
 		getLayoutManager().layout(this);
 	}
+
 }

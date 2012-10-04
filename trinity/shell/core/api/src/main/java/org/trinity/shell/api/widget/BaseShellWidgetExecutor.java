@@ -11,16 +11,12 @@
  */
 package org.trinity.shell.api.widget;
 
-import javax.inject.Named;
-
-import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
+import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeExecutor;
+import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
-import org.trinity.shell.api.surface.ShellSurface;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO documentation
 /**
@@ -33,21 +29,22 @@ import de.devsurf.injection.guice.annotations.Bind;
  * @since 1.0
  * @see ShellNodeExecutor
  */
-@Bind
-@Named("shellWidgetGeoExecutor")
-public class ShellWidgetGeoExecutor extends AbstractShellSurfaceExecutor {
+public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 
-	@Override
-	public DisplayAreaManipulator<DisplayArea> getShellNodeManipulator(final ShellNode shellNode) {
-		return getAreaManipulator((ShellSurface) shellNode);
+	private final BaseShellWidget shellWidget;
+
+	public BaseShellWidgetExecutor(final BaseShellWidget shellWidget) {
+		this.shellWidget = shellWidget;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	protected <T extends DisplayArea> DisplayAreaManipulator<T> getAreaManipulator(final ShellSurface shellSurface) {
-		final DisplayAreaManipulator<T> manip = (DisplayAreaManipulator<T>) ((BaseShellWidget) shellSurface)
-				.getPainter();
-		return manip;
+	public BaseShellWidget getShellNode() {
+		return this.shellWidget;
+	}
+
+	@Override
+	public DisplayAreaManipulator getShellNodeManipulator() {
+		return getShellNode().getPainter();
 	}
 
 	@Override
@@ -63,18 +60,16 @@ public class ShellWidgetGeoExecutor extends AbstractShellSurfaceExecutor {
 	}
 
 	@Override
-	protected DisplayArea getAreaPeer(final ShellSurface shellSurface) {
-		return shellSurface;
+	public PaintableSurfaceNode getSurfacePeer() {
+		return getShellNode();
 	}
 
 	@Override
-	protected void initializeShellSurface(	final ShellNode parent,
-											final ShellNode shellNode) {
+	protected void initializeShellSurface(final ShellNodeParent parent) {
 		// initialize the area with the closest typed parent.
-		if (shellNode instanceof BaseShellWidget) {
-			final BaseShellWidget shellWidgetImpl = (BaseShellWidget) shellNode;
-			final BaseShellWidget closestParentWidget = findClosestSameTypeSurface(parent);
-			shellWidgetImpl.init(closestParentWidget);
-		}
+
+		final BaseShellWidget shellWidgetImpl = getShellNode();
+		final BaseShellWidget closestParentWidget = findClosestSameTypeSurface(parent);
+		shellWidgetImpl.init(closestParentWidget);
 	}
 }

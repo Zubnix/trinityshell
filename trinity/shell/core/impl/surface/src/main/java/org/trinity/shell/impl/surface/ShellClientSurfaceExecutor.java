@@ -12,36 +12,19 @@
 package org.trinity.shell.impl.surface;
 
 import org.trinity.foundation.display.api.DisplayArea;
+import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.ShellNodeExecutor;
+import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
+public class ShellClientSurfaceExecutor extends AbstractShellSurfaceExecutor {
 
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
+	private final ShellSurface abstractShellSurface;
 
-// TODO documentation
-/**
- * A <code>RenderAreaGeoExecutor</code> is a delegate class for directly
- * manipulating a {@link ShellSurface}'s geometry.
- * 
- * @author Erik De Rijcke
- * @since 1.0
- * @see ShellNodeExecutor
- */
-@Bind(value = @Named("shellSurfaceGeoExecutor"), to = @To(value = Type.CUSTOM, customs = ShellNodeExecutor.class))
-@Singleton
-public class ShellSurfaceExecutor extends AbstractShellSurfaceExecutor {
-
-	@Override
-	protected void initializeShellSurface(	final ShellNode parent,
-											final ShellNode area) {
-		// No need to initialize
+	public ShellClientSurfaceExecutor(final ShellSurface abstractShellSurface) {
+		this.abstractShellSurface = abstractShellSurface;
 	}
 
 	/**
@@ -49,8 +32,8 @@ public class ShellSurfaceExecutor extends AbstractShellSurfaceExecutor {
 	 * @return
 	 */
 	@Override
-	protected DisplayArea getAreaPeer(final ShellSurface shellSurface) {
-		return shellSurface.getDisplaySurface();
+	public DisplayArea getSurfacePeer() {
+		return getShellNode().getDisplaySurface();
 	}
 
 	/**
@@ -85,5 +68,20 @@ public class ShellSurfaceExecutor extends AbstractShellSurfaceExecutor {
 				return findClosestSameTypeSurface(currentParent);
 			}
 		}
+	}
+
+	@Override
+	public ShellSurface getShellNode() {
+		return this.abstractShellSurface;
+	}
+
+	@Override
+	protected void initializeShellSurface(final ShellNodeParent parent) {
+		// No need to initialize
+	}
+
+	@Override
+	public DisplayAreaManipulator getShellNodeManipulator() {
+		return getShellNode().getDisplaySurface();
 	}
 }
