@@ -24,12 +24,11 @@ import org.trinity.shell.api.node.event.ShellNodeRaiseRequestEvent;
 import org.trinity.shell.api.node.event.ShellNodeReparentRequestEvent;
 import org.trinity.shell.api.node.event.ShellNodeShowRequestEvent;
 import org.trinity.shell.api.node.manager.AbstractShellLayoutManager;
-import org.trinity.shell.api.node.manager.ShellLayoutManager;
+import org.trinity.shell.api.node.manager.ShellLayoutManagerLine;
 import org.trinity.shell.api.node.manager.ShellLayoutProperty;
 import org.trinity.shell.api.node.manager.ShellLayoutPropertyLine;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
@@ -38,8 +37,8 @@ import de.devsurf.injection.guice.annotations.To.Type;
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
 // be negative. childs with size 0, ...)
 // TODO refactor to reuse code and for cleaner reading
-@Bind(value = @Named("ShellLayoutManagerLine"), to = @To(value = Type.CUSTOM, customs = ShellLayoutManager.class))
-public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
+@Bind(to = @To(value = Type.CUSTOM, customs = ShellLayoutManagerLine.class))
+public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
 
 	private final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(0,
 																								new Margins(0));
@@ -96,10 +95,12 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 	private boolean horizontalDirection = true;
 	private boolean inverseDirection = false;
 
+	@Override
 	public void setHorizontalDirection(final boolean horizontalDirection) {
 		this.horizontalDirection = horizontalDirection;
 	}
 
+	@Override
 	public void setInverseDirection(final boolean inverseDirection) {
 		this.inverseDirection = inverseDirection;
 	}
@@ -298,7 +299,7 @@ public class ShellLayoutManagerLine extends AbstractShellLayoutManager {
 	}
 
 	@Override
-	public ShellLayoutProperty defaultLayoutProperty() {
+	public ShellLayoutPropertyLine defaultLayoutProperty() {
 		return this.DEFAULT_LAYOUT_PROPERTY;
 	}
 }

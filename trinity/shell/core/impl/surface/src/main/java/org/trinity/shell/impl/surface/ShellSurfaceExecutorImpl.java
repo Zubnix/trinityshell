@@ -15,7 +15,6 @@ import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeParent;
-import org.trinity.shell.api.node.ShellNodeTransformation;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 
@@ -44,26 +43,21 @@ public class ShellSurfaceExecutorImpl extends AbstractShellSurfaceExecutor {
 	 */
 	@Override
 	protected ShellSurface findClosestSameTypeSurface(final ShellNode square) {
-
+		if (square == null) {
+			return null;
+		}
 		// find the closest ancestor that is of type ShellSurface
 		if (square instanceof ShellSurface) {
 
 			return (ShellSurface) square;
-
-		} else {
-			final ShellNodeTransformation transformation = square.toGeoTransformation();
-			final ShellNode currentParent = transformation.getParent0();
-			final ShellNode newParent = transformation.getParent1();
-			if (currentParent == null) {
-				if (newParent == null) {
-					return null;
-				} else {
-					return findClosestSameTypeSurface(newParent);
-				}
-			} else {
-				return findClosestSameTypeSurface(currentParent);
-			}
 		}
+
+		final ShellNodeParent parent = square.getParent();
+		if (parent.equals(square)) {
+			return null;
+		}
+
+		return findClosestSameTypeSurface(parent);
 	}
 
 	@Override

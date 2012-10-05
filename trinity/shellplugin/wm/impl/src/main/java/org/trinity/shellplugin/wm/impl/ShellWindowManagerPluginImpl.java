@@ -1,19 +1,16 @@
 package org.trinity.shellplugin.wm.impl;
 
-import org.trinity.foundation.shared.geometry.api.Margins;
+import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeParent;
-import org.trinity.shell.api.node.manager.ShellLayoutManager;
-import org.trinity.shell.api.node.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.plugin.ShellPlugin;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.event.ShellSurfaceCreatedEvent;
 import org.trinity.shell.api.widget.ShellRootWidget;
-import org.trinity.shell.api.widget.ShellWidget;
+import org.trinity.shellplugin.wm.api.ShellDecorator;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
@@ -26,71 +23,33 @@ public class ShellWindowManagerPluginImpl implements ShellPlugin {
 	private final ShellRootWidget shellRootWidget;
 	private final EventBus shellEventBus;
 
-	private final Provider<ShellLayoutManager> shellLayoutManagerProvider;
-	private final Provider<ShellNodeParent> shellNodeProvider;
-	private final Provider<ShellWidget> shellWidgetContainerProvider;
-
-	private final ShellLayoutManager shellLayoutManager;
-
-	private ShellNodeParent virtualNode;
+	private final ShellDecorator shellDecorator;
+	private ShellNodeParent rootFrame;
 
 	@Inject
 	ShellWindowManagerPluginImpl(	final ShellRootWidget shellRootWidget,
 									@Named("shellEventBus") final EventBus shellEventBus,
-									@Named("ShellLayoutManagerLine") final Provider<ShellLayoutManager> shellLayoutManagerProvider,
-									@Named("ShellWidgetContainer") final Provider<ShellWidget> shellWidgetContainerProvider,
-									@Named("ShellVirtualNode") final Provider<ShellNodeParent> shellNodeProvider) {
+									final ShellDecorator shellDecorator) {
 
 		this.shellRootWidget = shellRootWidget;
 		this.shellEventBus = shellEventBus;
-
-		this.shellLayoutManagerProvider = shellLayoutManagerProvider;
-		this.shellNodeProvider = shellNodeProvider;
-		this.shellWidgetContainerProvider = shellWidgetContainerProvider;
-
-		this.shellLayoutManager = shellLayoutManagerProvider.get();
+		this.shellDecorator = shellDecorator;
 	}
 
 	@Subscribe
 	public void handleShellClientCreated(final ShellSurfaceCreatedEvent shellSurfaceCreatedEvent) {
-		// TODO create widget to move/resize/close client?
-		final ShellSurface client = shellSurfaceCreatedEvent.getClient();
-		client.setParent(this.virtualNode);
-		client.doReparent();
 
-		this.shellLayoutManager.addChildNode(	client,
-												new ShellLayoutPropertyLine(1,
-																			new Margins(5)));
-		this.virtualNode.layout();
+		final ShellSurface client = shellSurfaceCreatedEvent.getClient();
+		final ShellNode clientFrame = this.shellDecorator.decorateClientSurface(client);
+		clientFrame.setParent(this.rootFrame);
+		clientFrame.doReparent();
+		this.rootFrame.getLayoutManager().addChildNode(clientFrame);
+		this.rootFrame.layout();
 	}
 
 	public void setupRootWidget() {
 		this.shellRootWidget.construct();
-
-		final ShellLayoutManager rootLayoutManager = this.shellLayoutManagerProvider.get();
-		this.shellRootWidget.setLayoutManager(rootLayoutManager);
-
-		final ShellWidget taskbar = this.shellWidgetContainerProvider.get();
-		rootLayoutManager.addChildNode(	taskbar,
-										new ShellLayoutPropertyLine(0,
-																	new Margins(2)));
-		taskbar.setParent(this.shellRootWidget);
-		taskbar.doReparent();
-		taskbar.setWidth(100);
-		taskbar.doResize();
-		taskbar.doShow();
-
-		this.virtualNode = this.shellNodeProvider.get();
-		this.virtualNode.setLayoutManager(this.shellLayoutManager);
-		rootLayoutManager.addChildNode(	this.virtualNode,
-										new ShellLayoutPropertyLine(1,
-																	new Margins(0)));
-		this.virtualNode.setParent(this.shellRootWidget);
-		this.virtualNode.doReparent();
-		this.virtualNode.doShow();
-
-		this.shellRootWidget.layout();
-
+		this.rootFrame = this.shellDecorator.decorateRootShellWidget(this.shellRootWidget);
 		this.shellRootWidget.doShow();
 	}
 

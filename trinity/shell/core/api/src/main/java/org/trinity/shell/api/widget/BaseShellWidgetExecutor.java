@@ -50,14 +50,21 @@ public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 
 	@Override
 	protected BaseShellWidget findClosestSameTypeSurface(final ShellNode square) {
-		if ((square == null)) {
+		if (square == null) {
 			return null;
 		}
+		// find the closest ancestor that is of type ShellSurface
 		if (square instanceof BaseShellWidget) {
+
 			return (BaseShellWidget) square;
 		}
 
-		return findClosestSameTypeSurface(square.getParent());
+		final ShellNodeParent parent = square.getParent();
+		if (parent.equals(square)) {
+			return null;
+		}
+
+		return findClosestSameTypeSurface(parent);
 	}
 
 	@Override
