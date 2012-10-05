@@ -21,7 +21,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
-public class ShellWindowManagerPlugin implements ShellPlugin {
+public class ShellWindowManagerPluginImpl implements ShellPlugin {
 
 	private final ShellRootWidget shellRootWidget;
 	private final EventBus shellEventBus;
@@ -35,11 +35,11 @@ public class ShellWindowManagerPlugin implements ShellPlugin {
 	private ShellNodeParent virtualNode;
 
 	@Inject
-	ShellWindowManagerPlugin(	final ShellRootWidget shellRootWidget,
-								@Named("shellEventBus") final EventBus shellEventBus,
-								@Named("ShellLayoutManagerLine") final Provider<ShellLayoutManager> shellLayoutManagerProvider,
-								@Named("ShellWidgetContainer") final Provider<ShellWidget> shellWidgetContainerProvider,
-								@Named("ShellVirtualNode") final Provider<ShellNodeParent> shellNodeProvider) {
+	ShellWindowManagerPluginImpl(	final ShellRootWidget shellRootWidget,
+									@Named("shellEventBus") final EventBus shellEventBus,
+									@Named("ShellLayoutManagerLine") final Provider<ShellLayoutManager> shellLayoutManagerProvider,
+									@Named("ShellWidgetContainer") final Provider<ShellWidget> shellWidgetContainerProvider,
+									@Named("ShellVirtualNode") final Provider<ShellNodeParent> shellNodeProvider) {
 
 		this.shellRootWidget = shellRootWidget;
 		this.shellEventBus = shellEventBus;

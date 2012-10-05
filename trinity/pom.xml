@@ -3,12 +3,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>org.trinity</groupId>
 	<artifactId>trinity</artifactId>
-	<packaging>pom</packaging>
-	<name>Trinity</name>
 	<version>0.0.1-SNAPSHOT</version>
-	<description>A Java based window manager.</description>
+	<packaging>pom</packaging>
+
+	<name>Trinity</name>
+	<description>A Java desktop shell.</description>
 	<url>http://code.google.com/p/ewm</url>
 	<inceptionYear>2009-11-06</inceptionYear>
 	<developers>

@@ -13,22 +13,22 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>foundation.display.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>foundation.render.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>foundation.input.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>foundation.shared.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>

@@ -13,7 +13,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shell.core.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>

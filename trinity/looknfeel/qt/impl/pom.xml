@@ -11,17 +11,17 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 	<name>Qt Jambi Look and Feel Implementation</name>
 	<dependencies>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>render.qt.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shell.core.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shellplugin.widget.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>

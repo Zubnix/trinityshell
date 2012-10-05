@@ -9,85 +9,84 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.trinity.bootstrap</groupId>
 	<artifactId>bootstrap</artifactId>
 	<name>Trinitry Bootstrap</name>
 
 	<dependencies>
 		<!-- foundation -->
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>foundation.display.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>foundation.render.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>foundation.input.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- display -->
 		<!-- X11 -->
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>display.x11.core.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- render -->
 		<!-- qt-jambi -->
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>render.qt.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>render.qt.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>looknfeel.qt.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- shell -->
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shell.core.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shell.core.impl.plugin</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shell.core.impl.node</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shell.core.impl.surface</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shell.core.impl.input</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shell.core.impl.widget</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- shellplugin -->
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shellplugin.widget.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -97,12 +96,12 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shellplugin.wm.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shellplugin.wm.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>

@@ -29,7 +29,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<version>4.6.3.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.trinity</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>foundation.render.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
