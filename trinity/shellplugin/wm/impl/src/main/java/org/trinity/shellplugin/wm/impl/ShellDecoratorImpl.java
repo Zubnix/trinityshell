@@ -36,13 +36,10 @@ public class ShellDecoratorImpl implements ShellDecorator {
 	@Override
 	public ShellNode decorateClientSurface(final ShellSurface client) {
 
-		final ShellNodeParent clientParent = client.getParent();
 		final int clientX = client.getX();
 		final int clientY = client.getY();
 
 		final ShellNodeParent clientFrame = this.shellVirtualNodeProvider.get();
-		clientFrame.setParent(clientParent);
-		clientFrame.doReparent();
 		clientFrame.setX(clientX);
 		clientFrame.setY(clientY);
 		clientFrame.doMove();
@@ -57,18 +54,21 @@ public class ShellDecoratorImpl implements ShellDecorator {
 		shellWidgetContainer.doResize();
 		shellWidgetContainer.setParent(clientFrame);
 		shellWidgetContainer.doReparent();
+		shellWidgetContainer.doShow();
 
 		client.setParent(clientFrame);
 		client.doReparent();
 
 		shellLayoutManagerLine.addChildNode(client,
 											new ShellLayoutPropertyLine(1,
-																		new Margins(0,
-																					5)));
+																		new Margins(0)));
 		shellLayoutManagerLine.addChildNode(shellWidgetContainer,
 											new ShellLayoutPropertyLine(0,
 																		new Margins(0)));
 		clientFrame.layout();
+
+		new ShellNodeVisibilityMirror(	client,
+										clientFrame);
 
 		if (client.isVisible()) {
 			clientFrame.doShow();
@@ -104,6 +104,9 @@ public class ShellDecoratorImpl implements ShellDecorator {
 											new ShellLayoutPropertyLine(1,
 																		new Margins(0)));
 		root.layout();
+
+		new ShellNodeVisibilityMirror(	root,
+										rootFrame);
 
 		return rootFrame;
 	}

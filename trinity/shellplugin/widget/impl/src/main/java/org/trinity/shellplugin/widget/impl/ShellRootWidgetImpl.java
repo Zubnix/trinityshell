@@ -12,6 +12,7 @@
 package org.trinity.shellplugin.widget.impl;
 
 import org.trinity.foundation.render.api.PainterFactory;
+import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
@@ -59,7 +60,7 @@ public class ShellRootWidgetImpl extends BaseShellWidget implements ShellRootWid
 	}
 
 	@Override
-	public ShellLayoutManager getParentLayoutManager() {
+	protected ShellLayoutManager getParentLayoutManager(final ShellNodeParent parent) {
 
 		return getLayoutManager();
 	}

@@ -116,10 +116,6 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 		return child;
 	}
 
-	/**
-	 * @param child
-	 * @return
-	 */
 	@Override
 	public ShellLayoutPropertyLine getLayoutProperty(final ShellNode child) {
 		return (ShellLayoutPropertyLine) this.childrenWithLayoutProperty.get(child);

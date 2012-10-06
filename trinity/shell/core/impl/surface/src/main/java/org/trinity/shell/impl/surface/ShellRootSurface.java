@@ -40,6 +40,11 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 	}
 
 	@Override
+	public boolean isVisible() {
+		return true;
+	}
+
+	@Override
 	public int getAbsoluteX() {
 		return getX();
 	}
@@ -50,7 +55,7 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 	}
 
 	@Override
-	public ShellLayoutManager getParentLayoutManager() {
+	protected ShellLayoutManager getParentLayoutManager(final ShellNodeParent parent) {
 		return getLayoutManager();
 	}
 

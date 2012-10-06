@@ -60,7 +60,7 @@ public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 		}
 
 		final ShellNodeParent parent = square.getParent();
-		if (parent.equals(square)) {
+		if ((parent == null) || parent.equals(square)) {
 			return null;
 		}
 

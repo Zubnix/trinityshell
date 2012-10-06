@@ -40,7 +40,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Bind(to = @To(value = Type.CUSTOM, customs = ShellLayoutManagerLine.class))
 public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
 
-	private final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(0,
+	private final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(1,
 																								new Margins(0));
 
 	private class ChildGeoListener {
@@ -294,7 +294,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	}
 
 	@Subscribe
-	public void handleContainerMoveReize(final ShellNodeMoveResizeEvent moveResizeEvent) {
+	public void handleContainerMoveResize(final ShellNodeMoveResizeEvent moveResizeEvent) {
 		layout(moveResizeEvent.getSource());
 	}
 

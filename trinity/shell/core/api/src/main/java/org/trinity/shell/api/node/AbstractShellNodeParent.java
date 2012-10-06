@@ -58,6 +58,13 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 	protected void doMoveResize(final boolean execute) {
 		super.doMoveResize(execute);
 		updateChildrenPosition();
+		layout();
+	}
+
+	@Override
+	protected void doResize(final boolean execute) {
+		super.doResize(execute);
+		layout();
 	}
 
 	@Override
@@ -83,7 +90,6 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 		if (layoutManager == null) {
 			return;
 		}
-
 		getLayoutManager().layout(this);
 	}
 }

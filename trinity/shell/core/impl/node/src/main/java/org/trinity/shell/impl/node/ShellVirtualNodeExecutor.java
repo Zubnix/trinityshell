@@ -132,13 +132,14 @@ public class ShellVirtualNodeExecutor implements ShellNodeExecutor {
 
 		final ShellNode[] children = shellNode.getChildren();
 
-		final boolean parentVisible = parent.isVisible();
+		final boolean nodeVisible = shellNode.isVisible();
 		for (final ShellNode child : children) {
 			// update underlying platform specific parent of
 			// the child
 			child.getShellNodeExecutor().reparent(shellNode);
+
 			updateChildVisibility(	child,
-									parentVisible);
+									nodeVisible);
 		}
 	}
 

@@ -4,7 +4,7 @@ import org.trinity.display.x11.core.impl.XEventConversion;
 import org.trinity.display.x11.core.impl.XWindow;
 import org.trinity.display.x11.core.impl.XWindowCache;
 import org.trinity.foundation.display.api.event.DisplayEvent;
-import org.trinity.foundation.display.api.event.HideNotifyEvent;
+import org.trinity.foundation.display.api.event.ShowNotifyEvent;
 
 import xcbjb.LibXcb;
 import xcbjb.xcb_generic_event_t;
@@ -46,7 +46,7 @@ public class MapNotifyConversion implements XEventConversion {
 		final int windowId = map_notify_event_t.getWindow();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
-		final DisplayEvent displayEvent = new HideNotifyEvent(displayEventSource);
+		final DisplayEvent displayEvent = new ShowNotifyEvent(displayEventSource);
 
 		return displayEvent;
 	}
