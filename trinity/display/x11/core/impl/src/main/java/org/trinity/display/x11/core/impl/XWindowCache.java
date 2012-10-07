@@ -35,8 +35,7 @@ public class XWindowCache {
 
 	// TODO make use of guava cache?
 
-	private final Cache<Integer, XWindow> xWindows = CacheBuilder.newBuilder().softValues().build();
-
+	private final Cache<Integer, XWindow> xWindows = CacheBuilder.newBuilder().weakValues().build();
 	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
 
 	private final DisplaySurfaceFactory displaySurfaceFactory;

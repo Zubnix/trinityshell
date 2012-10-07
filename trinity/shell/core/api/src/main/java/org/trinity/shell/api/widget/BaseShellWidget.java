@@ -21,10 +21,12 @@ import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.api.node.ShellNode;
+import org.trinity.shell.api.node.event.ShellNodeDestroyEvent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import de.devsurf.injection.guice.annotations.Bind;
@@ -74,6 +76,16 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 public class BaseShellWidget extends AbstractShellSurfaceParent implements ShellWidget {
 
+	private class DestroyCallback {
+		@Subscribe
+		public void handleDestroy(final ShellNodeDestroyEvent destroyEvent) {
+			BaseShellWidget.this.shellDisplayEventDispatcher
+					.unregisterAllDisplayEventSourceListeners(getDisplaySurface());
+			BaseShellWidget.this.shellDisplayEventDispatcher
+					.unregisterAllDisplayEventSourceListeners(BaseShellWidget.this);
+		}
+	}
+
 	private final Painter painter;
 	private final BaseShellWidgetExecutor shellNodeExecutor;
 	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
@@ -105,6 +117,7 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 										closestParentWidget);
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			getDisplaySurface());
+		addShellNodeEventHandler(new DestroyCallback());
 	}
 
 	@Override
@@ -147,6 +160,12 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 	public void setInputFocus() {
 
 		getPainter().setInputFocus();
+	}
+
+	@Override
+	protected void execDestroy() {
+		// BaseShellWidget.this.shellDisplayEventDispatcher.unregisterAllDisplayEventSourceListeners(getDisplaySurface());
+		super.execDestroy();
 	}
 
 	@Override

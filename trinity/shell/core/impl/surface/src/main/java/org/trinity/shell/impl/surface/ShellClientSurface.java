@@ -12,12 +12,13 @@
 package org.trinity.shell.impl.surface;
 
 import org.trinity.foundation.display.api.DisplaySurface;
-import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
 import org.trinity.shell.api.node.ShellNodeParent;
+import org.trinity.shell.api.node.event.ShellNodeDestroyEvent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
@@ -36,9 +37,21 @@ import com.google.inject.name.Named;
  */
 public class ShellClientSurface extends AbstractShellSurface {
 
+	private class DestroyCallback {
+		private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
+
+		public DestroyCallback(final ShellDisplayEventDispatcher shellDisplayEventDispatcher) {
+			this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
+		}
+
+		@Subscribe
+		public void handleDestroyNotify(final ShellNodeDestroyEvent destroyEvent) {
+			this.shellDisplayEventDispatcher.unregisterAllDisplayEventSourceListeners(getDisplaySurface());
+		}
+	}
+
 	private final ShellSurfaceExecutorImpl shellSurfaceExecutorImpl;
 	private final DisplaySurface displaySurface;
-	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
 
 	/**
 	 * Create a new <code>ShellClientSurface</code> from a foreign
@@ -56,22 +69,16 @@ public class ShellClientSurface extends AbstractShellSurface {
 						@Named("ShellRootSurface") final ShellNodeParent root,
 						@Assisted final DisplaySurface displaySurface) {
 		super(nodeEventBus);
-		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		this.displaySurface = displaySurface;
 		this.shellSurfaceExecutorImpl = new ShellSurfaceExecutorImpl(this);
 
 		shellDisplayEventDispatcher.registerDisplayEventSourceListener(	nodeEventBus,
 																		displaySurface);
+		addShellNodeEventHandler(new DestroyCallback(shellDisplayEventDispatcher));
 
 		setParent(root);
 		doReparent(false);
 		syncGeoToDisplaySurface();
-	}
-
-	@Override
-	public void handleDestroyNotifyEvent(final DestroyNotifyEvent destroyNotifyEvent) {
-		super.handleDestroyNotifyEvent(destroyNotifyEvent);
-		this.shellDisplayEventDispatcher.unregisterAllDisplayEventSourceListeners(getDisplaySurface());
 	}
 
 	@Override
@@ -83,5 +90,4 @@ public class ShellClientSurface extends AbstractShellSurface {
 	public DisplaySurface getDisplaySurface() {
 		return this.displaySurface;
 	}
-
 }

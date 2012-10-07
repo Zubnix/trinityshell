@@ -205,7 +205,7 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 	public void destroy() {
 		final ShellNode shellNode = getShellNode();
 		if (isAreaInitialized(shellNode)) {
-			super.show();
+			super.destroy();
 		}
 	}
 }

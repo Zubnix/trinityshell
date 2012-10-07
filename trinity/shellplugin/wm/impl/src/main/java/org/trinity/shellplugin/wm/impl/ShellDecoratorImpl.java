@@ -69,6 +69,8 @@ public class ShellDecoratorImpl implements ShellDecorator {
 
 		new ShellNodeVisibilityMirror(	client,
 										clientFrame);
+		new ShellNodeDestroyMirror(	client,
+									clientFrame);
 
 		if (client.isVisible()) {
 			clientFrame.doShow();

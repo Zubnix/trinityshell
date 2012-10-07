@@ -95,6 +95,7 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public void setInputFocus() {
+
 		if (XWindow.checked) {
 			final xcb_void_cookie_t void_cookie_t = LibXcb
 					.xcb_set_input_focus_checked(	getConnectionRef(),
@@ -114,6 +115,7 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public void lower() {
+
 		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 		final int xcb_stack_mode_above = xcb_stack_mode_t.XCB_STACK_MODE_BELOW;
@@ -138,6 +140,7 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public void show() {
+
 		if (XWindow.checked) {
 			final xcb_void_cookie_t void_cookie_t = LibXcb.xcb_map_window_checked(	getConnectionRef(),
 																					getWindowId());
@@ -153,6 +156,7 @@ public class XWindow implements DisplaySurface {
 	@Override
 	public void move(	final int x,
 						final int y) {
+
 		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X | xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder());
 		value_list.putInt(x).putInt(y);
@@ -178,6 +182,7 @@ public class XWindow implements DisplaySurface {
 							final int y,
 							final int width,
 							final int height) {
+
 		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X | xcb_config_window_t.XCB_CONFIG_WINDOW_Y
 				| xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH | xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(16).order(ByteOrder.nativeOrder());
@@ -227,6 +232,7 @@ public class XWindow implements DisplaySurface {
 	public void setParent(	final DisplayArea parent,
 							final int x,
 							final int y) {
+
 		final int parentId = ((Integer) (((DisplaySurface) parent).getDisplaySurfaceHandle()).getNativeHandle())
 				.intValue();
 
@@ -276,6 +282,7 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public void hide() {
+
 		if (XWindow.checked) {
 			final xcb_void_cookie_t void_cookie_t = LibXcb.xcb_unmap_window_checked(getConnectionRef(),
 																					getWindowId());
@@ -314,6 +321,7 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public Rectangle getGeometry() {
+
 		final xcb_get_geometry_cookie_t cookie_t = LibXcb.xcb_get_geometry(	getConnectionRef(),
 																			getWindowId());
 		final xcb_generic_error_t e = new xcb_generic_error_t();
@@ -334,13 +342,16 @@ public class XWindow implements DisplaySurface {
 
 	private void checkError(final xcb_generic_error_t e) {
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			throw new RuntimeException(XcbErrorUtil.toString(e));
+			// TODO logging
+			System.err.println(XcbErrorUtil.toString(e));
+			Thread.dumpStack();
 		}
 	}
 
 	@Override
 	public void grabButton(	final Button catchButton,
 							final InputModifiers withModifiers) {
+
 		final int buttonCode = catchButton.getButtonCode();
 		final int modifiers = withModifiers.getInputModifiersState();
 		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS
@@ -381,6 +392,7 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public void grabPointer() {
+
 		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS
 				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE;
 		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
@@ -407,6 +419,7 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public void ungrabPointer() {
+
 		if (XWindow.checked) {
 			final xcb_void_cookie_t void_cookie_t = LibXcb
 					.xcb_ungrab_pointer_checked(this.xConnection.getConnectionReference(),
@@ -423,6 +436,7 @@ public class XWindow implements DisplaySurface {
 	@Override
 	public void ungrabButton(	final Button likeButton,
 								final InputModifiers withModifiers) {
+
 		final int button = likeButton.getButtonCode();
 		final int modifiers = withModifiers.getInputModifiersState();
 
@@ -445,6 +459,7 @@ public class XWindow implements DisplaySurface {
 	@Override
 	public void grabKey(final Key catchKey,
 						final InputModifiers withModifiers) {
+
 		final int keyCode = catchKey.getKeyCode();
 		final int modifiers = withModifiers.getInputModifiersState();
 		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
@@ -476,6 +491,7 @@ public class XWindow implements DisplaySurface {
 	@Override
 	public void ungrabKey(	final Key catchKey,
 							final InputModifiers withModifiers) {
+
 		final int key = catchKey.getKeyCode();
 		final int modifiers = withModifiers.getInputModifiersState();
 		if (XWindow.checked) {
@@ -496,6 +512,7 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public void ungrabKeyboard() {
+
 		if (XWindow.checked) {
 			final xcb_void_cookie_t void_cookie_t = LibXcb.xcb_ungrab_keyboard_checked(	getConnectionRef(),
 																						this.xTime.getTime());
@@ -529,6 +546,7 @@ public class XWindow implements DisplaySurface {
 
 	@Override
 	public Coordinate getPointerCoordinate() {
+
 		final xcb_query_pointer_cookie_t cookie_t = LibXcb.xcb_query_pointer(	getConnectionRef(),
 																				getWindowId());
 		final xcb_generic_error_t e = new xcb_generic_error_t();

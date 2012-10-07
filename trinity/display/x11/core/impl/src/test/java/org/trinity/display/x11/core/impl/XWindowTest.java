@@ -52,24 +52,24 @@ public class XWindowTest // extends AbstractXTest
 	public static void startup() throws IOException, SecurityException, NoSuchFieldException {
 		LibXcbLoader.load();
 
-		xvfb = new ProcessBuilder(	"Xvfb",
-									"-ac",
-									displayName).start();
+		XWindowTest.xvfb = new ProcessBuilder(	"Xvfb",
+												"-ac",
+												XWindowTest.displayName).start();
 
-		xConnection = new XConnection();
-		xConnection.open(	displayName,
-							screenNr);
+		XWindowTest.xConnection = new XConnection();
+		XWindowTest.xConnection.open(	XWindowTest.displayName,
+										XWindowTest.screenNr);
 
-		final xcb_setup_t setup = LibXcb.xcb_get_setup(xConnection.getConnectionReference());
+		final xcb_setup_t setup = LibXcb.xcb_get_setup(XWindowTest.xConnection.getConnectionReference());
 		final xcb_screen_iterator_t iter = LibXcb.xcb_setup_roots_iterator(setup);
-		screen = iter.getData();
+		XWindowTest.screen = iter.getData();
 	}
 
 	@AfterClass
 	public static void closedown() {
 
-		xConnection.close();
-		xvfb.destroy();
+		XWindowTest.xConnection.close();
+		XWindowTest.xvfb.destroy();
 	}
 
 	// mocks
@@ -80,33 +80,33 @@ public class XWindowTest // extends AbstractXTest
 	public void setup() throws SecurityException, NoSuchFieldException, IllegalArgumentException,
 			IllegalAccessException {
 
-		this.windowId = (int) LibXcb.xcb_generate_id(xConnection.getConnectionReference());
+		this.windowId = LibXcb.xcb_generate_id(XWindowTest.xConnection.getConnectionReference());
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
-		LibXcb.xcb_create_window(	xConnection.getConnectionReference(),
+		LibXcb.xcb_create_window(	XWindowTest.xConnection.getConnectionReference(),
 									(short) LibXcbConstants.XCB_COPY_FROM_PARENT,
 									this.windowId,
-									screen.getRoot(),
+									XWindowTest.screen.getRoot(),
 									(short) 0,
 									(short) 0,
 									200,
 									200,
 									5,
 									xcb_window_class_t.XCB_WINDOW_CLASS_INPUT_OUTPUT,
-									screen.getRoot_visual(),
+									XWindowTest.screen.getRoot_visual(),
 									0,
 									value_list);
 
 		final XWindowHandle xWindowHandle = new XWindowHandle(this.windowId);
 
 		this.xWindow = new XWindow(	this.xTime,
-									xConnection,
+									XWindowTest.xConnection,
 									xWindowHandle);
 	}
 
 	@After
 	public void teardown() {
 		// destroy xwindow instance
-		LibXcb.xcb_destroy_window(	xConnection.getConnectionReference(),
+		LibXcb.xcb_destroy_window(	XWindowTest.xConnection.getConnectionReference(),
 									this.windowId);
 	}
 

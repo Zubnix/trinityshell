@@ -191,7 +191,8 @@ public abstract class AbstractShellNode implements ShellNode {
 		}
 
 		final ShellLayoutManager parentLayoutManager = parent.getLayoutManager();
-		if (parentLayoutManager == null) {
+		final ShellNodeParent grandParent = parent.getParent();
+		if ((parent != grandParent) && (parentLayoutManager == null)) {
 			return getParentLayoutManager(parent.getParent());
 		}
 
@@ -397,7 +398,6 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (execute) {
 			execReparent();
 		}
-
 		// Make sure we have the same size
 		// and place in our new parent
 		// as in our old parent.

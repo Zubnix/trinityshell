@@ -11,8 +11,8 @@
  */
 package org.trinity.render.qt.impl;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -29,6 +29,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.trolltech.qt.core.QCoreApplication;
+import com.trolltech.qt.core.QEvent;
+import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QWidget;
 
 import de.devsurf.injection.guice.annotations.Bind;
@@ -56,7 +58,8 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class QJRenderEngineImpl implements QJRenderEngine {
 
-	private final Map<PaintableSurfaceNode, QWidget> paintableToPaintPeer = new HashMap<PaintableSurfaceNode, QWidget>();
+	private final Map<PaintableSurfaceNode, QWidget> paintableToVisual = new WeakHashMap<PaintableSurfaceNode, QWidget>();
+	private final Map<QWidget, PaintableSurfaceNode> visualToPaintable = new WeakHashMap<QWidget, PaintableSurfaceNode>();
 
 	private final QJRenderEventConverter renderEventConverter;
 	private final DisplaySurfaceFactory displaySurfaceFactory;
@@ -72,7 +75,8 @@ public class QJRenderEngineImpl implements QJRenderEngine {
 	}
 
 	public void removeVisual(final PaintableSurfaceNode paintableSurfaceNode) {
-		this.paintableToPaintPeer.remove(paintableSurfaceNode);
+		final QWidget visual = this.paintableToVisual.remove(paintableSurfaceNode);
+		this.visualToPaintable.remove(visual);
 	}
 
 	@Override
@@ -107,7 +111,7 @@ public class QJRenderEngineImpl implements QJRenderEngine {
 	}
 
 	public QWidget getVisual(final PaintableSurfaceNode paintableSurfaceNode) {
-		return this.paintableToPaintPeer.get(paintableSurfaceNode);
+		return this.paintableToVisual.get(paintableSurfaceNode);
 	}
 
 	public void putVisual(	final DisplayEventSource displayEventSource,
@@ -117,8 +121,24 @@ public class QJRenderEngineImpl implements QJRenderEngine {
 															this.renderEventConverter,
 															displayEventSource,
 															visual));
-		this.paintableToPaintPeer.put(	paintableSurfaceNode,
-										visual);
+		visual.installEventFilter(new QObject() {
+			@Override
+			public boolean eventFilter(	final QObject qObject,
+										final QEvent qEvent) {
+				if ((qEvent.type() == QEvent.Type.Destroy)
+						&& QJRenderEngineImpl.this.visualToPaintable.containsKey(qObject)) {
+					final PaintableSurfaceNode paintableSurfaceNode = QJRenderEngineImpl.this.visualToPaintable
+							.remove(qObject);
+					QJRenderEngineImpl.this.paintableToVisual.remove(paintableSurfaceNode);
+				}
+				return false;
+			}
+		});
+
+		this.paintableToVisual.put(	paintableSurfaceNode,
+									visual);
+		this.visualToPaintable.put(	visual,
+									paintableSurfaceNode);
 	}
 
 }

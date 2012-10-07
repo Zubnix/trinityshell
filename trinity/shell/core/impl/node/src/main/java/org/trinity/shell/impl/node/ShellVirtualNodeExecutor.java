@@ -145,8 +145,12 @@ public class ShellVirtualNodeExecutor implements ShellNodeExecutor {
 
 	@Override
 	public void destroy() {
-		// TODO destroy all children? (Will somebody *please* think of the
-		// children! D: )
+		final ShellNode[] children = getShellNode().getChildren();
+		for (final ShellNode child : children) {
+			if (!child.isDestroyed()) {
+				child.doDestroy();
+			}
+		}
 	}
 
 	@Override
