@@ -1,8 +1,4 @@
-QFrame {
+#mainBar {
 	border-bottom: 1px solid black;
-	background:rgba(225,225,225,100);
-}
-
-QFrame QLabel {
-	color: orange;
+	background:rgba(220,220,220,255);
 }
