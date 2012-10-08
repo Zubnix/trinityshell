@@ -1,3 +1,8 @@
 QFrame {
-	background:rgba(10,10,10,200);
+	border-bottom: 1px solid black;
+	background:rgba(225,225,225,100);
+}
+
+QFrame QLabel {
+	color: orange;
 }

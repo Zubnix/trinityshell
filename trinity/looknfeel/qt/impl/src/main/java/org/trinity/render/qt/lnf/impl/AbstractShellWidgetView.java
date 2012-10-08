@@ -7,11 +7,11 @@ import java.util.concurrent.Future;
 
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.shell.api.widget.ShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
-import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
 import org.trinity.shellplugin.widget.api.binding.ViewAttributeSlot;
 
 import com.google.common.io.CharStreams;
@@ -50,7 +50,7 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 				try {
 					createDisplaySurfaceInstruction(paintContext,
 													parent);
-					setAllViewAttributes();
+					setAllViewAttributes(paintContext);
 				} catch (final Exception e) {
 					e.printStackTrace();
 				}
@@ -69,6 +69,7 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 
 		try {
 			visual.setStyleSheet(getStyleSheet());
+			visual.ensurePolished();
 		} catch (final IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -84,7 +85,8 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 		paintContext.setVisual(visual);
 	}
 
-	protected void setAllViewAttributes() {
+	protected void setAllViewAttributes(final QJPaintContext paintContext) {
+		final PaintableSurfaceNode paintableSurfaceNode = paintContext.getPaintableSurfaceNode();
 		// TODO invoke all @viewattributeslots
 
 	}
@@ -144,16 +146,10 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 		return displaySurface;
 	}
 
-	@ViewAttributeSlot("property")
-	public void setProperty(final ViewAttribute viewAttribute,
-							final QJPaintContext paintContext,
+	@ViewAttributeSlot("objectName")
+	public void setProperty(final QJPaintContext paintContext,
 							final String propVal) {
 		final QWidget visual = paintContext.getVisual(paintContext.getPaintableSurfaceNode());
-
-		if (visual == null) {
-			return;
-		}
-		visual.setProperty(	viewAttribute.id(),
-							propVal);
+		visual.setObjectName(propVal);
 	}
 }

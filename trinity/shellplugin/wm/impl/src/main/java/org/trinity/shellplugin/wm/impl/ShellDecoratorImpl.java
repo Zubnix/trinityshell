@@ -7,6 +7,7 @@ import org.trinity.shell.api.node.manager.ShellLayoutManagerLine;
 import org.trinity.shell.api.node.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.widget.ShellWidget;
+import org.trinity.shellplugin.widget.api.binding.ShellWidgetStyled;
 import org.trinity.shellplugin.wm.api.ShellDecorator;
 
 import com.google.inject.Inject;
@@ -21,12 +22,12 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ShellDecoratorImpl implements ShellDecorator {
 
 	private final Provider<ShellNodeParent> shellVirtualNodeProvider;
-	private final Provider<ShellWidget> shellWidgetContainerProvider;
+	private final Provider<ShellWidgetStyled> shellWidgetContainerProvider;
 	private final Provider<ShellLayoutManagerLine> shellLayoutManagerLineProvider;
 
 	@Inject
 	public ShellDecoratorImpl(	@Named("ShellVirtualNode") final Provider<ShellNodeParent> shellNodeParentProvider,
-								@Named("ShellWidgetContainer") final Provider<ShellWidget> shellWidgetContainerProvider,
+								@Named("ShellWidgetContainer") final Provider<ShellWidgetStyled> shellWidgetContainerProvider,
 								final Provider<ShellLayoutManagerLine> shellLayoutManagerLineProvider) {
 		this.shellVirtualNodeProvider = shellNodeParentProvider;
 		this.shellWidgetContainerProvider = shellWidgetContainerProvider;
@@ -49,7 +50,8 @@ public class ShellDecoratorImpl implements ShellDecorator {
 		shellLayoutManagerLine.setInverseDirection(false);
 		clientFrame.setLayoutManager(shellLayoutManagerLine);
 
-		final ShellWidget shellWidgetContainer = this.shellWidgetContainerProvider.get();
+		final ShellWidgetStyled shellWidgetContainer = this.shellWidgetContainerProvider.get();
+		shellWidgetContainer.setName("mainBar");
 		shellWidgetContainer.setHeight(25);
 		shellWidgetContainer.doResize();
 		shellWidgetContainer.setParent(clientFrame);
@@ -86,7 +88,9 @@ public class ShellDecoratorImpl implements ShellDecorator {
 		shellLayoutManagerLine.setInverseDirection(false);
 		root.setLayoutManager(shellLayoutManagerLine);
 
-		final ShellWidget shellWidgetContainer = this.shellWidgetContainerProvider.get();
+		final ShellWidgetStyled shellWidgetContainer = this.shellWidgetContainerProvider.get();
+		shellWidgetContainer.setName("mainBar");
+
 		shellWidgetContainer.setHeight(25);
 		shellWidgetContainer.doResize();
 		shellWidgetContainer.setParent(root);
