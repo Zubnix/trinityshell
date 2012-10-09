@@ -8,7 +8,7 @@ import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.render.qt.api.QJRenderEngine;
 import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
-import org.trinity.shellplugin.widget.api.binding.ViewAttributeSlotInvocationHandler;
+import org.trinity.shellplugin.widget.api.binding.ViewSlotInvocationHandler;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -17,7 +17,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton
-public class ViewSlotInvocationHandlerImpl implements ViewAttributeSlotInvocationHandler {
+public class ViewSlotInvocationHandlerImpl implements ViewSlotInvocationHandler {
 
 	private final QJRenderEngine qjRenderEngine;
 
@@ -68,7 +68,7 @@ public class ViewSlotInvocationHandlerImpl implements ViewAttributeSlotInvocatio
 			}
 
 			if (parameterType.isAssignableFrom(viewAttributeValue.getClass())) {
-				parameters[i] = viewAttribute;
+				parameters[i] = viewAttributeValue;
 				continue;
 			}
 		}
@@ -77,11 +77,11 @@ public class ViewSlotInvocationHandlerImpl implements ViewAttributeSlotInvocatio
 			viewAttributeSlot.invoke(	view,
 										parameters);
 		} catch (final IllegalAccessException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
 		} catch (final IllegalArgumentException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
 		} catch (final InvocationTargetException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
 		}
 	}
 }

@@ -344,7 +344,7 @@ public class XWindow implements DisplaySurface {
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
 			// TODO logging
 			System.err.println(XcbErrorUtil.toString(e));
-			Thread.dumpStack();
+			// Thread.dumpStack();
 		}
 	}
 

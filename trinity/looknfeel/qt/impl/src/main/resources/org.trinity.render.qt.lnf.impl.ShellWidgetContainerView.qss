@@ -1,4 +1,8 @@
 #mainBar {
-	border-bottom: 1px solid black;
+	border-bottom: 1px solid dark-grey;
 	background:rgba(220,220,220,255);
+}
+
+#clientBar {
+	
 }

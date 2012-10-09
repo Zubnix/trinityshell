@@ -3,6 +3,9 @@ package org.trinity.render.qt.lnf.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.trinity.foundation.display.api.DisplaySurface;
@@ -12,9 +15,13 @@ import org.trinity.foundation.render.api.Painter;
 import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.shell.api.widget.ShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
+import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
 import org.trinity.shellplugin.widget.api.binding.ViewAttributeSlot;
+import org.trinity.shellplugin.widget.api.binding.ViewAttributeUtil;
+import org.trinity.shellplugin.widget.api.binding.ViewSlotInvocationHandler;
 
 import com.google.common.io.CharStreams;
+import com.google.inject.Inject;
 import com.trolltech.qt.core.Qt.WidgetAttribute;
 import com.trolltech.qt.core.Qt.WindowType;
 import com.trolltech.qt.gui.QWidget;
@@ -22,6 +29,9 @@ import com.trolltech.qt.gui.QWidget;
 public abstract class AbstractShellWidgetView implements ShellWidgetView {
 
 	private Painter painter;
+
+	@Inject
+	private ViewSlotInvocationHandler viewSlotInvocationHandler;
 
 	protected Painter getPainter() {
 		return this.painter;
@@ -51,12 +61,27 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 					createDisplaySurfaceInstruction(paintContext,
 													parent);
 					setAllViewAttributes(paintContext);
+					setStyle(paintContext);
 				} catch (final Exception e) {
 					e.printStackTrace();
 				}
 				return null;
 			}
 		});
+	}
+
+	protected void setStyle(final QJPaintContext paintContext) {
+		final QWidget visual = paintContext.getVisual(paintContext.getPaintableSurfaceNode());
+		if (visual == null) {
+			return;
+		}
+		try {
+			visual.setStyleSheet(getStyleSheet());
+			visual.ensurePolished();
+		} catch (final IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	protected void createDisplaySurfaceInstruction(	final QJPaintContext paintContext,
@@ -66,14 +91,6 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 			parentVisual = paintContext.getVisual(parent);
 		}
 		final QWidget visual = createVisual(parentVisual);
-
-		try {
-			visual.setStyleSheet(getStyleSheet());
-			visual.ensurePolished();
-		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		visual.setWindowFlags(WindowType.X11BypassWindowManagerHint);
 		visual.setAttribute(WidgetAttribute.WA_DeleteOnClose,
@@ -87,7 +104,32 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 
 	protected void setAllViewAttributes(final QJPaintContext paintContext) {
 		final PaintableSurfaceNode paintableSurfaceNode = paintContext.getPaintableSurfaceNode();
-		// TODO invoke all @viewattributeslots
+
+		try {
+			final Field[] fields = ViewAttributeUtil.lookupAllViewAttributeFields(paintableSurfaceNode.getClass());
+			for (final Field field : fields) {
+				final ViewAttribute viewAttribute = field.getAnnotation(ViewAttribute.class);
+				final Method viewSlot = ViewAttributeUtil.lookupViewSlot(	getClass(),
+																			viewAttribute.name());
+				field.setAccessible(true);
+				final Object argument = field.get(paintableSurfaceNode);
+				field.setAccessible(false);
+				this.viewSlotInvocationHandler.invokeSlot(	paintableSurfaceNode,
+															viewAttribute,
+															this,
+															viewSlot,
+															argument);
+			}
+		} catch (final ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -114,7 +156,6 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 			@Override
 			public Void call(final QJPaintContext paintContext) {
 				destroyInstruction(paintContext);
-
 				return null;
 			}
 		});
@@ -147,9 +188,17 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 	}
 
 	@ViewAttributeSlot("objectName")
-	public void setProperty(final QJPaintContext paintContext,
-							final String propVal) {
+	public void setObjectName(	final QJPaintContext paintContext,
+								final String name) {
 		final QWidget visual = paintContext.getVisual(paintContext.getPaintableSurfaceNode());
-		visual.setObjectName(propVal);
+		if (visual != null) {
+			visual.setObjectName(name);
+			refreshVisual(visual);
+		}
+	}
+
+	private void refreshVisual(final QWidget visual) {
+		visual.style().unpolish(visual);
+		visual.ensurePolished();
 	}
 }

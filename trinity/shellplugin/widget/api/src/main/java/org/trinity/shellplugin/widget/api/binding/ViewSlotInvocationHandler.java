@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 
-public interface ViewAttributeSlotInvocationHandler {
+public interface ViewSlotInvocationHandler {
 
 	void invokeSlot(PaintableSurfaceNode paintableSurfaceNode,
 				ViewAttribute viewAttribute,

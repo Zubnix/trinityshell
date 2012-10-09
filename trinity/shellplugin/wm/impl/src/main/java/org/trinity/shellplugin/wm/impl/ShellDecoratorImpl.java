@@ -7,7 +7,7 @@ import org.trinity.shell.api.node.manager.ShellLayoutManagerLine;
 import org.trinity.shell.api.node.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.widget.ShellWidget;
-import org.trinity.shellplugin.widget.api.binding.ShellWidgetStyled;
+import org.trinity.shellplugin.widget.api.ShellWidgetStyled;
 import org.trinity.shellplugin.wm.api.ShellDecorator;
 
 import com.google.inject.Inject;
@@ -51,7 +51,7 @@ public class ShellDecoratorImpl implements ShellDecorator {
 		clientFrame.setLayoutManager(shellLayoutManagerLine);
 
 		final ShellWidgetStyled shellWidgetContainer = this.shellWidgetContainerProvider.get();
-		shellWidgetContainer.setName("mainBar");
+		shellWidgetContainer.setName("clientBar");
 		shellWidgetContainer.setHeight(25);
 		shellWidgetContainer.doResize();
 		shellWidgetContainer.setParent(clientFrame);

@@ -12,7 +12,7 @@ import com.google.inject.Inject;
 public class ViewAttributeSignalDispatcher implements MethodInterceptor {
 
 	@Inject
-	private ViewAttributeSlotInvocationHandler viewSlotInvocationHandler;
+	private ViewSlotInvocationHandler viewSlotInvocationHandler;
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {

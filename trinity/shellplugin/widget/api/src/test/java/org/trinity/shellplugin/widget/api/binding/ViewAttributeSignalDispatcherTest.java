@@ -20,13 +20,13 @@ public class ViewAttributeSignalDispatcherTest {
 	@Test
 	public void test() throws Throwable {
 
-		final ViewAttributeSlotInvocationHandler viewAttributeSlotInvocationHandler = mock(ViewAttributeSlotInvocationHandler.class);
+		final ViewSlotInvocationHandler viewSlotInvocationHandler = mock(ViewSlotInvocationHandler.class);
 		final ViewAttributeSignalDispatcher viewAttributeSignalDispatcher = new ViewAttributeSignalDispatcher();
 		final Field viewSlotInvocationField = ViewAttributeSignalDispatcher.class
 				.getDeclaredField("viewSlotInvocationHandler");
 		viewSlotInvocationField.setAccessible(true);
 		viewSlotInvocationField.set(viewAttributeSignalDispatcher,
-									viewAttributeSlotInvocationHandler);
+									viewSlotInvocationHandler);
 		viewSlotInvocationField.setAccessible(false);
 
 		final DummyView view = new DummyView();
@@ -45,7 +45,7 @@ public class ViewAttributeSignalDispatcherTest {
 		final ArgumentCaptor<Object> argumentCaptor = ArgumentCaptor.forClass(Object.class);
 
 		final Method viewSlot = DummyView.class.getMethod("dummyViewSlot");
-		verify(	viewAttributeSlotInvocationHandler,
+		verify(	viewSlotInvocationHandler,
 				times(2)).invokeSlot(	eq(dummyPaintableSurfaceNode),
 										viewAttributeCaptor.capture(),
 										eq(view),
