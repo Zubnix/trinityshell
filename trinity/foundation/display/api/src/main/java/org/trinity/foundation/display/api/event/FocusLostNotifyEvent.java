@@ -11,15 +11,8 @@
  */
 package org.trinity.foundation.display.api.event;
 
-/*****************************************
- * @author Erik De Rijcke
- * 
- ****************************************/
 public class FocusLostNotifyEvent extends FocusNotifyEvent {
 
-	/*****************************************
-	 * @param displayEventSource
-	 ****************************************/
 	public FocusLostNotifyEvent(final DisplayEventSource displayEventSource) {
 		super(displayEventSource);
 	}

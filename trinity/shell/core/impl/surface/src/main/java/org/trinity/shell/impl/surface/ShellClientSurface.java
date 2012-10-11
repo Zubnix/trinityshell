@@ -1,13 +1,13 @@
 /*
- * This file is part of HyperDrive. HyperDrive is free software: you can
- * redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version. HyperDrive is distributed in
- * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
- * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
- * the GNU General Public License for more details. You should have received a
- * copy of the GNU General Public License along with HyperDrive. If not, see
- * <http://www.gnu.org/licenses/>.
+ * Trinity Window Manager and Desktop Shell Copyright (C) 2012 Erik De Rijcke
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version. This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details. You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.trinity.shell.impl.surface;
 
@@ -31,9 +31,6 @@ import com.google.inject.name.Named;
  * <code>PlatformRenderArea</code> it wraps. A <code>ShellClientSurface</code>
  * provides functionality to manage and manipulate the geometry and visibility
  * of the <code>PlatformRenderArea</code> it wraps.
- * 
- * @author Erik De Rijcke
- * @since 1.0
  */
 public class ShellClientSurface extends AbstractShellSurface {
 
@@ -44,6 +41,7 @@ public class ShellClientSurface extends AbstractShellSurface {
 			this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		}
 
+		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleDestroyNotify(final ShellNodeDestroyEvent destroyEvent) {
 			this.shellDisplayEventDispatcher.unregisterAllDisplayEventSourceListeners(getDisplaySurface());

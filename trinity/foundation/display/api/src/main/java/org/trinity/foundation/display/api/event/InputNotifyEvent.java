@@ -18,9 +18,6 @@ import org.trinity.foundation.input.api.Input;
  * An <code>InputNotifyEvent</code> represents general user input notification.
  * This can be, for example, a keyboard key that was pressed or a mouse button
  * that was released.
- * 
- * @author Erik De Rijcke
- * @since 1.0
  */
 public class InputNotifyEvent<I extends Input> extends DisplayEvent {
 

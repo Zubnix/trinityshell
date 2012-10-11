@@ -11,19 +11,8 @@
  */
 package org.trinity.foundation.display.api.event;
 
-// TODO documentation
-/**
- * A <code>MouseEnterLeaveNotifyEvent</code> notifies that a mouse cursor has
- * entered or left an on-screen display resource, like a window.
- * 
- * @author Erik De Rijcke
- * @since 1.0
- */
 public abstract class PointerVisitationNotifyEvent extends DisplayEvent {
 
-	/*****************************************
-	 * @param displayEventSource
-	 ****************************************/
 	public PointerVisitationNotifyEvent(final DisplayEventSource displayEventSource) {
 		super(displayEventSource);
 	}

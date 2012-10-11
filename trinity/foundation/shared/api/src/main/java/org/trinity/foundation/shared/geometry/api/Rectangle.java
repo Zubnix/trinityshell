@@ -1,5 +1,3 @@
-package org.trinity.foundation.shared.geometry.api;
-
 /*
  * Trinity Window Manager and Desktop Shell Copyright (C) 2012 Erik De Rijcke
  * This program is free software: you can redistribute it and/or modify it under
@@ -11,6 +9,7 @@ package org.trinity.foundation.shared.geometry.api;
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.trinity.foundation.shared.geometry.api;
 
 public interface Rectangle {
 	int getX();

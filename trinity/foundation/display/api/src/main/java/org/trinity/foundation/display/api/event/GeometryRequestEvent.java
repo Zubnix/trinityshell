@@ -21,8 +21,6 @@ import org.trinity.foundation.shared.geometry.api.Rectangle;
  * perform the configuration of the <code>EventSource</code> that emitted the
  * <code>DisplayEvent</code>.
  * 
- * @author Erik De Rijcke
- * @since 1.0
  */
 public class GeometryRequestEvent extends DisplayEvent {
 
@@ -62,9 +60,6 @@ public class GeometryRequestEvent extends DisplayEvent {
 		return this.configureHeight;
 	}
 
-	/*****************************************
-	 * @return the rectangle
-	 ****************************************/
 	public Rectangle getGeometry() {
 		return this.geometry;
 	}

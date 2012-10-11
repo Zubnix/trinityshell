@@ -11,10 +11,6 @@
  */
 package org.trinity.foundation.display.api.event;
 
-/*****************************************
- * @author Erik De Rijcke
- * 
- ****************************************/
 public class FocusGainNotifyEvent extends FocusNotifyEvent {
 
 	public FocusGainNotifyEvent(final DisplayEventSource displayEventSource) {

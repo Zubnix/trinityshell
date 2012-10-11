@@ -18,8 +18,6 @@ import org.trinity.foundation.input.api.KeyboardInput;
  * A <code>KeyNotifyEvent</code> notifies that a keyboard key's state has
  * changed.
  * 
- * @author Erik De Rijcke
- * @since 1.0
  * 
  */
 public class KeyNotifyEvent extends InputNotifyEvent<KeyboardInput> {

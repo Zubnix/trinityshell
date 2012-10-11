@@ -15,8 +15,6 @@ package org.trinity.foundation.display.api.event;
  * An <code>UnmappedNotifyEvent</code> notifies when a display resource is made
  * invisible.
  * 
- * @author Erik De Rijcke
- * @since 1.0
  */
 public class HideNotifyEvent extends DisplayEvent {
 

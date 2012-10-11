@@ -11,15 +11,8 @@
  */
 package org.trinity.foundation.display.api.event;
 
-/*****************************************
- * @author Erik De Rijcke
- * 
- ****************************************/
 public class PointerLeaveNotifyEvent extends PointerVisitationNotifyEvent {
 
-	/*****************************************
-	 * @param displayEventSource
-	 ****************************************/
 	public PointerLeaveNotifyEvent(final DisplayEventSource displayEventSource) {
 		super(displayEventSource);
 	}
