@@ -17,7 +17,7 @@
     <!-- Pretty print-->
     <link href="assets/css/prettify.css" type="text/css" rel="stylesheet" />
 	</head>
-	<body onload="prettyPrint()" bgcolor="white">
+	<body onload="prettyPrint()" bgcolor="white" data-spy="scroll" data-target=".bs-docs-sidebar">
 		<div class="navbar navbar-fixed-top">
   		<div class="navbar-inner">
   			<div class="container">
@@ -29,9 +29,6 @@
       		</a>
 
     			<a class="brand" href="./index.html">Trinity Shell</a>
-    			<form class="navbar-search pull-right">
-      			<input type="text" class="search-query" placeholder="Search">
-      		</form>
     			<div class="nav-collapse">
     				<ul class="nav">
       				<li class="active"><a href="./developer.html">Developer</a></li>
@@ -45,17 +42,19 @@
 		</div>
 		<div class="container-fluid">
 			<div class="row">
-      			<!--Sidebar content-->
-            <div class="span2 bs-docs-sidebar">
-              <ul class="nav nav-list bs-docs-sidenav affix">
-                <li><a href="#download-bootstrap"><i class="icon-chevron-right"></i> Download</a></li>
-                <li><a href="#file-structure"><i class="icon-chevron-right"></i> File structure</a></li>
-                <li><a href="#contents"><i class="icon-chevron-right"></i> What's included</a></li>
-              </ul>
-            </div>
-    			<div class="span10">
+      		<!--Sidebar content-->
+          <div class="span2 bs-docs-sidebar">
+            <ul class="nav nav-list bs-docs-sidenav affix">
+              <li><a href="#Lorem"><i class="icon-chevron-right"></i> Lorem ipsum</a></li>
+              <li><a href="#Sed"><i class="icon-chevron-right"></i> Sed neque est</a></li>
+              <li><a href="#Nunc"><i class="icon-chevron-right"></i> Nunc sem metus</a></li>
+            </ul>
+          </div>
+
+    			<div class="span12">
       				<!--Body content-->
-      				<div class="page-header">
+            <section id="Lorem">
+      				<div class="page-header" >
       					<h1>Lorem ipsum</h1>
       				</div>
               <p>
@@ -82,21 +81,44 @@ public final class RandomInteger {
   }
 }
               </pre>
-
-              <hr class="bs-docs-separator">
-
+            </section>
+            <section id="Sed">
               <div class="page-header">
                 <h1>Sed neque est</h1>
               </div>
               <p>
               Sed neque est, pellentesque nec ultricies nec, accumsan id nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In nisl nisi, volutpat nec mollis non, bibendum in ligula. Phasellus tincidunt, sem sit amet pretium pulvinar, eros tortor sollicitudin ante, eu congue augue magna a neque. Morbi elementum, mauris eu fringilla rutrum, ligula dolor tristique justo, non lacinia odio urna quis felis. Suspendisse feugiat est sit amet nulla fermentum tristique at blandit neque. Nunc quis metus nibh, vel venenatis justo. Donec feugiat aliquet vehicula. Sed placerat vestibulum lectus, laoreet pulvinar lectus accumsan quis. Mauris justo purus, consectetur in aliquet ac, malesuada non sapien. Proin vitae metus lorem, sed semper odio.
-              <p>
+              </p>
+              <pre class="prettyprint linenums">
+public final class RandomInteger {
+  
+  public static final void main(String... aArgs){
+    log("Generating 10 random integers in range 0..99.");
+    
+    //note a single Random object is reused here
+    Random randomGenerator = new Random();
+    for (int idx = 1; idx &lt;= 10; ++idx){
+       int randomInt = randomGenerator.nextInt(100);
+      log("Generated : " + randomInt);
+    }
+    
+    log("Done.");
+  }
+  
+   private static void log(String aMessage){
+    System.out.println(aMessage);
+  }
+}
+              </pre>
+            </section>
+            <section id="Nunc">
               <div class="page-header">
                 <h1>Nunc sem metus</h1>
               </div>
               <p>
               Nunc sem metus, scelerisque at aliquet eu, vulputate ut orci. Ut facilisis velit id dui feugiat lobortis. Duis pulvinar dictum rutrum. Proin pretium, mauris nec lacinia molestie, elit ligula cursus magna, in sodales ipsum nisl eget massa. Proin rhoncus sodales ipsum, et vulputate felis gravida eu. In sem nisl, vehicula sed vulputate sit amet, tristique eu mauris. Phasellus aliquet lorem ut nibh laoreet gravida. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur massa nisl, feugiat ut volutpat sed, egestas nec elit. Sed blandit, elit sit amet molestie molestie, purus sem vehicula mi, eu rhoncus leo diam ac tellus. Vivamus gravida, nibh a fermentum accumsan, dolor ipsum posuere mi, quis iaculis magna ipsum eu velit. Praesent in magna turpis. In sit amet nulla nibh. Ut ut tempus sem.
               </p>
+            </section>
     			</div>
 			</div>
 		</div>
