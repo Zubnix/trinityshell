@@ -1,18 +1,24 @@
-.sidebar-nav-fixed {
+body {
+        padding-top: 40px;
+        padding-bottom: 120px;
+}
+
+section {
+    padding-top: 52px;
+}
+
+.well-fixed {
      position:fixed;
-     top:32px;
+     top:72px;
      width:21.97%;
  }
 
- @media (max-width: 767px) {
-     .sidebar-nav-fixed {
-         width:auto;
-     }
- }
-
- @media (max-width: 979px) {
-     .sidebar-nav-fixed {
-         position:static;
+@media (max-width: 979px) {
+     body {
+        padding-top: 5px;
+      }
+       .well-fixed {
+        position: static;
         width: auto;
      }
  }
@@ -23,7 +29,7 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);
     margin: 30px 0 0;
     padding: 0;
-    width: 228px;
+    width: auto;
 }
 .docs-sidenav > li > a {
     border: 1px solid #E5E5E5;
