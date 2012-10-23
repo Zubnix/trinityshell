@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Trinty Desktop Shell</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Java Shell.">
+		<meta name="author" content="Erik De Rijcke">
+		<!-- Bootstrap -->
+		<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/docs.css" rel="stylesheet">
+    <!-- Pretty print-->
+    <link href="assets/css/prettify.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body onload="prettyPrint()" bgcolor="white" data-spy="scroll" data-target=".docs-sidebar">
+		<div class="navbar navbar-fixed-top navbar-inverse">
+  		<div class="navbar-inner">
+  			<div class="container-fluid">
+
+  				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        		<span class="icon-bar"></span>
+        		<span class="icon-bar"></span>
+        		<span class="icon-bar"></span>
+      		</a>
+
+    			<a class="brand" href="./index.html">Trinity Shell</a>
+    			<div class="nav-collapse">
+    				<ul class="nav">
+      				<li class="active"><a href="./developer.html">/Developer</a></li>
+      				<li><a href="./user.html">/User</a></li>
+      				<li><a href="./download.html">/Download</a></li>
+      				<li><a href="./about.html">/About</a></li>
+    				</ul>
+    			</div>
+  			</div>
+  		</div>
+		</div>
+		<div class="container-fluid">
+			<div class="row-fluid">
+      		<!--Sidebar content-->
+          <div class="span2 docs-sidebar ">
+            <div class="well well-small well-fixed">
+              <ul class="breadcrumb">
+                <li><span class="divider">/</span><a href="./developer.html">Developer</a></li>
+                <li> <span class="divider">/</span><a href="./resource.html">Resource</a></li>
+                <li class="active"><span class="divider">/</span>QGraphicsView</li>
+              </ul>
+            <ul class="nav nav-list docs-sidenav">
+              <li><a href="#Disclaimer"><i class="icon-chevron-right"></i> Disclaimer</a></li>
+              <li><a href="#Intro"><i class="icon-chevron-right"></i> Intro</a></li>
+              <li><a href="#Basics"><i class="icon-chevron-right"></i> The Basics</a></li>
+            </ul>
+            </div>
+          </div>
+
+    			<div class="span10">
+      				<!--Body content-->
+            <section id="Disclaimer">
+      				<div class="page-header" >
+      					<h2>Disclaimer</h2>
+      				</div>
+              <p>
+                The information on this page was copied from <a href="http://web.archive.org/web/20100317151943/http://fredyduarte.net/blog/?p=7">here</a>. Reformatted and prettified. It handles the basic idea of how a <a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a> works. The code examples are in C++ but should be straightforward in any language.
+              </p>
+            </section>
+            <section id="Intro">
+              <div class="page-header">
+                <h2>Intro</h2>
+              </div>
+              <p>
+                This is just a small introduction to Qt Canvas system. I’ll give a brief overview of the <a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a> framework.
+              </p>
+              <p>
+                In Qt, it is possible to create your own widgets through the standard provided classes like QPushButton, QCheckBox, QGroupBox, etc. But even these widgets have limitations when writing a fully customizable application. Taking into account that most applications are built around Two-dimensional canvas, Qt Software developed the Graphics View framework, namely <a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a>.
+              </p>
+              <p>
+                <a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a> was preceded by the former two-dimensional canvas, QCanvas. The framework is composed by 3 main elements:
+                <ol>
+                  <li><a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a>: a class for displaying the widgets of a scene; It represents a viewport.</li>
+                  <li><a href="http://doc.qt.digia.com/4.5/qgraphicsscene.html"><code>QGraphicsScene</code></a>: a class for storing the widgets, handling event propagation(input from mouse, keyboard and other devices) and managing item states. It represents a scene with items in it;</li>
+                  <li>QGraphicsItem: a basic class for the graphical items on the scene. It can also represent a group of items.</li>
+                </ol>
+              </p>
+              <p>
+                A <a href="http://doc.qt.digia.com/4.5/qgraphicsscene.html"><code>QGraphicsScene</code></a> object is flexible enough to include any number of QGraphicsItem objects and still mantain the efficiency in retrieving them. On the other hand, a <a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a> object size is limited by the computer’s display size(1280×1024, 1024×768, 800×600, etc). Putting these 3 elements together we have something like this:
+              </p>
+              <p>
+                <img src="assets/img/devresource/qgraphicsview_400x437.png" class="img-polaroid">
+              </p>
+              <p>
+                The idea is to manage the events of each item you create and redraw them as needed. This way, you can make your own widgets with more visually appealing features.
+              </p>
+            </section>
+            <section id="Basics">
+              <div class="page-header">
+                <h2>The Basics</h2>
+              </div>
+              <p>
+                Now, let’s take a look at a small example:
+                <pre class="prettyprint linenums">QGraphicsScene scene;
+ 
+scene.addText("Hello, world!", QFont("Times", 10, QFont::Bold));
+ 
+QGraphicsView view(&amp;scene);
+view.show();</pre>
+              </p>
+              <p>
+                In the code above, I’ve created a <a href="http://doc.qt.digia.com/4.5/qgraphicsscene.html"><code>QGraphicsScene</code></a> object and added a text to it through the convenience function <a href="http://doc.qt.digia.com/4.5/qgraphicsscene.html#addText"><code>QGraphicsScene::addText</code></a>. The type of the item added is a <a href="http://doc.qt.digia.com/4.5/qgraphicstextitem.html"><code>QGraphicsTextItem</code></a>. Then a <a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a> object is created to display the scene. And the result is:
+              </p>
+              <p>
+                <img src="assets/img/devresource/hello-world.png" class="img-polaroid">
+              </p>
+              <p>
+                Let’s modify it a little bit:
+                <pre class="prettyprint linenums">QGraphicsScene scene;
+ 
+QPainterPath path;
+path.moveTo(10, 30);
+path.cubicTo(80, 0, 50, 50, 80, 80);
+ 
+scene.addPath(path, QPen(Qt::black), QBrush(Qt::green));
+ 
+scene.addText("Hello, world!", QFont("Times", 10, QFont::Bold));
+ 
+QGraphicsView view(&amp;scene);
+view.show();</pre>
+              </p>
+              <p>
+                <img src="assets/img/devresource/hello-world-bezier.png" class="img-polaroid">
+              </p>
+              <p>
+                Now I’ve also added a path to scene. This particular path creates a Bezier curve in green color. To create the path, it’s used the <a href="http://doc.qt.digia.com/4.5/qpainterpath.html"><code>QPainterPath</code></a> class, which allows you to draw any shape you want. And like the <a href="http://doc.qt.digia.com/4.5/qgraphicsscene.html#addText"><code>QGraphicsScene::addText</code></a> function, there’s also a <a href="http://doc.qt.digia.com/4.5/qgraphicsscene.html#addPath"><code>QGraphicsScene::addPath</code></a> convenience function. The result is:
+              </p>
+            </section>
+    			</div>
+			</div>
+		</div>
+
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript" src="assets/js/prettify.js"></script>
+		<script src="assets/js/bootstrap.min.js"></script>
+	</body>
+</html>

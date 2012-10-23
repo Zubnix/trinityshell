@@ -13,8 +13,8 @@ a {
 body {
         padding-top: 40px;
         padding-bottom: 120px;
-        padding-left: 6px;
-        padding-right: 6px;
+        padding-left: 10px;
+        padding-right: 10px;
         font-size: 12px;
 }
 
@@ -25,7 +25,7 @@ section {
 .well-fixed {
      position:fixed;
      top:72px;
-     width:21%;
+     width:12%;
  }
 
 @media (max-width: 979px) {
