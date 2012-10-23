@@ -1,0 +1,1302 @@
+<!-- Tue Dec 20 19:43:05 CST 1994 // C. Alex. North-Keys -->
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.1//EN'
+		  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+  <head>
+    <!-- @subhead/start erlkonig -->
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+
+
+ 
+  
+ 
+
+
+
+
+ 
+  
+   
+   <!-- webpage ads ENABLED by default -->
+   
+  
+ 
+
+
+
+ 
+
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta http-equiv="Content-Style-Type" content="text/css" />
+
+
+
+<title>Erlkönig: fredrik's X11 Composite Tutorial</title>
+
+
+
+<link rel="icon" href="/favicon.ico" />  <!-- the below for moz bookmarks -->
+<link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--                                  top  right bottom left -->
+
+
+
+
+
+ 
+
+
+
+ 
+  
+ 
+
+
+
+ 
+
+
+<!-- @style/start erlkonig -->
+<style type="text/css">
+/* see http://www.w3.org/TR/REC-CSS2/selector.html sect 5.1 for details */
+/* perhaps rework to have a calm variant of: * { margin:0; padding:0; }  */
+
+img  { border: none; }
+dt   { font-weight: bolder; }
+
+q:before { content:open-quote;  }
+q:after  { content:close-quote; }
+
+span.padlock abbr { border-bottom:0; }
+span.padlock abbr title { background-color:#ff8; }
+
+
+
+
+
+
+  body         {
+  
+   background-image:url('/~erlkonig/@theme/http/img_bg_all');
+   background-attachment:fixed;
+   background-image:
+       -moz-radial-gradient(left top, circle farthest-corner,
+                            rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0)),
+       -moz-radial-gradient(bottom right, circle farthest-corner,
+                            rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 60%, rgba(0,0,0,0)),
+       -moz-radial-gradient(top right, circle farthest-corner,
+                            rgba(200,200,200,.25) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0)),
+       url('/~erlkonig/@theme/http/img_bg_all');
+  
+   background-attachment:fixed;
+  }
+
+
+
+ /* wrapper elements: wrap{title, description, sigil, sitenav, pagenav} */
+ .wrapper         { position:relative; }
+ .wraptitle       { margin:0; padding:0; border:0; line-height:1em;
+                    background-color:transparent; font-size:200%;
+                    text-align:right; text-transform:none; }
+ .wrapdesc        { font-size:90%; }
+ .wrapipv6        { font-size:smaller; font-style:italic; height:3em; text-align:right; }
+ .wrapadvert      { text-align:center; }
+ .wrapadvert      { position:relative; }  /* required in Chrome to do absolute in .begging */
+ .wrapadvert img  { width:7em; position:relative; vertical-align:bottom; }
+ .wrapadvert .begging { position:absolute; top:0px; left:0px; width:100%; padding-top:1em; }
+ .wrapadvert .begging { font-style:italic; font-size:smaller; vertical-align:bottom; }
+ .wraptitle, .wrapdesc, .wrapquip { text-shadow: black .1em .1em .2em; }
+ .wrapsigil       { font-size:smaller; font-style:italic; width:8em; }
+ .wrapsigil .logo { border:none; width: 8.00em; }
+ .wrapsigil .moon { border:none; width: 1.80em; }
+ .wrapsigil .moon      { position:absolute; left:0.2em; top:0.2em; }
+ .wrapsigil .home      { position:absolute; left:1.2em; top:5.9em; z-index:1; }
+ .wrapsigil .sidebar   { position:absolute; left:5.6em; top:7.4em; z-index:1; }
+ .wrapsigil .login     { position:absolute; left:7.2em; top:0.2em; z-index:1; }
+ .wrapsigil .login     { -moz-transform: rotate(45deg) translate(.2em,.7em); font-size:105%; }
+ .wrapsigil .logged_in { position:absolute; left:7.2em; top:0.2em; }
+ .wrapsigil .logged_in { font-style:normal; font-weight:bold; }
+ .wrapsitenav      { font-size: smaller; font-style: italic; width: 3em; }
+ .wrapsitenav img  { border: none; width: 2.45em; }
+ .wrapsitenav      { padding-left:0; padding-right:0.2em; }
+ .wrappagenav      { font-style:italic; text-align:center; font-size:small;}
+ .wrappagenav td   { width:20%; }
+ .wrappagenav img  { border:none; height:2.6em; float:right; } /* eff */
+
+ .wrappagenav * img, .wrapsitenav * img, .wrapcoolorgs * img {
+     border-radius: 5px;
+     box-shadow: 1em 1em .8em  rgba(0,0,0,.3);
+ }
+
+ /* "color:" when paired w/ "background-color:transparent", breaks ns4.7 */
+
+ 
+ .wrapsitenav a span:hover { color: white; }
+ .wrapper               { color: #ddddff; background-color: transparent; }
+ .wrapper     a:link    { color: #ddddff; background-color: transparent; }
+ .wrapper     a:visited { color: #ddddff; background-color: transparent; }
+ .wrapper     a:active  { color: red;     background-color: transparent; }
+ .wrapper     a:hover   { color: white;   background-color: transparent; }
+ 
+
+ .wraptitle-prefix:hover{
+     -moz-transition-property: color;
+     -moz-transition-duration: 4s;
+     -moz-transition-timing-function: ease-in-out;
+     color: #daa;
+ }
+ .wraptitle-prefix {
+     -moz-transition-property: color;
+     -moz-transition-duration: 6s;
+     -moz-transition-timing-function: linear;
+/*     color: !inherit; */
+  }
+ .logo:hover, .wrapadvert:hover{
+     -moz-transition-property: -moz-transform;
+     -moz-transition-duration: 1s;
+     -moz-transition-timing-function: ease-in-out;
+     -moz-transform: matrix(.5, 0, 0, .5, 0, 1em);
+ }
+ .logo, .wrapadvert {
+     -moz-transition-property: -moz-transform;
+     -moz-transition-duration: 1s;
+     -moz-transition-timing-function: linear;
+     -moz-transform: matrix(1,0, 0, 1, 0, 0);
+  }
+ .wrapsitenav img:hover {
+     -moz-transition-property: -moz-transform;
+     -moz-transition-duration: .0s;
+     -moz-transition-timing-function: linear;
+     -moz-transform: matrix(1.3, 0, 0, 1.3, 0, 0);
+ }
+ .wrapsitenav img {
+     -moz-transition-property: -moz-transform;
+     -moz-transition-duration: .2s;
+     -moz-transition-timing-function: linear;
+     -moz-transform: matrix(1,0, 0, 1, 0, 0);
+  }
+
+ .wrapdesc    a:link    { color: #88ffff; background-color: transparent; }
+ .wrapdesc    a:visited { color: #ff88ff; background-color: transparent; }
+
+ .wrapsubpane a:link    { color: blue;    background-color: transparent; }
+ .wrapsubpane a:visited { color: purple;  background-color: transparent; }
+ .wrapsubpane a:active  { color: red;     background-color: transparent; }
+ 
+ .wrapsubpane a:hover   { background-image:url("/~erlkonig/img/bg/pixel-white-trans.png");}
+ 
+
+ .wrapsubpane         { margin-bottom: 0.1em; }
+ .wrapsubpane         { border-radius:1.4ex; }
+ .wrapsubpane         { box-shadow: 1em 1em .8em rgba(0,0,0,.3); }
+             
+
+ .subpane             { border-radius:1.1ex; }
+ .subpane             { box-shadow: inset 0.2em 0.2em 0.3em gray; }
+
+ .wrapsubpane > table {  /* should match sideboxinset values */
+	border:0.15em solid;
+    border-color:#9c6  #583  #472  #8b5;
+	color:inherit;
+	background-color: #cacaca;
+    box-shadow:       1em 1em 4em #020;
+    border-radius:1.3ex;
+    box-shadow: inset 0.3em 0.3em 0.9em black;
+ }
+
+ .subpane table tbody td h2 { margin:0 0 0.3em 0; }
+ .subpane       { background-image:url('/~erlkonig/@theme/http/img_bg_subpane'); }
+ .subpane {  background-image: -moz-radial-gradient(bottom right, ellipse farthest-corner,
+                                                    rgba(255,255,255,0) 80%,
+                                                    rgba(255,255,255,.5) 90%,
+                                                    rgba(255,255,255,1) 100%),
+                               url('/~erlkonig/@theme/http/img_bg_subpane'); }
+
+ .subpane       { padding: 0 .5em 0 .5em; }
+ .subpane table { background-color: transparent; } 
+
+ .wrapcoolorgs   { text-align:center; margin-top:1em; margin-bottom:1.2em; }
+ .wrapquip       { color:white; background-color:transparent; text-align:center;
+                   font-size:80%; }
+ .wrapquip q     { font-style:italic ; }
+ .wrapcsswarn    { color:white; background-color:transparent;
+                   visibility:hidden; text-align:center; }
+ .wrapalexsiodhe { color:white; background-color:transparent;
+                   visibility:hidden; font-size:1px; text-align:right;  }
+ 
+  /* ns4.7 hacks for its inherit' bugs */
+  .wrapdesc, .wraptitle, .wrapsitenav, .wrapsitenav span, .wrappagenav a, .wrappagenav, .wrapquip { color:#ddddff; }
+ 
+
+  .google-ad {
+     text-align:center;
+     margin-top:1em;
+     width:468px;
+     height:60px;
+     margin:1em auto auto auto; 
+  }
+  .google-ad {
+     border-radius: 10px;
+     box-shadow: 1em 1em .8em rgba(0,0,0,.3);
+  }
+
+ /* ! wrapper */
+
+sup, sub { vertical-align:baseline; position:relative; }
+sup { top:-0.4em; }
+sub { top:0.4em; }
+
+
+
+ ruby             { display:inline-table; empty-cells:hide; }
+ ruby             { vertical-align:-1em; }
+ ruby *           { text-align:center; }
+ ruby rbc         { display:table-row; }
+ ruby rtc         { display:table-row; }
+ ruby  rb         { display:table-cell; }
+ ruby  rt         { display:table-cell; font-size:70%; white-space:nowrap; }
+ ruby rbc+rtc     { display:table-header-group; }
+ ruby rbc+rtc rt  { color:#005500; }
+ ruby rtc+rtc     { display:table-caption; caption-side:bottom; }
+ ruby rtc+rtc rt  { display:inline; }
+ ruby rtc+rtc rt  { color:#ff0000; }
+
+ [class~="sideboxrightinset"] { /* mainly for aside (or div) elements */
+ 	float: right;
+ 	width: 14em;
+	position: relative;
+	left: 0.9em;     /* push past .subpane padding 0.5 (sic.) + border */
+ 	padding: 0.6em;
+ 	margin-left: 1em;
+	margin-right: 0em;
+	border:0.3em inset;
+	border-color:#9c6  #583  #472  #8b5; /* should match .wrapsubpane>table values */
+	border-right:0em solid transparent;
+
+	background-image: url('/~erlkonig/@theme/http/img_bg_all') ;
+	background-attachment: fixed;
+	color: white;
+
+ 	text-align: center;
+    border-radius: 1.1ex;
+    box-shadow: inset 0.2em 0.2em 0.6em black;
+ }
+ [class~="sideboxrightinset"] a:link    {
+	color: #88ffff; background-color: transparent;
+ }
+ [class~="sideboxrightinset"] a:visited {
+	color: #ff88ff; background-color: transparent;
+ }
+
+ [class~="sideboxright"] { /* mainly for aside (or div) elements */
+ 	float: right;
+ 	width: 14em;
+ 	padding: 0.6em;
+ 	margin-left: 1em;
+	margin-right: 0.2em;
+ 	border-top:    solid medium white;
+ 	border-left:   solid medium white;
+ 	border-right:  solid thin #888888;
+ 	border-bottom: solid thin #888888;
+    margin-bottom: 0.8em;
+ 	background: #dddddd; 
+ 	text-align: center;
+    border-radius: 1.1ex;
+    box-shadow:  0.2em 0.2em 0.3em grey;
+ }
+
+[xml\:lang|="en"]    { quotes: "“" "”" "‘" "’"; }
+[xml\:lang ="en-us"] { quotes: "“" "”" "‘" "’"; }
+[xml\:lang|="en-gb"] { quotes: "‘" "’" "“" "”"; }
+[xml\:lang|="jp"]    { quotes:"「" "」" "「" "」" ; }
+[xml\:lang|="de"]    { quotes: "»"  "«"  "›"  "‹"}
+[xml\:lang ="de-de"] { quotes: "„"  "“"  "‚"  "‘"}
+[xml\:lang|="de-ch"] { quotes: "«"  "»"  "‹"  "›"}
+[xml\:lang|="da"]    { quotes: "„" "”" "‚" "’"; }
+[xml\:lang|="no"]    { quotes: "„" "”" "‚" "’"; }
+[xml\:lang|="se"]    { quotes: "”" "”" "’" "’"; } /* auch: "«" "»" */
+[xml\:lang|="fr"]    { quotes: "«" "»" "‹" "›"; }
+
+ blockquote pre { background-color:white; border:thin solid gray; }
+
+ 
+ [class~="tty"] {
+   border:thin solid gray;
+   padding:0.5em;
+   background-color:white;
+   background: white url(data:image/gif;base64,R0lGODlhAQAEAIABAMz/zP///yH5BAEKAAEALAAAAAABAAQAAAICRF4AOw==); /* img/bg/paper-green-lines.gif */
+   box-shadow: 5px 5px 5px 2px rgba(0,0,0, 0.5);
+ }
+ [class~="glasstty"], [class="tty"] {
+   display:table;  /* solely for shrink-to-fit, until I find a better way */
+   font-family: monospace;
+   white-space:pre;
+   padding:0.5em;
+   margin-top:0.5em;
+   margin-bottom:0.5em;
+   margin-right:auto;
+ }
+ [class~="glasstty"] {
+   background-color:black;
+   color:#6f6;
+   border:0.3em gray ridge;
+   border-radius:1.5ex;
+ }
+ [class~="glasstty"] {
+   background-image:
+       -moz-radial-gradient(50% 80%, ellipse farthest-corner,
+           rgba(255,255,255,0.0),
+           rgba(255,255,255,0.10) 52%, 
+           rgba(255,255,255,0.25) 100%),
+       -moz-radial-gradient(-100% 100%, ellipse cover,
+           rgba(255,255,255,0.0),
+           rgba(255,255,255,0.1) 81%, 
+           rgba(255,255,255,0.3) 100%);
+   background-image: 
+       -webkit-radial-gradient(40% 60%, farthest-corner,
+                               rgba(255,255,255,0) 25%,
+                               rgba(255, 255, 255, .3));
+   box-shadow:
+        3px 3px 5px 2px rgba(0,0,0, 0.5);
+ }
+ *[class~="glasstty"] .input { color:#bfb !important; font-weight:bold; }
+ *[class~="glasstty"] kbd { color:#bfb !important; font-weight:bold; }
+
+ *[class~="glasstty"] .cursor:before { text-decoration:blink; content: "_"; }
+
+
+</style>
+
+<!-- @style/end erlkonig -->
+
+
+
+<!-- @subhead/end erlkonig -->
+
+    
+    <!-- `alexsiodhe' is a likely-unique search target -->
+    <meta name="keywords" content="erlkonig, north-keys, siodhe, alexsiodhe" />
+
+    <style type="text/css">
+      <!--/*--><![CDATA[/* ><!--*/
+    /*                             t   r   b   l */ 
+    p { text-align:justify; margin:1em 2em 1em 2em; }
+	pre.code {
+		font-family: monospace;
+        font-size:12px;
+		background: #fafafa;
+		border: solid .5mm silver;
+        margin:1em 3em 1em 3em;
+        padding:1em;
+	}
+    /*--><!]]>*/
+    </style>
+  </head>
+
+  <!-- @bodystart/start erlkonig -->
+
+
+
+
+
+ <!-- ! use_site_includes talis' mode has rest of @bodystart* -->
+
+<body>
+
+
+ <!-- ! client_is_small -->
+
+<table width="100%" class="wrapper"
+	
+	cellpadding="0" cellspacing="0">
+<tr valign="top">
+	<td class="wrapsigil" rowspan="2">
+
+		<a class="login"   href="/~erlkonig/@auth/">login</a>
+
+
+		<a href="/~erlkonig/img/places/moon/phases/64/">
+		  <img class="moon" alt="[moon]" src="/~erlkonig/moonphase.cgi"/></a>
+		<a href="/~erlkonig/">
+		    <span class="home">home</span>
+
+			<img class="logo" alt="[virtual tree]"
+				 src='/~erlkonig/@theme/http/img_logo' />
+
+		</a>
+		</td>
+
+    <!-- elvengear ad -->
+    <td rowspan="2" style="width:110px; vertical-align:bottom;">
+
+
+       <div class="wrapadvert">
+         <img alt="[shirt]" src='/~erlkonig/@theme/http/icon_shirt'/>
+         <div class="begging">
+	       <a rel="nofollow" href="http://www.cafepress.com/elvengear/">
+	         Buy<br/>Our<br/>Shirts!
+	       </a>
+         </div>
+       </div>
+	</td>
+
+	<td align="right" valign="top">
+	  <h1 class="wraptitle">
+		<span class="wraptitle-prefix"></span>
+		<span class="wraptitle-text">fredrik's X11 Composite Tutorial</span>
+	  </h1>
+	</td>
+</tr>
+<tr>
+	<td align="right">
+		<div class="wrapdesc">
+			
+    fredrik's wonderful tutorial from ~2012-01-10.
+	
+		</div>
+		</td>
+</tr>
+</table>
+
+<table width="100%"
+	
+	cellpadding="0" cellspacing="0" border="0">
+<tr valign="top">
+	<!-- note: moving bgcolor/background to subtable changes frame color -->
+	<td class="wrapsitenav" valign="top" align="center" rowspan="1">
+
+		<a href="../">
+
+			<span>parent</span><br />
+			<img src='/~erlkonig/@theme/http/icon_parent' 
+				alt="[parent webpage]" />
+			</a><br />
+		<a href="/">
+			<span>server</span><br />
+			<img src='/~erlkonig/@theme/http/icon_base' 
+				alt="[webserver base]" />
+			</a><br />
+		<a href="/~erlkonig/search/">
+			<span>search</span><br />
+			<img src='/~erlkonig/@theme/http/icon_search' 
+				alt="[search erlkonig webpages]" />
+			</a><br />
+		<a href="/~erlkonig/certs/">
+			<span>trust</span><br />
+			<img src='/~erlkonig/@theme/http/icon_padlock' 
+				alt="[import certificates]" />
+			</a><br />
+		<br />
+		<span>homes</span><br />
+		<a rel="nofollow" href="http://www.talisman.org/~erlkonig/">
+			<img src='/~erlkonig/@theme/http/icon_talisman' 
+				alt="[talisman]" />
+			</a><br />
+		<a rel="nofollow" href="http://www.zoion.com/~erlkonig/">
+			<img src='/~erlkonig/@theme/http/icon_zoion' 
+				alt="[zoion]" />
+			</a><br />
+		<a rel="nofollow" href="http://www.math.fu-berlin.de/~erlkonig/">
+			<img src='/~erlkonig/@theme/http/icon_fuberlin' 
+				alt="[fu-berlin]" />
+			</a><br />
+
+	</td>
+	<td>
+		<div class="wrapsubpane"
+
+			 >
+		<table
+ width="100%" 
+			   cellspacing="0" cellpadding="0" border="0">
+		<tr><td class="subpane">
+
+ <!-- ! client_is_small -->
+ <!--   wrapper -->
+ <!-- ! use_site_includes -->
+
+ <!-- ! wrapper -->
+
+<!-- @bodystart/end erlkonig -->
+
+
+  <p>Originally posted on
+    <a rel="nofollow" href="http://ktown.kde.org/%7Efredrik/composite_howto.html">
+      http://ktown.kde.org/~fredrik/composite_howto.html</a>
+    but now unavailable.
+  </p>
+  <p>
+    This article targets the Qt Widget toolkit but should make sense for 
+    every widget toolkit that exposes some basic X11 protocol.
+    It's been cloned here (ignoring formatting changes and minor corrections) from
+    <a rel="nofollow" href="http://trinity.netcat.be/blog/composite-tutorial">
+      http://trinity.netcat.be/blog/composite-tutorial</a>
+    to prevent its loss.
+  </p>
+
+  <h1>Composite tutorial</h1>
+  
+  <h2>Index</h2>
+  <ol>
+    <li>Introduction
+      <ol>
+        <li>About this tutorial</li>
+        <li>When a windows contents are made available by Composite</li>
+        <li>Reasons for using Xrender to access the contents</li>
+      </ol>
+    </li>
+    <li>Checking if the server supports the composite extension</li>
+    <li>Redirecting windows to offscreen pixmaps</li>
+    <li>Referencing the window contents
+      <ol>
+        <li>Getting information about the window</li>
+        <li>Creating a Render picture so we can access the window contents</li>
+        <li>Handling shaped windows correctly</li>
+      </ol>
+    </li>
+    <li>Drawing the window on a QWidget or a QPixmap</li>
+    <li>Tracking damage and other changes to a window
+      <ol>
+        <li>Intercepting X events as they're received</li>
+      </ol>
+    </li>
+    <li>Advanced concepts
+      <ol>
+        <li>Using a transformation matrix: scaling and rotating</li>
+        <li>Preventing the backing pixmap from being freed when the window is hidden/destroyed</li>
+        <li>Converting the window contents to a QImage</li>
+        <li>Differences between automatic and manual redirection</li>
+      </ol>
+    </li>
+    <li>Credits</li>
+    <li>References</li>
+  </ol>
+
+  <h2>Introduction</h2>
+  <h3>About this tutorial</h3>
+  <p>
+    Now that composite has appeared in an X.Org release, a lot of people will be
+    interested in using it, not just from a user point of view for transparency
+    and eye candy, but also from a developers point of view, for accessing the
+    contents of covered windows.</p>
+  <p>
+    This tutorial is about using Composite and the Xrender extension for doing
+    the latter. Tracking changes to window contents with Xdamage is tightly
+    coupled to accessing window contents, so that's also covered in this tutorial.</p>
+  <p>
+    This tutorial is mainly aimed at those that are interested in using Composite
+    for providing thumbnails in a desktop pager, or for those working on Exposé
+    like features. But the concepts introduced here are applicable to Composite
+    managers as well. This tutorial is not meant to be the one and only reference
+    you'll ever need for everything having to do with the Composite extension
+    however, but I've tried to cover all aspects of its usage for the above
+    mentioned purposes. It should also help you avoid all the pitfalls you're
+    likely to run into when using the Composite extension.</p>
+  <p>
+    You don't need to have any previous experience from using X directly from
+    within a Qt application, but it helps if you have a general idea on how
+    X works, and how an application communicates with an X server. Previous
+    experience with Xlib programming helps too.</p>
+  <h3>When a windows contents are made available by Composite</h3>
+  <p>
+    Before we begin I feel I need to clear up a misconception about when
+    the contents of a window is made available by composite. A backing pixmap is
+    allocated when the window is shown, and is deallocated when it becomes hidden.
+    What this means in other words is that when a window is minimized, or not on
+    the current desktop, the window contents aren't available.</p>
+  <p>
+    There are basically two reasons why composite works like this. The first is
+    to minimize the amount of video ram needed at a given time by the backing store.
+    The second is that with the traditional X design, drawing on a hidden window is
+    effectively a NOOP. Clever applications and toolkits know this, so they'll never
+    try to draw on a minimized window anyway.</p>
+  <p>
+    This probably comes as a dissapointment nonetheless to those that are hoping that
+    composite would enable them to e.g. hover over a taskbar button, and get a tooltip
+    with a thumbnail of a minimized window or a window on another desktop (to see if
+    the window has been updated).</p>
+  <p>
+    The best thing a taskbar/pager that wants to do this can do is to keep a cached
+    thumbnail of the contents of the window before it was unmapped. Composite actually
+    provides an easy way of doing that, as explained in this tutorial.</p>
+  <p>
+    Note that while the contents of a minimized window will never be available, the
+    contents of a window on an inactive desktop may be, depending on the WM design.
+    If the WM uses a virtual root window for each desktop, and don't unmap the inactive
+    ones, then the contents of those windows on those desktops will still be available.
+    KWin and Metacity aren't designed like that however.</p>
+  <h3>Reasons for using Xrender to access the contents</h3>
+  <p>
+    I'll also briefly explain the motivation for using Xrender to access the window
+    contents. It is perfectly possible to create a GC for a window and use XCopyArea()
+    to copy the contents of the window if you want to use the core protocol, but since
+    the Composite extension exposes new visuals (ones with alpha channels e.g.), there's
+    no guarantee that the format of the source drawable will match that of the destination.
+    With the core protocol that situation will result in a match error, something that
+    won't happen with the Xrender extension.</p>
+  <p>
+    In addition the core protocol has no understanding of alpha channels, which
+    means that it can't composite windows that use the new ARGB visual. When the
+    source and destination have the same format, there's also no performance
+    advantage to using the core protocol as of X11R6.8. That release is also the
+    first to support the new Composite extension.</p>
+  <p>
+    So in conclusion there are no drawbacks, and only advantages to choosing
+    Xrender over the core protocol for these operations.</p>
+  <h2>Checking if the X server supports the composite extension</h2>
+  <p>
+    The first you thing you need to do is to do a runtime check to make sure the X
+    server you're connected to actually supports the composite extension. You'll need
+    a compile time check too of course, but that'll only tell you that the composite
+    lib is available, not that the X server the application will be using has the
+    server side bits.</p>
+  <p>
+    Before you can make any calls to Xlib functions, you need to obtain a pointer from
+    Qt to the <i>Display</i> struct, which is the first argument to each Xlib function.
+    The Display struct contains information about the connection to the X server, such
+    as the socket number. This pointer is obtained by calling the static function
+    QPaintDevice::x11AppDisplay(), If you need a pointer to the Display struct from
+    inside a class that inherits QPaintDevice, you can call x11Display() instead.</p>
+  <pre class="code">Display *dpy = QPaintDevice::x11AppDisplay();
+  </pre><p>
+    Note that the KApplication object must be created before asking Qt for the
+    Display pointer, since it won't be initialized until QApplication has established
+    a connection to the X server. Once you have a pointer to the Display struct we
+    can proceed with the runtime check for the extension:</p>
+  <pre class="code">
+bool hasNamePixmap = false;
+int event_base, error_base;
+if ( XCompositeQueryExtension( dpy, &amp;event_base, &amp;error_base ) )
+{
+    // If we get here the server supports the extension
+    
+    int major = 0, minor = 2; // The highest version we support
+    XCompositeQueryVersion( dpy, &amp;major, &amp;minor );	
+    
+    // major and minor will now contain the highest version the server supports.
+    // The protocol specifies that the returned version will never be higher
+    // then the one requested. Version 0.2 is the first version to have the
+    // XCompositeNameWindowPixmap() request.
+    if ( major &gt; 0 || minor &gt;= 2 )
+        hasNamePixmap = true;
+}
+  </pre>
+  <h2>Redirecting all toplevel windows to offscreen pixmaps</h2>
+  <p>
+    Once you've made sure the X server supports the Composite extension, you need to
+    make sure that the contents of the window you want to grab are available in a
+    backing pixmap.</p>
+  <p>
+    This is accomplished by calling XCompositeRedirectSubwindows() once for each root
+    window, specifying that you want automatic redirection:</p>
+  <pre class="code">for ( int i = 0; i &lt; ScreenCount( dpy ); i++ )
+    XCompositeRedirectSubwindows( dpy, RootWindow( dpy, i ),
+CompositeRedirectAutomatic );
+  </pre><p>
+    This will redirect all current and future toplevel windows on each screen to offscreen
+    storage. There will only be more than one screen on a multihead (but not on a Xinerama)
+    system.</p>
+  <p>
+    You don't need to worry about unredirecting the windows, since this will be done
+    automatically when your application shuts down. Also if a composite manager has
+    already redirected the windows, this call will be a NOOP, so you don't need to
+    worry about this disrupting e.g. xcompmgr.</p>
+  <p>
+    The windows themselves are oblivious to the fact that they've been redirected
+    to offscreen storage, and no modifications need to be made to existing applications
+    for this to work. Both from the users point of view, and from that of the applications,
+    everything will just continue to work as it did before the windows were redirected.</p>
+  <p>
+    Note that if you know you won't be dealing with more than one window, it's better to
+    just redirect the window you're interested in using XCompositeRedirectWindow().
+    You can then unredirect it when you're done (using XCompositeUnredirectWindow()).</p>
+  <h2>Referencing the window contents</h2>
+  <p>
+    If you want access to the contents of a window, you must first know its ID.
+    It might be tempting to create a QPixmap and simply copy the window contents to it,
+    but remember that the window is already a pixmap, and if you want to store the contents
+    of multiple windows, creating a QPixmap for each one of them would mean that each window
+    ends up being stored twice in video RAM. So in other words that isn't a good idea. If
+    you just want to store thumbnails of each window, it might be a good idea to cache those
+    in QPixmaps however.</p>
+  <h3>Getting information about the window</h3>
+  <p>
+    Okay so we know the window ID, but we need to find out some other things about the
+    window, such as its size, the format of the pixels in the backing pixmap, and
+    whether the window has an alpha channel or not.</p>
+  <p>
+    It turns out we can find out most of these things by calling XGetWindowAttributes():</p>
+  <pre class="code">// We need to find out some things about the window, such as its size, its position
+// on the screen, and the format of the pixel data
+XWindowAttributes attr;
+XGetWindowAttributes( dpy, wId, &amp;attr );
+  </pre><p>
+    XGetWindowAttributes is a synchronous call (it blocks), so you don't want to call this
+    function too often. In a real world application you'll also need to check the return
+    value, since due to the asynchronous nature of X, the window may have been destroyed by
+    the time the call is made.</p>
+  <p>
+    Once XGetWindowAttributes() has filled in the members of the XWindowAttributes struct,
+    we'll extract the data we need:</p>
+  <pre class="code">XRenderPictFormat *format = XRenderFindVisualFormat( dpy, attr.visual );
+bool hasAlpha             = ( format-&gt;type == PictTypeDirect &amp;&amp; format-&gt;direct.alphaMask );
+int x                     = attr.x;
+int y                     = attr.y;
+int width                 = attr.width;
+int height                = attr.height;
+  </pre><h3>Creating a Render picture so we can access the window contents</h3>
+  <p>
+    Okay, so now we know the size of the window, the pixel format, and whether the window has
+    an alpha channel or not. What we need to do now is to create an XRender Picture for the
+    window, which we'll need to draw it with the Render extension. A picture is a basically
+    a handle to a server side struct with some additional information about a drawable (in this
+    case a window), such as its format, which clipping region should be used when drawing it
+    (if any), whether it should be tiled etc.</p>
+  <p>
+    Creating a picture for a drawable is done by calling 
+    XRenderCreatePicture(). Unlike XGetWindowAttributes() this function 
+    isn't synchronous, so it won't return an error code
+    if the window doesn't exist. Instead an X error will be sent to the application when the
+    X server processes the request, and the returned picture handle will be invalid (which
+    will result in further X errors if it's used in subsequent function calls).</p>
+  <p>
+    Responding to those errors correctly is quite complex, and beyond the scope of this
+    tutorial. But the errors are harmless and will only result in an error message being
+    printed on the console. When your application returns to the event loop you'll
+    recieve a message about the window having been deleted.</p>
+  <pre class="code">// Create a Render picture so we can reference the window contents.
+// We need to set the subwindow mode to IncludeInferiors, otherwise child widgets
+// in the window won't be included when we draw it, which is not what we want.
+XRenderPictureAttributes pa;
+pa.subwindow_mode = IncludeInferiors; // Don't clip child widgets
+
+Picture picture = XRenderCreatePicture( dpy, wId, format, CPSubwindowMode, &amp;pa );
+  </pre><p>
+    To avoid having to go through each of these steps each time you want to draw the
+    window, you'll probably want to stick this information in an class for quick
+    access. You could also put a draw() method in the same class for drawing the
+    window on a QPixmap/QWidget.</p>
+  <h3>Handling shaped windows correctly</h3>
+  <p>
+    A windows backing pixmap is always rectangular, but if the window has a non-rectangular shape
+    we don't want to end up copying pixels that aren't a part of the window when we draw it
+    (those pixels are undefined). To avoid doing that we'll set the clip region for the picture
+    to the windows shape region. Doing this requires using the XFixes extension, which you'll need
+    to query for, just like you did with composite.</p>
+  <pre class="code">// Create a copy of the bounding region for the window
+XserverRegion region = XFixesCreateRegionFromWindow( dpy, wId, WindowRegionBounding );
+
+// The region is relative to the screen, not the window, so we need to offset
+// it with the windows position
+XFixesTranslateRegion( dpy, region, -x, -y );
+XFixesSetPictureClipRegion( dpy, picture, 0, 0, region );
+XFixesDestroyRegion( dpy, region );
+  </pre><p>
+    It might be useful to know that when you draw a pixmap with Xrender, you provide pictures
+    both for the source and the destination drawables, and both the source and destination
+    pictures can have clip regions set. So if you're not planning on scaling the window when
+    you draw it, you could set the clip region in the destination picture instead.</p>
+  <p>
+    Don't forget that since the region is only a copy, you'll need to update it when the window
+    is resized or when the window shape is changed.</p>
+  <p>
+    The XShape extension can provide notifications when the window shape changes, but it
+    will only do this if you explicitly ask it to. Telling XShape to send such notifications
+    is done by calling XShapeSelectInput():</p>
+  <pre class="code">XShapeSelectInput( dpy, wId, ShapeNotifyMask );
+  </pre><p>
+    See the section about intercepting X events for information on how to recieve the actual
+    events.</p>
+  <h2>Drawing the window on a QWidget or QPixmap</h2>
+  <p>
+    We now have all the information we need in order to be able to draw the window using the
+    Xrender extension, and we've created and prepared a source picture for the window for
+    this purpose.</p>
+  <p>
+    The Xrender function we'll use to draw the window is XRenderComposite(), which is defined
+    like this in the Xrender header file:</p>
+  <pre class="code">void XRenderComposite (Display   *dpy,
+                       int       op,
+                       Picture   src,
+                       Picture   mask,
+                       Picture   dst,
+                       int       src_x,
+                       int       src_y,
+                       int       mask_x,
+                       int       mask_y,
+                       int       dst_x,
+                       int       dst_y,
+                       unsigned int  width,
+                       unsigned int  height);
+  </pre><p>
+    As you can see this function takes a source picture, a destination picture and an optional
+    mask picture. In our case we have need for a mask, but we will need a destination picture
+    however.</p>
+  <p>
+    We want to draw the window on a QWidget or a QPixmap, and it turns out that objects of both
+    these types already have render pictures (if Qt was built with Xft/Xrender support).
+    The picture is accessed by calling the x11RenderHandle() method in the QWidget or QPixmap.</p>
+  <p>
+    Another important parameter for XRenderComposite() is the second, op, which specifies how
+    the source and destination pixels should be combined. For our purposes there are only two
+    render operations that are of interest - PictOpSrc and PictOpOver.</p>
+  <p>
+    PictOpSrc specifies that the destination pixels should be replaced with the source pixels
+    (dst = src), including the alpha values. PictOpOver corresponds to the Porter/Duff Over
+    operator, which specifies that Xrender should use the alpha values in the source pixels to
+    blend them with the destination pixels (dst = src Over dst).</p>
+  <p>
+    So PictOpSrc won't blend the window, while PictOpOver will. PictOpSrc is faster, and is
+    almost always guaranteed to be accelerated, so when the window doesn't have an
+    alpha channel we'll want to use that. When it has an alpha channel we'll want to use
+    PictOpOver.</p>
+  <p>
+    In the following example dest must be a QWidget or a QPixmap. destX and destY are the X
+    and Y coordinates in the widget or pixmap where you want the window to be drawn.</p>
+  <pre class="code">// [Fill the destination widget/pixmap with whatever you want to use as a background here]
+XRenderComposite( dpy, hasAlpha ? PictOpOver : PictOpSrc, picture, None,
+                  dest.x11RenderHandle(), 0, 0, 0, 0, destX, destY, width, height );
+  </pre><h2>Tracking damage and other changes to a window</h2>
+  <p>
+    If you're only interested in creating a one time snapshot of a window, and you're not
+    interested in updating the snapshot when the window changes, you can skip this section.</p>
+  <p>
+    The first thing we need to do if we want to track damage to a window is to query the X
+    server for the damage extension, and this time we need to save the event base for later.
+    Read on to find out why.</p>
+  <pre class="code">int damage_event, damage_error; // The event base is important here
+XDamageQueryExtension( dpy, &amp;damage_event, &amp;damage_error );
+  </pre><p>
+    Once we've made sure the X server supports the damage extension, we need to create a damage
+    handle for each window we're interested in. There are a number of ways Xdamage can report
+    changes to the window, in this case we'll specify that we want an event whenever the window
+    state changes from not damaged to damaged. The allocated handle must be 
+    destroyed by calling XDamageDestroy() when damage events for the window 
+    are no longer needed.</p>
+  <pre class="code">// Create a damage handle for the window, and specify that we want an event whenever the
+// damage state changes from not damaged to damaged.
+Damage damage = XDamageCreate( dpy, wId, XDamageReportNonEmpty );
+  </pre><p>
+    One thing you'll notice here is that unlike most extensions that provide notifications,
+    Xdamage provides damage notification objects rather than exposing an XDamageSelectInput()
+    request. You'll recall from the section about shaped windows that the XShape extension
+    provides an XShapeSelectInput() request to request shape change notifications for
+    a window.</p>
+  <p>
+    Another interesting thing to note about Xdamage is that it doesn't just track damage
+    to windows, it can also track damage to pixmaps, if you want to use it for that.</p>
+  <h3>Intercepting X events as they're received</h3>
+  <p>
+    X continually sends events to the application over the network socket, where they're
+    demarshalled and inserted into an event queue. An application pulls the events out of
+    the queue one at a time by calling XNextEvent().</p>
+  <p>
+    In a Qt application all this is handled by QApplication, but in this particular case
+    we want to take a peek at each received X event before QApplication processess it.</p>
+  <p>
+    It turns out there's a way to do that - two ways in fact. In a Qt application this is
+    done by reimplementing QApplication::x11EventFilter( XEvent * ), which is called each
+    time an event is pulled out of the queue, but before it's processed by Qt. We even
+    have a choice of whether we should swallow the event (by returning true), or telling
+    Qt it should go ahead and process the event (by returning false).</p>
+  <p>
+    In a KDE application we also have the option of calling
+    KApplication::installX11EventFilter( QWidget * ), which tells KApplication to
+    forward each received X event to the x11Event( XEvent * ) member function in the
+    widget you specify.</p>
+  <p>
+    Now I mentioned before that it was important to save the event base for the damage extension.
+    It's now time to explain what you need it for. Each X event has a unique number that
+    identifies that event, with the numbers for the events in the core protocol starting with
+    the base number zero.</p>
+  <p>
+    Since there can be any number of X extensions and each extension can add any number of
+    events, the base number for the events provided by an extension depends on the X
+    implementation, and must be obtained from the X server at runtime.</p>
+  <p>
+    The event base must be added to the constants identifying the events from the extension
+    to compute the actual event number. You'll see how this works in the example below.</p>
+  <p>
+    For each X event there's a corresponding structure, and XEvent is union of all
+    possible event structures. The first member, which is common for all the structs,
+    is <i>type</i> which contains the event number, which tells us which type of event
+    the struct contains. The XEvent struct must be cast to the appropriate struct
+    matching the event, e.g. if type is ConfigureNotify, the XEvent should be cast to
+    XConfigureEvent.</p>
+  <p>
+    Here's a sample implementation of a function that receives X events, checks the type
+    member, and processes damage, shape and configure events:</p>
+  <pre class="code">bool x11EventFilter( XEvent *event )
+{
+    if ( event-&gt;type == damage_event + XDamageNotify ) {
+        XDamageNotifyEvent *e = reinterpret_cast&lt;XDamageNotifyEvent*&gt;( event );
+        // e-&gt;drawable is the window ID of the damaged window
+        // e-&gt;geometry is the geometry of the damaged window	
+        // e-&gt;area     is the bounding rect for the damaged area	
+        // e-&gt;damage   is the damage handle returned by XDamageCreate()
+        
+        // Subtract all the damage, repairing the window.
+        XDamageSubtract( dpy, e-&gt;damage, None, None );
+    }
+    
+    else if ( event-&gt;type == shape_event + ShapeNotify ) {
+        XShapeEvent *e = reinterpret_cast&lt;XShapeEvent*&gt;( event );
+        // It's probably safe to assume that the window shape region
+        // is invalid at this point...	
+    }
+    
+    else if ( event-&gt;type == ConfigureNotify ) {
+        XConfigureEvent *e = &amp;event-&gt;xconfigure;	
+        // The windows size, position or Z index in the stacking
+        // order has changed
+    }
+    
+    return false;			
+}
+  </pre><p>
+    Keep in mind that there may be several events of the same type for the same window
+    in the queue, so you should wait until you've processed all of them before taking any
+    action. This is also important because there could be a DestroyNotify event
+    for the window in the queue, after e.g. a damage event.</p>
+  <p>
+    Note that in the above example all the damage is subtracted from the window, but the
+    actual damage region is thrown away. In this example the damage region is retrieved
+    from the damage object, and set as a clip region for the picture:</p>
+  <pre class="code">// Create an empty region
+XserverRegion region = XFixesCreateRegion( dpy, 0, 0 );
+
+// Copy the damage region to region, subtracting it from the windows' damage
+XDamageSubtract( dpy, e-&gt;damage, None, region );
+
+// Offset the region with the windows' position
+XFixesTranslateRegion( dpy, region, e-&gt;geometry.x, e-&gt;geometry.y );
+
+// Set the region as the clip region for the picture
+XFixesSetPictureClipRegion( dpy, picture, 0, 0, region );
+
+// Free the region
+XFixesDestroyRegion( dpy, region );
+  </pre><p>
+    This will result in only the damaged pixels being copied when the window is
+    drawn, but this may not be an option if you're scaling the window as you're
+    drawing it. Scaling the window is covered in the next section.</p>
+  <h2>Advanced concepts</h2>
+  <h3>Using a tranformation matrix: scaling and rotating</h3>
+  <p>
+    If we want to create a thumbnail of a window we'll need to scale it, so I'll mention
+    briefly how to do that with the render extension. Doing it with Xrender has the
+    advantage that it's done server side, so there's no image transport involved. This is
+    quite important, especially for remote X connections.</p>
+  <p>
+    What we'll do is set a transformation matrix for the picture that'll cause the contents
+    to be scaled to the size we want when it's drawn. XTransform works much in the same way
+    as QWMatrix.</p>
+  <pre class="code">double scale = .5; // We'll scale the window to 50% of its original size
+
+// Scaling matrix
+XTransform xform = {{
+    { XDoubleToFixed( 1 ), XDoubleToFixed( 0 ), XDoubleToFixed(     0 ) },
+    { XDoubleToFixed( 0 ), XDoubleToFixed( 1 ), XDoubleToFixed(     0 ) },
+    { XDoubleToFixed( 0 ), XDoubleToFixed( 0 ), XDoubleToFixed( scale ) }
+}};
+
+XRenderSetPictureTransform( dpy, picture, &amp;xform );
+  </pre><p>
+    Since XTransform is a projective transformation matrix, scaling isn't 
+    the only possible transformation. E.g. below is an example of a matrix 
+    that rotates the picture 30 degrees
+    clockwise.</p>
+  <pre class="code">double angle = M_PI / 180 * 30; // 30 degrees
+double sina = std::sin( angle );
+double cosa = std::cos( angle );
+
+// Rotation matrix
+XTransform xform = {{
+    { XDoubleToFixed(  cosa ), XDoubleToFixed( sina ), XDoubleToFixed( 0 ) },
+    { XDoubleToFixed( -sina ), XDoubleToFixed( cosa ), XDoubleToFixed( 0 ) },
+    { XDoubleToFixed(     0 ), XDoubleToFixed(    0 ), XDoubleToFixed( 1 ) }
+}};
+  </pre><p>
+    Note that the center of rotation is the upper left corner, not the center of the picture,
+    so you'll need to offset the picture when you draw it to compensate for that.</p>
+  <p>
+    Since the resulting image comes out looking rather jagged, you might want to use a
+    filter when doing the transformation. All render implementations are required to
+    support two filters - nearest neighbor and bilinear, but may support any number of
+    filters, such as gaussian or even arbitrary convolution filters. XRenderQueryFilters()
+    returns a list of all filters supported by the render implementation.</p>
+  <p>
+    In this example we'll tell render to use a bilinear filter. When you use a filter
+    you'll probably want to use PictOpOver as the render op, regardless of whether the
+    source picture has an alpha channel or not, since the edges may end up having alpha
+    values after the filter has been applied.</p>
+  <pre class="code">XRenderSetPictureFilter( dpy, picture, FilterBilinear, 0, 0 );
+  </pre><p>
+    You should keep in mind that the transformation is applied in real time each time
+    the picture is rendered, so there's some value in caching the resulting images.</p>
+  <h3>Preventing the backing pixmap from being freed when the window is hidden/destroyed</h3>
+  <p>
+    If you want the window contents to still be available after the window has been destroyed,
+    or after the window has been resized (but not yet redrawn), you can increment the backing
+    pixmaps ref count to prevent it from being deallocated:</p>
+  <pre class="code">Pixmap windowPix = XCompositeNameWindowPixmap( dpy, wId );
+  </pre><p>
+    As you can see this function also returns a handle to the backing pixmap the window is
+    currently using, which is different from the window ID. The window ID, unlike the
+    returned pixmap handle won't be valid after the window has been destroyed.</p>
+  <p>
+    For this function to be useful you must call it before XRenderCreatePicture(), and
+    substitute the wId parameter with windowPix in that call.</p>
+  <p>
+    It's important to keep in mind that after doing this the picture will reference this
+    particular backing pixmap, rather than whatever the current backing pixmap is for
+    the window (which can always be referred to by the window ID). </p>
+  <p>
+    The caveat is that when the window is resized, composite allocates a new backing
+    pixmap for the window with the new size, and when that happens the picture will
+    continue refer to the now stale backing pixmap containing the window image as it
+    looked before it was resized.</p>
+  <p>
+    You'll therefore have to track resize events for the window, and when it's resized you
+    have to deref the backing pixmap (using XFreePixmap()) and destroy the picture, then call
+    XCompositeNameWindowPixmap() to get a handle to the new backing pixmap, and recreate
+    the picture.</p>
+  <p>
+    To get resize events for the window you'll have to make this call to tell the X server
+    you're interested in those types of events:</p>
+  <pre class="code">XSelectInput( dpy, wId, StructureNotifyMask );
+  </pre><p>
+    See the section about intercepting X events in a KDE application, for information on
+    how to receive the actual events. The event you're looking for is<a rel="nofollow" href="http://tronche.com/gui/x/xlib/events/window-state-change/configure.html">ConfigureNotify</a>.</p>
+  <p>
+    Don't forget to deref the window pixmap when the window is destroyed, otherwise you'll
+    leak the backing pixmap.</p>
+  <h3>Converting the window contents to a QImage</h3>
+  <p>
+    In some cases it might be interesting to take a snapshot of a window and save it to disk.
+    One way of doing that is to create a QPixmap of the same size as the window, copy the
+    contents to the pixmap, and then use QPixmap::convertToImage(). The problem with this
+    approach is that due to the limited support in Qt3 (and in Qt4 TP1) for alpha channels,
+    the alpha channel in the window will be lost when doing this.</p>
+  <p>
+    When the window has an alpha channel, the only option currently is to use XGetImage() to
+    get the window contents into an XImage, and then manually convert the XImage to a QImage,
+    using the information in the XRenderPictFormat. When doing this keep in mind that the
+    ARGB32 visual is a premultiplied alpha format, while the QImage format isn't.</p>
+  <pre class="code">// Convert the window contents to an XImage
+XImage *image = XGetImage( dpy, wId, 0, 0, width, height, AllPlanes, ZPixmap );
+
+// [Convert image to a QImage]
+
+XDestroyImage( image );
+  </pre><p>
+    The exact details on how to do the XImage to QImage conversion is beyond the scope of this
+    tutorial.</p>
+  <p>
+    When doing the conversion you'll need to take the windows shape region into account, in case
+    the window has a non-rectangular shape. XFixesFetchRegion() will return an XserverRegion in
+    the form of an array of XRectangles. You can also use XShapeGetRectangles() if you want to
+    avoid creating an XserverRegion. XGetImage(), XFixesFetchRegion() and XShapeGetRectangles()
+    are all synchronous calls.</p>
+  <h3>Differences between automatic and manual redirection</h3>
+  <p>
+    In this tutorial we've been using automatic redirection, since the goal has been to demonstrate
+    how we can use Composite to access window contents, regardless of whether they're covered
+    by other windows or not.</p>
+  <p>
+    An application that isn't only interested in doing that, but also in constructing the screen
+    image as it's presented to the user will want to use manual redirection. The difference between
+    automatic and manual redirection is, that with manual redirection the window contents will
+    be redirected to offscreen storage, but not automatically updated on the screen when they're
+    modified.</p>
+  <p>
+    If you're writing a composite manager you'll therefore want to use manual redirection. In order
+    to create the screen presentation you'll also need to create a render picture for the root
+    window, and draw the windows on it manually, taking the window hierarchy into account. Doing
+    this you'll have total control over the presentation, which enables you to draw additional
+    decorations, such drop shadows or lense glares. This is the topic of another tutorial however.</p>
+  <h2>Credits</h2>
+  <p>Thanks to Richard Moore and Chris Lee for their feedback.</p>
+  <h2>References</h2>
+
+  <ul>
+    <li>
+      <a href="ftp://ftp.x.org/pub/X11R7.0/doc/render-protocol.txt">
+        The X Rendering Extension protocol definition</a></li>
+    <li>
+      <a rel="nofollow" href="http://www.x.org/archive/X11R7.5/doc/compositeproto/compositeproto.txt">
+        The X Composite Extension protocol definition</a></li>
+    <li>
+      <a rel="nofollow" href="http://www.x.org/releases/current/doc/damageproto/damageproto.txt">
+        The X Damage Extension protocol definition</a></li>
+    <li>
+      <a rel="nofollow" href="http://www.x.org/releases/current/doc/fixesproto/fixesproto.txt">
+        The X Fixes Extension protocol definition</a></li>
+  </ul>
+
+  <!-- @bodyend/end start -->
+  <!-- ! use_site_includes -->
+
+
+
+		</td></tr></table>
+		</div>  <!-- wrapsubpane/end -->
+
+		<table class="wrapper" width="100%"
+			
+			cellpadding="0" cellspacing="0" border="0">
+		<tr class="wrappagenav" valign="top">
+			<td class="wrappagenav">
+
+
+
+
+
+
+				<a href='https://www.talisman.org/~erlkonig/misc/x11-composite-tutorial/' >
+					encrypt
+				</a>
+			</td>
+
+
+<!-- NOTE: Babelfish translates a tilde (~/0x73) to (‾/0xd7e) for JP.  Ick. -->
+
+
+
+			<td class="wrappagenav">
+				<a href='http://world.altavista.com/?url=http://www.talisman.org/~erlkonig/misc/x11-composite-tutorial/&amp;lp=en_de' >lang</a>
+				[<a href='http://babelfish.altavista.com/babelfish/urltrurl?url=http://www.talisman.org/~erlkonig/misc/x11-composite-tutorial/&amp;lp=en_de&amp;tt=url' >de</a>
+				 <a href='http://babelfish.altavista.com/babelfish/urltrurl?url=http://www.talisman.org/~erlkonig/misc/x11-composite-tutorial/&amp;lp=en_ja&amp;tt=url' >jp</a>
+				 <a href='http://babelfish.altavista.com/babelfish/urltrurl?url=http://www.talisman.org/~erlkonig/misc/x11-composite-tutorial/&amp;lp=en_fr&amp;tt=url' >fr</a>]
+                <a href='http://www.read-able.com/check.php?uri=http://www.talisman.org/~erlkonig/misc/x11-composite-tutorial/' >diff</a>
+			</td>
+			<td class="wrappagenav">
+<!-- #set var="backlink_url" value="'http://www.altavista.com/cgi-bin/query?q=%2Blink:http$sec://${SERVER_NAME}${REQUEST_URI}'" -->
+
+
+				<a href='http://www.google.com/search?hl=en&amp;q=link:http://www.talisman.org/~erlkonig/misc/x11-composite-tutorial/' >
+					backlinks
+				</a>
+				<a href='http://www.google.com/search?hl=en&amp;q=link:https://www.talisman.org/~erlkonig/misc/x11-composite-tutorial/' >
+					(sec)
+				</a>
+			</td>
+			<td class="wrappagenav">
+
+				<a href='http://validator.w3.org/check?uri=http://www.talisman.org/~erlkonig/misc/x11-composite-tutorial/' >
+					validate
+				</a>
+			</td>
+			<td class="wrappagenav">
+
+              <a href='http://www.talisman.org/~erlkonig/misc/x11-composite-tutorial/?wrapper=false&amp;backgrounds=false' >printable</a>
+			</td>
+		</tr>
+		</table>
+		
+		<div class="google-ad">
+          
+		    <script type="text/javascript"><!--
+google_ad_client = "ca-pub-6397413957890100";
+/* erlkonig */
+google_ad_slot = "6298458725";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+          
+		</div>
+		
+		<div class="wrapcoolorgs">
+		  <a rel="nofollow" href="http://wikimediafoundation.org/wiki/Donate/en">
+			<img src='/~erlkonig/@theme/http/icon_wikipedia'
+				 alt="Wikipedia Affiliate Button"/>
+		  </a>
+		  <a rel="nofollow" href="http://www.eff.com/">
+			<img src='/~erlkonig/@theme/http/icon_ribbon'
+				 alt="[Free Speech Online Blue Ribbon Campaign]"/>
+		  </a>
+		</div>
+        <div class="wrapquip">
+          <q>Cogito ergo spud (I think therefore I yam).</q>
+        </div>
+		<div class="wrapcsswarn">
+			[<i>
+			Your browser's CSS support is broken.
+			<a rel="nofollow" href="http://www.mozilla.org/" style="color:#88ffff;">
+			Upgrade!
+			</a>
+			</i>]
+		</div>
+	</td>
+	</tr>
+</table>
+<!-- a lot of work for a one-word, unique, subtle marker -->
+<!-- well, it *used* to be one word -->
+<div class="wrapalexsiodhe"><sup><sub><small>
+	alexsiodhe, christopher north-keys, christopher alex north-keys
+	</small></sub></sup></div>
+
+ <!-- client_is_small -->
+ <!-- wrapper -->
+</body>
+ <!-- ! use_site_includes -->
+<!-- @bodyend/end erlkonig -->
+
+</html>
+

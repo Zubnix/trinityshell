@@ -1,6 +1,21 @@
+.breadcrumb .divider {
+    color: #333333;
+}
+
+.nav-list > .active > a, .nav-list > .active > a:hover {
+    background-color: #CC5500;
+}
+
+a {
+    color: #006699;
+}
+
 body {
         padding-top: 40px;
         padding-bottom: 120px;
+        padding-left: 6px;
+        padding-right: 6px;
+        font-size: 12px;
 }
 
 section {
@@ -10,7 +25,7 @@ section {
 .well-fixed {
      position:fixed;
      top:72px;
-     width:21.97%;
+     width:21%;
  }
 
 @media (max-width: 979px) {
