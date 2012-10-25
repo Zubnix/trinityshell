@@ -60,7 +60,7 @@
       					<h2>Disclaimer</h2>
       				</div>
               <p>
-                The information on this page was copied from <a href="http://web.archive.org/web/20100317151943/http://fredyduarte.net/blog/?p=7">here</a>. Reformatted and prettified. It handles the basic idea of how a <a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a> works. The code examples are in C++ but should be straightforward in any language.
+                The information on this page was copied from <a href="http://web.archive.org/web/20100317151943/http://fredyduarte.net/blog/?p=7">here</a>. Reformatted and prettified. It handles the basic idea of how a <a href="http://doc.qt.digia.com/qt/qgraphicsview.html"><code>QGraphicsView</code></a> works. The code examples are in C++ but should be straightforward in any language.
               </p>
             </section>
             <section id="Intro">
@@ -68,21 +68,21 @@
                 <h2>Intro</h2>
               </div>
               <p>
-                This is just a small introduction to Qt Canvas system. I’ll give a brief overview of the <a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a> framework.
+                This is just a small introduction to Qt Canvas system. I’ll give a brief overview of the <a href="http://doc.qt.digia.com/qt/qgraphicsview.html"><code>QGraphicsView</code></a> framework.
               </p>
               <p>
-                In Qt, it is possible to create your own widgets through the standard provided classes like QPushButton, QCheckBox, QGroupBox, etc. But even these widgets have limitations when writing a fully customizable application. Taking into account that most applications are built around Two-dimensional canvas, Qt Software developed the Graphics View framework, namely <a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a>.
+                In Qt, it is possible to create your own widgets through the standard provided classes like QPushButton, QCheckBox, QGroupBox, etc. But even these widgets have limitations when writing a fully customizable application. Taking into account that most applications are built around Two-dimensional canvas, Qt Software developed the Graphics View framework, namely <a href="http://doc.qt.digia.com/qt/qgraphicsview.html"><code>QGraphicsView</code></a>.
               </p>
               <p>
-                <a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a> was preceded by the former two-dimensional canvas, QCanvas. The framework is composed by 3 main elements:
+                <a href="http://doc.qt.digia.com/qt/qgraphicsview.html"><code>QGraphicsView</code></a> was preceded by the former two-dimensional canvas, QCanvas. The framework is composed by 3 main elements:
                 <ol>
-                  <li><a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a>: a class for displaying the widgets of a scene; It represents a viewport.</li>
-                  <li><a href="http://doc.qt.digia.com/4.5/qgraphicsscene.html"><code>QGraphicsScene</code></a>: a class for storing the widgets, handling event propagation(input from mouse, keyboard and other devices) and managing item states. It represents a scene with items in it;</li>
+                  <li><a href="http://doc.qt.digia.com/qt/qgraphicsview.html"><code>QGraphicsView</code></a>: a class for displaying the widgets of a scene; It represents a viewport.</li>
+                  <li><a href="http://doc.qt.digia.com/qt/qgraphicsscene.html"><code>QGraphicsScene</code></a>: a class for storing the widgets, handling event propagation(input from mouse, keyboard and other devices) and managing item states. It represents a scene with items in it;</li>
                   <li>QGraphicsItem: a basic class for the graphical items on the scene. It can also represent a group of items.</li>
                 </ol>
               </p>
               <p>
-                A <a href="http://doc.qt.digia.com/4.5/qgraphicsscene.html"><code>QGraphicsScene</code></a> object is flexible enough to include any number of QGraphicsItem objects and still mantain the efficiency in retrieving them. On the other hand, a <a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a> object size is limited by the computer’s display size(1280×1024, 1024×768, 800×600, etc). Putting these 3 elements together we have something like this:
+                A <a href="http://doc.qt.digia.com/qt/qgraphicsscene.html"><code>QGraphicsScene</code></a> object is flexible enough to include any number of QGraphicsItem objects and still mantain the efficiency in retrieving them. On the other hand, a <a href="http://doc.qt.digia.com/qt/qgraphicsview.html"><code>QGraphicsView</code></a> object size is limited by the computer’s display size(1280×1024, 1024×768, 800×600, etc). Putting these 3 elements together we have something like this:
               </p>
               <p>
                 <img src="assets/img/devresource/qgraphicsview_400x437.png" class="img-polaroid">
@@ -105,7 +105,7 @@ QGraphicsView view(&amp;scene);
 view.show();</pre>
               </p>
               <p>
-                In the code above, I’ve created a <a href="http://doc.qt.digia.com/4.5/qgraphicsscene.html"><code>QGraphicsScene</code></a> object and added a text to it through the convenience function <a href="http://doc.qt.digia.com/4.5/qgraphicsscene.html#addText"><code>QGraphicsScene::addText</code></a>. The type of the item added is a <a href="http://doc.qt.digia.com/4.5/qgraphicstextitem.html"><code>QGraphicsTextItem</code></a>. Then a <a href="http://doc.qt.digia.com/4.5/qgraphicsview.html"><code>QGraphicsView</code></a> object is created to display the scene. And the result is:
+                In the code above, I’ve created a <a href="http://doc.qt.digia.com/qt/qgraphicsscene.html"><code>QGraphicsScene</code></a> object and added a text to it through the convenience function <a href="http://doc.qt.digia.com/qt/qgraphicsscene.html#addText"><code>QGraphicsScene::addText</code></a>. The type of the item added is a <a href="http://doc.qt.digia.com/qt/qgraphicstextitem.html"><code>QGraphicsTextItem</code></a>. Then a <a href="http://doc.qt.digia.com/qt/qgraphicsview.html"><code>QGraphicsView</code></a> object is created to display the scene. And the result is:
               </p>
               <p>
                 <img src="assets/img/devresource/hello-world.png" class="img-polaroid">
@@ -126,10 +126,16 @@ QGraphicsView view(&amp;scene);
 view.show();</pre>
               </p>
               <p>
+                Now I’ve also added a path to scene. This particular path creates a Bezier curve in green color. To create the path, it’s used the <a href="http://doc.qt.digia.com/qt/qpainterpath.html"><code>QPainterPath</code></a> class, which allows you to draw any shape you want. And like the <a href="http://doc.qt.digia.com/qt/qgraphicsscene.html#addText"><code>QGraphicsScene::addText</code></a> function, there’s also a <a href="http://doc.qt.digia.com/qt/qgraphicsscene.html#addPath"><code>QGraphicsScene::addPath</code></a> convenience function. The result is:
+              </p>
+              <p>
                 <img src="assets/img/devresource/hello-world-bezier.png" class="img-polaroid">
               </p>
               <p>
-                Now I’ve also added a path to scene. This particular path creates a Bezier curve in green color. To create the path, it’s used the <a href="http://doc.qt.digia.com/4.5/qpainterpath.html"><code>QPainterPath</code></a> class, which allows you to draw any shape you want. And like the <a href="http://doc.qt.digia.com/4.5/qgraphicsscene.html#addText"><code>QGraphicsScene::addText</code></a> function, there’s also a <a href="http://doc.qt.digia.com/4.5/qgraphicsscene.html#addPath"><code>QGraphicsScene::addPath</code></a> convenience function. The result is:
+                Every <a href="http://doc.qt.digia.com/qt/qgraphicstextitem.html"><code>QGraphicsTextItem</code></a> on the scene can also be translated, rotated, scaled and sheared. The <a href="http://doc.qt.digia.com/qt/qgraphicsview.html"><code>QGraphicsView</code></a> class also supports these four operations.
+              </p>
+              <p>
+                That’s it. Next time I’ll show some more advanced examples of the framework usage.
               </p>
             </section>
     			</div>
