@@ -99,9 +99,77 @@
                 Now, let’s do some coding. First, we add a rectangle and a circle to the scene:
               </p>
               <p>
-                <pre class="prettyprint linenums"></pre>
+                <pre class="prettyprint linenums">QGraphicsScene scene(0, 0, 240, 120);
+ 
+QGraphicsRectItem *rect;
+rect = new QGraphicsRectItem(QRect(0, 0, 100, 100));
+rect->setBrush( Qt::red );
+rect->setPos(10, 10);
+ 
+scene.addItem(rect);
+ 
+QGraphicsEllipseItem *circle;
+circle = new QGraphicsEllipseItem(QRect(0, 0, 100, 100));
+circle->setBrush( Qt::blue );
+circle->setPos(120, 10);
+ 
+scene.addItem(circle);
+ 
+QGraphicsView view(&amp;scene);
+ 
+view.show();</pre>
               </p>
-
+              <p>
+                <img src="assets/img/devresource/ex1.png" class="img-polaroid">
+              </p>
+              <p>
+                A rectangle and a circle. No transformations applied.
+              </p>
+              <p>
+                To add both items, the <a href="http://doc.qt.digia.com/qt/qgraphicsscene.html#addItem"><code>addItem</code></a> method was used. Both bounding rectangles start at (0, 0) point, but their scene positions were changed through the <a href="http://doc.qt.digia.com/qt/qgraphicsitem.html#setPos"><code>setPos</code></a> method. You can still use the convenience methods to add items if you want (<a href="http://doc.qt.digia.com/qt/qgraphicsscene.html#addRect"><code>addRect</code></a>, <a href="http://doc.qt.digia.com/qt/qgraphicsscene.html#addEllipse"><code>addEllipse</code></a>, <a href="http://doc.qt.digia.com/qt/qgraphicsscene.html#addPolygon"><code>addPolygon</code></a>, etc).
+              </p>
+              <p>
+                In order to add a third item, we must enlarge the scene to visualize it.
+              </p>
+              <p>
+                <pre class="prettyprint linenums">QGraphicsScene scene(0, 0, 240, 200);</pre>
+                <pre class="prettyprint linenums">QPolygonF polygon;
+polygon &lt;&lt; QPointF(0, 60) &lt;&lt; QPointF(120, 60)
+                          &lt;&lt; QPointF(60, 0);
+QGraphicsPolygonItem *triangle;
+triangle = new QGraphicsPolygonItem(polygon);
+triangle->setBrush( Qt::green );
+triangle->setPos(60, 120);
+ 
+scene.addItem(triangle);</pre>
+              </p>
+              <p>
+                <img src="assets/img/devresource/ex2.png" class="img-polaroid">
+              </p>
+              <p>
+                A triangle (<a href="http://doc.qt.digia.com/qt/qgraphicspolygonitem.html"><code>QGraphicsPolygonItem</code></a>) added to the scene.
+              </p>
+              <p>
+                Now, let’s apply some operations to them:
+              </p>
+              <p>
+                <pre class="prettyprint linenums">rect->translate(15, 10);
+rect->rotate(10);
+ 
+circle->translate(20, 30);
+circle->scale(1/1.5, 1/1.5);
+ 
+triangle->shear(0.85, 0);</pre>
+              </p>
+              <p>
+                <img src="assets/img/devresource/ex3.png" class="img-polaroid">
+              </p>
+              <p>
+                Now the rectangle was moved and rotated (by default Qt sets the transformation center to the scene’s (0,0) point), the circle was moved and scaled (shrinked) and the triangle was sheared. You can learn more about transformations at the <a href="http://doc.qt.digia.com/qt/qgraphicsitem.html"><code>QGraphicsItem</code></a> class.
+              </p>
+              <p>
+                And that’s it. Hope this was usefull!
+              </p>
             </section>
     			</div>
 			</div>
