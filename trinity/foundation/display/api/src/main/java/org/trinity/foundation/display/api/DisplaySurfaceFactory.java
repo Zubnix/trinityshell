@@ -11,6 +11,26 @@
  */
 package org.trinity.foundation.display.api;
 
+/***************************************
+ * A factory for creating {@link DisplaySurface}s based on their
+ * {@link DisplaySurfaceHandle}. Ideally multiple calls to
+ * {@link #createDisplaySurface(DisplaySurfaceHandle)} with the same
+ * {@link DisplaySurfaceHandle} argument should return the same
+ * {@link DisplaySurface} instance.
+ * 
+ *************************************** 
+ */
 public interface DisplaySurfaceFactory {
+
+	/***************************************
+	 * Create a new {@link DisplaySurface} with the provided
+	 * {@link DisplaySurfaceHandle} as reference to the underlying native
+	 * resource.
+	 * 
+	 * @param displaySurfaceHandle
+	 *            a {@link DisplaySurfaceHandle}
+	 * @return a {@link DisplaySurface}.
+	 *************************************** 
+	 */
 	DisplaySurface createDisplaySurface(DisplaySurfaceHandle displaySurfaceHandle);
 }

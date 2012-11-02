@@ -16,16 +16,37 @@ import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 /**
- * A <code>DisplaySurface</code> is represents a native isolated graphical area
- * created by a <code>Display</code>. Usually a <code>PlatformRenderArea</code>
- * manages a native window from a native display.
+ * A <code>DisplaySurface</code> is represents a native isolated graphical area.
+ * Usually a <code>DisplaySurface</code> maps to a native window from a native
+ * display.
  * 
  */
 public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator, DisplayEventSource {
 
+	/***************************************
+	 * Query geometry information. The values of the returned {@link Rectangle}
+	 * are implementation dependent but are usually in pixels.
+	 * 
+	 * @return a {@link Rectangle} corresponding to this {@link DisplaySurface}
+	 *         's parent relative position, a with and a hight.
+	 *************************************** 
+	 */
 	Rectangle getGeometry();
 
+	/***************************************
+	 * The position of the pointer as seen from this <code>DisplaySurface</code>
+	 * 's coordinate system.
+	 * 
+	 * @return The pointer position {@link Coordinate}.
+	 *************************************** 
+	 */
 	Coordinate getPointerCoordinate();
 
+	/***************************************
+	 * Return the handle of the underlying native resource.
+	 * 
+	 * @return a {@link DisplaySurfaceHandle}
+	 *************************************** 
+	 */
 	DisplaySurfaceHandle getDisplaySurfaceHandle();
 }

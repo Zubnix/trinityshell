@@ -11,7 +11,6 @@
  */
 package org.trinity.render.qt.impl.painter;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.trinity.foundation.display.api.DisplayArea;
@@ -22,7 +21,6 @@ import org.trinity.foundation.render.api.PaintContext;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.foundation.render.api.Painter;
-import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.render.qt.api.QJRenderEngine;
 import org.trinity.render.qt.impl.painter.instructions.QJDestroyInstruction;
@@ -39,7 +37,6 @@ import org.trinity.render.qt.impl.painter.instructions.QJReleaseMouseInstruction
 import org.trinity.render.qt.impl.painter.instructions.QJResizeInstruction;
 import org.trinity.render.qt.impl.painter.instructions.QJSetParentInstruction;
 import org.trinity.render.qt.impl.painter.instructions.QJShowInstruction;
-import org.trinity.render.qt.impl.painter.instructions.QJTranslateCoordinatesCalculation;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -152,25 +149,25 @@ public class QJPainter implements Painter {
 									this.grabKeyboard);
 	}
 
-	@Override
-	public Coordinate translateCoordinates(	final DisplayArea source,
-											final int sourceX,
-											final int sourceY) {
-		try {
-			return this.qFRenderEngine.invoke(	this.paintableSurfaceNode,
-												new QJTranslateCoordinatesCalculation(	(PaintableSurfaceNode) source,
-																						sourceX,
-																						sourceY)).get();
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} catch (final ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
+	// @Override
+	// public Coordinate translateCoordinates( final DisplayArea source,
+	// final int sourceX,
+	// final int sourceY) {
+	// try {
+	// return this.qFRenderEngine.invoke( this.paintableSurfaceNode,
+	// new QJTranslateCoordinatesCalculation( (PaintableSurfaceNode) source,
+	// sourceX,
+	// sourceY)).get();
+	// } catch (final InterruptedException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// return null;
+	// } catch (final ExecutionException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// return null;
+	// }
+	// }
 
 	@SuppressWarnings("unchecked")
 	@Override

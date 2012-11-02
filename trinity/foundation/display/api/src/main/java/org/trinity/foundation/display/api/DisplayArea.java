@@ -12,12 +12,12 @@
 package org.trinity.foundation.display.api;
 
 /**
- * An <code>Area</code> describes a visible part of the screen. It is the base
- * interface of all objects wishing to describe an on-screen area.
+ * A <code>DisplayArea</code> describes a visible part of the screen. It is the
+ * base interface of all objects wishing to describe an on-screen surface.
  * <p>
  * Implementation advice:
  * <p>
- * <code>Area</code> implementations should have a corresponding
+ * <code>DisplayArea</code> implementations should have a corresponding
  * {@link DisplayAreaManipulator} to provide interaction.
  * 
  * 

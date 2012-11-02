@@ -40,8 +40,6 @@ import xcbjb.xcb_input_focus_t;
 import xcbjb.xcb_query_pointer_cookie_t;
 import xcbjb.xcb_query_pointer_reply_t;
 import xcbjb.xcb_stack_mode_t;
-import xcbjb.xcb_translate_coordinates_cookie_t;
-import xcbjb.xcb_translate_coordinates_reply_t;
 import xcbjb.xcb_void_cookie_t;
 
 import com.google.inject.Inject;
@@ -295,29 +293,32 @@ public class XWindow implements DisplaySurface {
 		}
 	}
 
-	@Override
-	public Coordinate translateCoordinates(	final DisplayArea source,
-											final int sourceX,
-											final int sourceY) {
-
-		final int sourceId = ((Integer) (((DisplaySurface) source).getDisplaySurfaceHandle()).getNativeHandle())
-				.intValue();
-		final xcb_translate_coordinates_cookie_t cookie_t = LibXcb.xcb_translate_coordinates(	getConnectionRef(),
-																								sourceId,
-																								getWindowId(),
-																								(short) sourceX,
-																								(short) sourceY);
-		final xcb_generic_error_t e = new xcb_generic_error_t();
-		final xcb_translate_coordinates_reply_t reply = LibXcb.xcb_translate_coordinates_reply(	getConnectionRef(),
-																								cookie_t,
-																								e);
-		checkError(e);
-		final int destX = reply.getDst_x();
-		final int destY = reply.getDst_y();
-
-		return new Coordinate(	destX,
-								destY);
-	}
+	// @Override
+	// public Coordinate translateCoordinates( final DisplayArea source,
+	// final int sourceX,
+	// final int sourceY) {
+	//
+	// final int sourceId = ((Integer) (((DisplaySurface)
+	// source).getDisplaySurfaceHandle()).getNativeHandle())
+	// .intValue();
+	// final xcb_translate_coordinates_cookie_t cookie_t =
+	// LibXcb.xcb_translate_coordinates( getConnectionRef(),
+	// sourceId,
+	// getWindowId(),
+	// (short) sourceX,
+	// (short) sourceY);
+	// final xcb_generic_error_t e = new xcb_generic_error_t();
+	// final xcb_translate_coordinates_reply_t reply =
+	// LibXcb.xcb_translate_coordinates_reply( getConnectionRef(),
+	// cookie_t,
+	// e);
+	// checkError(e);
+	// final int destX = reply.getDst_x();
+	// final int destY = reply.getDst_y();
+	//
+	// return new Coordinate( destX,
+	// destY);
+	// }
 
 	@Override
 	public Rectangle getGeometry() {

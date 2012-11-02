@@ -13,17 +13,23 @@ package org.trinity.foundation.display.api.event;
 
 import org.trinity.foundation.input.api.PointerInput;
 
-// TODO documentation
 /**
  * A <code>ButtonNotifyEvent</code> notifies that a mouse button's state has
  * changed.
- * 
- * 
  */
 public class ButtonNotifyEvent extends InputNotifyEvent<PointerInput> {
-	/*****************************************
- * 
- ****************************************/
+
+	/***************************************
+	 * Create a new <code>ButtonNotifyEvent</code> with the given
+	 * {@link DisplayEventSource} as the surface where the pointer input
+	 * originated.
+	 * 
+	 * @param displayEventSource
+	 *            The source of this {@link DisplayEvent}.
+	 * @param pointerInput
+	 *            The {@link PointerInput} details.
+	 *************************************** 
+	 */
 	public ButtonNotifyEvent(final DisplayEventSource displayEventSource, final PointerInput pointerInput) {
 		super(	displayEventSource,
 				pointerInput);

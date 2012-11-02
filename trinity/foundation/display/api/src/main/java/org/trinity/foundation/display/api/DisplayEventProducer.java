@@ -11,23 +11,28 @@
  */
 package org.trinity.foundation.display.api;
 
+import org.trinity.foundation.display.api.event.DisplayEvent;
+
 /**
- * An <code>EventProducer</code> is a source of <code>DisplayEvent</code>s. A
- * <code>DisplayEvent</code> can be fetched by a call to
- * <code>getNextEvent</code>. An <code>EventProducter</code> can be registered
- * with a {@link DisplayServer}. The <code>Display</code> will fetch any events
- * and place them on the <code>Display</code>'s event queue. An
- * <code>EventProducer</code> can thus be seen as an "injector" of
- * <code>DisplayEvent</code>s.
- * <p>
- * Implementation notice:
- * <p>
- * A call to <code>getNextEvent</code> should block when no events are
- * available.
+ * An <code>EventProducer</code> is a production source of
+ * <code>DisplayEvent</code>s. It does not make {@link DisplayEvent}s available
+ * directly but makes sure that they are placed on the {@link DisplayServer}'s
+ * event queue.
  */
 public interface DisplayEventProducer {
 
+	/***************************************
+	 * Start constructing {@link DisplayEvent}s and place them on the
+	 * {@link DisplayServer}'s event queue.
+	 *************************************** 
+	 */
 	void startDisplayEventProduction();
 
+	/***************************************
+	 * Halt the production of {@link DisplayEvent}s.
+	 * 
+	 * @see #startDisplayEventProduction()
+	 *************************************** 
+	 */
 	void stopDisplayEventProduction();
 }
