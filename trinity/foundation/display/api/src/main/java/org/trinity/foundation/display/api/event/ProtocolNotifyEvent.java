@@ -11,19 +11,17 @@
  */
 package org.trinity.foundation.display.api.event;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class ProtocolNotifyEvent extends DisplayEvent {
 
-	private final Map<String, Object> protocol = new HashMap<String, Object>();
+	private final String protocol;
 
-	public ProtocolNotifyEvent(final DisplayEventSource displayEventSource, final Map<String, Object> protocol) {
+	public ProtocolNotifyEvent(final DisplayEventSource displayEventSource, final String protocol) {
 		super(displayEventSource);
-		protocol.putAll(protocol);
+		this.protocol = protocol;
 	}
 
-	public Map<String, Object> getDisplayProtocols() {
+	public String getDisplayProtocol() {
 		return this.protocol;
 	}
 }

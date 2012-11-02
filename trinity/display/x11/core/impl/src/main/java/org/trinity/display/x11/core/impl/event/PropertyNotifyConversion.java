@@ -11,14 +11,10 @@
  */
 package org.trinity.display.x11.core.impl.event;
 
-import java.util.List;
-
 import org.trinity.display.x11.core.impl.XAtomCache;
 import org.trinity.display.x11.core.impl.XEventConversion;
-import org.trinity.display.x11.core.impl.XPropertyDisplayProtocolMapping;
 import org.trinity.display.x11.core.impl.XWindow;
 import org.trinity.display.x11.core.impl.XWindowCache;
-import org.trinity.foundation.display.api.DisplayProtocol;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.ProtocolNotifyEvent;
 
@@ -41,17 +37,12 @@ public class PropertyNotifyConversion implements XEventConversion {
 	private final EventBus xEventBus;
 	private final XWindowCache xWindowCache;
 	private final XAtomCache xAtomCache;
-	private final XPropertyDisplayProtocolMapping xPropertyMapping;
 
 	@Inject
-	PropertyNotifyConversion(	final EventBus xEventBus,
-								final XWindowCache xWindowCache,
-								final XAtomCache xAtomCache,
-								final XPropertyDisplayProtocolMapping xPropertyMapping) {
+	PropertyNotifyConversion(final EventBus xEventBus, final XWindowCache xWindowCache, final XAtomCache xAtomCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 		this.xAtomCache = xAtomCache;
-		this.xPropertyMapping = xPropertyMapping;
 	}
 
 	@Override
@@ -72,13 +63,8 @@ public class PropertyNotifyConversion implements XEventConversion {
 		final int atomId = property_notify_event_t.getAtom();
 		final String xProperty = this.xAtomCache.getAtom(atomId);
 
-		final List<DisplayProtocol> displayProtocols = this.xPropertyMapping.toDisplayProtocols(xProperty);
-		if (displayProtocols == null) {
-			return null;
-		}
-
 		final DisplayEvent displayEvent = new ProtocolNotifyEvent(	displayEventSource,
-																	displayProtocols);
+																	xProperty);
 
 		return displayEvent;
 	}
