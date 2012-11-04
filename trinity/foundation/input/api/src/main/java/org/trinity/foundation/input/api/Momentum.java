@@ -14,8 +14,6 @@ package org.trinity.foundation.input.api;
 // TODO documentation
 /**
  * 
- * @author Erik De Rijcke
- * @since 1.0
  */
 public enum Momentum {
 	/**

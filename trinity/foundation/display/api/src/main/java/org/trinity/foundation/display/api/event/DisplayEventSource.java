@@ -11,6 +11,12 @@
  */
 package org.trinity.foundation.display.api.event;
 
+/****************************************
+ * A tag interface to indicate if an implementor is a source of
+ * {@link DisplayEvent}s.
+ * 
+ *************************************** 
+ */
 public interface DisplayEventSource {
 
 }

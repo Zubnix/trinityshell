@@ -11,13 +11,23 @@
  */
 package org.trinity.foundation.display.api.event;
 
+import org.trinity.foundation.display.api.DisplaySurface;
+
 /**
- * A <code>DestroyNotifyEvent</code> notifies that a display resource is
+ * A <code>DestroyNotifyEvent</code> notifies that a {@link DisplaySurface} is
  * destroyed.
  * 
  */
 public class DestroyNotifyEvent extends DisplayEvent {
 
+	/***************************************
+	 * Create a new <code>DestroyNotifyEvent</code> with the provided
+	 * {@link DisplayEventSource} as the resource that was destroyed.
+	 * 
+	 * @param displayEventSource
+	 *            A {@link DisplayEventSource}.
+	 *************************************** 
+	 */
 	public DestroyNotifyEvent(final DisplayEventSource displayEventSource) {
 		super(displayEventSource);
 	}

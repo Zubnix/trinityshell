@@ -11,21 +11,36 @@
  */
 package org.trinity.foundation.display.api.event;
 
+import org.trinity.foundation.display.api.DisplayServer;
+
 /**
  * A <code>DisplayEvent</code> is a piece of information coming from a
  * <code>Display</code>. A <code>DisplayEvent</code> is usually send on the
- * behalf of another resource living on the <code>Display</code> that sends the
- * event.
+ * behalf of another resource living on the {@link DisplayServer}.
  * 
  */
 public class DisplayEvent {
 
 	private final DisplayEventSource displayEventSource;
 
+	/****************************************
+	 * Construct a generic <code>DisplayEvent</code> with the given
+	 * {@link DisplayEventSource} as the originating resource.
+	 * 
+	 * @param displayEventSource
+	 *            A {@link DisplayEventSource}
+	 *************************************** 
+	 */
 	public DisplayEvent(final DisplayEventSource displayEventSource) {
 		this.displayEventSource = displayEventSource;
 	}
 
+	/****************************************
+	 * Get the {@link DisplayEventSource} where this event originated from.
+	 * 
+	 * @return A {@link DisplayEventSource}
+	 *************************************** 
+	 */
 	public DisplayEventSource getDisplayEventSource() {
 		return this.displayEventSource;
 	}
