@@ -11,11 +11,24 @@
  */
 package org.trinity.foundation.display.api.event;
 
-
+/***************************************
+ * Indicates a native underlying protocol hint. The implementation and meaning
+ * is implementation dependent.
+ * <p>
+ * For X this would be the name of a changed atom of a
+ * {@link DisplayEventSource}.
+ * 
+ *************************************** 
+ */
 public class ProtocolNotifyEvent extends DisplayEvent {
 
 	private final String protocol;
 
+	/***************************************
+	 * @param displayEventSource
+	 * @param protocol
+	 *************************************** 
+	 */
 	public ProtocolNotifyEvent(final DisplayEventSource displayEventSource, final String protocol) {
 		super(displayEventSource);
 		this.protocol = protocol;

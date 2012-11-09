@@ -14,20 +14,36 @@ package org.trinity.foundation.display.api.event;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 /**
- * A <code>ConfigureNotifyEvent</code> notifies that the configuration of a
- * display resource has changed.
+ * A <code>GeometryNotifyEvent</code> notifies that the geometry (size, place)
+ * of a {@link DisplayEventSource} has changed.
  * 
  */
 public class GeometryNotifyEvent extends DisplayEvent {
 
 	private final Rectangle geometry;
 
+	/***************************************
+	 * Create a new <code>GeometryNotifyEvent</code> that originated from the
+	 * given {@link DisplayEventSource}. The new geometry is specified by the
+	 * given {@link Rectangle}.
+	 * 
+	 * @param displayEventSource
+	 *            a {@link DisplayEventSource}
+	 * @param geometry
+	 *            a {@link Rectangle}.
+	 *************************************** 
+	 */
 	public GeometryNotifyEvent(final DisplayEventSource displayEventSource, final Rectangle geometry) {
 
 		super(displayEventSource);
 		this.geometry = geometry;
 	}
 
+	/***************************************
+	 * 
+	 * @return the new geometry
+	 *************************************** 
+	 */
 	public Rectangle getGeometry() {
 		return this.geometry;
 	}

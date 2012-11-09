@@ -22,10 +22,17 @@ import org.trinity.foundation.input.api.KeyboardInput;
  */
 public class KeyNotifyEvent extends InputNotifyEvent<KeyboardInput> {
 
-	/*****************************************
+	/***************************************
+	 * Create a new <code>KeyNotifyEvent</code> with the given
+	 * {@link DisplayEventSource} as the surface where the keyboard input
+	 * originated.
+	 * 
 	 * @param displayEventSource
+	 *            a {@link DisplayEventSource}
 	 * @param input
-	 ****************************************/
+	 *            {@link KeyboardInput}
+	 *************************************** 
+	 */
 	public KeyNotifyEvent(final DisplayEventSource displayEventSource, final KeyboardInput input) {
 		super(	displayEventSource,
 				input);

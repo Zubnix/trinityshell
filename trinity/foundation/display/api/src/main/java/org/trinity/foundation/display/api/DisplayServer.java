@@ -35,7 +35,7 @@ public interface DisplayServer {
 
 	/**
 	 * Indicates if there are any pending <code>DisplayEvent</code>s on the
-	 * master queue.
+	 * queue.
 	 * 
 	 * @return True if there are {@link DisplayEvent}s queued, false if not.
 	 */

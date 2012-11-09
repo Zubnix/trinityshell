@@ -11,8 +11,22 @@
  */
 package org.trinity.foundation.display.api.event;
 
+/***************************************
+ * A <code>PointerEnterNotifyEvent</code> indicates when a pointer device has
+ * left the area of a {@link DisplayEventSource}.
+ * 
+ *************************************** 
+ */
 public class PointerLeaveNotifyEvent extends PointerVisitationNotifyEvent {
 
+	/***************************************
+	 * Construct a new <code>PointerLeaveNotifyEvent</code> that originated from
+	 * the given {@link DisplayEventSource}.
+	 * 
+	 * @param displayEventSource
+	 *            A {@link DisplayEventSource}.
+	 *************************************** 
+	 */
 	public PointerLeaveNotifyEvent(final DisplayEventSource displayEventSource) {
 		super(displayEventSource);
 	}

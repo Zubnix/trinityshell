@@ -11,8 +11,21 @@
  */
 package org.trinity.foundation.display.api.event;
 
+/****************************************
+ * A generic abstract class for focus related events.
+ * 
+ *************************************** 
+ */
 public abstract class FocusNotifyEvent extends DisplayEvent {
 
+	/***************************************
+	 * Create a new focus event that originated from the given
+	 * {@link DisplayEventSource}.
+	 * 
+	 * @param displayEventSource
+	 *            a {@link DisplayEventSource}.
+	 *************************************** 
+	 */
 	public FocusNotifyEvent(final DisplayEventSource displayEventSource) {
 		super(displayEventSource);
 	}

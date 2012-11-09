@@ -12,14 +12,18 @@
 package org.trinity.foundation.display.api.event;
 
 /**
- * An <code>UnmappedNotifyEvent</code> notifies when a display resource is made
- * invisible.
+ * An <code>HideNotifyEvent</code> notifies when a {@link DisplayEventSource} is
+ * made invisible on the screen.
  * 
  */
 public class HideNotifyEvent extends DisplayEvent {
 
 	/*****************************************
+	 * Construct a new <code>HideNotifyEvent</code> that originated from the
+	 * given {@link DisplayEventSource}.
+	 * 
 	 * @param displayEventSource
+	 *            a {@link DisplayEventSource}.
 	 ****************************************/
 	public HideNotifyEvent(final DisplayEventSource displayEventSource) {
 		super(displayEventSource);

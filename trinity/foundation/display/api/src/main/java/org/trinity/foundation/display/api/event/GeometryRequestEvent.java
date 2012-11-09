@@ -14,12 +14,8 @@ package org.trinity.foundation.display.api.event;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 /**
- * A <code>ConfigureRequestEvent</code> is a request from a display resource to
- * handle and set it's configuration as provided in the request.
- * <p>
- * A <code>ConfigureRequestEvent</code> holds all the information needed to
- * perform the configuration of the <code>EventSource</code> that emitted the
- * <code>DisplayEvent</code>.
+ * A <code>GeometryRequestEvent</code> is a request from a
+ * {@link DisplayEventSource} for a new geometry.
  * 
  */
 public class GeometryRequestEvent extends DisplayEvent {
@@ -30,6 +26,26 @@ public class GeometryRequestEvent extends DisplayEvent {
 	private final boolean configureWidth;
 	private final boolean configureHeight;
 
+	/***************************************
+	 * Create a new <code>GeometryRequestEvent</code> that originated from the
+	 * given {@link DisplayEventSource}. The requested geometry is specified by
+	 * the given {@link Rectangle} together with a set of booleans to indicate
+	 * what values of the <code>Rectangle</code> should be interpreted.
+	 * 
+	 * @param displayEventSource
+	 *            A {@link DisplayEventSource}
+	 * @param geometry
+	 *            A {@link Rectangle}
+	 * @param configureX
+	 *            Indicates if the X value should be configured.
+	 * @param configureY
+	 *            Indicates if the Y value should be configured.
+	 * @param configureWidth
+	 *            Indicates if the width value should be configured.
+	 * @param configureHeight
+	 *            Indicates if the height value should be configured.
+	 *************************************** 
+	 */
 	public GeometryRequestEvent(final DisplayEventSource displayEventSource,
 								final Rectangle geometry,
 								final boolean configureX,
