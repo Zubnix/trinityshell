@@ -35,9 +35,15 @@ import com.google.common.io.CharStreams;
 import com.google.inject.Inject;
 import com.trolltech.qt.core.Qt.WidgetAttribute;
 import com.trolltech.qt.core.Qt.WindowType;
+import com.trolltech.qt.gui.QColor;
+import com.trolltech.qt.gui.QFrame;
+import com.trolltech.qt.gui.QGraphicsDropShadowEffect;
 import com.trolltech.qt.gui.QWidget;
 
-public abstract class AbstractShellWidgetView implements ShellWidgetView {
+import de.devsurf.injection.guice.annotations.Bind;
+
+@Bind
+public class BaseShellWidgetView implements ShellWidgetView {
 
 	private Painter painter;
 
@@ -144,10 +150,20 @@ public abstract class AbstractShellWidgetView implements ShellWidgetView {
 
 	}
 
-	protected abstract QWidget createVisual(final QWidget parentVisual);
+	protected QWidget createVisual(final QWidget parentVisual) {
+		final QFrame visual = new QFrame(parentVisual);
+		final QGraphicsDropShadowEffect effect = new QGraphicsDropShadowEffect();
+		effect.setBlurRadius(10);
+		effect.setOffset(	0,
+							5);
+		effect.setColor(QColor.darkGray);
+
+		visual.setGraphicsEffect(effect);
+		return visual;
+	}
 
 	protected String getStyleSheet() throws IOException {
-		final Class<? extends AbstractShellWidgetView> viewClass = getClass();
+		final Class<? extends BaseShellWidgetView> viewClass = getClass();
 		final String className = viewClass.getName();
 		final InputStream in = viewClass.getClassLoader().getResourceAsStream(className + ".qss");
 		final InputStreamReader inReader = new InputStreamReader(	in,

@@ -29,7 +29,7 @@ public class ShellWidgetContainer extends BaseShellWidgetStyled {
 	ShellWidgetContainer(	final EventBus eventBus,
 							final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 							final PainterFactory painterFactory,
-							@Named("ShellWidgetContainerView") final ShellWidgetView view) {
+							final ShellWidgetView view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory,

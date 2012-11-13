@@ -20,7 +20,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Named("ShellButtonView")
-public class ShellButtonView extends AbstractShellWidgetView {
+public class ShellButtonView extends BaseShellWidgetView {
 
 	@Override
 	protected QWidget createVisual(final QWidget parentVisual) {

@@ -79,11 +79,6 @@
 			<artifactId>shell.core.impl.input</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>shell.core.impl.widget</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 		<!-- shellplugin -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>

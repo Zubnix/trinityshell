@@ -22,7 +22,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Named("ShellRootView")
-public class ShellRootView extends AbstractShellWidgetView {
+public class ShellRootView extends BaseShellWidgetView {
 
 	@Override
 	protected QWidget createVisual(final QWidget parentVisual) {
