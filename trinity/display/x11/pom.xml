@@ -15,6 +15,5 @@
 
 	<modules>
 		<module>core</module>
-		<module>xcbjb</module>
 	</modules>
 </project>
