@@ -19,7 +19,7 @@ import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 
-import xcbjb.LibXcb;
+import xcb.LibXcb;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
@@ -35,7 +35,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class XDisplayServer implements DisplayServer {
 
 	private static final int QUEUE_SIZE = 32;
-	private final ArrayBlockingQueue<DisplayEvent> displayEvents = new ArrayBlockingQueue<DisplayEvent>(QUEUE_SIZE);
+	private final ArrayBlockingQueue<DisplayEvent> displayEvents = new ArrayBlockingQueue<DisplayEvent>(XDisplayServer.QUEUE_SIZE);
 
 	private final XConnection xConnection;
 	private final XWindowCache xWindowCache;
@@ -104,7 +104,7 @@ public class XDisplayServer implements DisplayServer {
 
 	@Override
 	public DisplaySurface getRootDisplayArea() {
-		return this.xWindowCache.getWindow((int) this.xConnection.getScreenReference().getRoot());
+		return this.xWindowCache.getWindow(this.xConnection.getScreenReference().getRoot());
 	}
 
 	public void startUp() {

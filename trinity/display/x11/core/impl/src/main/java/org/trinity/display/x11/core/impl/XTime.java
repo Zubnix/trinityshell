@@ -11,10 +11,10 @@
  */
 package org.trinity.display.x11.core.impl;
 
-import xcbjb.xcb_button_press_event_t;
-import xcbjb.xcb_enter_notify_event_t;
-import xcbjb.xcb_key_press_event_t;
-import xcbjb.xcb_property_notify_event_t;
+import xcb.xcb_button_press_event_t;
+import xcb.xcb_enter_notify_event_t;
+import xcb.xcb_key_press_event_t;
+import xcb.xcb_property_notify_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;

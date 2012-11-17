@@ -19,10 +19,10 @@ import org.trinity.foundation.display.api.event.GeometryRequestEvent;
 import org.trinity.foundation.shared.geometry.api.ImmutableRectangle;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
-import xcbjb.LibXcb;
-import xcbjb.xcb_config_window_t;
-import xcbjb.xcb_configure_request_event_t;
-import xcbjb.xcb_generic_event_t;
+import xcb.LibXcb;
+import xcb.xcb_config_window_t;
+import xcb.xcb_configure_request_event_t;
+import xcb.xcb_generic_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;

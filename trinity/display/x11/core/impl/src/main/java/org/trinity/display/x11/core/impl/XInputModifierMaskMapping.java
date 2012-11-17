@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.trinity.foundation.input.api.InputModifier;
 
-import xcbjb.xcb_mod_mask_t;
+import xcb.xcb_mod_mask_t;
 
 import com.google.inject.Singleton;
 

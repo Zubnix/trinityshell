@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.trinity.foundation.display.api.event.DisplayEvent;
 
-import xcbjb.xcb_generic_event_t;
+import xcb.xcb_generic_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;

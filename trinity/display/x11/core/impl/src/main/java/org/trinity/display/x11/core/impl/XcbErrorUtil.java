@@ -11,7 +11,7 @@
  */
 package org.trinity.display.x11.core.impl;
 
-import xcbjb.xcb_generic_error_t;
+import xcb.xcb_generic_error_t;
 
 public class XcbErrorUtil {
 	public static final int SUCCESS = 0;

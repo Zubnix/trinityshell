@@ -24,13 +24,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import xcbcustom.LibXcbLoader;
-import xcbjb.LibXcb;
-import xcbjb.LibXcbConstants;
-import xcbjb.xcb_screen_iterator_t;
-import xcbjb.xcb_screen_t;
-import xcbjb.xcb_setup_t;
-import xcbjb.xcb_window_class_t;
+import xcb.LibXcb;
+import xcb.LibXcbConstants;
+import xcb.xcb_screen_iterator_t;
+import xcb.xcb_screen_t;
+import xcb.xcb_setup_t;
+import xcb.xcb_window_class_t;
+import xcb4j.LibXcbLoader;
 
 @RunWith(MockitoJUnitRunner.class)
 public class XWindowTest // extends AbstractXTest

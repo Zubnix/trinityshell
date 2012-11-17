@@ -21,9 +21,9 @@ import org.trinity.foundation.input.api.Key;
 import org.trinity.foundation.input.api.KeyboardInput;
 import org.trinity.foundation.input.api.Momentum;
 
-import xcbjb.LibXcb;
-import xcbjb.xcb_generic_event_t;
-import xcbjb.xcb_key_press_event_t;
+import xcb.LibXcb;
+import xcb.xcb_generic_event_t;
+import xcb.xcb_key_press_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;

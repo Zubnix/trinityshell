@@ -13,7 +13,7 @@ package org.trinity.display.x11.core.impl;
 
 import org.trinity.foundation.display.api.event.DisplayEvent;
 
-import xcbjb.xcb_generic_event_t;
+import xcb.xcb_generic_event_t;
 
 public interface XEventConversion {
 	DisplayEvent convert(xcb_generic_event_t event_t);

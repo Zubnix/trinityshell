@@ -21,12 +21,12 @@ import java.util.Set;
 
 import org.trinity.foundation.display.api.DisplaySurface;
 
-import xcbjb.LibXcb;
-import xcbjb.xcb_generic_error_t;
-import xcbjb.xcb_get_property_cookie_t;
-import xcbjb.xcb_icccm_get_text_property_reply_t;
-import xcbjb.xcb_icccm_get_wm_protocols_reply_t;
-import xcbjb.xcb_property_notify_event_t;
+import xcb.LibXcb;
+import xcb.xcb_generic_error_t;
+import xcb.xcb_get_property_cookie_t;
+import xcb.xcb_icccm_get_text_property_reply_t;
+import xcb.xcb_icccm_get_wm_protocols_reply_t;
+import xcb.xcb_property_notify_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;

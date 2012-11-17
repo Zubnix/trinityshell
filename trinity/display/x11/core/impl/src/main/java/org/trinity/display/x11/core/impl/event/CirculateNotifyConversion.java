@@ -17,9 +17,9 @@ import org.trinity.display.x11.core.impl.XWindowCache;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.StackingChangedNotifyEvent;
 
-import xcbjb.LibXcb;
-import xcbjb.xcb_circulate_notify_event_t;
-import xcbjb.xcb_generic_event_t;
+import xcb.LibXcb;
+import xcb.xcb_circulate_notify_event_t;
+import xcb.xcb_generic_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;

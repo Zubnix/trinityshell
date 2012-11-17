@@ -17,11 +17,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import xcbjb.LibXcb;
-import xcbjb.LibXcbConstants;
-import xcbjb.SWIGTYPE_p__XCBKeySymbols;
-import xcbjb.xcb_mapping_notify_event_t;
-import xcbjb.xcb_mod_mask_t;
+import xcb.LibXcb;
+import xcb.LibXcbConstants;
+import xcb.SWIGTYPE_p__XCBKeySymbols;
+import xcb.xcb_mapping_notify_event_t;
+import xcb.xcb_mod_mask_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;

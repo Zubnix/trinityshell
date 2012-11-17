@@ -13,7 +13,7 @@ package org.trinity.bootstrap;
 
 import org.trinity.shell.api.plugin.ShellPluginsRunner;
 
-import xcbcustom.LibXcbLoader;
+import xcb4j.LibXcbLoader;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

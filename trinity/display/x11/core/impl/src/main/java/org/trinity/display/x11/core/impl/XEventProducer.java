@@ -13,8 +13,8 @@ package org.trinity.display.x11.core.impl;
 
 import org.trinity.foundation.display.api.DisplayEventProducer;
 
-import xcbjb.LibXcb;
-import xcbjb.xcb_generic_event_t;
+import xcb.LibXcb;
+import xcb.xcb_generic_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
