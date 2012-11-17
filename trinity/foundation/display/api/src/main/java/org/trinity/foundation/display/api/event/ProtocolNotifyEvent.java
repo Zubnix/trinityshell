@@ -25,8 +25,13 @@ public class ProtocolNotifyEvent extends DisplayEvent {
 	private final String protocol;
 
 	/***************************************
+	 * Construct a new <code>ProtocolNotifyEvent</code> that originated from the
+	 * given {@link DisplayEventSource} who's native protocol has changed.
+	 * 
 	 * @param displayEventSource
+	 *            a {@link DisplayEventSource}
 	 * @param protocol
+	 *            a native protocol id.
 	 *************************************** 
 	 */
 	public ProtocolNotifyEvent(final DisplayEventSource displayEventSource, final String protocol) {
@@ -34,6 +39,10 @@ public class ProtocolNotifyEvent extends DisplayEvent {
 		this.protocol = protocol;
 	}
 
+	/***************************************
+	 * @return The changed native protocol id.
+	 *************************************** 
+	 */
 	public String getDisplayProtocol() {
 		return this.protocol;
 	}

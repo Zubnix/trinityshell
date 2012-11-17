@@ -11,13 +11,23 @@
  */
 package org.trinity.foundation.display.api.event;
 
-/**
- * A <code>MapRequestEvent</code> is a request to make a display resource
- * visible.
+/****************************************
  * 
+ * A <code>ShowRequestEvent</code> signals a request to make a
+ * {@link DisplayEventSource} visible.
+ * 
+ *************************************** 
  */
 public class ShowRequestEvent extends DisplayEvent {
 
+	/***************************************
+	 * Construct a new <code>ShowRequestEvent</code> with the given
+	 * {@link DisplayEventSource} that wants to become visible.
+	 * 
+	 * @param displayEventSource
+	 *            a {@link DisplayEventSource}
+	 *************************************** 
+	 */
 	public ShowRequestEvent(final DisplayEventSource displayEventSource) {
 		super(displayEventSource);
 	}

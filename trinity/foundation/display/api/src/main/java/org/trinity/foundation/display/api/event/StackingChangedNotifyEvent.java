@@ -11,15 +11,22 @@
  */
 package org.trinity.foundation.display.api.event;
 
-// TODO documentation
-// TODO is this interface implemented in fusion-x11? If not, it should.
-/**
- * A <code>StackingNotifyEvent</code> notifies that the stacking position of an
- * on-screen display resource, like a window, has changed
+/***************************************
+ * A <code>StackingChangedNotifyEvent</code> notifies that the stacking position
+ * of a {@link DisplayEventSource} has changed
  * 
+ *************************************** 
  */
 public class StackingChangedNotifyEvent extends DisplayEvent {
 
+	/***************************************
+	 * Construct a new <code>StackingChangedNotifyEvent</code> with the given
+	 * {@link DisplayEventSource} who's stacking has changed.
+	 * 
+	 * @param displayEventSource
+	 *            a {@link DisplayEventSource}
+	 *************************************** 
+	 */
 	public StackingChangedNotifyEvent(final DisplayEventSource displayEventSource) {
 		super(displayEventSource);
 	}

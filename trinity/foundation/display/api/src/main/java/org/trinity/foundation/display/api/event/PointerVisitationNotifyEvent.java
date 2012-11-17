@@ -25,6 +25,7 @@ public abstract class PointerVisitationNotifyEvent extends DisplayEvent {
 	 * crossed.
 	 * 
 	 * @param displayEventSource
+	 *            a {@link DisplayEventSource}
 	 *************************************** 
 	 */
 	public PointerVisitationNotifyEvent(final DisplayEventSource displayEventSource) {
