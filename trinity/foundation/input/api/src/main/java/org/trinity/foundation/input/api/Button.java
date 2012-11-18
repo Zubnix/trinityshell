@@ -11,14 +11,33 @@
  */
 package org.trinity.foundation.input.api;
 
+/***************************************
+ * Identifies a pointing device's button ie. a mouse button.
+ * 
+ *************************************** 
+ */
 public class Button {
 
 	private final int buttonCode;
 
+	/***************************************
+	 * Construct a new <code>Button</code> with the given native button code.
+	 * 
+	 * @param buttonCode
+	 *            The native code of this <code>Button</code>.
+	 *************************************** 
+	 */
 	public Button(final int buttonCode) {
 		this.buttonCode = buttonCode;
 	}
 
+	/****************************************
+	 * The native code of this <code>Button</code>. This code uniquely
+	 * identifies a <code>Button</code>.
+	 * 
+	 * @return The native code of this <code>Button</code>.
+	 *************************************** 
+	 */
 	public int getButtonCode() {
 		return this.buttonCode;
 	}

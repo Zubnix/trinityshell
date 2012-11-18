@@ -11,14 +11,33 @@
  */
 package org.trinity.foundation.input.api;
 
+/***************************************
+ * Identifies a text input device's key, ie a keyboard key.
+ * 
+ *************************************** 
+ */
 public class Key {
 
 	private final int keyCode;
 
+	/***************************************
+	 * Construct a new <code>Key</code> with the given native key code.
+	 * 
+	 * @param keyCode
+	 *            the native code of this </code>Key</code>
+	 *************************************** 
+	 */
 	public Key(final int keyCode) {
 		this.keyCode = keyCode;
 	}
 
+	/***************************************
+	 * The native code of this <code>Key</code>. This code uniquely identifies a
+	 * <code>Key</code>.
+	 * 
+	 * @return the native code of this </code>Key</code>
+	 *************************************** 
+	 */
 	public int getKeyCode() {
 		return this.keyCode;
 	}

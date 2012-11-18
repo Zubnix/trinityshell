@@ -11,14 +11,34 @@
  */
 package org.trinity.foundation.input.api;
 
+/***************************************
+ * Represents any form of user input.
+ * 
+ *************************************** 
+ */
 public class Input {
 
 	public Momentum momentum;
 
+	/***************************************
+	 * Construct new <code>Input</code> with the given {@link Momentum}. The
+	 * <code>Momentum</code> is used to provide an indication of the state of
+	 * the user input.
+	 * 
+	 * @param momentum
+	 *            a {@link Momentum}.
+	 *************************************** 
+	 */
 	public Input(final Momentum momentum) {
 		this.momentum = momentum;
 	}
 
+	/***************************************
+	 * The state of the user input.
+	 * 
+	 * @return a {@link Momentum}.
+	 *************************************** 
+	 */
 	public Momentum getMomentum() {
 		return this.momentum;
 	}

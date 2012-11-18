@@ -11,36 +11,68 @@
  */
 package org.trinity.foundation.input.api;
 
+/***************************************
+ * Can modify the behavior of user input by accompanying {@link Input}.
+ * 
+ *************************************** 
+ */
 public interface InputModifier {
 	/**
-	 * shift key
+	 * shift key modifier name.
 	 */
 	String MOD_SHIFT = "MOD_SHIFT";
 	/**
-	 * shift lock
+	 * shift lock modifier name.
 	 */
 	String MOD_LOCK = "MOD_LOCK";
 	/**
-	 * control
+	 * control modifier name.
 	 */
 	String MOD_CTRL = "MOD_CTRL";
 	/**
-	 * Alt
+	 * Alt modifier name.
 	 */
 	String MOD_1 = "MOD_1";
 	/**
-	 * numlock
+	 * numlock modifier name.
 	 */
 	String MOD_2 = "MOD_2";
+	// TODO which key is mod3?
+	/**
+	 * 
+	 */
 	String MOD_3 = "MOD_3";
 	/**
-	 * Meta key (windows, cmd, ..)
+	 * Meta key (windows, cmd, ..) modifier name.
 	 */
 	String MOD_4 = "MOD_4";
+	// TODO which key is mod5?
+	/**
+	 * 
+	 */
 	String MOD_5 = "MOD_5";
+	/**
+	 * All modifiers name.
+	 */
 	String MOD_ANY = "MOD_ANY";
 
+	/***************************************
+	 * The native mask of this <code>InputModifier</code>. This mask can be
+	 * logically and'ed with a logically or'ed integer of masks to verifiy if
+	 * this <code>InputModifier</code> is active.
+	 * 
+	 * @return
+	 *************************************** 
+	 */
 	int getMask();
 
+	/***************************************
+	 * The name of this <code>InputModifier</code>. For a list of common names
+	 * check any of the statically defined names in the {@link InputModifier}
+	 * class.
+	 * 
+	 * @return A unique name.
+	 *************************************** 
+	 */
 	String getName();
 }

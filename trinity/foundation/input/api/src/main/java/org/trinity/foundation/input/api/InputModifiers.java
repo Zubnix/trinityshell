@@ -11,18 +11,46 @@
  */
 package org.trinity.foundation.input.api;
 
+/***************************************
+ * A group of {@link InputModifier}s.
+ * 
+ *************************************** 
+ */
 public class InputModifiers {
 
 	private final int inputModfiersState;
 
+	/***************************************
+	 * Construct a new <code>InputModifiers</code> instance with the logically
+	 * or'ed masks of the desired {@link InputModifier}s.
+	 * 
+	 * @param inputModifiersState
+	 *            A logically or'ed integer.
+	 *************************************** 
+	 */
 	public InputModifiers(final int inputModifiersState) {
 		this.inputModfiersState = inputModifiersState;
 	}
 
+	/***************************************
+	 * Convenience function to check if the given {@link InputModifier} is
+	 * active in this {@link InputModifiers} instance.
+	 * 
+	 * @param modifier
+	 *            The {@link InputModifier} to check
+	 * @return True if in this group, false if not.
+	 *************************************** 
+	 */
 	public boolean isModifierSet(final InputModifier modifier) {
-		return (this.inputModfiersState & modifier.getMask()) != 0;
+		return (getInputModifiersState() & modifier.getMask()) != 0;
 	}
 
+	/***************************************
+	 * The logically or'ed masks of the grouped {@link InputModifier}s.
+	 * 
+	 * @return A logically or'ed integer.
+	 *************************************** 
+	 */
 	public int getInputModifiersState() {
 		return this.inputModfiersState;
 	}
