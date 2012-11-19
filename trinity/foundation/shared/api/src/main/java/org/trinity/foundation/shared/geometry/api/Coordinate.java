@@ -11,6 +11,11 @@
  */
 package org.trinity.foundation.shared.geometry.api;
 
+/***************************************
+ * A coordinate in 2D space, in natural numbers.
+ * 
+ *************************************** 
+ */
 public class Coordinate {
 
 	private final int x, y;

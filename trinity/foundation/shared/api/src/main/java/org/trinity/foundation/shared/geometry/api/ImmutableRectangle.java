@@ -11,6 +11,11 @@
  */
 package org.trinity.foundation.shared.geometry.api;
 
+/***************************************
+ * A fixed size, fixed width {@link Rectangle}.
+ * 
+ *************************************** 
+ */
 public class ImmutableRectangle implements Rectangle {
 
 	private final int x, y, width, height;
