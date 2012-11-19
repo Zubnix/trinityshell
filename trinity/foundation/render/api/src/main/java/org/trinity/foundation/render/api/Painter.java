@@ -15,27 +15,34 @@ import java.util.concurrent.Future;
 
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
 
-/**
- * A <code>Painter</code> can be seen as the "gate keeper" to the underlying
- * paint back-end. It talks to a paint back-end by feeding it
- * <code>PaintCall</code>s.It provides the means to manipulate a
- * <code>PaintableSurfaceNode</code> area.
- * <p>
- * A <code>Painter</code> talks to a paint back-end that provides the visual
- * implementation for a <code>PaintableSurfaceNode</code>. It does this by
- * passing a paint toolkit specific implementation of a <code>PaintCall</code>
- * object to the paint back-end. This implies that a <code>Painter</code>
- * functions as a "bridge" between the model thread and the gui thread.
+/****************************************
+ * The gatekeeper to the underlying paint back-end. It talks to a paint back-end
+ * by feeding it {@link PaintInstruction}s that will be processed by the paint
+ * back-end. It thus provides the means to manipulate the visual appearance of
+ * the <code>PaintableSurfaceNode</code> it is bound to.
+ * 
+ *************************************** 
  */
 public interface Painter extends DisplayAreaManipulator {
 
+	/***************************************
+	 * Pass a {@link PaintInstruction} to the paint back-end that will be
+	 * processed by that paint back-end.
+	 * 
+	 * @param paintInstruction
+	 *            a {@link PaintInstruction}.
+	 * @return a {@link Future} that will return the result of the
+	 *         <code>PaintInstruction</code>. This feature will block until the
+	 *         <code>PaintInstruction</code> is completed.
+	 *************************************** 
+	 */
 	<R> Future<R> instruct(PaintInstruction<R, ? extends PaintContext> paintInstruction);
 
 	/**
 	 * The <code>PaintableSurfaceNode</code> that is managed by this
 	 * <code>Painter</code>.
 	 * 
-	 * @return
+	 * @return the {@link PaintableSurfaceNode}.
 	 */
 	PaintableSurfaceNode getPaintableRenderNode();
 }

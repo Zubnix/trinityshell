@@ -11,21 +11,52 @@
  */
 package org.trinity.foundation.input.api;
 
+/***************************************
+ * User input that came from a text input device.
+ * 
+ *************************************** 
+ */
 public class KeyboardInput extends Input {
 
 	private final Key key;
 	private final InputModifiers inputModifiers;
 
+	/***************************************
+	 * Create a new <code>KeyboardInput</code> with the {@link Key} who's
+	 * {@link Momentum} has changed.
+	 * 
+	 * @param momentum
+	 *            a {@link Momentum}
+	 * @param key
+	 *            a {@link Key}
+	 * @param inputModifiers
+	 *            The {@link InputModifiers} that were active during the
+	 *            creation of this <code>KeyboardInput</code>.
+	 *************************************** 
+	 */
 	public KeyboardInput(final Momentum momentum, final Key key, final InputModifiers inputModifiers) {
 		super(momentum);
 		this.key = key;
 		this.inputModifiers = inputModifiers;
 	}
 
+	/***************************************
+	 * the {@link Key} who's {@link Momentum} has changed.
+	 * 
+	 * @return a {@link Key}
+	 *************************************** 
+	 */
 	public Key getKey() {
 		return this.key;
 	}
 
+	/***************************************
+	 * The {@link InputModifiers} that were active during the creation of this
+	 * <code>KeyboardInput</code>.
+	 * 
+	 * @return {@link InputModifiers}
+	 *************************************** 
+	 */
 	public InputModifiers getInputModifiers() {
 		return this.inputModifiers;
 	}

@@ -14,62 +14,67 @@ package org.trinity.foundation.render.api;
 import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
-// TODO documentation
-/**
- * A <code>SurfaceNode</code> provide a mechanism to implement a tree structure
- * of <code>DisplayArea</code>s. It provides functions to retrieve information
- * about its geometry in the tree. It offers no ways of manipulating its visual
- * state. It represents a node in a tree structure of <code>SurfaceNode</code>s.
- * A <code>SurfaceNode</code> lives in an inverted Y-axis orthogonal space. This
- * space has its center positioned in the top left corner of the user's screen.
- * This means that a higher Y value indicates a lower geographical position on
- * the user's screen. A higher X value means a positioned more to the right on
- * the user's screen.
+/****************************************
+ * A node to implement a tree of <code>DisplayArea</code>s. It provides
+ * functions to retrieve information about its geometry in this tree. It offers
+ * no ways of manipulating its visual state directly.
  * <p>
  * Each <code>SurfaceNode</code> has a parent <code>SurfaceNode</code> . If a
  * <code>SurfaceNode</code> is repositioned, all it's children will be
  * repositioned by the same offset.
  * <p>
  * A <code>SurfaceNode</code> has an absolute X and a Y coordinate, based on the
- * <code>SurfaceNode</code>'s top left corner relative to the center of the
- * Y-axis inverted orthogonal space.
+ * <code>SurfaceNode</code>'s topmost parent, the 'root' parent.
  * <p>
  * A <code>SurfaceNode</code> has a relative X and Y coordinate. This coordinate
- * is based on the <code>SurfaceNode</code>'s top left corner relative to its
- * parent top left corner.
+ * is based on the <code>SurfaceNode</code>'s position relative to its direct
+ * parent.
  * <p>
  * A <code>SurfaceNode</code> has a positive, non-zero width and a height.
  * <p>
  * A <code>SurfaceNode</code> has a visibility of visible or invisible.
+ * 
+ *************************************** 
  */
 public interface SurfaceNode extends DisplayArea, Rectangle {
-	/**
-	 * The absolute X value of this <code>HierarchicalArea</code>.
+
+	/***************************************
+	 * The absolute X value of this <code>SurfaceNode</code>.
 	 * <p>
-	 * An absolute value is the distance in pixels to the center of the inverted
-	 * Y-axis orthogonal space.
+	 * The absolute value is the distance, implementation dependent but usually
+	 * in pixels, to root parent's position.
 	 * 
 	 * @return An absolute X coordinate.
+	 *************************************** 
 	 */
 	int getAbsoluteX();
 
-	/**
-	 * The absolute Y value of this <code>HierarchicalArea</code>.
+	/***************************************
+	 * The absolute Y value of this <code>SurfaceNode</code>.
 	 * <p>
-	 * An absolute value is the distance in pixels to the center of the inverted
-	 * Y-axis orthogonal space.
+	 * The absolute value is the distance, implementation dependent but usually
+	 * in pixels, to root parent's position.
 	 * 
 	 * @return An absolute Y coordinate.
+	 *************************************** 
 	 */
 	int getAbsoluteY();
 
 	/**
+	 * Indicates if this <code>SurfaceNode</code> is visible. This is
+	 * implementation dependent. A <code>SurfaceNode</code> is usually only
+	 * visible if it's parent is visible. So even though this method may return
+	 * true, the <code>SurfaceNode</code> will only be physically visible if all
+	 * it's parents are physically visible as well.
+	 * 
 	 * @return
 	 */
 	boolean isVisible();
 
 	/**
-	 * @return
+	 * The direct parent.
+	 * 
+	 * @return A SurfaceNode.
 	 */
 	SurfaceNode getParent();
 }

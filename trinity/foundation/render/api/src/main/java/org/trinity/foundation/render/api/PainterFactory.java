@@ -11,7 +11,21 @@
  */
 package org.trinity.foundation.render.api;
 
+/***************************************
+ * Creates new {@link Painter}s for {@link PaintableSurfaceNode}s.
+ * 
+ *************************************** 
+ */
 public interface PainterFactory {
 
+	/***************************************
+	 * Create a new {@link Painter} that will be bound to the given
+	 * {@link PaintableSurfaceNode}.
+	 * 
+	 * @param paintableSurfaceNode
+	 *            a {@link PaintableSurfaceNode}
+	 * @return a {@link Painter}.
+	 *************************************** 
+	 */
 	Painter createPainter(PaintableSurfaceNode paintableSurfaceNode);
 }

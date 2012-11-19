@@ -11,6 +11,10 @@
  */
 package org.trinity.foundation.input.api;
 
+/****************************************
+ * User input that came from a pointing device.
+ *************************************** 
+ */
 public class PointerInput extends Input {
 
 	private final Button button;
@@ -20,6 +24,31 @@ public class PointerInput extends Input {
 	private final int rootX;
 	private final int rootY;
 
+	/***************************************
+	 * Create a new {@code PointerInput} with the {@link Button} who's
+	 * {@link Momentum} has changed.
+	 * 
+	 * @param momentum
+	 *            A {@link Momentum}
+	 * @param button
+	 *            A {@link Button}
+	 * @param inputModifiers
+	 *            The {@link InputModifiers} that were active when this
+	 *            {@code PointerInput} was created.
+	 * @param relativeX
+	 *            The X position of the pointer relative to the currently
+	 *            focused native display area.
+	 * @param relativeY
+	 *            The Y position of the pointer relative to the currently
+	 *            focused native display area.
+	 * @param rootX
+	 *            The X position of the pointer relative to the root native
+	 *            display area.
+	 * @param rootY
+	 *            The Y position of the pointer relative to the root native
+	 *            display area.
+	 *************************************** 
+	 */
 	public PointerInput(final Momentum momentum,
 						final Button button,
 						final InputModifiers inputModifiers,
@@ -36,26 +65,69 @@ public class PointerInput extends Input {
 		this.rootY = rootY;
 	}
 
+	/***************************************
+	 * The {@link Button} who's {@link Momentum} has changed.
+	 * 
+	 * @return a {@link Button}.
+	 *************************************** 
+	 */
 	public Button getButton() {
 		return this.button;
 	}
 
+	/***************************************
+	 * The {@link InputModifiers} that were active when this
+	 * {@code PointerInput} was created.
+	 * 
+	 * @return
+	 *************************************** 
+	 */
 	public InputModifiers getModifiers() {
 		return this.inputModifiers;
 	}
 
+	/***************************************
+	 * The X position of the pointer relative to the currently focused native
+	 * display area.
+	 * 
+	 * @return the relative X position, implementation dependent but usually in
+	 *         pixels.
+	 *************************************** 
+	 */
 	public int getRelativeX() {
 		return this.relativeX;
 	}
 
+	/***************************************
+	 * The Y position of the pointer relative to the currently focused native
+	 * display area.
+	 * 
+	 * @return the relative Y position, implementation dependent but usually in
+	 *         pixels.
+	 *************************************** 
+	 */
 	public int getRelativeY() {
 		return this.relativeY;
 	}
 
+	/***************************************
+	 * The X position of the pointer relative to the root native display area.
+	 * 
+	 * @return the absolute X position, implementation dependent but usually in
+	 *         pixels.
+	 *************************************** 
+	 */
 	public int getRootX() {
 		return this.rootX;
 	}
 
+	/***************************************
+	 * The Y position of the pointer relative to the root native display area.
+	 * 
+	 * @return the absolute Y position, implementation dependent but usually in
+	 *         pixels.
+	 *************************************** 
+	 */
 	public int getRootY() {
 		return this.rootY;
 	}

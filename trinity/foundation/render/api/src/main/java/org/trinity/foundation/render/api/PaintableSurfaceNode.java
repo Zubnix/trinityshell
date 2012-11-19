@@ -11,10 +11,15 @@
  */
 package org.trinity.foundation.render.api;
 
+/***************************************
+ * A {@link SurfaceNode} who's visual appearance can be modified.
+ * 
+ *************************************** 
+ */
 public interface PaintableSurfaceNode extends SurfaceNode {
 
-	/**
-	 * The <code>Painter</code> of this <code>PaintableSurfaceNode</code>.
+	/***************************************
+	 * The {@link Painter} of this <code>PaintableSurfaceNode</code>.
 	 * <p>
 	 * A <code>Painter</code> is responsible for the visual manipulation of the
 	 * <code>PaintableSurfaceNode</code> it belongs to.
@@ -22,6 +27,7 @@ public interface PaintableSurfaceNode extends SurfaceNode {
 	 * 
 	 * @return The {@link Painter} that manages this
 	 *         <code>PaintableSurfaceNode</code>.
+	 *************************************** 
 	 */
 	Painter getPainter();
 

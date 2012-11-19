@@ -11,7 +11,26 @@
  */
 package org.trinity.foundation.render.api;
 
+/***************************************
+ * Wraps a paint operation.
+ * 
+ * @param <R>
+ *            The type of the <b>R</b>esult when this
+ *            <code>PaintInstruction</code> is finished.
+ * @param <P>
+ *            The type of the <b>P</b>aintContext when this
+ *            <code>PaintInstruction</code> is executed.
+ *************************************** 
+ */
 public interface PaintInstruction<R, P extends PaintContext> {
 
+	/***************************************
+	 * Called by the paint back-end.
+	 * 
+	 * @param paintContext
+	 *            A {@link PaintContext}.
+	 * @return a result.
+	 *************************************** 
+	 */
 	R call(P paintContext);
 }

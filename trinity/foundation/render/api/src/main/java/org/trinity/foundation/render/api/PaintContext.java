@@ -11,8 +11,20 @@
  */
 package org.trinity.foundation.render.api;
 
+/***************************************
+ * The context in which a paint operation takes place. A {@code PaintContext}
+ * can be extended by a paint back-end to provide specific paint operations.
+ * 
+ *************************************** 
+ */
 public interface PaintContext {
 
+	/***************************************
+	 * The {@link PaintableSurfaceNode} that is being painted.
+	 * 
+	 * @return a {@link PaintableSurfaceNode}
+	 *************************************** 
+	 */
 	PaintableSurfaceNode getPaintableSurfaceNode();
 
 }

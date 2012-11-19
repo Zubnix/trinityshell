@@ -13,15 +13,15 @@ package org.trinity.foundation.input.api;
 
 // TODO documentation
 /**
- * 
+ * A user input momentum.
  */
 public enum Momentum {
 	/**
-	 *  
+	 * User input has started.
 	 */
 	STARTED,
 	/**
-	 * 
+	 * User input has stopped.
 	 */
 	STOPPED
 }
