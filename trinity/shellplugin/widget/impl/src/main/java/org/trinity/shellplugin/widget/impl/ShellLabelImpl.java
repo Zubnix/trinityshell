@@ -18,7 +18,6 @@ import org.trinity.shell.api.widget.ShellWidgetView;
 import org.trinity.shellplugin.widget.api.ShellLabel;
 import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
 import org.trinity.shellplugin.widget.api.binding.ViewAttributeChanged;
-import org.trinity.shellplugin.widget.api.binding.ViewReference;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -34,9 +33,6 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 public class ShellLabelImpl extends BaseShellWidget implements ShellLabel {
 
-	@ViewReference
-	private final ShellWidgetView view;
-
 	@ViewAttribute(name = "text")
 	private String labelText;
 
@@ -49,7 +45,6 @@ public class ShellLabelImpl extends BaseShellWidget implements ShellLabel {
 				shellDisplayEventDispatcher,
 				painterFactory,
 				view);
-		this.view = view;
 	}
 
 	@Override

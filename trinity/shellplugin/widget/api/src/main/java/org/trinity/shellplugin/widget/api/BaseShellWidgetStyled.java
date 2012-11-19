@@ -25,6 +25,9 @@ public class BaseShellWidgetStyled extends BaseShellWidget implements ShellWidge
 
 	@ViewAttribute(name = "objectName")
 	private String name = getClass().getSimpleName();
+
+	// used by bindings through reflection
+	@SuppressWarnings("unused")
 	@ViewReference
 	private final ShellWidgetView view;
 
