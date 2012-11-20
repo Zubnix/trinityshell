@@ -108,4 +108,43 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.9</version>
+					<configuration>
+						<verbose>true</verbose>
+						<groups>
+							<group>
+								<title>Foundation</title>
+								<packages>org.trinity.foundation.display.api*:org.trinity.foundation.input.api*:org.trinity.foundation.render.api*:org.trinity.foundation.shared.geometry.api*</packages>
+							</group>
+							<group>
+								<title>Render Qt</title>
+								<packages>org.trinity.render.qt.api*</packages>
+							</group>
+							<group>
+								<title>Shell Core</title>
+								<packages>org.trinity.shell.api*</packages>
+							</group>
+							<group>
+								<title>Shell Plugins</title>
+								<packages>org.trinity.shellplugin.wm.api*:org.trinity.shellplugin.widget.api*</packages>
+							</group>
+							<group>
+								<title>Fusion-Qt</title>
+								<packages>org.fusion.qt*</packages>
+							</group>
+						</groups>
+						<linksource>true</linksource>
+						<minmemory>16m</minmemory>
+						<maxmemory>128m</maxmemory>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
