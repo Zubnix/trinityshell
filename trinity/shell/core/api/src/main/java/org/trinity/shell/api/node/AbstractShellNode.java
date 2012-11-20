@@ -36,7 +36,11 @@ import com.google.common.eventbus.EventBus;
 // TODO Let geo events travel downwards to children to notify them that one of
 // their parents has changed
 
-// TODO move to api?
+/***************************************
+ * An abstract base implementation of a {@link ShellNode}.
+ * 
+ *************************************** 
+ */
 public abstract class AbstractShellNode implements ShellNode {
 
 	private int x;

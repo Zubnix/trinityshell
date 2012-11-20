@@ -21,6 +21,11 @@ import org.trinity.shell.api.node.manager.ShellLayoutManager;
 
 import com.google.common.eventbus.EventBus;
 
+/***************************************
+ * An abstract base implementation of a {@link ShellNodeParent}.
+ * 
+ *************************************** 
+ */
 public abstract class AbstractShellNodeParent extends AbstractShellNode implements ShellNodeParent {
 
 	private final EventBus nodeEventBus;

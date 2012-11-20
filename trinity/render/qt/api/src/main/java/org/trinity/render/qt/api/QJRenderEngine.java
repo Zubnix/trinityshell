@@ -16,8 +16,25 @@ import java.util.concurrent.Future;
 import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 
+/***************************************
+ * A QtJambi specific paint engine.
+ * 
+ *************************************** 
+ */
 public interface QJRenderEngine {
 
+	/***************************************
+	 * Invoke the given {@link PaintInstruction} for the given
+	 * {@link PaintableSurfaceNode}. Invocation is usually done by a seperate
+	 * paint thread.
+	 * 
+	 * @param paintableSurfaceNode
+	 *            a {@link PaintableSurfaceNode}
+	 * @param paintInstruction
+	 *            a {@link PaintInstruction}
+	 * @return a {@link Future} result.
+	 *************************************** 
+	 */
 	<R> Future<R> invoke(	PaintableSurfaceNode paintableSurfaceNode,
 							PaintInstruction<R, QJPaintContext> paintInstruction);
 

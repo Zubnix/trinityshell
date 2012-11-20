@@ -16,7 +16,13 @@ import java.util.List;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
 
+/***************************************
+ * Creates key bindings with a specific action.
+ * 
+ *************************************** 
+ */
 public interface KeysBindingFactory {
+
 	ShellKeysBinding createKeysBinding(	List<Key> keys,
 										InputModifiers inputModifiers,
 										Runnable action);

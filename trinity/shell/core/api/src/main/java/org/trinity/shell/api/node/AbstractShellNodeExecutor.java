@@ -13,6 +13,12 @@ package org.trinity.shell.api.node;
 
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
 
+/****************************************
+ * An abstract base implemenation of a {@link ShellNodeExecutor} for use with an
+ * {@link AbstractShellNode}.
+ * 
+ *************************************** 
+ */
 public abstract class AbstractShellNodeExecutor implements ShellNodeExecutor {
 
 	public abstract DisplayAreaManipulator getShellNodeManipulator();

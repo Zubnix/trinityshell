@@ -16,14 +16,33 @@ import java.util.List;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
 
+/***************************************
+ * A specific keybinding.
+ * 
+ *************************************** 
+ */
 public interface ShellKeysBinding {
+	/***************************************
+	 * The action to perform when this keybinding is executed.
+	 * 
+	 * @return a {@link Runnable}
+	 *************************************** 
+	 */
 	Runnable getAction();
 
 	List<Key> getKeys();
 
 	InputModifiers getInputModifiers();
 
+	/***************************************
+	 * Make this keybinding eligible for execution.
+	 *************************************** 
+	 */
 	void bind();
 
+	/***************************************
+	 * Deactive this keybinding.
+	 *************************************** 
+	 */
 	void unbind();
 }

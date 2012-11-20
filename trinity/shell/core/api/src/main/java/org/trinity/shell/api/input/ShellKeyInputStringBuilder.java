@@ -13,11 +13,36 @@ package org.trinity.shell.api.input;
 
 import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 
+/***************************************
+ * Convenience class to build a human readable {@link String} with
+ * {@link KeyNotifyEvent}s.
+ * 
+ *************************************** 
+ */
 public interface ShellKeyInputStringBuilder {
 
+	/***************************************
+	 * Append the given {@link String} to the underlying string buffer.
+	 * 
+	 * @param string
+	 *            a {@link String}
+	 *************************************** 
+	 */
 	void append(String string);
 
+	/***************************************
+	 * Append the {@link String} derived from the given {@link KeyNotifyEvent}
+	 * to the underlying string buffer.
+	 * 
+	 * @param input
+	 *            a {@link KeyNotifyEvent}
+	 *************************************** 
+	 */
 	void append(KeyNotifyEvent input);
 
+	/***************************************
+	 * Clear the underlying string buffer.
+	 *************************************** 
+	 */
 	void clear();
 }
