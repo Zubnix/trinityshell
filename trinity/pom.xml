@@ -119,19 +119,19 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 						<verbose>true</verbose>
 						<groups>
 							<group>
-								<title>Foundation</title>
+								<title>Foundation API</title>
 								<packages>org.trinity.foundation.display.api*:org.trinity.foundation.input.api*:org.trinity.foundation.render.api*:org.trinity.foundation.shared.geometry.api*</packages>
 							</group>
 							<group>
-								<title>Render Qt</title>
+								<title>Render QtJambi API</title>
 								<packages>org.trinity.render.qt.api*</packages>
 							</group>
 							<group>
-								<title>Shell Core</title>
+								<title>Shell Core API</title>
 								<packages>org.trinity.shell.api*</packages>
 							</group>
 							<group>
-								<title>Shell Plugins</title>
+								<title>Shell Plugins API</title>
 								<packages>org.trinity.shellplugin.wm.api*:org.trinity.shellplugin.widget.api*</packages>
 							</group>
 							<group>
@@ -139,6 +139,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 								<packages>org.fusion.qt*</packages>
 							</group>
 						</groups>
+						<excludePackageNames>*impl*:org.trinity.bootstrap</excludePackageNames>
 						<linksource>true</linksource>
 						<minmemory>16m</minmemory>
 						<maxmemory>128m</maxmemory>
