@@ -12,8 +12,8 @@
 package org.trinity.foundation.display.api.event;
 
 /****************************************
- * A <code>PointerVisitationNotifyEvent</code> indicates when a pointer device
- * has crossed the boundary of a {@link DisplayEventSource}.
+ * Indicates when a pointer device has crossed the boundary of a
+ * {@link DisplayEventSource}.
  * 
  *************************************** 
  */

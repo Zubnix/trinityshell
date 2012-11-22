@@ -23,6 +23,15 @@ import org.trinity.foundation.input.api.Key;
  */
 public interface KeysBindingFactory {
 
+	/****************************************
+	 * Create a new keybinding.
+	 * 
+	 * @param keys
+	 * @param inputModifiers
+	 * @param action
+	 * @return
+	 *************************************** 
+	 */
 	ShellKeysBinding createKeysBinding(	List<Key> keys,
 										InputModifiers inputModifiers,
 										Runnable action);

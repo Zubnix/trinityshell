@@ -12,8 +12,8 @@
 package org.trinity.foundation.display.api;
 
 /**
- * A <code>DisplayArea</code> describes a visible part of the screen. It is the
- * base interface of all objects wishing to describe an on-screen surface.
+ * Describes a visible part of the screen. It is the base interface of all
+ * objects wishing to describe an on-screen surface.
  * <p>
  * Implementation advice:
  * <p>

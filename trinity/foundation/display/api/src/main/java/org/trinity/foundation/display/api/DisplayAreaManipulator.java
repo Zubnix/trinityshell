@@ -18,10 +18,9 @@ import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
 
 /****************************************
- * A <code>DisplayAreaManipulator</code> provides the operations that are
- * available for manipulating and interacting with a {@link DisplayArea}. A
- * <code>DisplayAreaManipulator</code> instance is bound to exactly one
- * <code>DisplayArea</code> instance.
+ * Provides the operations that are available for manipulating and interacting
+ * with a {@link DisplayArea}. A <code>DisplayAreaManipulator</code> instance is
+ * bound to exactly one <code>DisplayArea</code> instance.
  * 
  *************************************** 
  */

@@ -39,6 +39,11 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 		this.nodeEventBus = nodeEventBus;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * The returned array is a copy of the internal array.
+	 */
 	@Override
 	public ShellNode[] getChildren() {
 		return this.children.toArray(new ShellNode[this.children.size()]);
@@ -100,6 +105,12 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * This call has no effect if no {@link ShellLayoutManager} is set for this
+	 * node.
+	 */
 	@Override
 	public void layout() {
 		final ShellLayoutManager layoutManager = getLayoutManager();

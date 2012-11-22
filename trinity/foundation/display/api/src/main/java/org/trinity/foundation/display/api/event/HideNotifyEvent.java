@@ -12,8 +12,7 @@
 package org.trinity.foundation.display.api.event;
 
 /**
- * An <code>HideNotifyEvent</code> notifies when a {@link DisplayEventSource} is
- * made invisible on the screen.
+ * Notifies when a {@link DisplayEventSource} is made invisible on the screen.
  * 
  */
 public class HideNotifyEvent extends DisplayEvent {

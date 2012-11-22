@@ -14,8 +14,7 @@ package org.trinity.foundation.display.api.event;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 /**
- * A <code>GeometryRequestEvent</code> is a request from a
- * {@link DisplayEventSource} for a new geometry.
+ * A request from a {@link DisplayEventSource} for a new geometry.
  * 
  */
 public class GeometryRequestEvent extends DisplayEvent {

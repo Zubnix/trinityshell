@@ -16,9 +16,8 @@ import org.trinity.foundation.shared.geometry.api.Coordinate;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 /**
- * A <code>DisplaySurface</code> is represents a native isolated graphical area.
- * Usually a <code>DisplaySurface</code> maps to a native window from a native
- * display.
+ * Represents a native isolated graphical area. Usually a
+ * <code>DisplaySurface</code> maps to a native window from a native display.
  * 
  */
 public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator, DisplayEventSource {

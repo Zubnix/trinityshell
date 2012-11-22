@@ -12,9 +12,8 @@
 package org.trinity.foundation.display.api;
 
 /***************************************
- * A <code>DisplaySurfaceHandle</code> wraps a native handle to an underlying
- * native display resource. Access to the native handle is done by calling
- * {@link #getNativeHandle()}.
+ * Wraps a native handle to an underlying native display resource. Access to the
+ * native handle is done by calling {@link #getNativeHandle()}.
  * 
  *************************************** 
  */

@@ -17,7 +17,11 @@ import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
 
 /***************************************
- * A specific keybinding.
+ * A specific keybinding. The keybinding will not be bound until a call to
+ * {@link ShellKeysBinding#bind()} is made. A bound
+ * <code>ShellKeysBinding</code> will be activated as soon as any of the
+ * required {@link Key}s is pressed and the required {@link InputModifiers} are
+ * active.
  * 
  *************************************** 
  */
@@ -30,8 +34,21 @@ public interface ShellKeysBinding {
 	 */
 	Runnable getAction();
 
+	/***************************************
+	 * A group of possible <code>Keys</code> for this keybinding to become
+	 * active.
+	 * 
+	 * @return {@link Key}s
+	 *************************************** 
+	 */
 	List<Key> getKeys();
 
+	/***************************************
+	 * The <code>InputModifiers</code> that are required to be active.
+	 * 
+	 * @return {@link InputModifiers}
+	 *************************************** 
+	 */
 	InputModifiers getInputModifiers();
 
 	/***************************************

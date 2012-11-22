@@ -14,10 +14,9 @@ package org.trinity.foundation.display.api;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 
 /**
- * An <code>EventProducer</code> is a production source of
- * <code>DisplayEvent</code>s. It does not make {@link DisplayEvent}s available
- * directly but makes sure that they are placed on the {@link DisplayServer}'s
- * event queue.
+ * A producer of <code>DisplayEvent</code>s. It does not make
+ * {@link DisplayEvent}s available directly but makes sure that they are placed
+ * on the {@link DisplayServer}'s event queue.
  */
 public interface DisplayEventProducer {
 

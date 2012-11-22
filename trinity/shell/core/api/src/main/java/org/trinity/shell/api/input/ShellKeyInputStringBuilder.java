@@ -14,8 +14,7 @@ package org.trinity.shell.api.input;
 import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 
 /***************************************
- * Convenience class to build a human readable {@link String} with
- * {@link KeyNotifyEvent}s.
+ * Convenience class to build a {@link String} with {@link KeyNotifyEvent}s.
  * 
  *************************************** 
  */

@@ -13,8 +13,7 @@ package org.trinity.foundation.display.api.event;
 
 /****************************************
  * 
- * A <code>ShowRequestEvent</code> signals a request to make a
- * {@link DisplayEventSource} visible.
+ * A request to make a {@link DisplayEventSource} visible.
  * 
  *************************************** 
  */

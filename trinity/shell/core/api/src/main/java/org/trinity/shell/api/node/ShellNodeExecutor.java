@@ -13,10 +13,9 @@ package org.trinity.shell.api.node;
 
 // TODO documentation
 /**
- * A <code>ShellNodeExecutor</code> is responsible for executing the actual
- * geometry changes for a <code>ShellNode</code>. In essence a
- * <code>ShellNodeExecutor</code> is a delegate for a <code>ShellNode</code> to
- * execute the requested geometry changes.
+ * Executes the actual geometry changes for a <code>ShellNode</code>. In essence
+ * a <code>ShellNodeExecutor</code> is a delegate for a <code>ShellNode</code>
+ * to execute the requested geometry changes.
  * <p>
  * A <code>ShellNodeExecutor</code> is needed because a tree structure of
  * different <code>ShellNode</code> subclasses can have non-uniform and
@@ -25,11 +24,15 @@ package org.trinity.shell.api.node;
  * this and make sure a change in the geometry of its requester has the correct
  * and desired on-screen effect.
  * 
- * @author Erik De Rijcke
- * @since 1.0
  */
 public interface ShellNodeExecutor {
 
+	/***************************************
+	 * The <code>SHellNode</code> on who's behalf this executer operates.
+	 * 
+	 * @return a {@link ShellNode}
+	 *************************************** 
+	 */
 	ShellNode getShellNode();
 
 	/**
@@ -74,8 +77,16 @@ public interface ShellNodeExecutor {
 					int width,
 					int height);
 
+	/***************************************
+	 * Execute the actual showing of the handled <code>ShellNode</code>.
+	 *************************************** 
+	 */
 	void show();
 
+	/***************************************
+	 * Execute the actual hiding of the handled <code>ShellNode</code>.
+	 *************************************** 
+	 */
 	void hide();
 
 	/**

@@ -14,8 +14,8 @@ package org.trinity.foundation.display.api.event;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 /**
- * A <code>GeometryNotifyEvent</code> notifies that the geometry (size, place)
- * of a {@link DisplayEventSource} has changed.
+ * Notifies that the geometry (size, place) of a {@link DisplayEventSource} has
+ * changed.
  * 
  */
 public class GeometryNotifyEvent extends DisplayEvent {

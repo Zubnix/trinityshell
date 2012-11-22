@@ -12,8 +12,7 @@
 package org.trinity.foundation.display.api.event;
 
 /***************************************
- * A <code>ShowNotifyEvent</code> notifies that a {@link DisplayEventSource} has
- * become visible.
+ * Notifies that a {@link DisplayEventSource} has become visible.
  * 
  *************************************** 
  */

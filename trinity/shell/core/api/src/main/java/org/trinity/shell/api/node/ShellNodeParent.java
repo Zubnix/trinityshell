@@ -13,9 +13,19 @@ package org.trinity.shell.api.node;
 
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 
+/***************************************
+ * A {@link ShellNode} that can have child <code>ShellNode</code>s.
+ * 
+ *************************************** 
+ */
 public interface ShellNodeParent extends ShellNode {
+
 	ShellLayoutManager getLayoutManager();
 
+	/***************************************
+	 * Layout all child <code>ShellNode</code>s.
+	 *************************************** 
+	 */
 	void layout();
 
 	void setLayoutManager(ShellLayoutManager shellLayoutManager);

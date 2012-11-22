@@ -15,8 +15,7 @@ import org.trinity.foundation.input.api.KeyboardInput;
 
 // TODO documentation
 /**
- * A <code>KeyNotifyEvent</code> notifies that a keyboard key's state has
- * changed.
+ * Notifies that a keyboard key's state has changed.
  * 
  * 
  */

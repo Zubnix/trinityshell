@@ -35,6 +35,8 @@ import com.google.common.eventbus.EventBus;
 
 // TODO Let geo events travel downwards to children to notify them that one of
 // their parents has changed
+// TODO move all layoutmanager checking to AbstractShellNodeParent, as well as
+// the javadoc that mentions it.
 
 /***************************************
  * An abstract base implementation of a {@link ShellNode}.
@@ -86,8 +88,9 @@ public abstract class AbstractShellNode implements ShellNode {
 											getDesiredParent());
 	}
 
-	@Override
-	public abstract ShellNodeExecutor getShellNodeExecutor();
+	protected EventBus getNodeEventBus() {
+		return this.nodeEventBus;
+	}
 
 	@Override
 	public boolean isDestroyed() {
@@ -104,18 +107,30 @@ public abstract class AbstractShellNode implements ShellNode {
 		this.desiredParent = parent;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * A {@link ShellNodeReparentRequestEvent} will be emitted by this node. If
+	 * no {@link ShellLayoutManager} is set for this node, {@link #doReparent()}
+	 * will take place after all node subscribers are notified of the request.
+	 */
 	@Override
 	public void requestReparent() {
 		// update parent to new parent
 		final ShellNodeEvent event = new ShellNodeReparentRequestEvent(	this,
 																		toGeoTransformation());
-		this.nodeEventBus.post(event);
+		getNodeEventBus().post(event);
 		final ShellLayoutManager shellLayoutManager = getParentLayoutManager(getParent());
 		if (shellLayoutManager == null) {
 			doReparent();
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * If this node has no parent, its relative X position is returned.
+	 */
 	@Override
 	public int getAbsoluteX() {
 		if ((getParent() == null) || getParent().equals(this)) {
@@ -124,6 +139,11 @@ public abstract class AbstractShellNode implements ShellNode {
 		return getParent().getAbsoluteX() + getX();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * If this node has no parent, its relative Y position will be returned.
+	 */
 	@Override
 	public int getAbsoluteY() {
 		if ((getParent() == null) || getParent().equals(this)) {
@@ -172,6 +192,12 @@ public abstract class AbstractShellNode implements ShellNode {
 		this.desiredHeight = height;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * This method will only return true if this node is in the visible state an
+	 * all of its parents in the hierarchy are visible as well.
+	 */
 	@Override
 	public boolean isVisible() {
 		if (!this.visible) {
@@ -203,55 +229,91 @@ public abstract class AbstractShellNode implements ShellNode {
 		return parentLayoutManager;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * A {@link ShellNodeMoveRequestEvent} will be emitted by this node. If no
+	 * {@link ShellLayoutManager} is set for this node, {@link #doMove()} will
+	 * take place after all node subscribers have been notified of the request.
+	 */
 	@Override
 	public void requestMove() {
 		final ShellNodeMoveRequestEvent event = new ShellNodeMoveRequestEvent(	this,
 																				toGeoTransformation());
-		this.nodeEventBus.post(event);
+		getNodeEventBus().post(event);
 		final ShellLayoutManager shellLayoutManager = getParentLayoutManager(getParent());
 		if (shellLayoutManager == null) {
 			doMove();
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * A {@link ShellNodeResizeRequestEvent} will be emitted by this node. If no
+	 * {@link ShellLayoutManager} is set for this node, {@link #doResize()} will
+	 * take place after all node subscribers have been notified of the request.
+	 */
 	@Override
 	public void requestResize() {
 		final ShellNodeEvent event = new ShellNodeResizeRequestEvent(	this,
 																		toGeoTransformation());
-		this.nodeEventBus.post(event);
+		getNodeEventBus().post(event);
 		final ShellLayoutManager shellLayoutManager = getParentLayoutManager(getParent());
 		if (shellLayoutManager == null) {
 			doResize();
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * A {@link ShellNodeMoveResizeEvent} will be emitted by this node. If no
+	 * {@link ShellLayoutManager} is set for this node, {@link #doMoveResize()}
+	 * will take place after all node subscribers have been notified of the
+	 * request.
+	 */
 	@Override
 	public void requestMoveResize() {
 		final ShellNodeMoveResizeRequestEvent event = new ShellNodeMoveResizeRequestEvent(	this,
 																							toGeoTransformation());
-		this.nodeEventBus.post(event);
+		getNodeEventBus().post(event);
 		final ShellLayoutManager shellLayoutManager = getParentLayoutManager(getParent());
 		if (shellLayoutManager == null) {
 			doMoveResize();
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * A {@link ShellNodeRaiseRequestEvent} will be emitted by this node. If no
+	 * {@link ShellLayoutManager} is set for this node, {@link #doRaise()} will
+	 * take place after all node subscribers have been notified of the request.
+	 */
 	@Override
 	public void requestRaise() {
 		final ShellNodeEvent event = new ShellNodeRaiseRequestEvent(this,
 																	toGeoTransformation());
-		this.nodeEventBus.post(event);
+		getNodeEventBus().post(event);
 		final ShellLayoutManager shellLayoutManager = getParentLayoutManager(getParent());
 		if (shellLayoutManager == null) {
 			doRaise();
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * A {@link ShellNodeLowerRequestEvent} will be emitted by this node. If no
+	 * {@link ShellLayoutManager} is set for this node, {@link #doLower()} will
+	 * take place after all node subscribers have been notified of the request.
+	 */
 	@Override
 	public void requestLower() {
 		final ShellNodeLowerRequestEvent event = new ShellNodeLowerRequestEvent(this,
 																				toGeoTransformation());
-		this.nodeEventBus.post(event);
+		getNodeEventBus().post(event);
 		if (getParentLayoutManager(getParent()) == null) {
 			doLower();
 		}
@@ -269,7 +331,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		}
 		final ShellNodeMoveEvent geoEvent = new ShellNodeMoveEvent(	this,
 																	toGeoTransformation());
-		this.nodeEventBus.post(geoEvent);
+		getNodeEventBus().post(geoEvent);
 	}
 
 	protected void execMove() {
@@ -295,7 +357,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		}
 		final ShellNodeResizeEvent geoEvent = new ShellNodeResizeEvent(	this,
 																		toGeoTransformation());
-		this.nodeEventBus.post(geoEvent);
+		getNodeEventBus().post(geoEvent);
 	}
 
 	protected void execResize() {
@@ -321,7 +383,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		}
 		final ShellNodeMoveResizeEvent geoEvent = new ShellNodeMoveResizeEvent(	this,
 																				toGeoTransformation());
-		this.nodeEventBus.post(geoEvent);
+		getNodeEventBus().post(geoEvent);
 	}
 
 	protected void execMoveResize() {
@@ -348,7 +410,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		}
 		final ShellNodeDestroyEvent geoEvent = new ShellNodeDestroyEvent(	this,
 																			toGeoTransformation());
-		this.nodeEventBus.post(geoEvent);
+		getNodeEventBus().post(geoEvent);
 	}
 
 	protected void execDestroy() {
@@ -366,7 +428,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		}
 		final ShellNodeRaiseEvent geoEvent = new ShellNodeRaiseEvent(	this,
 																		toGeoTransformation());
-		this.nodeEventBus.post(geoEvent);
+		getNodeEventBus().post(geoEvent);
 	}
 
 	protected void execRaise() {
@@ -384,7 +446,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		}
 		final ShellNodeLowerEvent geoEvent = new ShellNodeLowerEvent(	this,
 																		toGeoTransformation());
-		this.nodeEventBus.post(geoEvent);
+		getNodeEventBus().post(geoEvent);
 	}
 
 	protected void execLower() {
@@ -409,7 +471,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		final ShellNodeReparentEvent geoEvent = new ShellNodeReparentEvent(	this,
 																			toGeoTransformation());
 
-		this.nodeEventBus.post(geoEvent);
+		getNodeEventBus().post(geoEvent);
 	}
 
 	protected void execReparent() {
@@ -434,12 +496,12 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	@Override
 	public void addShellNodeEventHandler(final Object geoEventHandler) {
-		this.nodeEventBus.register(geoEventHandler);
+		getNodeEventBus().register(geoEventHandler);
 	}
 
 	@Override
 	public void removeShellNodeEventHandler(final Object geoEventHandler) {
-		this.nodeEventBus.unregister(geoEventHandler);
+		getNodeEventBus().unregister(geoEventHandler);
 	}
 
 	protected int getDesiredHeight() {
@@ -478,7 +540,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		}
 		final ShellNodeShowEvent geoEvent = new ShellNodeShowEvent(	this,
 																	toGeoTransformation());
-		this.nodeEventBus.post(geoEvent);
+		getNodeEventBus().post(geoEvent);
 	}
 
 	protected void execShow() {
@@ -497,28 +559,42 @@ public abstract class AbstractShellNode implements ShellNode {
 		}
 		final ShellNodeHideEvent geoEvent = new ShellNodeHideEvent(	this,
 																	toGeoTransformation());
-		this.nodeEventBus.post(geoEvent);
+		getNodeEventBus().post(geoEvent);
 	}
 
 	protected void execHide() {
 		getShellNodeExecutor().hide();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * A {@link ShellNodeShowRequestEvent} will be emitted by this node. If no
+	 * {@link ShellLayoutManager} is set for this node, {@link #doShow()} will
+	 * take place after all node subscribers have been notified of the request.
+	 */
 	@Override
 	public void requestShow() {
 		final ShellNodeShowRequestEvent event = new ShellNodeShowRequestEvent(	this,
 																				toGeoTransformation());
-		this.nodeEventBus.post(event);
+		getNodeEventBus().post(event);
 		if (getParentLayoutManager(getParent()) == null) {
 			doShow();
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * A {@link ShellNodeHideEvent} will be emitted by this node. If no
+	 * {@link ShellLayoutManager} is set for this node, {@link #doHide()} will
+	 * take place after all node subscribers have been notified of the request.
+	 */
 	@Override
 	public void requestHide() {
 		final ShellNodeHideRequestEvent event = new ShellNodeHideRequestEvent(	this,
 																				toGeoTransformation());
-		this.nodeEventBus.post(event);
+		getNodeEventBus().post(event);
 		if (getParentLayoutManager(getParent()) == null) {
 			doHide();
 		}

@@ -14,8 +14,7 @@ package org.trinity.foundation.display.api.event;
 import org.trinity.foundation.display.api.DisplaySurface;
 
 /**
- * A <code>DestroyNotifyEvent</code> notifies that a {@link DisplaySurface} is
- * destroyed.
+ * Notifies that a {@link DisplaySurface} is destroyed.
  * 
  */
 public class DestroyNotifyEvent extends DisplayEvent {

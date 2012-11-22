@@ -70,8 +70,6 @@ public interface ShellNode extends SurfaceNode, ShellNodeTransformable {
 
 	void setWidth(final int width);
 
-	// ShellLayoutManager getParentLayoutManager();
-
 	@Override
 	ShellNodeParent getParent();
 

@@ -14,8 +14,7 @@ package org.trinity.foundation.display.api.event;
 import org.trinity.foundation.input.api.PointerInput;
 
 /**
- * A <code>ButtonNotifyEvent</code> notifies that a mouse button's state has
- * changed.
+ * Notifies that a mouse button's state has changed.
  */
 public class ButtonNotifyEvent extends InputNotifyEvent<PointerInput> {
 

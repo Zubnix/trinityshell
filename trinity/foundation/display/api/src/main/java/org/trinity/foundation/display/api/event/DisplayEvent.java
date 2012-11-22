@@ -14,9 +14,9 @@ package org.trinity.foundation.display.api.event;
 import org.trinity.foundation.display.api.DisplayServer;
 
 /**
- * A <code>DisplayEvent</code> is a piece of information coming from a
- * <code>Display</code>. A <code>DisplayEvent</code> is usually send on the
- * behalf of another resource living on the {@link DisplayServer}.
+ * Information coming from a <code>Display</code>. A <code>DisplayEvent</code>
+ * is usually send on the behalf of another resource living on the
+ * {@link DisplayServer}.
  * 
  */
 public class DisplayEvent {
