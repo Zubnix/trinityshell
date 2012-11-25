@@ -32,5 +32,11 @@ public interface ShellNodeParent extends ShellNode {
 
 	ShellNode[] getChildren();
 
+	/***************************************
+	 * Signal that a child has left/joined this parent.
+	 * 
+	 * @param child
+	 *************************************** 
+	 */
 	void handleChildReparentEvent(ShellNode child);
 }

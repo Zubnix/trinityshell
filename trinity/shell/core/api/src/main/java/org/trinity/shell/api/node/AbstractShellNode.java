@@ -494,6 +494,12 @@ public abstract class AbstractShellNode implements ShellNode {
 		setY(getY());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Subscription is done through Google Guava's {@link EventBus}'s
+	 * subscription mechanism.
+	 */
 	@Override
 	public void addShellNodeEventHandler(final Object geoEventHandler) {
 		getNodeEventBus().register(geoEventHandler);

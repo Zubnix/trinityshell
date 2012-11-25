@@ -12,15 +12,12 @@
 package org.trinity.shell.api.node;
 
 /**
- * A <code>ShellNodeTransformation</code> represents a geometric transformation
- * in time. Current geometric property names end in 0, new ones in 1. A Delta
- * value is the subtraction of the new value with the current value so that:<br/>
+ * A geometric transformation. Current geometric property names end in 0, new
+ * ones in 1. A Delta value is the subtraction of the new value with the current
+ * value so that:<br/>
  * <code>geoTransformation.getDeltaX() == geoTransformation.getX1() - geoTransformation.getX0()</code>
  * <br/>
  * returns true.
- * 
- * @author Erik De Rijcke
- * @since 1.0
  */
 public class ShellNodeTransformation {
 	private final int x0;
