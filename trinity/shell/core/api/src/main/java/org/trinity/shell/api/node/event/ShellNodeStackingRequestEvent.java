@@ -14,6 +14,11 @@ package org.trinity.shell.api.node.event;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 
+/***************************************
+ * General event to request stacking (raise, lower) related operations.
+ * 
+ *************************************** 
+ */
 public class ShellNodeStackingRequestEvent extends ShellNodeEvent {
 
 	public ShellNodeStackingRequestEvent(	final ShellNode shellNode,
@@ -21,5 +26,4 @@ public class ShellNodeStackingRequestEvent extends ShellNodeEvent {
 		super(	shellNode,
 				shellNodeTransformation);
 	}
-
 }

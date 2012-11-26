@@ -12,8 +12,8 @@
 package org.trinity.shellplugin.wm.impl;
 
 import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.event.ShellNodeHideEvent;
-import org.trinity.shell.api.node.event.ShellNodeShowEvent;
+import org.trinity.shell.api.node.event.ShellNodeHiddenEvent;
+import org.trinity.shell.api.node.event.ShellNodeShowedEvent;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -35,12 +35,12 @@ public class ShellNodeVisibilityMirror {
 	}
 
 	@Subscribe
-	public void handleSourceShow(final ShellNodeShowEvent showNotifyEvent) {
+	public void handleSourceShow(final ShellNodeShowedEvent showNotifyEvent) {
 		this.reflection.doShow();
 	}
 
 	@Subscribe
-	public void handleSourceHide(final ShellNodeHideEvent hideNotifyEvent) {
+	public void handleSourceHide(final ShellNodeHiddenEvent hideNotifyEvent) {
 		this.reflection.doHide();
 	}
 

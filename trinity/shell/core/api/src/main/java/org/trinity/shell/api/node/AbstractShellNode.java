@@ -11,23 +11,23 @@
  */
 package org.trinity.shell.api.node;
 
-import org.trinity.shell.api.node.event.ShellNodeDestroyEvent;
+import org.trinity.shell.api.node.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.node.event.ShellNodeEvent;
-import org.trinity.shell.api.node.event.ShellNodeHideEvent;
+import org.trinity.shell.api.node.event.ShellNodeHiddenEvent;
 import org.trinity.shell.api.node.event.ShellNodeHideRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeLowerEvent;
+import org.trinity.shell.api.node.event.ShellNodeLoweredEvent;
 import org.trinity.shell.api.node.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeMoveEvent;
+import org.trinity.shell.api.node.event.ShellNodeMovedEvent;
 import org.trinity.shell.api.node.event.ShellNodeMoveRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeMoveResizeEvent;
+import org.trinity.shell.api.node.event.ShellNodeMovedResizedEvent;
 import org.trinity.shell.api.node.event.ShellNodeMoveResizeRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeRaiseEvent;
+import org.trinity.shell.api.node.event.ShellNodeRaisedEvent;
 import org.trinity.shell.api.node.event.ShellNodeRaiseRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeReparentEvent;
+import org.trinity.shell.api.node.event.ShellNodeReparentedEvent;
 import org.trinity.shell.api.node.event.ShellNodeReparentRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeResizeEvent;
+import org.trinity.shell.api.node.event.ShellNodeResizedEvent;
 import org.trinity.shell.api.node.event.ShellNodeResizeRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeShowEvent;
+import org.trinity.shell.api.node.event.ShellNodeShowedEvent;
 import org.trinity.shell.api.node.event.ShellNodeShowRequestEvent;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 
@@ -268,7 +268,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * A {@link ShellNodeMoveResizeEvent} will be emitted by this node. If no
+	 * A {@link ShellNodeMovedResizedEvent} will be emitted by this node. If no
 	 * {@link ShellLayoutManager} is set for this node, {@link #doMoveResize()}
 	 * will take place after all node subscribers have been notified of the
 	 * request.
@@ -329,7 +329,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (execute) {
 			execMove();
 		}
-		final ShellNodeMoveEvent geoEvent = new ShellNodeMoveEvent(	this,
+		final ShellNodeMovedEvent geoEvent = new ShellNodeMovedEvent(	this,
 																	toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
@@ -355,7 +355,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (execute) {
 			execResize();
 		}
-		final ShellNodeResizeEvent geoEvent = new ShellNodeResizeEvent(	this,
+		final ShellNodeResizedEvent geoEvent = new ShellNodeResizedEvent(	this,
 																		toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
@@ -381,7 +381,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (execute) {
 			execMoveResize();
 		}
-		final ShellNodeMoveResizeEvent geoEvent = new ShellNodeMoveResizeEvent(	this,
+		final ShellNodeMovedResizedEvent geoEvent = new ShellNodeMovedResizedEvent(	this,
 																				toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
@@ -408,7 +408,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (execute) {
 			execDestroy();
 		}
-		final ShellNodeDestroyEvent geoEvent = new ShellNodeDestroyEvent(	this,
+		final ShellNodeDestroyedEvent geoEvent = new ShellNodeDestroyedEvent(	this,
 																			toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
@@ -426,7 +426,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (execute) {
 			execRaise();
 		}
-		final ShellNodeRaiseEvent geoEvent = new ShellNodeRaiseEvent(	this,
+		final ShellNodeRaisedEvent geoEvent = new ShellNodeRaisedEvent(	this,
 																		toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
@@ -444,7 +444,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (execute) {
 			execLower();
 		}
-		final ShellNodeLowerEvent geoEvent = new ShellNodeLowerEvent(	this,
+		final ShellNodeLoweredEvent geoEvent = new ShellNodeLoweredEvent(	this,
 																		toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
@@ -468,7 +468,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		// and place in our new parent
 		// as in our old parent.
 		doMoveResize(execute);
-		final ShellNodeReparentEvent geoEvent = new ShellNodeReparentEvent(	this,
+		final ShellNodeReparentedEvent geoEvent = new ShellNodeReparentedEvent(	this,
 																			toGeoTransformation());
 
 		getNodeEventBus().post(geoEvent);
@@ -544,7 +544,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (execute) {
 			execShow();
 		}
-		final ShellNodeShowEvent geoEvent = new ShellNodeShowEvent(	this,
+		final ShellNodeShowedEvent geoEvent = new ShellNodeShowedEvent(	this,
 																	toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
@@ -563,7 +563,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		if (execute) {
 			execHide();
 		}
-		final ShellNodeHideEvent geoEvent = new ShellNodeHideEvent(	this,
+		final ShellNodeHiddenEvent geoEvent = new ShellNodeHiddenEvent(	this,
 																	toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
@@ -592,7 +592,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * A {@link ShellNodeHideEvent} will be emitted by this node. If no
+	 * A {@link ShellNodeHiddenEvent} will be emitted by this node. If no
 	 * {@link ShellLayoutManager} is set for this node, {@link #doHide()} will
 	 * take place after all node subscribers have been notified of the request.
 	 */

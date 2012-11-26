@@ -21,7 +21,7 @@ import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.event.ShellNodeDestroyEvent;
+import org.trinity.shell.api.node.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
@@ -78,7 +78,7 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 	private class DestroyCallback {
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleDestroy(final ShellNodeDestroyEvent destroyEvent) {
+		public void handleDestroy(final ShellNodeDestroyedEvent destroyEvent) {
 			BaseShellWidget.this.shellDisplayEventDispatcher
 					.unregisterAllDisplayEventSourceListeners(getDisplaySurface());
 			BaseShellWidget.this.shellDisplayEventDispatcher

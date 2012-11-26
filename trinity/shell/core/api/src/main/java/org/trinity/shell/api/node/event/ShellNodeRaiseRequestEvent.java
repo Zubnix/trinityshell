@@ -14,6 +14,11 @@ package org.trinity.shell.api.node.event;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 
+/***************************************
+ * Request to raise the {@link ShellNode} that emits this event.
+ * 
+ *************************************** 
+ */
 public class ShellNodeRaiseRequestEvent extends ShellNodeStackingRequestEvent {
 
 	public ShellNodeRaiseRequestEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {

@@ -14,6 +14,11 @@ package org.trinity.shell.api.node.event;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 
+/***************************************
+ * Request to resize the {@link ShellNode} that emits this event.
+ * 
+ *************************************** 
+ */
 public class ShellNodeResizeRequestEvent extends ShellNodeEvent {
 
 	public ShellNodeResizeRequestEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {

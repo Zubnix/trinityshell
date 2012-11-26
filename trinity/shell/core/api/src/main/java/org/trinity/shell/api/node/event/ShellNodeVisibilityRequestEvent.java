@@ -14,6 +14,10 @@ package org.trinity.shell.api.node.event;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 
+/***************************************
+ * General event to request visibility (show, hide) related operations.
+ *************************************** 
+ */
 public class ShellNodeVisibilityRequestEvent extends ShellNodeEvent {
 
 	public ShellNodeVisibilityRequestEvent(	final ShellNode shellNode,

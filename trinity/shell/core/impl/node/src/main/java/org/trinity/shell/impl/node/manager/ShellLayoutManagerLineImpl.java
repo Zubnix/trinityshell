@@ -15,10 +15,10 @@ import java.util.List;
 
 import org.trinity.foundation.shared.geometry.api.Margins;
 import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.event.ShellNodeDestroyEvent;
+import org.trinity.shell.api.node.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.node.event.ShellNodeHideRequestEvent;
 import org.trinity.shell.api.node.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeMoveResizeEvent;
+import org.trinity.shell.api.node.event.ShellNodeMovedResizedEvent;
 import org.trinity.shell.api.node.event.ShellNodeMoveResizeRequestEvent;
 import org.trinity.shell.api.node.event.ShellNodeRaiseRequestEvent;
 import org.trinity.shell.api.node.event.ShellNodeReparentRequestEvent;
@@ -58,9 +58,9 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleChildDestroyed(final ShellNodeDestroyEvent shellNodeDestroyEvent) {
-			final ShellNode child = shellNodeDestroyEvent.getSource();
-			removeChild(shellNodeDestroyEvent.getSource());
+		public void handleChildDestroyed(final ShellNodeDestroyedEvent shellNodeDestroyedEvent) {
+			final ShellNode child = shellNodeDestroyedEvent.getSource();
+			removeChild(shellNodeDestroyedEvent.getSource());
 			layout(child.getParent());
 		}
 
@@ -301,7 +301,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	}
 
 	@Subscribe
-	public void handleContainerMoveResize(final ShellNodeMoveResizeEvent moveResizeEvent) {
+	public void handleContainerMoveResize(final ShellNodeMovedResizedEvent moveResizeEvent) {
 		layout(moveResizeEvent.getSource());
 	}
 

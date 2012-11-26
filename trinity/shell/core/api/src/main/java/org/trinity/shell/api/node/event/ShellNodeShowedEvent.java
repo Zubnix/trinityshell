@@ -14,9 +14,14 @@ package org.trinity.shell.api.node.event;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 
-public class ShellNodeLowerEvent extends ShellNodeStackingEvent {
+/***************************************
+ * Informs that the {@link ShellNode} that emitted this event, is showed.
+ * 
+ *************************************** 
+ */
+public class ShellNodeShowedEvent extends ShellNodeVisibilityEvent {
 
-	public ShellNodeLowerEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
+	public ShellNodeShowedEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
 		super(	shellNode,
 				shellNodeTransformation);
 	}

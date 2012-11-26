@@ -14,6 +14,11 @@ package org.trinity.shell.api.node.event;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 
+/***************************************
+ * Request to show the {@link ShellNode} that emits this event.
+ * 
+ *************************************** 
+ */
 public class ShellNodeShowRequestEvent extends ShellNodeVisibilityRequestEvent {
 
 	public ShellNodeShowRequestEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {

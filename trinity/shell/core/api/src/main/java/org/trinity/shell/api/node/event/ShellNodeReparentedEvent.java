@@ -14,9 +14,14 @@ package org.trinity.shell.api.node.event;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 
-public class ShellNodeDestroyEvent extends ShellNodeEvent {
+/***************************************
+ * Informs that the {@link ShellNode} that emitted this event, is reparented.
+ * 
+ *************************************** 
+ */
+public class ShellNodeReparentedEvent extends ShellNodeEvent {
 
-	public ShellNodeDestroyEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
+	public ShellNodeReparentedEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
 		super(	shellNode,
 				shellNodeTransformation);
 	}

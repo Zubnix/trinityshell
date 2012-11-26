@@ -14,6 +14,12 @@ package org.trinity.shell.api.node.event;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 
+/***************************************
+ * Informs that a child {@link ShellNodeEvent} was added to the node that
+ * emitted this event.
+ * 
+ *************************************** 
+ */
 public class ShellNodeChildAddedEvent extends ShellNodeChildEvent {
 
 	public ShellNodeChildAddedEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {

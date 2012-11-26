@@ -14,9 +14,14 @@ package org.trinity.shell.api.node.event;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 
-public class ShellNodeShowEvent extends ShellNodeVisibilityEvent {
+/***************************************
+ * Informs that the {@link ShellNode} that emitted this event, is resized.
+ * 
+ *************************************** 
+ */
+public class ShellNodeResizedEvent extends ShellNodeEvent {
 
-	public ShellNodeShowEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
+	public ShellNodeResizedEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
 		super(	shellNode,
 				shellNodeTransformation);
 	}

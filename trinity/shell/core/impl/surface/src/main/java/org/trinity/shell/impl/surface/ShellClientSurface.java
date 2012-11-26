@@ -13,7 +13,7 @@ package org.trinity.shell.impl.surface;
 
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.shell.api.node.ShellNodeParent;
-import org.trinity.shell.api.node.event.ShellNodeDestroyEvent;
+import org.trinity.shell.api.node.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
@@ -43,7 +43,7 @@ public class ShellClientSurface extends AbstractShellSurface {
 
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleDestroyNotify(final ShellNodeDestroyEvent destroyEvent) {
+		public void handleDestroyNotify(final ShellNodeDestroyedEvent destroyEvent) {
 			this.shellDisplayEventDispatcher.unregisterAllDisplayEventSourceListeners(getDisplaySurface());
 		}
 	}

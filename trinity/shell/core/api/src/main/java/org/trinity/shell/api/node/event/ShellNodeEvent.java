@@ -14,6 +14,11 @@ package org.trinity.shell.api.node.event;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 
+/***************************************
+ * General event for all {@link ShellNode} operations.
+ * 
+ *************************************** 
+ */
 public class ShellNodeEvent {
 
 	private final ShellNode shellNode;
@@ -24,10 +29,23 @@ public class ShellNodeEvent {
 		this.shellNodeTransformation = shellNodeTransformation;
 	}
 
+	/***************************************
+	 * The source that emitted this event.
+	 * 
+	 * @return a {@link ShellNode}.
+	 *************************************** 
+	 */
 	public ShellNode getSource() {
 		return this.shellNode;
 	}
 
+	/***************************************
+	 * The transformation of the source {@link ShellNode} at the time of
+	 * creation of this event.
+	 * 
+	 * @return a {@link ShellNodeTransformation}.
+	 *************************************** 
+	 */
 	public ShellNodeTransformation getSourceTransformation() {
 		return this.shellNodeTransformation;
 	}

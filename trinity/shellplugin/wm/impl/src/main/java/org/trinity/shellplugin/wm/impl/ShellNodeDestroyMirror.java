@@ -12,7 +12,7 @@
 package org.trinity.shellplugin.wm.impl;
 
 import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.event.ShellNodeDestroyEvent;
+import org.trinity.shell.api.node.event.ShellNodeDestroyedEvent;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -32,7 +32,7 @@ public class ShellNodeDestroyMirror {
 	}
 
 	@Subscribe
-	public void handleSourceDestroy(final ShellNodeDestroyEvent showNotifyEvent) {
+	public void handleSourceDestroy(final ShellNodeDestroyedEvent showNotifyEvent) {
 		this.reflection.doDestroy();
 	}
 

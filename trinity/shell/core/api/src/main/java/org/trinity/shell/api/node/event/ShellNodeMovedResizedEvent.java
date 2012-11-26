@@ -14,9 +14,15 @@ package org.trinity.shell.api.node.event;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 
-public class ShellNodeReparentEvent extends ShellNodeEvent {
+/***************************************
+ * Informs that the {@link ShellNode} that emits this event, is moved and
+ * resized.
+ * 
+ *************************************** 
+ */
+public class ShellNodeMovedResizedEvent extends ShellNodeEvent {
 
-	public ShellNodeReparentEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
+	public ShellNodeMovedResizedEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
 		super(	shellNode,
 				shellNodeTransformation);
 	}

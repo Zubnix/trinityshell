@@ -14,9 +14,14 @@ package org.trinity.shell.api.node.event;
 import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeTransformation;
 
-public class ShellNodeMoveEvent extends ShellNodeEvent {
+/***************************************
+ * Informs that the {@link ShellNode} that emits this event, is moved.
+ * 
+ *************************************** 
+ */
+public class ShellNodeMovedEvent extends ShellNodeEvent {
 
-	public ShellNodeMoveEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
+	public ShellNodeMovedEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
 		super(	shellNode,
 				shellNodeTransformation);
 	}
