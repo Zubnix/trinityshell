@@ -15,20 +15,20 @@ import org.trinity.shell.api.node.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.node.event.ShellNodeEvent;
 import org.trinity.shell.api.node.event.ShellNodeHiddenEvent;
 import org.trinity.shell.api.node.event.ShellNodeHideRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeLoweredEvent;
 import org.trinity.shell.api.node.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeMovedEvent;
+import org.trinity.shell.api.node.event.ShellNodeLoweredEvent;
 import org.trinity.shell.api.node.event.ShellNodeMoveRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeMovedResizedEvent;
 import org.trinity.shell.api.node.event.ShellNodeMoveResizeRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeRaisedEvent;
+import org.trinity.shell.api.node.event.ShellNodeMovedEvent;
+import org.trinity.shell.api.node.event.ShellNodeMovedResizedEvent;
 import org.trinity.shell.api.node.event.ShellNodeRaiseRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeReparentedEvent;
+import org.trinity.shell.api.node.event.ShellNodeRaisedEvent;
 import org.trinity.shell.api.node.event.ShellNodeReparentRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeResizedEvent;
+import org.trinity.shell.api.node.event.ShellNodeReparentedEvent;
 import org.trinity.shell.api.node.event.ShellNodeResizeRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeShowedEvent;
+import org.trinity.shell.api.node.event.ShellNodeResizedEvent;
 import org.trinity.shell.api.node.event.ShellNodeShowRequestEvent;
+import org.trinity.shell.api.node.event.ShellNodeShowedEvent;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 
 import com.google.common.eventbus.EventBus;
@@ -58,7 +58,6 @@ public abstract class AbstractShellNode implements ShellNode {
 	private int desiredHeight;
 
 	private boolean visible;
-	private boolean desiredVisibility;
 
 	private ShellNodeParent parent;
 	private ShellNodeParent desiredParent;
@@ -78,13 +77,11 @@ public abstract class AbstractShellNode implements ShellNode {
 											getY(),
 											getWidth(),
 											getHeight(),
-											isVisible(),
 											getParent(),
 											getDesiredX(),
 											getDesiredY(),
 											getDesiredWidth(),
 											getDesiredHeight(),
-											getDesiredVisibility(),
 											getDesiredParent());
 	}
 
@@ -324,16 +321,32 @@ public abstract class AbstractShellNode implements ShellNode {
 		doMove(true);
 	}
 
+	/***************************************
+	 * Move the current node but the actual delegated execution by this node's
+	 * {@link ShellNodeExecutor} is conditional. This call will affect the
+	 * node's state.
+	 * 
+	 * @param execute
+	 *            True to execute the process by the this node's
+	 *            {@link ShellNodeExecutor}, false to ignore the low level
+	 *            execution.
+	 *************************************** 
+	 */
 	protected void doMove(final boolean execute) {
 		flushPlaceValues();
 		if (execute) {
 			execMove();
 		}
 		final ShellNodeMovedEvent geoEvent = new ShellNodeMovedEvent(	this,
-																	toGeoTransformation());
+																		toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
 
+	/***************************************
+	 * Execute the move process by this node's {@link ShellNodeExecutor}. This
+	 * call does not affect the node's state.
+	 *************************************** 
+	 */
 	protected void execMove() {
 		getShellNodeExecutor().move(getDesiredX(),
 									getDesiredY());
@@ -350,16 +363,32 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	}
 
+	/***************************************
+	 * Resize the current node but the actual delegated execution by this node's
+	 * {@link ShellNodeExecutor} is conditional. This call will affect the
+	 * node's state.
+	 * 
+	 * @param execute
+	 *            True to execute the process by the this node's
+	 *            {@link ShellNodeExecutor}, false to ignore the low level
+	 *            execution.
+	 *************************************** 
+	 */
 	protected void doResize(final boolean execute) {
 		flushSizeValues();
 		if (execute) {
 			execResize();
 		}
 		final ShellNodeResizedEvent geoEvent = new ShellNodeResizedEvent(	this,
-																		toGeoTransformation());
+																			toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
 
+	/***************************************
+	 * Execute the resize process by this node's {@link ShellNodeExecutor}. This
+	 * call does not affect the node's state.
+	 *************************************** 
+	 */
 	protected void execResize() {
 		getShellNodeExecutor().resize(	getDesiredWidth(),
 										getDesiredHeight());
@@ -376,16 +405,32 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	}
 
+	/***************************************
+	 * Move and resize the current node but the actual delegated execution by
+	 * this node's {@link ShellNodeExecutor} is conditional. This call will
+	 * affect the node's state.
+	 * 
+	 * @param execute
+	 *            True to execute the process by the this node's
+	 *            {@link ShellNodeExecutor}, false to ignore the low level
+	 *            execution.
+	 *************************************** 
+	 */
 	protected void doMoveResize(final boolean execute) {
 		flushSizePlaceValues();
 		if (execute) {
 			execMoveResize();
 		}
 		final ShellNodeMovedResizedEvent geoEvent = new ShellNodeMovedResizedEvent(	this,
-																				toGeoTransformation());
+																					toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
 
+	/***************************************
+	 * Execute the move and resize process by this node's
+	 * {@link ShellNodeExecutor}. This call does not affect the node's state.
+	 *************************************** 
+	 */
 	protected void execMoveResize() {
 		getShellNodeExecutor().moveResize(	getDesiredX(),
 											getDesiredY(),
@@ -403,16 +448,32 @@ public abstract class AbstractShellNode implements ShellNode {
 		this.doDestroy(true);
 	}
 
+	/***************************************
+	 * Destroy the current node but the actual delegated execution by this
+	 * node's {@link ShellNodeExecutor} is conditional. This call will affect
+	 * the node's state.
+	 * 
+	 * @param execute
+	 *            True to execute the process by the this node's
+	 *            {@link ShellNodeExecutor}, false to ignore the low level
+	 *            execution.
+	 *************************************** 
+	 */
 	protected void doDestroy(final boolean execute) {
 		this.destroyed = true;
 		if (execute) {
 			execDestroy();
 		}
 		final ShellNodeDestroyedEvent geoEvent = new ShellNodeDestroyedEvent(	this,
-																			toGeoTransformation());
+																				toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
 
+	/***************************************
+	 * Execute the destroy process by this node's {@link ShellNodeExecutor}.
+	 * This call does not affect the node's state.
+	 *************************************** 
+	 */
 	protected void execDestroy() {
 		getShellNodeExecutor().destroy();
 	}
@@ -422,6 +483,17 @@ public abstract class AbstractShellNode implements ShellNode {
 		doRaise(true);
 	}
 
+	/***************************************
+	 * Raise the current node but the actual delegated execution by this node's
+	 * {@link ShellNodeExecutor} is conditional. This call will affect the
+	 * node's state.
+	 * 
+	 * @param execute
+	 *            True to execute the process by the this node's
+	 *            {@link ShellNodeExecutor}, false to ignore the low level
+	 *            execution.
+	 *************************************** 
+	 */
 	protected void doRaise(final boolean execute) {
 		if (execute) {
 			execRaise();
@@ -431,6 +503,11 @@ public abstract class AbstractShellNode implements ShellNode {
 		getNodeEventBus().post(geoEvent);
 	}
 
+	/***************************************
+	 * Execute the raise process by this node's {@link ShellNodeExecutor}. This
+	 * call does not affect the node's state.
+	 *************************************** 
+	 */
 	protected void execRaise() {
 		getShellNodeExecutor().raise();
 	}
@@ -440,15 +517,31 @@ public abstract class AbstractShellNode implements ShellNode {
 		doLower(true);
 	}
 
+	/***************************************
+	 * Lower the current node but the actual delegated execution by this node's
+	 * {@link ShellNodeExecutor} is conditional. This call will affect the
+	 * node's state.
+	 * 
+	 * @param execute
+	 *            True to execute the process by the this node's
+	 *            {@link ShellNodeExecutor}, false to ignore the low level
+	 *            execution.
+	 *************************************** 
+	 */
 	protected void doLower(final boolean execute) {
 		if (execute) {
 			execLower();
 		}
 		final ShellNodeLoweredEvent geoEvent = new ShellNodeLoweredEvent(	this,
-																		toGeoTransformation());
+																			toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
 
+	/***************************************
+	 * Execute the lower process by this node's {@link ShellNodeExecutor}. This
+	 * call does not affect the node's state.
+	 *************************************** 
+	 */
 	protected void execLower() {
 		getShellNodeExecutor().lower();
 	}
@@ -459,6 +552,17 @@ public abstract class AbstractShellNode implements ShellNode {
 		getParent().handleChildReparentEvent(this);
 	}
 
+	/***************************************
+	 * Reparent the current node but the actual delegated execution by this
+	 * node's {@link ShellNodeExecutor} is conditional. This call will affect
+	 * the node's state.
+	 * 
+	 * @param execute
+	 *            True to execute the process by the this node's
+	 *            {@link ShellNodeExecutor}, false to ignore the low level
+	 *            execution.
+	 *************************************** 
+	 */
 	protected void doReparent(final boolean execute) {
 		flushParentValue();
 		if (execute) {
@@ -469,11 +573,16 @@ public abstract class AbstractShellNode implements ShellNode {
 		// as in our old parent.
 		doMoveResize(execute);
 		final ShellNodeReparentedEvent geoEvent = new ShellNodeReparentedEvent(	this,
-																			toGeoTransformation());
+																				toGeoTransformation());
 
 		getNodeEventBus().post(geoEvent);
 	}
 
+	/***************************************
+	 * Execute the reparent process by this node's {@link ShellNodeExecutor}.
+	 * This call does not affect the node's state.
+	 *************************************** 
+	 */
 	protected void execReparent() {
 		getShellNodeExecutor().reparent(getDesiredParent());
 	}
@@ -510,26 +619,52 @@ public abstract class AbstractShellNode implements ShellNode {
 		getNodeEventBus().unregister(geoEventHandler);
 	}
 
+	/***************************************
+	 * The desired height as set by {@link #setHeight(int)}.
+	 * 
+	 * @return height, implementation dependent but usually in pixels.
+	 *************************************** 
+	 */
 	protected int getDesiredHeight() {
 		return this.desiredHeight;
 	}
 
+	/***************************************
+	 * The desired width as set by {@link #setWidth(int)}.
+	 * 
+	 * @return width, implementation dependent but usually in pixels.
+	 *************************************** 
+	 */
 	protected int getDesiredWidth() {
 		return this.desiredWidth;
 	}
 
+	/***************************************
+	 * The desired X coordinate as set by {@link #setX(int)}.
+	 * 
+	 * @return X coordinate, implementation dependent but usually in pixels.
+	 *************************************** 
+	 */
 	protected int getDesiredX() {
 		return this.desiredX;
 	}
 
+	/***************************************
+	 * The desired Y coordinate as set by {@link #setY(int)}.
+	 * 
+	 * @return Y coordinate, implementation dependent but usually in pixels.
+	 *************************************** 
+	 */
 	protected int getDesiredY() {
 		return this.desiredY;
 	}
 
-	protected boolean getDesiredVisibility() {
-		return this.desiredVisibility;
-	}
-
+	/***************************************
+	 * The desired parent as set by {@link #setParent(ShellNodeParent)}.
+	 * 
+	 * @return a {@link ShellNodeParent}.
+	 *************************************** 
+	 */
 	protected ShellNodeParent getDesiredParent() {
 		return this.desiredParent;
 	}
@@ -539,16 +674,32 @@ public abstract class AbstractShellNode implements ShellNode {
 		doShow(true);
 	}
 
+	/***************************************
+	 * Show the current node but the actual delegated execution by this node's
+	 * {@link ShellNodeExecutor} is conditional. This call will affect the
+	 * node's state.
+	 * 
+	 * @param execute
+	 *            True to execute the process by the this node's
+	 *            {@link ShellNodeExecutor}, false to ignore the low level
+	 *            execution.
+	 *************************************** 
+	 */
 	protected void doShow(final boolean execute) {
 		this.visible = true;
 		if (execute) {
 			execShow();
 		}
 		final ShellNodeShowedEvent geoEvent = new ShellNodeShowedEvent(	this,
-																	toGeoTransformation());
+																		toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
 
+	/***************************************
+	 * Execute the show process by this node's {@link ShellNodeExecutor}. This
+	 * call does not affect the node's state.
+	 *************************************** 
+	 */
 	protected void execShow() {
 		getShellNodeExecutor().show();
 	}
@@ -558,16 +709,32 @@ public abstract class AbstractShellNode implements ShellNode {
 		doHide(true);
 	}
 
+	/***************************************
+	 * Hide the current node but the actual delegated execution by this node's
+	 * {@link ShellNodeExecutor} is conditional. This call will affect the
+	 * node's state.
+	 * 
+	 * @param execute
+	 *            True to execute the process by the this node's
+	 *            {@link ShellNodeExecutor}, false to ignore the low level
+	 *            execution.
+	 *************************************** 
+	 */
 	protected void doHide(final boolean execute) {
 		this.visible = false;
 		if (execute) {
 			execHide();
 		}
 		final ShellNodeHiddenEvent geoEvent = new ShellNodeHiddenEvent(	this,
-																	toGeoTransformation());
+																		toGeoTransformation());
 		getNodeEventBus().post(geoEvent);
 	}
 
+	/***************************************
+	 * Execute the hide process by this node's {@link ShellNodeExecutor}. This
+	 * call does not affect the node's state.
+	 *************************************** 
+	 */
 	protected void execHide() {
 		getShellNodeExecutor().hide();
 	}

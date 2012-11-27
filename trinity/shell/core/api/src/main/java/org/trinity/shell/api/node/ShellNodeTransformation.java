@@ -30,9 +30,6 @@ public class ShellNodeTransformation {
 	private final int width1;
 	private final int height1;
 
-	private final boolean visible0;
-	private final boolean visible1;
-
 	private final int deltaX;
 	private final int deltaY;
 
@@ -71,13 +68,11 @@ public class ShellNodeTransformation {
 									final int y0,
 									final int width0,
 									final int height0,
-									final boolean visible0,
 									final ShellNode parent0,
 									final int x1,
 									final int y1,
 									final int width1,
 									final int height1,
-									final boolean visible1,
 									final ShellNode parent1) {
 		this.x0 = x0;
 		this.y0 = y0;
@@ -88,9 +83,6 @@ public class ShellNodeTransformation {
 		this.y1 = y1;
 		this.width1 = width1;
 		this.height1 = height1;
-
-		this.visible0 = visible0;
-		this.visible1 = visible1;
 
 		this.deltaX = this.x1 - this.x0;
 		this.deltaY = this.y1 - this.y0;
@@ -228,24 +220,6 @@ public class ShellNodeTransformation {
 	 */
 	public int getY1() {
 		return this.y1;
-	}
-
-	/**
-	 * The current visibility.
-	 * 
-	 * @return True if currently visible, false if not.
-	 */
-	public boolean isVisible0() {
-		return this.visible0;
-	}
-
-	/**
-	 * The new visibility.
-	 * 
-	 * @return True if should be visible, false if not.
-	 */
-	public boolean isVisible1() {
-		return this.visible1;
 	}
 
 	// @Override

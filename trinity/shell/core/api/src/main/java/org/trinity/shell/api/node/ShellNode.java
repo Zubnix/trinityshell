@@ -17,7 +17,7 @@ import org.trinity.foundation.render.api.SurfaceNode;
 import org.trinity.shell.api.node.event.ShellNodeEvent;
 
 /***************************************
- * The super interface of all nodes that live in the shell's scene graph.
+ * The super interface of all nodes that live in the shell scene graph.
  * 
  *************************************** 
  */
@@ -253,7 +253,11 @@ public interface ShellNode extends SurfaceNode {
 	void removeShellNodeEventHandler(Object shellNodeEventHandler);
 
 	/**
-	 * The desired transformation of this node.
+	 * The desired transformation of this node. The "0" named properties match
+	 * this node's current state, the "1" named properties match this node's
+	 * desired state. I call to {@link #setWidth(int)} with a value of 10 will
+	 * thus be reflected by the returned
+	 * {@link ShellNodeTransformation#getWidth1()} also returning 10.
 	 * 
 	 * @return A {@link ShellNodeTransformation}.
 	 */

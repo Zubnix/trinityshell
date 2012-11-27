@@ -14,12 +14,26 @@ package org.trinity.shell.api.node;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 
 /***************************************
- * A {@link ShellNode} that can have child <code>ShellNode</code>s.
+ * A {@link ShellNode} that can have child <code>ShellNode</code>s. A node's
+ * parent can be changed by calling {@link ShellNode#setParent(ShellNodeParent)}
+ * followed by either {@link ShellNode#doReparent()} or
+ * {@link ShellNode#requestReparent()}. <code>doReparent</code> guarantees that
+ * the child will have the desired parent as its new parent.
+ * <code>requestReparent</code> delegates the reparenting to any subscribed
+ * child node listener, which can be the current parent's
+ * {@link ShellLayoutManager}.
  * 
  *************************************** 
  */
 public interface ShellNodeParent extends ShellNode {
 
+	/***************************************
+	 * The layout manager that his parent will use to layout it's children.
+	 * Children are not laid out automatically. See {@link #layout()}.
+	 * 
+	 * @return A {@link ShellLayoutManager}.
+	 *************************************** 
+	 */
 	ShellLayoutManager getLayoutManager();
 
 	/***************************************
@@ -28,14 +42,28 @@ public interface ShellNodeParent extends ShellNode {
 	 */
 	void layout();
 
+	/***************************************
+	 * Change the layout manager of this parent to the desired layout manager.
+	 * 
+	 * @param shellLayoutManager
+	 *            A {@link ShellLayoutManager}.f
+	 *************************************** 
+	 */
 	void setLayoutManager(ShellLayoutManager shellLayoutManager);
 
+	/***************************************
+	 * The direct child nodes of this parent.
+	 * 
+	 * @return an array of {@link ShellNode}s
+	 *************************************** 
+	 */
 	ShellNode[] getChildren();
 
 	/***************************************
-	 * Signal that a child has left/joined this parent.
+	 * Signal that a child has left or joined this parent.
 	 * 
 	 * @param child
+	 *            a {@link ShellNode}.
 	 *************************************** 
 	 */
 	void handleChildReparentEvent(ShellNode child);

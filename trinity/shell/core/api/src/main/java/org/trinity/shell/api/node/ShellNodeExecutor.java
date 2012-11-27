@@ -13,9 +13,9 @@ package org.trinity.shell.api.node;
 
 // TODO documentation
 /**
- * Executes the actual geometry changes for a <code>ShellNode</code>. In essence
- * a <code>ShellNodeExecutor</code> is a delegate for a <code>ShellNode</code>
- * to execute the requested geometry changes.
+ * Executes the actual geometry changes for a {@link ShellNode}. A
+ * <code>ShellNodeExecutor</code> is a delegate for a <code>ShellNode</code> to
+ * execute the requested geometry changes.
  * <p>
  * A <code>ShellNodeExecutor</code> is needed because a tree structure of
  * different <code>ShellNode</code> subclasses can have non-uniform and
@@ -28,7 +28,7 @@ package org.trinity.shell.api.node;
 public interface ShellNodeExecutor {
 
 	/***************************************
-	 * The <code>SHellNode</code> on who's behalf this executer operates.
+	 * The <code>ShellNode</code> on who's behalf this executer operates.
 	 * 
 	 * @return a {@link ShellNode}
 	 *************************************** 
@@ -101,5 +101,14 @@ public interface ShellNodeExecutor {
 	 */
 	void destroy();
 
+	/***************************************
+	 * Initialize the handled <code>ShellNode</code> so it is operational in the
+	 * shell scene graph. The parent argument is the direct parent of the
+	 * handled <code>ShellNode</code>.
+	 * 
+	 * @param parent
+	 *            a {@link ShellNodeParent}.
+	 *************************************** 
+	 */
 	void init(ShellNodeParent parent);
 }
