@@ -11,6 +11,11 @@
  */
 package org.trinity.shell.api.node.manager;
 
+/***************************************
+ * Marker interface for child layout properties.
+ * 
+ *************************************** 
+ */
 public interface ShellLayoutProperty {
 
 }

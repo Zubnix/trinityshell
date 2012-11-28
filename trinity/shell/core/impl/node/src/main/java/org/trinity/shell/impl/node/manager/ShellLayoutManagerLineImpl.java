@@ -15,11 +15,12 @@ import java.util.List;
 
 import org.trinity.foundation.shared.geometry.api.Margins;
 import org.trinity.shell.api.node.ShellNode;
+import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.node.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.node.event.ShellNodeHideRequestEvent;
 import org.trinity.shell.api.node.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.api.node.event.ShellNodeMovedResizedEvent;
 import org.trinity.shell.api.node.event.ShellNodeMoveResizeRequestEvent;
+import org.trinity.shell.api.node.event.ShellNodeMovedResizedEvent;
 import org.trinity.shell.api.node.event.ShellNodeRaiseRequestEvent;
 import org.trinity.shell.api.node.event.ShellNodeReparentRequestEvent;
 import org.trinity.shell.api.node.event.ShellNodeShowRequestEvent;
@@ -34,6 +35,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
+// TODO refactor/rewrite
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
 // be negative. childs with size 0, ...)
 // TODO refactor to reuse code and for cleaner reading
@@ -67,7 +69,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildReparentRequest(final ShellNodeReparentRequestEvent shellNodeReparentRequestEvent) {
-			final ShellNode oldParent = shellNodeReparentRequestEvent.getSource().getParent();
+			final ShellNodeParent oldParent = shellNodeReparentRequestEvent.getSource().getParent();
 			shellNodeReparentRequestEvent.getSource().doReparent();
 			layout(oldParent);
 		}
@@ -289,7 +291,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	}
 
 	@Override
-	public void layout(final ShellNode containerNode) {
+	public void layout(final ShellNodeParent containerNode) {
 		if (containerNode == null) {
 			return;
 		}
@@ -302,7 +304,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 	@Subscribe
 	public void handleContainerMoveResize(final ShellNodeMovedResizedEvent moveResizeEvent) {
-		layout(moveResizeEvent.getSource());
+		layout((ShellNodeParent) moveResizeEvent.getSource());
 	}
 
 	@Override

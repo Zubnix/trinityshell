@@ -13,6 +13,11 @@ package org.trinity.shell.api.node.manager;
 
 import org.trinity.foundation.shared.geometry.api.Margins;
 
+/***************************************
+ * Child node property to be used with a {@link ShellLayoutManagerLine}.
+ * 
+ *************************************** 
+ */
 public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 
 	private final int weight;
