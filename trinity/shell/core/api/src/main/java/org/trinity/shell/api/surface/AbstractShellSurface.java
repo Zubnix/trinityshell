@@ -11,9 +11,7 @@
  */
 package org.trinity.shell.api.surface;
 
-import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
-import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.GeometryNotifyEvent;
 import org.trinity.foundation.display.api.event.GeometryRequestEvent;
 import org.trinity.foundation.display.api.event.HideNotifyEvent;
@@ -30,25 +28,10 @@ import com.google.common.eventbus.Subscribe;
 // TODO redesign/evaluate input manager integration/method delegation.
 
 /**
- * An <code>AbstractShellSurface</code> provides a basic abstract implementation
- * of an on-screen area. It wraps a {@link DisplaySurface} and provides and
- * implements additional basic functionality like state information, minimum,
- * maximum, current and requested dimensions. It is the the most basic
- * implementation of on on-screen area.
- * <p>
- * Classes that wish to concretely represent an on-screen area should extend
- * from <code>AbstractShellSurface</code>. The most important existing ones
- * being {@link ShellClient} and {@link BaseWidget}.
- * <p>
- * <code>AbstractShellSurface</code> emits {@link DisplayEvent}s that it
- * receives from the {@link ShellDisplay} it lives on.
+ * An abstract base implementation of {@link ShellSurface}. Implementations that
+ * wish to concretely represent an on-screen area are encouraged to extend from
+ * <code>AbstractShellSurface</code>.
  * 
- * @author Erik De Rijcke
- * @since 1.0
- * @see ShellNode
- * @see ShellDisplay
- * @see ShellClient
- * @see BaseWidget
  */
 public abstract class AbstractShellSurface extends AbstractShellNode implements ShellSurface {
 

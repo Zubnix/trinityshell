@@ -51,16 +51,6 @@ public class ShellClientSurface extends AbstractShellSurface {
 	private final ShellSurfaceExecutorImpl shellSurfaceExecutorImpl;
 	private final DisplaySurface displaySurface;
 
-	/**
-	 * Create a new <code>ShellClientSurface</code> from a foreign
-	 * <code>PlatformRenderArea</code>.
-	 * 
-	 * @param managedDisplay
-	 *            The {@link ShellDisplay} where this
-	 *            <code>ShellClientSurface</code> lives on.
-	 * @param clientWindow
-	 *            The foreign {@link DisplaySurface}.
-	 */
 	@Inject
 	ShellClientSurface(	final EventBus nodeEventBus,
 						final ShellDisplayEventDispatcher shellDisplayEventDispatcher,

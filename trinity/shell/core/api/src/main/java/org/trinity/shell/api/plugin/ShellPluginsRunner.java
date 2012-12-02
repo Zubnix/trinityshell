@@ -11,9 +11,22 @@
  */
 package org.trinity.shell.api.plugin;
 
+/***************************************
+ * Starts all the {@link ShellPlugin}s.
+ * 
+ *************************************** 
+ */
 public interface ShellPluginsRunner {
 
+	/***************************************
+	 * Start all {@link ShellPlugin}s.
+	 *************************************** 
+	 */
 	void startAll();
 
+	/***************************************
+	 * Stop all {@link ShellPlugin}s.
+	 *************************************** 
+	 */
 	void stopAll();
 }
