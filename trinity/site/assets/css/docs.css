@@ -5,7 +5,7 @@
 }
 
 .jumbotron {
-    background: url("../img/banner/gridintro.jpg") no-repeat scroll center 25% transparent;
+    background: url("../img/banner/blue_grid.png") no-repeat scroll center 25% transparent;
     background-size: 100%;
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3) inset, 0 -3px 7px rgba(0, 0, 0, 0.3) inset;
     color: #FFFFFF;
