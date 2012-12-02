@@ -11,6 +11,11 @@
  */
 package org.trinity.foundation.shared.geometry.api;
 
+/***************************************
+ * A 2 dimensional rectangle with a position.
+ * 
+ *************************************** 
+ */
 public interface Rectangle {
 	int getX();
 

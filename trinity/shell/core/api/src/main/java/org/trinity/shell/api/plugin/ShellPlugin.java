@@ -11,12 +11,28 @@
  */
 package org.trinity.shell.api.plugin;
 
+import org.trinity.shell.api.Module;
+
 /*****************************************
- * @author Erik De Rijcke
+ * General interface for every shell plugin. Every shell plugin has a
+ * <code>start()</code> and <code>stop()</code> method that is called by the
+ * shell when a plugin is started and stopped respectively. Calls to
+ * {@code start()} and {@code stop} should be non-blocking and should not spawn
+ * any additional threads unless absolutely necessary. Instead a shell plugin
+ * should hook into the shell thread itself. This keeps for a more thread safe
+ * and more predictable behavior of shell plugins. See the shell {@link Module}.
  * 
  ****************************************/
 public interface ShellPlugin {
+	/***************************************
+	 * Start the plugin. This method should not block.
+	 *************************************** 
+	 */
 	void start();
 
+	/***************************************
+	 * Stop the plugin. This method should not block.
+	 *************************************** 
+	 */
 	void stop();
 }

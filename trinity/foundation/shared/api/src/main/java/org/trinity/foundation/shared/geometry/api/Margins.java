@@ -15,9 +15,6 @@ public class Margins {
 
 	private final int bottom, left, right, top;
 
-	/*****************************************
-	 * 
-	 ****************************************/
 	public Margins(final int margins) {
 		this(	margins,
 				margins);

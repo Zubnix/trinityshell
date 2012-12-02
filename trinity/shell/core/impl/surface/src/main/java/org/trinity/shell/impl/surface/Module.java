@@ -13,10 +13,8 @@ package org.trinity.shell.impl.surface;
 
 import org.trinity.shell.api.surface.ShellSurface;
 
-import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.name.Names;
 
 import de.devsurf.injection.guice.annotations.GuiceModule;
 
@@ -25,7 +23,6 @@ public class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(EventBus.class).annotatedWith(Names.named("shellEventBus")).toInstance(new EventBus());
 		install(new FactoryModuleBuilder().implement(	ShellSurface.class,
 														ShellClientSurface.class)
 				.build(ShellClientSurfaceFactory.class));
