@@ -21,11 +21,20 @@ import org.trinity.shellplugin.widget.api.binding.ViewReference;
 
 import com.google.common.eventbus.EventBus;
 
+/***************************************
+ * Base implementation of a {@link ShellWidgetStyled}. It has a single
+ * "objectName" {@link ViewAttribute} so it can be identified in a style sheet.
+ * This {@code ViewAttribute} can be changed and read through
+ * {@link #setName(String)} and {@link #getName()} respectively.
+ * 
+ *************************************** 
+ */
 public class BaseShellWidgetStyled extends BaseShellWidget implements ShellWidgetStyled {
 
 	@ViewAttribute(name = "objectName")
 	private String name = getClass().getSimpleName();
 
+	// FIXME let the bindings search through the class hierarchy for the view...
 	// used by bindings through reflection
 	@SuppressWarnings("unused")
 	@ViewReference
