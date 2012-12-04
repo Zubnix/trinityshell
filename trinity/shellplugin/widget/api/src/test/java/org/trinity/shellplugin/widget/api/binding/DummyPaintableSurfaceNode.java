@@ -6,10 +6,8 @@ import org.trinity.foundation.render.api.SurfaceNode;
 
 public class DummyPaintableSurfaceNode implements PaintableSurfaceNode {
 
-	@ViewAttribute(name = "dummyAttribute", id = "one")
+	@ViewProperty(value = "dummyAttribute")
 	private String attributeOne = "valOne";
-	@ViewAttribute(name = "dummyAttribute", id = "two")
-	private String attributeTwo = "valTwo";
 	@ViewReference
 	private final DummyView view;
 
@@ -17,10 +15,9 @@ public class DummyPaintableSurfaceNode implements PaintableSurfaceNode {
 		this.view = view;
 	}
 
-	@ViewAttributeChanged("dummyAttribute")
+	@ViewPropertyChanged("dummyAttribute")
 	public void setBothAttributes() {
 		this.attributeOne = "val1";
-		this.attributeTwo = "val2";
 	}
 
 	@Override

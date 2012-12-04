@@ -2,7 +2,7 @@ package org.trinity.shellplugin.widget.api.binding;
 
 public class DummyView {
 
-	@ViewAttributeSlot("dummyAttribute")
+	@ViewPropertySlot("dummyAttribute")
 	public void dummyViewSlot() {
 
 	}

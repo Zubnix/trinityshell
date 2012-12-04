@@ -18,7 +18,7 @@ import org.trinity.foundation.render.api.PaintInstruction;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.render.qt.api.QJRenderEngine;
-import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
+import org.trinity.shellplugin.widget.api.binding.ViewProperty;
 import org.trinity.shellplugin.widget.api.binding.ViewSlotInvocationHandler;
 
 import com.google.inject.Inject;
@@ -39,7 +39,7 @@ public class ViewSlotInvocationHandlerImpl implements ViewSlotInvocationHandler 
 
 	@Override
 	public void invokeSlot(	final PaintableSurfaceNode paintableSurfaceNode,
-							final ViewAttribute viewAttribute,
+							final ViewProperty viewProperty,
 							final Object view,
 							final Method viewAttributeSlot,
 							final Object viewAttributeValue) {
@@ -48,7 +48,7 @@ public class ViewSlotInvocationHandlerImpl implements ViewSlotInvocationHandler 
 										@Override
 										public Void call(final QJPaintContext paintContext) {
 											invokeViewSlot(	paintContext,
-															viewAttribute,
+															viewProperty,
 															view,
 															viewAttributeSlot,
 															viewAttributeValue);
@@ -59,7 +59,7 @@ public class ViewSlotInvocationHandlerImpl implements ViewSlotInvocationHandler 
 	}
 
 	private void invokeViewSlot(final QJPaintContext paintContext,
-								final ViewAttribute viewAttribute,
+								final ViewProperty viewProperty,
 								final Object view,
 								final Method viewAttributeSlot,
 								final Object viewAttributeValue) {
@@ -73,8 +73,8 @@ public class ViewSlotInvocationHandlerImpl implements ViewSlotInvocationHandler 
 				continue;
 			}
 
-			if (parameterType.isAssignableFrom(ViewAttribute.class)) {
-				parameters[i] = viewAttribute;
+			if (parameterType.isAssignableFrom(ViewProperty.class)) {
+				parameters[i] = viewProperty;
 				continue;
 			}
 

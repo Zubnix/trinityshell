@@ -15,23 +15,23 @@ import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
-import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
-import org.trinity.shellplugin.widget.api.binding.ViewAttributeChanged;
+import org.trinity.shellplugin.widget.api.binding.ViewProperty;
+import org.trinity.shellplugin.widget.api.binding.ViewPropertyChanged;
 import org.trinity.shellplugin.widget.api.binding.ViewReference;
 
 import com.google.common.eventbus.EventBus;
 
 /***************************************
  * Base implementation of a {@link ShellWidgetStyled}. It has a single
- * "objectName" {@link ViewAttribute} so it can be identified in a style sheet.
- * This {@code ViewAttribute} can be changed and read through
+ * {@link ViewProperty} with name "objectName" in order to be identified in a
+ * style sheet. This {@code ViewProperty} can be changed and read through
  * {@link #setName(String)} and {@link #getName()} respectively.
  * 
  *************************************** 
  */
 public class BaseShellWidgetStyled extends BaseShellWidget implements ShellWidgetStyled {
 
-	@ViewAttribute(name = "objectName")
+	@ViewProperty(value = "objectName")
 	private String name = getClass().getSimpleName();
 
 	// FIXME let the bindings search through the class hierarchy for the view...
@@ -52,7 +52,7 @@ public class BaseShellWidgetStyled extends BaseShellWidget implements ShellWidge
 	}
 
 	@Override
-	@ViewAttributeChanged("objectName")
+	@ViewPropertyChanged("objectName")
 	public void setName(final String name) {
 		this.name = name;
 	}

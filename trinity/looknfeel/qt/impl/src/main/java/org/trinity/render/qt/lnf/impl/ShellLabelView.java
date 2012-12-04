@@ -14,7 +14,7 @@ package org.trinity.render.qt.lnf.impl;
 import javax.inject.Named;
 
 import org.trinity.render.qt.api.QJPaintContext;
-import org.trinity.shellplugin.widget.api.binding.ViewAttributeSlot;
+import org.trinity.shellplugin.widget.api.binding.ViewPropertySlot;
 
 import com.trolltech.qt.gui.QLabel;
 import com.trolltech.qt.gui.QWidget;
@@ -30,7 +30,7 @@ public class ShellLabelView extends BaseShellWidgetView {
 		return new QLabel(parentVisual);
 	}
 
-	@ViewAttributeSlot("text")
+	@ViewPropertySlot("text")
 	protected void handleTextChanged(	final QJPaintContext paintContext,
 										final String text) {
 		final QLabel visual = (QLabel) paintContext.getVisual(paintContext.getPaintableSurfaceNode());

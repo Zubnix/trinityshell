@@ -12,10 +12,10 @@ public final class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		final ViewAttributeSignalDispatcher viewSignalDispatcher = new ViewAttributeSignalDispatcher();
+		final ViewPropertySignalDispatcher viewSignalDispatcher = new ViewPropertySignalDispatcher();
 		requestInjection(viewSignalDispatcher);
 		bindInterceptor(Matchers.subclassesOf(PaintableSurfaceNode.class),
-						Matchers.annotatedWith(ViewAttributeChanged.class),
+						Matchers.annotatedWith(ViewPropertyChanged.class),
 						viewSignalDispatcher);
 	}
 }

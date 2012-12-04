@@ -9,7 +9,19 @@ import org.trinity.foundation.render.api.PaintableSurfaceNode;
 
 import com.google.inject.Inject;
 
-public class ViewAttributeSignalDispatcher implements MethodInterceptor {
+/***************************************
+ * Post processes a method annotated with {@link ViewPropertyChanged}. It reads
+ * the {@link ViewPropertyChanged#value()} and finds for each String value a
+ * {@link ViewProperty} and {@link ViewPropertySlot} with the same name. Each
+ * matching {@code ViewProperty} will be read and it's corresponding
+ * {@code ViewPropertySlot} will be invoked. Invoking the
+ * {@code ViewPropertySlot} is done through an underlying
+ * {@link ViewSlotInvocationHandler} implementation.
+ * <p>
+ * This class is used by Google Guice AOP.
+ *************************************** 
+ */
+public class ViewPropertySignalDispatcher implements MethodInterceptor {
 
 	@Inject
 	private ViewSlotInvocationHandler viewSlotInvocationHandler;
@@ -21,19 +33,22 @@ public class ViewAttributeSignalDispatcher implements MethodInterceptor {
 		final Object thisObj = invocation.getThis();
 		final Class<?> thisObjClass = invocation.getMethod().getDeclaringClass();
 
-		final ViewAttributeChanged viewSignal = invocation.getMethod().getAnnotation(ViewAttributeChanged.class);
+		final ViewPropertyChanged viewSignal = invocation.getMethod().getAnnotation(ViewPropertyChanged.class);
 		final String[] viewAttributeIds = viewSignal.value();
 
-		final Field viewField = ViewAttributeUtil.lookupViewReferenceField(thisObjClass);
+		final Field viewField = ViewPropertyUtil.lookupViewReferenceField(thisObjClass);
 		viewField.setAccessible(true);
 		final Object view = viewField.get(thisObj);
 		viewField.setAccessible(false);
 
 		for (final String viewAttributeName : viewAttributeIds) {
-			final Field[] fields = ViewAttributeUtil.lookupViewAttributeFields(	thisObjClass,
+			// FIXME only allow to find one field.
+			final Field[] fields = ViewPropertyUtil.lookupViewAttributeFields(	thisObjClass,
 																				viewAttributeName);
+			// TODO also search for property getter & make sure only one has a
+			// result.
 
-			final Method viewSlotMethod = ViewAttributeUtil.lookupViewSlot(	view.getClass(),
+			final Method viewSlotMethod = ViewPropertyUtil.lookupViewSlot(	view.getClass(),
 																			viewAttributeName);
 			if (viewSlotMethod == null) {
 				continue;
@@ -44,7 +59,7 @@ public class ViewAttributeSignalDispatcher implements MethodInterceptor {
 				final Object argument = field.get(thisObj);
 				field.setAccessible(false);
 				this.viewSlotInvocationHandler.invokeSlot(	(PaintableSurfaceNode) thisObj,
-															field.getAnnotation(ViewAttribute.class),
+															field.getAnnotation(ViewProperty.class),
 															view,
 															viewSlotMethod,
 															argument);

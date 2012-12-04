@@ -11,7 +11,13 @@ import java.util.concurrent.ExecutionException;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-public class ViewAttributeUtil {
+/***************************************
+ * Utility class used by {@link ViewPropertySignalDispatcher} to scan for
+ * {@link ViewProperty}s, {@link ViewPropertySlot}s and
+ * {@link ViewPropertyChanged}s.
+ *************************************** 
+ */
+public class ViewPropertyUtil {
 	// yo dawg, I heard you like caches so I put a cache in your cache so you
 	// can cache while you cache!
 	private static final Cache<Class<?>, Field[]> allViewAttributeFields = CacheBuilder.newBuilder().build();
@@ -20,12 +26,12 @@ public class ViewAttributeUtil {
 	private static final Cache<Class<?>, Field> viewReferenceFields = CacheBuilder.newBuilder().build();
 	private static final Cache<Class<?>, Method> viewSlots = CacheBuilder.newBuilder().build();
 
-	private ViewAttributeUtil() {
+	private ViewPropertyUtil() {
 
 	}
 
 	public static Field[] lookupAllViewAttributeFields(final Class<?> thisObjClass) throws ExecutionException {
-		return ViewAttributeUtil.allViewAttributeFields.get(thisObjClass,
+		return ViewPropertyUtil.allViewAttributeFields.get(	thisObjClass,
 															new Callable<Field[]>() {
 																@Override
 																public Field[] call() {
@@ -39,21 +45,21 @@ public class ViewAttributeUtil {
 		Class<?> searchedClass = clazz;
 		while (searchedClass != null) {
 			final List<Field> viewAttributeFields = new ArrayList<Field>();
-			final List<ViewAttribute> viewAttributes = new ArrayList<ViewAttribute>();
+			final List<ViewProperty> viewProperties = new ArrayList<ViewProperty>();
 			for (final Field field : searchedClass.getDeclaredFields()) {
-				final ViewAttribute viewAttribute = field.getAnnotation(ViewAttribute.class);
-				if (viewAttribute == null) {
+				final ViewProperty viewProperty = field.getAnnotation(ViewProperty.class);
+				if (viewProperty == null) {
 					continue;
 				}
-				if (isDuplicateViewAttribute(	viewAttributes,
-												viewAttribute)) {
-					throw new IllegalArgumentException(String.format(	"Found duplicate %s with name=%s and id=%s on %s",
-																		ViewAttribute.class.getName(),
-																		viewAttribute.name(),
-																		viewAttribute.id(),
+				if (isDuplicateViewAttribute(	viewProperties,
+												viewProperty)) {
+					throw new IllegalArgumentException(String.format(	"Found duplicate %s with name=%s on %s",
+																		ViewProperty.class.getName(),
+																		viewProperty.value(),
+																		// viewProperty.id(),
 																		searchedClass.getName()));
 				}
-				viewAttributes.add(viewAttribute);
+				viewProperties.add(viewProperty);
 				viewAttributeFields.add(field);
 			}
 			allViewAttributeFields.addAll(viewAttributeFields);
@@ -64,20 +70,20 @@ public class ViewAttributeUtil {
 
 	public static Field[] lookupViewAttributeFields(final Class<?> thisObjClass,
 													final String viewAttributeName) throws ExecutionException {
-		return ViewAttributeUtil.viewAttributeFields.get(	thisObjClass,
-															new Callable<Cache<String, Field[]>>() {
-																@Override
-																public Cache<String, Field[]> call() {
-																	return CacheBuilder.newBuilder().build();
-																}
-															}).get(	viewAttributeName,
-																	new Callable<Field[]>() {
-																		@Override
-																		public Field[] call() {
-																			return getViewAttributeFields(	thisObjClass,
-																											viewAttributeName);
-																		}
-																	});
+		return ViewPropertyUtil.viewAttributeFields.get(thisObjClass,
+														new Callable<Cache<String, Field[]>>() {
+															@Override
+															public Cache<String, Field[]> call() {
+																return CacheBuilder.newBuilder().build();
+															}
+														}).get(	viewAttributeName,
+																new Callable<Field[]>() {
+																	@Override
+																	public Field[] call() {
+																		return getViewAttributeFields(	thisObjClass,
+																										viewAttributeName);
+																	}
+																});
 	}
 
 	private static Field[] getViewAttributeFields(	final Class<?> clazz,
@@ -87,22 +93,21 @@ public class ViewAttributeUtil {
 		Class<?> searchedClass = clazz;
 		while (searchedClass != null) {
 			final List<Field> viewAttributeFields = new ArrayList<Field>();
-			final List<ViewAttribute> viewAttributes = new ArrayList<ViewAttribute>();
+			final List<ViewProperty> viewProperties = new ArrayList<ViewProperty>();
 			for (final Field field : searchedClass.getDeclaredFields()) {
-				final ViewAttribute viewAttribute = field.getAnnotation(ViewAttribute.class);
-				if (viewAttribute == null) {
+				final ViewProperty viewProperty = field.getAnnotation(ViewProperty.class);
+				if (viewProperty == null) {
 					continue;
 				}
-				if (viewAttribute.name().equals(viewAttributeName)) {
-					if (isDuplicateViewAttribute(	viewAttributes,
-													viewAttribute)) {
-						throw new IllegalArgumentException(String.format(	"Found duplicate %s with name=%s and id=%s on %s",
-																			ViewAttribute.class.getName(),
+				if (viewProperty.value().equals(viewAttributeName)) {
+					if (isDuplicateViewAttribute(	viewProperties,
+													viewProperty)) {
+						throw new IllegalArgumentException(String.format(	"Found duplicate %s with name=%s on %s",
+																			ViewProperty.class.getName(),
 																			viewAttributeName,
-																			viewAttribute.id(),
 																			searchedClass.getName()));
 					}
-					viewAttributes.add(viewAttribute);
+					viewProperties.add(viewProperty);
 					viewAttributeFields.add(field);
 				}
 			}
@@ -112,17 +117,17 @@ public class ViewAttributeUtil {
 
 		if (allViewAttributeFields.isEmpty()) {
 			throw new IllegalArgumentException(String.format(	"Found no %s with name: %s on %s",
-																ViewAttribute.class.getName(),
+																ViewProperty.class.getName(),
 																viewAttributeName,
 																clazz.getName()));
 		}
 		return allViewAttributeFields.toArray(new Field[] {});
 	}
 
-	private static boolean isDuplicateViewAttribute(final List<ViewAttribute> viewAttributes,
-													final ViewAttribute viewAttribute) {
-		for (final ViewAttribute addedViewAttribute : viewAttributes) {
-			if (addedViewAttribute.id().equals(viewAttribute.id())) {
+	private static boolean isDuplicateViewAttribute(final List<ViewProperty> viewProperties,
+													final ViewProperty viewProperty) {
+		for (final ViewProperty addedViewAttribute : viewProperties) {
+			if (addedViewAttribute.value().equals(viewProperty.value())) {
 				return true;
 			}
 		}
@@ -131,42 +136,40 @@ public class ViewAttributeUtil {
 
 	public static Field lookupViewReferenceField(final Class<?> clazz) throws ExecutionException {
 
-		return ViewAttributeUtil.viewReferenceFields.get(	clazz,
-															new Callable<Field>() {
-																@Override
-																public Field call() {
-																	Field foundField = null;
-																	final Field[] declaredFields = clazz
-																			.getDeclaredFields();
-																	for (final Field field : declaredFields) {
-																		final ViewReference viewReference = field
-																				.getAnnotation(ViewReference.class);
-																		if ((viewReference != null)
-																				&& (foundField != null)) {
-																			throw new IllegalArgumentException(String
-																					.format("Found multiple %s on %s",
-																							ViewReference.class
-																									.getName(),
-																							clazz.getName()));
-																		} else if (viewReference != null) {
-																			foundField = field;
-																		}
-																	}
-																	if (foundField == null) {
+		return ViewPropertyUtil.viewReferenceFields.get(clazz,
+														new Callable<Field>() {
+															@Override
+															public Field call() {
+																Field foundField = null;
+																final Field[] declaredFields = clazz
+																		.getDeclaredFields();
+																for (final Field field : declaredFields) {
+																	final ViewReference viewReference = field
+																			.getAnnotation(ViewReference.class);
+																	if ((viewReference != null) && (foundField != null)) {
 																		throw new IllegalArgumentException(String
-																				.format("Found no %s on %s",
+																				.format("Found multiple %s on %s",
 																						ViewReference.class.getName(),
 																						clazz.getName()));
+																	} else if (viewReference != null) {
+																		foundField = field;
 																	}
-
-																	return foundField;
 																}
-															});
+																if (foundField == null) {
+																	throw new IllegalArgumentException(String
+																			.format("Found no %s on %s",
+																					ViewReference.class.getName(),
+																					clazz.getName()));
+																}
+
+																return foundField;
+															}
+														});
 	}
 
 	public static Method lookupViewSlot(final Class<?> clazz,
 										final String viewAttributeName) throws ExecutionException {
-		return ViewAttributeUtil.viewSlots.get(	clazz,
+		return ViewPropertyUtil.viewSlots.get(	clazz,
 												new Callable<Method>() {
 													@Override
 													public Method call() {
@@ -177,8 +180,8 @@ public class ViewAttributeUtil {
 															for (final Method method : searchedClass
 																	.getDeclaredMethods()) {
 
-																final ViewAttributeSlot viewSlot = method
-																		.getAnnotation(ViewAttributeSlot.class);
+																final ViewPropertySlot viewSlot = method
+																		.getAnnotation(ViewPropertySlot.class);
 
 																if (viewSlot == null) {
 																	continue;
@@ -191,7 +194,7 @@ public class ViewAttributeUtil {
 																	} else if ((foundMethod != null)) {
 																		throw new IllegalArgumentException(String
 																				.format("Found multiple %s in the class hierarchy of %s",
-																						ViewAttributeSlot.class
+																						ViewPropertySlot.class
 																								.getName(),
 																						clazz.getName()));
 																	}

@@ -14,7 +14,7 @@ import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.render.qt.api.QJRenderEngine;
 import org.trinity.render.qt.lnf.impl.DummyView;
 import org.trinity.render.qt.lnf.impl.binding.ViewSlotInvocationHandlerImpl;
-import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
+import org.trinity.shellplugin.widget.api.binding.ViewProperty;
 
 public class ViewSlotInvocationHandlerImplTest {
 
@@ -25,17 +25,17 @@ public class ViewSlotInvocationHandlerImplTest {
 		final QJRenderEngine qjRenderEngine = mock(QJRenderEngine.class);
 
 		final PaintableSurfaceNode paintableSurfaceNode = mock(PaintableSurfaceNode.class);
-		final ViewAttribute viewAttribute = mock(ViewAttribute.class);
+		final ViewProperty viewProperty = mock(ViewProperty.class);
 		final DummyView view = mock(DummyView.class);
 		final Method viewAttributeSlot = DummyView.class.getMethod(	"dummyViewAttributeSlot",
-																	ViewAttribute.class,
+																	ViewProperty.class,
 																	PaintableSurfaceNode.class,
 																	QJPaintContext.class);
 		final Object viewAttributeValue = mock(Object.class);
 
 		final ViewSlotInvocationHandlerImpl viewSlotInvocationHandlerImpl = new ViewSlotInvocationHandlerImpl(qjRenderEngine);
 		viewSlotInvocationHandlerImpl.invokeSlot(	paintableSurfaceNode,
-													viewAttribute,
+													viewProperty,
 													view,
 													viewAttributeSlot,
 													viewAttributeValue);
@@ -49,7 +49,7 @@ public class ViewSlotInvocationHandlerImplTest {
 
 		paintInstructionCaptor.getValue().call(paintContext);
 
-		verify(view).dummyViewAttributeSlot(viewAttribute,
+		verify(view).dummyViewAttributeSlot(viewProperty,
 											null,
 											paintContext);
 	}

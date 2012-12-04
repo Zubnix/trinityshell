@@ -26,9 +26,9 @@ import org.trinity.foundation.render.api.Painter;
 import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.shell.api.widget.ShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
-import org.trinity.shellplugin.widget.api.binding.ViewAttribute;
-import org.trinity.shellplugin.widget.api.binding.ViewAttributeSlot;
-import org.trinity.shellplugin.widget.api.binding.ViewAttributeUtil;
+import org.trinity.shellplugin.widget.api.binding.ViewProperty;
+import org.trinity.shellplugin.widget.api.binding.ViewPropertySlot;
+import org.trinity.shellplugin.widget.api.binding.ViewPropertyUtil;
 import org.trinity.shellplugin.widget.api.binding.ViewSlotInvocationHandler;
 
 import com.google.common.io.CharStreams;
@@ -123,16 +123,16 @@ public class BaseShellWidgetView implements ShellWidgetView {
 		final PaintableSurfaceNode paintableSurfaceNode = paintContext.getPaintableSurfaceNode();
 
 		try {
-			final Field[] fields = ViewAttributeUtil.lookupAllViewAttributeFields(paintableSurfaceNode.getClass());
+			final Field[] fields = ViewPropertyUtil.lookupAllViewAttributeFields(paintableSurfaceNode.getClass());
 			for (final Field field : fields) {
-				final ViewAttribute viewAttribute = field.getAnnotation(ViewAttribute.class);
-				final Method viewSlot = ViewAttributeUtil.lookupViewSlot(	getClass(),
-																			viewAttribute.name());
+				final ViewProperty viewProperty = field.getAnnotation(ViewProperty.class);
+				final Method viewSlot = ViewPropertyUtil.lookupViewSlot(	getClass(),
+																			viewProperty.value());
 				field.setAccessible(true);
 				final Object argument = field.get(paintableSurfaceNode);
 				field.setAccessible(false);
 				this.viewSlotInvocationHandler.invokeSlot(	paintableSurfaceNode,
-															viewAttribute,
+															viewProperty,
 															this,
 															viewSlot,
 															argument);
@@ -214,7 +214,7 @@ public class BaseShellWidgetView implements ShellWidgetView {
 		return displaySurface;
 	}
 
-	@ViewAttributeSlot("objectName")
+	@ViewPropertySlot("objectName")
 	public void setObjectName(	final QJPaintContext paintContext,
 								final String name) {
 		final QWidget visual = paintContext.getVisual(paintContext.getPaintableSurfaceNode());
