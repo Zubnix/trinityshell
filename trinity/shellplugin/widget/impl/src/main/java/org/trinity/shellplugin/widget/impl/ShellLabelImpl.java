@@ -33,7 +33,6 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 public class ShellLabelImpl extends BaseShellWidget implements ShellLabel {
 
-	@ViewProperty(value = "text")
 	private String labelText;
 
 	@Inject
@@ -53,6 +52,7 @@ public class ShellLabelImpl extends BaseShellWidget implements ShellLabel {
 		this.labelText = text;
 	}
 
+	@ViewProperty
 	@Override
 	public String getText() {
 		return this.labelText;

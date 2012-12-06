@@ -17,7 +17,7 @@ import org.trinity.foundation.render.api.PaintableSurfaceNode;
  *************************************** 
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.METHOD })
+@Target({ ElementType.METHOD })
 public @interface ViewReference {
 
 }

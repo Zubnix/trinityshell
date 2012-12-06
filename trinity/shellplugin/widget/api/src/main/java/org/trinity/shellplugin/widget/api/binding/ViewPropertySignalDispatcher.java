@@ -1,11 +1,7 @@
 package org.trinity.shellplugin.widget.api.binding;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.trinity.foundation.render.api.PaintableSurfaceNode;
 
 import com.google.inject.Inject;
 
@@ -34,38 +30,12 @@ public class ViewPropertySignalDispatcher implements MethodInterceptor {
 		final Class<?> thisObjClass = invocation.getMethod().getDeclaringClass();
 
 		final ViewPropertyChanged viewSignal = invocation.getMethod().getAnnotation(ViewPropertyChanged.class);
-		final String[] viewAttributeIds = viewSignal.value();
+		final String[] viewPropertyNames = viewSignal.value();
 
-		final Field viewField = ViewPropertyUtil.lookupViewReferenceField(thisObjClass);
-		viewField.setAccessible(true);
-		final Object view = viewField.get(thisObj);
-		viewField.setAccessible(false);
-
-		for (final String viewAttributeName : viewAttributeIds) {
-			// FIXME only allow to find one field.
-			final Field[] fields = ViewPropertyUtil.lookupViewAttributeFields(	thisObjClass,
-																				viewAttributeName);
-			// TODO also search for property getter & make sure only one has a
-			// result.
-
-			final Method viewSlotMethod = ViewPropertyUtil.lookupViewSlot(	view.getClass(),
-																			viewAttributeName);
-			if (viewSlotMethod == null) {
-				continue;
-			}
-
-			for (final Field field : fields) {
-				field.setAccessible(true);
-				final Object argument = field.get(thisObj);
-				field.setAccessible(false);
-				this.viewSlotInvocationHandler.invokeSlot(	(PaintableSurfaceNode) thisObj,
-															field.getAnnotation(ViewProperty.class),
-															view,
-															viewSlotMethod,
-															argument);
-			}
-		}
+		ViewPropertyUtil.notifyViewSlot(this.viewSlotInvocationHandler,
+										thisObjClass,
+										thisObj,
+										viewPropertyNames);
 		return invocationResult;
 	}
-
 }

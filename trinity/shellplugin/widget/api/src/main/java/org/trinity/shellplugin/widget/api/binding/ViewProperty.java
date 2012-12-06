@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  *************************************** 
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.METHOD })
+@Target({ ElementType.METHOD })
 public @interface ViewProperty {
 
 	/****************************************
@@ -21,6 +21,6 @@ public @interface ViewProperty {
 	 * @return a {@code String}
 	 *************************************** 
 	 */
-	String value();
+	String value() default "";
 
 }

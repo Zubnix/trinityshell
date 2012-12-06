@@ -123,7 +123,7 @@ public class BaseShellWidgetView implements ShellWidgetView {
 		final PaintableSurfaceNode paintableSurfaceNode = paintContext.getPaintableSurfaceNode();
 
 		try {
-			final Field[] fields = ViewPropertyUtil.lookupAllViewAttributeFields(paintableSurfaceNode.getClass());
+			final Field[] fields = ViewPropertyUtil.lookupAllViewProperties(paintableSurfaceNode.getClass());
 			for (final Field field : fields) {
 				final ViewProperty viewProperty = field.getAnnotation(ViewProperty.class);
 				final Method viewSlot = ViewPropertyUtil.lookupViewSlot(	getClass(),

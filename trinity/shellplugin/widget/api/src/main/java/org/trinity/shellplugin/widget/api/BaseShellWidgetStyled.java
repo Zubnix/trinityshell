@@ -31,13 +31,8 @@ import com.google.common.eventbus.EventBus;
  */
 public class BaseShellWidgetStyled extends BaseShellWidget implements ShellWidgetStyled {
 
-	@ViewProperty(value = "objectName")
 	private String name = getClass().getSimpleName();
 
-	// FIXME let the bindings search through the class hierarchy for the view...
-	// used by bindings through reflection
-	@SuppressWarnings("unused")
-	@ViewReference
 	private final ShellWidgetView view;
 
 	public BaseShellWidgetStyled(	final EventBus eventBus,
@@ -51,12 +46,18 @@ public class BaseShellWidgetStyled extends BaseShellWidget implements ShellWidge
 		this.view = view;
 	}
 
+	@ViewReference
+	public ShellWidgetView getView() {
+		return this.view;
+	}
+
 	@Override
-	@ViewPropertyChanged("objectName")
+	@ViewPropertyChanged("name")
 	public void setName(final String name) {
 		this.name = name;
 	}
 
+	@ViewProperty
 	@Override
 	public String getName() {
 		return this.name;
