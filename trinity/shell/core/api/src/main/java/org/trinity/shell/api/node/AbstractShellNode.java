@@ -11,6 +11,8 @@
  */
 package org.trinity.shell.api.node;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.trinity.shell.api.node.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.node.event.ShellNodeEvent;
 import org.trinity.shell.api.node.event.ShellNodeHiddenEvent;
@@ -181,11 +183,17 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	@Override
 	public void setWidth(final int width) {
+		checkArgument(	width > 0,
+						"Argument was %s but expected nonzero nonnegative",
+						width);
 		this.desiredWidth = width;
 	}
 
 	@Override
 	public void setHeight(final int height) {
+		checkArgument(	height > 0,
+						"Argument was %s but expected nonzero nonnegative",
+						this.width);
 		this.desiredHeight = height;
 	}
 

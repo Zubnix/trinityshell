@@ -11,6 +11,8 @@
  */
 package org.trinity.render.qt.lnf.impl.binding;
 
+import static com.google.common.base.Throwables.propagate;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -88,11 +90,11 @@ public class ViewSlotInvocationHandlerImpl implements ViewSlotInvocationHandler 
 			viewAttributeSlot.invoke(	view,
 										parameters);
 		} catch (final IllegalAccessException e) {
-			e.printStackTrace();
+			propagate(e);
 		} catch (final IllegalArgumentException e) {
-			e.printStackTrace();
+			propagate(e);
 		} catch (final InvocationTargetException e) {
-			e.printStackTrace();
+			propagate(e);
 		}
 	}
 }

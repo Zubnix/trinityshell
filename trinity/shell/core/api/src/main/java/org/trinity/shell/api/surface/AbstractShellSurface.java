@@ -285,21 +285,6 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	}
 
 	/**
-	 * Set the <code>DisplaySurface</code> that will be used as the native
-	 * visual representation.
-	 * 
-	 * @param displaySurface
-	 *            A {@link DisplaySurface}.
-	 * @see AbstractShellSurface#getDisplaySurface()
-	 */
-	// protected void setDisplaySurface(final DisplaySurface platformRenderArea)
-	// {
-	// this.displaySurface = platformRenderArea;
-	// this.shellDisplayEventDispatcher.registerDisplayEventSource(this.nodeEventBus,
-	// platformRenderArea);
-	// }
-
-	/**
 	 * A new width that lies within the interval of a minimum and maximum width
 	 * (included).
 	 * 
