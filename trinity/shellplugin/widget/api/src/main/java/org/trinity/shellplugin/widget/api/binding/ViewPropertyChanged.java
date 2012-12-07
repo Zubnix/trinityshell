@@ -6,10 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /****************************************
- * Marks a method as a manipulator of a property. After the execution of an
- * annotated method, the {@link ViewPropertySlot}s with a matching
+ * Marks a method as a manipulator of a property. After the execution of a
+ * marked method, the {@link ViewPropertySlot}s with a matching
  * {@link ViewProperty#value()} will be invoked. The most straightforward
  * implementation is thus to place this annotation on setter methods.
+ * <p>
+ * If more precise control is required, see
+ * {@link ViewPropertyDiscovery#notifyViewSlot(Class, Object, String...)}.
  * 
  *************************************** 
  */

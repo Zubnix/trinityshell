@@ -1,26 +1,30 @@
 /**
- * Property bindings. Property bindings can be used on
- * {@link org.trinity.shell.api.widget.ShellWidget}s to automatically propagate
- * changes of properties to a render back-end.
+ * Property bindings. Property bindings can be used on a
+ * {@link org.trinity.foundation.render.api.PaintableSurfaceNode}, eg. a
+ * {@link org.trinity.shell.api.widget.ShellWidget}, to automatically propagate
+ * changes of view properties to a view object.
  * <p>
- * To use this binding API, annotate the
- * {@link org.trinity.shell.api.widget.ShellWidgetView} with the
+ * To use this API, annotate a single object inside a
+ * {@code PaintableSurfaceNode} with the
  * {@link org.trinity.shellplugin.widget.api.binding.ViewReference} annotation.
- * Next, annotate the attribute or getter that returns the property value with
- * the {@link org.trinity.shellplugin.widget.api.binding.ViewProperty}
- * annotation. To notify the render back-end that the property has changed,
- * annotate a method with the
+ * Usually this object is a {@link org.trinity.shell.api.widget.ShellWidgetView}
+ * . Next, annotate a property getter with the
+ * {@link org.trinity.shellplugin.widget.api.binding.ViewProperty} annotation to
+ * mark it as a view property. You can give this view property a name. If no
+ * name is given the name is derived from the getter method, that is the name of
+ * the getter method without 'get' and will start with a lower case. To notify
+ * the render back-end that the property has changed, mark a method with the
  * {@link org.trinity.shellplugin.widget.api.binding.ViewPropertyChanged}
- * annotation. After invocation of this annotated method the render back-end
- * will be notified of the change. In order for the view to be notified, a
- * method of the annotated {@code ViewReference} object must be marked with
- * {@link org.trinity.shellplugin.widget.api.binding.ViewPropertySlot}.
- * <p>
- * A {@code ViewProperty} has a
- * {@link org.trinity.shellplugin.widget.api.binding.ViewProperty#value()}. A
- * name uniquely identifies a {@code ViewProperty} within his datacontext i.e.
- * the object that encapsulates it. The value of the name is used to find the
- * {@code ViewProperty} and the corresponding {@code ViewPropertySlot} of the
- * view.
+ * annotation. This annotation can be given multiple names of view properties to
+ * indicate which view properties have changed after the method has been
+ * executed. After invocation of this marked method, the object that was
+ * annotated with {@code ViewReference} will be notified of the change. In order
+ * for this object to be notified, a method of this object must be marked with
+ * {@link org.trinity.shellplugin.widget.api.binding.ViewPropertySlot}. This
+ * annotation is given the names of the properties that it will listened to. To
+ * manually notify a {@code ViewPropertySlot}, inject a
+ * {@link org.trinity.shellplugin.widget.api.binding.ViewPropertyDiscovery}
+ * instance and call
+ * {@link org.trinity.shellplugin.widget.api.binding.ViewPropertyDiscovery#notifyViewSlot(Class, Object, String...)}.
  */
 package org.trinity.shellplugin.widget.api.binding;

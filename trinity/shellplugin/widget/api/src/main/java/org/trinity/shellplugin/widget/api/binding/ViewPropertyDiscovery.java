@@ -22,9 +22,8 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 // TODO convert to non static singleton instance
 /***************************************
- * Utility class used by {@link ViewPropertySignalDispatcher} to scan for
- * {@link ViewProperty}s, {@link ViewPropertySlot}s and
- * {@link ViewPropertyChanged}s.
+ * Scanner class used to discover {@link ViewProperty}s,
+ * {@link ViewPropertySlot}s and {@link ViewPropertyChanged}s.
  *************************************** 
  */
 @Singleton
@@ -45,6 +44,17 @@ public class ViewPropertyDiscovery {
 		this.viewSlotInvocationHandler = viewSlotInvocationHandler;
 	}
 
+	/****************************************
+	 * Find all methods that have been annotated with {@link ViewProperty}.
+	 * 
+	 * @param thisObjClass
+	 *            The {@link Class} to scan for annotated methods.
+	 * @return All found {@link Method}s
+	 * @throws ExecutionException
+	 *             Thrown if a badly placed annotation is encountered. ie on a
+	 *             non public method, or duplicate properties are found.
+	 *************************************** 
+	 */
 	public Method[] lookupAllViewProperties(final Class<?> thisObjClass) throws ExecutionException {
 		return ViewPropertyDiscovery.allViewProperties.get(	thisObjClass,
 															new Callable<Method[]>() {
@@ -83,6 +93,20 @@ public class ViewPropertyDiscovery {
 		return allViewProperties.toArray(new Method[] {});
 	}
 
+	/***************************************
+	 * Find the method annotated with {@link ViewProperty} and the specified
+	 * name.
+	 * 
+	 * @param thisObjClass
+	 *            The {@link Class} to scan for the view property.
+	 * @param viewPropertyName
+	 *            The name of the view property.
+	 * @return a {@link Method}.
+	 * @throws ExecutionException
+	 *             Thrown if a badly placed annotation is encountered. ie on a
+	 *             non public method, or duplicate properties are found.
+	 *************************************** 
+	 */
 	public Optional<Method> lookupViewProperty(	final Class<?> thisObjClass,
 												final String viewPropertyName) throws ExecutionException {
 		return ViewPropertyDiscovery.viewPropertiesByName.get(	thisObjClass,
@@ -149,6 +173,17 @@ public class ViewPropertyDiscovery {
 		return false;
 	}
 
+	/***************************************
+	 * Find the getter annotated with {@link ViewReference}.
+	 * 
+	 * @param clazz
+	 *            The {@link Class} to scan.
+	 * @return The found getter method.
+	 * @throws ExecutionException
+	 *             Thrown if a badly placed annotation is encountered. ie on a
+	 *             non public method, or multiple views are found.
+	 *************************************** 
+	 */
 	public Optional<Method> lookupViewReference(final Class<?> clazz) throws ExecutionException {
 
 		return ViewPropertyDiscovery.viewReferenceFields.get(	clazz,
@@ -177,6 +212,20 @@ public class ViewPropertyDiscovery {
 		return Optional.fromNullable(foundMethod);
 	}
 
+	/***************************************
+	 * Find the method annotated with a {@link ViewPropertySlot} with the given
+	 * name.
+	 * 
+	 * @param clazz
+	 *            The view {@link Class} to scan.
+	 * @param viewPropertyName
+	 *            The name that should be present in the
+	 *            {@code  ViewPropertySlot}.
+	 * @return The found method.
+	 * @throws ExecutionException
+	 *             Thrown if a badly placed annotation is found.
+	 *************************************** 
+	 */
 	public Optional<Method> lookupViewSlot(	final Class<?> clazz,
 											final String viewPropertyName) throws ExecutionException {
 		return ViewPropertyDiscovery.viewSlots.get(	clazz,
@@ -216,10 +265,24 @@ public class ViewPropertyDiscovery {
 		return Optional.fromNullable(foundMethod);
 	}
 
+	/***************************************
+	 * Manually notify a view slot.
+	 * 
+	 * @param dataContextClass
+	 *            The class of the object the encloses the annotated view
+	 *            object.
+	 * @param dataContext
+	 *            The instance that encloses the view object.
+	 * @param propertyNames
+	 *            The names of the view properties who's matching view slots
+	 *            should be notified.
+	 * @throws ExecutionException
+	 *             Thrown if a badly placed annotation is encountered.
+	 *************************************** 
+	 */
 	public <T> void notifyViewSlot(	final Class<? extends T> dataContextClass,
 									final T dataContext,
-									final String... propertyNames) throws ExecutionException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException {
+									final String... propertyNames) throws ExecutionException {
 
 		final Object thisObj = dataContext;
 		final Class<?> thisObjClass = dataContextClass;
@@ -232,28 +295,40 @@ public class ViewPropertyDiscovery {
 		}
 
 		final Method viewField = viewReference.get();
-		final Object view = viewField.invoke(thisObj);
+		Object view;
+		try {
+			view = viewField.invoke(thisObj);
 
-		for (final String viewAttributeName : viewAttributeIds) {
-			final Optional<Method> viewPropertyMethod = lookupViewProperty(	thisObjClass,
-																			viewAttributeName);
-			if (!viewPropertyMethod.isPresent()) {
-				continue;
+			for (final String viewAttributeName : viewAttributeIds) {
+				final Optional<Method> viewPropertyMethod = lookupViewProperty(	thisObjClass,
+																				viewAttributeName);
+				if (!viewPropertyMethod.isPresent()) {
+					continue;
+				}
+
+				final Optional<Method> viewSlotMethod = lookupViewSlot(	view.getClass(),
+																		viewAttributeName);
+				if (!viewSlotMethod.isPresent()) {
+					continue;
+				}
+
+				Object argument;
+
+				argument = viewPropertyMethod.get().invoke(thisObj);
+
+				this.viewSlotInvocationHandler.invokeSlot(	(PaintableSurfaceNode) thisObj,
+															viewPropertyMethod.get().getAnnotation(ViewProperty.class),
+															view,
+															viewSlotMethod.get(),
+															argument);
+
 			}
-
-			final Optional<Method> viewSlotMethod = lookupViewSlot(	view.getClass(),
-																	viewAttributeName);
-			if (!viewSlotMethod.isPresent()) {
-				continue;
-			}
-
-			final Object argument = viewPropertyMethod.get().invoke(thisObj);
-
-			this.viewSlotInvocationHandler.invokeSlot(	(PaintableSurfaceNode) thisObj,
-														viewPropertyMethod.get().getAnnotation(ViewProperty.class),
-														view,
-														viewSlotMethod.get(),
-														argument);
+		} catch (final IllegalAccessException e) {
+			throw new ExecutionException(e);
+		} catch (final IllegalArgumentException e) {
+			throw new ExecutionException(e);
+		} catch (final InvocationTargetException e) {
+			throw new ExecutionException(e);
 		}
 	}
 }

@@ -6,7 +6,8 @@ import org.trinity.foundation.render.api.PaintableSurfaceNode;
 
 /***************************************
  * Used by {@link ViewPropertySignalDispatcher} as a delegate to handle a
- * {@link ViewPropertySlot} invocation,
+ * {@link ViewPropertySlot} invocation. This interface should be implemented by
+ * a render back-end to handle calls to render back-end specific views.
  * 
  *************************************** 
  */

@@ -9,9 +9,9 @@ import org.trinity.foundation.render.api.PaintableSurfaceNode;
 
 /***************************************
  * Marks an object as the view of a {@link PaintableSurfaceNode}. The view
- * should be encapsulated by the {@code PaintableSurfaceNode} that has the
- * properties that you wish to handle. In order for the view to handle changes
- * of properties, you must annotated the desired view methods with
+ * should be enclosed by the {@code PaintableSurfaceNode} that has the
+ * properties that should be handled. In order for the marked view to handle
+ * changes of properties, methods of the view must be marked with
  * {@link ViewPropertySlot}.
  * 
  *************************************** 
