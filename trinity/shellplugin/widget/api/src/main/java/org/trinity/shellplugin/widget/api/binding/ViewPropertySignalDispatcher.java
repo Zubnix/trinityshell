@@ -20,7 +20,7 @@ import com.google.inject.Inject;
 public class ViewPropertySignalDispatcher implements MethodInterceptor {
 
 	@Inject
-	private ViewSlotInvocationHandler viewSlotInvocationHandler;
+	private ViewPropertyDiscovery viewPropertyDiscovery;
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
@@ -32,10 +32,9 @@ public class ViewPropertySignalDispatcher implements MethodInterceptor {
 		final ViewPropertyChanged viewSignal = invocation.getMethod().getAnnotation(ViewPropertyChanged.class);
 		final String[] viewPropertyNames = viewSignal.value();
 
-		ViewPropertyUtil.notifyViewSlot(this.viewSlotInvocationHandler,
-										thisObjClass,
-										thisObj,
-										viewPropertyNames);
+		this.viewPropertyDiscovery.notifyViewSlot(	thisObjClass,
+													thisObj,
+													viewPropertyNames);
 		return invocationResult;
 	}
 }

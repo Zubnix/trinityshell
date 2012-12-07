@@ -14,7 +14,7 @@ package org.trinity.render.qt.lnf.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -27,8 +27,8 @@ import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.shell.api.widget.ShellWidget;
 import org.trinity.shell.api.widget.ShellWidgetView;
 import org.trinity.shellplugin.widget.api.binding.ViewProperty;
+import org.trinity.shellplugin.widget.api.binding.ViewPropertyDiscovery;
 import org.trinity.shellplugin.widget.api.binding.ViewPropertySlot;
-import org.trinity.shellplugin.widget.api.binding.ViewPropertyUtil;
 import org.trinity.shellplugin.widget.api.binding.ViewSlotInvocationHandler;
 
 import com.google.common.io.CharStreams;
@@ -49,6 +49,9 @@ public class BaseShellWidgetView implements ShellWidgetView {
 
 	@Inject
 	private ViewSlotInvocationHandler viewSlotInvocationHandler;
+
+	@Inject
+	private ViewPropertyDiscovery viewPropertyDiscovery;
 
 	protected Painter getPainter() {
 		return this.painter;
@@ -77,7 +80,7 @@ public class BaseShellWidgetView implements ShellWidgetView {
 				try {
 					createDisplaySurfaceInstruction(paintContext,
 													parent);
-					setAllViewAttributes(paintContext);
+					setAllViewProperties(paintContext);
 					setStyle(paintContext);
 				} catch (final Exception e) {
 					e.printStackTrace();
@@ -119,18 +122,18 @@ public class BaseShellWidgetView implements ShellWidgetView {
 		paintContext.setVisual(visual);
 	}
 
-	protected void setAllViewAttributes(final QJPaintContext paintContext) {
+	protected void setAllViewProperties(final QJPaintContext paintContext) {
 		final PaintableSurfaceNode paintableSurfaceNode = paintContext.getPaintableSurfaceNode();
 
+		Method[] fields;
 		try {
-			final Field[] fields = ViewPropertyUtil.lookupAllViewProperties(paintableSurfaceNode.getClass());
-			for (final Field field : fields) {
-				final ViewProperty viewProperty = field.getAnnotation(ViewProperty.class);
-				final Method viewSlot = ViewPropertyUtil.lookupViewSlot(	getClass(),
-																			viewProperty.value());
-				field.setAccessible(true);
-				final Object argument = field.get(paintableSurfaceNode);
-				field.setAccessible(false);
+			fields = this.viewPropertyDiscovery.lookupAllViewProperties(paintableSurfaceNode.getClass());
+
+			for (final Method method : fields) {
+				final ViewProperty viewProperty = method.getAnnotation(ViewProperty.class);
+				final Method viewSlot = this.viewPropertyDiscovery.lookupViewSlot(	getClass(),
+																					viewProperty.value());
+				final Object argument = method.invoke(paintableSurfaceNode);
 				this.viewSlotInvocationHandler.invokeSlot(	paintableSurfaceNode,
 															viewProperty,
 															this,
@@ -140,14 +143,16 @@ public class BaseShellWidgetView implements ShellWidgetView {
 		} catch (final ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (final IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (final IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (final IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
 	}
 
 	protected QWidget createVisual(final QWidget parentVisual) {

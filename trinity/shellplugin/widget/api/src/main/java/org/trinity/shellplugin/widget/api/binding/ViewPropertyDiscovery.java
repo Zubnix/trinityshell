@@ -12,6 +12,12 @@ import org.trinity.foundation.render.api.PaintableSurfaceNode;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
+import de.devsurf.injection.guice.annotations.To.Type;
 
 // TODO convert to non static singleton instance
 /***************************************
@@ -20,7 +26,9 @@ import com.google.common.cache.CacheBuilder;
  * {@link ViewPropertyChanged}s.
  *************************************** 
  */
-public class ViewPropertyUtil {
+@Singleton
+@Bind(to = @To(value = Type.IMPLEMENTATION))
+public class ViewPropertyDiscovery {
 	// yo dawg, I heard you like caches so I put a cache in your cache so you
 	// can cache while you cache!
 	private static final Cache<Class<?>, Method[]> allViewProperties = CacheBuilder.newBuilder().build();
@@ -29,21 +37,24 @@ public class ViewPropertyUtil {
 	private static final Cache<Class<?>, Method> viewReferenceFields = CacheBuilder.newBuilder().build();
 	private static final Cache<Class<?>, Method> viewSlots = CacheBuilder.newBuilder().build();
 
-	private ViewPropertyUtil() {
+	private final ViewSlotInvocationHandler viewSlotInvocationHandler;
 
+	@Inject
+	ViewPropertyDiscovery(final ViewSlotInvocationHandler viewSlotInvocationHandler) {
+		this.viewSlotInvocationHandler = viewSlotInvocationHandler;
 	}
 
-	public static Method[] lookupAllViewProperties(final Class<?> thisObjClass) throws ExecutionException {
-		return ViewPropertyUtil.allViewProperties.get(	thisObjClass,
-														new Callable<Method[]>() {
-															@Override
-															public Method[] call() {
-																return getAllViewProperties(thisObjClass);
-															}
-														});
+	public Method[] lookupAllViewProperties(final Class<?> thisObjClass) throws ExecutionException {
+		return ViewPropertyDiscovery.allViewProperties.get(	thisObjClass,
+															new Callable<Method[]>() {
+																@Override
+																public Method[] call() {
+																	return getAllViewProperties(thisObjClass);
+																}
+															});
 	}
 
-	private static Method[] getAllViewProperties(final Class<?> clazz) {
+	private Method[] getAllViewProperties(final Class<?> clazz) {
 		final List<Method> allViewProperties = new ArrayList<Method>();
 
 		final List<Method> viewProperties = new ArrayList<Method>();
@@ -71,26 +82,26 @@ public class ViewPropertyUtil {
 		return allViewProperties.toArray(new Method[] {});
 	}
 
-	public static Method lookupViewProperty(final Class<?> thisObjClass,
-											final String viewPropertyName) throws ExecutionException {
-		return ViewPropertyUtil.viewPropertiesByName.get(	thisObjClass,
-															new Callable<Cache<String, Method>>() {
-																@Override
-																public Cache<String, Method> call() {
-																	return CacheBuilder.newBuilder().build();
-																}
-															}).get(	viewPropertyName,
-																	new Callable<Method>() {
-																		@Override
-																		public Method call() {
-																			return getViewProperty(	thisObjClass,
-																									viewPropertyName);
-																		}
-																	});
+	public Method lookupViewProperty(	final Class<?> thisObjClass,
+										final String viewPropertyName) throws ExecutionException {
+		return ViewPropertyDiscovery.viewPropertiesByName.get(	thisObjClass,
+																new Callable<Cache<String, Method>>() {
+																	@Override
+																	public Cache<String, Method> call() {
+																		return CacheBuilder.newBuilder().build();
+																	}
+																}).get(	viewPropertyName,
+																		new Callable<Method>() {
+																			@Override
+																			public Method call() {
+																				return getViewProperty(	thisObjClass,
+																										viewPropertyName);
+																			}
+																		});
 	}
 
-	private static Method getViewProperty(	final Class<?> clazz,
-											final String viewPropertyName) {
+	private Method getViewProperty(	final Class<?> clazz,
+									final String viewPropertyName) {
 
 		final Method[] viewProperties = getAllViewProperties(clazz);
 
@@ -113,7 +124,7 @@ public class ViewPropertyUtil {
 		return foundMethod;
 	}
 
-	private static String findViewPropertyName(final Method method) {
+	private String findViewPropertyName(final Method method) {
 		final String viewPropertyName = method.getAnnotation(ViewProperty.class).value();
 		if (!viewPropertyName.equals("")) {
 			return viewPropertyName;
@@ -134,8 +145,8 @@ public class ViewPropertyUtil {
 
 	}
 
-	private static boolean isDuplicateViewProperty(	final List<ViewProperty> viewProperties,
-													final ViewProperty viewProperty) {
+	private boolean isDuplicateViewProperty(final List<ViewProperty> viewProperties,
+											final ViewProperty viewProperty) {
 		for (final ViewProperty addedViewAttribute : viewProperties) {
 			if (addedViewAttribute.value().equals(viewProperty.value())) {
 				return true;
@@ -144,21 +155,21 @@ public class ViewPropertyUtil {
 		return false;
 	}
 
-	public static Method lookupViewReferenceObject(final Class<?> clazz) throws ExecutionException {
+	public Method lookupViewReferenceObject(final Class<?> clazz) throws ExecutionException {
 
-		return ViewPropertyUtil.viewReferenceFields.get(clazz,
-														new Callable<Method>() {
-															@Override
-															public Method call() {
-																return getViewReferenceObject(clazz);
-															}
-														});
+		return ViewPropertyDiscovery.viewReferenceFields.get(	clazz,
+																new Callable<Method>() {
+																	@Override
+																	public Method call() {
+																		return getViewReferenceObject(clazz);
+																	}
+																});
 	}
 
-	private static Method getViewReferenceObject(final Class<?> clazz) {
+	private Method getViewReferenceObject(final Class<?> clazz) {
 		Method foundMethod = null;
-		final Method[] declaredMethods = clazz.getMethods();
-		for (final Method method : declaredMethods) {
+		final Method[] methods = clazz.getMethods();
+		for (final Method method : methods) {
 			final ViewReference viewReference = method.getAnnotation(ViewReference.class);
 			if ((viewReference != null) && (foundMethod != null)) {
 				throw new IllegalArgumentException(String.format(	"Found multiple %s on %s",
@@ -178,76 +189,71 @@ public class ViewPropertyUtil {
 		return foundMethod;
 	}
 
-	public static Method lookupViewSlot(final Class<?> clazz,
-										final String viewPropertyName) throws ExecutionException {
-		return ViewPropertyUtil.viewSlots.get(	clazz,
-												new Callable<Method>() {
-													@Override
-													public Method call() {
-														return getViewSlot(	clazz,
-																			viewPropertyName);
-													}
-												});
+	public Method lookupViewSlot(	final Class<?> clazz,
+									final String viewPropertyName) throws ExecutionException {
+		return ViewPropertyDiscovery.viewSlots.get(	clazz,
+													new Callable<Method>() {
+														@Override
+														public Method call() {
+															return getViewSlot(	clazz,
+																				viewPropertyName);
+														}
+													});
 	}
 
-	private static Method getViewSlot(	final Class<?> clazz,
-										final String viewAttributeName) {
+	private Method getViewSlot(	final Class<?> clazz,
+								final String viewAttributeName) {
 		Method foundMethod = null;
 
-		Class<?> searchedClass = clazz;
-		while (searchedClass != null) {
-			for (final Method method : searchedClass.getDeclaredMethods()) {
+		for (final Method method : clazz.getMethods()) {
 
-				final ViewPropertySlot viewSlot = method.getAnnotation(ViewPropertySlot.class);
+			final ViewPropertySlot viewSlot = method.getAnnotation(ViewPropertySlot.class);
 
-				if (viewSlot == null) {
-					continue;
-				}
+			if (viewSlot == null) {
+				continue;
+			}
 
-				final String[] values = viewSlot.value();
-				if (Arrays.asList(values).contains(viewAttributeName)) {
-					if ((foundMethod == null)) {
-						foundMethod = method;
-					} else if ((foundMethod != null)) {
-						throw new IllegalArgumentException(String.format(	"Found multiple %s in the class hierarchy of %s",
-																			ViewPropertySlot.class.getName(),
-																			clazz.getName()));
-					}
+			final String[] values = viewSlot.value();
+			if (Arrays.asList(values).contains(viewAttributeName)) {
+				if ((foundMethod == null)) {
+					foundMethod = method;
+				} else if ((foundMethod != null)) {
+					throw new IllegalArgumentException(String.format(	"Found multiple %s in the class hierarchy of %s",
+																		ViewPropertySlot.class.getName(),
+																		clazz.getName()));
 				}
 			}
-			searchedClass = searchedClass.getSuperclass();
 		}
 
 		return foundMethod;
 	}
 
-	public static <T> void notifyViewSlot(	final ViewSlotInvocationHandler viewSlotInvocationHandler,
-											final Class<? extends T> dataContextClass,
-											final T dataContext,
-											final String... propertyNames) throws ExecutionException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public <T> void notifyViewSlot(	final Class<? extends T> dataContextClass,
+									final T dataContext,
+									final String... propertyNames) throws ExecutionException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException {
 
 		final Object thisObj = dataContext;
 		final Class<?> thisObjClass = dataContextClass;
 
 		final String[] viewAttributeIds = propertyNames;
 
-		final Method viewField = ViewPropertyUtil.lookupViewReferenceObject(thisObjClass);
+		final Method viewField = lookupViewReferenceObject(thisObjClass);
 		final Object view = viewField.invoke(thisObj);
 
 		for (final String viewAttributeName : viewAttributeIds) {
-			final Method method = ViewPropertyUtil.lookupViewProperty(	thisObjClass,
-																		viewAttributeName);
-			final Method viewSlotMethod = ViewPropertyUtil.lookupViewSlot(	view.getClass(),
-																			viewAttributeName);
+			final Method method = lookupViewProperty(	thisObjClass,
+														viewAttributeName);
+			final Method viewSlotMethod = lookupViewSlot(	view.getClass(),
+															viewAttributeName);
 
 			final Object argument = method.invoke(thisObj);
 
-			viewSlotInvocationHandler.invokeSlot(	(PaintableSurfaceNode) thisObj,
-													method.getAnnotation(ViewProperty.class),
-													view,
-													viewSlotMethod,
-													argument);
+			this.viewSlotInvocationHandler.invokeSlot(	(PaintableSurfaceNode) thisObj,
+														method.getAnnotation(ViewProperty.class),
+														view,
+														viewSlotMethod,
+														argument);
 		}
 	}
 }
