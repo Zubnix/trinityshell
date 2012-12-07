@@ -31,6 +31,7 @@ import org.trinity.shellplugin.widget.api.binding.ViewPropertyDiscovery;
 import org.trinity.shellplugin.widget.api.binding.ViewPropertySlot;
 import org.trinity.shellplugin.widget.api.binding.ViewSlotInvocationHandler;
 
+import com.google.common.base.Optional;
 import com.google.common.io.CharStreams;
 import com.google.inject.Inject;
 import com.trolltech.qt.core.Qt.WidgetAttribute;
@@ -131,13 +132,17 @@ public class BaseShellWidgetView implements ShellWidgetView {
 
 			for (final Method method : fields) {
 				final ViewProperty viewProperty = method.getAnnotation(ViewProperty.class);
-				final Method viewSlot = this.viewPropertyDiscovery.lookupViewSlot(	getClass(),
-																					viewProperty.value());
+				final Optional<Method> viewSlot = this.viewPropertyDiscovery.lookupViewSlot(getClass(),
+																							viewProperty.value());
+				if (!viewSlot.isPresent()) {
+					continue;
+				}
+
 				final Object argument = method.invoke(paintableSurfaceNode);
 				this.viewSlotInvocationHandler.invokeSlot(	paintableSurfaceNode,
 															viewProperty,
 															this,
-															viewSlot,
+															viewSlot.get(),
 															argument);
 			}
 		} catch (final ExecutionException e) {
