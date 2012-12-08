@@ -1,3 +1,20 @@
+.jumbotron .container {
+    position: relative;
+    z-index: 2;
+}
+
+.jumbotron:after {
+    background: url("../img/banner/gplaypattern.png") repeat scroll center center transparent;
+    bottom: 0;
+    content: "";
+    display: block;
+    left: 0;
+    opacity: 1;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
 .masthead {
     color: #FFFFFF;
     margin-bottom: 0;
@@ -5,7 +22,7 @@
 }
 
 .jumbotron {
-    background: url("../img/banner/blue_grid.png") no-repeat scroll center 25% transparent;
+    background: linear-gradient(to bottom, #FFA84C 0%, #FF7B0D 100%);
     background-size: 100%;
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3) inset, 0 -3px 7px rgba(0, 0, 0, 0.3) inset;
     color: #FFFFFF;
@@ -31,8 +48,9 @@ body {
         padding-top: 40px;
         padding-bottom: 120px;
         font-family: 'Droid Sans', sans-serif;
-        font-size: 12px;
+        font-size: 14px;
         text-shadow: 0 0 1px rgba(0,0,0,0.1);
+        background: #f7f7f7;
 }
 
 section {
