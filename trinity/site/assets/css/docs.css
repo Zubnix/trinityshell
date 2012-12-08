@@ -4,12 +4,12 @@
 }
 
 .jumbotron:after {
-    background: url("../img/banner/gplaypattern.png") repeat scroll center center transparent;
+    background: url("../img/banner/black_thread.png") repeat scroll center center transparent;
     bottom: 0;
     content: "";
     display: block;
     left: 0;
-    opacity: 1;
+    opacity: 0.2;
     position: absolute;
     right: 0;
     top: 0;
@@ -22,14 +22,14 @@
 }
 
 .jumbotron {
-    background: linear-gradient(to bottom, #FFA84C 0%, #FF7B0D 100%);
+    background: linear-gradient(45deg, rgba(252,92,0,1) 0%,rgba(255,116,0,1) 27%,rgba(252,176,0,1) 68%,rgba(255,206,84,1) 100%);
     background-size: 100%;
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3) inset, 0 -3px 7px rgba(0, 0, 0, 0.3) inset;
     color: #FFFFFF;
-    padding: 100px 0;
+    padding: 160px 0;
     position: relative;
     text-align: center;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 0, 0, 0.15);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 0, 0, 0.15);
 }
 
 .breadcrumb .divider {
@@ -38,6 +38,10 @@
 
 .nav-list > .active > a, .nav-list > .active > a:hover {
     background-color: #CC5500;
+}
+
+h1 {
+    font-size: 64px;
 }
 
 a {
