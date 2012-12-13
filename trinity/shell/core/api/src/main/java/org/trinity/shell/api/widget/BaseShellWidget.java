@@ -11,13 +11,10 @@
  */
 package org.trinity.shell.api.widget;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
 import javax.swing.text.View;
 
 import org.trinity.foundation.display.api.DisplaySurface;
-import org.trinity.foundation.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.api.node.ShellNode;
@@ -25,6 +22,7 @@ import org.trinity.shell.api.node.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -32,51 +30,28 @@ import com.google.inject.Inject;
 import de.devsurf.injection.guice.annotations.Bind;
 
 /**
- * An <code>AbstractShellSurface</code> with a <code>PaintableSurfaceNode</code>
- * implementation. A <code>BaseShellWidget</code> is ment to provide a visual
- * interface for the user so it can manipulate the shell core library at
- * runtime.
+ * An {@link AbstractShellSurfaceParent} with a base
+ * {@link PaintableSurfaceNode} implementation.
  * <p>
  * A <code>BaseShellWidget</code> is manipulated through a {@link Painter} that
- * talks to a paint back-end. This is done by the <code>BaseShellWidget</code>'s
- * {@link View} object. The <code>View</code> object receives state change
- * notifications of the <code>BaseShellWidget</code> and in turn returns a
- * {@link PaintInstruction}. This <code>PaintCall</code> is then fed to the
- * <code>BaseShellWidget</code>'s <code>Painter</code>. A <code>View</code> is
- * defined by the {@link ViewClassFactory} implementation that was given as a
- * parameter at startup to the {@link ShellDisplay}.
+ * can talk to a paint back-end. This is done by an enclosed {@link View}
+ * object. The <code>View</code> object receives state change notifications of
+ * the <code>BaseShellWidget</code> and in turn talks to the {@code Painter} of
+ * the <code>BaseShellWidget</code>.
  * <p>
  * A <code>BaseShellWidget</code> is lazily initialized. This means that it is
  * fully initialized by the paint back-end when the <code>BaseShellWidget</code>
- * is assigned to an already initialized parent <code>BaseShellWidget</code>. A
- * uninitialized <code>BaseShellWidget</code> will thus return null when
- * <code>getManagedDisplay</code>, <code>getView</code>,
- * <code>getPlatformRenderArea</code> is called. Calls to
- * <code>getPainter</code> will also fail.
+ * is assigned to an already initialized parent <code>BaseShellWidget</code>.
  * <p>
  * An initialized <code>BaseShellWidget</code> will have a
- * {@link DisplaySurface} . This is the native window that the
+ * {@link DisplaySurface} . This surface maps to the native window that the
  * <code>BaseShellWidget</code> will be draw on. Note that multiple
- * <code>BaseShellWidget</code>s can share the same
- * <code>PlatformRenderArea</code>. A <code>BaseShellWidget</code> who's parent
- * has a different <code>PlatformRenderArea</code>, is called the owner of the
- * <code>PlatformRenderArea</code>. As a consequence the owning
- * <code>BaseShellWidget</code>'s geometry should reflect the geometry of its
- * <code>PlatformRenderArea</code>.
- * <p>
- * Every <code>BaseShellWidget</code> implements <code>HasGeoManager</code>.
- * This means that every <code>BaseShellWidget</code> can optionally manage the
- * geometry of it's child <code>BaseShellWidget</code>s. See the
- * {@link org.hyperdrive.geo.impl} package documentation for details.
- * 
- * @author Erik De Rijcke
- * @since 1.0
+ * <code>BaseShellWidget</code>s can share the same <code>DisplaySurface</code>.
  */
 @Bind
 public class BaseShellWidget extends AbstractShellSurfaceParent implements ShellWidget {
 
 	private class DestroyCallback {
-		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleDestroy(final ShellNodeDestroyedEvent destroyEvent) {
 			BaseShellWidget.this.shellDisplayEventDispatcher
@@ -90,7 +65,6 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 	private final BaseShellWidgetExecutor shellNodeExecutor;
 	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
 	private final EventBus eventBus;
-	private final ShellWidgetView view;
 
 	/**
 	 * Create an uninitialized <code>BaseShellWidget</code>.A
@@ -100,21 +74,18 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 	@Inject
 	public BaseShellWidget(	final EventBus eventBus,
 							final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-							final PainterFactory painterFactory,
-							final ShellWidgetView view) {
+							final PainterFactory painterFactory) {
 		super(eventBus);
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		this.eventBus = eventBus;
 		this.shellNodeExecutor = new BaseShellWidgetExecutor(this);
 		this.painter = painterFactory.createPainter(this);
-		this.view = view;
 	}
 
 	protected void init(final BaseShellWidget closestParentWidget) {
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			this);
-		this.view.createDisplaySurface(	getPainter(),
-										closestParentWidget);
+		this.painter.initView(Optional.fromNullable(closestParentWidget));
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			getDisplaySurface());
 		addShellNodeEventHandler(new DestroyCallback());
@@ -163,27 +134,8 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 	}
 
 	@Override
-	protected void execDestroy() {
-		// BaseShellWidget.this.shellDisplayEventDispatcher.unregisterAllDisplayEventSourceListeners(getDisplaySurface());
-		super.execDestroy();
-	}
-
-	@Override
 	public DisplaySurface getDisplaySurface() {
-		final Future<DisplaySurface> displaySurfaceFuture = this.view.getDislaySurface();
-		if (displaySurfaceFuture == null) {
-			return null;
-		}
-		DisplaySurface displaySurface = null;
-		try {
-			displaySurface = displaySurfaceFuture.get();
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (final ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		DisplaySurface displaySurface = this.painter.getDislaySurface().get();
 		return displaySurface;
 	}
 }

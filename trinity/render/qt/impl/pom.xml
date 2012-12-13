@@ -17,5 +17,10 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<artifactId>render.qt.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>shellplugin.widget.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -11,33 +11,29 @@
  */
 package org.trinity.render.qt.impl.painter.instructions;
 
-import org.trinity.foundation.render.api.PaintInstruction;
-import org.trinity.foundation.render.api.PaintableSurfaceNode;
+import org.trinity.foundation.render.api.PaintRoutine;
 import org.trinity.render.qt.api.QJPaintContext;
 
 import com.trolltech.qt.gui.QWidget;
 
-public class QJSetParentInstruction implements PaintInstruction<Void, QJPaintContext> {
+public class QJSetParentInstruction implements PaintRoutine<Void, QJPaintContext> {
 
-	private final PaintableSurfaceNode parentPaintableSurfaceNode;
-	private final int x;
-	private final int y;
+	private QWidget view;
+	private QWidget parentView;
+	private int x;
+	private int y;
 
-	public QJSetParentInstruction(final PaintableSurfaceNode parent, final int x, final int y) {
-		this.parentPaintableSurfaceNode = parent;
+	public QJSetParentInstruction(QWidget view, QWidget parentView, final int x, final int y) {
+		this.view = view;
+		this.parentView = parentView;
 		this.x = x;
 		this.y = y;
 	}
 
 	@Override
 	public Void call(final QJPaintContext paintContext) {
-		final PaintableSurfaceNode paintableSurfaceNode = paintContext.getPaintableSurfaceNode();
-		final QWidget visual = paintContext.getVisual(paintableSurfaceNode);
-
-		final QWidget parentVisual = paintContext.getVisual(this.parentPaintableSurfaceNode);
-
-		visual.setParent(parentVisual);
-		visual.move(this.x,
+		view.setParent(parentView);
+		view.move(	this.x,
 					this.y);
 		return null;
 	}

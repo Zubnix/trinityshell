@@ -11,12 +11,31 @@
  */
 package org.trinity.shell.api.surface.event;
 
+import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.shell.api.surface.ShellSurface;
 
+import com.google.common.eventbus.EventBus;
+import com.google.inject.name.Named;
+
+/**
+ * 
+ * Emitted by an {@link EventBus} which is {@link Named} "shellEventBus" to
+ * indicate that a new client {@link ShellSurface} was created. A client
+ * {@code ShellSurface} is a surface that maps to a native {@link DisplayArea}
+ * that was created by an external program.
+ * 
+ */
 public class ShellSurfaceCreatedEvent {
 
 	private final ShellSurface client;
 
+	/**
+	 * Construct a new event to indicate that a new {@code ShellSurface} has
+	 * been created.
+	 * 
+	 * @param client
+	 *            The client {@link ShellSurface}.
+	 */
 	public ShellSurfaceCreatedEvent(final ShellSurface client) {
 		this.client = client;
 	}

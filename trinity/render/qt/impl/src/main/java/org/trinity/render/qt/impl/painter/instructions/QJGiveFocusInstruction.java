@@ -11,14 +11,22 @@
  */
 package org.trinity.render.qt.impl.painter.instructions;
 
-import org.trinity.foundation.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.PaintRoutine;
 import org.trinity.render.qt.api.QJPaintContext;
 
-public class QJGiveFocusInstruction implements PaintInstruction<Void, QJPaintContext> {
+import com.trolltech.qt.gui.QWidget;
+
+public class QJGiveFocusInstruction implements PaintRoutine<Void, QJPaintContext> {
+
+	private final QWidget view;
+
+	public QJGiveFocusInstruction(QWidget view) {
+		this.view = view;
+	}
 
 	@Override
 	public Void call(final QJPaintContext paintContext) {
-		paintContext.getVisual(paintContext.getPaintableSurfaceNode()).setFocus();
+		view.setFocus();
 		return null;
 	}
 }

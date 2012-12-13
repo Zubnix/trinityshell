@@ -11,50 +11,27 @@
  */
 package org.trinity.render.qt.impl;
 
-import org.trinity.foundation.display.api.DisplaySurface;
-import org.trinity.foundation.display.api.DisplaySurfaceFactory;
-import org.trinity.foundation.display.api.DisplaySurfaceHandle;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.qt.api.QJPaintContext;
+import org.trinity.render.qt.api.QJViewEventSubscription;
 
+import com.google.common.eventbus.EventBus;
+import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QWidget;
 
 public class QJPaintContextImpl implements QJPaintContext {
 
+	private final QJRenderEventConverter renderEventConverter;
+	private final EventBus displayEventBus;
 	private final PaintableSurfaceNode paintableSurfaceNode;
-	private final QJRenderEngineImpl qjRenderEngine;
-	private final DisplaySurfaceFactory displaySurfaceFactory;
 
-	public QJPaintContextImpl(	final PaintableSurfaceNode paintableSurfaceNode,
-								final QJRenderEngineImpl qjRenderEngineImpl,
-								final DisplaySurfaceFactory displaySurfaceFactory) {
+	public QJPaintContextImpl(	QJRenderEventConverter renderEventConverter,
+								EventBus displayEventBus,
+								final PaintableSurfaceNode paintableSurfaceNode) {
 		this.paintableSurfaceNode = paintableSurfaceNode;
-		this.qjRenderEngine = qjRenderEngineImpl;
-		this.displaySurfaceFactory = displaySurfaceFactory;
-	}
-
-	@Override
-	public void setVisual(final QWidget qWidget) {
-		this.qjRenderEngine.putVisual(	(DisplayEventSource) this.paintableSurfaceNode,
-										this.paintableSurfaceNode,
-										qWidget);
-	}
-
-	@Override
-	public QWidget getVisual(final PaintableSurfaceNode paintableSurfaceNode) {
-		return this.qjRenderEngine.getVisual(paintableSurfaceNode);
-	}
-
-	@Override
-	public DisplaySurface getDisplaySurface(final QWidget visual) {
-		if (visual == null) {
-			return null;
-		}
-		final DisplaySurfaceHandle displaySurfaceHandle = new QJDisplaySurfaceHandle(visual);
-		final DisplaySurface displaySurface = this.displaySurfaceFactory.createDisplaySurface(displaySurfaceHandle);
-
-		return displaySurface;
+		this.renderEventConverter = renderEventConverter;
+		this.displayEventBus = displayEventBus;
 	}
 
 	@Override
@@ -74,12 +51,19 @@ public class QJPaintContextImpl implements QJPaintContext {
 	}
 
 	@Override
-	public void disposeVisual() {
-		this.qjRenderEngine.removeVisual(this.paintableSurfaceNode);
+	public PaintableSurfaceNode getPaintableSurfaceNode() {
+		return this.paintableSurfaceNode;
 	}
 
 	@Override
-	public PaintableSurfaceNode getPaintableSurfaceNode() {
-		return this.paintableSurfaceNode;
+	public QJViewEventSubscription subscribeToEvents(	final DisplayEventSource displayEventSource,
+														final QWidget view) {
+		QObject eventFilter = new QJRenderEventFilter(	this.displayEventBus,
+														this.renderEventConverter,
+														displayEventSource,
+														view);
+		view.installEventFilter(eventFilter);
+		return new QJViewEventSubscriptionImpl(	view,
+												eventFilter);
 	}
 }

@@ -6,22 +6,45 @@ import org.trinity.foundation.render.api.SurfaceNode;
 
 public class DummyPaintableSurfaceNode implements PaintableSurfaceNode {
 
-	private String attributeOne = "valOne";
+	private final DummyView view = new DummyView();
 
-	private final DummyView view;
+	private Object object;
+	private Object nameless = "namelessValue";
+	private boolean primitiveBoolean = true;
 
-	public DummyPaintableSurfaceNode(final DummyView view) {
-		this.view = view;
+	@ViewReference
+	public DummyView getView() {
+		return view;
 	}
 
-	@ViewPropertyChanged("dummyAttribute")
-	public void setBothAttributes() {
-		this.attributeOne = "val1";
+	@ViewPropertyChanged("object")
+	public void setObject(Object object) {
+		this.object = object;
 	}
 
-	@ViewProperty(value = "dummyAttribute")
-	public String getAttributeOne() {
-		return this.attributeOne;
+	@ViewProperty("object")
+	public Object getObject() {
+		return this.object;
+	}
+
+	@ViewPropertyChanged("nameless")
+	public void setNameless(Object nameless) {
+
+	}
+
+	@ViewProperty
+	public Object getNameless() {
+		return nameless;
+	}
+
+	@ViewPropertyChanged("primitiveBoolean")
+	public void setPrimitiveBoolean(boolean primitiveBoolean) {
+		this.primitiveBoolean = primitiveBoolean;
+	}
+
+	@ViewProperty("primitiveBoolean")
+	public boolean isPrimitiveBoolean() {
+		return primitiveBoolean;
 	}
 
 	@Override
@@ -72,11 +95,6 @@ public class DummyPaintableSurfaceNode implements PaintableSurfaceNode {
 		return 0;
 	}
 
-	@ViewReference
-	public DummyView getView() {
-		return this.view;
-	}
-
 	@Override
 	public Painter getPainter() {
 		// TODO Auto-generated method stub
@@ -88,4 +106,5 @@ public class DummyPaintableSurfaceNode implements PaintableSurfaceNode {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

@@ -9,16 +9,26 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.render.qt.impl.painter.instructions;
+package org.trinity.render.qt.lnf.impl;
 
-import org.trinity.foundation.render.api.PaintInstruction;
+import javax.inject.Named;
+
 import org.trinity.render.qt.api.QJPaintContext;
+import org.trinity.shellplugin.widget.api.binding.ViewPropertySlot;
 
-public class QJReleaseKeyboardInstruction implements PaintInstruction<Void, QJPaintContext> {
+import com.trolltech.qt.gui.QFrame;
 
-	@Override
-	public Void call(final QJPaintContext paintContext) {
-		paintContext.getVisual(paintContext.getPaintableSurfaceNode()).releaseKeyboard();
-		return null;
+import de.devsurf.injection.guice.annotations.Bind;
+
+@Bind
+@Named("StyledView")
+public class StyledQJView extends QFrame {
+
+	@ViewPropertySlot("name")
+	public void setObjectName(	final QJPaintContext paintContext,
+								final String name) {
+		setObjectName(name);
+		style().unpolish(this);
+		ensurePolished();
 	}
 }

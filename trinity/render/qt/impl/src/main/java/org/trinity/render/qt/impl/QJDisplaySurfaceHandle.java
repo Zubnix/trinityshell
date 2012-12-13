@@ -28,7 +28,7 @@ public class QJDisplaySurfaceHandle implements DisplaySurfaceHandle {
 	private final WeakReference<QWidget> visualReference;
 	private volatile boolean visualDestroyed = false;
 
-	QJDisplaySurfaceHandle(final QWidget visual) {
+	public QJDisplaySurfaceHandle(final QWidget visual) {
 		this.visualReference = new WeakReference<QWidget>(visual);
 		installDestroyListener();
 	}

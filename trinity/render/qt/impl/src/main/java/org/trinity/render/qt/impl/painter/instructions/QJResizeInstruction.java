@@ -11,23 +11,27 @@
  */
 package org.trinity.render.qt.impl.painter.instructions;
 
-import org.trinity.foundation.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.PaintRoutine;
 import org.trinity.render.qt.api.QJPaintContext;
 
-public class QJResizeInstruction implements PaintInstruction<Void, QJPaintContext> {
+import com.trolltech.qt.gui.QWidget;
 
+public class QJResizeInstruction implements PaintRoutine<Void, QJPaintContext> {
+
+	private final QWidget view;
 	private final int width;
 	private final int height;
 
-	public QJResizeInstruction(final int width, final int height) {
+	public QJResizeInstruction(QWidget view, final int width, final int height) {
+		this.view = view;
 		this.width = width;
 		this.height = height;
 	}
 
 	@Override
 	public Void call(final QJPaintContext paintContext) {
-		paintContext.getVisual(paintContext.getPaintableSurfaceNode()).resize(	this.width,
-																				this.height);
+		view.resize(this.width,
+					this.height);
 		return null;
 	}
 }

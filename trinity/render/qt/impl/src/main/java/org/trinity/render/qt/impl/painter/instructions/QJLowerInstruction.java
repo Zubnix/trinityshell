@@ -11,14 +11,22 @@
  */
 package org.trinity.render.qt.impl.painter.instructions;
 
-import org.trinity.foundation.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.PaintRoutine;
 import org.trinity.render.qt.api.QJPaintContext;
 
-public class QJLowerInstruction implements PaintInstruction<Void, QJPaintContext> {
+import com.trolltech.qt.gui.QWidget;
+
+public class QJLowerInstruction implements PaintRoutine<Void, QJPaintContext> {
+
+	private final QWidget view;
+
+	public QJLowerInstruction(QWidget view) {
+		this.view = view;
+	}
 
 	@Override
 	public Void call(final QJPaintContext paintContext) {
-		paintContext.getVisual(paintContext.getPaintableSurfaceNode()).lower();
+		view.lower();
 		return null;
 	}
 

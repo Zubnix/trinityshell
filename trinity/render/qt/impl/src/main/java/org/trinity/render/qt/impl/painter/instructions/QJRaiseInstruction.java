@@ -11,20 +11,22 @@
  */
 package org.trinity.render.qt.impl.painter.instructions;
 
-import org.trinity.foundation.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.PaintRoutine;
 import org.trinity.render.qt.api.QJPaintContext;
 
-import com.google.inject.Singleton;
+import com.trolltech.qt.gui.QWidget;
 
-/*****************************************
- * @author Erik De Rijcke
- ****************************************/
-@Singleton
-public class QJRaiseInstruction implements PaintInstruction<Void, QJPaintContext> {
+public class QJRaiseInstruction implements PaintRoutine<Void, QJPaintContext> {
+
+	private final QWidget view;
+
+	public QJRaiseInstruction(QWidget view) {
+		this.view = view;
+	}
 
 	@Override
 	public Void call(final QJPaintContext paintContext) {
-		paintContext.getVisual(paintContext.getPaintableSurfaceNode()).raise();
+		view.raise();
 		return null;
 	}
 }

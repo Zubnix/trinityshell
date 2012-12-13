@@ -9,21 +9,24 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.render.qt.lnf.impl;
+package org.trinity.render.qt.impl.painter.instructions;
 
-import javax.inject.Named;
+import org.trinity.foundation.render.api.PaintRoutine;
+import org.trinity.render.qt.api.QJPaintContext;
 
-import com.trolltech.qt.gui.QPushButton;
 import com.trolltech.qt.gui.QWidget;
 
-import de.devsurf.injection.guice.annotations.Bind;
+public class QJUngrabKeyboardRoutine implements PaintRoutine<Void, QJPaintContext> {
 
-@Bind
-@Named("ShellButtonView")
-public class ShellButtonView extends BaseShellWidgetView {
+	private final QWidget view;
+
+	public QJUngrabKeyboardRoutine(QWidget view) {
+		this.view = view;
+	}
 
 	@Override
-	protected QWidget createVisual(final QWidget parentVisual) {
-		return new QPushButton(parentVisual);
+	public Void call(final QJPaintContext paintContext) {
+		view.releaseKeyboard();
+		return null;
 	}
 }

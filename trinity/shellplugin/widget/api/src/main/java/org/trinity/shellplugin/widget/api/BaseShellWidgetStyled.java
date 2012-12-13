@@ -14,7 +14,6 @@ package org.trinity.shellplugin.widget.api;
 import org.trinity.foundation.render.api.PainterFactory;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
-import org.trinity.shell.api.widget.ShellWidgetView;
 import org.trinity.shellplugin.widget.api.binding.ViewProperty;
 import org.trinity.shellplugin.widget.api.binding.ViewPropertyChanged;
 import org.trinity.shellplugin.widget.api.binding.ViewReference;
@@ -33,26 +32,25 @@ public class BaseShellWidgetStyled extends BaseShellWidget implements ShellWidge
 
 	private String name = getClass().getSimpleName();
 
-	private final ShellWidgetView view;
+	private final Object view;
 
 	public BaseShellWidgetStyled(	final EventBus eventBus,
 									final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 									final PainterFactory painterFactory,
-									final ShellWidgetView view) {
+									final Object view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
-				painterFactory,
-				view);
+				painterFactory);
 		this.view = view;
 	}
 
 	@ViewReference
-	public ShellWidgetView getView() {
+	public Object getView() {
 		return this.view;
 	}
 
-	@Override
 	@ViewPropertyChanged("name")
+	@Override
 	public void setName(final String name) {
 		this.name = name;
 	}

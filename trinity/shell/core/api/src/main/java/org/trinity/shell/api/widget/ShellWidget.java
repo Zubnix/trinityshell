@@ -15,6 +15,11 @@ import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
+/**
+ * 
+ * Provides visual interaction for the user in the shell scene graph.
+ * 
+ */
 public interface ShellWidget extends PaintableSurfaceNode, DisplayEventSource, ShellSurfaceParent {
 
 }

@@ -11,6 +11,11 @@
  */
 package org.trinity.shell.api.widget;
 
+/**
+ * 
+ * The parent of all {@link ShellWidget}s.
+ * 
+ */
 public interface ShellRootWidget extends ShellWidget {
 
 	void construct();

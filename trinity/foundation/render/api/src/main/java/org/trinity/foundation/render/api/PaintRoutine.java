@@ -9,25 +9,28 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.render.qt.lnf.impl;
+package org.trinity.foundation.render.api;
 
-import javax.inject.Named;
+/***************************************
+ * Wraps a paint operation.
+ * 
+ * @param <R>
+ *            The type of the <b>R</b>esult when this <code>PaintRoutine</code>
+ *            is finished.
+ * @param <P>
+ *            The type of the <b>P</b>aintContext when this
+ *            <code>PaintRoutine</code> is executed.
+ *************************************** 
+ */
+public interface PaintRoutine<R, P extends PaintContext> {
 
-import com.trolltech.qt.core.Qt.WindowType;
-import com.trolltech.qt.gui.QApplication;
-import com.trolltech.qt.gui.QFrame;
-import com.trolltech.qt.gui.QWidget;
-
-import de.devsurf.injection.guice.annotations.Bind;
-
-@Bind
-@Named("ShellRootView")
-public class ShellRootView extends BaseShellWidgetView {
-
-	@Override
-	protected QWidget createVisual(final QWidget parentVisual) {
-		final QWidget visual = new QFrame(	QApplication.desktop(),
-											WindowType.X11BypassWindowManagerHint);
-		return visual;
-	}
+	/***************************************
+	 * Called by the paint back-end.
+	 * 
+	 * @param paintContext
+	 *            A {@link PaintContext}.
+	 * @return a result.
+	 *************************************** 
+	 */
+	R call(P paintContext);
 }

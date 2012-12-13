@@ -14,10 +14,13 @@ package org.trinity.foundation.render.api;
 import java.util.concurrent.Future;
 
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
+import org.trinity.foundation.display.api.DisplaySurface;
+
+import com.google.common.base.Optional;
 
 /****************************************
  * The gatekeeper to the underlying paint back-end. It talks to a paint back-end
- * by feeding it {@link PaintInstruction}s that will be processed by the paint
+ * by feeding it {@link PaintRoutine}s that will be processed by the paint
  * back-end. It thus provides the means to manipulate the visual appearance of
  * the <code>PaintableSurfaceNode</code> it is bound to.
  * 
@@ -25,24 +28,27 @@ import org.trinity.foundation.display.api.DisplayAreaManipulator;
  */
 public interface Painter extends DisplayAreaManipulator {
 
-	/***************************************
-	 * Pass a {@link PaintInstruction} to the paint back-end that will be
-	 * processed by that paint back-end.
+	/**
 	 * 
-	 * @param paintInstruction
-	 *            a {@link PaintInstruction}.
-	 * @return a {@link Future} that will return the result of the
-	 *         <code>PaintInstruction</code>. This feature will block until the
-	 *         <code>PaintInstruction</code> is completed.
-	 *************************************** 
+	 * Get the {@link DisplaySurface} that the painter uses to paint the view.
+	 * 
+	 * @return A {@link DisplaySurface}.
 	 */
-	<R> Future<R> instruct(PaintInstruction<R, ? extends PaintContext> paintInstruction);
+	Optional<DisplaySurface> getDislaySurface();
 
 	/**
-	 * The <code>PaintableSurfaceNode</code> that is managed by this
-	 * <code>Painter</code>.
+	 * Create a {@link DisplaySurface} for this view's {@link ShellWidget}.
+	 * <p>
+	 * Calling this method multiple times can have undesired effects and is
+	 * implementation dependent. As a general rule this should be avoided.
 	 * 
-	 * @return the {@link PaintableSurfaceNode}.
+	 * @param painter
+	 *            The {@link Painter} of the {@code ShellWidget}
+	 * @param closestParentWidget
+	 *            The closest parent that is of type {@link ShellWidget}.
+	 * @return A {@link Future} who's {@link Future#get()} method will block
+	 *         until the {@code DisplaySurface} has been created.
 	 */
-	PaintableSurfaceNode getPaintableRenderNode();
+
+	void initView(Optional<? extends PaintableSurfaceNode> closestParentPaintable);
 }

@@ -11,8 +11,13 @@
  */
 package org.trinity.shell.api.surface;
 
+import org.trinity.shell.api.node.ShellNode;
 import org.trinity.shell.api.node.ShellNodeParent;
 
+/**
+ * A {@link ShellSurface} that can have child {@link ShellNode}s.
+ * 
+ */
 public interface ShellSurfaceParent extends ShellSurface, ShellNodeParent {
 
 }

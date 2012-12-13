@@ -2,8 +2,13 @@ package org.trinity.shellplugin.widget.api.binding;
 
 public class DummyView {
 
-	@ViewPropertySlot("dummyAttribute")
-	public void dummyViewSlot() {
+	@ViewPropertySlot({ "object", "nameless" })
+	public void viewSlot0(Object arg) {
+
+	}
+
+	@ViewPropertySlot("primitiveBoolean")
+	public void viewSlotPrimitiveBoolean(boolean arg) {
 
 	}
 }

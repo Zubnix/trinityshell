@@ -14,21 +14,14 @@ package org.trinity.shell.api.widget;
 import org.trinity.foundation.display.api.DisplayAreaManipulator;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.ShellNodeExecutor;
 import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 
 // TODO documentation
 /**
- * A <code>WidgetGeoExecutor</code> is a delegate class for directly
- * manipulating a {@link BaseShellWidget}'s geometry. A
- * <code>BaseShellWidget</code> will ask it's <code>WidgetGeoExecutor</code> to
- * directly perform the requested geometric change.
+ * A delegate for managing a {@link BaseShellWidget}'s geometry.
  * 
- * @author Erik De Rijcke
- * @since 1.0
- * @see ShellNodeExecutor
  */
 public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 

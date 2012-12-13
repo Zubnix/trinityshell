@@ -14,6 +14,10 @@ package org.trinity.shell.api.surface;
 import org.trinity.foundation.display.api.DisplayArea;
 import org.trinity.shell.api.node.ShellNodeExecutor;
 
+/**
+ * Geometry delegate for a {@link ShellSurface}.
+ * 
+ */
 public interface ShellSurfaceExecutor extends ShellNodeExecutor {
 	DisplayArea getSurfacePeer();
 }

@@ -11,15 +11,13 @@
  */
 package org.trinity.render.qt.impl;
 
-import java.util.Map;
-import java.util.WeakHashMap;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
-import org.trinity.foundation.display.api.DisplaySurfaceFactory;
-import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.render.api.PaintInstruction;
+import org.trinity.foundation.render.api.PaintRoutine;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.render.qt.api.QJRenderEngine;
@@ -29,9 +27,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.trolltech.qt.core.QCoreApplication;
-import com.trolltech.qt.core.QEvent;
-import com.trolltech.qt.core.QObject;
-import com.trolltech.qt.gui.QWidget;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
@@ -56,30 +51,21 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class QJRenderEngineImpl implements QJRenderEngine {
 
-	private final Map<PaintableSurfaceNode, QWidget> paintableToVisual = new WeakHashMap<PaintableSurfaceNode, QWidget>();
-	private final Map<QWidget, PaintableSurfaceNode> visualToPaintable = new WeakHashMap<QWidget, PaintableSurfaceNode>();
-
 	private final QJRenderEventConverter renderEventConverter;
-	private final DisplaySurfaceFactory displaySurfaceFactory;
 	private final EventBus displayEventBus;
 
 	@Inject
 	QJRenderEngineImpl(	final QJRenderEventConverter renderEventConverter,
-						final DisplaySurfaceFactory displaySurfaceFactory,
 						@Named("displayEventBus") final EventBus displayEventBus) {
 		this.renderEventConverter = renderEventConverter;
-		this.displaySurfaceFactory = displaySurfaceFactory;
 		this.displayEventBus = displayEventBus;
-	}
-
-	public void removeVisual(final PaintableSurfaceNode paintableSurfaceNode) {
-		final QWidget visual = this.paintableToVisual.remove(paintableSurfaceNode);
-		this.visualToPaintable.remove(visual);
 	}
 
 	@Override
 	public <R> Future<R> invoke(final PaintableSurfaceNode paintableSurfaceNode,
-								final PaintInstruction<R, QJPaintContext> paintInstruction) {
+								final PaintRoutine<R, QJPaintContext> paintInstruction) {
+		checkNotNull(paintableSurfaceNode);
+		checkNotNull(paintInstruction);
 		// make sure qapplication.initialize() is finished before submitting any
 		// runnables, else they get lost.
 		while (QCoreApplication.startingUp()) {
@@ -97,9 +83,9 @@ public class QJRenderEngineImpl implements QJRenderEngine {
 		final FutureTask<R> futureTask = new FutureTask<R>(new Callable<R>() {
 			@Override
 			public R call() throws Exception {
-				final QJPaintContext qjPaintContext = new QJPaintContextImpl(	paintableSurfaceNode,
-																				QJRenderEngineImpl.this,
-																				QJRenderEngineImpl.this.displaySurfaceFactory);
+				final QJPaintContext qjPaintContext = new QJPaintContextImpl(	renderEventConverter,
+																				displayEventBus,
+																				paintableSurfaceNode);
 				final R result = paintInstruction.call(qjPaintContext);
 				return result;
 			}
@@ -107,36 +93,4 @@ public class QJRenderEngineImpl implements QJRenderEngine {
 		QCoreApplication.invokeLater(futureTask);
 		return futureTask;
 	}
-
-	public QWidget getVisual(final PaintableSurfaceNode paintableSurfaceNode) {
-		return this.paintableToVisual.get(paintableSurfaceNode);
-	}
-
-	public void putVisual(	final DisplayEventSource displayEventSource,
-							final PaintableSurfaceNode paintableSurfaceNode,
-							final QWidget visual) {
-		visual.installEventFilter(new QJRenderEventFilter(	this.displayEventBus,
-															this.renderEventConverter,
-															displayEventSource,
-															visual));
-		visual.installEventFilter(new QObject() {
-			@Override
-			public boolean eventFilter(	final QObject qObject,
-										final QEvent qEvent) {
-				if ((qEvent.type() == QEvent.Type.Destroy)
-						&& QJRenderEngineImpl.this.visualToPaintable.containsKey(qObject)) {
-					final PaintableSurfaceNode paintableSurfaceNode = QJRenderEngineImpl.this.visualToPaintable
-							.remove(qObject);
-					QJRenderEngineImpl.this.paintableToVisual.remove(paintableSurfaceNode);
-				}
-				return false;
-			}
-		});
-
-		this.paintableToVisual.put(	paintableSurfaceNode,
-									visual);
-		this.visualToPaintable.put(	visual,
-									paintableSurfaceNode);
-	}
-
 }

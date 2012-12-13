@@ -19,7 +19,6 @@ import com.google.inject.Inject;
  */
 public class ViewPropertySignalDispatcher implements MethodInterceptor {
 
-	@Inject
 	private ViewPropertyDiscovery viewPropertyDiscovery;
 
 	@Override
@@ -32,9 +31,18 @@ public class ViewPropertySignalDispatcher implements MethodInterceptor {
 		final ViewPropertyChanged viewSignal = invocation.getMethod().getAnnotation(ViewPropertyChanged.class);
 		final String[] viewPropertyNames = viewSignal.value();
 
-		this.viewPropertyDiscovery.notifyViewSlot(	thisObjClass,
+		getViewPropertyDiscovery().notifyViewSlot(	thisObjClass,
 													thisObj,
 													viewPropertyNames);
 		return invocationResult;
+	}
+
+	public ViewPropertyDiscovery getViewPropertyDiscovery() {
+		return viewPropertyDiscovery;
+	}
+
+	@Inject
+	public void setViewPropertyDiscovery(ViewPropertyDiscovery viewPropertyDiscovery) {
+		this.viewPropertyDiscovery = viewPropertyDiscovery;
 	}
 }
