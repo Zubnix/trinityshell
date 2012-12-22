@@ -19,6 +19,7 @@ import org.trinity.render.qt.impl.QJRenderEventConversion;
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
+import com.trolltech.qt.core.QObject;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
@@ -40,7 +41,9 @@ public class QJMouseLeaveConversion implements QJRenderEventConversion {
 
 	@Override
 	public PointerVisitationNotifyEvent convertEvent(	final DisplayEventSource eventSource,
-														final QEvent qEvent) {
+														Object view,
+														QObject eventProducer,
+														final QEvent qEventz) {
 		return new PointerLeaveNotifyEvent(eventSource);
 	}
 

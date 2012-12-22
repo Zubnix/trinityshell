@@ -18,7 +18,6 @@ package org.trinity.foundation.input.api;
 public class PointerInput extends Input {
 
 	private final Button button;
-	private final InputModifiers inputModifiers;
 	private final int relativeX;
 	private final int relativeY;
 	private final int rootX;
@@ -56,9 +55,9 @@ public class PointerInput extends Input {
 						final int relativeY,
 						final int rootX,
 						final int rootY) {
-		super(momentum);
+		super(	momentum,
+				inputModifiers);
 		this.button = button;
-		this.inputModifiers = inputModifiers;
 		this.relativeX = relativeX;
 		this.relativeY = relativeY;
 		this.rootX = rootX;
@@ -73,17 +72,6 @@ public class PointerInput extends Input {
 	 */
 	public Button getButton() {
 		return this.button;
-	}
-
-	/***************************************
-	 * The {@link InputModifiers} that were active when this
-	 * {@code PointerInput} was created.
-	 * 
-	 * @return
-	 *************************************** 
-	 */
-	public InputModifiers getModifiers() {
-		return this.inputModifiers;
 	}
 
 	/***************************************

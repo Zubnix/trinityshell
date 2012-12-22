@@ -19,7 +19,6 @@ package org.trinity.foundation.input.api;
 public class KeyboardInput extends Input {
 
 	private final Key key;
-	private final InputModifiers inputModifiers;
 
 	/***************************************
 	 * Create a new <code>KeyboardInput</code> with the {@link Key} who's
@@ -35,9 +34,9 @@ public class KeyboardInput extends Input {
 	 *************************************** 
 	 */
 	public KeyboardInput(final Momentum momentum, final Key key, final InputModifiers inputModifiers) {
-		super(momentum);
+		super(	momentum,
+				inputModifiers);
 		this.key = key;
-		this.inputModifiers = inputModifiers;
 	}
 
 	/***************************************
@@ -48,16 +47,5 @@ public class KeyboardInput extends Input {
 	 */
 	public Key getKey() {
 		return this.key;
-	}
-
-	/***************************************
-	 * The {@link InputModifiers} that were active during the creation of this
-	 * <code>KeyboardInput</code>.
-	 * 
-	 * @return {@link InputModifiers}
-	 *************************************** 
-	 */
-	public InputModifiers getInputModifiers() {
-		return this.inputModifiers;
 	}
 }

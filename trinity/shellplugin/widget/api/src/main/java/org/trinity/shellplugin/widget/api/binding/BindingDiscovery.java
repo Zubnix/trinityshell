@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import org.trinity.foundation.input.api.Input;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 
 import com.google.common.base.Optional;
@@ -28,26 +29,31 @@ import de.devsurf.injection.guice.annotations.To.Type;
  */
 @Singleton
 @Bind(to = @To(value = Type.IMPLEMENTATION))
-public class ViewPropertyDiscovery {
-	// yo dawg, I heard you like caches so I put a cache in your cache so you
-	// can cache while you cache!
+public class BindingDiscovery {
+
+	// view properties
 	private static final Cache<Class<?>, Method[]> allViewProperties = CacheBuilder.newBuilder().build();
 	private static final Cache<Class<?>, Cache<String, Optional<Method>>> viewPropertiesByName = CacheBuilder
 			.newBuilder().build();
 	private static final Cache<Class<?>, Optional<Method>> viewReferenceFields = CacheBuilder.newBuilder().build();
 	private static final Cache<Class<?>, Optional<Method>> viewSlots = CacheBuilder.newBuilder().build();
 
+	// view inputs
+	private static final Cache<Class<?>, Cache<Class<? extends Input>, Cache<String, Optional<Method>>>> inputSlots = CacheBuilder
+			.newBuilder().build();
+	private static final Cache<Class<?>, Method[]> inputEmitters = CacheBuilder.newBuilder().build();
+
 	private final ViewSlotInvocationHandler viewSlotInvocationHandler;
 
 	@Inject
-	ViewPropertyDiscovery(final ViewSlotInvocationHandler viewSlotInvocationHandler) {
+	BindingDiscovery(final ViewSlotInvocationHandler viewSlotInvocationHandler) {
 		this.viewSlotInvocationHandler = viewSlotInvocationHandler;
 	}
 
 	/****************************************
 	 * Find all methods that have been annotated with {@link ViewProperty}.
 	 * 
-	 * @param thisObjClass
+	 * @param dataContextClass
 	 *            The {@link Class} to scan for annotated methods.
 	 * @return All found {@link Method}s
 	 * @throws ExecutionException
@@ -55,20 +61,19 @@ public class ViewPropertyDiscovery {
 	 *             non public method, or duplicate properties are found.
 	 *************************************** 
 	 */
-	public Method[] lookupAllViewProperties(final Class<?> thisObjClass) throws ExecutionException {
-		return ViewPropertyDiscovery.allViewProperties.get(	thisObjClass,
-															new Callable<Method[]>() {
-																@Override
-																public Method[] call() {
-																	return getAllViewProperties(thisObjClass);
-																}
-															});
+	public Method[] lookupAllViewProperties(final Class<?> dataContextClass) throws ExecutionException {
+		return BindingDiscovery.allViewProperties.get(	dataContextClass,
+														new Callable<Method[]>() {
+															@Override
+															public Method[] call() {
+																return getAllViewProperties(dataContextClass);
+															}
+														});
 	}
 
-	private Method[] getAllViewProperties(final Class<?> clazz) {
+	protected Method[] getAllViewProperties(final Class<?> clazz) {
 		final List<Method> allViewProperties = new ArrayList<Method>();
 
-		final List<Method> viewProperties = new ArrayList<Method>();
 		final List<ViewProperty> viewPropertyAnnotations = new ArrayList<ViewProperty>();
 
 		for (final Method method : clazz.getMethods()) {
@@ -86,9 +91,8 @@ public class ViewPropertyDiscovery {
 			}
 
 			viewPropertyAnnotations.add(viewPropertyAnnotation);
-			viewProperties.add(method);
+			allViewProperties.add(method);
 		}
-		allViewProperties.addAll(viewProperties);
 
 		return allViewProperties.toArray(new Method[] {});
 	}
@@ -97,7 +101,7 @@ public class ViewPropertyDiscovery {
 	 * Find the method annotated with {@link ViewProperty} and the specified
 	 * name.
 	 * 
-	 * @param thisObjClass
+	 * @param dataContextClass
 	 *            The {@link Class} to scan for the view property.
 	 * @param viewPropertyName
 	 *            The name of the view property.
@@ -107,25 +111,25 @@ public class ViewPropertyDiscovery {
 	 *             non public method, or duplicate properties are found.
 	 *************************************** 
 	 */
-	public Optional<Method> lookupViewProperty(	final Class<?> thisObjClass,
+	public Optional<Method> lookupViewProperty(	final Class<?> dataContextClass,
 												final String viewPropertyName) throws ExecutionException {
-		return ViewPropertyDiscovery.viewPropertiesByName.get(	thisObjClass,
-																new Callable<Cache<String, Optional<Method>>>() {
-																	@Override
-																	public Cache<String, Optional<Method>> call() {
-																		return CacheBuilder.newBuilder().build();
-																	}
-																}).get(	viewPropertyName,
-																		new Callable<Optional<Method>>() {
-																			@Override
-																			public Optional<Method> call() {
-																				return getViewProperty(	thisObjClass,
-																										viewPropertyName);
-																			}
-																		});
+		return BindingDiscovery.viewPropertiesByName.get(	dataContextClass,
+															new Callable<Cache<String, Optional<Method>>>() {
+																@Override
+																public Cache<String, Optional<Method>> call() {
+																	return CacheBuilder.newBuilder().build();
+																}
+															}).get(	viewPropertyName,
+																	new Callable<Optional<Method>>() {
+																		@Override
+																		public Optional<Method> call() {
+																			return getViewProperty(	dataContextClass,
+																									viewPropertyName);
+																		}
+																	});
 	}
 
-	private Optional<Method> getViewProperty(	final Class<?> clazz,
+	protected Optional<Method> getViewProperty(	final Class<?> clazz,
 												final String viewPropertyName) {
 
 		final Method[] viewProperties = getAllViewProperties(clazz);
@@ -142,7 +146,7 @@ public class ViewPropertyDiscovery {
 		return Optional.fromNullable(foundMethod);
 	}
 
-	private String findViewPropertyName(final Method method) {
+	protected String findViewPropertyName(final Method method) {
 		final String viewPropertyName = method.getAnnotation(ViewProperty.class).value();
 		if (!viewPropertyName.equals("")) {
 			return viewPropertyName;
@@ -163,8 +167,8 @@ public class ViewPropertyDiscovery {
 
 	}
 
-	private boolean isDuplicateViewProperty(final List<ViewProperty> viewProperties,
-											final ViewProperty viewProperty) {
+	protected boolean isDuplicateViewProperty(	final List<ViewProperty> viewProperties,
+												final ViewProperty viewProperty) {
 		for (final ViewProperty addedViewAttribute : viewProperties) {
 			if (addedViewAttribute.value().equals(viewProperty.value())) {
 				return true;
@@ -176,7 +180,7 @@ public class ViewPropertyDiscovery {
 	/***************************************
 	 * Find the getter annotated with {@link ViewReference}.
 	 * 
-	 * @param clazz
+	 * @param dataContextClass
 	 *            The {@link Class} to scan.
 	 * @return The found getter method.
 	 * @throws ExecutionException
@@ -184,18 +188,18 @@ public class ViewPropertyDiscovery {
 	 *             non public method, or multiple views are found.
 	 *************************************** 
 	 */
-	public Optional<Method> lookupViewReference(final Class<?> clazz) throws ExecutionException {
+	public Optional<Method> lookupViewReference(final Class<?> dataContextClass) throws ExecutionException {
 
-		return ViewPropertyDiscovery.viewReferenceFields.get(	clazz,
-																new Callable<Optional<Method>>() {
-																	@Override
-																	public Optional<Method> call() {
-																		return getViewReferenceObject(clazz);
-																	}
-																});
+		return BindingDiscovery.viewReferenceFields.get(dataContextClass,
+														new Callable<Optional<Method>>() {
+															@Override
+															public Optional<Method> call() {
+																return getViewReferenceObject(dataContextClass);
+															}
+														});
 	}
 
-	private Optional<Method> getViewReferenceObject(final Class<?> clazz) {
+	protected Optional<Method> getViewReferenceObject(final Class<?> clazz) {
 		Method foundMethod = null;
 		final Method[] methods = clazz.getMethods();
 		for (final Method method : methods) {
@@ -216,7 +220,7 @@ public class ViewPropertyDiscovery {
 	 * Find the method annotated with a {@link ViewPropertySlot} with the given
 	 * name.
 	 * 
-	 * @param clazz
+	 * @param viewClass
 	 *            The view {@link Class} to scan.
 	 * @param viewPropertyName
 	 *            The name that should be present in the
@@ -226,20 +230,20 @@ public class ViewPropertyDiscovery {
 	 *             Thrown if a badly placed annotation is found.
 	 *************************************** 
 	 */
-	public Optional<Method> lookupViewSlot(	final Class<?> clazz,
-											final String viewPropertyName) throws ExecutionException {
-		return ViewPropertyDiscovery.viewSlots.get(	clazz,
-													new Callable<Optional<Method>>() {
-														@Override
-														public Optional<Method> call() {
-															return getViewSlot(	clazz,
-																				viewPropertyName);
-														}
-													});
+	public Optional<Method> lookupViewPropertySlot(	final Class<?> viewClass,
+													final String viewPropertyName) throws ExecutionException {
+		return BindingDiscovery.viewSlots.get(	viewClass,
+												new Callable<Optional<Method>>() {
+													@Override
+													public Optional<Method> call() {
+														return getViewPropertySlot(	viewClass,
+																					viewPropertyName);
+													}
+												});
 	}
 
-	private Optional<Method> getViewSlot(	final Class<?> clazz,
-											final String viewAttributeName) {
+	protected Optional<Method> getViewPropertySlot(	final Class<?> clazz,
+													final String viewAttributeName) {
 		Method foundMethod = null;
 
 		for (final Method method : clazz.getMethods()) {
@@ -255,7 +259,7 @@ public class ViewPropertyDiscovery {
 				if ((foundMethod == null)) {
 					foundMethod = method;
 				} else if ((foundMethod != null)) {
-					throw new IllegalArgumentException(String.format(	"Found multiple %s in the class hierarchy of %s",
+					throw new IllegalArgumentException(String.format(	"Found multiple identical %s in the class hierarchy of %s",
 																		ViewPropertySlot.class.getName(),
 																		clazz.getName()));
 				}
@@ -280,9 +284,9 @@ public class ViewPropertyDiscovery {
 	 *             Thrown if a badly placed annotation is encountered.
 	 *************************************** 
 	 */
-	public <T> void notifyViewSlot(	final Class<? extends T> dataContextClass,
-									final T dataContext,
-									final String... propertyNames) throws ExecutionException {
+	public <T> void notifyViewPropertySlot(	final Class<? extends T> dataContextClass,
+											final T dataContext,
+											final String... propertyNames) throws ExecutionException {
 
 		final Object thisObj = dataContext;
 		final Class<?> thisObjClass = dataContextClass;
@@ -290,10 +294,6 @@ public class ViewPropertyDiscovery {
 		final String[] viewAttributeIds = propertyNames;
 
 		final Optional<Method> viewReference = lookupViewReference(thisObjClass);
-		if (!viewReference.isPresent()) {
-			return;
-		}
-
 		final Method viewField = viewReference.get();
 		Object view;
 		try {
@@ -306,8 +306,8 @@ public class ViewPropertyDiscovery {
 					continue;
 				}
 
-				final Optional<Method> viewSlotMethod = lookupViewSlot(	view.getClass(),
-																		viewAttributeName);
+				final Optional<Method> viewSlotMethod = lookupViewPropertySlot(	view.getClass(),
+																				viewAttributeName);
 				if (!viewSlotMethod.isPresent()) {
 					continue;
 				}
@@ -325,10 +325,131 @@ public class ViewPropertyDiscovery {
 			}
 		} catch (final IllegalAccessException e) {
 			throw new ExecutionException(e);
-		} catch (final IllegalArgumentException e) {
-			throw new ExecutionException(e);
 		} catch (final InvocationTargetException e) {
 			throw new ExecutionException(e);
 		}
+	}
+
+	public Optional<Method> lookupInputSlot(final Class<?> dataContextClass,
+											final Class<? extends Input> inputType,
+											final String inputSlotName) throws ExecutionException {
+		return inputSlots.get(	dataContextClass,
+								new Callable<Cache<Class<? extends Input>, Cache<String, Optional<Method>>>>() {
+									@Override
+									public Cache<Class<? extends Input>, Cache<String, Optional<Method>>> call()
+											throws Exception {
+										return CacheBuilder.newBuilder().build();
+									}
+								}).get(	inputType,
+										new Callable<Cache<String, Optional<Method>>>() {
+											@Override
+											public Cache<String, Optional<Method>> call() throws Exception {
+												return CacheBuilder.newBuilder().build();
+											}
+										}).get(	inputSlotName,
+												new Callable<Optional<Method>>() {
+													@Override
+													public Optional<Method> call() throws Exception {
+														return getInputSlot(dataContextClass,
+																			inputType,
+																			inputSlotName);
+													}
+												});
+	}
+
+	protected Optional<Method> getInputSlot(Class<?> dataContextClass,
+											Class<? extends Input> inputType,
+											String inputSlotName) {
+		Method[] allMethods = dataContextClass.getMethods();
+		Method foundMethod = null;
+
+		for (Method method : allMethods) {
+			InputSlot inputSlotAnnotation = method.getAnnotation(InputSlot.class);
+			if (inputSlotAnnotation == null) {
+				continue;
+			}
+
+			Class<? extends Input> validInputType = inputSlotAnnotation.input();
+			String validInputSlotName = inputSlotAnnotation.name();
+			if (validInputSlotName.equals("")) {
+				validInputSlotName = method.getName();
+			}
+			if (validInputType.isAssignableFrom(inputType) && validInputSlotName.equals(inputSlotName)) {
+				if (foundMethod == null) {
+					foundMethod = method;
+				} else {
+					throw new IllegalArgumentException(String.format(	"Found multiple identical %s in the class hierarchy of %s",
+																		InputSlot.class.getName(),
+																		dataContextClass.getName()));
+				}
+			}
+		}
+		return Optional.fromNullable(foundMethod);
+	}
+
+	public Method[] lookupInputEmitters(final Class<?> viewClass) throws ExecutionException {
+		return inputEmitters.get(	viewClass,
+									new Callable<Method[]>() {
+										@Override
+										public Method[] call() throws Exception {
+											return getInputEmitters(viewClass);
+										}
+									});
+	}
+
+	protected Method[] getInputEmitters(Class<?> viewClass) {
+		Method[] allMethods = viewClass.getMethods();
+
+		List<Method> foundMethods = new ArrayList<Method>();
+		for (Method method : allMethods) {
+			InputEmitter inputEmitterAnnotation = method.getAnnotation(InputEmitter.class);
+			if (inputEmitterAnnotation == null) {
+				continue;
+			}
+		}
+
+		return foundMethods.toArray(new Method[] {});
+	}
+
+	public Optional<String> lookupInputEmitterInputSlotName(Object view,
+															Object possibleInputEmitter,
+															Class<? extends Input> inputType) throws ExecutionException {
+		Method[] inputEmitters = lookupInputEmitters(view.getClass());
+		String inputSlotName = null;
+		for (Method inputEmitterMethod : inputEmitters) {
+			try {
+				Object inputEmitter = inputEmitterMethod.invoke(view);
+				if (inputEmitter.equals(possibleInputEmitter)) {
+					if (inputSlotName != null) {
+						throw new IllegalArgumentException(String.format(	"There is ambiguity as to which slot should handle the given input type. Found multiple matching %s for type %s coming from %s as declared in %s.",
+																			InputSignal.class.getName(),
+																			inputType.getName(),
+																			possibleInputEmitter,
+																			view));
+					}
+
+					InputEmitter inputEmitterAnnotation = inputEmitterMethod.getAnnotation(InputEmitter.class);
+					InputSignal[] inputSignals = inputEmitterAnnotation.value();
+					for (InputSignal inputSignal : inputSignals) {
+						boolean validType = inputSignal.inputType().isAssignableFrom(inputType);
+						if (validType) {
+							if (inputSlotName != null) {
+								throw new IllegalArgumentException(String.format(	"There is ambiguity as to which slot should handle the given input type. Found multiple matching %s for type %s coming from %s as declared in %s.",
+																					InputSignal.class.getName(),
+																					inputType.getName(),
+																					possibleInputEmitter,
+																					view));
+							}
+							inputSlotName = inputSignal.inputSlotName();
+						}
+					}
+				}
+			} catch (IllegalAccessException e) {
+				throw new ExecutionException(e);
+			} catch (InvocationTargetException e) {
+				throw new ExecutionException(e);
+			}
+		}
+		return Optional.fromNullable(inputSlotName);
 	}
 }

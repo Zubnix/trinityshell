@@ -19,6 +19,7 @@ import org.trinity.render.qt.impl.QJRenderEventConversion;
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
+import com.trolltech.qt.core.QObject;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
@@ -40,6 +41,8 @@ public class QJMouseEnterConversion implements QJRenderEventConversion {
 
 	@Override
 	public PointerVisitationNotifyEvent convertEvent(	final DisplayEventSource eventSource,
+														Object view,
+														QObject evenetProducer,
 														final QEvent qEvent) {
 		return new PointerEnterNotifyEvent(eventSource);
 	}

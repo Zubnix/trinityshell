@@ -1,5 +1,10 @@
 package org.trinity.shellplugin.widget.api.binding;
 
+import org.trinity.foundation.input.api.Input;
+import org.trinity.foundation.input.api.InputModifier;
+import org.trinity.foundation.input.api.KeyboardInput;
+import org.trinity.foundation.input.api.Momentum;
+import org.trinity.foundation.input.api.PointerInput;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.foundation.render.api.Painter;
 import org.trinity.foundation.render.api.SurfaceNode;
@@ -11,6 +16,27 @@ public class DummyPaintableSurfaceNode implements PaintableSurfaceNode {
 	private Object object;
 	private Object nameless = "namelessValue";
 	private boolean primitiveBoolean = true;
+
+	@InputSlot(name = "onClick", momentum = { Momentum.STARTED, Momentum.STOPPED }, modifier = { InputModifier.MOD_1,
+			InputModifier.MOD_CTRL })
+	public void onClick(PointerInput pointerInput) {
+
+	}
+
+	@InputSlot(name = "onKey", momentum = Momentum.STARTED)
+	public void onKey(KeyboardInput keyboardInput) {
+
+	}
+
+	@InputSlot(input = KeyboardInput.class)
+	public void onAnyKeyInput(Input input) {
+
+	}
+
+	@InputSlot
+	public void onAny() {
+
+	}
 
 	@ViewReference
 	public DummyView getView() {

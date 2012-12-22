@@ -11,60 +11,34 @@
  */
 package org.trinity.render.qt.impl.eventconverters;
 
-import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
-import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.input.api.Button;
-import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Momentum;
-import org.trinity.foundation.input.api.PointerInput;
-import org.trinity.render.qt.impl.QJRenderEventConversion;
+import org.trinity.shellplugin.widget.api.binding.BindingDiscovery;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
-import com.trolltech.qt.gui.QMouseEvent;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
 
 @Bind(multiple = true)
+@To(To.Type.INTERFACES)
 @Singleton
-public class QJButtonPressedConversion implements QJRenderEventConversion {
+public class QJButtonPressedConversion extends AbstractQJButtonConversion {
 
-	QJButtonPressedConversion() {
-
-	}
-
-	@Override
-	public ButtonNotifyEvent convertEvent(	final DisplayEventSource source,
-											final QEvent qEvent) {
-		qEvent.accept();
-
-		final QMouseEvent qMouseEvent = (QMouseEvent) qEvent;
-
-		final int buttonCode = qMouseEvent.button().value();
-		final int state = qMouseEvent.modifiers().value();
-
-		final int rootX = qMouseEvent.globalX();
-		final int rootY = qMouseEvent.globalY();
-		final int relativeX = qMouseEvent.x();
-		final int relativeY = qMouseEvent.y();
-
-		final Button button = new Button(buttonCode);
-		final InputModifiers inputModifiers = new InputModifiers(state);
-		final PointerInput mouseInput = new PointerInput(	Momentum.STARTED,
-															button,
-															inputModifiers,
-															relativeX,
-															relativeY,
-															rootX,
-															rootY);
-
-		return new ButtonNotifyEvent(	source,
-										mouseInput);
+	@Inject
+	QJButtonPressedConversion(BindingDiscovery bindingDiscovery) {
+		super(bindingDiscovery);
 	}
 
 	@Override
 	public Type getQEventType() {
 		return QEvent.Type.MouseButtonPress;
+	}
+
+	@Override
+	public Momentum getMomentum() {
+		return Momentum.STARTED;
 	}
 }

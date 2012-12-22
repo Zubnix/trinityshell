@@ -11,7 +11,6 @@
  */
 package org.trinity.render.qt.api;
 
-import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.render.api.PaintContext;
 import org.trinity.foundation.render.api.PaintRoutine;
 
@@ -34,6 +33,7 @@ public interface QJPaintContext extends PaintContext {
 	 */
 	void syncVisualGeometryToSurfaceNode(QWidget visual);
 
-	QJViewEventSubscription subscribeToEvents(	DisplayEventSource displayEventSource,
-												QWidget view);
+	// QJViewEventSubscription subscribeToEvents( DisplayEventSource
+	// displayEventSource,
+	// QWidget view);
 }

@@ -18,9 +18,11 @@ import java.util.Set;
 import org.trinity.foundation.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.api.event.DisplayEventSource;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
+import com.trolltech.qt.core.QObject;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
@@ -44,28 +46,31 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Singleton
 public class QJRenderEventConverter {
 
-	private final Map<QEvent.Type, QJRenderEventConversion> converterByQEventType = new HashMap<QEvent.Type, QJRenderEventConversion>();
+	private final Map<QEvent.Type, Optional<QJRenderEventConversion>> converterByQEventType = new HashMap<QEvent.Type, Optional<QJRenderEventConversion>>();
 
 	@Inject
 	QJRenderEventConverter(final Set<QJRenderEventConversion> qfusionEventConversions) {
 		for (final QJRenderEventConversion eventConverter : qfusionEventConversions) {
 			this.converterByQEventType.put(	eventConverter.getQEventType(),
-											eventConverter);
+											Optional.of(eventConverter));
 		}
 	}
 
-	public DisplayEvent convertRenderEvent(	final DisplayEventSource eventSource,
-											final QEvent event) {
+	public Optional<DisplayEvent> convertRenderEvent(	final DisplayEventSource eventSource,
+														Object view,
+														final QObject eventProducer,
+														final QEvent event) {
 
-		if ((event != null) && (eventSource != null)) {
-			final QJRenderEventConversion eventConverter = this.converterByQEventType.get(event.type());
-			if (eventConverter != null) {
-				final DisplayEvent convertedEvent = eventConverter.convertEvent(eventSource,
-																				event);
+		final Optional<QJRenderEventConversion> eventConverter = this.converterByQEventType.get(event.type());
+		DisplayEvent displayEvent = null;
+		if (eventConverter.isPresent()) {
+			displayEvent = eventConverter.get().convertEvent(	eventSource,
+																view,
+																eventProducer,
+																event);
 
-				return convertedEvent;
-			}
 		}
-		return null;
+
+		return Optional.fromNullable(displayEvent);
 	}
 }

@@ -23,8 +23,8 @@
  * {@link org.trinity.shellplugin.widget.api.binding.ViewPropertySlot}. This
  * annotation is given the names of the properties that it will listened to. To
  * manually notify a {@code ViewPropertySlot}, inject a
- * {@link org.trinity.shellplugin.widget.api.binding.ViewPropertyDiscovery}
+ * {@link org.trinity.shellplugin.widget.api.binding.BindingDiscovery}
  * instance and call
- * {@link org.trinity.shellplugin.widget.api.binding.ViewPropertyDiscovery#notifyViewSlot(Class, Object, String...)}.
+ * {@link org.trinity.shellplugin.widget.api.binding.BindingDiscovery#notifyViewPropertySlot(Class, Object, String...)}.
  */
 package org.trinity.shellplugin.widget.api.binding;

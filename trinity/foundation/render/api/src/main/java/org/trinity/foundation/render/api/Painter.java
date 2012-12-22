@@ -50,5 +50,5 @@ public interface Painter extends DisplayAreaManipulator {
 	 *         until the {@code DisplaySurface} has been created.
 	 */
 
-	void initView(Optional<? extends PaintableSurfaceNode> closestParentPaintable);
+	void bindView(Optional<? extends PaintableSurfaceNode> closestParentPaintable);
 }

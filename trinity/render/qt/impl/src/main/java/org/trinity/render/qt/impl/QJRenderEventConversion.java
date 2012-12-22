@@ -16,9 +16,12 @@ import org.trinity.foundation.display.api.event.DisplayEventSource;
 
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
+import com.trolltech.qt.core.QObject;
 
 public interface QJRenderEventConversion {
 	DisplayEvent convertEvent(	DisplayEventSource source,
+	                          	Object view,
+								QObject eventProducer,
 								QEvent qEvent);
 
 	Type getQEventType();

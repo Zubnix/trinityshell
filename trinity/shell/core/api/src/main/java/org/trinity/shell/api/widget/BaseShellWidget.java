@@ -85,7 +85,7 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 	protected void init(final BaseShellWidget closestParentWidget) {
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			this);
-		this.painter.initView(Optional.fromNullable(closestParentWidget));
+		this.painter.bindView(Optional.fromNullable(closestParentWidget));
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			getDisplaySurface());
 		addShellNodeEventHandler(new DestroyCallback());

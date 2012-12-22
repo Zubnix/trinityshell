@@ -18,17 +18,10 @@ import org.trinity.render.qt.impl.QJRenderEventConversion;
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
+import com.trolltech.qt.core.QObject;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
-/**
- * A <code>QFusionDestroyConverter</code> takes a <code>QEvent</code> and it's
- * <code>DisplayEventSource</code> as input and converts it to a
- * <code>DestroyNotifyEvent</code>.
- * 
- * @author Erik De Rijcke
- * @since 1.0
- */
 @Bind(multiple = true)
 @Singleton
 public class QJDestroyConversion implements QJRenderEventConversion {
@@ -38,7 +31,9 @@ public class QJDestroyConversion implements QJRenderEventConversion {
 
 	@Override
 	public DestroyNotifyEvent convertEvent(	final DisplayEventSource eventSource,
-											final QEvent qEvent) {
+											Object view,
+											QObject eventProducer,
+											final QEvent qEventz) {
 		return new DestroyNotifyEvent(eventSource);
 	}
 

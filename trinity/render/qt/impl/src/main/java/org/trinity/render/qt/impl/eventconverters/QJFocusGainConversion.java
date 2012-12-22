@@ -19,6 +19,7 @@ import org.trinity.render.qt.impl.QJRenderEventConversion;
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
+import com.trolltech.qt.core.QObject;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
@@ -39,6 +40,8 @@ public class QJFocusGainConversion implements QJRenderEventConversion {
 
 	@Override
 	public FocusNotifyEvent convertEvent(	final DisplayEventSource eventSource,
+											Object view,
+											QObject eventProducer,
 											final QEvent qEvent) {
 		return new FocusGainNotifyEvent(eventSource);
 	}

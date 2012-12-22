@@ -11,27 +11,24 @@
  */
 package org.trinity.render.qt.impl;
 
-import org.trinity.foundation.display.api.event.DisplayEventSource;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.qt.api.QJPaintContext;
-import org.trinity.render.qt.api.QJViewEventSubscription;
 
 import com.google.common.eventbus.EventBus;
-import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QWidget;
 
 public class QJPaintContextImpl implements QJPaintContext {
 
-	private final QJRenderEventConverter renderEventConverter;
-	private final EventBus displayEventBus;
+	// private final QJRenderEventConverter renderEventConverter;
+	// private final EventBus displayEventBus;
 	private final PaintableSurfaceNode paintableSurfaceNode;
 
 	public QJPaintContextImpl(	QJRenderEventConverter renderEventConverter,
 								EventBus displayEventBus,
 								final PaintableSurfaceNode paintableSurfaceNode) {
 		this.paintableSurfaceNode = paintableSurfaceNode;
-		this.renderEventConverter = renderEventConverter;
-		this.displayEventBus = displayEventBus;
+		// this.renderEventConverter = renderEventConverter;
+		// this.displayEventBus = displayEventBus;
 	}
 
 	@Override
@@ -55,15 +52,15 @@ public class QJPaintContextImpl implements QJPaintContext {
 		return this.paintableSurfaceNode;
 	}
 
-	@Override
-	public QJViewEventSubscription subscribeToEvents(	final DisplayEventSource displayEventSource,
-														final QWidget view) {
-		QObject eventFilter = new QJRenderEventFilter(	this.displayEventBus,
-														this.renderEventConverter,
-														displayEventSource,
-														view);
-		view.installEventFilter(eventFilter);
-		return new QJViewEventSubscriptionImpl(	view,
-												eventFilter);
-	}
+//	@Override
+//	public QJViewEventSubscription subscribeToEvents(	final DisplayEventSource displayEventSource,
+//														final QWidget view) {
+//		QObject eventFilter = new QJViewEventTracker(	this.displayEventBus,
+//														this.renderEventConverter,
+//														displayEventSource,
+//														view);
+//		view.installEventFilter(eventFilter);
+//		return new QJViewEventSubscriptionImpl(	view,
+//												eventFilter);
+//	}
 }

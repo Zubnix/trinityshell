@@ -18,7 +18,8 @@ package org.trinity.foundation.input.api;
  */
 public class Input {
 
-	public Momentum momentum;
+	private Momentum momentum;
+	private InputModifiers inputModifiers;
 
 	/***************************************
 	 * Construct new <code>Input</code> with the given {@link Momentum}. The
@@ -29,8 +30,9 @@ public class Input {
 	 *            a {@link Momentum}.
 	 *************************************** 
 	 */
-	public Input(final Momentum momentum) {
+	public Input(final Momentum momentum, InputModifiers inputModifiers) {
 		this.momentum = momentum;
+		this.inputModifiers = inputModifiers;
 	}
 
 	/***************************************
@@ -42,4 +44,9 @@ public class Input {
 	public Momentum getMomentum() {
 		return this.momentum;
 	}
+
+	public InputModifiers getInputModifiers() {
+		return inputModifiers;
+	}
+
 }

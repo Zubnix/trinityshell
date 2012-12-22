@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * implementation is thus to place this annotation on setter methods.
  * <p>
  * If more precise control is required, see
- * {@link ViewPropertyDiscovery#notifyViewSlot(Class, Object, String...)}.
+ * {@link BindingDiscovery#notifyViewPropertySlot(Class, Object, String...)}.
  * 
  *************************************** 
  */

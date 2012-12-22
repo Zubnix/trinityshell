@@ -14,14 +14,14 @@ import org.junit.Test;
 
 import com.google.common.base.Optional;
 
-public class BindingTest {
+public class ViewPropertyBindingTest {
 
 	@Test
 	public void testViewReferenceDiscovery() throws ExecutionException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 
-		ViewPropertyDiscovery viewPropertyDiscovery = new ViewPropertyDiscovery(null);
-		Optional<Method> dummyView = viewPropertyDiscovery.lookupViewReference(DummyPaintableSurfaceNode.class);
+		BindingDiscovery bindingDiscovery = new BindingDiscovery(null);
+		Optional<Method> dummyView = bindingDiscovery.lookupViewReference(DummyPaintableSurfaceNode.class);
 		DummyPaintableSurfaceNode dummyPaintableSurfaceNode = new DummyPaintableSurfaceNode();
 		Object view = dummyView.get().invoke(dummyPaintableSurfaceNode);
 		assertNotNull(view);
@@ -29,13 +29,13 @@ public class BindingTest {
 
 	@Test
 	public void testViewSlotDiscovery() throws ExecutionException {
-		ViewPropertyDiscovery viewPropertyDiscovery = new ViewPropertyDiscovery(null);
-		Optional<Method> objectSlot = viewPropertyDiscovery.lookupViewSlot(	DummyView.class,
-																			"object");
+		BindingDiscovery bindingDiscovery = new BindingDiscovery(null);
+		Optional<Method> objectSlot = bindingDiscovery.lookupViewPropertySlot(	DummyView.class,
+																		"object");
 		assertNotNull(objectSlot.orNull());
 
-		Optional<Method> namelessSlot = viewPropertyDiscovery.lookupViewSlot(	DummyView.class,
-																				"nameless");
+		Optional<Method> namelessSlot = bindingDiscovery.lookupViewPropertySlot(DummyView.class,
+																		"nameless");
 		assertNotNull(namelessSlot.orNull());
 	}
 
@@ -44,10 +44,10 @@ public class BindingTest {
 
 		ViewSlotInvocationHandler viewSlotInvocationHandler = mock(ViewSlotInvocationHandler.class);
 
-		ViewPropertyDiscovery viewPropertyDiscovery = new ViewPropertyDiscovery(viewSlotInvocationHandler);
+		BindingDiscovery bindingDiscovery = new BindingDiscovery(viewSlotInvocationHandler);
 
 		ViewPropertySignalDispatcher viewPropertySignalDispatcher = new ViewPropertySignalDispatcher();
-		viewPropertySignalDispatcher.setViewPropertyDiscovery(viewPropertyDiscovery);
+		viewPropertySignalDispatcher.setViewPropertyDiscovery(bindingDiscovery);
 
 		MethodInvocation methodInvocation = mock(MethodInvocation.class);
 		DummyPaintableSurfaceNode dummyPaintableSurfaceNode = new DummyPaintableSurfaceNode();

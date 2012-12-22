@@ -11,64 +11,34 @@
  */
 package org.trinity.render.qt.impl.eventconverters;
 
-import org.trinity.foundation.display.api.event.DisplayEventSource;
-import org.trinity.foundation.display.api.event.KeyNotifyEvent;
-import org.trinity.foundation.input.api.InputModifiers;
-import org.trinity.foundation.input.api.Key;
-import org.trinity.foundation.input.api.KeyboardInput;
 import org.trinity.foundation.input.api.Momentum;
-import org.trinity.render.qt.impl.QJRenderEventConversion;
+import org.trinity.shellplugin.widget.api.binding.BindingDiscovery;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
-import com.trolltech.qt.gui.QKeyEvent;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
 
-// TODO documentation
-/**
- * A <code>QFusionKeyPressConverter</code> takes a <code>QKeyEvent</code> and
- * it's <code>DisplayEventSource</code> as input and converts it to a
- * <code>KeyNotifyEvent</code>.
- * 
- * @author Erik De Rijcke
- * @since 1.0
- */
 @Bind(multiple = true)
+@To(To.Type.INTERFACES)
 @Singleton
-public class QJKeyPressedConversion implements QJRenderEventConversion {
+public class QJKeyPressedConversion extends AbstractQJKeyConversion {
 
-	QJKeyPressedConversion() {
-	}
-
-	@Override
-	public KeyNotifyEvent convertEvent(	final DisplayEventSource source,
-										final QEvent qEvent) {
-
-		qEvent.accept();
-		final QKeyEvent keyEvent = (QKeyEvent) qEvent;
-
-		if (keyEvent.isAutoRepeat()) {
-			return null;
-		}
-
-		final int keyCode = keyEvent.nativeScanCode();
-
-		final int state = keyEvent.nativeModifiers();
-
-		final Key key = new Key(keyCode);
-		final InputModifiers inputModifiers = new InputModifiers(state);
-		final KeyboardInput input = new KeyboardInput(	Momentum.STARTED,
-														key,
-														inputModifiers);
-
-		return new KeyNotifyEvent(	source,
-									input);
+	@Inject
+	QJKeyPressedConversion(BindingDiscovery bindingDiscovery) {
+		super(bindingDiscovery);
 	}
 
 	@Override
 	public Type getQEventType() {
 		return QEvent.Type.KeyPress;
+	}
+
+	@Override
+	public Momentum getMomemtum() {
+		return Momentum.STARTED;
 	}
 }

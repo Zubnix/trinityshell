@@ -19,7 +19,7 @@ import com.google.inject.Inject;
  */
 public class ViewPropertySignalDispatcher implements MethodInterceptor {
 
-	private ViewPropertyDiscovery viewPropertyDiscovery;
+	private BindingDiscovery bindingDiscovery;
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
@@ -31,18 +31,18 @@ public class ViewPropertySignalDispatcher implements MethodInterceptor {
 		final ViewPropertyChanged viewSignal = invocation.getMethod().getAnnotation(ViewPropertyChanged.class);
 		final String[] viewPropertyNames = viewSignal.value();
 
-		getViewPropertyDiscovery().notifyViewSlot(	thisObjClass,
+		getViewPropertyDiscovery().notifyViewPropertySlot(	thisObjClass,
 													thisObj,
 													viewPropertyNames);
 		return invocationResult;
 	}
 
-	public ViewPropertyDiscovery getViewPropertyDiscovery() {
-		return viewPropertyDiscovery;
+	public BindingDiscovery getViewPropertyDiscovery() {
+		return bindingDiscovery;
 	}
 
 	@Inject
-	public void setViewPropertyDiscovery(ViewPropertyDiscovery viewPropertyDiscovery) {
-		this.viewPropertyDiscovery = viewPropertyDiscovery;
+	public void setViewPropertyDiscovery(BindingDiscovery bindingDiscovery) {
+		this.bindingDiscovery = bindingDiscovery;
 	}
 }
