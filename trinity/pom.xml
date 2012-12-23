@@ -87,6 +87,13 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<artifactId>de.devsurf.injection.guice.core</artifactId>
 			<version>${autobind.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>de.devsurf.injection.guice.scanner</groupId>
+			<artifactId>
+				de.devsurf.injection.guice.scanner.asm
+			</artifactId>
+			<version>${autobind.version}</version>
+		</dependency>
 
 		<!-- test deps -->
 		<dependency>

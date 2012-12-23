@@ -46,12 +46,12 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Singleton
 public class QJRenderEventConverter {
 
-	private final Map<QEvent.Type, Optional<QJRenderEventConversion>> converterByQEventType = new HashMap<QEvent.Type, Optional<QJRenderEventConversion>>();
+	private final Map<QEvent.Type, Optional<QJRenderEventConversion>> conversionByQEventType = new HashMap<QEvent.Type, Optional<QJRenderEventConversion>>();
 
 	@Inject
-	QJRenderEventConverter(final Set<QJRenderEventConversion> qfusionEventConversions) {
-		for (final QJRenderEventConversion eventConverter : qfusionEventConversions) {
-			this.converterByQEventType.put(	eventConverter.getQEventType(),
+	QJRenderEventConverter(final Set<QJRenderEventConversion> eventConversions) {
+		for (final QJRenderEventConversion eventConverter : eventConversions) {
+			this.conversionByQEventType.put(eventConverter.getQEventType(),
 											Optional.of(eventConverter));
 		}
 	}
@@ -61,7 +61,7 @@ public class QJRenderEventConverter {
 														final QObject eventProducer,
 														final QEvent event) {
 
-		final Optional<QJRenderEventConversion> eventConverter = this.converterByQEventType.get(event.type());
+		final Optional<QJRenderEventConversion> eventConverter = this.conversionByQEventType.get(event.type());
 		DisplayEvent displayEvent = null;
 		if (eventConverter.isPresent()) {
 			displayEvent = eventConverter.get().convertEvent(	eventSource,

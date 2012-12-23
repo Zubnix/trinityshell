@@ -54,7 +54,7 @@ public class QJViewEventTracker extends QObject {
 										qEvent);
 
 			if (displayEvent.isPresent()) {
-				this.displayEventBus.post(displayEvent);
+				this.displayEventBus.post(displayEvent.get());
 				eventConsumed = true;
 			}
 		}
