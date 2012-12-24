@@ -12,19 +12,19 @@
 package org.trinity.foundation.display.api.event;
 
 /**
- * Notifies when a {@link DisplayEventSource} is made invisible on the screen.
+ * Notifies when a {@link DisplayEventTarget} is made invisible on the screen.
  * 
  */
 public class HideNotifyEvent extends DisplayEvent {
 
 	/*****************************************
 	 * Construct a new <code>HideNotifyEvent</code> that originated from the
-	 * given {@link DisplayEventSource}.
+	 * given {@link DisplayEventTarget}.
 	 * 
-	 * @param displayEventSource
-	 *            a {@link DisplayEventSource}.
+	 * @param displayEventTarget
+	 *            a {@link DisplayEventTarget}.
 	 ****************************************/
-	public HideNotifyEvent(final DisplayEventSource displayEventSource) {
-		super(displayEventSource);
+	public HideNotifyEvent(final DisplayEventTarget displayEventTarget) {
+		super(displayEventTarget);
 	}
 }

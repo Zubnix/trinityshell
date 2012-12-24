@@ -9,11 +9,13 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
-import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.DisplayEventTarget;
 import org.trinity.foundation.display.api.event.FocusGainNotifyEvent;
 import org.trinity.render.qt.impl.DummyQJRenderEngine;
 import org.trinity.render.qt.impl.DummyView;
 import org.trinity.render.qt.impl.QJRenderEventConverter;
+import org.trinity.render.qt.impl.painter.instructions.QJViewEventTracker;
+import org.trinity.render.qt.impl.painter.instructions.QJViewInputTracker;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
@@ -32,7 +34,7 @@ public class EventInterceptionTest {
 	public void testViewEvents() throws InterruptedException {
 		final EventBus displayEventBus = mock(EventBus.class);
 
-		final DisplayEventSource eventSource = mock(DisplayEventSource.class);
+		final DisplayEventTarget eventSource = mock(DisplayEventTarget.class);
 		final DisplayEvent focusGainNotifyEvent = new FocusGainNotifyEvent(eventSource);
 		final Optional<DisplayEvent> optionalFocusGainNotifyEvent = Optional.of(focusGainNotifyEvent);
 		final DisplayEvent buttonNotifyEvent = new ButtonNotifyEvent(	eventSource,
@@ -95,7 +97,7 @@ public class EventInterceptionTest {
 	public void testInputEvents() throws InterruptedException {
 		final EventBus displayEventBus = mock(EventBus.class);
 
-		final DisplayEventSource eventSource = mock(DisplayEventSource.class);
+		final DisplayEventTarget eventSource = mock(DisplayEventTarget.class);
 		final DisplayEvent focusGainNotifyEvent = new FocusGainNotifyEvent(eventSource);
 		final Optional<DisplayEvent> optionalFocusGainNotifyEvent = Optional.of(focusGainNotifyEvent);
 		final DisplayEvent buttonNotifyEvent = new ButtonNotifyEvent(	eventSource,

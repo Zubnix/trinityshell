@@ -12,7 +12,7 @@
 package org.trinity.foundation.display.api.event;
 
 /***************************************
- * Notifies that a {@link DisplayEventSource} has become visible.
+ * Notifies that a {@link DisplayEventTarget} has become visible.
  * 
  *************************************** 
  */
@@ -20,14 +20,14 @@ public class ShowNotifyEvent extends DisplayEvent {
 
 	/***************************************
 	 * Construct a new <code>ShowNotifyEvent</code> with the given
-	 * {@link DisplayEventSource} that became visible.
+	 * {@link DisplayEventTarget} that became visible.
 	 * 
-	 * @param displayEventSource
-	 *            A {@link DisplayEventSource}.
+	 * @param displayEventTarget
+	 *            A {@link DisplayEventTarget}.
 	 *************************************** 
 	 */
-	public ShowNotifyEvent(final DisplayEventSource displayEventSource) {
-		super(displayEventSource);
+	public ShowNotifyEvent(final DisplayEventTarget displayEventTarget) {
+		super(displayEventTarget);
 	}
 
 }

@@ -16,7 +16,7 @@ package org.trinity.foundation.display.api.event;
  * is implementation dependent.
  * <p>
  * For X this would be the name of a changed atom of a
- * {@link DisplayEventSource}.
+ * {@link DisplayEventTarget}.
  * 
  *************************************** 
  */
@@ -26,16 +26,16 @@ public class ProtocolNotifyEvent extends DisplayEvent {
 
 	/***************************************
 	 * Construct a new <code>ProtocolNotifyEvent</code> that originated from the
-	 * given {@link DisplayEventSource} who's native protocol has changed.
+	 * given {@link DisplayEventTarget} who's native protocol has changed.
 	 * 
-	 * @param displayEventSource
-	 *            a {@link DisplayEventSource}
+	 * @param displayEventTarget
+	 *            a {@link DisplayEventTarget}
 	 * @param protocol
 	 *            a native protocol id.
 	 *************************************** 
 	 */
-	public ProtocolNotifyEvent(final DisplayEventSource displayEventSource, final String protocol) {
-		super(displayEventSource);
+	public ProtocolNotifyEvent(final DisplayEventTarget displayEventTarget, final String protocol) {
+		super(displayEventTarget);
 		this.protocol = protocol;
 	}
 

@@ -21,13 +21,13 @@ public class DestroyNotifyEvent extends DisplayEvent {
 
 	/***************************************
 	 * Create a new <code>DestroyNotifyEvent</code> with the provided
-	 * {@link DisplayEventSource} as the resource that was destroyed.
+	 * {@link DisplayEventTarget} as the resource that was destroyed.
 	 * 
-	 * @param displayEventSource
-	 *            A {@link DisplayEventSource}.
+	 * @param displayEventTarget
+	 *            A {@link DisplayEventTarget}.
 	 *************************************** 
 	 */
-	public DestroyNotifyEvent(final DisplayEventSource displayEventSource) {
-		super(displayEventSource);
+	public DestroyNotifyEvent(final DisplayEventTarget displayEventTarget) {
+		super(displayEventTarget);
 	}
 }

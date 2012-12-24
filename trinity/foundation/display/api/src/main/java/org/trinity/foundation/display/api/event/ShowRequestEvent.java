@@ -13,7 +13,7 @@ package org.trinity.foundation.display.api.event;
 
 /****************************************
  * 
- * A request to make a {@link DisplayEventSource} visible.
+ * A request to make a {@link DisplayEventTarget} visible.
  * 
  *************************************** 
  */
@@ -21,13 +21,13 @@ public class ShowRequestEvent extends DisplayEvent {
 
 	/***************************************
 	 * Construct a new <code>ShowRequestEvent</code> with the given
-	 * {@link DisplayEventSource} that wants to become visible.
+	 * {@link DisplayEventTarget} that wants to become visible.
 	 * 
-	 * @param displayEventSource
-	 *            a {@link DisplayEventSource}
+	 * @param displayEventTarget
+	 *            a {@link DisplayEventTarget}
 	 *************************************** 
 	 */
-	public ShowRequestEvent(final DisplayEventSource displayEventSource) {
-		super(displayEventSource);
+	public ShowRequestEvent(final DisplayEventTarget displayEventTarget) {
+		super(displayEventTarget);
 	}
 }

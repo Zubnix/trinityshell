@@ -20,17 +20,17 @@ public class ButtonNotifyEvent extends InputNotifyEvent<PointerInput> {
 
 	/***************************************
 	 * Create a new <code>ButtonNotifyEvent</code> with the given
-	 * {@link DisplayEventSource} as the surface where the pointer input
+	 * {@link DisplayEventTarget} as the surface where the pointer input
 	 * originated.
 	 * 
-	 * @param displayEventSource
+	 * @param displayEventTarget
 	 *            The source of this {@link DisplayEvent}.
 	 * @param pointerInput
 	 *            The {@link PointerInput} details.
 	 *************************************** 
 	 */
-	public ButtonNotifyEvent(final DisplayEventSource displayEventSource, final PointerInput pointerInput) {
-		super(	displayEventSource,
+	public ButtonNotifyEvent(final DisplayEventTarget displayEventTarget, final PointerInput pointerInput) {
+		super(	displayEventTarget,
 				pointerInput);
 	}
 }

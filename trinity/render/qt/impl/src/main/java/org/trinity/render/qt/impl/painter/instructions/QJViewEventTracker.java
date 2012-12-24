@@ -12,7 +12,7 @@
 package org.trinity.render.qt.impl.painter.instructions;
 
 import org.trinity.foundation.display.api.event.DisplayEvent;
-import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.DisplayEventTarget;
 import org.trinity.render.qt.impl.QJRenderEventConverter;
 
 import com.google.common.base.Optional;
@@ -23,14 +23,14 @@ import com.trolltech.qt.core.QObject;
 
 public class QJViewEventTracker extends QObject {
 
-	private final DisplayEventSource eventSource;
+	private final DisplayEventTarget eventSource;
 	private final EventBus displayEventBus;
 	private final QJRenderEventConverter renderEventConverter;
 	private final QObject view;
 
 	QJViewEventTracker(	final EventBus displayEventBus,
 						final QJRenderEventConverter qjRenderEventConverter,
-						final DisplayEventSource eventSource,
+						final DisplayEventTarget eventSource,
 						QObject view) {
 		this.displayEventBus = displayEventBus;
 		this.renderEventConverter = qjRenderEventConverter;

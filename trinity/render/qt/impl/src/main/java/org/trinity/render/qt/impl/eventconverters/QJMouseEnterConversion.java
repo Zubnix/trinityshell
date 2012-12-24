@@ -11,7 +11,7 @@
  */
 package org.trinity.render.qt.impl.eventconverters;
 
-import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.DisplayEventTarget;
 import org.trinity.foundation.display.api.event.PointerEnterNotifyEvent;
 import org.trinity.foundation.display.api.event.PointerVisitationNotifyEvent;
 import org.trinity.render.qt.impl.QJRenderEventConversion;
@@ -26,7 +26,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 // TODO documentation
 /**
  * A <code>QFusionMouseEnterEventConverter</code> takes a <code>QEvent</code>
- * and it's <code>DisplayEventSource</code> as input and converts it to a
+ * and it's <code>DisplayEventTarget</code> as input and converts it to a
  * <code>MouseEnterLeaveNotifyEvent</code>.
  * 
  * @author Erik De Rijcke
@@ -40,7 +40,7 @@ public class QJMouseEnterConversion implements QJRenderEventConversion {
 	}
 
 	@Override
-	public PointerVisitationNotifyEvent convertEvent(	final DisplayEventSource eventSource,
+	public PointerVisitationNotifyEvent convertEvent(	final DisplayEventTarget eventSource,
 														Object view,
 														QObject evenetProducer,
 														final QEvent qEvent) {

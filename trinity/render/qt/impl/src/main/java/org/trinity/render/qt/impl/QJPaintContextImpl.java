@@ -53,7 +53,7 @@ public class QJPaintContextImpl implements QJPaintContext {
 	}
 
 //	@Override
-//	public QJViewEventSubscription subscribeToEvents(	final DisplayEventSource displayEventSource,
+//	public QJViewEventSubscription subscribeToEvents(	final DisplayEventTarget displayEventSource,
 //														final QWidget view) {
 //		QObject eventFilter = new QJViewEventTracker(	this.displayEventBus,
 //														this.renderEventConverter,

@@ -21,28 +21,28 @@ import org.trinity.foundation.display.api.DisplayServer;
  */
 public class DisplayEvent {
 
-	private final DisplayEventSource displayEventSource;
+	private final DisplayEventTarget displayEventTarget;
 
 	/****************************************
 	 * Construct a generic <code>DisplayEvent</code> with the given
-	 * {@link DisplayEventSource} as the originating resource.
+	 * {@link DisplayEventTarget} as the originating resource.
 	 * 
-	 * @param displayEventSource
-	 *            A {@link DisplayEventSource}
+	 * @param displayEventTarget
+	 *            A {@link DisplayEventTarget}
 	 *************************************** 
 	 */
-	public DisplayEvent(final DisplayEventSource displayEventSource) {
-		this.displayEventSource = displayEventSource;
+	public DisplayEvent(final DisplayEventTarget displayEventTarget) {
+		this.displayEventTarget = displayEventTarget;
 	}
 
 	/****************************************
-	 * Get the {@link DisplayEventSource} where this event originated from.
+	 * Get the {@link DisplayEventTarget} where this event originated from.
 	 * 
-	 * @return A {@link DisplayEventSource}
+	 * @return A {@link DisplayEventTarget}
 	 *************************************** 
 	 */
-	public DisplayEventSource getDisplayEventSource() {
-		return this.displayEventSource;
+	public DisplayEventTarget getDisplayEventSource() {
+		return this.displayEventTarget;
 	}
 
 	@Override

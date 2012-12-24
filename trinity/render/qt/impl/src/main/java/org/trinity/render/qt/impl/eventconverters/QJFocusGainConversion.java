@@ -11,7 +11,7 @@
  */
 package org.trinity.render.qt.impl.eventconverters;
 
-import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.DisplayEventTarget;
 import org.trinity.foundation.display.api.event.FocusGainNotifyEvent;
 import org.trinity.foundation.display.api.event.FocusNotifyEvent;
 import org.trinity.render.qt.impl.QJRenderEventConversion;
@@ -25,7 +25,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 /**
  * A <code>QFusionDestroyConverter</code> takes a <code>QFocusEvent</code> and
- * it's <code>DisplayEventSource</code> as input and converts it to a
+ * it's <code>DisplayEventTarget</code> as input and converts it to a
  * <code>FocusNotifyEvent</code>.
  * 
  * @author Erik De Rijcke
@@ -39,7 +39,7 @@ public class QJFocusGainConversion implements QJRenderEventConversion {
 	}
 
 	@Override
-	public FocusNotifyEvent convertEvent(	final DisplayEventSource eventSource,
+	public FocusNotifyEvent convertEvent(	final DisplayEventTarget eventSource,
 											Object view,
 											QObject eventProducer,
 											final QEvent qEvent) {

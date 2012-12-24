@@ -33,7 +33,7 @@ public interface QJPaintContext extends PaintContext {
 	 */
 	void syncVisualGeometryToSurfaceNode(QWidget visual);
 
-	// QJViewEventSubscription subscribeToEvents( DisplayEventSource
+	// QJViewEventSubscription subscribeToEvents( DisplayEventTarget
 	// displayEventSource,
 	// QWidget view);
 }

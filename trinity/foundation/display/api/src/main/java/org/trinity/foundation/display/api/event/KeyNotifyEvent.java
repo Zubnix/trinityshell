@@ -23,17 +23,17 @@ public class KeyNotifyEvent extends InputNotifyEvent<KeyboardInput> {
 
 	/***************************************
 	 * Create a new <code>KeyNotifyEvent</code> with the given
-	 * {@link DisplayEventSource} as the surface where the keyboard input
+	 * {@link DisplayEventTarget} as the surface where the keyboard input
 	 * originated.
 	 * 
-	 * @param displayEventSource
-	 *            a {@link DisplayEventSource}
+	 * @param displayEventTarget
+	 *            a {@link DisplayEventTarget}
 	 * @param input
 	 *            {@link KeyboardInput}
 	 *************************************** 
 	 */
-	public KeyNotifyEvent(final DisplayEventSource displayEventSource, final KeyboardInput input) {
-		super(	displayEventSource,
+	public KeyNotifyEvent(final DisplayEventTarget displayEventTarget, final KeyboardInput input) {
+		super(	displayEventTarget,
 				input);
 	}
 }

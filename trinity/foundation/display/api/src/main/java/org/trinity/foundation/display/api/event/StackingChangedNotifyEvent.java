@@ -12,7 +12,7 @@
 package org.trinity.foundation.display.api.event;
 
 /***************************************
- * Notifies that the stacking position of a {@link DisplayEventSource} has
+ * Notifies that the stacking position of a {@link DisplayEventTarget} has
  * changed
  * 
  *************************************** 
@@ -21,14 +21,14 @@ public class StackingChangedNotifyEvent extends DisplayEvent {
 
 	/***************************************
 	 * Construct a new <code>StackingChangedNotifyEvent</code> with the given
-	 * {@link DisplayEventSource} who's stacking has changed.
+	 * {@link DisplayEventTarget} who's stacking has changed.
 	 * 
-	 * @param displayEventSource
-	 *            a {@link DisplayEventSource}
+	 * @param displayEventTarget
+	 *            a {@link DisplayEventTarget}
 	 *************************************** 
 	 */
-	public StackingChangedNotifyEvent(final DisplayEventSource displayEventSource) {
-		super(displayEventSource);
+	public StackingChangedNotifyEvent(final DisplayEventTarget displayEventTarget) {
+		super(displayEventTarget);
 	}
 
 }

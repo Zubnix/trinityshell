@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.display.api.event.ButtonNotifyEvent;
 import org.trinity.foundation.display.api.event.DisplayEvent;
-import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.DisplayEventTarget;
 import org.trinity.foundation.input.api.Button;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Momentum;
@@ -28,7 +28,7 @@ public abstract class AbstractQJButtonConversion implements QJRenderEventConvers
 	}
 
 	@Override
-	public DisplayEvent convertEvent(	DisplayEventSource source,
+	public DisplayEvent convertEvent(	DisplayEventTarget target,
 										Object view,
 										QObject eventProducer,
 										QEvent qEvent) {
@@ -66,11 +66,11 @@ public abstract class AbstractQJButtonConversion implements QJRenderEventConvers
 
 		ButtonNotifyEvent buttonNotifyEvent;
 		if (inputSlotName.isPresent()) {
-			buttonNotifyEvent = new BoundButtonInputEvent(	source,
+			buttonNotifyEvent = new BoundButtonInputEvent(	target,
 															pointerInput,
 															inputSlotName.get());
 		} else {
-			buttonNotifyEvent = new ButtonNotifyEvent(	source,
+			buttonNotifyEvent = new ButtonNotifyEvent(	target,
 														pointerInput);
 		}
 		return buttonNotifyEvent;

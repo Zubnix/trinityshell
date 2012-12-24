@@ -14,7 +14,7 @@ package org.trinity.foundation.display.api.event;
 import org.trinity.foundation.shared.geometry.api.Rectangle;
 
 /**
- * Notifies that the geometry (size, place) of a {@link DisplayEventSource} has
+ * Notifies that the geometry (size, place) of a {@link DisplayEventTarget} has
  * changed.
  * 
  */
@@ -24,18 +24,18 @@ public class GeometryNotifyEvent extends DisplayEvent {
 
 	/***************************************
 	 * Create a new <code>GeometryNotifyEvent</code> that originated from the
-	 * given {@link DisplayEventSource}. The new geometry is specified by the
+	 * given {@link DisplayEventTarget}. The new geometry is specified by the
 	 * given {@link Rectangle}.
 	 * 
-	 * @param displayEventSource
-	 *            a {@link DisplayEventSource}
+	 * @param displayEventTarget
+	 *            a {@link DisplayEventTarget}
 	 * @param geometry
 	 *            a {@link Rectangle}.
 	 *************************************** 
 	 */
-	public GeometryNotifyEvent(final DisplayEventSource displayEventSource, final Rectangle geometry) {
+	public GeometryNotifyEvent(final DisplayEventTarget displayEventTarget, final Rectangle geometry) {
 
-		super(displayEventSource);
+		super(displayEventTarget);
 		this.geometry = geometry;
 	}
 

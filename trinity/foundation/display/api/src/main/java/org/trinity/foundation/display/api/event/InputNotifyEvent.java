@@ -24,17 +24,17 @@ public class InputNotifyEvent<I extends Input> extends DisplayEvent {
 
 	/***************************************
 	 * Create a new <code>InputNotifyEvent</code> that originated from the given
-	 * {@link DisplayEventSource}. The input detail is described by the given
+	 * {@link DisplayEventTarget}. The input detail is described by the given
 	 * {@link Input} argument.
 	 * 
-	 * @param displayEventSource
-	 *            A {@link DisplayEventSource}
+	 * @param displayEventTarget
+	 *            A {@link DisplayEventTarget}
 	 * @param input
 	 *            an {@link Input}
 	 *************************************** 
 	 */
-	public InputNotifyEvent(final DisplayEventSource displayEventSource, final I input) {
-		super(displayEventSource);
+	public InputNotifyEvent(final DisplayEventTarget displayEventTarget, final I input) {
+		super(displayEventTarget);
 		this.input = input;
 	}
 

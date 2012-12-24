@@ -16,17 +16,17 @@ import org.mockito.Mockito;
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DisplayEvent;
-import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.DisplayEventTarget;
 
 import com.google.common.eventbus.EventBus;
 
 public class ShellEventDispatcherImplTest {
 
 	/***************************************
-	 * Test if registering multiple {@link DisplayEventSource}s, each will
+	 * Test if registering multiple {@link DisplayEventTarget}s, each will
 	 * receive the same event if one arrives
 	 * <p>
-	 * Test if no {@link DisplayEventSource} is registered, a new
+	 * Test if no {@link DisplayEventTarget} is registered, a new
 	 * {@link ShellClientSurface} will be created.
 	 * <p>
 	 * TODO test unregistering
@@ -37,7 +37,7 @@ public class ShellEventDispatcherImplTest {
 
 		final EventBus nodeEventBus = Mockito.mock(EventBus.class);
 
-		final DisplayEventSource displayEventSource = Mockito.mock(DisplayEventSource.class);
+		final DisplayEventTarget displayEventTarget = Mockito.mock(DisplayEventTarget.class);
 
 		final ShellClientSurfaceFactory shellClientSurfaceFactory = Mockito.mock(ShellClientSurfaceFactory.class);
 
@@ -48,8 +48,8 @@ public class ShellEventDispatcherImplTest {
 		final DisplayEvent displayEvent1 = Mockito.mock(DisplayEvent.class);
 		final DisplayEvent displayEvent2 = Mockito.mock(DisplayEvent.class);
 
-		Mockito.when(displayEvent0.getDisplayEventSource()).thenReturn(displayEventSource);
-		Mockito.when(displayEvent1.getDisplayEventSource()).thenReturn(displayEventSource);
+		Mockito.when(displayEvent0.getDisplayEventSource()).thenReturn(displayEventTarget);
+		Mockito.when(displayEvent1.getDisplayEventSource()).thenReturn(displayEventTarget);
 		Mockito.when(displayEvent2.getDisplayEventSource()).thenReturn(displaySurface);
 
 		Mockito.when(displayServer.getNextDisplayEvent()).thenReturn(	displayEvent0,
@@ -61,13 +61,13 @@ public class ShellEventDispatcherImplTest {
 																												displayServer);
 
 		shellEventDispatcherImpl.registerDisplayEventSourceListener(nodeEventBus,
-																	displayEventSource);
+																	displayEventTarget);
 		shellEventDispatcherImpl.dispatchDisplayEvent(false);
 		shellEventDispatcherImpl.dispatchDisplayEvent(false);
 		shellEventDispatcherImpl.dispatchDisplayEvent(false);
 
 		/*
-		 * verify if registering multiple {@link DisplayEventSource}s, each will
+		 * verify if registering multiple {@link DisplayEventTarget}s, each will
 		 * receive the same event if one arrives
 		 */
 		Mockito.verify(	nodeEventBus,
@@ -76,7 +76,7 @@ public class ShellEventDispatcherImplTest {
 						Mockito.times(1)).post(displayEvent1);
 
 		/*
-		 * verify if no {@link DisplayEventSource} is registered, a new {@link
+		 * verify if no {@link DisplayEventTarget} is registered, a new {@link
 		 * ShellClientSurface} will be created.
 		 */
 		Mockito.verify(	shellClientSurfaceFactory,

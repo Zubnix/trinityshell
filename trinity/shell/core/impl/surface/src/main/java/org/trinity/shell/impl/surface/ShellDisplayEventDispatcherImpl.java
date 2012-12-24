@@ -19,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.trinity.foundation.display.api.DisplayServer;
 import org.trinity.foundation.display.api.DisplaySurface;
 import org.trinity.foundation.display.api.event.DisplayEvent;
-import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.DisplayEventTarget;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.event.ShellSurfaceCreatedEvent;
@@ -39,7 +39,7 @@ import de.devsurf.injection.guice.annotations.Bind;
  * an event is fetched, it is delivered at corresponding the
  * <code>EventBus</code> objects that were registered with the
  * <code>ManagedDisplay</code>. (see
- * {@link ShellDisplay#registerEventBus(DisplayEventSource, EventBus)})
+ * {@link ShellDisplay#registerEventBus(DisplayEventTarget, EventBus)})
  * <p>
  * The <code>EventDispatcher</code> implements the main hyperdrive even loop in
  * it's run method. This method is activated by the <code>ManagedDisplay</code>
@@ -55,7 +55,7 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 
 	// TODO this is basically the same mechanism as used in EventBus. Find a way
 	// to seperate and uniform this mechanism.
-	private final Map<DisplayEventSource, List<EventBus>> eventRecipients = new WeakHashMap<DisplayEventSource, List<EventBus>>();
+	private final Map<DisplayEventTarget, List<EventBus>> eventRecipients = new WeakHashMap<DisplayEventTarget, List<EventBus>>();
 
 	private final DisplayServer displayServer;
 	private final ShellClientSurfaceFactory shellClientSurfaceFactory;
@@ -112,9 +112,9 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 
 	private void newShellSurfaceClientIfNeeded(final DisplayEvent event) {
 		synchronized (this.eventRecipients) {
-			final DisplayEventSource displayEventSource = event.getDisplayEventSource();
-			if (!this.eventRecipients.containsKey(displayEventSource) && (displayEventSource instanceof DisplaySurface)) {
-				createClientShellSurface((DisplaySurface) displayEventSource);
+			final DisplayEventTarget displayEventTarget = event.getDisplayEventSource();
+			if (!this.eventRecipients.containsKey(displayEventTarget) && (displayEventTarget instanceof DisplaySurface)) {
+				createClientShellSurface((DisplaySurface) displayEventTarget);
 			}
 		}
 	}
@@ -127,14 +127,14 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 
 	@Override
 	public void registerDisplayEventSourceListener(	final EventBus nodeEventBus,
-													final DisplayEventSource displayEventSource) {
+													final DisplayEventTarget displayEventTarget) {
 		List<EventBus> nodeEventBusses;
 		synchronized (this.eventRecipients) {
-			nodeEventBusses = this.eventRecipients.get(displayEventSource);
+			nodeEventBusses = this.eventRecipients.get(displayEventTarget);
 
 			if (nodeEventBusses == null) {
 				nodeEventBusses = new CopyOnWriteArrayList<EventBus>();
-				this.eventRecipients.put(	displayEventSource,
+				this.eventRecipients.put(	displayEventTarget,
 											nodeEventBusses);
 			}
 			nodeEventBusses.add(nodeEventBus);
@@ -143,10 +143,10 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 
 	@Override
 	public void unregisterDisplayEventSourceListener(	final EventBus nodeEventBus,
-														final DisplayEventSource displayEventSource) {
+														final DisplayEventTarget displayEventTarget) {
 		synchronized (this.eventRecipients) {
 
-			final List<EventBus> nodeEventBusses = this.eventRecipients.get(displayEventSource);
+			final List<EventBus> nodeEventBusses = this.eventRecipients.get(displayEventTarget);
 			if (nodeEventBusses != null) {
 				nodeEventBusses.remove(nodeEventBus);
 			}
@@ -154,9 +154,9 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 	}
 
 	@Override
-	public void unregisterAllDisplayEventSourceListeners(final DisplayEventSource displayEventSource) {
+	public void unregisterAllDisplayEventSourceListeners(final DisplayEventTarget displayEventTarget) {
 		synchronized (this.eventRecipients) {
-			this.eventRecipients.remove(displayEventSource);
+			this.eventRecipients.remove(displayEventTarget);
 		}
 	}
 }

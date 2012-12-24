@@ -12,7 +12,7 @@
 package org.trinity.render.qt.impl.eventconverters;
 
 import org.trinity.foundation.display.api.event.DestroyNotifyEvent;
-import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.DisplayEventTarget;
 import org.trinity.render.qt.impl.QJRenderEventConversion;
 
 import com.google.inject.Singleton;
@@ -30,7 +30,7 @@ public class QJDestroyConversion implements QJRenderEventConversion {
 	}
 
 	@Override
-	public DestroyNotifyEvent convertEvent(	final DisplayEventSource eventSource,
+	public DestroyNotifyEvent convertEvent(	final DisplayEventTarget eventSource,
 											Object view,
 											QObject eventProducer,
 											final QEvent qEventz) {

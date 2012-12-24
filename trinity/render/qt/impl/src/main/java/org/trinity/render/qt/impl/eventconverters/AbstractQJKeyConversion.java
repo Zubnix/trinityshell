@@ -2,7 +2,7 @@ package org.trinity.render.qt.impl.eventconverters;
 
 import java.util.concurrent.ExecutionException;
 
-import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.DisplayEventTarget;
 import org.trinity.foundation.display.api.event.KeyNotifyEvent;
 import org.trinity.foundation.input.api.InputModifiers;
 import org.trinity.foundation.input.api.Key;
@@ -27,7 +27,7 @@ public abstract class AbstractQJKeyConversion implements QJRenderEventConversion
 	}
 
 	@Override
-	public KeyNotifyEvent convertEvent(	final DisplayEventSource source,
+	public KeyNotifyEvent convertEvent(	final DisplayEventTarget source,
 										Object view,
 										QObject qObject,
 										final QEvent qEvent) {

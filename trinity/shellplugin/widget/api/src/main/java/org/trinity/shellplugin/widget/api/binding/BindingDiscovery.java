@@ -406,6 +406,8 @@ public class BindingDiscovery {
 			if (inputEmitterAnnotation == null) {
 				continue;
 			}
+
+			foundMethods.add(method);
 		}
 
 		return foundMethods.toArray(new Method[] {});

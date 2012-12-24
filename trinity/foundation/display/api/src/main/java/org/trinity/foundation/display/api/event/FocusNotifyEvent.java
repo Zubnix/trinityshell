@@ -20,13 +20,13 @@ public abstract class FocusNotifyEvent extends DisplayEvent {
 
 	/***************************************
 	 * Create a new focus event that originated from the given
-	 * {@link DisplayEventSource}.
+	 * {@link DisplayEventTarget}.
 	 * 
-	 * @param displayEventSource
-	 *            a {@link DisplayEventSource}.
+	 * @param displayEventTarget
+	 *            a {@link DisplayEventTarget}.
 	 *************************************** 
 	 */
-	public FocusNotifyEvent(final DisplayEventSource displayEventSource) {
-		super(displayEventSource);
+	public FocusNotifyEvent(final DisplayEventTarget displayEventTarget) {
+		super(displayEventTarget);
 	}
 }

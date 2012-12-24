@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.trinity.foundation.display.api.event.DisplayEvent;
-import org.trinity.foundation.display.api.event.DisplayEventSource;
+import org.trinity.foundation.display.api.event.DisplayEventTarget;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -56,7 +56,7 @@ public class QJRenderEventConverter {
 		}
 	}
 
-	public Optional<DisplayEvent> convertRenderEvent(	final DisplayEventSource eventSource,
+	public Optional<DisplayEvent> convertRenderEvent(	final DisplayEventTarget eventSource,
 														Object view,
 														final QObject eventProducer,
 														final QEvent event) {
