@@ -21,9 +21,9 @@ public class ViewPropertyBindingTest {
 			IllegalArgumentException, InvocationTargetException {
 
 		BindingDiscovery bindingDiscovery = new BindingDiscovery(null);
-		Optional<Method> dummyView = bindingDiscovery.lookupViewReference(DummyPaintableSurfaceNode.class);
-		DummyPaintableSurfaceNode dummyPaintableSurfaceNode = new DummyPaintableSurfaceNode();
-		Object view = dummyView.get().invoke(dummyPaintableSurfaceNode);
+		Optional<Method> dummyView = bindingDiscovery.lookupViewReference(DummyShellWidget.class);
+		DummyShellWidget dummyShellWidget = new DummyShellWidget();
+		Object view = dummyView.get().invoke(dummyShellWidget);
 		assertNotNull(view);
 	}
 
@@ -50,21 +50,21 @@ public class ViewPropertyBindingTest {
 		viewPropertySignalDispatcher.setViewPropertyDiscovery(bindingDiscovery);
 
 		MethodInvocation methodInvocation = mock(MethodInvocation.class);
-		DummyPaintableSurfaceNode dummyPaintableSurfaceNode = new DummyPaintableSurfaceNode();
-		when(methodInvocation.getThis()).thenReturn(dummyPaintableSurfaceNode);
-		Method setPrimitiveBooleanMethod = DummyPaintableSurfaceNode.class.getMethod(	"setPrimitiveBoolean",
+		DummyShellWidget dummyShellWidget = new DummyShellWidget();
+		when(methodInvocation.getThis()).thenReturn(dummyShellWidget);
+		Method setPrimitiveBooleanMethod = DummyShellWidget.class.getMethod(	"setPrimitiveBoolean",
 																						boolean.class);
 		when(methodInvocation.getMethod()).thenReturn(setPrimitiveBooleanMethod);
 
 		viewPropertySignalDispatcher.invoke(methodInvocation);
 
-		Method isPrimitiveBooleanMethod = DummyPaintableSurfaceNode.class.getMethod("isPrimitiveBoolean");
+		Method isPrimitiveBooleanMethod = DummyShellWidget.class.getMethod("isPrimitiveBoolean");
 		ViewProperty viewProperty = isPrimitiveBooleanMethod.getAnnotation(ViewProperty.class);
-		Object view = dummyPaintableSurfaceNode.getView();
+		Object view = dummyShellWidget.getView();
 		Method viewSlot = DummyView.class.getMethod("viewSlotPrimitiveBoolean",
 													boolean.class);
-		boolean argument = dummyPaintableSurfaceNode.isPrimitiveBoolean();
-		verify(viewSlotInvocationHandler).invokeSlot(	dummyPaintableSurfaceNode,
+		boolean argument = dummyShellWidget.isPrimitiveBoolean();
+		verify(viewSlotInvocationHandler).invokeSlot(	dummyShellWidget,
 														viewProperty,
 														view,
 														viewSlot,

@@ -15,7 +15,7 @@ import org.trinity.shell.api.node.manager.ShellLayoutManager;
 import org.trinity.shell.api.surface.ShellSurfaceExecutor;
 import org.trinity.shell.api.widget.ShellWidget;
 
-public class DummyPaintableSurfaceNode implements ShellWidget {
+public class DummyShellWidget implements ShellWidget {
 
 	private final DummyView view = new DummyView();
 
