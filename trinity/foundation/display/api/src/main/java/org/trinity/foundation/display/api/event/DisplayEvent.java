@@ -41,7 +41,7 @@ public class DisplayEvent {
 	 * @return A {@link DisplayEventTarget}
 	 *************************************** 
 	 */
-	public DisplayEventTarget getDisplayEventSource() {
+	public DisplayEventTarget getDisplayEventTarget() {
 		return this.displayEventTarget;
 	}
 
@@ -49,6 +49,6 @@ public class DisplayEvent {
 	public String toString() {
 		return String.format(	"%s=>[%s]",
 								getClass().getSimpleName(),
-								getDisplayEventSource());
+								getDisplayEventTarget());
 	}
 }

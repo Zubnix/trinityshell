@@ -48,9 +48,9 @@ public class ShellEventDispatcherImplTest {
 		final DisplayEvent displayEvent1 = Mockito.mock(DisplayEvent.class);
 		final DisplayEvent displayEvent2 = Mockito.mock(DisplayEvent.class);
 
-		Mockito.when(displayEvent0.getDisplayEventSource()).thenReturn(displayEventTarget);
-		Mockito.when(displayEvent1.getDisplayEventSource()).thenReturn(displayEventTarget);
-		Mockito.when(displayEvent2.getDisplayEventSource()).thenReturn(displaySurface);
+		Mockito.when(displayEvent0.getDisplayEventTarget()).thenReturn(displayEventTarget);
+		Mockito.when(displayEvent1.getDisplayEventTarget()).thenReturn(displayEventTarget);
+		Mockito.when(displayEvent2.getDisplayEventTarget()).thenReturn(displaySurface);
 
 		Mockito.when(displayServer.getNextDisplayEvent()).thenReturn(	displayEvent0,
 																		displayEvent1,

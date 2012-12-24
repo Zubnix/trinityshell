@@ -94,7 +94,7 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 		this.shellEventBus.post(displayEvent);
 
 		synchronized (this.eventRecipients) {
-			final List<EventBus> eventBusses = this.eventRecipients.get(displayEvent.getDisplayEventSource());
+			final List<EventBus> eventBusses = this.eventRecipients.get(displayEvent.getDisplayEventTarget());
 			if (eventBusses == null) {
 				return;
 			}
@@ -112,7 +112,7 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 
 	private void newShellSurfaceClientIfNeeded(final DisplayEvent event) {
 		synchronized (this.eventRecipients) {
-			final DisplayEventTarget displayEventTarget = event.getDisplayEventSource();
+			final DisplayEventTarget displayEventTarget = event.getDisplayEventTarget();
 			if (!this.eventRecipients.containsKey(displayEventTarget) && (displayEventTarget instanceof DisplaySurface)) {
 				createClientShellSurface((DisplaySurface) displayEventTarget);
 			}
