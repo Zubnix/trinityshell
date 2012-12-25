@@ -1,5 +1,6 @@
 package org.trinity.shellplugin.widget.api.binding;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -20,50 +21,56 @@ public class ViewPropertyBindingTest {
 	public void testViewReferenceDiscovery() throws ExecutionException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 
-		BindingDiscovery bindingDiscovery = new BindingDiscovery(null);
-		Optional<Method> dummyView = bindingDiscovery.lookupViewReference(DummyShellWidget.class);
-		DummyShellWidget dummyShellWidget = new DummyShellWidget();
-		Object view = dummyView.get().invoke(dummyShellWidget);
-		assertNotNull(view);
+		final BindingDiscovery bindingDiscovery = new BindingDiscovery(null);
+		final Optional<Method> dummyView = bindingDiscovery.lookupViewReference(DummyShellWidget.class);
+		final DummyShellWidget mockedDummyShellWidget = mock(DummyShellWidget.class);
+		final DummyView view = new DummyView();
+		when(mockedDummyShellWidget.getView()).thenReturn(view);
+		final DummyShellWidget dummyShellWidget = new DummyShellWidget(mockedDummyShellWidget);
+		final Object discoveredView = dummyView.get().invoke(dummyShellWidget);
+		assertEquals(	view,
+						discoveredView);
 	}
 
 	@Test
 	public void testViewSlotDiscovery() throws ExecutionException {
-		BindingDiscovery bindingDiscovery = new BindingDiscovery(null);
-		Optional<Method> objectSlot = bindingDiscovery.lookupViewPropertySlot(	DummyView.class,
-																		"object");
+		final BindingDiscovery bindingDiscovery = new BindingDiscovery(null);
+		final Optional<Method> objectSlot = bindingDiscovery.lookupViewPropertySlot(DummyView.class,
+																					"object");
 		assertNotNull(objectSlot.orNull());
 
-		Optional<Method> namelessSlot = bindingDiscovery.lookupViewPropertySlot(DummyView.class,
-																		"nameless");
+		final Optional<Method> namelessSlot = bindingDiscovery.lookupViewPropertySlot(	DummyView.class,
+																						"nameless");
 		assertNotNull(namelessSlot.orNull());
 	}
 
 	@Test
 	public void testPrimitiveBooleanViewProperty() throws Throwable {
 
-		ViewSlotInvocationHandler viewSlotInvocationHandler = mock(ViewSlotInvocationHandler.class);
+		final ViewSlotInvocationHandler viewSlotInvocationHandler = mock(ViewSlotInvocationHandler.class);
 
-		BindingDiscovery bindingDiscovery = new BindingDiscovery(viewSlotInvocationHandler);
+		final BindingDiscovery bindingDiscovery = new BindingDiscovery(viewSlotInvocationHandler);
 
-		ViewPropertySignalDispatcher viewPropertySignalDispatcher = new ViewPropertySignalDispatcher();
+		final ViewPropertySignalDispatcher viewPropertySignalDispatcher = new ViewPropertySignalDispatcher();
 		viewPropertySignalDispatcher.setViewPropertyDiscovery(bindingDiscovery);
 
-		MethodInvocation methodInvocation = mock(MethodInvocation.class);
-		DummyShellWidget dummyShellWidget = new DummyShellWidget();
+		final MethodInvocation methodInvocation = mock(MethodInvocation.class);
+		final DummyShellWidget mockedDummyShellWidget = mock(DummyShellWidget.class);
+		final DummyView view = new DummyView();
+		when(mockedDummyShellWidget.getView()).thenReturn(view);
+		final DummyShellWidget dummyShellWidget = new DummyShellWidget(mockedDummyShellWidget);
 		when(methodInvocation.getThis()).thenReturn(dummyShellWidget);
-		Method setPrimitiveBooleanMethod = DummyShellWidget.class.getMethod(	"setPrimitiveBoolean",
-																						boolean.class);
+		final Method setPrimitiveBooleanMethod = DummyShellWidget.class.getMethod(	"setPrimitiveBoolean",
+																					boolean.class);
 		when(methodInvocation.getMethod()).thenReturn(setPrimitiveBooleanMethod);
 
 		viewPropertySignalDispatcher.invoke(methodInvocation);
 
-		Method isPrimitiveBooleanMethod = DummyShellWidget.class.getMethod("isPrimitiveBoolean");
-		ViewProperty viewProperty = isPrimitiveBooleanMethod.getAnnotation(ViewProperty.class);
-		Object view = dummyShellWidget.getView();
-		Method viewSlot = DummyView.class.getMethod("viewSlotPrimitiveBoolean",
-													boolean.class);
-		boolean argument = dummyShellWidget.isPrimitiveBoolean();
+		final Method isPrimitiveBooleanMethod = DummyShellWidget.class.getMethod("isPrimitiveBoolean");
+		final ViewProperty viewProperty = isPrimitiveBooleanMethod.getAnnotation(ViewProperty.class);
+		final Method viewSlot = DummyView.class.getMethod(	"viewSlotPrimitiveBoolean",
+															boolean.class);
+		final boolean argument = dummyShellWidget.isPrimitiveBoolean();
 		verify(viewSlotInvocationHandler).invokeSlot(	dummyShellWidget,
 														viewProperty,
 														view,

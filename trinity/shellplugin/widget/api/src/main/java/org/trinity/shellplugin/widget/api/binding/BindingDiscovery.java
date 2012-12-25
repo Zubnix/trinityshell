@@ -36,7 +36,7 @@ public class BindingDiscovery {
 	private static final Cache<Class<?>, Cache<String, Optional<Method>>> viewPropertiesByName = CacheBuilder
 			.newBuilder().build();
 	private static final Cache<Class<?>, Optional<Method>> viewReferenceFields = CacheBuilder.newBuilder().build();
-	private static final Cache<Class<?>, Optional<Method>> viewSlots = CacheBuilder.newBuilder().build();
+	private static final Cache<Class<?>, Cache<String, Optional<Method>>> viewSlots = CacheBuilder.newBuilder().build();
 
 	// view inputs
 	private static final Cache<Class<?>, Cache<Class<? extends Input>, Cache<String, Optional<Method>>>> inputSlots = CacheBuilder
@@ -233,20 +233,26 @@ public class BindingDiscovery {
 	public Optional<Method> lookupViewPropertySlot(	final Class<?> viewClass,
 													final String viewPropertyName) throws ExecutionException {
 		return BindingDiscovery.viewSlots.get(	viewClass,
-												new Callable<Optional<Method>>() {
+												new Callable<Cache<String, Optional<Method>>>() {
 													@Override
-													public Optional<Method> call() {
-														return getViewPropertySlot(	viewClass,
-																					viewPropertyName);
+													public Cache<String, Optional<Method>> call() throws Exception {
+														return CacheBuilder.newBuilder().build();
 													}
-												});
+												}).get(	viewPropertyName,
+														new Callable<Optional<Method>>() {
+															@Override
+															public Optional<Method> call() {
+																return getViewPropertySlot(	viewClass,
+																							viewPropertyName);
+															}
+														});
 	}
 
-	protected Optional<Method> getViewPropertySlot(	final Class<?> clazz,
+	protected Optional<Method> getViewPropertySlot(	final Class<?> viewClass,
 													final String viewAttributeName) {
 		Method foundMethod = null;
 
-		for (final Method method : clazz.getMethods()) {
+		for (final Method method : viewClass.getMethods()) {
 
 			final ViewPropertySlot viewSlot = method.getAnnotation(ViewPropertySlot.class);
 
@@ -261,7 +267,7 @@ public class BindingDiscovery {
 				} else if ((foundMethod != null)) {
 					throw new IllegalArgumentException(String.format(	"Found multiple identical %s in the class hierarchy of %s",
 																		ViewPropertySlot.class.getName(),
-																		clazz.getName()));
+																		viewClass.getName()));
 				}
 			}
 		}
@@ -288,19 +294,14 @@ public class BindingDiscovery {
 											final T dataContext,
 											final String... propertyNames) throws ExecutionException {
 
-		final Object thisObj = dataContext;
-		final Class<?> thisObjClass = dataContextClass;
-
-		final String[] viewAttributeIds = propertyNames;
-
-		final Optional<Method> viewReference = lookupViewReference(thisObjClass);
+		final Optional<Method> viewReference = lookupViewReference(dataContextClass);
 		final Method viewField = viewReference.get();
 		Object view;
 		try {
-			view = viewField.invoke(thisObj);
+			view = viewField.invoke(dataContext);
 
-			for (final String viewAttributeName : viewAttributeIds) {
-				final Optional<Method> viewPropertyMethod = lookupViewProperty(	thisObjClass,
+			for (final String viewAttributeName : propertyNames) {
+				final Optional<Method> viewPropertyMethod = lookupViewProperty(	dataContextClass,
 																				viewAttributeName);
 				if (!viewPropertyMethod.isPresent()) {
 					continue;
@@ -314,9 +315,9 @@ public class BindingDiscovery {
 
 				Object argument;
 
-				argument = viewPropertyMethod.get().invoke(thisObj);
+				argument = viewPropertyMethod.get().invoke(dataContext);
 
-				this.viewSlotInvocationHandler.invokeSlot(	(PaintableSurfaceNode) thisObj,
+				this.viewSlotInvocationHandler.invokeSlot(	(PaintableSurfaceNode) dataContext,
 															viewPropertyMethod.get().getAnnotation(ViewProperty.class),
 															view,
 															viewSlotMethod.get(),
@@ -357,19 +358,19 @@ public class BindingDiscovery {
 												});
 	}
 
-	protected Optional<Method> getInputSlot(Class<?> dataContextClass,
-											Class<? extends Input> inputType,
-											String inputSlotName) {
-		Method[] allMethods = dataContextClass.getMethods();
+	protected Optional<Method> getInputSlot(final Class<?> dataContextClass,
+											final Class<? extends Input> inputType,
+											final String inputSlotName) {
+		final Method[] allMethods = dataContextClass.getMethods();
 		Method foundMethod = null;
 
-		for (Method method : allMethods) {
-			InputSlot inputSlotAnnotation = method.getAnnotation(InputSlot.class);
+		for (final Method method : allMethods) {
+			final InputSlot inputSlotAnnotation = method.getAnnotation(InputSlot.class);
 			if (inputSlotAnnotation == null) {
 				continue;
 			}
 
-			Class<? extends Input> validInputType = inputSlotAnnotation.input();
+			final Class<? extends Input> validInputType = inputSlotAnnotation.input();
 			String validInputSlotName = inputSlotAnnotation.name();
 			if (validInputSlotName.equals("")) {
 				validInputSlotName = method.getName();
@@ -397,12 +398,12 @@ public class BindingDiscovery {
 									});
 	}
 
-	protected Method[] getInputEmitters(Class<?> viewClass) {
-		Method[] allMethods = viewClass.getMethods();
+	protected Method[] getInputEmitters(final Class<?> viewClass) {
+		final Method[] allMethods = viewClass.getMethods();
 
-		List<Method> foundMethods = new ArrayList<Method>();
-		for (Method method : allMethods) {
-			InputEmitter inputEmitterAnnotation = method.getAnnotation(InputEmitter.class);
+		final List<Method> foundMethods = new ArrayList<Method>();
+		for (final Method method : allMethods) {
+			final InputEmitter inputEmitterAnnotation = method.getAnnotation(InputEmitter.class);
 			if (inputEmitterAnnotation == null) {
 				continue;
 			}
@@ -413,14 +414,15 @@ public class BindingDiscovery {
 		return foundMethods.toArray(new Method[] {});
 	}
 
-	public Optional<String> lookupInputEmitterInputSlotName(Object view,
-															Object possibleInputEmitter,
-															Class<? extends Input> inputType) throws ExecutionException {
-		Method[] inputEmitters = lookupInputEmitters(view.getClass());
+	public Optional<String> lookupInputEmitterInputSlotName(final Object view,
+															final Object possibleInputEmitter,
+															final Class<? extends Input> inputType)
+			throws ExecutionException {
+		final Method[] inputEmitters = lookupInputEmitters(view.getClass());
 		String inputSlotName = null;
-		for (Method inputEmitterMethod : inputEmitters) {
+		for (final Method inputEmitterMethod : inputEmitters) {
 			try {
-				Object inputEmitter = inputEmitterMethod.invoke(view);
+				final Object inputEmitter = inputEmitterMethod.invoke(view);
 				if (inputEmitter.equals(possibleInputEmitter)) {
 					if (inputSlotName != null) {
 						throw new IllegalArgumentException(String.format(	"There is ambiguity as to which slot should handle the given input type. Found multiple matching %s for type %s coming from %s as declared in %s.",
@@ -430,10 +432,10 @@ public class BindingDiscovery {
 																			view));
 					}
 
-					InputEmitter inputEmitterAnnotation = inputEmitterMethod.getAnnotation(InputEmitter.class);
-					InputSignal[] inputSignals = inputEmitterAnnotation.value();
-					for (InputSignal inputSignal : inputSignals) {
-						boolean validType = inputSignal.inputType().isAssignableFrom(inputType);
+					final InputEmitter inputEmitterAnnotation = inputEmitterMethod.getAnnotation(InputEmitter.class);
+					final InputSignal[] inputSignals = inputEmitterAnnotation.value();
+					for (final InputSignal inputSignal : inputSignals) {
+						final boolean validType = inputSignal.inputType().isAssignableFrom(inputType);
 						if (validType) {
 							if (inputSlotName != null) {
 								throw new IllegalArgumentException(String.format(	"There is ambiguity as to which slot should handle the given input type. Found multiple matching %s for type %s coming from %s as declared in %s.",
@@ -446,9 +448,9 @@ public class BindingDiscovery {
 						}
 					}
 				}
-			} catch (IllegalAccessException e) {
+			} catch (final IllegalAccessException e) {
 				throw new ExecutionException(e);
-			} catch (InvocationTargetException e) {
+			} catch (final InvocationTargetException e) {
 				throw new ExecutionException(e);
 			}
 		}

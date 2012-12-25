@@ -17,66 +17,74 @@ import org.trinity.shell.api.widget.ShellWidget;
 
 public class DummyShellWidget implements ShellWidget {
 
-	private final DummyView view = new DummyView();
+	// private final DummyView view = new DummyView();
+	//
+	// private Object object;
+	// private final Object nameless = "namelessValue";
+	// private final boolean primitiveBoolean = true;
 
-	private Object object;
-	private Object nameless = "namelessValue";
-	private boolean primitiveBoolean = true;
+	private final DummyShellWidget mockedDummyShellWidget;
+
+	public DummyShellWidget(final DummyShellWidget mockedDummyShellWidget) {
+		this.mockedDummyShellWidget = mockedDummyShellWidget;
+	}
 
 	@InputSlot(name = "onClick", momentum = { Momentum.STARTED, Momentum.STOPPED }, modifier = { InputModifier.MOD_1,
 			InputModifier.MOD_CTRL })
-	public void onClick(PointerInput pointerInput) {
-
+	public void onClick(final PointerInput pointerInput) {
+		this.mockedDummyShellWidget.onClick(pointerInput);
 	}
 
 	@InputSlot(name = "onKey", momentum = Momentum.STARTED)
-	public void onKey(KeyboardInput keyboardInput) {
+	public void onKey(final KeyboardInput keyboardInput) {
+		this.mockedDummyShellWidget.onKey(keyboardInput);
 
 	}
 
 	@InputSlot(input = KeyboardInput.class)
-	public void onAnyKeyInput(Input input) {
-
+	public void onAnyKeyInput(final Input input) {
+		this.mockedDummyShellWidget.onAnyKeyInput(input);
 	}
 
 	@InputSlot
 	public void onAny() {
-
+		this.mockedDummyShellWidget.onAny();
 	}
 
 	@ViewReference
 	public DummyView getView() {
-		return view;
+		return this.mockedDummyShellWidget.getView();
 	}
 
 	@ViewPropertyChanged("object")
-	public void setObject(Object object) {
-		this.object = object;
+	public void setObject(final Object object) {
+		this.mockedDummyShellWidget.setObject(object);
+
 	}
 
 	@ViewProperty("object")
 	public Object getObject() {
-		return this.object;
+		return this.mockedDummyShellWidget.getObject();
 	}
 
 	@ViewPropertyChanged("nameless")
-	public void setNameless(Object nameless) {
-
+	public void setNameless(final Object nameless) {
+		this.mockedDummyShellWidget.setNameless(nameless);
 	}
 
 	@ViewProperty
 	public Object getNameless() {
-		return nameless;
+		return this.mockedDummyShellWidget.getNameless();
 	}
 
 	@ViewPropertyChanged("primitiveBoolean")
-	public void setPrimitiveBoolean(boolean primitiveBoolean) {
-		this.primitiveBoolean = primitiveBoolean;
+	public void setPrimitiveBoolean(final boolean primitiveBoolean) {
+		this.mockedDummyShellWidget.setPrimitiveBoolean(primitiveBoolean);
 	}
 
 	@ViewProperty("primitiveBoolean")
 	public boolean isPrimitiveBoolean() {
-		return primitiveBoolean;
+		return this.mockedDummyShellWidget.isPrimitiveBoolean();
 	}
 
 	@Override
@@ -194,49 +202,49 @@ public class DummyShellWidget implements ShellWidget {
 	}
 
 	@Override
-	public void setHeightIncrement(int heightIncrement) {
+	public void setHeightIncrement(final int heightIncrement) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setMaxHeight(int maxHeight) {
+	public void setMaxHeight(final int maxHeight) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setMaxWidth(int maxWidth) {
+	public void setMaxWidth(final int maxWidth) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setMinHeight(int minHeight) {
+	public void setMinHeight(final int minHeight) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setMinWidth(int minWidth) {
+	public void setMinWidth(final int minWidth) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setMovable(boolean movable) {
+	public void setMovable(final boolean movable) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setResizable(boolean isResizable) {
+	public void setResizable(final boolean isResizable) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setWidthIncrement(int widthIncrement) {
+	public void setWidthIncrement(final int widthIncrement) {
 		// TODO Auto-generated method stub
 
 	}
@@ -374,43 +382,43 @@ public class DummyShellWidget implements ShellWidget {
 	}
 
 	@Override
-	public void setWidth(int width) {
+	public void setWidth(final int width) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setHeight(int height) {
+	public void setHeight(final int height) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setParent(ShellNodeParent parent) {
+	public void setParent(final ShellNodeParent parent) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setX(int x) {
+	public void setX(final int x) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setY(int y) {
+	public void setY(final int y) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void addShellNodeEventHandler(Object shellNodeEventHandler) {
+	public void addShellNodeEventHandler(final Object shellNodeEventHandler) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void removeShellNodeEventHandler(Object shellNodeEventHandler) {
+	public void removeShellNodeEventHandler(final Object shellNodeEventHandler) {
 		// TODO Auto-generated method stub
 
 	}
@@ -434,7 +442,7 @@ public class DummyShellWidget implements ShellWidget {
 	}
 
 	@Override
-	public void setLayoutManager(ShellLayoutManager shellLayoutManager) {
+	public void setLayoutManager(final ShellLayoutManager shellLayoutManager) {
 		// TODO Auto-generated method stub
 
 	}
@@ -446,7 +454,7 @@ public class DummyShellWidget implements ShellWidget {
 	}
 
 	@Override
-	public void handleChildReparentEvent(ShellNode child) {
+	public void handleChildReparentEvent(final ShellNode child) {
 		// TODO Auto-generated method stub
 
 	}

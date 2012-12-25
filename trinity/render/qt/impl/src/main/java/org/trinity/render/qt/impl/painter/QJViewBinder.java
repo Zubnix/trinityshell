@@ -2,6 +2,7 @@ package org.trinity.render.qt.impl.painter;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.render.api.PaintableSurfaceNode;
 import org.trinity.render.qt.api.QJRenderEngine;
 import org.trinity.render.qt.impl.QJRenderEventConverter;
@@ -23,35 +24,39 @@ import de.devsurf.injection.guice.annotations.To.Type;
 public class QJViewBinder {
 
 	private final QJRenderEngine qjRenderEngine;
-	private BindingDiscovery bindingDiscovery;
-	private ViewSlotInvocationHandler viewSlotInvocationHandler;
-	private EventBus displayEventBus;
-	private QJRenderEventConverter qjRenderEventConverter;
+	private final BindingDiscovery bindingDiscovery;
+	private final ViewSlotInvocationHandler viewSlotInvocationHandler;
+	private final EventBus displayEventBus;
+	private final QJRenderEventConverter qjRenderEventConverter;
+	private final Keyboard keyboard;
 
 	@Inject
-	QJViewBinder(	QJRenderEngine qjRenderEngine,
-						BindingDiscovery bindingDiscovery,
-						ViewSlotInvocationHandler viewSlotInvocationHandler,
-						@Named("displayEventBus") EventBus displayEventBus,
-						QJRenderEventConverter qjRenderEventConverter) {
+	QJViewBinder(	final QJRenderEngine qjRenderEngine,
+					final BindingDiscovery bindingDiscovery,
+					final ViewSlotInvocationHandler viewSlotInvocationHandler,
+					@Named("displayEventBus") final EventBus displayEventBus,
+					final QJRenderEventConverter qjRenderEventConverter,
+					final Keyboard keyboard) {
 		this.qjRenderEngine = qjRenderEngine;
 		this.bindingDiscovery = bindingDiscovery;
 		this.viewSlotInvocationHandler = viewSlotInvocationHandler;
 		this.displayEventBus = displayEventBus;
 		this.qjRenderEventConverter = qjRenderEventConverter;
+		this.keyboard = keyboard;
 	}
 
-	public void bindView(	Optional<QWidget> parentView,
-							QWidget view,
-							PaintableSurfaceNode paintableSurfaceNode) {
+	public void bindView(	final Optional<QWidget> parentView,
+							final QWidget view,
+							final PaintableSurfaceNode paintableSurfaceNode) {
 		checkNotNull(view);
 		checkNotNull(paintableSurfaceNode);
 
 		this.qjRenderEngine.invoke(	paintableSurfaceNode,
-									new QJBindViewRoutine(	bindingDiscovery,
-															viewSlotInvocationHandler,
-															displayEventBus,
-															qjRenderEventConverter,
+									new QJBindViewRoutine(	this.bindingDiscovery,
+															this.viewSlotInvocationHandler,
+															this.keyboard,
+															this.displayEventBus,
+															this.qjRenderEventConverter,
 															parentView,
 															view));
 	}

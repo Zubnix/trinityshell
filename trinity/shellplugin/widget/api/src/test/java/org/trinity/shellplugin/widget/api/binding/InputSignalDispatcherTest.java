@@ -1,6 +1,8 @@
 package org.trinity.shellplugin.widget.api.binding;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
@@ -14,7 +16,9 @@ public class InputSignalDispatcherTest {
 
 	@Test
 	public void test() {
-		final DummyShellWidget dummyShellWidget = new DummyShellWidget();
+		final DummyShellWidget mockedDummyShellWidget = mock(DummyShellWidget.class);
+		final DummyShellWidget dummyShellWidget = new DummyShellWidget(mockedDummyShellWidget);
+
 		final BindingDiscovery bindingDiscovery = new BindingDiscovery(null);
 		final InputModifiers inputModifiers = mock(InputModifiers.class);
 		final PointerInput input = mock(PointerInput.class);
@@ -32,5 +36,7 @@ public class InputSignalDispatcherTest {
 																						keyboard);
 		inputSignalDispatcher.handleBoundButtonInputEvent(boundInputEvent);
 
+		verify(	mockedDummyShellWidget,
+				times(1)).onClick(input);
 	}
 }

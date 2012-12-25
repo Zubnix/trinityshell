@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ExecutionException;
 
+import org.trinity.foundation.input.api.Keyboard;
 import org.trinity.foundation.render.api.PaintRoutine;
 import org.trinity.render.qt.api.QJPaintContext;
 import org.trinity.render.qt.impl.QJRenderEventConverter;
@@ -33,13 +34,15 @@ public class QJBindViewRoutine implements PaintRoutine<Void, QJPaintContext> {
 
 	private final Optional<QWidget> parentView;
 	private final QWidget view;
+	private final Keyboard keyboard;
 
-	public QJBindViewRoutine(	BindingDiscovery bindingDiscovery,
-								ViewSlotInvocationHandler viewSlotInvocationHandler,
-								EventBus displayEventBus,
-								QJRenderEventConverter renderEventConverter,
-								Optional<QWidget> parentView,
-								QWidget view) {
+	public QJBindViewRoutine(	final BindingDiscovery bindingDiscovery,
+								final ViewSlotInvocationHandler viewSlotInvocationHandler,
+								final Keyboard keyboard,
+								final EventBus displayEventBus,
+								final QJRenderEventConverter renderEventConverter,
+								final Optional<QWidget> parentView,
+								final QWidget view) {
 
 		this.bindingDiscovery = bindingDiscovery;
 		this.viewSlotInvocationHandler = viewSlotInvocationHandler;
@@ -48,45 +51,47 @@ public class QJBindViewRoutine implements PaintRoutine<Void, QJPaintContext> {
 
 		this.parentView = parentView;
 		this.view = view;
+		this.keyboard = keyboard;
 	}
 
 	@Override
-	public Void call(QJPaintContext paintContext) {
+	public Void call(final QJPaintContext paintContext) {
 		checkArgument(paintContext.getPaintableSurfaceNode() instanceof ShellWidget);
-		ShellWidget shellWidget = (ShellWidget) paintContext.getPaintableSurfaceNode();
+		final ShellWidget shellWidget = (ShellWidget) paintContext.getPaintableSurfaceNode();
 		initView(paintContext);
-		bindViewProperties(	bindingDiscovery,
-							viewSlotInvocationHandler,
+		bindViewProperties(	this.bindingDiscovery,
+							this.viewSlotInvocationHandler,
 							shellWidget,
-							view);
+							this.view);
 		bindViewEventListeners(shellWidget);
 		bindViewInputEmitters(shellWidget);
 
 		return null;
 	}
 
-	private void bindViewEventListeners(ShellWidget shellWidget) {
+	private void bindViewEventListeners(final ShellWidget shellWidget) {
 		new QJViewEventTracker(	this.displayEventBus,
 								this.renderEventConverter,
 								shellWidget,
-								view);
+								this.view);
 
 	}
 
-	private void bindViewInputEmitters(ShellWidget shellWidget) {
+	private void bindViewInputEmitters(final ShellWidget shellWidget) {
 		shellWidget.addShellNodeEventHandler(new InputSignalDispatcher(	shellWidget,
-																		bindingDiscovery));
+																		this.bindingDiscovery,
+																		this.keyboard));
 
 		new QJViewInputTracker(	this.displayEventBus,
 								this.renderEventConverter,
 								shellWidget,
-								view);
+								this.view);
 
 	}
 
 	private void initView(final QJPaintContext paintContext) {
-		if (parentView.isPresent()) {
-			view.setParent(parentView.get());
+		if (this.parentView.isPresent()) {
+			this.view.setParent(this.parentView.get());
 		}
 
 		final QGraphicsDropShadowEffect effect = new QGraphicsDropShadowEffect();
@@ -94,22 +99,22 @@ public class QJBindViewRoutine implements PaintRoutine<Void, QJPaintContext> {
 		effect.setOffset(	0,
 							5);
 		effect.setColor(QColor.darkGray);
-		view.setGraphicsEffect(effect);
+		this.view.setGraphicsEffect(effect);
 
-		view.setWindowFlags(WindowType.X11BypassWindowManagerHint);
-		view.setAttribute(	WidgetAttribute.WA_DeleteOnClose,
-							true);
-		view.setAttribute(	WidgetAttribute.WA_DontCreateNativeAncestors,
-							true);
+		this.view.setWindowFlags(WindowType.X11BypassWindowManagerHint);
+		this.view.setAttribute(	WidgetAttribute.WA_DeleteOnClose,
+								true);
+		this.view.setAttribute(	WidgetAttribute.WA_DontCreateNativeAncestors,
+								true);
 
-		paintContext.syncVisualGeometryToSurfaceNode(view);
+		paintContext.syncVisualGeometryToSurfaceNode(this.view);
 
 	}
 
-	private void bindViewProperties(BindingDiscovery bindingDiscovery,
-									ViewSlotInvocationHandler viewSlotInvocationHandler,
-									ShellWidget shellWidget,
-									Object view) {
+	private void bindViewProperties(final BindingDiscovery bindingDiscovery,
+									final ViewSlotInvocationHandler viewSlotInvocationHandler,
+									final ShellWidget shellWidget,
+									final Object view) {
 		Method[] fields;
 
 		try {
@@ -129,13 +134,13 @@ public class QJBindViewRoutine implements PaintRoutine<Void, QJPaintContext> {
 														viewSlot.get(),
 														argument);
 			}
-		} catch (ExecutionException e) {
+		} catch (final ExecutionException e) {
 			Throwables.propagate(e);
-		} catch (IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 			Throwables.propagate(e);
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			Throwables.propagate(e);
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			Throwables.propagate(e);
 		}
 	}
