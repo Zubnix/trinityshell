@@ -44,7 +44,6 @@ public class EventInterceptionTest {
 			public void run() {
 				// keep reference, else we garbage collect too fast which messes
 				// up qt jambi.
-				@SuppressWarnings("unused")
 				DummyQJRenderEngine dummyQJRenderEngine = new DummyQJRenderEngine();
 
 				final DummyView view = new DummyView();
@@ -111,7 +110,6 @@ public class EventInterceptionTest {
 			public void run() {
 				// keep reference, else we garbage collect too fast which messes
 				// up qt jambi.
-				@SuppressWarnings("unused")
 				DummyQJRenderEngine dummyQJRenderEngine = new DummyQJRenderEngine();
 
 				final DummyView view = new DummyView();
