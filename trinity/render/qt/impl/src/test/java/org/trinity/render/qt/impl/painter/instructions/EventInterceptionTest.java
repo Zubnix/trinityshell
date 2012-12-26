@@ -14,8 +14,6 @@ import org.trinity.foundation.display.api.event.FocusGainNotifyEvent;
 import org.trinity.render.qt.impl.DummyQJRenderEngine;
 import org.trinity.render.qt.impl.DummyView;
 import org.trinity.render.qt.impl.QJRenderEventConverter;
-import org.trinity.render.qt.impl.painter.instructions.QJViewEventTracker;
-import org.trinity.render.qt.impl.painter.instructions.QJViewInputTracker;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
@@ -41,26 +39,26 @@ public class EventInterceptionTest {
 																		null);
 		final Optional<DisplayEvent> optionalButtonNotifyEvent = Optional.of(buttonNotifyEvent);
 
-		Thread guiThread = new Thread() {
+		final Thread guiThread = new Thread() {
 			@Override
 			public void run() {
 				// keep reference, else we garbage collect too fast which messes
 				// up qt jambi.
 				@SuppressWarnings("unused")
-				final DummyQJRenderEngine dummyQJRenderEngine = new DummyQJRenderEngine();
+				DummyQJRenderEngine dummyQJRenderEngine = new DummyQJRenderEngine();
 
-				DummyView view = new DummyView();
+				final DummyView view = new DummyView();
 
-				QJRenderEventConverter qjRenderEventConverter = mock(QJRenderEventConverter.class);
-				QMouseEvent mouseEnterEvent = new QMouseEvent(	Type.Enter,
-																new QPoint(),
-																MouseButton.NoButton,
-																new MouseButtons(0));
-				QFocusEvent focusEvent = new QFocusEvent(Type.FocusIn);
-				QMouseEvent mouseClickEvent = new QMouseEvent(	Type.MouseButtonPress,
-																new QPoint(),
-																MouseButton.LeftButton,
-																new MouseButtons(0));
+				final QJRenderEventConverter qjRenderEventConverter = mock(QJRenderEventConverter.class);
+				final QMouseEvent mouseEnterEvent = new QMouseEvent(Type.Enter,
+																	new QPoint(),
+																	MouseButton.NoButton,
+																	new MouseButtons(0));
+				final QFocusEvent focusEvent = new QFocusEvent(Type.FocusIn);
+				final QMouseEvent mouseClickEvent = new QMouseEvent(Type.MouseButtonPress,
+																	new QPoint(),
+																	MouseButton.LeftButton,
+																	new MouseButtons(0));
 				when(qjRenderEventConverter.convertRenderEvent(	eventSource,
 																view,
 																view,
@@ -83,11 +81,15 @@ public class EventInterceptionTest {
 										mouseClickEvent);
 
 				QApplication.exec();
+				dummyQJRenderEngine.dispose();
+				dummyQJRenderEngine = null;
 			}
 		};
+		guiThread.setDaemon(true);
 		guiThread.start();
+		Thread.sleep(1000);
 		QApplication.quit();
-		guiThread.join(1000);
+		guiThread.join(2000);
 		verify(	displayEventBus,
 				times(1)).post(focusGainNotifyEvent);
 		verifyNoMoreInteractions(displayEventBus);
@@ -104,22 +106,22 @@ public class EventInterceptionTest {
 																		null);
 		final Optional<DisplayEvent> optionalButtonNotifyEvent = Optional.of(buttonNotifyEvent);
 
-		Thread guiThread = new Thread() {
+		final Thread guiThread = new Thread() {
 			@Override
 			public void run() {
 				// keep reference, else we garbage collect too fast which messes
 				// up qt jambi.
 				@SuppressWarnings("unused")
-				final DummyQJRenderEngine dummyQJRenderEngine = new DummyQJRenderEngine();
+				DummyQJRenderEngine dummyQJRenderEngine = new DummyQJRenderEngine();
 
-				DummyView view = new DummyView();
+				final DummyView view = new DummyView();
 
-				QJRenderEventConverter qjRenderEventConverter = mock(QJRenderEventConverter.class);
-				QFocusEvent focusEvent = new QFocusEvent(Type.FocusIn);
-				QMouseEvent mouseEvent = new QMouseEvent(	Type.MouseButtonPress,
-															new QPoint(),
-															MouseButton.LeftButton,
-															new MouseButtons(0));
+				final QJRenderEventConverter qjRenderEventConverter = mock(QJRenderEventConverter.class);
+				final QFocusEvent focusEvent = new QFocusEvent(Type.FocusIn);
+				final QMouseEvent mouseEvent = new QMouseEvent(	Type.MouseButtonPress,
+																new QPoint(),
+																MouseButton.LeftButton,
+																new MouseButtons(0));
 
 				when(qjRenderEventConverter.convertRenderEvent(	eventSource,
 																view,
@@ -152,7 +154,7 @@ public class EventInterceptionTest {
 				QApplication.sendEvent(	view.getPushButton1(),
 										mouseEvent);
 
-				QWidget extraChild = new QWidget();
+				final QWidget extraChild = new QWidget();
 				when(qjRenderEventConverter.convertRenderEvent(	eventSource,
 																view,
 																extraChild,
@@ -163,11 +165,15 @@ public class EventInterceptionTest {
 										mouseEvent);
 
 				QApplication.exec();
+				dummyQJRenderEngine.dispose();
+				dummyQJRenderEngine = null;
 			}
 		};
+		guiThread.setDaemon(true);
 		guiThread.start();
+		Thread.sleep(1000);
 		QApplication.quit();
-		guiThread.join(1000);
+		guiThread.join(2000);
 		verify(	displayEventBus,
 				times(4)).post(buttonNotifyEvent);
 		verifyNoMoreInteractions(displayEventBus);
