@@ -12,10 +12,11 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>display</module>
-		<module>input</module>
-		<module>render</module>
-		<module>shared</module>
+		<module>api</module>
+		<module>display.x11.impl</module>
+		<module>render.qt.api</module>
+		<module>render.qt.impl</module>
+		<module>display.x11.impl</module>
 	</modules>
 </project>
 
