@@ -11,7 +11,6 @@
  */
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
-import org.trinity.foundation.api.display.event.DisplayEventTarget;
 import org.trinity.foundation.api.display.event.FocusGainNotifyEvent;
 import org.trinity.foundation.api.display.event.FocusNotifyEvent;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConversion;
@@ -39,11 +38,11 @@ public class QJFocusGainConversion implements QJRenderEventConversion {
 	}
 
 	@Override
-	public FocusNotifyEvent convertEvent(	final DisplayEventTarget eventSource,
+	public FocusNotifyEvent convertEvent(	final Object eventTarget,
 											final Object view,
 											final QObject eventProducer,
 											final QEvent qEvent) {
-		return new FocusGainNotifyEvent(eventSource);
+		return new FocusGainNotifyEvent(eventTarget);
 	}
 
 	@Override

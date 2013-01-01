@@ -27,7 +27,7 @@ public class StackingChangedNotifyEvent extends DisplayEvent {
 	 *            a {@link DisplayEventTarget}
 	 *************************************** 
 	 */
-	public StackingChangedNotifyEvent(final DisplayEventTarget displayEventTarget) {
+	public StackingChangedNotifyEvent(final Object displayEventTarget) {
 		super(displayEventTarget);
 	}
 

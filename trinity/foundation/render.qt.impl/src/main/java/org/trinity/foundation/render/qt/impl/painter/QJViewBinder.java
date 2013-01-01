@@ -2,8 +2,11 @@ package org.trinity.foundation.render.qt.impl.painter;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import javax.annotation.Nullable;
+
 import org.trinity.foundation.api.render.binding.BindingDiscovery;
-import org.trinity.foundation.api.render.binding.ViewSlotInvocationHandler;
+import org.trinity.foundation.api.render.binding.ObservedCollectionHandler;
+import org.trinity.foundation.api.render.binding.ViewSlotHandler;
 import org.trinity.foundation.render.qt.api.QJRenderEngine;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConverter;
 import org.trinity.foundation.render.qt.impl.painter.routine.QJBindViewRoutine;
@@ -23,19 +26,22 @@ public class QJViewBinder {
 
 	private final QJRenderEngine qjRenderEngine;
 	private final BindingDiscovery bindingDiscovery;
-	private final ViewSlotInvocationHandler viewSlotInvocationHandler;
+	private final ViewSlotHandler viewSlotHandler;
+	private final ObservedCollectionHandler observedCollectionHandler;
 	private final EventBus displayEventBus;
 	private final QJRenderEventConverter qjRenderEventConverter;
 
 	@Inject
 	QJViewBinder(	final QJRenderEngine qjRenderEngine,
 					final BindingDiscovery bindingDiscovery,
-					final ViewSlotInvocationHandler viewSlotInvocationHandler,
+					@Nullable final ViewSlotHandler viewSlotHandler,
+					@Nullable final ObservedCollectionHandler observedCollectionHandler,
 					@Named("displayEventBus") final EventBus displayEventBus,
 					final QJRenderEventConverter qjRenderEventConverter) {
 		this.qjRenderEngine = qjRenderEngine;
 		this.bindingDiscovery = bindingDiscovery;
-		this.viewSlotInvocationHandler = viewSlotInvocationHandler;
+		this.viewSlotHandler = viewSlotHandler;
+		this.observedCollectionHandler = observedCollectionHandler;
 		this.displayEventBus = displayEventBus;
 		this.qjRenderEventConverter = qjRenderEventConverter;
 	}
@@ -48,7 +54,8 @@ public class QJViewBinder {
 
 		this.qjRenderEngine.invoke(	dataContext,
 									new QJBindViewRoutine(	this.bindingDiscovery,
-															this.viewSlotInvocationHandler,
+															Optional.fromNullable(this.viewSlotHandler),
+															Optional.fromNullable(this.observedCollectionHandler),
 															this.displayEventBus,
 															this.qjRenderEventConverter,
 															parentView,

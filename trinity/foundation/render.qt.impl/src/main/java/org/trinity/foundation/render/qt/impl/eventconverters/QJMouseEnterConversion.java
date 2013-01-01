@@ -11,7 +11,6 @@
  */
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
-import org.trinity.foundation.api.display.event.DisplayEventTarget;
 import org.trinity.foundation.api.display.event.PointerEnterNotifyEvent;
 import org.trinity.foundation.api.display.event.PointerVisitationNotifyEvent;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConversion;
@@ -40,11 +39,11 @@ public class QJMouseEnterConversion implements QJRenderEventConversion {
 	}
 
 	@Override
-	public PointerVisitationNotifyEvent convertEvent(	final DisplayEventTarget eventSource,
+	public PointerVisitationNotifyEvent convertEvent(	final Object eventTarget,
 														final Object view,
 														final QObject evenetProducer,
 														final QEvent qEvent) {
-		return new PointerEnterNotifyEvent(eventSource);
+		return new PointerEnterNotifyEvent(eventTarget);
 	}
 
 	@Override

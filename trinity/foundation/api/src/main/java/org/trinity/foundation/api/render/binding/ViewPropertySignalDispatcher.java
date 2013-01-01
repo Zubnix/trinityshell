@@ -2,22 +2,20 @@ package org.trinity.foundation.api.render.binding;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.trinity.foundation.api.render.binding.BindingDiscovery;
-import org.trinity.foundation.api.render.binding.ViewProperty;
-import org.trinity.foundation.api.render.binding.ViewPropertyChanged;
-import org.trinity.foundation.api.render.binding.ViewPropertySlot;
-import org.trinity.foundation.api.render.binding.ViewSlotInvocationHandler;
+import org.trinity.foundation.api.render.binding.refactor.model.ViewProperty;
+import org.trinity.foundation.api.render.binding.refactor.model.ViewPropertyChanged;
+import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
 
 import com.google.inject.Inject;
 
 /***************************************
  * Post processes a method annotated with {@link ViewPropertyChanged}. It reads
  * the {@link ViewPropertyChanged#value()} and finds for each String value a
- * {@link ViewProperty} and {@link ViewPropertySlot} with the same name. Each
+ * {@link ViewProperty} and {@link PropertySlot} with the same name. Each
  * matching {@code ViewProperty} will be read and it's corresponding
- * {@code ViewPropertySlot} will be invoked. Invoking the
- * {@code ViewPropertySlot} is done through an underlying
- * {@link ViewSlotInvocationHandler} implementation.
+ * {@code PropertySlot} will be invoked. Invoking the
+ * {@code PropertySlot} is done through an underlying
+ * {@link ViewSlotHandler} implementation.
  * <p>
  * This class is used by Google Guice AOP.
  *************************************** 
@@ -37,17 +35,17 @@ public class ViewPropertySignalDispatcher implements MethodInterceptor {
 		final String[] viewPropertyNames = viewSignal.value();
 
 		getViewPropertyDiscovery().notifyViewPropertySlot(	thisObjClass,
-													thisObj,
-													viewPropertyNames);
+															thisObj,
+															viewPropertyNames);
 		return invocationResult;
 	}
 
 	public BindingDiscovery getViewPropertyDiscovery() {
-		return bindingDiscovery;
+		return this.bindingDiscovery;
 	}
 
 	@Inject
-	public void setViewPropertyDiscovery(BindingDiscovery bindingDiscovery) {
+	public void setViewPropertyDiscovery(final BindingDiscovery bindingDiscovery) {
 		this.bindingDiscovery = bindingDiscovery;
 	}
 }

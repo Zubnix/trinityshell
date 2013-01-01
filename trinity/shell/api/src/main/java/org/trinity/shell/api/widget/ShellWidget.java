@@ -11,7 +11,6 @@
  */
 package org.trinity.shell.api.widget;
 
-import org.trinity.foundation.api.display.event.DisplayEventTarget;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
@@ -20,7 +19,7 @@ import org.trinity.shell.api.surface.ShellSurfaceParent;
  * Provides visual interaction for the user in the shell scene graph.
  * 
  */
-public interface ShellWidget extends DisplayEventTarget, ShellSurfaceParent {
+public interface ShellWidget extends ShellSurfaceParent {
 
 	Painter getPainter();
 }

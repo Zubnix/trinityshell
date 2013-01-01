@@ -30,11 +30,6 @@ import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.binding.BindingDiscovery;
 import org.trinity.foundation.render.qt.api.QJRenderEngine;
 import org.trinity.foundation.render.qt.impl.painter.routine.QJGetDisplaySurfaceRoutine;
-import org.trinity.foundation.render.qt.impl.painter.routine.QJResizeInstruction;
-import org.trinity.foundation.render.qt.impl.painter.routine.QJSetParentInstruction;
-import org.trinity.foundation.render.qt.impl.painter.routine.QJShowInstruction;
-import org.trinity.foundation.render.qt.impl.painter.routine.QJUngrabKeyboardRoutine;
-import org.trinity.foundation.render.qt.impl.painter.routine.QJUngrabPointer;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
@@ -84,7 +79,7 @@ public class QJPainter implements Painter {
 	private QWidget getView(final Object dataContext) {
 		QWidget view = null;
 		try {
-			final Optional<Method> viewRef = this.bindingDiscovery.lookupViewReference(dataContext.getClass());
+			final Optional<Method> viewRef = this.bindingDiscovery.lookupView(dataContext.getClass());
 			final Object viewInst = viewRef.get().invoke(dataContext);
 			checkArgument(viewInst instanceof QWidget);
 			view = (QWidget) viewInst;
@@ -131,7 +126,13 @@ public class QJPainter implements Painter {
 	public void show() {
 		final QWidget view = getView();
 		this.renderEngine.invoke(	this.dataContext,
-									new QJShowInstruction(view));
+									new PaintRoutine<Void, PaintContext>() {
+										@Override
+										public Void call(final PaintContext paintContext) {
+											view.show();
+											return null;
+										}
+									});
 	}
 
 	@Override
@@ -188,10 +189,15 @@ public class QJPainter implements Painter {
 		final QWidget parentView = getView(parent);
 		final QWidget view = getView();
 		this.renderEngine.invoke(	this.dataContext,
-									new QJSetParentInstruction(	view,
-																parentView,
-																x,
-																y));
+									new PaintRoutine<Void, PaintContext>() {
+										@Override
+										public Void call(final PaintContext paintContext) {
+											view.setParent(parentView);
+											view.move(	x,
+														y);
+											return null;
+										}
+									});
 	}
 
 	@Override
@@ -199,9 +205,14 @@ public class QJPainter implements Painter {
 						final int height) {
 		final QWidget view = getView();
 		this.renderEngine.invoke(	this.dataContext,
-									new QJResizeInstruction(view,
-															width,
-															height));
+									new PaintRoutine<Void, PaintContext>() {
+										@Override
+										public Void call(final PaintContext paintContext) {
+											view.resize(width,
+														height);
+											return null;
+										}
+									});
 	}
 
 	@Override
@@ -260,7 +271,13 @@ public class QJPainter implements Painter {
 	public void ungrabPointer() {
 		final QWidget view = getView();
 		this.renderEngine.invoke(	this.dataContext,
-									new QJUngrabPointer(view));
+									new PaintRoutine<Void, PaintContext>() {
+										@Override
+										public Void call(final PaintContext paintContext) {
+											view.releaseMouse();
+											return null;
+										}
+									});
 	}
 
 	@Override
@@ -308,7 +325,13 @@ public class QJPainter implements Painter {
 	public void ungrabKeyboard() {
 		final QWidget view = getView();
 		this.renderEngine.invoke(	this.dataContext,
-									new QJUngrabKeyboardRoutine(view));
+									new PaintRoutine<Void, PaintContext>() {
+										@Override
+										public Void call(final PaintContext paintContext) {
+											view.releaseKeyboard();
+											return null;
+										}
+									});
 
 	}
 

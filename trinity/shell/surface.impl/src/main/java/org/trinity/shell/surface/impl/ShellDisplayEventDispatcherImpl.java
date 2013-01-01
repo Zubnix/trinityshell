@@ -19,7 +19,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.DisplayEventTarget;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.event.ShellSurfaceCreatedEvent;
@@ -55,7 +54,7 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 
 	// TODO this is basically the same mechanism as used in EventBus. Find a way
 	// to seperate and uniform this mechanism.
-	private final Map<DisplayEventTarget, List<EventBus>> eventRecipients = new WeakHashMap<DisplayEventTarget, List<EventBus>>();
+	private final Map<Object, List<EventBus>> eventRecipients = new WeakHashMap<Object, List<EventBus>>();
 
 	private final DisplayServer displayServer;
 	private final ShellClientSurfaceFactory shellClientSurfaceFactory;
@@ -112,7 +111,7 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 
 	private void newShellSurfaceClientIfNeeded(final DisplayEvent event) {
 		synchronized (this.eventRecipients) {
-			final DisplayEventTarget displayEventTarget = event.getDisplayEventTarget();
+			final Object displayEventTarget = event.getDisplayEventTarget();
 			if (!this.eventRecipients.containsKey(displayEventTarget) && (displayEventTarget instanceof DisplaySurface)) {
 				createClientShellSurface((DisplaySurface) displayEventTarget);
 			}
@@ -127,7 +126,7 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 
 	@Override
 	public void registerDisplayEventSourceListener(	final EventBus nodeEventBus,
-													final DisplayEventTarget displayEventTarget) {
+													final Object displayEventTarget) {
 		List<EventBus> nodeEventBusses;
 		synchronized (this.eventRecipients) {
 			nodeEventBusses = this.eventRecipients.get(displayEventTarget);
@@ -143,7 +142,7 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 
 	@Override
 	public void unregisterDisplayEventSourceListener(	final EventBus nodeEventBus,
-														final DisplayEventTarget displayEventTarget) {
+														final Object displayEventTarget) {
 		synchronized (this.eventRecipients) {
 
 			final List<EventBus> nodeEventBusses = this.eventRecipients.get(displayEventTarget);
@@ -154,7 +153,7 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 	}
 
 	@Override
-	public void unregisterAllDisplayEventSourceListeners(final DisplayEventTarget displayEventTarget) {
+	public void unregisterAllDisplayEventSourceListeners(final Object displayEventTarget) {
 		synchronized (this.eventRecipients) {
 			this.eventRecipients.remove(displayEventTarget);
 		}

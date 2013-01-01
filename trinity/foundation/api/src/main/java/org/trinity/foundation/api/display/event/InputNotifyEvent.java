@@ -33,7 +33,7 @@ public class InputNotifyEvent<I extends Input> extends DisplayEvent {
 	 *            an {@link Input}
 	 *************************************** 
 	 */
-	public InputNotifyEvent(final DisplayEventTarget displayEventTarget, final I input) {
+	public InputNotifyEvent(final Object displayEventTarget, final I input) {
 		super(displayEventTarget);
 		this.input = input;
 	}

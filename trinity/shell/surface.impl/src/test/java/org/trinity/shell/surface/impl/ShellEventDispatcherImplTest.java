@@ -16,10 +16,6 @@ import org.mockito.Mockito;
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.DisplayEventTarget;
-import org.trinity.shell.surface.impl.ShellClientSurface;
-import org.trinity.shell.surface.impl.ShellClientSurfaceFactory;
-import org.trinity.shell.surface.impl.ShellDisplayEventDispatcherImpl;
 
 import com.google.common.eventbus.EventBus;
 
@@ -40,7 +36,7 @@ public class ShellEventDispatcherImplTest {
 
 		final EventBus nodeEventBus = Mockito.mock(EventBus.class);
 
-		final DisplayEventTarget displayEventTarget = Mockito.mock(DisplayEventTarget.class);
+		final Object displayEventTarget = Mockito.mock(Object.class);
 
 		final ShellClientSurfaceFactory shellClientSurfaceFactory = Mockito.mock(ShellClientSurfaceFactory.class);
 

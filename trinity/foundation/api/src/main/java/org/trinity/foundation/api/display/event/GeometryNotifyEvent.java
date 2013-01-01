@@ -33,7 +33,7 @@ public class GeometryNotifyEvent extends DisplayEvent {
 	 *            a {@link Rectangle}.
 	 *************************************** 
 	 */
-	public GeometryNotifyEvent(final DisplayEventTarget displayEventTarget, final Rectangle geometry) {
+	public GeometryNotifyEvent(final Object displayEventTarget, final Rectangle geometry) {
 
 		super(displayEventTarget);
 		this.geometry = geometry;

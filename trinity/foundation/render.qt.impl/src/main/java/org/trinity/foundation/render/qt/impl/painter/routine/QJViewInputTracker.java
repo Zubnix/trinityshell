@@ -14,7 +14,6 @@ package org.trinity.foundation.render.qt.impl.painter.routine;
 import java.util.List;
 
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.DisplayEventTarget;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConverter;
 
 import com.google.common.base.Optional;
@@ -25,18 +24,18 @@ import com.trolltech.qt.core.QObject;
 
 public class QJViewInputTracker extends QObject {
 
-	private final DisplayEventTarget eventSource;
+	private final Object eventTarget;
 	private final EventBus displayEventBus;
 	private final QJRenderEventConverter renderEventConverter;
 	private final QObject view;
 
 	QJViewInputTracker(	final EventBus displayEventBus,
 						final QJRenderEventConverter qjRenderEventConverter,
-						final DisplayEventTarget eventSource,
+						final Object eventTarget,
 						final QObject view) {
 		this.displayEventBus = displayEventBus;
 		this.renderEventConverter = qjRenderEventConverter;
-		this.eventSource = eventSource;
+		this.eventTarget = eventTarget;
 		this.view = view;
 		trackQObjectTree(view);
 	}
@@ -106,7 +105,7 @@ public class QJViewInputTracker extends QObject {
 
 	private boolean handleInputEvent(	final QObject eventProducer,
 										final QEvent qEvent) {
-		final Optional<DisplayEvent> displayEvent = this.renderEventConverter.convertRenderEvent(	this.eventSource,
+		final Optional<DisplayEvent> displayEvent = this.renderEventConverter.convertRenderEvent(	this.eventTarget,
 																									this.view,
 																									eventProducer,
 																									qEvent);

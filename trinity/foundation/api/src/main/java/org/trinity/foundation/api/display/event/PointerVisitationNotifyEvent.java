@@ -28,7 +28,7 @@ public abstract class PointerVisitationNotifyEvent extends DisplayEvent {
 	 *            a {@link DisplayEventTarget}
 	 *************************************** 
 	 */
-	public PointerVisitationNotifyEvent(final DisplayEventTarget displayEventTarget) {
+	public PointerVisitationNotifyEvent(final Object displayEventTarget) {
 		super(displayEventTarget);
 	}
 }

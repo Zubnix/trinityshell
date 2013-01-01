@@ -2,14 +2,13 @@ package org.trinity.foundation.render.qt.impl.eventconverters;
 
 import java.util.concurrent.ExecutionException;
 
-import org.trinity.foundation.api.display.event.DisplayEventTarget;
 import org.trinity.foundation.api.display.event.KeyNotifyEvent;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.api.render.binding.BindingDiscovery;
-import org.trinity.foundation.api.render.binding.BoundKeyInputEvent;
+import org.trinity.foundation.api.render.binding.refactor.view.BoundKeyInputEvent;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConversion;
 
 import com.google.common.base.Optional;
@@ -27,7 +26,7 @@ public abstract class AbstractQJKeyConversion implements QJRenderEventConversion
 	}
 
 	@Override
-	public KeyNotifyEvent convertEvent(	final DisplayEventTarget source,
+	public KeyNotifyEvent convertEvent(	final Object eventTarget,
 										final Object view,
 										final QObject qObject,
 										final QEvent qEvent) {
@@ -61,11 +60,11 @@ public abstract class AbstractQJKeyConversion implements QJRenderEventConversion
 
 		KeyNotifyEvent keyNotifyEvent;
 		if (inputSlotName.isPresent()) {
-			keyNotifyEvent = new BoundKeyInputEvent(source,
+			keyNotifyEvent = new BoundKeyInputEvent(eventTarget,
 													input,
 													inputSlotName.get());
 		} else {
-			keyNotifyEvent = new KeyNotifyEvent(source,
+			keyNotifyEvent = new KeyNotifyEvent(eventTarget,
 												input);
 		}
 

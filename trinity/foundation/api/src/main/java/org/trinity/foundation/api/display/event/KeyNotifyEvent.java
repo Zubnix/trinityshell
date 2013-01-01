@@ -32,7 +32,7 @@ public class KeyNotifyEvent extends InputNotifyEvent<KeyboardInput> {
 	 *            {@link KeyboardInput}
 	 *************************************** 
 	 */
-	public KeyNotifyEvent(final DisplayEventTarget displayEventTarget, final KeyboardInput input) {
+	public KeyNotifyEvent(final Object displayEventTarget, final KeyboardInput input) {
 		super(	displayEventTarget,
 				input);
 	}

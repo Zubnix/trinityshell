@@ -29,7 +29,7 @@ public class ButtonNotifyEvent extends InputNotifyEvent<PointerInput> {
 	 *            The {@link PointerInput} details.
 	 *************************************** 
 	 */
-	public ButtonNotifyEvent(final DisplayEventTarget displayEventTarget, final PointerInput pointerInput) {
+	public ButtonNotifyEvent(final Object displayEventTarget, final PointerInput pointerInput) {
 		super(	displayEventTarget,
 				pointerInput);
 	}

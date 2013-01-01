@@ -13,8 +13,7 @@ package org.trinity.foundation.render.qt.impl.binding;
 
 import java.lang.reflect.Method;
 
-import org.trinity.foundation.api.render.binding.ViewProperty;
-import org.trinity.foundation.api.render.binding.ViewSlotInvocationHandler;
+import org.trinity.foundation.api.render.binding.ViewSlotHandler;
 import org.trinity.foundation.render.qt.api.QJRenderEngine;
 
 import com.google.inject.Inject;
@@ -24,7 +23,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton
-public class ViewSlotInvocationHandlerImpl implements ViewSlotInvocationHandler {
+public class ViewSlotInvocationHandlerImpl implements ViewSlotHandler {
 
 	private final QJRenderEngine qjRenderEngine;
 
@@ -35,13 +34,11 @@ public class ViewSlotInvocationHandlerImpl implements ViewSlotInvocationHandler 
 
 	@Override
 	public void invokeSlot(	final Object dataContext,
-							final ViewProperty viewProperty,
 							final Object view,
 							final Method viewSlot,
 							final Object argument) {
 		this.qjRenderEngine.invoke(	dataContext,
-									new InvokeSlotRoutine(	viewProperty,
-															view,
+									new InvokeSlotRoutine(	view,
 															viewSlot,
 															argument));
 	}

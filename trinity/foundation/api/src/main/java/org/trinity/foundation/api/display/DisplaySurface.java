@@ -11,7 +11,6 @@
  */
 package org.trinity.foundation.api.display;
 
-import org.trinity.foundation.api.display.event.DisplayEventTarget;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.Rectangle;
 
@@ -20,7 +19,7 @@ import org.trinity.foundation.api.shared.Rectangle;
  * <code>DisplaySurface</code> maps to a native window from a native display.
  * 
  */
-public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator, DisplayEventTarget {
+public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator {
 
 	/***************************************
 	 * Query geometry information. The values of the returned {@link Rectangle}

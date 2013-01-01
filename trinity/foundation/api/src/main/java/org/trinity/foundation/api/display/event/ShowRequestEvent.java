@@ -27,7 +27,7 @@ public class ShowRequestEvent extends DisplayEvent {
 	 *            a {@link DisplayEventTarget}
 	 *************************************** 
 	 */
-	public ShowRequestEvent(final DisplayEventTarget displayEventTarget) {
+	public ShowRequestEvent(final Object displayEventTarget) {
 		super(displayEventTarget);
 	}
 }

@@ -27,7 +27,7 @@ public class PointerLeaveNotifyEvent extends PointerVisitationNotifyEvent {
 	 *            A {@link DisplayEventTarget}.
 	 *************************************** 
 	 */
-	public PointerLeaveNotifyEvent(final DisplayEventTarget displayEventTarget) {
+	public PointerLeaveNotifyEvent(final Object displayEventTarget) {
 		super(displayEventTarget);
 	}
 

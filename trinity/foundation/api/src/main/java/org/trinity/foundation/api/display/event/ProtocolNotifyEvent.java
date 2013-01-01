@@ -34,7 +34,7 @@ public class ProtocolNotifyEvent extends DisplayEvent {
 	 *            a native protocol id.
 	 *************************************** 
 	 */
-	public ProtocolNotifyEvent(final DisplayEventTarget displayEventTarget, final String protocol) {
+	public ProtocolNotifyEvent(final Object displayEventTarget, final String protocol) {
 		super(displayEventTarget);
 		this.protocol = protocol;
 	}

@@ -8,5 +8,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>foundation.api</artifactId>
 	<name>Foundation API</name>
+	<dependencies>
+		<dependency>
+			<groupId>net.java.dev.glazedlists</groupId>
+			<artifactId>glazedlists_java15</artifactId>
+			<version>1.8.0</version>
+		</dependency>
+	</dependencies>
 </project>
 

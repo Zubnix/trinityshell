@@ -21,7 +21,7 @@ import org.trinity.foundation.api.display.DisplayServer;
  */
 public class DisplayEvent {
 
-	private final DisplayEventTarget displayEventTarget;
+	private final Object displayEventTarget;
 
 	/****************************************
 	 * Construct a generic <code>DisplayEvent</code> with the given
@@ -31,7 +31,7 @@ public class DisplayEvent {
 	 *            A {@link DisplayEventTarget}
 	 *************************************** 
 	 */
-	public DisplayEvent(final DisplayEventTarget displayEventTarget) {
+	public DisplayEvent(final Object displayEventTarget) {
 		this.displayEventTarget = displayEventTarget;
 	}
 
@@ -41,7 +41,7 @@ public class DisplayEvent {
 	 * @return A {@link DisplayEventTarget}
 	 *************************************** 
 	 */
-	public DisplayEventTarget getDisplayEventTarget() {
+	public Object getDisplayEventTarget() {
 		return this.displayEventTarget;
 	}
 

@@ -28,14 +28,14 @@ public interface QJRenderEngine {
 	 * {@link PaintableSurfaceNode}. Invocation is usually done by a seperate
 	 * paint thread.
 	 * 
-	 * @param paintableSurfaceNode
-	 *            a {@link PaintableSurfaceNode}
+	 * @param dataContext
+	 *            a data context.
 	 * @param paintInstruction
 	 *            a {@link PaintRoutine}
 	 * @return a {@link Future} result.
 	 *************************************** 
 	 */
-	<R> Future<R> invoke(	Object paintableSurfaceNode,
+	<R> Future<R> invoke(	Object dataContext,
 							PaintRoutine<R, PaintContext> paintInstruction);
 
 }

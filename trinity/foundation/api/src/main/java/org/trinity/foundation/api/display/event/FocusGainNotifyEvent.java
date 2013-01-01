@@ -26,7 +26,7 @@ public class FocusGainNotifyEvent extends FocusNotifyEvent {
 	 *            An {@link DisplayEventTarget}
 	 *************************************** 
 	 */
-	public FocusGainNotifyEvent(final DisplayEventTarget displayEventTarget) {
+	public FocusGainNotifyEvent(final Object displayEventTarget) {
 		super(displayEventTarget);
 	}
 }

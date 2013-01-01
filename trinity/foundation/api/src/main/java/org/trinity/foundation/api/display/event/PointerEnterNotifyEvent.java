@@ -27,7 +27,7 @@ public class PointerEnterNotifyEvent extends PointerVisitationNotifyEvent {
 	 *            A {@link DisplayEventTarget}.
 	 *************************************** 
 	 */
-	public PointerEnterNotifyEvent(final DisplayEventTarget displayEventTarget) {
+	public PointerEnterNotifyEvent(final Object displayEventTarget) {
 		super(displayEventTarget);
 	}
 

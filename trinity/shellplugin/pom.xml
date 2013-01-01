@@ -13,6 +13,7 @@
 	<modules>
 		<module>styledwidget.api</module>
 		<module>styledwidget.impl</module>
+		<module>styledwidget.view.qt.impl</module>
 		<module>wm.api</module>
 		<module>wm.impl</module>
 	</modules>

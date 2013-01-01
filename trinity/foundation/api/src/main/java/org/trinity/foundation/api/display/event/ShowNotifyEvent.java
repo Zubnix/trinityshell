@@ -26,7 +26,7 @@ public class ShowNotifyEvent extends DisplayEvent {
 	 *            A {@link DisplayEventTarget}.
 	 *************************************** 
 	 */
-	public ShowNotifyEvent(final DisplayEventTarget displayEventTarget) {
+	public ShowNotifyEvent(final Object displayEventTarget) {
 		super(displayEventTarget);
 	}
 

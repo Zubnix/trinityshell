@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.DisplayEventTarget;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -28,20 +27,6 @@ import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
-// TODO documentation
-/**
- * Promotes <code>QEvent</code>s to <code>DisplayEvent</code>s so they can be
- * processed by an <code>BaseEventProducingDisplay</code>. Promoted
- * <code>QEvent</code>s are translated to an {@link DisplayEvent} and placed on
- * a thread safe queue. This queue can be read with a call to
- * <code>getNextEvent()</code>.
- * <p>
- * Every <code>QEvent</code> that is promoted is read only. Not every
- * <code>QEvent</code> will be translated. Only those <code>QEvent</code>s that
- * have a corresponding <code>DisplayEvent</code> are translated and placed on a
- * queue.
- * 
- */
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
 public class QJRenderEventConverter {
@@ -56,7 +41,7 @@ public class QJRenderEventConverter {
 		}
 	}
 
-	public Optional<DisplayEvent> convertRenderEvent(	final DisplayEventTarget target,
+	public Optional<DisplayEvent> convertRenderEvent(	final Object eventTarget,
 														final Object view,
 														final QObject eventProducer,
 														final QEvent event) {
@@ -64,7 +49,7 @@ public class QJRenderEventConverter {
 		final Optional<QJRenderEventConversion> eventConverter = this.conversionByQEventType.get(event.type());
 		DisplayEvent displayEvent = null;
 		if (eventConverter.isPresent()) {
-			displayEvent = eventConverter.get().convertEvent(	target,
+			displayEvent = eventConverter.get().convertEvent(	eventTarget,
 																view,
 																eventProducer,
 																event);

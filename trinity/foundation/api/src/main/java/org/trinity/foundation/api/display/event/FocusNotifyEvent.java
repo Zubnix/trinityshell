@@ -26,7 +26,7 @@ public abstract class FocusNotifyEvent extends DisplayEvent {
 	 *            a {@link DisplayEventTarget}.
 	 *************************************** 
 	 */
-	public FocusNotifyEvent(final DisplayEventTarget displayEventTarget) {
+	public FocusNotifyEvent(final Object displayEventTarget) {
 		super(displayEventTarget);
 	}
 }

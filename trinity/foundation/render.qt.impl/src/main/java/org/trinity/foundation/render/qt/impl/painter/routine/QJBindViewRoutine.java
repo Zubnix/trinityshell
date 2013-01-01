@@ -1,18 +1,22 @@
 package org.trinity.foundation.render.qt.impl.painter.routine;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ExecutionException;
 
-import org.trinity.foundation.api.display.event.DisplayEventTarget;
 import org.trinity.foundation.api.render.PaintContext;
 import org.trinity.foundation.api.render.PaintRoutine;
 import org.trinity.foundation.api.render.binding.BindingDiscovery;
-import org.trinity.foundation.api.render.binding.ViewProperty;
-import org.trinity.foundation.api.render.binding.ViewSlotInvocationHandler;
+import org.trinity.foundation.api.render.binding.ObservableCollection;
+import org.trinity.foundation.api.render.binding.ObservedCollection;
+import org.trinity.foundation.api.render.binding.ObservedCollectionHandler;
+import org.trinity.foundation.api.render.binding.ViewSlotHandler;
+import org.trinity.foundation.api.render.binding.refactor.model.ViewProperty;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConverter;
+
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.event.ListEvent;
+import ca.odell.glazedlists.event.ListEventListener;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
@@ -26,7 +30,8 @@ import com.trolltech.qt.gui.QWidget;
 public class QJBindViewRoutine implements PaintRoutine<Void, PaintContext> {
 
 	private final BindingDiscovery bindingDiscovery;
-	private final ViewSlotInvocationHandler viewSlotInvocationHandler;
+	private final Optional<ViewSlotHandler> optionalViewSlotInvocationHandler;
+	private final Optional<ObservedCollectionHandler> optionalObservableCollectionHandler;
 	private final QJRenderEventConverter renderEventConverter;
 	private final EventBus displayEventBus;
 
@@ -34,14 +39,17 @@ public class QJBindViewRoutine implements PaintRoutine<Void, PaintContext> {
 	private final QWidget view;
 
 	public QJBindViewRoutine(	final BindingDiscovery bindingDiscovery,
-								final ViewSlotInvocationHandler viewSlotInvocationHandler,
+								final Optional<ViewSlotHandler> viewSlotHandler,
+								final Optional<ObservedCollectionHandler> observedCollectionHandler,
 								final EventBus displayEventBus,
 								final QJRenderEventConverter renderEventConverter,
 								final Optional<QWidget> parentView,
 								final QWidget view) {
 
 		this.bindingDiscovery = bindingDiscovery;
-		this.viewSlotInvocationHandler = viewSlotInvocationHandler;
+		this.optionalViewSlotInvocationHandler = viewSlotHandler;
+		this.optionalObservableCollectionHandler = observedCollectionHandler;
+
 		this.renderEventConverter = renderEventConverter;
 		this.displayEventBus = displayEventBus;
 
@@ -51,20 +59,63 @@ public class QJBindViewRoutine implements PaintRoutine<Void, PaintContext> {
 
 	@Override
 	public Void call(final PaintContext paintContext) {
-		final Object shellWidget = paintContext.getDataContext();
-		checkArgument(shellWidget instanceof DisplayEventTarget);
+		final Object rootDataContext = paintContext.getDataContext();
 		initView(paintContext);
-		bindViewProperties(	this.bindingDiscovery,
-							this.viewSlotInvocationHandler,
-							shellWidget,
-							this.view);
-		bindViewEventListeners((DisplayEventTarget) shellWidget);
-		bindViewInputEmitters((DisplayEventTarget) shellWidget);
+		bindViewProperties(rootDataContext);
+		bindViewEventListeners(rootDataContext);
+		bindViewInputEmitters(rootDataContext);
+		bindObservedCollections(rootDataContext);
 
 		return null;
 	}
 
-	private void bindViewEventListeners(final DisplayEventTarget dataContext) {
+	private void bindObservedCollections(final Object dataContext) {
+		if (!this.optionalObservableCollectionHandler.isPresent()) {
+			return;
+		}
+
+		try {
+			final Method[] observableCollections = this.bindingDiscovery.lookupAllObservableCollections(dataContext
+					.getClass());
+			for (final Method method : observableCollections) {
+				final ObservableCollection observableCollection = method.getAnnotation(ObservableCollection.class);
+				final Optional<Method> observedCollection = this.bindingDiscovery
+						.lookupObservedCollection(	this.view.getClass(),
+													observableCollection.name());
+				if (!observedCollection.isPresent()) {
+					continue;
+				}
+				final ObservedCollection observedCollectionMeta = observedCollection.get()
+						.getAnnotation(ObservedCollection.class);
+				final EventList<?> collection = (EventList<?>) method.invoke(dataContext);
+				collection.addListEventListener(new ListEventListener<Object>() {
+
+					@Override
+					public void listChanged(final ListEvent<Object> listChanges) {
+
+						// TODO Auto-generated method stub
+
+					}
+
+				});
+				this.optionalObservableCollectionHandler.get().handleObservedCollection(dataContext,
+																						this.view,
+																						observedCollectionMeta,
+																						observedCollection.get(),
+																						collection);
+			}
+		} catch (final ExecutionException e) {
+			Throwables.propagate(e);
+		} catch (final IllegalAccessException e) {
+			Throwables.propagate(e);
+		} catch (final IllegalArgumentException e) {
+			Throwables.propagate(e);
+		} catch (final InvocationTargetException e) {
+			Throwables.propagate(e);
+		}
+	}
+
+	private void bindViewEventListeners(final Object dataContext) {
 		new QJViewEventTracker(	this.displayEventBus,
 								this.renderEventConverter,
 								dataContext,
@@ -72,7 +123,7 @@ public class QJBindViewRoutine implements PaintRoutine<Void, PaintContext> {
 
 	}
 
-	private void bindViewInputEmitters(final DisplayEventTarget dataContext) {
+	private void bindViewInputEmitters(final Object dataContext) {
 		new QJViewInputTracker(	this.displayEventBus,
 								this.renderEventConverter,
 								dataContext,
@@ -99,28 +150,26 @@ public class QJBindViewRoutine implements PaintRoutine<Void, PaintContext> {
 								true);
 	}
 
-	private void bindViewProperties(final BindingDiscovery bindingDiscovery,
-									final ViewSlotInvocationHandler viewSlotInvocationHandler,
-									final Object shellWidget,
-									final Object view) {
-		Method[] fields;
+	private void bindViewProperties(final Object dataContext) {
+		if (!this.optionalViewSlotInvocationHandler.isPresent()) {
+			return;
+		}
 
 		try {
-			fields = bindingDiscovery.lookupAllViewProperties(shellWidget.getClass());
-			for (final Method method : fields) {
+			final Method[] viewProperties = this.bindingDiscovery.lookupAllViewProperties(dataContext.getClass());
+			for (final Method method : viewProperties) {
 				final ViewProperty viewProperty = method.getAnnotation(ViewProperty.class);
-				final Optional<Method> viewSlot = bindingDiscovery.lookupViewPropertySlot(	view.getClass(),
-																							viewProperty.value());
+				final Optional<Method> viewSlot = this.bindingDiscovery.lookupViewPropertySlot(	this.view.getClass(),
+																								viewProperty.value());
 				if (!viewSlot.isPresent()) {
 					continue;
 				}
 
-				final Object argument = method.invoke(shellWidget);
-				viewSlotInvocationHandler.invokeSlot(	shellWidget,
-														viewProperty,
-														view,
-														viewSlot.get(),
-														argument);
+				final Object argument = method.invoke(dataContext);
+				this.optionalViewSlotInvocationHandler.get().invokeSlot(dataContext,
+																		this.view,
+																		viewSlot.get(),
+																		argument);
 			}
 		} catch (final ExecutionException e) {
 			Throwables.propagate(e);

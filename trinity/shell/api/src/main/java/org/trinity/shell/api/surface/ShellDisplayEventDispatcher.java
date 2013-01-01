@@ -11,18 +11,16 @@
  */
 package org.trinity.shell.api.surface;
 
-import org.trinity.foundation.api.display.event.DisplayEventTarget;
-
 import com.google.common.eventbus.EventBus;
 
 public interface ShellDisplayEventDispatcher {
 	void dispatchDisplayEvent(final boolean block);
 
 	void registerDisplayEventSourceListener(final EventBus nodeEventBus,
-											final DisplayEventTarget displayEventTarget);
+											final Object displayEventTarget);
 
 	void unregisterDisplayEventSourceListener(	EventBus nodeEventBus,
-												DisplayEventTarget displayEventTarget);
+												Object displayEventTarget);
 
-	void unregisterAllDisplayEventSourceListeners(DisplayEventTarget displayEventTarget);
+	void unregisterAllDisplayEventSourceListeners(Object displayEventTarget);
 }

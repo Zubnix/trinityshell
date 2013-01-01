@@ -1,0 +1,7 @@
+ShellMenuBarView {
+	
+}
+
+ShellMenuBarView > ShellMenuBarClientView {
+
+}

@@ -7,13 +7,15 @@ import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shellplugin.styledwidget.api.BaseShellWidgetStyled;
 
 import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
 
 public class ShellMenuBar extends BaseShellWidgetStyled {
 
-	public ShellMenuBar(final EventBus eventBus,
-						final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-						final PainterFactory painterFactory,
-						@Named("StyledQJView") final Object view) {
+	@Inject
+	ShellMenuBar(	final EventBus eventBus,
+					final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
+					final PainterFactory painterFactory,
+					@Named("ShellMenuBarView") final Object view) {
 
 		super(	eventBus,
 				shellDisplayEventDispatcher,
@@ -21,5 +23,4 @@ public class ShellMenuBar extends BaseShellWidgetStyled {
 				view);
 		setName("ShellMenuBar");
 	}
-
 }

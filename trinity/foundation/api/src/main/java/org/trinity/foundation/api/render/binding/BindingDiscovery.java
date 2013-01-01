@@ -12,6 +12,15 @@ import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Keyboard;
 import org.trinity.foundation.api.display.input.Momentum;
+import org.trinity.foundation.api.render.binding.refactor.model.InputSlot;
+import org.trinity.foundation.api.render.binding.refactor.model.View;
+import org.trinity.foundation.api.render.binding.refactor.model.ViewProperty;
+import org.trinity.foundation.api.render.binding.refactor.view.BoundInputEvent;
+import org.trinity.foundation.api.render.binding.refactor.view.InputSignal;
+import org.trinity.foundation.api.render.binding.refactor.view.InputSignals;
+import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
+
+import ca.odell.glazedlists.EventList;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
@@ -24,12 +33,6 @@ import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
-// TODO convert to non static singleton instance
-/***************************************
- * Scanner class used to discover {@link ViewProperty}s,
- * {@link ViewPropertySlot}s and {@link ViewPropertyChanged}s.
- *************************************** 
- */
 @Singleton
 @Bind(to = @To(value = Type.IMPLEMENTATION))
 public class BindingDiscovery {
@@ -38,7 +41,7 @@ public class BindingDiscovery {
 	private static final Cache<Class<?>, Method[]> allViewProperties = CacheBuilder.newBuilder().build();
 	private static final Cache<Class<?>, Cache<String, Optional<Method>>> viewPropertiesByName = CacheBuilder
 			.newBuilder().build();
-	private static final Cache<Class<?>, Optional<Method>> viewReferenceFields = CacheBuilder.newBuilder().build();
+	private static final Cache<Class<?>, Optional<Method>> views = CacheBuilder.newBuilder().build();
 	private static final Cache<Class<?>, Cache<String, Optional<Method>>> viewSlots = CacheBuilder.newBuilder().build();
 
 	// view inputs
@@ -46,13 +49,21 @@ public class BindingDiscovery {
 			.newBuilder().build();
 	private static final Cache<Class<?>, Method[]> inputEmitters = CacheBuilder.newBuilder().build();
 
-	private final ViewSlotInvocationHandler viewSlotInvocationHandler;
+	// observable collections
+	private static final Cache<Class<?>, Method[]> allObservableCollections = CacheBuilder.newBuilder().build();
+	private static final Cache<Class<?>, Cache<String, Optional<Method>>> observedCollectionsByName = CacheBuilder
+			.newBuilder().build();
+
+	// data contexes
+	private static final Cache<Object, Object> dataContextsBySubDataContex = CacheBuilder.newBuilder().build();
+
+	private final ViewSlotHandler viewSlotHandler;
 	private final Keyboard keyboard;
 
 	@Inject
-	BindingDiscovery(final Keyboard keyboard, final ViewSlotInvocationHandler viewSlotInvocationHandler) {
+	BindingDiscovery(final Keyboard keyboard, final ViewSlotHandler viewSlotHandler) {
 		this.keyboard = keyboard;
-		this.viewSlotInvocationHandler = viewSlotInvocationHandler;
+		this.viewSlotHandler = viewSlotHandler;
 	}
 
 	/****************************************
@@ -76,12 +87,12 @@ public class BindingDiscovery {
 														});
 	}
 
-	protected Method[] getAllViewProperties(final Class<?> clazz) {
+	protected Method[] getAllViewProperties(final Class<?> dataContextClass) {
 		final List<Method> allViewProperties = new ArrayList<Method>();
 
 		final List<ViewProperty> viewPropertyAnnotations = new ArrayList<ViewProperty>();
 
-		for (final Method method : clazz.getMethods()) {
+		for (final Method method : dataContextClass.getMethods()) {
 			final ViewProperty viewPropertyAnnotation = method.getAnnotation(ViewProperty.class);
 			if (viewPropertyAnnotation == null) {
 				continue;
@@ -92,7 +103,7 @@ public class BindingDiscovery {
 				throw new IllegalArgumentException(String.format(	"Found duplicate %s with name=%s on %s",
 																	ViewProperty.class.getName(),
 																	viewPropertyAnnotation.value(),
-																	clazz.getName()));
+																	dataContextClass.getName()));
 			}
 
 			viewPropertyAnnotations.add(viewPropertyAnnotation);
@@ -182,6 +193,16 @@ public class BindingDiscovery {
 		return false;
 	}
 
+	protected boolean isDuplicateObservableCollection(	final List<ObservableCollection> observableCollections,
+														final ObservableCollection observableCollection) {
+		for (final ObservableCollection addedObservableCollection : observableCollections) {
+			if (addedObservableCollection.name().equals(observableCollection.name())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/***************************************
 	 * Find the getter annotated with {@link View}.
 	 * 
@@ -193,15 +214,15 @@ public class BindingDiscovery {
 	 *             non public method, or multiple views are found.
 	 *************************************** 
 	 */
-	public Optional<Method> lookupViewReference(final Class<?> dataContextClass) throws ExecutionException {
+	public Optional<Method> lookupView(final Class<?> dataContextClass) throws ExecutionException {
 
-		return BindingDiscovery.viewReferenceFields.get(dataContextClass,
-														new Callable<Optional<Method>>() {
-															@Override
-															public Optional<Method> call() {
-																return getViewReferenceObject(dataContextClass);
-															}
-														});
+		return BindingDiscovery.views.get(	dataContextClass,
+											new Callable<Optional<Method>>() {
+												@Override
+												public Optional<Method> call() {
+													return getViewReferenceObject(dataContextClass);
+												}
+											});
 	}
 
 	protected Optional<Method> getViewReferenceObject(final Class<?> clazz) {
@@ -222,14 +243,14 @@ public class BindingDiscovery {
 	}
 
 	/***************************************
-	 * Find the method annotated with a {@link ViewPropertySlot} with the given
+	 * Find the method annotated with a {@link PropertySlot} with the given
 	 * name.
 	 * 
 	 * @param viewClass
 	 *            The view {@link Class} to scan.
 	 * @param viewPropertyName
 	 *            The name that should be present in the
-	 *            {@code  ViewPropertySlot}.
+	 *            {@code  PropertySlot}.
 	 * @return The found method.
 	 * @throws ExecutionException
 	 *             Thrown if a badly placed annotation is found.
@@ -259,7 +280,7 @@ public class BindingDiscovery {
 
 		for (final Method method : viewClass.getMethods()) {
 
-			final ViewPropertySlot viewSlot = method.getAnnotation(ViewPropertySlot.class);
+			final PropertySlot viewSlot = method.getAnnotation(PropertySlot.class);
 
 			if (viewSlot == null) {
 				continue;
@@ -271,7 +292,7 @@ public class BindingDiscovery {
 					foundMethod = method;
 				} else if ((foundMethod != null)) {
 					throw new IllegalArgumentException(String.format(	"Found multiple identical %s in the class hierarchy of %s",
-																		ViewPropertySlot.class.getName(),
+																		PropertySlot.class.getName(),
 																		viewClass.getName()));
 				}
 			}
@@ -299,7 +320,7 @@ public class BindingDiscovery {
 											final T dataContext,
 											final String... propertyNames) throws ExecutionException {
 
-		final Optional<Method> viewReference = lookupViewReference(dataContextClass);
+		final Optional<Method> viewReference = lookupView(dataContextClass);
 		final Method viewField = viewReference.get();
 		Object view;
 		try {
@@ -322,11 +343,10 @@ public class BindingDiscovery {
 
 				argument = viewPropertyMethod.get().invoke(dataContext);
 
-				this.viewSlotInvocationHandler.invokeSlot(	dataContext,
-															viewPropertyMethod.get().getAnnotation(ViewProperty.class),
-															view,
-															viewSlotMethod.get(),
-															argument);
+				this.viewSlotHandler.invokeSlot(dataContext,
+												view,
+												viewSlotMethod.get(),
+												argument);
 
 			}
 		} catch (final IllegalAccessException e) {
@@ -384,8 +404,9 @@ public class BindingDiscovery {
 				if (foundMethod == null) {
 					foundMethod = method;
 				} else {
-					throw new IllegalArgumentException(String.format(	"Found multiple identical %s in the class hierarchy of %s",
+					throw new IllegalArgumentException(String.format(	"Found multiple identical %s with name %s in the class hierarchy of %s",
 																		InputSlot.class.getName(),
+																		inputSlotName,
 																		dataContextClass.getName()));
 				}
 			}
@@ -408,7 +429,7 @@ public class BindingDiscovery {
 
 		final List<Method> foundMethods = new ArrayList<Method>();
 		for (final Method method : allMethods) {
-			final InputEmitter inputEmitterAnnotation = method.getAnnotation(InputEmitter.class);
+			final InputSignals inputEmitterAnnotation = method.getAnnotation(InputSignals.class);
 			if (inputEmitterAnnotation == null) {
 				continue;
 			}
@@ -437,7 +458,7 @@ public class BindingDiscovery {
 																			view));
 					}
 
-					final InputEmitter inputEmitterAnnotation = inputEmitterMethod.getAnnotation(InputEmitter.class);
+					final InputSignals inputEmitterAnnotation = inputEmitterMethod.getAnnotation(InputSignals.class);
 					final InputSignal[] inputSignals = inputEmitterAnnotation.value();
 					for (final InputSignal inputSignal : inputSignals) {
 						final boolean validType = inputSignal.inputType().isAssignableFrom(inputType);
@@ -449,7 +470,7 @@ public class BindingDiscovery {
 																					possibleInputEmitter,
 																					view));
 							}
-							inputSlotName = inputSignal.inputSlotName();
+							inputSlotName = inputSignal.name();
 						}
 					}
 				}
@@ -497,4 +518,96 @@ public class BindingDiscovery {
 			Throwables.propagate(e);
 		}
 	}
+
+	public Method[] lookupAllObservableCollections(final Class<?> dataContextClass) throws ExecutionException {
+		return allObservableCollections.get(dataContextClass,
+											new Callable<Method[]>() {
+												@Override
+												public Method[] call() throws Exception {
+													return getAllObservableCollections(dataContextClass);
+												}
+											});
+	}
+
+	protected Method[] getAllObservableCollections(final Class<?> dataContextClass) {
+		final List<Method> allViewProperties = new ArrayList<Method>();
+
+		final List<ObservableCollection> observableCollectionAnnotations = new ArrayList<ObservableCollection>();
+
+		for (final Method method : dataContextClass.getMethods()) {
+			final ObservableCollection observableCollectionAnnotation = method
+					.getAnnotation(ObservableCollection.class);
+			if (observableCollectionAnnotation == null) {
+				continue;
+			}
+
+			if (isDuplicateObservableCollection(observableCollectionAnnotations,
+												observableCollectionAnnotation)) {
+				throw new IllegalArgumentException(String.format(	"Found duplicate %s with name %s on %s",
+																	ObservableCollection.class.getName(),
+																	observableCollectionAnnotation.name(),
+																	dataContextClass.getName()));
+			}
+
+			if (!EventList.class.isAssignableFrom(method.getReturnType())) {
+				throw new IllegalArgumentException(String.format(	"Found %s with name %s who's method return type is not a %s",
+																	ObservableCollection.class.getName(),
+																	observableCollectionAnnotation.name(),
+																	EventList.class.getName()));
+			}
+
+			observableCollectionAnnotations.add(observableCollectionAnnotation);
+			allViewProperties.add(method);
+		}
+
+		return allViewProperties.toArray(new Method[] {});
+	}
+
+	public Optional<Method> lookupObservedCollection(	final Class<?> viewClass,
+														final String name) throws ExecutionException {
+		return observedCollectionsByName.get(	viewClass,
+												new Callable<Cache<String, Optional<Method>>>() {
+													@Override
+													public Cache<String, Optional<Method>> call() throws Exception {
+														return CacheBuilder.newBuilder().build();
+													}
+												}).get(	name,
+														new Callable<Optional<Method>>() {
+															@Override
+															public Optional<Method> call() throws Exception {
+																return getObservedCollection(	viewClass,
+																								name);
+															}
+														});
+	}
+
+	protected Optional<Method> getObservedCollection(	final Class<?> viewClass,
+														final String name) {
+
+		Method foundMethod = null;
+
+		for (final Method method : viewClass.getMethods()) {
+
+			final ObservedCollection observedCollection = method.getAnnotation(ObservedCollection.class);
+
+			if (observedCollection == null) {
+				continue;
+			}
+
+			final String collectionName = observedCollection.name();
+			if (collectionName.equals(name)) {
+				if ((foundMethod == null)) {
+					foundMethod = method;
+				} else if ((foundMethod != null)) {
+					throw new IllegalArgumentException(String.format(	"Found multiple identical %s with name %s in the class hierarchy of %s",
+																		ObservedCollection.class.getName(),
+																		name,
+																		viewClass.getName()));
+				}
+			}
+		}
+
+		return Optional.fromNullable(foundMethod);
+	}
+
 }

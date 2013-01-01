@@ -27,7 +27,7 @@ public class DestroyNotifyEvent extends DisplayEvent {
 	 *            A {@link DisplayEventTarget}.
 	 *************************************** 
 	 */
-	public DestroyNotifyEvent(final DisplayEventTarget displayEventTarget) {
+	public DestroyNotifyEvent(final Object displayEventTarget) {
 		super(displayEventTarget);
 	}
 }

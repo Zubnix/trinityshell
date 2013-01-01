@@ -45,7 +45,7 @@ public class GeometryRequestEvent extends DisplayEvent {
 	 *            Indicates if the height value should be configured.
 	 *************************************** 
 	 */
-	public GeometryRequestEvent(final DisplayEventTarget displayEventTarget,
+	public GeometryRequestEvent(final Object displayEventTarget,
 								final Rectangle geometry,
 								final boolean configureX,
 								final boolean configureY,

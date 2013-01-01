@@ -24,7 +24,7 @@ public class HideNotifyEvent extends DisplayEvent {
 	 * @param displayEventTarget
 	 *            a {@link DisplayEventTarget}.
 	 ****************************************/
-	public HideNotifyEvent(final DisplayEventTarget displayEventTarget) {
+	public HideNotifyEvent(final Object displayEventTarget) {
 		super(displayEventTarget);
 	}
 }
