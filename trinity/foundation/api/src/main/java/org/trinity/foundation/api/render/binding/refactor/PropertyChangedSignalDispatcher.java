@@ -1,5 +1,7 @@
 package org.trinity.foundation.api.render.binding.refactor;
 
+import java.util.Set;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.trinity.foundation.api.render.binding.refactor.model.PropertyChanged;
@@ -21,20 +23,24 @@ import com.google.inject.Inject;
 public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 
 	private Binder binder;
-	private ViewBindingFactory viewBindingFactory;
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
 		final Object invocationResult = invocation.proceed();
 
-		final Object thisObj = invocation.getThis();
-		final Class<?> thisObjClass = invocation.getMethod().getDeclaringClass();
+		final Object changedModel = invocation.getThis();
+		final Class<?> changedModelClass = invocation.getMethod().getDeclaringClass();
 
 		final PropertyChanged changedPropertySignal = invocation.getMethod().getAnnotation(PropertyChanged.class);
-		final String[] propertyNames = changedPropertySignal.value();
+		final String[] changedPropertyNames = changedPropertySignal.value();
 
-		for (final String propertyName : propertyNames) {
-
+		for (final String propertyName : changedPropertyNames) {
+			final Object propertyInstance = getBinder().findGetter(	changedModelClass,
+																	propertyName).invoke(changedModel);
+			final Set<Object> dirtyViews = getBinder().getSubViews(changedModel);
+			for (final Object dirtyView : dirtyViews) {
+				// TODO find dirty bindings and refresh them
+			}
 		}
 
 		return invocationResult;
@@ -47,10 +53,5 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 	@Inject
 	void setBinder(final Binder binder) {
 		this.binder = binder;
-	}
-
-	@Inject
-	void setViewBindingFactory(final ViewBindingFactory viewBindingFactory) {
-		this.viewBindingFactory = viewBindingFactory;
 	}
 }

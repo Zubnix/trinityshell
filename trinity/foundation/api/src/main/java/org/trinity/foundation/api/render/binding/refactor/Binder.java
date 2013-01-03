@@ -49,7 +49,6 @@ public class Binder {
 	private final Map<Object, Object> subModelBySubViewElement = new WeakHashMap<Object, Object>();
 
 	private final InputListenerInstaller inputListenerInstaller;
-	private final ViewBindingFactory viewBindingFactory;
 	private final BindingAnnotationScanner bindingAnnotationScanner;
 	private final PropertySlotInvocator propertySlotInvocator;
 	private final ChildViewHandler childViewHandler;
@@ -58,11 +57,9 @@ public class Binder {
 	Binder(	final BindingAnnotationScanner bindingAnnotationScanner,
 			final InputListenerInstaller inputListenerInstaller,
 			final ChildViewHandler childViewHandler,
-			final ViewBindingFactory viewBindingFactory,
 			final PropertySlotInvocator propertySlotInvocator) {
 		this.bindingAnnotationScanner = bindingAnnotationScanner;
 		this.inputListenerInstaller = inputListenerInstaller;
-		this.viewBindingFactory = viewBindingFactory;
 		this.propertySlotInvocator = propertySlotInvocator;
 		this.childViewHandler = childViewHandler;
 	}
@@ -83,14 +80,15 @@ public class Binder {
 									propertyName);
 	}
 
-	public void bindSubModels(	final Object model,
-								final Object view) {
+	protected void bindAllSubModels(final Object model,
+									final Object view) {
 		final Class<?> viewClass = view.getClass();
 		try {
 			for (final Method viewMethod : this.bindingAnnotationScanner.lookupAllSubModels(viewClass)) {
+				// TODO create queryable binding object that can be 'refreshed'
 
 				final Object subModelInstance = getSubModelInstance(model,
-																	viewMethod.getAnnotation(SubModel.class));
+																	viewMethod.getAnnotation(SubModel.class).value());
 				final Object childViewElement = viewMethod.invoke(view);
 
 				// This will link any object (including observable
@@ -98,15 +96,10 @@ public class Binder {
 				cleanupOldSubmodelSubViewLink(childViewElement);
 				linkSubViewToSubModel(	subModelInstance,
 										childViewElement);
-				final ViewBinding subViewBinding = this.viewBindingFactory.createViewBinding(	childViewElement,
-																								subModelInstance);
-				subViewBinding.bindSubModels();
-				subViewBinding.bindInput();
-				subViewBinding.bindProperty();
-				subViewBinding.bindCollections();
+
+				bind(	subModelInstance,
+						childViewElement);
 			}
-		} catch (final NoSuchMethodException e) {
-			Throwables.propagate(e);
 		} catch (final SecurityException e) {
 			Throwables.propagate(e);
 		} catch (final IllegalAccessException e) {
@@ -120,6 +113,18 @@ public class Binder {
 		}
 	}
 
+	public void bind(	final Object model,
+						final Object view) {
+		bindAllSubModels(	model,
+							view);
+		bindAllInputs(	model,
+						view);
+		bindAllProperties(	model,
+							view);
+		bindAllCollections(	model,
+							view);
+	}
+
 	protected void cleanupOldSubmodelSubViewLink(final Object subViewInstance) {
 		final Object oldSubModelInstance = this.subModelBySubViewElement.get(subViewInstance);
 		if (oldSubModelInstance != null) {
@@ -127,7 +132,7 @@ public class Binder {
 		}
 	}
 
-	public Set<Object> getSubViews(final Object subModel) {
+	protected Set<Object> getSubViews(final Object subModel) {
 		Set<Object> subViews = this.subViewsBySubModel.get(subModel);
 		if (subViews == null) {
 			return Collections.emptySet();
@@ -151,11 +156,10 @@ public class Binder {
 	}
 
 	protected Object getSubModelInstance(	final Object model,
-											final SubModel subModel) throws ExecutionException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException {
+											final String subModelPath) throws ExecutionException,
+			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
-		final String subModelChain = subModel.value();
-		final Iterable<String> propertyNames = Splitter.on('.').trimResults().omitEmptyStrings().split(subModelChain);
+		final Iterable<String> propertyNames = Splitter.on('.').trimResults().omitEmptyStrings().split(subModelPath);
 		Object currentModel = model;
 		for (final String propertyName : propertyNames) {
 			final Class<?> currentModelClass = currentModel.getClass();
@@ -166,11 +170,12 @@ public class Binder {
 		return currentModel;
 	}
 
-	public void bindInputs(	final Object model,
-							final Object view) {
+	protected void bindAllInputs(	final Object model,
+									final Object view) {
 		final Class<?> viewClass = view.getClass();
 		try {
 			for (final Method viewMethod : this.bindingAnnotationScanner.lookupAllInputSignals(viewClass)) {
+				// TODO create queryable binding object that can be 'refreshed'
 
 				Object boundModel;
 				// check if this view is assigned to a submodel
@@ -222,11 +227,13 @@ public class Binder {
 		return foundMethod;
 	}
 
-	public void bindCollections(final Object model,
-								final Object view) {
+	protected void bindAllCollections(	final Object model,
+										final Object view) {
 		final Class<?> viewClass = view.getClass();
 		try {
 			for (final Method viewMethod : this.bindingAnnotationScanner.lookupObservableCollections(viewClass)) {
+				// TODO create queryable binding object that can be 'refreshed'
+
 				final ObservableCollection observableCollection = viewMethod.getAnnotation(ObservableCollection.class);
 
 				final Collection<?> collectionView = (Collection<?>) viewMethod.invoke(view);
@@ -260,6 +267,7 @@ public class Binder {
 				bindCollectionElements(	view,
 										boundModelList,
 										viewElementType);
+
 			}
 		} catch (final IllegalAccessException e) {
 			Throwables.propagate(e);
@@ -284,18 +292,19 @@ public class Binder {
 			final Object childViewElement = elementView.newInstance();
 			this.childViewHandler.handleNewChildViewElement(view,
 															childViewElement);
-			new ViewBinding(this,
-							modelElement,
-							childViewElement);
+			bind(	modelElement,
+					childViewElement);
 		}
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void bindProperties(	final Object model,
-								final Object view) {
+	protected void bindAllProperties(	final Object model,
+										final Object view) {
 		final Class<?> viewClass = view.getClass();
 		try {
 			for (final Method viewMethod : this.bindingAnnotationScanner.lookupAllPropertySlots(viewClass)) {
+				// TODO create queryable binding object that can be 'refreshed'
+
 				Object boundModel;
 				// check if this view is assigned to a submodel
 				final Object subModel = this.subModelBySubViewElement.get(view);
