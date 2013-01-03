@@ -13,10 +13,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>api</module>
-		<module>input.impl</module>
-		<module>node.impl</module>
-		<module>plugin.impl</module>
-		<module>surface.impl</module>
+		<module>core</module>
 	</modules>
 </project>

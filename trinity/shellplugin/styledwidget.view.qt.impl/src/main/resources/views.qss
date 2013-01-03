@@ -1,7 +1,0 @@
-ShellMenuBarView {
-	
-}
-
-ShellMenuBarView > ShellMenuBarClientView {
-
-}

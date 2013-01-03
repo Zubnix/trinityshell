@@ -100,5 +100,13 @@
 			<artifactId>shellplugin.wm.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- bootstrap -->
+		<dependency>
+			<groupId>de.devsurf.injection.guice.scanner</groupId>
+			<artifactId>
+				de.devsurf.injection.guice.scanner.asm
+			</artifactId>
+			<version>0.8.7</version>
+		</dependency>
 	</dependencies>
 </project>

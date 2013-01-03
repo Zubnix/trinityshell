@@ -39,9 +39,9 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 		<jukito.version>1.1</jukito.version>
 
 		<!-- java version -->
-		<maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.compiler.executable>javac</maven.compiler.executable>
 
 		<!-- build properties -->
@@ -87,13 +87,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<artifactId>de.devsurf.injection.guice.core</artifactId>
 			<version>${autobind.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>de.devsurf.injection.guice.scanner</groupId>
-			<artifactId>
-				de.devsurf.injection.guice.scanner.asm
-			</artifactId>
-			<version>${autobind.version}</version>
-		</dependency>
 
 		<!-- test deps -->
 		<dependency>
@@ -113,11 +106,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<artifactId>jukito</artifactId>
 			<version>${jukito.version}</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>2.0.1</version>
 		</dependency>
 	</dependencies>
 	<build>

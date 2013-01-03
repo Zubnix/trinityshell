@@ -11,18 +11,15 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>styledwidget.api</module>
-		<module>styledwidget.impl</module>
-		<module>styledwidget.view.qt.impl</module>
-		<module>wm.api</module>
-		<module>wm.impl</module>
+		<module>widget</module>
+		<module>wm</module>
 	</modules>
 
 
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>shell.api</artifactId>
+			<groupId>org.trinity</groupId>
+			<artifactId>shell.core.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
