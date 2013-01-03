@@ -8,16 +8,15 @@ import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.refactor.model.InputSlot;
-import org.trinity.foundation.api.render.binding.refactor.model.SubModel;
 import org.trinity.foundation.api.render.binding.refactor.model.View;
 import org.trinity.foundation.api.render.binding.refactor.view.InputSignals;
 import org.trinity.foundation.api.render.binding.refactor.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.refactor.view.SubModel;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.devsurf.injection.guice.annotations.Bind;
@@ -36,10 +35,33 @@ public class BindingAnnotationScanner {
 	private final Cache<Class<?>, Method[]> subModels = CacheBuilder.newBuilder().build();
 	private final Cache<Class<?>, Method[]> propertySlots = CacheBuilder.newBuilder().build();
 	private final Cache<Class<?>, Method[]> observableCollections = CacheBuilder.newBuilder().build();
+	private final Cache<Class<?>, Cache<String, Method>> modelPropertiesByName = CacheBuilder.newBuilder().build();
 
-	@Inject
 	BindingAnnotationScanner() {
 
+	}
+
+	public Method lookupModelPropety(	final Class<?> modelClass,
+										final String getterMethodName) throws ExecutionException {
+		return this.modelPropertiesByName.get(	modelClass,
+												new Callable<Cache<String, Method>>() {
+													@Override
+													public Cache<String, Method> call() throws Exception {
+														return CacheBuilder.newBuilder().build();
+													}
+												}).get(	getterMethodName,
+														new Callable<Method>() {
+															@Override
+															public Method call() throws Exception {
+																return getModelPropety(	modelClass,
+																						getterMethodName);
+															}
+														});
+	}
+
+	protected Method getModelPropety(	final Class<?> modelClass,
+										final String getterMethodName) throws NoSuchMethodException, SecurityException {
+		return modelClass.getMethod(getterMethodName);
 	}
 
 	public Optional<Method> lookupView(final Class<?> modelClass) throws ExecutionException {
@@ -124,7 +146,7 @@ public class BindingAnnotationScanner {
 									});
 	}
 
-	public Method[] getAllSubModels(final Class<?> viewClass) {
+	protected Method[] getAllSubModels(final Class<?> viewClass) {
 		final List<Method> methods = new ArrayList<Method>();
 		for (final Method viewMethod : viewClass.getMethods()) {
 			if (hasAnnotation(	viewMethod,

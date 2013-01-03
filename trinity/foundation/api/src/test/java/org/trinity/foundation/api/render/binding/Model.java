@@ -1,8 +1,6 @@
 package org.trinity.foundation.api.render.binding;
 
-import org.trinity.foundation.api.render.binding.refactor.model.SubModelChanged;
-import org.trinity.foundation.api.render.binding.refactor.model.ViewProperty;
-import org.trinity.foundation.api.render.binding.refactor.model.ViewPropertyChanged;
+import org.trinity.foundation.api.render.binding.refactor.model.PropertyChanged;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
@@ -19,17 +17,16 @@ public class Model {
 		return this.subModel;
 	}
 
-	@SubModelChanged("subModel")
+	@PropertyChanged("subModel")
 	public void setSubModel(final SubModel subModel) {
 		this.subModel = subModel;
 	}
 
-	@ViewProperty
 	public boolean isBooleanProperty() {
 		return this.booleanProperty;
 	}
 
-	@ViewPropertyChanged("booleanProperty")
+	@PropertyChanged("booleanProperty")
 	public void setBooleanProperty(final boolean booleanProperty) {
 		this.booleanProperty = booleanProperty;
 	}

@@ -12,8 +12,7 @@ import java.util.concurrent.ExecutionException;
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.PointerInput;
-import org.trinity.foundation.api.render.binding.refactor.model.SubModel;
-import org.trinity.foundation.api.render.binding.refactor.view.ChildViewElementHandler;
+import org.trinity.foundation.api.render.binding.refactor.view.ChildViewHandler;
 import org.trinity.foundation.api.render.binding.refactor.view.InputListenerInstaller;
 import org.trinity.foundation.api.render.binding.refactor.view.InputSignal;
 import org.trinity.foundation.api.render.binding.refactor.view.InputSignals;
@@ -21,13 +20,13 @@ import org.trinity.foundation.api.render.binding.refactor.view.ObservableCollect
 import org.trinity.foundation.api.render.binding.refactor.view.PropertyAdapter;
 import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.refactor.view.PropertySlotInvocator;
+import org.trinity.foundation.api.render.binding.refactor.view.SubModel;
 
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
 import ca.odell.glazedlists.event.ListEventListener;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
@@ -53,19 +52,35 @@ public class Binder {
 	private final ViewBindingFactory viewBindingFactory;
 	private final BindingAnnotationScanner bindingAnnotationScanner;
 	private final PropertySlotInvocator propertySlotInvocator;
-	private final ChildViewElementHandler childViewElementHandler;
+	private final ChildViewHandler childViewHandler;
 
 	@Inject
 	Binder(	final BindingAnnotationScanner bindingAnnotationScanner,
 			final InputListenerInstaller inputListenerInstaller,
-			final ChildViewElementHandler childViewElementHandler,
+			final ChildViewHandler childViewHandler,
 			final ViewBindingFactory viewBindingFactory,
 			final PropertySlotInvocator propertySlotInvocator) {
 		this.bindingAnnotationScanner = bindingAnnotationScanner;
 		this.inputListenerInstaller = inputListenerInstaller;
 		this.viewBindingFactory = viewBindingFactory;
 		this.propertySlotInvocator = propertySlotInvocator;
-		this.childViewElementHandler = childViewElementHandler;
+		this.childViewHandler = childViewHandler;
+	}
+
+	protected String toGetterMethodName(final String propertyName) {
+		return toGetterMethodName(	GET_PREFIX,
+									propertyName);
+	}
+
+	protected String toGetterMethodName(final String prefix,
+										final String propertyName) {
+		return prefix + CaseFormat.LOWER_CAMEL.to(	CaseFormat.UPPER_CAMEL,
+													propertyName);
+	}
+
+	protected String toBooleanGetterMethodName(final String propertyName) {
+		return toGetterMethodName(	GET_BOOLEAN_PREFIX,
+									propertyName);
 	}
 
 	public void bindSubModels(	final Object model,
@@ -112,14 +127,13 @@ public class Binder {
 		}
 	}
 
-	public Optional<Set<Object>> getSubViews(final Object subModel) {
+	public Set<Object> getSubViews(final Object subModel) {
 		Set<Object> subViews = this.subViewsBySubModel.get(subModel);
 		if (subViews == null) {
-			return Optional.absent();
-		} else {
-			subViews = Collections.unmodifiableSet(subViews);
-			return Optional.of(subViews);
+			return Collections.emptySet();
 		}
+		subViews = Collections.unmodifiableSet(subViews);
+		return subViews;
 	}
 
 	protected void linkSubViewToSubModel(	final Object subModelInstance,
@@ -137,36 +151,19 @@ public class Binder {
 	}
 
 	protected Object getSubModelInstance(	final Object model,
-											final SubModel subModel) throws NoSuchMethodException, SecurityException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+											final SubModel subModel) throws ExecutionException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException {
 
 		final String subModelChain = subModel.value();
-		final Iterable<String> getterNames = Splitter.on('.').trimResults().omitEmptyStrings().split(subModelChain);
+		final Iterable<String> propertyNames = Splitter.on('.').trimResults().omitEmptyStrings().split(subModelChain);
 		Object currentModel = model;
-		for (final String getterName : getterNames) {
-			String getMethodName = toGetterMethodName(getterName);
-			// TODO we might want to cache method lookup somehow if performance
-			// is lacking here...
-			Method foundMethod;
-			try {
-				foundMethod = model.getClass().getMethod(getMethodName);
-			} catch (final NoSuchMethodError e) {
-				// no getter with get found, try with is.
-				getMethodName = getMethodName.replaceFirst(	GET_PREFIX,
-															GET_BOOLEAN_PREFIX);
-				// if nothing found, let the exception bubble up.
-				foundMethod = model.getClass().getMethod(getMethodName);
-			}
-
+		for (final String propertyName : propertyNames) {
+			final Class<?> currentModelClass = currentModel.getClass();
+			final Method foundMethod = findGetter(	currentModelClass,
+													propertyName);
 			currentModel = foundMethod.invoke(currentModel);
 		}
-		final Method subModelMethod = model.getClass().getMethod(subModelChain);
-		return subModelMethod.invoke(model);
-	}
-
-	protected String toGetterMethodName(final String propertyName) {
-		return GET_PREFIX + CaseFormat.LOWER_CAMEL.to(	CaseFormat.UPPER_CAMEL,
-														propertyName);
+		return currentModel;
 	}
 
 	public void bindInputs(	final Object model,
@@ -208,6 +205,23 @@ public class Binder {
 		}
 	}
 
+	protected Method findGetter(final Class<?> modelClass,
+								final String propertyName) throws ExecutionException {
+		Method foundMethod;
+		String getterMethodName = toGetterMethodName(propertyName);
+		try {
+			foundMethod = this.bindingAnnotationScanner.lookupModelPropety(	modelClass,
+																			getterMethodName);
+		} catch (final ExecutionException e) {
+			// no getter with get found, try with is. If nothing found, let
+			// the exception bubble up.
+			getterMethodName = toBooleanGetterMethodName(propertyName);
+			foundMethod = this.bindingAnnotationScanner.lookupModelPropety(	modelClass,
+																			getterMethodName);
+		}
+		return foundMethod;
+	}
+
 	public void bindCollections(final Object model,
 								final Object view) {
 		final Class<?> viewClass = view.getClass();
@@ -224,6 +238,7 @@ public class Binder {
 				} else {
 					boundModel = model;
 				}
+
 				if (!(boundModel instanceof EventList)) {
 					// TODO make a more descriptive exception
 					throw new IllegalArgumentException(String.format(	"Only collections that implement the %s interface can be observed.",
@@ -267,11 +282,11 @@ public class Binder {
 			IllegalAccessException {
 		for (final Object modelElement : elements) {
 			final Object childViewElement = elementView.newInstance();
-			this.childViewElementHandler.handleNewChildViewElement(	view,
-																	childViewElement);
+			this.childViewHandler.handleNewChildViewElement(view,
+															childViewElement);
 			new ViewBinding(this,
-							childViewElement,
-							modelElement);
+							modelElement,
+							childViewElement);
 		}
 	}
 
@@ -292,8 +307,8 @@ public class Binder {
 
 				final PropertySlot propertySlot = viewMethod.getAnnotation(PropertySlot.class);
 				final String propertyName = propertySlot.propertyName();
-				final String getterMethodName = toGetterMethodName(propertyName);
-				final Object propertyInstance = boundModel.getClass().getMethod(getterMethodName).invoke(boundModel);
+				final Object propertyInstance = findGetter(	boundModel.getClass(),
+															propertyName).invoke(boundModel);
 
 				final String viewMethodName = propertySlot.methodName();
 				final Class<?>[] viewMethodArgumentTypes = propertySlot.argumentTypes();

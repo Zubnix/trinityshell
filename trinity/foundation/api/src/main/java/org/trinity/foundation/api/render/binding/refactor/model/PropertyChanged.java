@@ -5,8 +5,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.trinity.foundation.api.render.binding.BindingDiscovery;
-import org.trinity.foundation.api.render.binding.refactor.model.ViewProperty;
 import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
 
 /****************************************
@@ -22,9 +20,9 @@ import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
-public @interface ViewPropertyChanged {
+public @interface PropertyChanged {
 	/****************************************
-	 * The name(s) of the {@link ViewProperty}(s) that will be updated.
+	 * The name(s) of the properties that were updated.
 	 * 
 	 * @return
 	 *************************************** 

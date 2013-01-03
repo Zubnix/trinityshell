@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.trinity.foundation.api.display.input.KeyboardInput;
-import org.trinity.foundation.api.render.binding.refactor.model.SubModel;
 import org.trinity.foundation.api.render.binding.refactor.view.InputSignal;
 import org.trinity.foundation.api.render.binding.refactor.view.InputSignals;
 import org.trinity.foundation.api.render.binding.refactor.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.refactor.view.SubModel;
 import org.trinity.foundation.api.render.binding.refactor.view.SubViewChanged;
 
 public class View {

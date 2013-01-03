@@ -1,6 +1,6 @@
-package org.trinity.foundation.api.render.binding;
+package org.trinity.foundation.api.render.binding.refactor;
 
-import org.trinity.foundation.api.render.binding.refactor.model.ViewPropertyChanged;
+import org.trinity.foundation.api.render.binding.refactor.model.PropertyChanged;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;
@@ -12,10 +12,10 @@ public final class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		final ViewPropertySignalDispatcher viewSignalDispatcher = new ViewPropertySignalDispatcher();
+		final PropertyChangedSignalDispatcher viewSignalDispatcher = new PropertyChangedSignalDispatcher();
 		requestInjection(viewSignalDispatcher);
 		bindInterceptor(Matchers.any(),
-						Matchers.annotatedWith(ViewPropertyChanged.class),
+						Matchers.annotatedWith(PropertyChanged.class),
 						viewSignalDispatcher);
 	}
 }

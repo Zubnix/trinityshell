@@ -5,8 +5,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.trinity.foundation.api.render.binding.refactor.model.ViewProperty;
-
 /***************************************
  * Marks a view method as the handler method for a changed property. A property
  * is linked to a slot by matching it's {@link ViewProperty#value()} to one the
