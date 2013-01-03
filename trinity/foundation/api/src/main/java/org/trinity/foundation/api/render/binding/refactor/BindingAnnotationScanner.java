@@ -11,6 +11,7 @@ import org.trinity.foundation.api.render.binding.refactor.model.InputSlot;
 import org.trinity.foundation.api.render.binding.refactor.model.SubModel;
 import org.trinity.foundation.api.render.binding.refactor.model.View;
 import org.trinity.foundation.api.render.binding.refactor.view.InputSignals;
+import org.trinity.foundation.api.render.binding.refactor.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
 
 import com.google.common.base.Optional;
@@ -34,6 +35,7 @@ public class BindingAnnotationScanner {
 	private final Cache<Class<?>, Method[]> inputSignals = CacheBuilder.newBuilder().build();
 	private final Cache<Class<?>, Method[]> subModels = CacheBuilder.newBuilder().build();
 	private final Cache<Class<?>, Method[]> propertySlots = CacheBuilder.newBuilder().build();
+	private final Cache<Class<?>, Method[]> observableCollections = CacheBuilder.newBuilder().build();
 
 	@Inject
 	BindingAnnotationScanner() {
@@ -125,11 +127,8 @@ public class BindingAnnotationScanner {
 	public Method[] getAllSubModels(final Class<?> viewClass) {
 		final List<Method> methods = new ArrayList<Method>();
 		for (final Method viewMethod : viewClass.getMethods()) {
-			SubModel subModel = viewMethod.getAnnotation(SubModel.class);
-			if (subModel == null) {
-				subModel = viewMethod.getReturnType().getAnnotation(SubModel.class);
-			}
-			if (subModel != null) {
+			if (hasAnnotation(	viewMethod,
+								SubModel.class)) {
 				methods.add(viewMethod);
 			}
 		}
@@ -150,11 +149,8 @@ public class BindingAnnotationScanner {
 
 		final List<Method> methods = new ArrayList<Method>();
 		for (final Method viewMethod : viewClass.getMethods()) {
-			InputSignals inputSignals = viewMethod.getAnnotation(InputSignals.class);
-			if (inputSignals == null) {
-				inputSignals = viewMethod.getReturnType().getAnnotation(InputSignals.class);
-			}
-			if (inputSignals != null) {
+			if (hasAnnotation(	viewMethod,
+								InputSignals.class)) {
 				methods.add(viewMethod);
 			}
 		}
@@ -175,11 +171,41 @@ public class BindingAnnotationScanner {
 	protected Method[] getAllPropertySlots(final Class<?> viewClass) {
 		final List<Method> methods = new ArrayList<Method>();
 		for (final Method viewMethod : viewClass.getMethods()) {
-			PropertySlot propertySlot = viewMethod.getAnnotation(PropertySlot.class);
-			if (propertySlot == null) {
-				propertySlot = viewMethod.getReturnType().getAnnotation(PropertySlot.class);
+			if (hasAnnotation(	viewMethod,
+								PropertySlot.class)) {
+				methods.add(viewMethod);
 			}
-			if (propertySlot != null) {
+		}
+		return methods.toArray(new Method[] {});
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected boolean hasAnnotation(final Method method,
+									final Class annotationClass) {
+		Object annotation = method.getAnnotation(annotationClass);
+		if (annotation == null) {
+			annotation = method.getReturnType().getAnnotation(annotationClass);
+		}
+
+		return annotation != null;
+	}
+
+	public Method[] lookupObservableCollections(final Class<?> viewClass) throws ExecutionException {
+
+		return this.observableCollections.get(	viewClass,
+												new Callable<Method[]>() {
+													@Override
+													public Method[] call() {
+														return getObservableCollections(viewClass);
+													}
+												});
+	}
+
+	protected Method[] getObservableCollections(final Class<?> viewClass) {
+		final List<Method> methods = new ArrayList<Method>();
+		for (final Method viewMethod : viewClass.getMethods()) {
+			if (hasAnnotation(	viewMethod,
+								ObservableCollection.class)) {
 				methods.add(viewMethod);
 			}
 		}

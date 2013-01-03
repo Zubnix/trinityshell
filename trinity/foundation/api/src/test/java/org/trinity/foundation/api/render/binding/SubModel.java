@@ -6,6 +6,8 @@ import org.trinity.foundation.api.render.binding.refactor.model.InputSlot;
 
 public class SubModel {
 
+	private final SubModel subModel = new SubModel();
+
 	@InputSlot
 	public void onClick(final PointerInput input) {
 
@@ -14,5 +16,9 @@ public class SubModel {
 	@InputSlot
 	public void onKey(final KeyboardInput keyboardInput) {
 
+	}
+
+	public SubModel getSubModel() {
+		return this.subModel;
 	}
 }

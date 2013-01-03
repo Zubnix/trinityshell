@@ -12,9 +12,7 @@ public class ViewBinding {
 	private final Object model;
 
 	@AssistedInject
-	ViewBinding(final Binder binder, @Assisted final Object viewModel, @Assisted final Object view)
-			throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException {
+	ViewBinding(final Binder binder, @Assisted final Object viewModel, @Assisted final Object view) {
 		this.binder = binder;
 
 		this.model = viewModel;
@@ -34,6 +32,11 @@ public class ViewBinding {
 
 	public void bindProperty() {
 		this.binder.bindProperties(	this.model,
+									this.view);
+	}
+
+	public void bindCollections() {
+		this.binder.bindCollections(this.model,
 									this.view);
 	}
 }
