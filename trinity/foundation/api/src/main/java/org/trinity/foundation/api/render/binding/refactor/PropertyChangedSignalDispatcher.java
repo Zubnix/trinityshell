@@ -37,9 +37,9 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 		for (final String propertyName : changedPropertyNames) {
 			final Object propertyInstance = getBinder().findGetter(	changedModelClass,
 																	propertyName).invoke(changedModel);
-			final Set<Object> dirtyViews = getBinder().getSubViews(changedModel);
-			for (final Object dirtyView : dirtyViews) {
-				// TODO find dirty bindings and refresh them
+			final Set<ModelBinding> dirtyBindings = getBinder().getViewElements(changedModel);
+			for (final ModelBinding dirtyBinding : dirtyBindings) {
+
 			}
 		}
 

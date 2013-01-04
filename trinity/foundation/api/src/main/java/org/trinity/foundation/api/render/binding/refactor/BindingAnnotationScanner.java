@@ -1,8 +1,10 @@
 package org.trinity.foundation.api.render.binding.refactor;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
@@ -31,10 +33,11 @@ public class BindingAnnotationScanner {
 	private final Cache<Class<?>, Optional<Method>> views = CacheBuilder.newBuilder().build();
 	private final Cache<Class<?>, Cache<Class<? extends Input>, Cache<String, Optional<Method>>>> inputSlots = CacheBuilder
 			.newBuilder().build();
-	private final Cache<Class<?>, Method[]> inputSignals = CacheBuilder.newBuilder().build();
-	private final Cache<Class<?>, Method[]> subModels = CacheBuilder.newBuilder().build();
-	private final Cache<Class<?>, Method[]> propertySlots = CacheBuilder.newBuilder().build();
-	private final Cache<Class<?>, Method[]> observableCollections = CacheBuilder.newBuilder().build();
+	private final Cache<Class<?>, Map<InputSignals, Method>> inputSignals = CacheBuilder.newBuilder().build();
+	private final Cache<Class<?>, Map<SubModel, Method>> subModels = CacheBuilder.newBuilder().build();
+	private final Cache<Class<?>, Map<PropertySlot, Method>> propertySlots = CacheBuilder.newBuilder().build();
+	private final Cache<Class<?>, Map<ObservableCollection, Method>> observableCollections = CacheBuilder.newBuilder()
+			.build();
 	private final Cache<Class<?>, Cache<String, Method>> modelPropertiesByName = CacheBuilder.newBuilder().build();
 
 	BindingAnnotationScanner() {
@@ -136,101 +139,110 @@ public class BindingAnnotationScanner {
 		return Optional.fromNullable(method);
 	}
 
-	public Method[] lookupAllSubModels(final Class<?> viewClass) throws ExecutionException {
+	public Map<SubModel, Method> lookupAllSubModels(final Class<?> viewClass) throws ExecutionException {
 		return this.subModels.get(	viewClass,
-									new Callable<Method[]>() {
+									new Callable<Map<SubModel, Method>>() {
 										@Override
-										public Method[] call() throws Exception {
+										public Map<SubModel, Method> call() throws Exception {
 											return getAllSubModels(viewClass);
 										}
 									});
 	}
 
-	protected Method[] getAllSubModels(final Class<?> viewClass) {
-		final List<Method> methods = new ArrayList<Method>();
+	protected Map<SubModel, Method> getAllSubModels(final Class<?> viewClass) {
+		final Map<SubModel, Method> submodels = new HashMap<SubModel, Method>();
 		for (final Method viewMethod : viewClass.getMethods()) {
-			if (hasAnnotation(	viewMethod,
-								SubModel.class)) {
-				methods.add(viewMethod);
+			final SubModel subModel = getAnnotation(viewMethod,
+													SubModel.class);
+			if (subModel != null) {
+				submodels.put(	subModel,
+								viewMethod);
 			}
 		}
-		return methods.toArray(new Method[] {});
+
+		return Collections.unmodifiableMap(submodels);
 	}
 
-	public Method[] lookupAllInputSignals(final Class<?> viewClass) throws ExecutionException {
+	public Map<InputSignals, Method> lookupAllInputSignals(final Class<?> viewClass) throws ExecutionException {
 		return this.inputSignals.get(	viewClass,
-										new Callable<Method[]>() {
+										new Callable<Map<InputSignals, Method>>() {
 											@Override
-											public Method[] call() throws Exception {
+											public Map<InputSignals, Method> call() throws Exception {
 												return getAllInputSignals(viewClass);
 											}
 										});
 	}
 
-	protected Method[] getAllInputSignals(final Class<?> viewClass) {
+	protected Map<InputSignals, Method> getAllInputSignals(final Class<?> viewClass) {
 
-		final List<Method> methods = new ArrayList<Method>();
+		final Map<InputSignals, Method> inputSignalsMap = new HashMap<InputSignals, Method>();
 		for (final Method viewMethod : viewClass.getMethods()) {
-			if (hasAnnotation(	viewMethod,
-								InputSignals.class)) {
-				methods.add(viewMethod);
+			final InputSignals inputSignals = getAnnotation(viewMethod,
+															InputSignals.class);
+			if (inputSignals != null) {
+				inputSignalsMap.put(inputSignals,
+									viewMethod);
 			}
 		}
 
-		return methods.toArray(new Method[] {});
+		return Collections.unmodifiableMap(inputSignalsMap);
 	}
 
-	public Method[] lookupAllPropertySlots(final Class<?> viewClass) throws ExecutionException {
+	public Map<PropertySlot, Method> lookupAllPropertySlots(final Class<?> viewClass) throws ExecutionException {
 		return this.propertySlots.get(	viewClass,
-										new Callable<Method[]>() {
+										new Callable<Map<PropertySlot, Method>>() {
 											@Override
-											public Method[] call() throws Exception {
+											public Map<PropertySlot, Method> call() throws Exception {
 												return getAllPropertySlots(viewClass);
 											}
 										});
 	}
 
-	protected Method[] getAllPropertySlots(final Class<?> viewClass) {
-		final List<Method> methods = new ArrayList<Method>();
+	protected Map<PropertySlot, Method> getAllPropertySlots(final Class<?> viewClass) {
+		final Map<PropertySlot, Method> propertySlots = new HashMap<PropertySlot, Method>();
 		for (final Method viewMethod : viewClass.getMethods()) {
-			if (hasAnnotation(	viewMethod,
-								PropertySlot.class)) {
-				methods.add(viewMethod);
+			final PropertySlot propertySlot = getAnnotation(viewMethod,
+															PropertySlot.class);
+			if (propertySlot != null) {
+				propertySlots.put(	propertySlot,
+									viewMethod);
 			}
 		}
-		return methods.toArray(new Method[] {});
+		return Collections.unmodifiableMap(propertySlots);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected boolean hasAnnotation(final Method method,
-									final Class annotationClass) {
-		Object annotation = method.getAnnotation(annotationClass);
+	protected <T extends Annotation> T getAnnotation(	final Method method,
+														final Class<T> annotationClass) {
+		T annotation = method.getAnnotation(annotationClass);
 		if (annotation == null) {
 			annotation = method.getReturnType().getAnnotation(annotationClass);
 		}
 
-		return annotation != null;
+		return annotation;
 	}
 
-	public Method[] lookupObservableCollections(final Class<?> viewClass) throws ExecutionException {
+	public Map<ObservableCollection, Method> lookupObservableCollections(final Class<?> viewClass)
+			throws ExecutionException {
 
 		return this.observableCollections.get(	viewClass,
-												new Callable<Method[]>() {
+												new Callable<Map<ObservableCollection, Method>>() {
 													@Override
-													public Method[] call() {
+													public Map<ObservableCollection, Method> call() {
 														return getObservableCollections(viewClass);
 													}
 												});
 	}
 
-	protected Method[] getObservableCollections(final Class<?> viewClass) {
-		final List<Method> methods = new ArrayList<Method>();
+	protected Map<ObservableCollection, Method> getObservableCollections(final Class<?> viewClass) {
+		final Map<ObservableCollection, Method> observableCollections = new HashMap<ObservableCollection, Method>();
 		for (final Method viewMethod : viewClass.getMethods()) {
-			if (hasAnnotation(	viewMethod,
-								ObservableCollection.class)) {
-				methods.add(viewMethod);
+			final ObservableCollection observableCollection = getAnnotation(viewMethod,
+																			ObservableCollection.class);
+			if (observableCollection != null) {
+				observableCollections.put(	observableCollection,
+											viewMethod);
 			}
 		}
-		return methods.toArray(new Method[] {});
+		return Collections.unmodifiableMap(observableCollections);
 	}
 }
