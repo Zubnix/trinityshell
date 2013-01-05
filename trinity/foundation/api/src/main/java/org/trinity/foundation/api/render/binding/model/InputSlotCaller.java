@@ -1,4 +1,4 @@
-package org.trinity.foundation.api.render.binding.refactor.model;
+package org.trinity.foundation.api.render.binding.model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,8 +9,8 @@ import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Keyboard;
 import org.trinity.foundation.api.display.input.Momentum;
-import org.trinity.foundation.api.render.binding.refactor.BindingAnnotationScanner;
-import org.trinity.foundation.api.render.binding.refactor.view.BoundInputEvent;
+import org.trinity.foundation.api.render.binding.BindingAnnotationScanner;
+import org.trinity.foundation.api.render.binding.view.BoundInputEvent;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;

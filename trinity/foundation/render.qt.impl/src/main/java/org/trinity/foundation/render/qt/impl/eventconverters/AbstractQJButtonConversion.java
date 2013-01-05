@@ -9,7 +9,7 @@ import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.binding.BindingDiscovery;
-import org.trinity.foundation.api.render.binding.refactor.view.BoundButtonInputEvent;
+import org.trinity.foundation.api.render.binding.view.BoundButtonInputEvent;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConversion;
 
 import com.google.common.base.Optional;

@@ -1,6 +1,5 @@
-package org.trinity.foundation.api.render.binding.refactor.view;
+package org.trinity.foundation.api.render.binding.view;
 
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -13,7 +12,7 @@ import java.lang.annotation.Target;
  *************************************** 
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target({})
 public @interface PropertySlot {
 	String propertyName();
 
@@ -23,5 +22,5 @@ public @interface PropertySlot {
 
 	// TODO perhaps we want to use a provider to instantiate a certain type of
 	// adapters?
-	Class<? extends PropertyAdapter<?, ?>> adapter() default DefaultPropertyAdapter.class;
+	Class<? extends PropertyAdapter<?>> adapter() default DefaultPropertyAdapter.class;
 }

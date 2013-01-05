@@ -1,6 +1,6 @@
-package org.trinity.foundation.api.render.binding.refactor;
+package org.trinity.foundation.api.render.binding;
 
-import org.trinity.foundation.api.render.binding.refactor.model.PropertyChanged;
+import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;

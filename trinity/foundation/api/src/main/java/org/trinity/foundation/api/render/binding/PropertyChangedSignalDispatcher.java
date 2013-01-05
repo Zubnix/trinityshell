@@ -1,11 +1,11 @@
-package org.trinity.foundation.api.render.binding.refactor;
+package org.trinity.foundation.api.render.binding;
 
 import java.util.Set;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.trinity.foundation.api.render.binding.refactor.model.PropertyChanged;
-import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.model.PropertyChanged;
+import org.trinity.foundation.api.render.binding.view.PropertySlot;
 
 import com.google.inject.Inject;
 

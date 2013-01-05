@@ -2,11 +2,11 @@ package org.trinity.foundation.api.render.binding;
 
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.PointerInput;
-import org.trinity.foundation.api.render.binding.refactor.model.InputSlot;
+import org.trinity.foundation.api.render.binding.model.InputSlot;
 
-public class SubModel {
+public class DummySubModel {
 
-	private final SubModel subModel = new SubModel();
+	private final DummySubModel dummySubModel = new DummySubModel();
 
 	@InputSlot
 	public void onClick(final PointerInput input) {
@@ -18,7 +18,7 @@ public class SubModel {
 
 	}
 
-	public SubModel getSubModel() {
-		return this.subModel;
+	public DummySubModel getSubModel() {
+		return this.dummySubModel;
 	}
 }

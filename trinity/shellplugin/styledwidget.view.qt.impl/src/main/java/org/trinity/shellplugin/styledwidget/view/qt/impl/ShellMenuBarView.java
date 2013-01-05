@@ -2,7 +2,7 @@ package org.trinity.shellplugin.styledwidget.view.qt.impl;
 
 import javax.inject.Named;
 
-import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.view.PropertySlot;
 
 import com.trolltech.qt.gui.QFrame;
 

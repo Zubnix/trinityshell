@@ -2,9 +2,9 @@ package org.trinity.render.qt.impl;
 
 import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.PaintContext;
-import org.trinity.foundation.api.render.binding.refactor.view.InputSignal;
-import org.trinity.foundation.api.render.binding.refactor.view.InputSignals;
-import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.view.InputSignal;
+import org.trinity.foundation.api.render.binding.view.InputSignals;
+import org.trinity.foundation.api.render.binding.view.PropertySlot;
 
 import com.trolltech.qt.gui.QLayout;
 import com.trolltech.qt.gui.QPushButton;

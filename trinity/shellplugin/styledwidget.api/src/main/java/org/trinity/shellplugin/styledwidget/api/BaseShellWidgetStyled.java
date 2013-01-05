@@ -12,9 +12,9 @@
 package org.trinity.shellplugin.styledwidget.api;
 
 import org.trinity.foundation.api.render.PainterFactory;
-import org.trinity.foundation.api.render.binding.refactor.model.View;
-import org.trinity.foundation.api.render.binding.refactor.model.ViewProperty;
-import org.trinity.foundation.api.render.binding.refactor.model.PropertyChanged;
+import org.trinity.foundation.api.render.binding.model.PropertyChanged;
+import org.trinity.foundation.api.render.binding.model.View;
+import org.trinity.foundation.api.render.binding.model.ViewProperty;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
 

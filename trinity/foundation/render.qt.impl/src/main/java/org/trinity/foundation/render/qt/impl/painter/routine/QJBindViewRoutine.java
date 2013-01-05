@@ -11,7 +11,7 @@ import org.trinity.foundation.api.render.binding.ObservableCollection;
 import org.trinity.foundation.api.render.binding.ObservedCollection;
 import org.trinity.foundation.api.render.binding.ObservedCollectionHandler;
 import org.trinity.foundation.api.render.binding.ViewSlotHandler;
-import org.trinity.foundation.api.render.binding.refactor.model.ViewProperty;
+import org.trinity.foundation.api.render.binding.model.ViewProperty;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConverter;
 
 import ca.odell.glazedlists.EventList;

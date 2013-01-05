@@ -1,4 +1,4 @@
-package org.trinity.foundation.api.render.binding.refactor;
+package org.trinity.foundation.api.render.binding;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,15 +11,16 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.api.display.input.Input;
-import org.trinity.foundation.api.render.binding.refactor.view.ChildViewHandler;
-import org.trinity.foundation.api.render.binding.refactor.view.InputListenerInstaller;
-import org.trinity.foundation.api.render.binding.refactor.view.InputSignal;
-import org.trinity.foundation.api.render.binding.refactor.view.InputSignals;
-import org.trinity.foundation.api.render.binding.refactor.view.ObservableCollection;
-import org.trinity.foundation.api.render.binding.refactor.view.PropertyAdapter;
-import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
-import org.trinity.foundation.api.render.binding.refactor.view.PropertySlotInvocator;
-import org.trinity.foundation.api.render.binding.refactor.view.SubModel;
+import org.trinity.foundation.api.render.binding.view.ChildViewHandler;
+import org.trinity.foundation.api.render.binding.view.InputListenerInstaller;
+import org.trinity.foundation.api.render.binding.view.InputSignal;
+import org.trinity.foundation.api.render.binding.view.InputSignals;
+import org.trinity.foundation.api.render.binding.view.ObservableCollection;
+import org.trinity.foundation.api.render.binding.view.PropertyAdapter;
+import org.trinity.foundation.api.render.binding.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.view.PropertySlotInvocator;
+import org.trinity.foundation.api.render.binding.view.PropertySlots;
+import org.trinity.foundation.api.render.binding.view.SubModel;
 
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
@@ -110,7 +111,6 @@ public class Binder {
 	public void refresh(final Object model,
 						final String property,
 						final Object value) {
-		final Set<Object> views = getViewElements(model);
 	}
 
 	public void bind(	final Object model,
@@ -119,18 +119,31 @@ public class Binder {
 		removeBinding(view);
 		addBinding(	model,
 					view);
+
 		bindAllSubModels(	model,
 							view);
 
-		bindInput(	model,
-					view);
+		final InputSignals inputSignals = model.getClass().getAnnotation(InputSignals.class);
+		if (inputSignals != null) {
+			bindInput(	model,
+						view,
+						inputSignals);
+		}
 		bindAllChildInputs(	model,
 							view);
 
+		final PropertySlots propertySlots = model.getClass().getAnnotation(PropertySlots.class);
+		if (propertySlots != null) {
+			bindProperties(	model,
+							view,
+							propertySlots);
+		}
+
 		bindAllChildProperties(	model,
 								view);
-		bindAllCollections(	model,
-							view);
+
+		bindAllChildCollections(model,
+								view);
 
 	}
 
@@ -216,16 +229,6 @@ public class Binder {
 	}
 
 	protected void bindInput(	final Object model,
-								final Object view) {
-		final InputSignals inputSignals = view.getClass().getAnnotation(InputSignals.class);
-		if (inputSignals != null) {
-			bindInput(	model,
-						view,
-						inputSignals);
-		}
-	}
-
-	protected void bindInput(	final Object model,
 								final Object view,
 								final InputSignals inputSignals) {
 
@@ -259,21 +262,24 @@ public class Binder {
 		return foundMethod;
 	}
 
-	protected void bindAllCollections(	final Object model,
-										final Object view) {
+	protected void bindAllChildCollections(	final Object model,
+											final Object view) {
 		final Class<?> viewClass = view.getClass();
 		try {
-			for (final Method viewMethod : this.bindingAnnotationScanner.lookupObservableCollections(viewClass)) {
+			for (final Entry<ObservableCollection, Method> viewMethod : this.bindingAnnotationScanner
+					.lookupObservableCollections(viewClass).entrySet()) {
 
-				final ObservableCollection observableCollection = viewMethod.getAnnotation(ObservableCollection.class);
+				final ObservableCollection observableCollection = viewMethod.getKey();
+				final Object value = viewMethod.getValue().invoke(view);
+				if (!(value instanceof Collection)) {
+					throw new IllegalArgumentException(String.format(	"Only view elements that implement the %s interface can be annotated with %s.",
+																		Collection.class.getName(),
+																		ObservableCollection.class.getName()));
+				}
+				final Collection<?> collectionView = (Collection<?>) value;
 
-				final Collection<?> collectionView = (Collection<?>) viewMethod.invoke(view);
-
-				Object boundModel;
-				final Object subModel = this.valueByView.get(collectionView);
-				if (subModel != null) {
-					boundModel = subModel;
-				} else {
+				Object boundModel = this.valueByView.get(collectionView);
+				if (boundModel == null) {
 					boundModel = model;
 				}
 
@@ -328,35 +334,23 @@ public class Binder {
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected void bindAllChildProperties(	final Object model,
-											final Object view) {
-		final Class<?> viewClass = view.getClass();
+	protected void bindProperties(	final Object model,
+									final Object view,
+									final PropertySlots propertySlots) {
 		try {
-			for (final Entry<PropertySlot, Method> viewMethod : this.bindingAnnotationScanner
-					.lookupAllPropertySlots(viewClass).entrySet()) {
-
-				final Object viewElement = viewMethod.getValue().invoke(view);
-				Object boundModel;
-				// check if this view is assigned to a submodel
-				final Object subModel = this.valueByView.get(viewElement);
-				if (subModel != null) {
-					boundModel = subModel;
-				} else {
-					boundModel = model;
-				}
-
-				final PropertySlot propertySlot = viewMethod.getAnnotation(PropertySlot.class);
+			for (final PropertySlot propertySlot : propertySlots.value()) {
 				final String propertyName = propertySlot.propertyName();
-				final Object propertyInstance = findGetter(	boundModel.getClass(),
-															propertyName).invoke(boundModel);
+				Object propertyInstance;
+
+				propertyInstance = findGetter(	model.getClass(),
+												propertyName).invoke(model);
 
 				final String viewMethodName = propertySlot.methodName();
 				final Class<?>[] viewMethodArgumentTypes = propertySlot.argumentTypes();
 				final Method targetViewMethod = view.getClass().getMethod(	viewMethodName,
 																			viewMethodArgumentTypes);
 
-				final Class<? extends PropertyAdapter> propertyAdapterType = propertySlot.adapter();
+				final Class<? extends PropertyAdapter<?>> propertyAdapterType = propertySlot.adapter();
 				final PropertyAdapter propertyAdapter = propertyAdapterType.newInstance();
 				final Object argument = propertyAdapter.adapt(propertyInstance);
 
@@ -370,11 +364,46 @@ public class Binder {
 			Throwables.propagate(e);
 		} catch (final InvocationTargetException e) {
 			Throwables.propagate(e);
+		} catch (final ExecutionException e) {
+			Throwables.propagate(e);
 		} catch (final NoSuchMethodException e) {
 			Throwables.propagate(e);
 		} catch (final SecurityException e) {
 			Throwables.propagate(e);
 		} catch (final InstantiationException e) {
+			Throwables.propagate(e);
+		}
+	}
+
+	protected void bindAllChildProperties(	final Object model,
+											final Object view) {
+		final Class<?> viewClass = view.getClass();
+		try {
+			for (final Entry<PropertySlots, Method> viewMethod : this.bindingAnnotationScanner
+					.lookupAllPropertySlots(viewClass).entrySet()) {
+
+				final Object viewElement = viewMethod.getValue().invoke(view);
+				Object boundModel;
+				// check if this view is assigned to a submodel
+				final Object subModel = this.valueByView.get(viewElement);
+				if (subModel != null) {
+					boundModel = subModel;
+				} else {
+					boundModel = model;
+				}
+
+				final PropertySlots propertySlots = viewMethod.getKey();
+				bindProperties(	boundModel,
+								viewElement,
+								propertySlots);
+			}
+		} catch (final IllegalAccessException e) {
+			Throwables.propagate(e);
+		} catch (final IllegalArgumentException e) {
+			Throwables.propagate(e);
+		} catch (final InvocationTargetException e) {
+			Throwables.propagate(e);
+		} catch (final SecurityException e) {
 			Throwables.propagate(e);
 		} catch (final ExecutionException e) {
 			Throwables.propagate(e);

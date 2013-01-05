@@ -4,26 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.trinity.foundation.api.display.input.KeyboardInput;
-import org.trinity.foundation.api.render.binding.refactor.view.InputSignal;
-import org.trinity.foundation.api.render.binding.refactor.view.InputSignals;
-import org.trinity.foundation.api.render.binding.refactor.view.ObservableCollection;
-import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
-import org.trinity.foundation.api.render.binding.refactor.view.SubModel;
-import org.trinity.foundation.api.render.binding.refactor.view.SubViewChanged;
+import org.trinity.foundation.api.render.binding.view.InputSignal;
+import org.trinity.foundation.api.render.binding.view.InputSignals;
+import org.trinity.foundation.api.render.binding.view.ObservableCollection;
+import org.trinity.foundation.api.render.binding.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.view.PropertySlots;
+import org.trinity.foundation.api.render.binding.view.SubModel;
+import org.trinity.foundation.api.render.binding.view.SubViewChanged;
 
 public class View {
 
+	@SubModel("otherSubModel.subModel")
+	@PropertySlots(@PropertySlot(propertyName = "booleanProperty", methodName = "handleStringProperty", argumentTypes = String.class, adapter = BooleanToStringAdapter.class))
 	private SubView mouseInputSubView = new SubView();
+
+	@InputSignals(@InputSignal(name = "onKey", inputType = KeyboardInput.class))
 	private SubView keyInputSubView = new SubView();
 
+	@SubModel("subModels")
+	@ObservableCollection(SubView.class)
 	private final List<Object> subViews = new ArrayList<Object>();
 
 	public SubView getInputSubView() {
 		return this.keyInputSubView;
 	}
 
-	@SubModel("otherSubModel.subModel")
-	@PropertySlot(propertyName = "booleanProperty", methodName = "handleStringProperty", argumentTypes = String.class, adapter = BooleanToStringAdapter.class)
 	public SubView getMouseInputSubView() {
 		return this.mouseInputSubView;
 	}
@@ -33,7 +38,6 @@ public class View {
 		this.mouseInputSubView = subView;
 	}
 
-	@InputSignals(@InputSignal(name = "onKey", inputType = KeyboardInput.class))
 	public SubView getKeyInputSubView() {
 		return this.keyInputSubView;
 	}
@@ -43,8 +47,6 @@ public class View {
 		this.keyInputSubView = keyInputSubView;
 	}
 
-	@SubModel("subModels")
-	@ObservableCollection(SubView.class)
 	public List<Object> getSubViews() {
 		return this.subViews;
 	}

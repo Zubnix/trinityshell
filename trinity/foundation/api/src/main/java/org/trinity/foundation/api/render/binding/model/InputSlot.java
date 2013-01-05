@@ -1,4 +1,4 @@
-package org.trinity.foundation.api.render.binding.refactor.model;
+package org.trinity.foundation.api.render.binding.model;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

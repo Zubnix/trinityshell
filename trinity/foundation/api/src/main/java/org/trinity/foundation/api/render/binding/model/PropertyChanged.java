@@ -1,11 +1,11 @@
-package org.trinity.foundation.api.render.binding.refactor.model;
+package org.trinity.foundation.api.render.binding.model;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.view.PropertySlot;
 
 /****************************************
  * Marks a method as a manipulator of a property. After the execution of a

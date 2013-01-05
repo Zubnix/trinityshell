@@ -1,4 +1,4 @@
-package org.trinity.foundation.api.render.binding.refactor;
+package org.trinity.foundation.api.render.binding;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -9,12 +9,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.api.display.input.Input;
-import org.trinity.foundation.api.render.binding.refactor.model.InputSlot;
-import org.trinity.foundation.api.render.binding.refactor.model.View;
-import org.trinity.foundation.api.render.binding.refactor.view.InputSignals;
-import org.trinity.foundation.api.render.binding.refactor.view.ObservableCollection;
-import org.trinity.foundation.api.render.binding.refactor.view.PropertySlot;
-import org.trinity.foundation.api.render.binding.refactor.view.SubModel;
+import org.trinity.foundation.api.render.binding.model.InputSlot;
+import org.trinity.foundation.api.render.binding.model.View;
+import org.trinity.foundation.api.render.binding.view.InputSignals;
+import org.trinity.foundation.api.render.binding.view.ObservableCollection;
+import org.trinity.foundation.api.render.binding.view.PropertySlots;
+import org.trinity.foundation.api.render.binding.view.SubModel;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
@@ -35,7 +35,7 @@ public class BindingAnnotationScanner {
 			.newBuilder().build();
 	private final Cache<Class<?>, Map<InputSignals, Method>> inputSignals = CacheBuilder.newBuilder().build();
 	private final Cache<Class<?>, Map<SubModel, Method>> subModels = CacheBuilder.newBuilder().build();
-	private final Cache<Class<?>, Map<PropertySlot, Method>> propertySlots = CacheBuilder.newBuilder().build();
+	private final Cache<Class<?>, Map<PropertySlots, Method>> propertySlots = CacheBuilder.newBuilder().build();
 	private final Cache<Class<?>, Map<ObservableCollection, Method>> observableCollections = CacheBuilder.newBuilder()
 			.build();
 	private final Cache<Class<?>, Cache<String, Method>> modelPropertiesByName = CacheBuilder.newBuilder().build();
@@ -188,21 +188,21 @@ public class BindingAnnotationScanner {
 		return Collections.unmodifiableMap(inputSignalsMap);
 	}
 
-	public Map<PropertySlot, Method> lookupAllPropertySlots(final Class<?> viewClass) throws ExecutionException {
+	public Map<PropertySlots, Method> lookupAllPropertySlots(final Class<?> viewClass) throws ExecutionException {
 		return this.propertySlots.get(	viewClass,
-										new Callable<Map<PropertySlot, Method>>() {
+										new Callable<Map<PropertySlots, Method>>() {
 											@Override
-											public Map<PropertySlot, Method> call() throws Exception {
+											public Map<PropertySlots, Method> call() throws Exception {
 												return getAllPropertySlots(viewClass);
 											}
 										});
 	}
 
-	protected Map<PropertySlot, Method> getAllPropertySlots(final Class<?> viewClass) {
-		final Map<PropertySlot, Method> propertySlots = new HashMap<PropertySlot, Method>();
+	protected Map<PropertySlots, Method> getAllPropertySlots(final Class<?> viewClass) {
+		final Map<PropertySlots, Method> propertySlots = new HashMap<PropertySlots, Method>();
 		for (final Method viewMethod : viewClass.getMethods()) {
-			final PropertySlot propertySlot = getAnnotation(viewMethod,
-															PropertySlot.class);
+			final PropertySlots propertySlot = getAnnotation(	viewMethod,
+																PropertySlots.class);
 			if (propertySlot != null) {
 				propertySlots.put(	propertySlot,
 									viewMethod);

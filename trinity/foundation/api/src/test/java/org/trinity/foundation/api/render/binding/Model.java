@@ -1,25 +1,25 @@
 package org.trinity.foundation.api.render.binding;
 
-import org.trinity.foundation.api.render.binding.refactor.model.PropertyChanged;
+import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 
 public class Model {
-	private SubModel subModel = new SubModel();
-	private final SubModel otherSubModel = new SubModel();
+	private DummySubModel dummySubModel = new DummySubModel();
+	private final DummySubModel otherSubModel = new DummySubModel();
 
-	private final EventList<SubModel> subModels = new BasicEventList<SubModel>();
+	private final EventList<DummySubModel> dummySubModels = new BasicEventList<DummySubModel>();
 
 	private boolean booleanProperty;
 
-	public SubModel getSubModel() {
-		return this.subModel;
+	public DummySubModel getSubModel() {
+		return this.dummySubModel;
 	}
 
-	@PropertyChanged("subModel")
-	public void setSubModel(final SubModel subModel) {
-		this.subModel = subModel;
+	@PropertyChanged("dummySubModel")
+	public void setSubModel(final DummySubModel dummySubModel) {
+		this.dummySubModel = dummySubModel;
 	}
 
 	public boolean isBooleanProperty() {
@@ -31,11 +31,11 @@ public class Model {
 		this.booleanProperty = booleanProperty;
 	}
 
-	public SubModel getOtherSubModel() {
+	public DummySubModel getOtherSubModel() {
 		return this.otherSubModel;
 	}
 
-	public EventList<SubModel> getSubModels() {
-		return this.subModels;
+	public EventList<DummySubModel> getSubModels() {
+		return this.dummySubModels;
 	}
 }
