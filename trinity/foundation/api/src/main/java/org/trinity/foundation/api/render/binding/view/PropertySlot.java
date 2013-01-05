@@ -20,7 +20,5 @@ public @interface PropertySlot {
 
 	Class<?>[] argumentTypes();
 
-	// TODO perhaps we want to use a provider to instantiate a certain type of
-	// adapters?
 	Class<? extends PropertyAdapter<?>> adapter() default DefaultPropertyAdapter.class;
 }

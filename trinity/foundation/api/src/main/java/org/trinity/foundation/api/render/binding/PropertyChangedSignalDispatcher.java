@@ -1,7 +1,5 @@
 package org.trinity.foundation.api.render.binding;
 
-import java.util.Set;
-
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
@@ -37,10 +35,7 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 		for (final String propertyName : changedPropertyNames) {
 			final Object propertyInstance = getBinder().findGetter(	changedModelClass,
 																	propertyName).invoke(changedModel);
-			final Set<ModelBinding> dirtyBindings = getBinder().getViewElements(changedModel);
-			for (final ModelBinding dirtyBinding : dirtyBindings) {
 
-			}
 		}
 
 		return invocationResult;
