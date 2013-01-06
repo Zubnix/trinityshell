@@ -14,7 +14,7 @@ import org.trinity.foundation.api.render.binding.model.View;
 import org.trinity.foundation.api.render.binding.view.InputSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
-import org.trinity.foundation.api.render.binding.view.SubModel;
+import org.trinity.foundation.api.render.binding.view.DataContext;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
@@ -34,7 +34,7 @@ public class BindingAnnotationScanner {
 	private final Cache<Class<?>, Cache<Class<? extends Input>, Cache<String, Optional<Method>>>> inputSlots = CacheBuilder
 			.newBuilder().build();
 	private final Cache<Class<?>, Map<InputSignals, Method>> inputSignals = CacheBuilder.newBuilder().build();
-	private final Cache<Class<?>, Map<SubModel, Method>> subModels = CacheBuilder.newBuilder().build();
+	private final Cache<Class<?>, Map<DataContext, Method>> dataContexts = CacheBuilder.newBuilder().build();
 	private final Cache<Class<?>, Map<PropertySlots, Method>> propertySlots = CacheBuilder.newBuilder().build();
 	private final Cache<Class<?>, Map<ObservableCollection, Method>> observableCollections = CacheBuilder.newBuilder()
 			.build();
@@ -139,23 +139,23 @@ public class BindingAnnotationScanner {
 		return Optional.fromNullable(method);
 	}
 
-	public Map<SubModel, Method> lookupAllSubModels(final Class<?> viewClass) throws ExecutionException {
-		return this.subModels.get(	viewClass,
-									new Callable<Map<SubModel, Method>>() {
+	public Map<DataContext, Method> lookupAllSubModels(final Class<?> viewClass) throws ExecutionException {
+		return this.dataContexts.get(	viewClass,
+									new Callable<Map<DataContext, Method>>() {
 										@Override
-										public Map<SubModel, Method> call() throws Exception {
+										public Map<DataContext, Method> call() throws Exception {
 											return getAllSubModels(viewClass);
 										}
 									});
 	}
 
-	protected Map<SubModel, Method> getAllSubModels(final Class<?> viewClass) {
-		final Map<SubModel, Method> submodels = new HashMap<SubModel, Method>();
+	protected Map<DataContext, Method> getAllSubModels(final Class<?> viewClass) {
+		final Map<DataContext, Method> submodels = new HashMap<DataContext, Method>();
 		for (final Method viewMethod : viewClass.getMethods()) {
-			final SubModel subModel = getAnnotation(viewMethod,
-													SubModel.class);
-			if (subModel != null) {
-				submodels.put(	subModel,
+			final DataContext dataContext = getAnnotation(viewMethod,
+													DataContext.class);
+			if (dataContext != null) {
+				submodels.put(	dataContext,
 								viewMethod);
 			}
 		}

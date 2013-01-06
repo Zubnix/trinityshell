@@ -1,23 +1,38 @@
 package org.trinity.foundation.api.render.binding;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 
+import org.trinity.foundation.api.display.input.Input;
+import org.trinity.foundation.api.render.binding.view.DataContext;
 import org.trinity.foundation.api.render.binding.view.InputSignal;
 import org.trinity.foundation.api.render.binding.view.InputSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
+import org.trinity.foundation.api.render.binding.view.PropertyAdapter;
+import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
-import org.trinity.foundation.api.render.binding.view.SubModel;
 import org.trinity.foundation.api.render.binding.view.ViewElementTypes;
+import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
+import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
+import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
+
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.event.ListEvent;
+import ca.odell.glazedlists.event.ListEventListener;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 public class NewBinder {
@@ -26,10 +41,29 @@ public class NewBinder {
 	private static final String GET_PREFIX = "get";
 
 	private final BindingAnnotationScanner bindingAnnotationScanner;
+	private final PropertySlotInvocatorDelegate propertySlotDelegate;
+	private final InputListenerInstallerDelegate inputListenerInstallerDelegate;
+	private final ChildViewDelegate childViewDelegate;
 	private final ViewElementTypes viewElementTypes;
 
+	private final Map<Object, Object> dataContextValueByView = new WeakHashMap<Object, Object>();
+	private final Map<Object, Set<Object>> viewsByDataContextValue = new WeakHashMap<Object, Set<Object>>();
+
+	private final Map<Object, PropertySlots> propertySlotsByView = new WeakHashMap<Object, PropertySlots>();
+	private final Map<Object, ObservableCollection> observableCollectionByView = new WeakHashMap<Object, ObservableCollection>();
+	private final Map<Object, InputSignals> inputSignalsByView = new WeakHashMap<Object, InputSignals>();
+
+	private final Map<Object, Map<Object, DataContext>> dataContextByViewByParentDataContextValue = new WeakHashMap<Object, Map<Object, DataContext>>();
+
 	@Inject
-	NewBinder(final BindingAnnotationScanner bindingAnnotationScanner, final ViewElementTypes viewElementTypes) {
+	NewBinder(	final BindingAnnotationScanner bindingAnnotationScanner,
+				final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate,
+				final InputListenerInstallerDelegate inputListenerInstallerDelegate,
+				final ChildViewDelegate childViewDelegate,
+				final ViewElementTypes viewElementTypes) {
+		this.childViewDelegate = childViewDelegate;
+		this.inputListenerInstallerDelegate = inputListenerInstallerDelegate;
+		this.propertySlotDelegate = propertySlotInvocatorDelegate;
 		this.bindingAnnotationScanner = bindingAnnotationScanner;
 		this.viewElementTypes = viewElementTypes;
 	}
@@ -39,73 +73,284 @@ public class NewBinder {
 
 		bindViewElement(model,
 						view,
-						Optional.<SubModel> absent(),
+						Optional.<DataContext> absent(),
 						Optional.<InputSignals> absent(),
 						Optional.<ObservableCollection> absent(),
 						Optional.<PropertySlots> absent());
 	}
 
 	public void updateView(	final Object model,
-							final String propertyName,
-							final Object propertyValue) {
-		// TODO find bound views & call property slots
-
-		// TODO find out if any views with submodels had this property in their
-		// chain
-		// & rebind them if so.
+							final String propertyName) throws ExecutionException {
+		try {
+			final Object propertyValue = findGetter(model.getClass(),
+													propertyName).invoke(model);
+			updateBinding(	model,
+							propertyName,
+							propertyValue);
+			updateProperties(	model,
+								propertyName,
+								propertyValue);
+		} catch (final IllegalAccessException e) {
+			throw new ExecutionException(e);
+		} catch (final IllegalArgumentException e) {
+			throw new ExecutionException(e);
+		} catch (final InvocationTargetException e) {
+			throw new ExecutionException(e);
+		}
 	}
 
-	protected void bindViewElement(	final Object inheritedModel,
+	protected void updateBinding(	final Object model,
+									final String propertyName,
+									final Object propertyValue) throws ExecutionException {
+
+		final Map<Object, DataContext> dataContextByView = this.dataContextByViewByParentDataContextValue.get(model);
+		if (dataContextByView == null) {
+			return;
+		}
+		for (final Entry<Object, DataContext> dataContextByViewEntry : dataContextByView.entrySet()) {
+
+			final Object view = dataContextByViewEntry.getKey();
+			final DataContext dataContext = dataContextByViewEntry.getValue();
+			final Optional<DataContext> optionalDataContext = Optional.of(dataContext);
+			final Optional<InputSignals> optionalInputSignals = Optional
+					.fromNullable(this.inputSignalsByView.get(view));
+			final Optional<ObservableCollection> optionalObservableCollection = Optional
+					.fromNullable(this.observableCollectionByView.get(view));
+			final Optional<PropertySlots> optionalPropertySlots = Optional.fromNullable(this.propertySlotsByView
+					.get(view));
+
+			if (dataContext.value().startsWith(propertyName)) {
+				bindViewElement(model,
+								view,
+								optionalDataContext,
+								optionalInputSignals,
+								optionalObservableCollection,
+								optionalPropertySlots);
+			}
+		}
+	}
+
+	protected void updateProperties(final Object model,
+									final String propertyName,
+									final Object propertyValue) throws ExecutionException {
+		final Set<Object> views = this.viewsByDataContextValue.get(model);
+		if (views == null) {
+			return;
+		}
+		for (final Object view : views) {
+			final PropertySlots propertySlots = this.propertySlotsByView.get(view);
+			for (final PropertySlot propertySlot : propertySlots.value()) {
+				final String propertySlotPropertyName = propertySlot.propertyName();
+				if (propertySlotPropertyName.equals(propertyName)) {
+					invokePropertySlot(	view,
+										propertySlot,
+										propertyValue);
+				}
+			}
+		}
+	}
+
+	protected void bindViewElement(	final Object inheritedDataContext,
 									final Object view,
-									final Optional<SubModel> optionalFieldSubModel,
-									final Optional<InputSignals> optionalFieldInputSignals,
-									final Optional<ObservableCollection> optionalFieldObservableCollection,
-									final Optional<PropertySlots> optionalFieldPropertySlots) throws ExecutionException {
-		checkNotNull(inheritedModel);
+									final Optional<DataContext> optionalFieldLevelDataContext,
+									final Optional<InputSignals> optionalFieldLEvelInputSignals,
+									final Optional<ObservableCollection> optionalFieldLevelObservableCollection,
+									final Optional<PropertySlots> optionalFieldLevelPropertySlots)
+			throws ExecutionException {
+		checkNotNull(inheritedDataContext);
 		checkNotNull(view);
 
 		final Class<?> viewClass = view.getClass();
 
-		// check for classlevel annotations if field level annotations are
+		// check for class level annotations if field level annotations are
 		// absent
-		final Optional<SubModel> optionalSubModel = optionalFieldSubModel.or(Optional.<SubModel> fromNullable(viewClass
-				.getAnnotation(SubModel.class)));
-		final Optional<InputSignals> optionalInputSignals = optionalFieldInputSignals.or(Optional
+		final Optional<DataContext> optionalDataContext = optionalFieldLevelDataContext.or(Optional
+				.<DataContext> fromNullable(viewClass.getAnnotation(DataContext.class)));
+		final Optional<InputSignals> optionalInputSignals = optionalFieldLEvelInputSignals.or(Optional
 				.<InputSignals> fromNullable(viewClass.getAnnotation(InputSignals.class)));
-		final Optional<ObservableCollection> optionalObservableCollection = optionalFieldObservableCollection
+		final Optional<ObservableCollection> optionalObservableCollection = optionalFieldLevelObservableCollection
 				.or(Optional.<ObservableCollection> fromNullable(viewClass.getAnnotation(ObservableCollection.class)));
-		final Optional<PropertySlots> optionalPropertySlots = optionalFieldPropertySlots.or(Optional
+		final Optional<PropertySlots> optionalPropertySlots = optionalFieldLevelPropertySlots.or(Optional
 				.<PropertySlots> fromNullable(viewClass.getAnnotation(PropertySlots.class)));
 
-		Object model = inheritedModel;
-		if (optionalSubModel.isPresent()) {
-			final String propertyChain = optionalSubModel.get().value();
-			final Optional<Object> optionalSubModelInstance = getSubModelInstance(	model,
-																					propertyChain);
-			if (optionalSubModelInstance.isPresent()) {
-				model = optionalSubModelInstance.get();
+		Object dataContext = inheritedDataContext;
+		if (optionalDataContext.isPresent()) {
+			final Optional<Object> optionalDataContextValue = handleDataContext(dataContext,
+																				view,
+																				optionalDataContext.get());
+			if (optionalDataContextValue.isPresent()) {
+				dataContext = optionalDataContextValue.get();
 			} else {
 				return;
 			}
 		}
+		registerBinding(dataContext,
+						view);
 
 		if (optionalInputSignals.isPresent()) {
 			final InputSignal[] inputSignals = optionalInputSignals.get().value();
-			// TODO install input emitters
+			bindInputSignals(	dataContext,
+								view,
+								inputSignals);
 		}
 
 		if (optionalObservableCollection.isPresent()) {
 			final ObservableCollection observableCollection = optionalObservableCollection.get();
-			// TODO link to observableCollection
+			bindObservableCollection(	dataContext,
+										view,
+										observableCollection);
 		}
 
 		if (optionalPropertySlots.isPresent()) {
 			final PropertySlots propertySlots = optionalPropertySlots.get();
-			// TODO link to propertySlots
+			bindPropertySlots(	dataContext,
+								view,
+								propertySlots);
 		}
 
-		bindChildViewElements(	model,
+		bindChildViewElements(	dataContext,
 								view);
+	}
+
+	protected void bindObservableCollection(final Object dataContext,
+											final Object view,
+											final ObservableCollection observableCollection) throws ExecutionException {
+		checkArgument(dataContext instanceof EventList);
+
+		final EventList<?> contextCollection = (EventList<?>) dataContext;
+		final Class<?> childViewClass = observableCollection.value();
+
+		for (final Object childViewDataContext : contextCollection) {
+			final Object childView = this.childViewDelegate.newView(view,
+																	childViewClass);
+			bind(	childViewDataContext,
+					childView);
+		}
+
+		contextCollection.addListEventListener(new ListEventListener<Object>() {
+			@Override
+			public void listChanged(final ListEvent<Object> listChanges) {
+				// TODO update observableCollection
+
+			}
+		});
+	}
+
+	protected void bindInputSignals(final Object dataContext,
+									final Object view,
+									final InputSignal[] inputSignals) {
+		for (final InputSignal inputSignal : inputSignals) {
+			final Class<? extends Input> inputType = inputSignal.inputType();
+			final String inputSlotName = inputSignal.name();
+
+			this.inputListenerInstallerDelegate.installInputListener(	inputType,
+																		view,
+																		dataContext,
+																		inputSlotName);
+		}
+	}
+
+	protected void registerBinding(	final Object dataContext,
+									final Object view) {
+		final Object oldDataContext = this.dataContextValueByView.put(	view,
+																		dataContext);
+		if (oldDataContext != null) {
+			final Set<Object> oldDataContextViews = this.viewsByDataContextValue.get(oldDataContext);
+			if (oldDataContextViews != null) {
+				oldDataContextViews.remove(view);
+			}
+		}
+		Set<Object> dataContextViews = this.viewsByDataContextValue.get(dataContext);
+		if (dataContextViews == null) {
+			dataContextViews = Sets.newSetFromMap(new WeakHashMap<Object, Boolean>());
+			this.viewsByDataContextValue.put(	dataContext,
+												dataContextViews);
+		}
+		dataContextViews.add(view);
+	}
+
+	protected void bindPropertySlots(	final Object dataContext,
+										final Object view,
+										final PropertySlots propertySlots) throws ExecutionException {
+		this.propertySlotsByView.put(	view,
+										propertySlots);
+		for (final PropertySlot propertySlot : propertySlots.value()) {
+			handlePropertySlot(	dataContext,
+								view,
+								propertySlot);
+		}
+	}
+
+	protected void handlePropertySlot(	final Object dataContext,
+										final Object view,
+										final PropertySlot propertySlot) throws ExecutionException {
+
+		try {
+			final String propertyName = propertySlot.propertyName();
+			final Object propertyInstance = findGetter(	dataContext.getClass(),
+														propertyName).invoke(dataContext);
+			invokePropertySlot(	view,
+								propertySlot,
+								propertyInstance);
+		} catch (final IllegalAccessException e) {
+			throw new ExecutionException(e);
+		} catch (final IllegalArgumentException e) {
+			throw new ExecutionException(e);
+		} catch (final InvocationTargetException e) {
+			throw new ExecutionException(e);
+		}
+
+	}
+
+	protected void invokePropertySlot(	final Object view,
+										final PropertySlot propertySlot,
+										final Object propertyValue) throws ExecutionException {
+
+		try {
+			final String viewMethodName = propertySlot.methodName();
+			final Class<?>[] viewMethodArgumentTypes = propertySlot.argumentTypes();
+			final Method targetViewMethod = view.getClass().getMethod(	viewMethodName,
+																		viewMethodArgumentTypes);
+			final Class<? extends PropertyAdapter<?>> propertyAdapterType = propertySlot.adapter();
+			@SuppressWarnings("rawtypes")
+			final PropertyAdapter propertyAdapter = propertyAdapterType.newInstance();
+			@SuppressWarnings("unchecked")
+			final Object argument = propertyAdapter.adapt(propertyValue);
+
+			this.propertySlotDelegate.invoke(	view,
+												targetViewMethod,
+												argument);
+		} catch (final NoSuchMethodException e) {
+			throw new ExecutionException(e);
+		} catch (final SecurityException e) {
+			throw new ExecutionException(e);
+		} catch (final InstantiationException e) {
+			throw new ExecutionException(e);
+		} catch (final IllegalAccessException e) {
+			throw new ExecutionException(e);
+		}
+	}
+
+	protected Optional<Object> handleDataContext(	final Object parentDataContextValue,
+													final Object view,
+													final DataContext dataContext) throws ExecutionException {
+		Map<Object, DataContext> dataContextByView = this.dataContextByViewByParentDataContextValue
+				.get(parentDataContextValue);
+		if (dataContextByView == null) {
+			dataContextByView = new WeakHashMap<Object, DataContext>();
+			this.dataContextByViewByParentDataContextValue.put(	parentDataContextValue,
+																dataContextByView);
+		}
+		dataContextByView.put(	view,
+								dataContext);
+
+		final String propertyChain = dataContext.value();
+		final Iterable<String> propertyNames = toPropertyNames(propertyChain);
+
+		final Object dataContextValue = getDataContextValue(parentDataContextValue,
+															propertyNames);
+
+		return Optional.fromNullable(dataContextValue);
 	}
 
 	protected void bindChildViewElements(	final Object inheritedModel,
@@ -113,86 +358,84 @@ public class NewBinder {
 		checkNotNull(inheritedModel);
 		checkNotNull(view);
 
-		final Class<?> viewClass = view.getClass();
+		try {
 
-		final Field[] childViewElements = viewClass.getDeclaredFields();
+			final Class<?> viewClass = view.getClass();
 
-		for (final Field childViewElement : childViewElements) {
+			final Field[] childViewElements = viewClass.getDeclaredFields();
 
-			childViewElement.setAccessible(true);
-			Object childView;
-			try {
-				childView = childViewElement.get(view);
-			} catch (final IllegalArgumentException e) {
-				throw new ExecutionException(e);
-			} catch (final IllegalAccessException e) {
-				throw new ExecutionException(e);
+			for (final Field childViewElement : childViewElements) {
+
+				childViewElement.setAccessible(true);
+				final Object childView = childViewElement.get(view);
+				childViewElement.setAccessible(false);
+
+				// filter out null values
+				if (childView == null) {
+					continue;
+				}
+
+				// filter out types we're not interested in
+				boolean interestedViewElement = false;
+				for (final Class<?> viewElementType : this.viewElementTypes.getViewElementTypes()) {
+					interestedViewElement |= viewElementType.isAssignableFrom(childView.getClass());
+				}
+				if (!interestedViewElement) {
+					continue;
+				}
+
+				final Optional<DataContext> optionalFieldDataContext = Optional
+						.<DataContext> fromNullable(childViewElement.getAnnotation(DataContext.class));
+				final Optional<InputSignals> optionalFieldInputSignals = Optional
+						.<InputSignals> fromNullable(childViewElement.getAnnotation(InputSignals.class));
+				final Optional<ObservableCollection> optionalFieldObservableCollection = Optional
+						.<ObservableCollection> fromNullable(childViewElement.getAnnotation(ObservableCollection.class));
+				final Optional<PropertySlots> optionalFieldPropertySlots = Optional
+						.<PropertySlots> fromNullable(childViewElement.getAnnotation(PropertySlots.class));
+
+				bindViewElement(inheritedModel,
+								childView,
+								optionalFieldDataContext,
+								optionalFieldInputSignals,
+								optionalFieldObservableCollection,
+								optionalFieldPropertySlots);
 			}
-			childViewElement.setAccessible(false);
-
-			// filter out null values
-			if (childView == null) {
-				continue;
-			}
-
-			// filter out types we're not interested in
-			boolean interestedViewElement = false;
-			for (final Class<?> viewElementType : this.viewElementTypes.getViewElementTypes()) {
-				interestedViewElement |= viewElementType.isAssignableFrom(childView.getClass());
-			}
-			if (!interestedViewElement) {
-				continue;
-			}
-
-			final Optional<SubModel> optionalFieldSubModel = Optional.<SubModel> fromNullable(childViewElement
-					.getAnnotation(SubModel.class));
-			final Optional<InputSignals> optionalFieldInputSignals = Optional
-					.<InputSignals> fromNullable(childViewElement.getAnnotation(InputSignals.class));
-			final Optional<ObservableCollection> optionalFieldObservableCollection = Optional
-					.<ObservableCollection> fromNullable(childViewElement.getAnnotation(ObservableCollection.class));
-			final Optional<PropertySlots> optionalFieldPropertySlots = Optional
-					.<PropertySlots> fromNullable(childViewElement.getAnnotation(PropertySlots.class));
-
-			bindViewElement(inheritedModel,
-							childView,
-							optionalFieldSubModel,
-							optionalFieldInputSignals,
-							optionalFieldObservableCollection,
-							optionalFieldPropertySlots);
+		} catch (final IllegalArgumentException e) {
+			throw new ExecutionException(e);
+		} catch (final IllegalAccessException e) {
+			throw new ExecutionException(e);
 		}
 	}
 
-	protected Optional<Object> getSubModelInstance(	final Object model,
-													final String subModelPath) throws ExecutionException {
+	protected Iterable<String> toPropertyNames(final String subModelPath) {
+		return Splitter.on('.').trimResults().omitEmptyStrings().split(subModelPath);
+	}
+
+	protected Optional<Object> getDataContextValue(	final Object model,
+													final Iterable<String> propertyNames) throws ExecutionException {
 		checkNotNull(model);
 
-		final Iterable<String> propertyNames = Splitter.on('.').trimResults().omitEmptyStrings().split(subModelPath);
 		Object currentModel = model;
-		for (final String propertyName : propertyNames) {
-			if (currentModel == null) {
-				break;
-			}
-			final Class<?> currentModelClass = currentModel.getClass();
-			final Method foundMethod = findGetter(	currentModelClass,
-													propertyName);
-			try {
+		try {
+
+			for (final String propertyName : propertyNames) {
+				if (currentModel == null) {
+					break;
+				}
+				final Class<?> currentModelClass = currentModel.getClass();
+				final Method foundMethod = findGetter(	currentModelClass,
+														propertyName);
 				currentModel = foundMethod.invoke(currentModel);
-			} catch (final IllegalAccessException e) {
-				throw new ExecutionException(	String.format(	"Can not access getter on %s. Is it a no argument public method?",
-																currentModel),
-												e);
-			} catch (final IllegalArgumentException e) {
-				throw new ExecutionException(e);
-			} catch (final InvocationTargetException e) {
-				throw new ExecutionException(e);
 			}
+		} catch (final IllegalAccessException e) {
+			throw new ExecutionException(	String.format(	"Can not access getter on %s. Is it a no argument public method?",
+															currentModel),
+											e);
+		} catch (final IllegalArgumentException e) {
+			throw new ExecutionException(e);
+		} catch (final InvocationTargetException e) {
+			throw new ExecutionException(e);
 		}
-
-		final Iterator<String> propertyNamesIt = propertyNames.iterator();
-		if (propertyNamesIt.hasNext()) {
-			final String firstPropertyName = propertyNamesIt.next();
-		}
-
 		return Optional.fromNullable(currentModel);
 	}
 

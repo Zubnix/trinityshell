@@ -20,33 +20,31 @@ import com.google.inject.Inject;
  */
 public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 
-	private Binder binder;
+	private NewBinder binder;
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
 		final Object invocationResult = invocation.proceed();
 
 		final Object changedModel = invocation.getThis();
-		final Class<?> changedModelClass = invocation.getMethod().getDeclaringClass();
 
 		final PropertyChanged changedPropertySignal = invocation.getMethod().getAnnotation(PropertyChanged.class);
 		final String[] changedPropertyNames = changedPropertySignal.value();
 
 		for (final String propertyName : changedPropertyNames) {
-			final Object propertyInstance = getBinder().findGetter(	changedModelClass,
-																	propertyName).invoke(changedModel);
-
+			getBinder().updateView(	changedModel,
+									propertyName);
 		}
 
 		return invocationResult;
 	}
 
-	public Binder getBinder() {
+	public NewBinder getBinder() {
 		return this.binder;
 	}
 
 	@Inject
-	void setBinder(final Binder binder) {
+	void setBinder(final NewBinder binder) {
 		this.binder = binder;
 	}
 }

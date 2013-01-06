@@ -1,8 +1,8 @@
-package org.trinity.foundation.api.render.binding.view;
+package org.trinity.foundation.api.render.binding.view.delegate;
 
 import org.trinity.foundation.api.display.input.Input;
 
-public interface InputListenerInstaller {
+public interface InputListenerInstallerDelegate {
 
 	void installInputListener(	Class<? extends Input> inputType,
 								Object view,
