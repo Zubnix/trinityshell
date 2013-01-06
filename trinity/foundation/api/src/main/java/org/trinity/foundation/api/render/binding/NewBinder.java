@@ -175,9 +175,9 @@ public class NewBinder {
 
 		Object dataContext = inheritedDataContext;
 		if (optionalDataContext.isPresent()) {
-			final Optional<Object> optionalDataContextValue = handleDataContext(dataContext,
-																				view,
-																				optionalDataContext.get());
+			final Optional<Object> optionalDataContextValue = getDataContextValue(	dataContext,
+																					view,
+																					optionalDataContext.get());
 			if (optionalDataContextValue.isPresent()) {
 				dataContext = optionalDataContextValue.get();
 			} else {
@@ -275,15 +275,15 @@ public class NewBinder {
 		this.propertySlotsByView.put(	view,
 										propertySlots);
 		for (final PropertySlot propertySlot : propertySlots.value()) {
-			handlePropertySlot(	dataContext,
+			bindPropertySlot(	dataContext,
 								view,
 								propertySlot);
 		}
 	}
 
-	protected void handlePropertySlot(	final Object dataContext,
-										final Object view,
-										final PropertySlot propertySlot) throws ExecutionException {
+	protected void bindPropertySlot(final Object dataContext,
+									final Object view,
+									final PropertySlot propertySlot) throws ExecutionException {
 
 		try {
 			final String propertyName = propertySlot.propertyName();
@@ -331,7 +331,7 @@ public class NewBinder {
 		}
 	}
 
-	protected Optional<Object> handleDataContext(	final Object parentDataContextValue,
+	protected Optional<Object> getDataContextValue(	final Object parentDataContextValue,
 													final Object view,
 													final DataContext dataContext) throws ExecutionException {
 		Map<Object, DataContext> dataContextByView = this.dataContextByViewByParentDataContextValue

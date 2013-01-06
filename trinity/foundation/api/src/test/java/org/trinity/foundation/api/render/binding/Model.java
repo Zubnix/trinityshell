@@ -13,12 +13,12 @@ public class Model {
 
 	private boolean booleanProperty;
 
-	public DummySubModel getSubModel() {
+	public DummySubModel getDummySubModel() {
 		return this.dummySubModel;
 	}
 
 	@PropertyChanged("dummySubModel")
-	public void setSubModel(final DummySubModel dummySubModel) {
+	public void setDummySubModel(final DummySubModel dummySubModel) {
 		this.dummySubModel = dummySubModel;
 	}
 
@@ -35,7 +35,7 @@ public class Model {
 		return this.otherSubModel;
 	}
 
-	public EventList<DummySubModel> getSubModels() {
+	public EventList<DummySubModel> getDummySubModels() {
 		return this.dummySubModels;
 	}
 }
