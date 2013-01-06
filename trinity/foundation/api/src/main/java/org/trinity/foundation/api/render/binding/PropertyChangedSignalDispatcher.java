@@ -20,7 +20,7 @@ import com.google.inject.Inject;
  */
 public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 
-	private NewBinder binder;
+	private Binder binder;
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
@@ -32,19 +32,19 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 		final String[] changedPropertyNames = changedPropertySignal.value();
 
 		for (final String propertyName : changedPropertyNames) {
-			getBinder().updateView(	changedModel,
+			getBinder().updateBinding(	changedModel,
 									propertyName);
 		}
 
 		return invocationResult;
 	}
 
-	public NewBinder getBinder() {
+	public Binder getBinder() {
 		return this.binder;
 	}
 
 	@Inject
-	void setBinder(final NewBinder binder) {
+	void setBinder(final Binder binder) {
 		this.binder = binder;
 	}
 }

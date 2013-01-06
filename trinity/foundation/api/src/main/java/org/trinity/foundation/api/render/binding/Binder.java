@@ -35,7 +35,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-public class NewBinder {
+public class Binder {
 
 	private static final String GET_BOOLEAN_PREFIX = "is";
 	private static final String GET_PREFIX = "get";
@@ -56,11 +56,11 @@ public class NewBinder {
 	private final Map<Object, Map<Object, DataContext>> dataContextByViewByParentDataContextValue = new WeakHashMap<Object, Map<Object, DataContext>>();
 
 	@Inject
-	NewBinder(	final BindingAnnotationScanner bindingAnnotationScanner,
-				final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate,
-				final InputListenerInstallerDelegate inputListenerInstallerDelegate,
-				final ChildViewDelegate childViewDelegate,
-				final ViewElementTypes viewElementTypes) {
+	Binder(	final BindingAnnotationScanner bindingAnnotationScanner,
+			final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate,
+			final InputListenerInstallerDelegate inputListenerInstallerDelegate,
+			final ChildViewDelegate childViewDelegate,
+			final ViewElementTypes viewElementTypes) {
 		this.childViewDelegate = childViewDelegate;
 		this.inputListenerInstallerDelegate = inputListenerInstallerDelegate;
 		this.propertySlotDelegate = propertySlotInvocatorDelegate;
@@ -79,29 +79,16 @@ public class NewBinder {
 						Optional.<PropertySlots> absent());
 	}
 
-	public void updateView(	final Object model,
-							final String propertyName) throws ExecutionException {
-		try {
-			final Object propertyValue = findGetter(model.getClass(),
-													propertyName).invoke(model);
-			updateBinding(	model,
-							propertyName,
-							propertyValue);
-			updateProperties(	model,
-								propertyName,
-								propertyValue);
-		} catch (final IllegalAccessException e) {
-			throw new ExecutionException(e);
-		} catch (final IllegalArgumentException e) {
-			throw new ExecutionException(e);
-		} catch (final InvocationTargetException e) {
-			throw new ExecutionException(e);
-		}
+	public void updateBinding(	final Object model,
+								final String propertyName) throws ExecutionException {
+		updateDataContextBinding(	model,
+									propertyName);
+		updateProperties(	model,
+							propertyName);
 	}
 
-	protected void updateBinding(	final Object model,
-									final String propertyName,
-									final Object propertyValue) throws ExecutionException {
+	protected void updateDataContextBinding(final Object model,
+											final String propertyName) throws ExecutionException {
 
 		final Map<Object, DataContext> dataContextByView = this.dataContextByViewByParentDataContextValue.get(model);
 		if (dataContextByView == null) {
@@ -120,6 +107,7 @@ public class NewBinder {
 					.get(view));
 
 			if (dataContext.value().startsWith(propertyName)) {
+
 				bindViewElement(model,
 								view,
 								optionalDataContext,
@@ -131,23 +119,33 @@ public class NewBinder {
 	}
 
 	protected void updateProperties(final Object model,
-									final String propertyName,
-									final Object propertyValue) throws ExecutionException {
-		final Set<Object> views = this.viewsByDataContextValue.get(model);
-		if (views == null) {
-			return;
-		}
-		for (final Object view : views) {
-			final PropertySlots propertySlots = this.propertySlotsByView.get(view);
-			for (final PropertySlot propertySlot : propertySlots.value()) {
-				final String propertySlotPropertyName = propertySlot.propertyName();
-				if (propertySlotPropertyName.equals(propertyName)) {
-					invokePropertySlot(	view,
-										propertySlot,
-										propertyValue);
+									final String propertyName) throws ExecutionException {
+		try {
+			final Object propertyValue = findGetter(model.getClass(),
+													propertyName).invoke(model);
+			final Set<Object> views = this.viewsByDataContextValue.get(model);
+			if (views == null) {
+				return;
+			}
+			for (final Object view : views) {
+				final PropertySlots propertySlots = this.propertySlotsByView.get(view);
+				for (final PropertySlot propertySlot : propertySlots.value()) {
+					final String propertySlotPropertyName = propertySlot.propertyName();
+					if (propertySlotPropertyName.equals(propertyName)) {
+						invokePropertySlot(	view,
+											propertySlot,
+											propertyValue);
+					}
 				}
 			}
+		} catch (final IllegalAccessException e) {
+			throw new ExecutionException(e);
+		} catch (final IllegalArgumentException e) {
+			throw new ExecutionException(e);
+		} catch (final InvocationTargetException e) {
+			throw new ExecutionException(e);
 		}
+
 	}
 
 	protected void bindViewElement(	final Object inheritedDataContext,
