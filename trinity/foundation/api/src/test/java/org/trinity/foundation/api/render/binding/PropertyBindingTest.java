@@ -7,6 +7,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
 import org.trinity.foundation.api.render.binding.view.ViewElementTypes;
+import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
+import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
 public class PropertyBindingTest {
@@ -20,15 +22,19 @@ public class PropertyBindingTest {
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
+		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
+		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final Binder binder = new Binder(	bindingAnnotationScanner,
 											propertySlotInvocatorDelegate,
-											null,
-											null,
+											inputListenerInstallerDelegate,
+											childViewDelegate,
 											viewElementTypes);
 		binder.bind(model,
 					view);
 		binder.updateBinding(	model,
 								"dummySubModel");
+
+		// TODO verify
 	}
 
 	@Test
@@ -40,14 +46,18 @@ public class PropertyBindingTest {
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
+		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
+		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final Binder binder = new Binder(	bindingAnnotationScanner,
 											propertySlotInvocatorDelegate,
-											null,
-											null,
+											inputListenerInstallerDelegate,
+											childViewDelegate,
 											viewElementTypes);
 		binder.bind(model,
 					view);
-		binder.updateBinding(	model,
+		binder.updateBinding(	model.getDummySubModel(),
 								"booleanProperty");
+
+		// TODO verify
 	}
 }

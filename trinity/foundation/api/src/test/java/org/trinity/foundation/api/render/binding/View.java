@@ -14,7 +14,7 @@ import org.trinity.foundation.api.render.binding.view.SubViewChanged;
 
 public class View {
 
-	@DataContext("otherSubModel.subModel")
+	@DataContext("otherSubModel.subSubModel")
 	@PropertySlots(@PropertySlot(propertyName = "booleanProperty", methodName = "handleStringProperty", argumentTypes = String.class, adapter = BooleanToStringAdapter.class))
 	private SubView mouseInputSubView = new SubView();
 

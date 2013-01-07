@@ -11,8 +11,6 @@ public class Model {
 
 	private final EventList<DummySubModel> dummySubModels = new BasicEventList<DummySubModel>();
 
-	private boolean booleanProperty;
-
 	public DummySubModel getDummySubModel() {
 		return this.dummySubModel;
 	}
@@ -20,15 +18,6 @@ public class Model {
 	@PropertyChanged("dummySubModel")
 	public void setDummySubModel(final DummySubModel dummySubModel) {
 		this.dummySubModel = dummySubModel;
-	}
-
-	public boolean isBooleanProperty() {
-		return this.booleanProperty;
-	}
-
-	@PropertyChanged("booleanProperty")
-	public void setBooleanProperty(final boolean booleanProperty) {
-		this.booleanProperty = booleanProperty;
 	}
 
 	public DummySubModel getOtherSubModel() {

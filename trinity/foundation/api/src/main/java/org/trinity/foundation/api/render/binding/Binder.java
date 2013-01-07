@@ -2,6 +2,7 @@ package org.trinity.foundation.api.render.binding;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.String.format;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -129,6 +130,9 @@ public class Binder {
 			}
 			for (final Object view : views) {
 				final PropertySlots propertySlots = this.propertySlotsByView.get(view);
+				if (propertySlots == null) {
+					continue;
+				}
 				for (final PropertySlot propertySlot : propertySlots.value()) {
 					final String propertySlotPropertyName = propertySlot.propertyName();
 					if (propertySlotPropertyName.equals(propertyName)) {
@@ -270,6 +274,10 @@ public class Binder {
 	protected void bindPropertySlots(	final Object dataContext,
 										final Object view,
 										final PropertySlots propertySlots) throws ExecutionException {
+		checkNotNull(dataContext);
+		checkNotNull(view);
+		checkNotNull(propertySlots);
+
 		this.propertySlotsByView.put(	view,
 										propertySlots);
 		for (final PropertySlot propertySlot : propertySlots.value()) {
@@ -285,8 +293,14 @@ public class Binder {
 
 		try {
 			final String propertyName = propertySlot.propertyName();
-			final Object propertyInstance = findGetter(	dataContext.getClass(),
-														propertyName).invoke(dataContext);
+			final Method getter = findGetter(	dataContext.getClass(),
+												propertyName);
+			if (getter == null) {
+				throw new NullPointerException(format(	"Property %s not found on %s",
+														propertyName,
+														dataContext));
+			}
+			final Object propertyInstance = getter.invoke(dataContext);
 			invokePropertySlot(	view,
 								propertySlot,
 								propertyInstance);
@@ -345,10 +359,8 @@ public class Binder {
 		final String propertyChain = dataContext.value();
 		final Iterable<String> propertyNames = toPropertyNames(propertyChain);
 
-		final Object dataContextValue = getDataContextValue(parentDataContextValue,
-															propertyNames);
-
-		return Optional.fromNullable(dataContextValue);
+		return getDataContextValue(	parentDataContextValue,
+									propertyNames);
 	}
 
 	protected void bindChildViewElements(	final Object inheritedModel,
@@ -391,12 +403,18 @@ public class Binder {
 				final Optional<PropertySlots> optionalFieldPropertySlots = Optional
 						.<PropertySlots> fromNullable(childViewElement.getAnnotation(PropertySlots.class));
 
+				// recursion safety
+				if (this.dataContextValueByView.containsKey(childView)) {
+					continue;
+				}
+
 				bindViewElement(inheritedModel,
 								childView,
 								optionalFieldDataContext,
 								optionalFieldInputSignals,
 								optionalFieldObservableCollection,
 								optionalFieldPropertySlots);
+
 			}
 		} catch (final IllegalArgumentException e) {
 			throw new ExecutionException(e);
@@ -423,6 +441,12 @@ public class Binder {
 				final Class<?> currentModelClass = currentModel.getClass();
 				final Method foundMethod = findGetter(	currentModelClass,
 														propertyName);
+				if (foundMethod == null) {
+					throw new NullPointerException(format(	"Data context path %s starting from %s can not find the property %s.",
+															propertyNames,
+															model,
+															propertyName));
+				}
 				currentModel = foundMethod.invoke(currentModel);
 			}
 		} catch (final IllegalAccessException e) {
@@ -448,11 +472,21 @@ public class Binder {
 			// no getter with get found, try with is. If nothing found, let
 			// the exception bubble up.
 			getterMethodName = toBooleanGetterMethodName(propertyName);
-			foundMethod = this.bindingAnnotationScanner.lookupModelPropety(	modelClass,
-																			getterMethodName);
+			try {
+				foundMethod = modelClass.getMethod(getterMethodName);
+			} catch (final NoSuchMethodException e1) {
+				throw new NullPointerException(format(	"Property %s could not be found on %s.",
+														propertyName,
+														modelClass.getName()));
+			} catch (final SecurityException e1) {
+				throw new IllegalAccessError(format("Property %s is not accessible on %s. Did you declare it as public?",
+													propertyName,
+													modelClass.getName()));
+			}
 		} catch (final SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new IllegalAccessError(format("Property %s is not accessible on %s. Did you declare it as public?",
+												propertyName,
+												modelClass.getName()));
 		}
 		return foundMethod;
 	}
