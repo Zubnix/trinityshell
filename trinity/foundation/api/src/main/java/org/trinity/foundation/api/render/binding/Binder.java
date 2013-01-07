@@ -439,17 +439,20 @@ public class Binder {
 
 	protected Method findGetter(final Class<?> modelClass,
 								final String propertyName) throws ExecutionException {
-		Method foundMethod;
+		Method foundMethod = null;
 		String getterMethodName = toGetterMethodName(propertyName);
+
 		try {
-			foundMethod = this.bindingAnnotationScanner.lookupModelPropety(	modelClass,
-																			getterMethodName);
-		} catch (final ExecutionException e) {
+			foundMethod = modelClass.getMethod(getterMethodName);
+		} catch (final NoSuchMethodException e) {
 			// no getter with get found, try with is. If nothing found, let
 			// the exception bubble up.
 			getterMethodName = toBooleanGetterMethodName(propertyName);
 			foundMethod = this.bindingAnnotationScanner.lookupModelPropety(	modelClass,
 																			getterMethodName);
+		} catch (final SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return foundMethod;
 	}

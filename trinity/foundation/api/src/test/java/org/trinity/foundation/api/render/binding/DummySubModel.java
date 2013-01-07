@@ -6,7 +6,7 @@ import org.trinity.foundation.api.render.binding.model.InputSlot;
 
 public class DummySubModel {
 
-	private final DummySubModel dummySubModel = new DummySubModel();
+	private final DummySubSubModel dummySubSubModel = new DummySubSubModel();
 
 	@InputSlot
 	public void onClick(final PointerInput input) {
@@ -18,7 +18,7 @@ public class DummySubModel {
 
 	}
 
-	public DummySubModel getSubModel() {
-		return this.dummySubModel;
+	public DummySubSubModel getSubSubModel() {
+		return this.dummySubSubModel;
 	}
 }
