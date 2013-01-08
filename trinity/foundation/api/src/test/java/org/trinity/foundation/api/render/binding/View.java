@@ -10,7 +10,6 @@ import org.trinity.foundation.api.render.binding.view.InputSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
-import org.trinity.foundation.api.render.binding.view.SubViewChanged;
 
 public class View {
 
@@ -25,15 +24,10 @@ public class View {
 	@ObservableCollection(SubView.class)
 	private final List<Object> subViews = new ArrayList<Object>();
 
-	public SubView getInputSubView() {
-		return this.keyInputSubView;
-	}
-
 	public SubView getMouseInputSubView() {
 		return this.mouseInputSubView;
 	}
 
-	@SubViewChanged("mouseInputSubView")
 	public void setSubView(final SubView subView) {
 		this.mouseInputSubView = subView;
 	}
@@ -42,7 +36,6 @@ public class View {
 		return this.keyInputSubView;
 	}
 
-	@SubViewChanged("keyInputSubView")
 	public void setKeyInputSubView(final SubView keyInputSubView) {
 		this.keyInputSubView = keyInputSubView;
 	}

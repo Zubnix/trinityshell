@@ -41,7 +41,6 @@ public class Binder {
 	private static final String GET_BOOLEAN_PREFIX = "is";
 	private static final String GET_PREFIX = "get";
 
-	private final BindingAnnotationScanner bindingAnnotationScanner;
 	private final PropertySlotInvocatorDelegate propertySlotDelegate;
 	private final InputListenerInstallerDelegate inputListenerInstallerDelegate;
 	private final ChildViewDelegate childViewDelegate;
@@ -57,20 +56,20 @@ public class Binder {
 	private final Map<Object, Map<Object, DataContext>> dataContextByViewByParentDataContextValue = new WeakHashMap<Object, Map<Object, DataContext>>();
 
 	@Inject
-	Binder(	final BindingAnnotationScanner bindingAnnotationScanner,
-			final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate,
+	Binder(	final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate,
 			final InputListenerInstallerDelegate inputListenerInstallerDelegate,
 			final ChildViewDelegate childViewDelegate,
 			final ViewElementTypes viewElementTypes) {
 		this.childViewDelegate = childViewDelegate;
 		this.inputListenerInstallerDelegate = inputListenerInstallerDelegate;
 		this.propertySlotDelegate = propertySlotInvocatorDelegate;
-		this.bindingAnnotationScanner = bindingAnnotationScanner;
 		this.viewElementTypes = viewElementTypes;
 	}
 
 	public void bind(	final Object model,
 						final Object view) throws ExecutionException {
+		checkNotNull(model);
+		checkNotNull(view);
 
 		bindViewElement(model,
 						view,
@@ -82,6 +81,9 @@ public class Binder {
 
 	public void updateBinding(	final Object model,
 								final String propertyName) throws ExecutionException {
+		checkNotNull(model);
+		checkNotNull(propertyName);
+
 		updateDataContextBinding(	model,
 									propertyName);
 		updateProperties(	model,
@@ -90,6 +92,8 @@ public class Binder {
 
 	protected void updateDataContextBinding(final Object model,
 											final String propertyName) throws ExecutionException {
+		checkNotNull(model);
+		checkNotNull(propertyName);
 
 		final Map<Object, DataContext> dataContextByView = this.dataContextByViewByParentDataContextValue.get(model);
 		if (dataContextByView == null) {
@@ -121,6 +125,9 @@ public class Binder {
 
 	protected void updateProperties(final Object model,
 									final String propertyName) throws ExecutionException {
+		checkNotNull(model);
+		checkNotNull(propertyName);
+
 		try {
 			final Object propertyValue = findGetter(model.getClass(),
 													propertyName).invoke(model);
@@ -217,6 +224,10 @@ public class Binder {
 	protected void bindObservableCollection(final Object dataContext,
 											final Object view,
 											final ObservableCollection observableCollection) throws ExecutionException {
+		checkNotNull(dataContext);
+		checkNotNull(view);
+		checkNotNull(observableCollection);
+
 		checkArgument(dataContext instanceof EventList);
 
 		final EventList<?> contextCollection = (EventList<?>) dataContext;
@@ -241,6 +252,10 @@ public class Binder {
 	protected void bindInputSignals(final Object dataContext,
 									final Object view,
 									final InputSignal[] inputSignals) {
+		checkNotNull(dataContext);
+		checkNotNull(view);
+		checkNotNull(inputSignals);
+
 		for (final InputSignal inputSignal : inputSignals) {
 			final Class<? extends Input> inputType = inputSignal.inputType();
 			final String inputSlotName = inputSignal.name();
@@ -254,6 +269,9 @@ public class Binder {
 
 	protected void registerBinding(	final Object dataContext,
 									final Object view) {
+		checkNotNull(dataContext);
+		checkNotNull(view);
+
 		final Object oldDataContext = this.dataContextValueByView.put(	view,
 																		dataContext);
 		if (oldDataContext != null) {
@@ -290,6 +308,9 @@ public class Binder {
 	protected void bindPropertySlot(final Object dataContext,
 									final Object view,
 									final PropertySlot propertySlot) throws ExecutionException {
+		checkNotNull(dataContext);
+		checkNotNull(view);
+		checkNotNull(propertySlot);
 
 		try {
 			final String propertyName = propertySlot.propertyName();
@@ -317,6 +338,9 @@ public class Binder {
 	protected void invokePropertySlot(	final Object view,
 										final PropertySlot propertySlot,
 										final Object propertyValue) throws ExecutionException {
+		checkNotNull(view);
+		checkNotNull(propertySlot);
+		checkNotNull(propertyValue);
 
 		try {
 			final String viewMethodName = propertySlot.methodName();
@@ -346,6 +370,10 @@ public class Binder {
 	protected Optional<Object> getDataContextValue(	final Object parentDataContextValue,
 													final Object view,
 													final DataContext dataContext) throws ExecutionException {
+		checkNotNull(parentDataContextValue);
+		checkNotNull(view);
+		checkNotNull(dataContext);
+
 		Map<Object, DataContext> dataContextByView = this.dataContextByViewByParentDataContextValue
 				.get(parentDataContextValue);
 		if (dataContextByView == null) {
@@ -372,6 +400,8 @@ public class Binder {
 
 			final Class<?> viewClass = view.getClass();
 
+			// TODO Cache field lookup so we only get fields we're potentially
+			// interested in.
 			final Field[] childViewElements = viewClass.getDeclaredFields();
 
 			for (final Field childViewElement : childViewElements) {
@@ -424,12 +454,15 @@ public class Binder {
 	}
 
 	protected Iterable<String> toPropertyNames(final String subModelPath) {
+		checkNotNull(subModelPath);
+
 		return Splitter.on('.').trimResults().omitEmptyStrings().split(subModelPath);
 	}
 
 	protected Optional<Object> getDataContextValue(	final Object model,
 													final Iterable<String> propertyNames) throws ExecutionException {
 		checkNotNull(model);
+		checkNotNull(propertyNames);
 
 		Object currentModel = model;
 		try {
@@ -463,6 +496,10 @@ public class Binder {
 
 	protected Method findGetter(final Class<?> modelClass,
 								final String propertyName) throws ExecutionException {
+		checkNotNull(modelClass);
+		checkNotNull(propertyName);
+		// TODO improve performance by caching found Methods.
+
 		Method foundMethod = null;
 		String getterMethodName = toGetterMethodName(propertyName);
 
@@ -498,6 +535,9 @@ public class Binder {
 
 	protected String toGetterMethodName(final String prefix,
 										final String propertyName) {
+		checkNotNull(prefix);
+		checkNotNull(propertyName);
+
 		return prefix + CaseFormat.LOWER_CAMEL.to(	CaseFormat.UPPER_CAMEL,
 													propertyName);
 	}
