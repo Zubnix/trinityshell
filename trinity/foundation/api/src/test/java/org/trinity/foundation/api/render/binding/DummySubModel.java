@@ -7,7 +7,7 @@ import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 
 public class DummySubModel {
 
-	private final DummySubSubModel dummySubSubModel = new DummySubSubModel();
+	private DummySubSubModel dummySubSubModel = new DummySubSubModel();
 
 	private boolean booleanProperty;
 
@@ -28,6 +28,11 @@ public class DummySubModel {
 	@InputSlot
 	public void onKey(final KeyboardInput keyboardInput) {
 
+	}
+
+	@PropertyChanged("dummySubSubModel")
+	public void setDummySubSubModel(final DummySubSubModel dummySubSubModel) {
+		this.dummySubSubModel = dummySubSubModel;
 	}
 
 	public DummySubSubModel getSubSubModel() {
