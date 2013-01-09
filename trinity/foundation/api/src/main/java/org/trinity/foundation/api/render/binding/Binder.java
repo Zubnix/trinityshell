@@ -7,10 +7,13 @@ import static java.lang.String.format;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.api.display.input.Input;
@@ -33,10 +36,15 @@ import ca.odell.glazedlists.event.ListEventListener;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 public class Binder {
+
+	private static final Cache<Class<?>, Cache<String, Method>> getterCache = CacheBuilder.newBuilder().build();
+	private static final Cache<Class<?>, Field[]> childViewCache = CacheBuilder.newBuilder().build();
 
 	private static final String GET_BOOLEAN_PREFIX = "is";
 	private static final String GET_PREFIX = "get";
@@ -391,6 +399,34 @@ public class Binder {
 									propertyNames);
 	}
 
+	protected Field[] findChildViews(final Class<?> modelClass) throws ExecutionException {
+		return childViewCache.get(	modelClass,
+									new Callable<Field[]>() {
+										@Override
+										public Field[] call() throws Exception {
+											final List<Field> possibleChildViews = new ArrayList<Field>();
+											final Field[] childViewElements = modelClass.getDeclaredFields();
+											for (final Field childViewElement : childViewElements) {
+												// filter out types we're
+												// definitely not interested in
+												boolean interestedViewElement = false;
+												for (final Class<?> validViewElementType : Binder.this.viewElementTypes
+														.getViewElementTypes()) {
+													interestedViewElement |= validViewElementType
+															.isAssignableFrom(childViewElement.getDeclaringClass());
+
+													if (interestedViewElement) {
+														possibleChildViews.add(childViewElement);
+														break;
+													}
+												}
+											}
+
+											return possibleChildViews.toArray(new Field[] {});
+										}
+									});
+	}
+
 	protected void bindChildViewElements(	final Object inheritedModel,
 											final Object view) throws ExecutionException {
 		checkNotNull(inheritedModel);
@@ -412,15 +448,6 @@ public class Binder {
 
 				// filter out null values
 				if (childView == null) {
-					continue;
-				}
-
-				// filter out types we're not interested in
-				boolean interestedViewElement = false;
-				for (final Class<?> viewElementType : this.viewElementTypes.getViewElementTypes()) {
-					interestedViewElement |= viewElementType.isAssignableFrom(childView.getClass());
-				}
-				if (!interestedViewElement) {
 					continue;
 				}
 
@@ -495,37 +522,59 @@ public class Binder {
 	}
 
 	protected Method findGetter(final Class<?> modelClass,
-								final String propertyName) throws ExecutionException {
+								final String propertyName) {
 		checkNotNull(modelClass);
 		checkNotNull(propertyName);
-		// TODO improve performance by caching found Methods.
-
-		Method foundMethod = null;
-		String getterMethodName = toGetterMethodName(propertyName);
 
 		try {
-			foundMethod = modelClass.getMethod(getterMethodName);
-		} catch (final NoSuchMethodException e) {
-			// no getter with get found, try with is. If nothing found, let
-			// the exception bubble up.
-			getterMethodName = toBooleanGetterMethodName(propertyName);
-			try {
-				foundMethod = modelClass.getMethod(getterMethodName);
-			} catch (final NoSuchMethodException e1) {
-				throw new NullPointerException(format(	"Property %s could not be found on %s.",
-														propertyName,
-														modelClass.getName()));
-			} catch (final SecurityException e1) {
-				throw new IllegalAccessError(format("Property %s is not accessible on %s. Did you declare it as public?",
-													propertyName,
-													modelClass.getName()));
-			}
-		} catch (final SecurityException e) {
-			throw new IllegalAccessError(format("Property %s is not accessible on %s. Did you declare it as public?",
-												propertyName,
-												modelClass.getName()));
+			return getGetterMethod(	modelClass,
+									propertyName);
+		} catch (final ExecutionException e) {
+			throw new RuntimeException(e);
 		}
-		return foundMethod;
+	}
+
+	protected Method getGetterMethod(	final Class<?> modelClass,
+										final String propertyName) throws ExecutionException {
+		return getterCache.get(	modelClass,
+								new Callable<Cache<String, Method>>() {
+									@Override
+									public Cache<String, Method> call() {
+
+										return CacheBuilder.newBuilder().build();
+									}
+								}).get(	propertyName,
+										new Callable<Method>() {
+											@Override
+											public Method call() {
+												Method foundMethod = null;
+												String getterMethodName = toGetterMethodName(propertyName);
+
+												try {
+													foundMethod = modelClass.getMethod(getterMethodName);
+												} catch (final NoSuchMethodException e) {
+													// no getter with get found,
+													// try with is.
+													getterMethodName = toBooleanGetterMethodName(propertyName);
+													try {
+														foundMethod = modelClass.getMethod(getterMethodName);
+													} catch (final NoSuchMethodException e1) {
+														throw new NullPointerException(format(	"Property %s could not be found on %s.",
+																								propertyName,
+																								modelClass.getName()));
+													} catch (final SecurityException e1) {
+														throw new IllegalAccessError(format("Property %s is not accessible on %s. Did you declare it as public?",
+																							propertyName,
+																							modelClass.getName()));
+													}
+												} catch (final SecurityException e) {
+													throw new IllegalAccessError(format("Property %s is not accessible on %s. Did you declare it as public?",
+																						propertyName,
+																						modelClass.getName()));
+												}
+												return foundMethod;
+											}
+										});
 	}
 
 	protected String toGetterMethodName(final String propertyName) {
