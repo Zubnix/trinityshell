@@ -8,16 +8,41 @@ import static org.mockito.Mockito.when;
 import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
+import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.binding.view.ViewElementTypes;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
-public class DataContextTest {
+public class InputSlotBindingTest {
 
 	@Test
-	public void testDataContextNestedValueUpdate() throws ExecutionException, NoSuchMethodException, SecurityException {
+	public void testInputSlotBinding() throws ExecutionException {
+		final Model model = new Model();
+		final View view = new View();
+
+		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
+		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
+		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
+		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
+		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
+											inputListenerInstallerDelegate,
+											childViewDelegate,
+											viewElementTypes);
+		binder.bind(model,
+					view);
+
+		verify(	inputListenerInstallerDelegate,
+				times(1)).installInputListener(	KeyboardInput.class,
+												view.getKeyInputSubView(),
+												model.getDummySubModel(),
+												"onKey");
+	}
+
+	@Test
+	public void testInputSlotBindingRenewal() throws ExecutionException {
 		final Model model = new Model();
 		final View view = new View();
 
@@ -34,12 +59,6 @@ public class DataContextTest {
 					view);
 		binder.updateBinding(	model,
 								"otherSubModel");
-
-		verify(	propertySlotInvocatorDelegate,
-				times(2)).invoke(	view.getMouseInputSubView(),
-									SubView.class.getMethod("handleStringProperty",
-															String.class),
-									"false");
 		verify(	inputListenerInstallerDelegate,
 				times(2)).installInputListener(	PointerInput.class,
 												view.getMouseInputSubView(),
