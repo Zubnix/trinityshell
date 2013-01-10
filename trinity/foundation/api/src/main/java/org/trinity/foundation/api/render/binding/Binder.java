@@ -251,8 +251,29 @@ public class Binder {
 		contextCollection.addListEventListener(new ListEventListener<Object>() {
 			@Override
 			public void listChanged(final ListEvent<Object> listChanges) {
-				// TODO update observableCollection
+				final List<Object> changeList = listChanges.getSourceList();
 
+				while (listChanges.next()) {
+					final int sourceIndex = listChanges.getIndex();
+					final int changeType = listChanges.getType();
+					final Object childViewDataContext = changeList.get(sourceIndex);
+					final Object changedChildView = Binder.this.viewsByDataContextValue.get(childViewDataContext);
+					switch (changeType) {
+						case ListEvent.DELETE:
+							Binder.this.childViewDelegate.destroyView(changedChildView);
+							break;
+						case ListEvent.INSERT:
+							Binder.this.childViewDelegate.newView(	view,
+																	childViewClass);
+							break;
+						case ListEvent.UPDATE:
+							if (listChanges.isReordering()) {
+								final int[] reorderings = listChanges.getReorderMap();
+								// update child view ordering
+							}
+							break;
+					}
+				}
 			}
 		});
 	}
