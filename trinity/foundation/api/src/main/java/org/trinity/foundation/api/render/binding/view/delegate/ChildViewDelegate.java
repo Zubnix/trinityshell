@@ -5,4 +5,8 @@ public interface ChildViewDelegate {
 					Class<T> childView);
 
 	void destroyView(Object childView);
+
+	void updateChildViewPosition(	Object parentView,
+									Object childView,
+									int newPosition);
 }

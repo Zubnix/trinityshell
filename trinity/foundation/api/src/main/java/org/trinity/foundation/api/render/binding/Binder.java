@@ -261,6 +261,7 @@ public class Binder {
 					switch (changeType) {
 						case ListEvent.DELETE:
 							Binder.this.childViewDelegate.destroyView(changedChildView);
+
 							break;
 						case ListEvent.INSERT:
 							Binder.this.childViewDelegate.newView(	view,
@@ -269,7 +270,11 @@ public class Binder {
 						case ListEvent.UPDATE:
 							if (listChanges.isReordering()) {
 								final int[] reorderings = listChanges.getReorderMap();
-								// update child view ordering
+								for (final int newPosition : reorderings) {
+									Binder.this.childViewDelegate.updateChildViewPosition(	view,
+																							changedChildView,
+																							newPosition);
+								}
 							}
 							break;
 					}
