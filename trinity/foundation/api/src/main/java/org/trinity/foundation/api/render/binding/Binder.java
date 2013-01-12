@@ -36,6 +36,7 @@ import ca.odell.glazedlists.event.ListEventListener;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
+import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Sets;
@@ -248,42 +249,105 @@ public class Binder {
 			final EventList<?> contextCollection = (EventList<?>) collection;
 			final Class<?> childViewClass = observableCollection.view();
 
-			for (final Object childViewDataContext : contextCollection) {
+			for (int i = 0; i < contextCollection.size(); i++) {
+				final Object childViewDataContext = contextCollection.get(i);
 				final Object childView = this.childViewDelegate.newView(view,
-																		childViewClass);
+																		childViewClass,
+																		i);
 				bind(	childViewDataContext,
 						childView);
 			}
 
 			contextCollection.addListEventListener(new ListEventListener<Object>() {
+
+				// We use a shadow list because glazedlists does not give us the
+				// deleted object...
+				private final List<Object> shadowChildDataContextList = new ArrayList<Object>(contextCollection);
+
 				@Override
 				public void listChanged(final ListEvent<Object> listChanges) {
-					final List<Object> changeList = listChanges.getSourceList();
 
 					while (listChanges.next()) {
 						final int sourceIndex = listChanges.getIndex();
 						final int changeType = listChanges.getType();
-						final Object childViewDataContext = changeList.get(sourceIndex);
-						final Object changedChildView = Binder.this.viewsByDataContextValue.get(childViewDataContext);
+						final List<Object> changeList = listChanges.getSourceList();
+
 						switch (changeType) {
-							case ListEvent.DELETE:
-								Binder.this.childViewDelegate.destroyView(changedChildView);
+							case ListEvent.DELETE: {
+								final Object removedObject = this.shadowChildDataContextList.remove(sourceIndex);
+								checkNotNull(removedObject);
+
+								final Set<Object> removedChildViews = Binder.this.viewsByDataContextValue
+										.get(removedObject);
+								for (final Object removedChildView : removedChildViews) {
+									Binder.this.childViewDelegate.destroyView(	view,
+																				removedChildView,
+																				sourceIndex);
+								}
 
 								break;
-							case ListEvent.INSERT:
-								Binder.this.childViewDelegate.newView(	view,
-																		childViewClass);
+							}
+							case ListEvent.INSERT: {
+								final Object childViewDataContext = changeList.get(sourceIndex);
+								checkNotNull(childViewDataContext);
+
+								this.shadowChildDataContextList.add(sourceIndex,
+																	childViewDataContext);
+
+								final Object newChildView = Binder.this.childViewDelegate.newView(	view,
+																									childViewClass,
+																									sourceIndex);
+								try {
+									bind(	childViewDataContext,
+											newChildView);
+								} catch (final ExecutionException e) {
+									Throwables.propagate(e);
+								}
+
 								break;
-							case ListEvent.UPDATE:
+							}
+							case ListEvent.UPDATE: {
 								if (listChanges.isReordering()) {
 									final int[] reorderings = listChanges.getReorderMap();
-									for (final int newPosition : reorderings) {
-										Binder.this.childViewDelegate.updateChildViewPosition(	view,
-																								changedChildView,
-																								newPosition);
+									for (int i = 0; i < reorderings.length; i++) {
+										final int newPosition = reorderings[i];
+										final Object childViewDataContext = changeList.get(sourceIndex);
+
+										this.shadowChildDataContextList.clear();
+										this.shadowChildDataContextList.add(newPosition,
+																			childViewDataContext);
+
+										final Set<Object> changedChildViews = Binder.this.viewsByDataContextValue
+												.get(childViewDataContext);
+										for (final Object changedChildView : changedChildViews) {
+											Binder.this.childViewDelegate.updateChildViewPosition(	view,
+																									changedChildView,
+																									i,
+																									newPosition);
+										}
+									}
+								} else {
+									final Object newChildViewDataContext = changeList.get(sourceIndex);
+									final Object oldChildViewDataContext = this.shadowChildDataContextList
+											.set(	sourceIndex,
+													newChildViewDataContext);
+									checkNotNull(oldChildViewDataContext);
+									checkNotNull(newChildViewDataContext);
+
+									final Object childView = Binder.this.viewsByDataContextValue
+											.get(oldChildViewDataContext);
+									checkNotNull(childView);
+
+									try {
+										bind(	newChildViewDataContext,
+												childView);
+									} catch (final ExecutionException e) {
+										Throwables.propagate(e);
 									}
 								}
+
 								break;
+							}
 						}
 					}
 				}

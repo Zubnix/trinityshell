@@ -26,7 +26,8 @@ public class ObservableCollectionBindingTest {
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		when(childViewDelegate.newView(	view,
-										CollectionElementView.class)).thenReturn(new CollectionElementView());
+										CollectionElementView.class,
+										0)).thenReturn(new CollectionElementView());
 		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
 											inputListenerInstallerDelegate,
 											childViewDelegate,
@@ -36,7 +37,8 @@ public class ObservableCollectionBindingTest {
 
 		verify(	childViewDelegate,
 				times(1)).newView(	view,
-									CollectionElementView.class);
+									CollectionElementView.class,
+									0);
 	}
 
 	@Test
@@ -50,7 +52,11 @@ public class ObservableCollectionBindingTest {
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		when(childViewDelegate.newView(	view,
-										CollectionElementView.class)).thenReturn(new CollectionElementView());
+										CollectionElementView.class,
+										0)).thenReturn(new CollectionElementView());
+		when(childViewDelegate.newView(	view,
+										CollectionElementView.class,
+										1)).thenReturn(new CollectionElementView());
 		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
 											inputListenerInstallerDelegate,
 											childViewDelegate,
@@ -63,8 +69,14 @@ public class ObservableCollectionBindingTest {
 		model.getDummySubModels().add(childDummySubModel);
 
 		verify(	childViewDelegate,
-				times(2)).newView(	view,
-									CollectionElementView.class);
+				times(1)).newView(	view,
+									CollectionElementView.class,
+									0);
+		verify(	childViewDelegate,
+				times(1)).newView(	view,
+									CollectionElementView.class,
+									1);
+
 	}
 
 	@Test
@@ -77,14 +89,22 @@ public class ObservableCollectionBindingTest {
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		final CollectionElementView collectionElementView = new CollectionElementView();
 		when(childViewDelegate.newView(	view,
-										CollectionElementView.class)).thenReturn(new CollectionElementView());
+										CollectionElementView.class,
+										0)).thenReturn(collectionElementView);
 		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
 											inputListenerInstallerDelegate,
 											childViewDelegate,
 											viewElementTypes);
 		binder.bind(model,
 					view);
+
+		model.getDummySubModels().remove(0);
+		verify(	childViewDelegate,
+				times(1)).destroyView(	view,
+										collectionElementView,
+										0);
 	}
 
 	@Test
@@ -98,12 +118,27 @@ public class ObservableCollectionBindingTest {
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		when(childViewDelegate.newView(	view,
-										CollectionElementView.class)).thenReturn(new CollectionElementView());
+										CollectionElementView.class,
+										0)).thenReturn(new CollectionElementView());
+		when(childViewDelegate.newView(	view,
+										CollectionElementView.class,
+										1)).thenReturn(new CollectionElementView());
+		when(childViewDelegate.newView(	view,
+										CollectionElementView.class,
+										2)).thenReturn(new CollectionElementView());
 		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
 											inputListenerInstallerDelegate,
 											childViewDelegate,
 											viewElementTypes);
 		binder.bind(model,
 					view);
+
+		final DummySubModel childDummySubModel0 = new DummySubModel();
+		final DummySubModel childDummySubModel1 = new DummySubModel();
+
+		model.getDummySubModels().add(childDummySubModel0);
+		model.getDummySubModels().set(	1,
+										childDummySubModel1);
+
 	}
 }
