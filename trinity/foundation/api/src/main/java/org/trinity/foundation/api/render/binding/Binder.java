@@ -236,51 +236,68 @@ public class Binder {
 		checkNotNull(view);
 		checkNotNull(observableCollection);
 
-		checkArgument(dataContext instanceof EventList);
+		final String collectionProperty = observableCollection.value();
+		final Method collectionGetter = findGetter(	dataContext.getClass(),
+													collectionProperty);
+		try {
+			final Object collection = collectionGetter.invoke(dataContext);
+			checkArgument(	collection instanceof EventList,
+							format(	"Observable collection must be bound to a property of type %s",
+									EventList.class.getName()));
 
-		final EventList<?> contextCollection = (EventList<?>) dataContext;
-		final Class<?> childViewClass = observableCollection.value();
+			final EventList<?> contextCollection = (EventList<?>) collection;
+			final Class<?> childViewClass = observableCollection.view();
 
-		for (final Object childViewDataContext : contextCollection) {
-			final Object childView = this.childViewDelegate.newView(view,
-																	childViewClass);
-			bind(	childViewDataContext,
-					childView);
-		}
+			for (final Object childViewDataContext : contextCollection) {
+				final Object childView = this.childViewDelegate.newView(view,
+																		childViewClass);
+				bind(	childViewDataContext,
+						childView);
+			}
 
-		contextCollection.addListEventListener(new ListEventListener<Object>() {
-			@Override
-			public void listChanged(final ListEvent<Object> listChanges) {
-				final List<Object> changeList = listChanges.getSourceList();
+			contextCollection.addListEventListener(new ListEventListener<Object>() {
+				@Override
+				public void listChanged(final ListEvent<Object> listChanges) {
+					final List<Object> changeList = listChanges.getSourceList();
 
-				while (listChanges.next()) {
-					final int sourceIndex = listChanges.getIndex();
-					final int changeType = listChanges.getType();
-					final Object childViewDataContext = changeList.get(sourceIndex);
-					final Object changedChildView = Binder.this.viewsByDataContextValue.get(childViewDataContext);
-					switch (changeType) {
-						case ListEvent.DELETE:
-							Binder.this.childViewDelegate.destroyView(changedChildView);
+					while (listChanges.next()) {
+						final int sourceIndex = listChanges.getIndex();
+						final int changeType = listChanges.getType();
+						final Object childViewDataContext = changeList.get(sourceIndex);
+						final Object changedChildView = Binder.this.viewsByDataContextValue.get(childViewDataContext);
+						switch (changeType) {
+							case ListEvent.DELETE:
+								Binder.this.childViewDelegate.destroyView(changedChildView);
 
-							break;
-						case ListEvent.INSERT:
-							Binder.this.childViewDelegate.newView(	view,
-																	childViewClass);
-							break;
-						case ListEvent.UPDATE:
-							if (listChanges.isReordering()) {
-								final int[] reorderings = listChanges.getReorderMap();
-								for (final int newPosition : reorderings) {
-									Binder.this.childViewDelegate.updateChildViewPosition(	view,
-																							changedChildView,
-																							newPosition);
+								break;
+							case ListEvent.INSERT:
+								Binder.this.childViewDelegate.newView(	view,
+																		childViewClass);
+								break;
+							case ListEvent.UPDATE:
+								if (listChanges.isReordering()) {
+									final int[] reorderings = listChanges.getReorderMap();
+									for (final int newPosition : reorderings) {
+										Binder.this.childViewDelegate.updateChildViewPosition(	view,
+																								changedChildView,
+																								newPosition);
+									}
 								}
-							}
-							break;
+								break;
+						}
 					}
 				}
-			}
-		});
+			});
+		} catch (final IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	protected void bindInputSignals(final Object dataContext,

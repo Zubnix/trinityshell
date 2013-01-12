@@ -11,6 +11,10 @@ public class Model {
 
 	private final EventList<DummySubModel> dummySubModels = new BasicEventList<DummySubModel>();
 
+	public Model() {
+		this.dummySubModels.add(new DummySubModel());
+	}
+
 	public DummySubModel getDummySubModel() {
 		return this.dummySubModel;
 	}

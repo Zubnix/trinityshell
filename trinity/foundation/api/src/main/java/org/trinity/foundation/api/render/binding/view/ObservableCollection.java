@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 @Target({ ElementType.FIELD, ElementType.TYPE })
 public @interface ObservableCollection {
 
+	String value();
+
 	// TODO somehow pass a Guice Provider to instantiate views?
-	Class<?> value();
+	Class<?> view();
 }

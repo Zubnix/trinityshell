@@ -1,8 +1,5 @@
 package org.trinity.foundation.api.render.binding;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.render.binding.view.DataContext;
 import org.trinity.foundation.api.render.binding.view.InputSignal;
@@ -11,6 +8,7 @@ import org.trinity.foundation.api.render.binding.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 
+@ObservableCollection(value = "dummySubModels", view = CollectionElementView.class)
 public class View {
 
 	@DataContext("otherSubModel.subSubModel")
@@ -19,10 +17,6 @@ public class View {
 
 	@InputSignals(@InputSignal(name = "onKey", inputType = KeyboardInput.class))
 	private SubView keyInputSubView = new SubView();
-
-	@DataContext("dummySubModels")
-	@ObservableCollection(SubView.class)
-	private final List<Object> subViews = new ArrayList<Object>();
 
 	public SubView getMouseInputSubView() {
 		return this.mouseInputSubView;
@@ -38,9 +32,5 @@ public class View {
 
 	public void setKeyInputSubView(final SubView keyInputSubView) {
 		this.keyInputSubView = keyInputSubView;
-	}
-
-	public List<Object> getSubViews() {
-		return this.subViews;
 	}
 }
