@@ -51,12 +51,12 @@ public class ObservableCollectionBindingTest {
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
-		when(childViewDelegate.newView(	view,
-										CollectionElementView.class,
-										0)).thenReturn(new CollectionElementView());
-		when(childViewDelegate.newView(	view,
-										CollectionElementView.class,
-										1)).thenReturn(new CollectionElementView());
+		when(childViewDelegate.<CollectionElementView> newView(	view,
+																CollectionElementView.class,
+																0)).thenReturn(new CollectionElementView());
+		when(childViewDelegate.<CollectionElementView> newView(	view,
+																CollectionElementView.class,
+																1)).thenReturn(new CollectionElementView());
 		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
 											inputListenerInstallerDelegate,
 											childViewDelegate,
@@ -69,13 +69,13 @@ public class ObservableCollectionBindingTest {
 		model.getDummySubModels().add(childDummySubModel);
 
 		verify(	childViewDelegate,
-				times(1)).newView(	view,
-									CollectionElementView.class,
-									0);
+				times(1)).<CollectionElementView> newView(	view,
+															CollectionElementView.class,
+															0);
 		verify(	childViewDelegate,
-				times(1)).newView(	view,
-									CollectionElementView.class,
-									1);
+				times(1)).<CollectionElementView> newView(	view,
+															CollectionElementView.class,
+															1);
 
 	}
 
@@ -90,9 +90,9 @@ public class ObservableCollectionBindingTest {
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final CollectionElementView collectionElementView = new CollectionElementView();
-		when(childViewDelegate.newView(	view,
-										CollectionElementView.class,
-										0)).thenReturn(collectionElementView);
+		when(childViewDelegate.<CollectionElementView> newView(	view,
+																CollectionElementView.class,
+																0)).thenReturn(collectionElementView);
 		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
 											inputListenerInstallerDelegate,
 											childViewDelegate,
@@ -117,15 +117,15 @@ public class ObservableCollectionBindingTest {
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
-		when(childViewDelegate.newView(	view,
-										CollectionElementView.class,
-										0)).thenReturn(new CollectionElementView());
-		when(childViewDelegate.newView(	view,
-										CollectionElementView.class,
-										1)).thenReturn(new CollectionElementView());
-		when(childViewDelegate.newView(	view,
-										CollectionElementView.class,
-										2)).thenReturn(new CollectionElementView());
+		when(childViewDelegate.<CollectionElementView> newView(	view,
+																CollectionElementView.class,
+																0)).thenReturn(new CollectionElementView());
+		when(childViewDelegate.<CollectionElementView> newView(	view,
+																CollectionElementView.class,
+																1)).thenReturn(new CollectionElementView());
+		when(childViewDelegate.<CollectionElementView> newView(	view,
+																CollectionElementView.class,
+																2)).thenReturn(new CollectionElementView());
 		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
 											inputListenerInstallerDelegate,
 											childViewDelegate,
