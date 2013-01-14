@@ -243,8 +243,11 @@ public class Binder {
 		try {
 			final Object collection = collectionGetter.invoke(dataContext);
 			checkArgument(	collection instanceof EventList,
-							format(	"Observable collection must be bound to a property of type %s",
-									EventList.class.getName()));
+							format(	"Observable collection must be bound to a property of type %s @ dataContext: %s, view: %s, observable collection: %s",
+									EventList.class.getName(),
+									dataContext,
+									view,
+									observableCollection));
 
 			final EventList<?> contextCollection = (EventList<?>) collection;
 			final Class<?> childViewClass = observableCollection.view();
@@ -254,6 +257,8 @@ public class Binder {
 				final Object childView = this.childViewDelegate.newView(view,
 																		childViewClass,
 																		i);
+				checkNotNull(childView);
+
 				bind(	childViewDataContext,
 						childView);
 			}
@@ -266,101 +271,106 @@ public class Binder {
 
 				@Override
 				public void listChanged(final ListEvent<Object> listChanges) {
-
-					while (listChanges.next()) {
-						final int sourceIndex = listChanges.getIndex();
-						final int changeType = listChanges.getType();
-						final List<Object> changeList = listChanges.getSourceList();
-
-						switch (changeType) {
-							case ListEvent.DELETE: {
-								final Object removedObject = this.shadowChildDataContextList.remove(sourceIndex);
-								checkNotNull(removedObject);
-
-								final Set<Object> removedChildViews = Binder.this.viewsByDataContextValue
-										.get(removedObject);
-								for (final Object removedChildView : removedChildViews) {
-									Binder.this.childViewDelegate.destroyView(	view,
-																				removedChildView,
-																				sourceIndex);
-								}
-
-								break;
-							}
-							case ListEvent.INSERT: {
-								final Object childViewDataContext = changeList.get(sourceIndex);
-								checkNotNull(childViewDataContext);
-
-								this.shadowChildDataContextList.add(sourceIndex,
-																	childViewDataContext);
-
-								final Object newChildView = Binder.this.childViewDelegate.newView(	view,
-																									childViewClass,
-																									sourceIndex);
-								try {
-									bind(	childViewDataContext,
-											newChildView);
-								} catch (final ExecutionException e) {
-									Throwables.propagate(e);
-								}
-
-								break;
-							}
-							case ListEvent.UPDATE: {
-								if (listChanges.isReordering()) {
-									final int[] reorderings = listChanges.getReorderMap();
-									for (int i = 0; i < reorderings.length; i++) {
-										final int newPosition = reorderings[i];
-										final Object childViewDataContext = changeList.get(sourceIndex);
-
-										this.shadowChildDataContextList.clear();
-										this.shadowChildDataContextList.add(newPosition,
-																			childViewDataContext);
-
-										final Set<Object> changedChildViews = Binder.this.viewsByDataContextValue
-												.get(childViewDataContext);
-										for (final Object changedChildView : changedChildViews) {
-											Binder.this.childViewDelegate.updateChildViewPosition(	view,
-																									changedChildView,
-																									i,
-																									newPosition);
-										}
-									}
-								} else {
-									final Object newChildViewDataContext = changeList.get(sourceIndex);
-									final Object oldChildViewDataContext = this.shadowChildDataContextList
-											.set(	sourceIndex,
-													newChildViewDataContext);
-									checkNotNull(oldChildViewDataContext);
-									checkNotNull(newChildViewDataContext);
-
-									final Object childView = Binder.this.viewsByDataContextValue
-											.get(oldChildViewDataContext);
-									checkNotNull(childView);
-
-									try {
-										bind(	newChildViewDataContext,
-												childView);
-									} catch (final ExecutionException e) {
-										Throwables.propagate(e);
-									}
-								}
-
-								break;
-							}
-						}
-					}
+					handleListChanged(	view,
+										childViewClass,
+										this.shadowChildDataContextList,
+										listChanges);
 				}
 			});
 		} catch (final IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ExecutionException(e);
 		} catch (final IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ExecutionException(e);
 		} catch (final InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ExecutionException(e);
+		}
+	}
+
+	protected void handleListChanged(	final Object view,
+										final Class<?> childViewClass,
+										final List<Object> shadowChildDataContextList,
+										final ListEvent<Object> listChanges) {
+		while (listChanges.next()) {
+			final int sourceIndex = listChanges.getIndex();
+			final int changeType = listChanges.getType();
+			final List<Object> changeList = listChanges.getSourceList();
+
+			switch (changeType) {
+				case ListEvent.DELETE: {
+					final Object removedObject = shadowChildDataContextList.remove(sourceIndex);
+					checkNotNull(removedObject);
+
+					final Set<Object> removedChildViews = Binder.this.viewsByDataContextValue.get(removedObject);
+					for (final Object removedChildView : removedChildViews) {
+						Binder.this.childViewDelegate.destroyView(	view,
+																	removedChildView,
+																	sourceIndex);
+					}
+
+					break;
+				}
+				case ListEvent.INSERT: {
+					final Object childViewDataContext = changeList.get(sourceIndex);
+					checkNotNull(childViewDataContext);
+
+					shadowChildDataContextList.add(	sourceIndex,
+													childViewDataContext);
+
+					final Object childView = Binder.this.childViewDelegate.newView(	view,
+																					childViewClass,
+																					sourceIndex);
+					checkNotNull(childView);
+					try {
+						bind(	childViewDataContext,
+								childView);
+					} catch (final ExecutionException e) {
+						Throwables.propagate(e);
+					}
+
+					break;
+				}
+				case ListEvent.UPDATE: {
+					if (listChanges.isReordering()) {
+						final int[] reorderings = listChanges.getReorderMap();
+						for (int i = 0; i < reorderings.length; i++) {
+							final int newPosition = reorderings[i];
+							final Object childViewDataContext = changeList.get(sourceIndex);
+
+							shadowChildDataContextList.clear();
+							shadowChildDataContextList.add(	newPosition,
+															childViewDataContext);
+
+							final Set<Object> changedChildViews = Binder.this.viewsByDataContextValue
+									.get(childViewDataContext);
+							for (final Object changedChildView : changedChildViews) {
+								Binder.this.childViewDelegate.updateChildViewPosition(	view,
+																						changedChildView,
+																						i,
+																						newPosition);
+							}
+						}
+					} else {
+						final Object newChildViewDataContext = changeList.get(sourceIndex);
+						final Object oldChildViewDataContext = shadowChildDataContextList
+								.set(	sourceIndex,
+										newChildViewDataContext);
+						checkNotNull(oldChildViewDataContext);
+						checkNotNull(newChildViewDataContext);
+
+						final Object childView = Binder.this.viewsByDataContextValue.get(oldChildViewDataContext);
+						checkNotNull(childView);
+
+						try {
+							bind(	newChildViewDataContext,
+									childView);
+						} catch (final ExecutionException e) {
+							Throwables.propagate(e);
+						}
+					}
+
+					break;
+				}
+			}
 		}
 	}
 
