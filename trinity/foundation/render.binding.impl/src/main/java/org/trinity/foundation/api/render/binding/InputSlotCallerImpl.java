@@ -34,7 +34,7 @@ public class InputSlotCallerImpl implements InputSlotCaller {
 	}
 
 	@Override
-	public void notifyDataContextInputSlot(	final Object model,
+	public void callInputSlot(	final Object model,
 											final BoundInputEvent boundInputEvent) {
 		try {
 			final Input input = boundInputEvent.getInput();
