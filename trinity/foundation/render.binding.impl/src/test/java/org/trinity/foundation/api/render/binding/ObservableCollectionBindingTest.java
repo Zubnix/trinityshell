@@ -28,10 +28,10 @@ public class ObservableCollectionBindingTest {
 		when(childViewDelegate.newView(	view,
 										CollectionElementView.class,
 										0)).thenReturn(new CollectionElementView());
-		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
-											inputListenerInstallerDelegate,
-											childViewDelegate,
-											viewElementTypes);
+		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
+												inputListenerInstallerDelegate,
+												childViewDelegate,
+												viewElementTypes);
 		binder.bind(model,
 					view);
 
@@ -57,10 +57,10 @@ public class ObservableCollectionBindingTest {
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
 																1)).thenReturn(new CollectionElementView());
-		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
-											inputListenerInstallerDelegate,
-											childViewDelegate,
-											viewElementTypes);
+		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
+												inputListenerInstallerDelegate,
+												childViewDelegate,
+												viewElementTypes);
 		binder.bind(model,
 					view);
 
@@ -93,10 +93,10 @@ public class ObservableCollectionBindingTest {
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
 																0)).thenReturn(collectionElementView);
-		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
-											inputListenerInstallerDelegate,
-											childViewDelegate,
-											viewElementTypes);
+		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
+												inputListenerInstallerDelegate,
+												childViewDelegate,
+												viewElementTypes);
 		binder.bind(model,
 					view);
 
@@ -126,10 +126,10 @@ public class ObservableCollectionBindingTest {
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
 																2)).thenReturn(new CollectionElementView());
-		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
-											inputListenerInstallerDelegate,
-											childViewDelegate,
-											viewElementTypes);
+		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
+												inputListenerInstallerDelegate,
+												childViewDelegate,
+												viewElementTypes);
 		binder.bind(model,
 					view);
 

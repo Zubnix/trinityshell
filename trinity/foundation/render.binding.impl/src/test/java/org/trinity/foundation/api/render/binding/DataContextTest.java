@@ -29,10 +29,10 @@ public class DataContextTest {
 		when(childViewDelegate.newView(	view,
 										CollectionElementView.class,
 										0)).thenReturn(new CollectionElementView());
-		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
-											inputListenerInstallerDelegate,
-											childViewDelegate,
-											viewElementTypes);
+		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
+												inputListenerInstallerDelegate,
+												childViewDelegate,
+												viewElementTypes);
 		binder.bind(model,
 					view);
 		binder.updateBinding(	model,
