@@ -25,6 +25,9 @@ public class PropertyBindingTest {
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		when(childViewDelegate.newView(	view,
+										CollectionElementView.class,
+										0)).thenReturn(new CollectionElementView());
 		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
 											inputListenerInstallerDelegate,
 											childViewDelegate,
@@ -60,6 +63,9 @@ public class PropertyBindingTest {
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		when(childViewDelegate.newView(	view,
+										CollectionElementView.class,
+										0)).thenReturn(new CollectionElementView());
 		final Binder binder = new Binder(	propertySlotInvocatorDelegate,
 											inputListenerInstallerDelegate,
 											childViewDelegate,
