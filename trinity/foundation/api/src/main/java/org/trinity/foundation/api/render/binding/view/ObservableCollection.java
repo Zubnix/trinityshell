@@ -16,12 +16,33 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
+
+/***************************************
+ * Binds every child view of the marked view to the respective element of the
+ * referenced collection property. Correctly handling these child views is
+ * delegated to the {@link ChildViewDelegate}.
+ * 
+ *************************************** 
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.TYPE })
 public @interface ObservableCollection {
 
+	/***************************************
+	 * The referenced collection property. Valid collection types are
+	 * implementation dependent.
+	 * 
+	 * @return a property name.
+	 *************************************** 
+	 */
 	String value();
 
-	// TODO somehow pass a Guice Provider to instantiate views?
+	/***************************************
+	 * The child view class to use when instantiating a new child view.
+	 * 
+	 * @return a view type.
+	 *************************************** 
+	 */
 	Class<?> view();
 }

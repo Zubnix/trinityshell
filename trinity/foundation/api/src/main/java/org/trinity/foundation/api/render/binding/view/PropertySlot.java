@@ -16,20 +16,49 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /***************************************
- * Marks a view method as the handler method for a changed property. A property
- * is linked to a slot by matching it's {@link ViewProperty#value()} to one the
- * {@link #value()}s of the slot.
+ * Marks a view method as the handler method for a changed model property. A
+ * property is linked to a slot by matching the model property name to
+ * {@link #propertyName()}.
+ * <p>
+ * A {@code PropertySlot} is used as an argument of {@link PropertySlots}.
  * 
  *************************************** 
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
 public @interface PropertySlot {
+	/***************************************
+	 * The model property name.
+	 * 
+	 * @return a model property name.
+	 *************************************** 
+	 */
 	String propertyName();
 
+	/***************************************
+	 * The name of the view method that should be invoked when the model
+	 * property changes.
+	 * 
+	 * @return a view method name.
+	 *************************************** 
+	 */
 	String methodName();
 
+	/***************************************
+	 * The argument types of the view method that should be invoked when the
+	 * model property changes.
+	 * 
+	 * @return the argument types.
+	 *************************************** 
+	 */
 	Class<?>[] argumentTypes();
 
+	/***************************************
+	 * An optional {@link PropertyAdapter} that will be used to transform the
+	 * model property to match the arguments of the method view.
+	 * 
+	 * @return a {@link PropertyAdapter}.
+	 *************************************** 
+	 */
 	Class<? extends PropertyAdapter<?>> adapter() default DefaultPropertyAdapter.class;
 }

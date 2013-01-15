@@ -16,8 +16,22 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/***************************************
+ * Bind the annotated child view element to a property. The property is resolved
+ * relative to the parent view's model. The property path is constructed by 1 or
+ * more properties, seperated by a dot eg. "foo.bar.baz", which would translate
+ * to getFoo().getBar().getBaz().
+ *************************************** 
+ */
 @Target({ ElementType.FIELD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DataContext {
+	/***************************************
+	 * A property path consisting of 1 or more property names seperated by a dot
+	 * eg. "foo.bar.baz".
+	 * 
+	 * @return A property path
+	 *************************************** 
+	 */
 	String value();
 }

@@ -11,6 +11,27 @@
  */
 package org.trinity.foundation.api.render.binding.view;
 
+import java.lang.reflect.Method;
+
+/***************************************
+ * Transforms a model property value to one or more other values so it can be
+ * used to invoke a view method. To transform to multiple different types of
+ * objects, simply return an array of objects containing the values. The value
+ * returned by {@link #adapt(Object)} will be used directly as the var args
+ * argument of {@link Method#invoke(Object, Object...)}
+ * 
+ * @see PropertySlot
+ *************************************** 
+ */
 public interface PropertyAdapter<T> {
+
+	/***************************************
+	 * Transforms a model property value to one or more other values.
+	 * 
+	 * @param property
+	 *            A model property
+	 * @return the transformatin.
+	 *************************************** 
+	 */
 	Object adapt(T property);
 }

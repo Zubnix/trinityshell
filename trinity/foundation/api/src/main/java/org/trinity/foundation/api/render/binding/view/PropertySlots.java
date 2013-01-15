@@ -16,10 +16,20 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/***************************************
+ * Groups all {@link PropertySlot}s of a view.
+ * 
+ *************************************** 
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.FIELD })
 public @interface PropertySlots {
 
+	/***************************************
+	 * Available {@link PropertySlot}s on annotated view.
+	 * 
+	 * @return {@link PropertySlot}s
+	 *************************************** 
+	 */
 	PropertySlot[] value();
-
 }

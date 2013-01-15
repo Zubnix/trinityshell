@@ -11,9 +11,31 @@
  */
 package org.trinity.foundation.api.render.binding.view;
 
+import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.api.display.event.InputNotifyEvent;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 
+/****************************************
+ * Creator of {@link BoundKeyInputEventFactory}s.
+ * 
+ *************************************** 
+ */
 public interface BoundKeyInputEventFactory {
+
+	/***************************************
+	 * Create a new {@code BoundKeyInputEvent}.
+	 * 
+	 * @param inputTarget
+	 *            The event target as defined in
+	 *            {@link DisplayEvent#getDisplayEventTarget()}
+	 * @param pointerInput
+	 *            The input as defined in {@link InputNotifyEvent#getInput()}
+	 * @param inputSlotName
+	 *            The input slot name as defined in
+	 *            {@link BoundInputEvent#getInputSlotName()}
+	 * @return a new {@link BoundKeyInputEvent}.
+	 *************************************** 
+	 */
 	BoundKeyInputEvent createBoundKeyInputEvent(final Object inputTarget,
 												final KeyboardInput input,
 												final String inputSlotName);

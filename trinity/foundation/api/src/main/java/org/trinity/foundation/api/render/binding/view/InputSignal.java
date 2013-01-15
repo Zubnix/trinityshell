@@ -16,12 +16,39 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.trinity.foundation.api.display.input.Input;
+import org.trinity.foundation.api.render.binding.model.InputSlot;
+import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
+import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 
+/***************************************
+ * Mark a view as a generator of {@link BoundInputEvent}s. It's up to the
+ * {@link InputListenerInstallerDelegate} to make sure the correct input
+ * listeners are installed and the correct {@code BoundInputEvent}s are received
+ * by the model of the marked view.
+ * <p>
+ * An {@code InputSignal} is used as an argument of {@link InputSignals}.
+ * 
+ * @see InputSlotCaller
+ *************************************** 
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
 public @interface InputSignal {
+	/***************************************
+	 * The {@link Input} type to listen for.
+	 * 
+	 * @return An {@link Input} (sub)class.
+	 *************************************** 
+	 */
 	Class<? extends Input> inputType();
 
+	/***************************************
+	 * The name of the {@link InputSlot} that should be invoked. The name of the
+	 * {@code InputSlot} is the name of the method that it annotates.
+	 * 
+	 * @return a method name.
+	 *************************************** 
+	 */
 	String name();
 
 }

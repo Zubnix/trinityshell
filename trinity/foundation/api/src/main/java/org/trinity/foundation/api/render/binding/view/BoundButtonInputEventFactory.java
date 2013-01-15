@@ -32,7 +32,7 @@ public interface BoundButtonInputEventFactory {
 	 * @param inputSlotName
 	 *            The input slot name as defined in
 	 *            {@link BoundInputEvent#getInputSlotName()}
-	 * @return a new {@code BoundButtonInputEvent}.
+	 * @return a new {@link BoundButtonInputEvent}.
 	 *************************************** 
 	 */
 	BoundButtonInputEvent createBoundButtonInputEvent(	final Object inputTarget,

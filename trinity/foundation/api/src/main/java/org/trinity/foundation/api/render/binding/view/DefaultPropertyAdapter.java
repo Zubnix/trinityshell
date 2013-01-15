@@ -11,11 +11,17 @@
  */
 package org.trinity.foundation.api.render.binding.view;
 
+/***************************************
+ * A default implementation of a {@link PropertyAdapter}. It simply returns the
+ * property object without modification. Used as the default value in
+ * {@link PropertySlot#adapter()}.
+ * 
+ *************************************** 
+ */
 public class DefaultPropertyAdapter implements PropertyAdapter<Object> {
 
 	@Override
 	public Object adapt(final Object property) {
 		return property;
 	}
-
 }

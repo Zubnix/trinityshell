@@ -23,7 +23,7 @@ public class InputNotifyEvent<I extends Input> extends DisplayEvent {
 	private final I input;
 
 	/***************************************
-	 * Create a new <code>InputNotifyEvent</code> that originated from the given
+	 * Create a new <code>InputNotifyEvent</code> that targets the given
 	 * {@link DisplayEventTarget}. The input detail is described by the given
 	 * {@link Input} argument.
 	 * 
@@ -38,6 +38,12 @@ public class InputNotifyEvent<I extends Input> extends DisplayEvent {
 		this.input = input;
 	}
 
+	/***************************************
+	 * The object describing the user input.
+	 * 
+	 * @return {@link Input}
+	 *************************************** 
+	 */
 	public I getInput() {
 		return this.input;
 	}

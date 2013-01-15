@@ -11,6 +11,12 @@
  */
 package org.trinity.foundation.api.render.binding.view;
 
+/***************************************
+ * Groups all types of views that should be inspected for annotations. This is
+ * to reduce the scanning for view annotations.
+ * 
+ *************************************** 
+ */
 public interface ViewElementTypes {
 	Class<?>[] getViewElementTypes();
 }
