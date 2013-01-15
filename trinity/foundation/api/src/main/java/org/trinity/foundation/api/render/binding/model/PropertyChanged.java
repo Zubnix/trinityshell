@@ -17,7 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /****************************************
- * Marks a method as a manipulator of a property. After the execution of a
+ * Marks a model method as a manipulator of a property. After the execution of a
  * marked method, the properties with a matching name will be used to update the
  * bound view.
  * <p>

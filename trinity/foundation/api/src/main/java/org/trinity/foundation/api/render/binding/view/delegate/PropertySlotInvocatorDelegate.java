@@ -13,7 +13,33 @@ package org.trinity.foundation.api.render.binding.view.delegate;
 
 import java.lang.reflect.Method;
 
+import org.trinity.foundation.api.render.binding.model.PropertyChanged;
+import org.trinity.foundation.api.render.binding.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.view.PropertySlots;
+
+/***************************************
+ * Delegate to invoke a view method when a bound model property changes.
+ * 
+ * @see PropertySlots
+ * @see PropertySlot
+ * @see PropertyChanged
+ *************************************** 
+ */
 public interface PropertySlotInvocatorDelegate {
+
+	/***************************************
+	 * Invoke a view method with the given argument.
+	 * 
+	 * @param view
+	 *            The view who's method should be invoked.
+	 * @param viewMethod
+	 *            The method of the view to invoke.
+	 * @param argument
+	 *            The argument to use when invoking the method. This can be an
+	 *            array of objects, as defined in the var args of
+	 *            {@link Method#invoke(Object, Object...)}.
+	 *************************************** 
+	 */
 	void invoke(Object view,
 				Method viewMethod,
 				Object argument);

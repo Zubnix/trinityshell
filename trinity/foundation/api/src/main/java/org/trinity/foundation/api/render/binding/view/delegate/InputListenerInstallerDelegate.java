@@ -12,14 +12,56 @@
 package org.trinity.foundation.api.render.binding.view.delegate;
 
 import org.trinity.foundation.api.display.input.Input;
+import org.trinity.foundation.api.render.binding.model.InputSlot;
+import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
+import org.trinity.foundation.api.render.binding.view.BoundInputEvent;
 
+/***************************************
+ * A delegate to listen for specific user input on a view instance. When input
+ * arrives, a corresponding {@link BoundInputEvent} should be created and passed
+ * to the target view model.
+ * 
+ * @see InputSlotCaller
+ *************************************** 
+ */
 public interface InputListenerInstallerDelegate {
 
+	/***************************************
+	 * Install a new input listener. When receiving the desired input, a
+	 * corresponding {@link BoundInputEvent} should be generated and delivered
+	 * to the input event target.
+	 * 
+	 * @param inputType
+	 *            The type of {@link Input} to listen for.
+	 * @param view
+	 *            The view instance to listen for input.
+	 * @param inputEventTarget
+	 *            The view model interested in the {@link BoundInputEvent}.
+	 * @param inputSlotName
+	 *            The name of the {@link InputSlot} that should be invoked when
+	 *            input arrives.
+	 *************************************** 
+	 */
 	void installInputListener(	Class<? extends Input> inputType,
 								Object view,
 								Object inputEventTarget,
 								String inputSlotName);
 
+	/***************************************
+	 * Remove a previously installed input listener.
+	 * 
+	 * @param inputType
+	 *            The type of {@link Input} that was listened to.
+	 * @param view
+	 *            The view used to listen for input.
+	 * @param inputEventTarget
+	 *            The view model that was interested in the
+	 *            {@link BoundInputEvent}.
+	 * @param inputSlotName
+	 *            The name of the {@link InputSlot} that would be invoked when
+	 *            input arrives.
+	 *************************************** 
+	 */
 	void removeInputListener(	Class<? extends Input> inputType,
 								Object view,
 								Object inputEventTarget,
