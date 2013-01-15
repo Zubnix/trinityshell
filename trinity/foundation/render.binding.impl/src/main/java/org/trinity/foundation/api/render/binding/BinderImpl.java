@@ -17,6 +17,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.api.display.input.Input;
+import org.trinity.foundation.api.render.Renderer;
 import org.trinity.foundation.api.render.binding.view.DataContext;
 import org.trinity.foundation.api.render.binding.view.InputSignal;
 import org.trinity.foundation.api.render.binding.view.InputSignals;
@@ -70,7 +71,8 @@ public class BinderImpl implements Binder {
 	private final Map<Object, Map<Object, DataContext>> dataContextByViewByParentDataContextValue = new WeakHashMap<Object, Map<Object, DataContext>>();
 
 	@Inject
-	BinderImpl(	final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate,
+	BinderImpl(	final Renderer renderer,
+				final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate,
 				final InputListenerInstallerDelegate inputListenerInstallerDelegate,
 				final ChildViewDelegate childViewDelegate,
 				final ViewElementTypes viewElementTypes) {
@@ -278,10 +280,14 @@ public class BinderImpl implements Binder {
 
 				@Override
 				public void listChanged(final ListEvent<Object> listChanges) {
-					handleListChanged(	view,
-										childViewClass,
-										this.shadowChildDataContextList,
-										listChanges);
+					try {
+						handleListChanged(	view,
+											childViewClass,
+											this.shadowChildDataContextList,
+											listChanges);
+					} catch (final ExecutionException e) {
+						Throwables.propagate(e);
+					}
 				}
 			});
 		} catch (final IllegalAccessException e) {
@@ -296,7 +302,7 @@ public class BinderImpl implements Binder {
 	protected void handleListChanged(	final Object view,
 										final Class<?> childViewClass,
 										final List<Object> shadowChildDataContextList,
-										final ListEvent<Object> listChanges) {
+										final ListEvent<Object> listChanges) throws ExecutionException {
 		while (listChanges.next()) {
 			final int sourceIndex = listChanges.getIndex();
 			final int changeType = listChanges.getType();

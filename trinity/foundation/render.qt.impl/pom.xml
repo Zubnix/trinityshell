@@ -11,10 +11,26 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 	<artifactId>foundation.render.qt.impl</artifactId>
 	<name>Foundation Render Qt Jambi Implementation</name>
 
+	<repositories>
+		<repository>
+			<id>qtjambi</id>
+			<name>qtjambi</name>
+			<url>http://qtjambi.sourceforge.net/maven2/</url>
+			<releases>
+			</releases>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
-			<groupId>org.trinity</groupId>
-			<artifactId>foundation.render.qt.api</artifactId>
+			<groupId>net.sf.qtjambi</groupId>
+			<artifactId>qtjambi</artifactId>
+			<!-- <version>4.5.2_01</version> -->
+			<version>4.6.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>foundation.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

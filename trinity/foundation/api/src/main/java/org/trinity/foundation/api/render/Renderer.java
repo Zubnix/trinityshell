@@ -9,33 +9,30 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.foundation.render.qt.api;
+package org.trinity.foundation.api.render;
 
 import java.util.concurrent.Future;
-
-import org.trinity.foundation.api.render.PaintContext;
-import org.trinity.foundation.api.render.PaintRoutine;
 
 /***************************************
  * A QtJambi specific paint engine.
  * 
  *************************************** 
  */
-public interface QJRenderEngine {
+public interface Renderer {
 
 	/***************************************
 	 * Invoke the given {@link PaintRoutine} for the given
 	 * {@link PaintableSurfaceNode}. Invocation is usually done by a seperate
 	 * paint thread.
 	 * 
-	 * @param dataContext
-	 *            a data context.
-	 * @param paintInstruction
+	 * @param callerContext
+	 *            the calling instance.
+	 * @param paintRoutine
 	 *            a {@link PaintRoutine}
 	 * @return a {@link Future} result.
 	 *************************************** 
 	 */
-	<R> Future<R> invoke(	Object dataContext,
-							PaintRoutine<R, PaintContext> paintInstruction);
+	<R> Future<R> invoke(	Object callerContext,
+							PaintRoutine<R, PaintContext> paintRoutine);
 
 }

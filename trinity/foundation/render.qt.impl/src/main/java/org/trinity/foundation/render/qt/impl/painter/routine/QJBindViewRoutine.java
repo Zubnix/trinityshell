@@ -59,7 +59,7 @@ public class QJBindViewRoutine implements PaintRoutine<Void, PaintContext> {
 
 	@Override
 	public Void call(final PaintContext paintContext) {
-		final Object rootDataContext = paintContext.getDataContext();
+		final Object rootDataContext = paintContext.getCaller();
 		initView(paintContext);
 		bindViewProperties(rootDataContext);
 		bindViewEventListeners(rootDataContext);

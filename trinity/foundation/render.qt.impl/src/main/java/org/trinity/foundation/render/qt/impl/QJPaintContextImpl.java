@@ -22,7 +22,7 @@ public class QJPaintContextImpl implements PaintContext {
 	}
 
 	@Override
-	public Object getDataContext() {
+	public Object getCaller() {
 		return this.dataContext;
 	}
 }

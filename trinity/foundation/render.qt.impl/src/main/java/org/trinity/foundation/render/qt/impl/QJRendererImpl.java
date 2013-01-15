@@ -19,7 +19,7 @@ import java.util.concurrent.FutureTask;
 
 import org.trinity.foundation.api.render.PaintContext;
 import org.trinity.foundation.api.render.PaintRoutine;
-import org.trinity.foundation.render.qt.api.QJRenderEngine;
+import org.trinity.foundation.api.render.Renderer;
 
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QCoreApplication;
@@ -45,14 +45,15 @@ import de.devsurf.injection.guice.annotations.Bind;
  */
 @Bind
 @Singleton
-public class QJRenderEngineImpl implements QJRenderEngine {
+public class QJRendererImpl implements Renderer {
 
-	QJRenderEngineImpl() {
+	QJRendererImpl() {
 	}
 
 	@Override
 	public <R> Future<R> invoke(final Object dataContext,
 								final PaintRoutine<R, PaintContext> paintInstruction) {
+
 		checkNotNull(dataContext);
 		checkNotNull(paintInstruction);
 		// make sure qapplication.initialize() is finished before submitting any

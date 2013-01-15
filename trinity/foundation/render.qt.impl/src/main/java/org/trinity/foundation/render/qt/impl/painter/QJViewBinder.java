@@ -4,10 +4,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.annotation.Nullable;
 
+import org.trinity.foundation.api.render.Renderer;
 import org.trinity.foundation.api.render.binding.BindingDiscovery;
 import org.trinity.foundation.api.render.binding.ObservedCollectionHandler;
 import org.trinity.foundation.api.render.binding.ViewSlotHandler;
-import org.trinity.foundation.render.qt.api.QJRenderEngine;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConverter;
 import org.trinity.foundation.render.qt.impl.painter.routine.QJBindViewRoutine;
 
@@ -24,7 +24,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Bind(to = @To(Type.IMPLEMENTATION))
 public class QJViewBinder {
 
-	private final QJRenderEngine qjRenderEngine;
+	private final Renderer qjRenderEngine;
 	private final BindingDiscovery bindingDiscovery;
 	private final ViewSlotHandler viewSlotHandler;
 	private final ObservedCollectionHandler observedCollectionHandler;
@@ -32,7 +32,7 @@ public class QJViewBinder {
 	private final QJRenderEventConverter qjRenderEventConverter;
 
 	@Inject
-	QJViewBinder(	final QJRenderEngine qjRenderEngine,
+	QJViewBinder(	final Renderer qjRenderEngine,
 					final BindingDiscovery bindingDiscovery,
 					@Nullable final ViewSlotHandler viewSlotHandler,
 					@Nullable final ObservedCollectionHandler observedCollectionHandler,

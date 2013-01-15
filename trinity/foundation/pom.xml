@@ -14,9 +14,7 @@
 	<modules>
 		<module>api</module>
 		<module>display.x11.impl</module>
-		<module>render.qt.api</module>
 		<module>render.qt.impl</module>
-		<module>display.x11.impl</module>
 		<module>render.binding.impl</module>
 	</modules>
 </project>

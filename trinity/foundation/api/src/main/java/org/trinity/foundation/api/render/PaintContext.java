@@ -20,11 +20,11 @@ package org.trinity.foundation.api.render;
 public interface PaintContext {
 
 	/***************************************
-	 * The object that is being painted.
+	 * The object that issues the painting.
 	 * 
 	 * @return an Object
 	 *************************************** 
 	 */
-	Object getDataContext();
+	Object getCaller();
 
 }

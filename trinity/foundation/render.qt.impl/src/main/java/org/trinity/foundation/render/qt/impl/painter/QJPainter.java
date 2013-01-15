@@ -27,8 +27,8 @@ import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.render.PaintContext;
 import org.trinity.foundation.api.render.PaintRoutine;
 import org.trinity.foundation.api.render.Painter;
+import org.trinity.foundation.api.render.Renderer;
 import org.trinity.foundation.api.render.binding.BindingDiscovery;
-import org.trinity.foundation.render.qt.api.QJRenderEngine;
 import org.trinity.foundation.render.qt.impl.painter.routine.QJGetDisplaySurfaceRoutine;
 
 import com.google.common.base.Optional;
@@ -39,14 +39,14 @@ import com.trolltech.qt.gui.QWidget;
 
 public class QJPainter implements Painter {
 
-	private final QJRenderEngine renderEngine;
+	private final Renderer renderEngine;
 	private final Object dataContext;
 	private final BindingDiscovery bindingDiscovery;
 	private final DisplaySurfaceFactory displaySurfaceFactory;
 	private final QJViewBinder qjViewBinder;
 
 	@Inject
-	QJPainter(	final QJRenderEngine qFRenderEngine,
+	QJPainter(	final Renderer qFRenderEngine,
 				final DisplaySurfaceFactory displaySurfaceFactory,
 				final BindingDiscovery bindingDiscovery,
 				final QJViewBinder qjViewInitializier,
