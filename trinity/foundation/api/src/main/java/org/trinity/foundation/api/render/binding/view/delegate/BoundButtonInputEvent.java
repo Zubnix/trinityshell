@@ -9,16 +9,13 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.foundation.api.render.binding.view;
+package org.trinity.foundation.api.render.binding.view.delegate;
 
 import org.trinity.foundation.api.display.event.ButtonNotifyEvent;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
 import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
-
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 
 /***************************************
  * A base implementation of a {@link BoundInputEvent} for {@link PointerInput}.
@@ -34,10 +31,9 @@ public class BoundButtonInputEvent extends ButtonNotifyEvent implements BoundInp
 
 	private final String inputSlotName;
 
-	@AssistedInject
-	BoundButtonInputEvent(	@Assisted final Object displayEventTarget,
-							@Assisted final PointerInput pointerInput,
-							@Assisted final String inputSlotName) {
+	public BoundButtonInputEvent(	final Object displayEventTarget,
+									final PointerInput pointerInput,
+									final String inputSlotName) {
 		super(	displayEventTarget,
 				pointerInput);
 		this.inputSlotName = inputSlotName;

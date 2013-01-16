@@ -14,7 +14,6 @@ package org.trinity.foundation.api.render.binding.view.delegate;
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
 import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
-import org.trinity.foundation.api.render.binding.view.BoundInputEvent;
 
 /***************************************
  * A delegate to listen for specific user input on a view instance. When input

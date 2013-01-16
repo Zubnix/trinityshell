@@ -9,34 +9,36 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.foundation.api.render.binding.view;
+package org.trinity.foundation.api.render.binding.view.delegate;
 
-import org.trinity.foundation.api.display.input.Input;
+import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.api.display.event.KeyNotifyEvent;
+import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
 import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
 
 /***************************************
- * An input event meant to invoke a bound {@link InputSlot}.
- * 
+ * A base implementation of a {@link BoundInputEvent} for {@link KeyboardInput}.
+ * A bound button input event is both a {@link KeyNotifyEvent} and a
+ * {@code BoundInputEvent}, so it can be used as an ordinary
+ * {@link DisplayEvent} with additional information to invoke the correct
+ * {@link InputSlot}.
  * 
  * @see InputSlotCaller
  *************************************** 
  */
-public interface BoundInputEvent {
+public class BoundKeyInputEvent extends KeyNotifyEvent implements BoundInputEvent {
 
-	/***************************************
-	 * The {@link Input} from a view object.
-	 * 
-	 * @return
-	 *************************************** 
-	 */
-	Input getInput();
+	private final String inputSlotName;
 
-	/***************************************
-	 * The name of the method marked as an {@link InputSlot}.
-	 * 
-	 * @return a method name.
-	 *************************************** 
-	 */
-	String getInputSlotName();
+	public BoundKeyInputEvent(final Object inputTarget, final KeyboardInput input, final String inputSlotName) {
+		super(	inputTarget,
+				input);
+		this.inputSlotName = inputSlotName;
+	}
+
+	@Override
+	public String getInputSlotName() {
+		return this.inputSlotName;
+	}
 }

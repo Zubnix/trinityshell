@@ -12,7 +12,6 @@
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
 import org.trinity.foundation.api.display.input.Momentum;
-import org.trinity.foundation.api.render.binding.BindingDiscovery;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -28,8 +27,7 @@ import de.devsurf.injection.guice.annotations.To;
 public class QJKeyPressedConversion extends AbstractQJKeyConversion {
 
 	@Inject
-	QJKeyPressedConversion(final BindingDiscovery bindingDiscovery) {
-		super(bindingDiscovery);
+	QJKeyPressedConversion() {
 	}
 
 	@Override

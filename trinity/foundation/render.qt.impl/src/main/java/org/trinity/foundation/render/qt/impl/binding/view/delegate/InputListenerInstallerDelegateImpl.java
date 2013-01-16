@@ -3,6 +3,7 @@ package org.trinity.foundation.render.qt.impl.binding.view.delegate;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.String.format;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.api.display.input.Input;
@@ -11,6 +12,10 @@ import org.trinity.foundation.api.render.PaintRoutine;
 import org.trinity.foundation.api.render.Renderer;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QObject;
@@ -20,6 +25,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Bind
 @Singleton
 public class InputListenerInstallerDelegateImpl implements InputListenerInstallerDelegate {
+
+	private final HashFunction hashFunction = Hashing.goodFastHash(16);
+	private final Cache<Integer, QObject> inputListeners = CacheBuilder.newBuilder().softValues().build();
 
 	private final Renderer renderer;
 
@@ -37,12 +45,30 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 						format(	"Expected view should be of type %s",
 								QObject.class.getName()));
 
+		final int inputListenerHash = this.hashFunction.newHasher().putInt(inputType.hashCode())
+				.putInt(view.hashCode()).putInt(inputEventTarget.hashCode()).putString(inputSlotName).hashCode();
+
+		final Callable<QObject> inputListenerCreator = new Callable<QObject>() {
+			@Override
+			public QObject call() throws Exception {
+				return new BoundInputListener(	inputType,
+												inputEventTarget,
+												inputSlotName);
+			}
+		};
+
 		this.renderer.invoke(	this,
 								new PaintRoutine<Void, PaintContext>() {
 									@Override
-									public Void call(final PaintContext paintContext) {
+									public Void call(final PaintContext paintContext) throws ExecutionException {
 										final QObject viewInstance = (QObject) view;
-										viewInstance.installEventFilter(arg__1);
+
+										final QObject inputListener = InputListenerInstallerDelegateImpl.this.inputListeners
+												.get(	Integer.valueOf(inputListenerHash),
+														inputListenerCreator);
+
+										viewInstance.installEventFilter(inputListener);
+										return null;
 									};
 								});
 	}
@@ -56,12 +82,29 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 						format(	"Expected view should be of type %s",
 								QObject.class.getName()));
 
+		final int inputListenerHash = this.hashFunction.newHasher().putInt(inputType.hashCode())
+				.putInt(view.hashCode()).putInt(inputEventTarget.hashCode()).putString(inputSlotName).hashCode();
+
+		final Callable<QObject> inputListenerCreator = new Callable<QObject>() {
+			@Override
+			public QObject call() throws Exception {
+				return new BoundInputListener(	inputType,
+												inputEventTarget,
+												inputSlotName);
+			}
+		};
+
 		this.renderer.invoke(	this,
 								new PaintRoutine<Void, PaintContext>() {
 									@Override
 									public Void call(final PaintContext paintContext) throws ExecutionException {
 										final QObject viewInstance = (QObject) view;
-										viewInstance.removeEventFilter(arg__1);
+
+										final QObject inputListener = InputListenerInstallerDelegateImpl.this.inputListeners
+												.get(	Integer.valueOf(inputListenerHash),
+														inputListenerCreator);
+										viewInstance.removeEventFilter(inputListener);
+
 										return null;
 									}
 								});

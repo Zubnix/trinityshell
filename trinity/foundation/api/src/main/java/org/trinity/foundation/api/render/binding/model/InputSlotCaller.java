@@ -11,7 +11,7 @@
  */
 package org.trinity.foundation.api.render.binding.model;
 
-import org.trinity.foundation.api.render.binding.view.BoundInputEvent;
+import org.trinity.foundation.api.render.binding.view.delegate.BoundInputEvent;
 
 /***************************************
  * A convenience service to call a method marked with {@link InputSlot} based on

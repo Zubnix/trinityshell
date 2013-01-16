@@ -1,30 +1,18 @@
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
-import java.util.concurrent.ExecutionException;
-
 import org.trinity.foundation.api.display.event.ButtonNotifyEvent;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.input.Button;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.api.display.input.PointerInput;
-import org.trinity.foundation.api.render.binding.BindingDiscovery;
-import org.trinity.foundation.api.render.binding.view.BoundButtonInputEvent;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConversion;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Throwables;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QMouseEvent;
 
 public abstract class AbstractQJButtonConversion implements QJRenderEventConversion {
-
-	private final BindingDiscovery bindingDiscovery;
-
-	AbstractQJButtonConversion(final BindingDiscovery bindingDiscovery) {
-		this.bindingDiscovery = bindingDiscovery;
-	}
 
 	@Override
 	public DisplayEvent convertEvent(	final Object eventTarget,
@@ -53,25 +41,9 @@ public abstract class AbstractQJButtonConversion implements QJRenderEventConvers
 															rootX,
 															rootY);
 
-		Optional<String> inputSlotName;
-		try {
-			inputSlotName = this.bindingDiscovery.lookupInputEmitterInputSlotName(	view,
-																					eventProducer,
-																					PointerInput.class);
-		} catch (final ExecutionException e) {
-			Throwables.propagate(e);
-			inputSlotName = Optional.absent();
-		}
+		final ButtonNotifyEvent buttonNotifyEvent = new ButtonNotifyEvent(	eventTarget,
+																			pointerInput);
 
-		ButtonNotifyEvent buttonNotifyEvent;
-		if (inputSlotName.isPresent()) {
-			buttonNotifyEvent = new BoundButtonInputEvent(	eventTarget,
-															pointerInput,
-															inputSlotName.get());
-		} else {
-			buttonNotifyEvent = new ButtonNotifyEvent(	eventTarget,
-														pointerInput);
-		}
 		return buttonNotifyEvent;
 	}
 

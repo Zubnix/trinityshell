@@ -9,47 +9,34 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.foundation.api.render.binding.view;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package org.trinity.foundation.api.render.binding.view.delegate;
 
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
 import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
-import org.trinity.foundation.api.render.binding.view.delegate.BoundInputEvent;
-import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 
 /***************************************
- * Mark a view as a generator of {@link BoundInputEvent}s. It's up to the
- * {@link InputListenerInstallerDelegate} to make sure the correct input
- * listeners are installed and the correct {@code BoundInputEvent}s are received
- * by the model of the marked view.
- * <p>
- * An {@code InputSignal} is used as an argument of {@link InputSignals}.
+ * An input event meant to invoke a bound {@link InputSlot}.
+ * 
  * 
  * @see InputSlotCaller
  *************************************** 
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({})
-public @interface InputSignal {
-	/***************************************
-	 * The {@link Input} type to listen for.
-	 * 
-	 * @return An {@link Input} (sub)class.
-	 *************************************** 
-	 */
-	Class<? extends Input> inputType();
+public interface BoundInputEvent {
 
 	/***************************************
-	 * The name of the {@link InputSlot} that should be invoked. The name of the
-	 * {@code InputSlot} is the name of the method that it annotates.
+	 * The {@link Input} from a view object.
+	 * 
+	 * @return
+	 *************************************** 
+	 */
+	Input getInput();
+
+	/***************************************
+	 * The name of the method marked as an {@link InputSlot}.
 	 * 
 	 * @return a method name.
 	 *************************************** 
 	 */
-	String name();
-
+	String getInputSlotName();
 }
