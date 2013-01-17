@@ -19,27 +19,27 @@ import org.trinity.foundation.api.shared.Rectangle;
  * functions to retrieve information about its geometry in this tree. It offers
  * no ways of manipulating its visual state directly.
  * <p>
- * Each <code>SurfaceNode</code> has a parent <code>SurfaceNode</code> . If a
- * <code>SurfaceNode</code> is repositioned, all it's children will be
- * repositioned by the same offset.
+ * Each <code>PaintSurfaceNode</code> has a parent <code>PaintSurfaceNode</code>
+ * . If a <code>PaintSurfaceNode</code> is repositioned, all it's children will
+ * be repositioned by the same offset.
  * <p>
- * A <code>SurfaceNode</code> has an absolute X and a Y coordinate, based on the
- * <code>SurfaceNode</code>'s topmost parent, the 'root' parent.
+ * A <code>PaintSurfaceNode</code> has an absolute X and a Y coordinate, based
+ * on the <code>PaintSurfaceNode</code>'s topmost parent, the 'root' parent.
  * <p>
- * A <code>SurfaceNode</code> has a relative X and Y coordinate. This coordinate
- * is based on the <code>SurfaceNode</code>'s position relative to its direct
- * parent.
+ * A <code>PaintSurfaceNode</code> has a relative X and Y coordinate. This
+ * coordinate is based on the <code>PaintSurfaceNode</code>'s position relative
+ * to its direct parent.
  * <p>
- * A <code>SurfaceNode</code> has a positive, non-zero width and a height.
+ * A <code>PaintSurfaceNode</code> has a positive, non-zero width and a height.
  * <p>
- * A <code>SurfaceNode</code> has a visibility of visible or invisible.
+ * A <code>PaintSurfaceNode</code> has a visibility of visible or invisible.
  * 
  *************************************** 
  */
-public interface SurfaceNode extends DisplayArea, Rectangle {
+public interface PaintSurfaceNode extends DisplayArea, Rectangle {
 
 	/***************************************
-	 * The absolute X value of this <code>SurfaceNode</code>.
+	 * The absolute X value of this <code>PaintSurfaceNode</code>.
 	 * <p>
 	 * The absolute value is the distance, implementation dependent but usually
 	 * in pixels, to root parent's position.
@@ -50,7 +50,7 @@ public interface SurfaceNode extends DisplayArea, Rectangle {
 	int getAbsoluteX();
 
 	/***************************************
-	 * The absolute Y value of this <code>SurfaceNode</code>.
+	 * The absolute Y value of this <code>PaintSurfaceNode</code>.
 	 * <p>
 	 * The absolute value is the distance, implementation dependent but usually
 	 * in pixels, to root parent's position.
@@ -61,11 +61,11 @@ public interface SurfaceNode extends DisplayArea, Rectangle {
 	int getAbsoluteY();
 
 	/**
-	 * Indicates if this <code>SurfaceNode</code> is visible. This is
-	 * implementation dependent. A <code>SurfaceNode</code> is usually only
+	 * Indicates if this <code>PaintSurfaceNode</code> is visible. This is
+	 * implementation dependent. A <code>PaintSurfaceNode</code> is usually only
 	 * visible if it's parent is visible. So even though this method may return
-	 * true, the <code>SurfaceNode</code> will only be physically visible if all
-	 * it's parents are physically visible as well.
+	 * true, the <code>PaintSurfaceNode</code> will only be physically visible
+	 * if all it's parents are physically visible as well.
 	 * 
 	 * @return
 	 */
@@ -74,7 +74,7 @@ public interface SurfaceNode extends DisplayArea, Rectangle {
 	/**
 	 * The direct parent.
 	 * 
-	 * @return A SurfaceNode.
+	 * @return A PaintSurfaceNode.
 	 */
-	SurfaceNode getParent();
+	PaintSurfaceNode getParent();
 }

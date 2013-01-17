@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.api.render.PaintContext;
 import org.trinity.foundation.api.render.PaintRoutine;
-import org.trinity.foundation.api.render.Renderer;
+import org.trinity.foundation.api.render.PaintRenderer;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
 import com.google.inject.Inject;
@@ -18,18 +18,18 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class PropertySlotInvocatorDelegateImpl implements PropertySlotInvocatorDelegate {
 
-	private final Renderer renderer;
+	private final PaintRenderer paintRenderer;
 
 	@Inject
-	PropertySlotInvocatorDelegateImpl(final Renderer renderer) {
-		this.renderer = renderer;
+	PropertySlotInvocatorDelegateImpl(final PaintRenderer paintRenderer) {
+		this.paintRenderer = paintRenderer;
 	}
 
 	@Override
 	public void invoke(	final Object view,
 						final Method viewMethod,
 						final Object argument) {
-		this.renderer.invoke(	this,
+		this.paintRenderer.invoke(	this,
 								new PaintRoutine<Void, PaintContext>() {
 									@Override
 									public Void call(final PaintContext paintContext) throws ExecutionException {

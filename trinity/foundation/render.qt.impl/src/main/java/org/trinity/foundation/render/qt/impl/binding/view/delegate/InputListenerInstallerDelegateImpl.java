@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.PaintContext;
 import org.trinity.foundation.api.render.PaintRoutine;
-import org.trinity.foundation.api.render.Renderer;
+import org.trinity.foundation.api.render.PaintRenderer;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 
 import com.google.common.cache.Cache;
@@ -29,11 +29,11 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 	private final HashFunction hashFunction = Hashing.goodFastHash(16);
 	private final Cache<Integer, QObject> inputListeners = CacheBuilder.newBuilder().softValues().build();
 
-	private final Renderer renderer;
+	private final PaintRenderer paintRenderer;
 
 	@Inject
-	InputListenerInstallerDelegateImpl(final Renderer renderer) {
-		this.renderer = renderer;
+	InputListenerInstallerDelegateImpl(final PaintRenderer paintRenderer) {
+		this.paintRenderer = paintRenderer;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 			}
 		};
 
-		this.renderer.invoke(	this,
+		this.paintRenderer.invoke(	this,
 								new PaintRoutine<Void, PaintContext>() {
 									@Override
 									public Void call(final PaintContext paintContext) throws ExecutionException {
@@ -94,7 +94,7 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 			}
 		};
 
-		this.renderer.invoke(	this,
+		this.paintRenderer.invoke(	this,
 								new PaintRoutine<Void, PaintContext>() {
 									@Override
 									public Void call(final PaintContext paintContext) throws ExecutionException {

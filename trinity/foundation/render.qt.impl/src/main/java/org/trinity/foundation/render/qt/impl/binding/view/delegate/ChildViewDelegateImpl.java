@@ -8,7 +8,7 @@ import java.util.concurrent.Future;
 
 import org.trinity.foundation.api.render.PaintContext;
 import org.trinity.foundation.api.render.PaintRoutine;
-import org.trinity.foundation.api.render.Renderer;
+import org.trinity.foundation.api.render.PaintRenderer;
 import org.trinity.foundation.api.render.binding.error.BindingError;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 
@@ -30,12 +30,12 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ChildViewDelegateImpl implements ChildViewDelegate {
 
 	private final Injector injector;
-	private final Renderer renderer;
+	private final PaintRenderer paintRenderer;
 
 	@Inject
-	ChildViewDelegateImpl(final Injector injector, final Renderer renderer) {
+	ChildViewDelegateImpl(final Injector injector, final PaintRenderer paintRenderer) {
 		this.injector = injector;
-		this.renderer = renderer;
+		this.paintRenderer = paintRenderer;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -52,7 +52,7 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
 
 		final QWidget parentViewInstance = (QWidget) parentView;
 
-		final Future<T> newChildViewFuture = this.renderer.invoke(	this,
+		final Future<T> newChildViewFuture = this.paintRenderer.invoke(	this,
 																	new PaintRoutine<T, PaintContext>() {
 																		@Override
 																		public T call(final PaintContext paintContext) {
@@ -115,7 +115,7 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
 						format(	"Expected child view should be of type %s",
 								QWidget.class.getName()));
 
-		this.renderer.invoke(	this,
+		this.paintRenderer.invoke(	this,
 								new PaintRoutine<Void, PaintContext>() {
 									@Override
 									public Void call(final PaintContext paintContext) throws ExecutionException {
@@ -142,7 +142,7 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
 		final QWidget parentViewInstance = (QWidget) parentView;
 		final QWidget childViewInstance = (QWidget) childView;
 
-		this.renderer.invoke(	this,
+		this.paintRenderer.invoke(	this,
 								new PaintRoutine<Void, PaintContext>() {
 									@Override
 									public Void call(final PaintContext paintContext) throws ExecutionException {

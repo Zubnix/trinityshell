@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 import org.trinity.foundation.api.render.PaintContext;
 import org.trinity.foundation.api.render.PaintRoutine;
-import org.trinity.foundation.api.render.Renderer;
+import org.trinity.foundation.api.render.PaintRenderer;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
@@ -23,7 +23,7 @@ public class StyleSheetLoader {
 	private static final String STYLESHEET_NAME = "views.qss";
 
 	@Inject
-	StyleSheetLoader(final Renderer renderEngine) {
+	StyleSheetLoader(final PaintRenderer renderEngine) {
 		renderEngine.invoke(this,
 							new PaintRoutine<Void, PaintContext>() {
 								@Override

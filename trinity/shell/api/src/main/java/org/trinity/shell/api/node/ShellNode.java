@@ -13,7 +13,7 @@ package org.trinity.shell.api.node;
 
 import java.awt.LayoutManager;
 
-import org.trinity.foundation.api.render.SurfaceNode;
+import org.trinity.foundation.api.render.PaintSurfaceNode;
 import org.trinity.shell.api.node.event.ShellNodeEvent;
 
 /***************************************
@@ -21,7 +21,7 @@ import org.trinity.shell.api.node.event.ShellNodeEvent;
  * 
  *************************************** 
  */
-public interface ShellNode extends SurfaceNode {
+public interface ShellNode extends PaintSurfaceNode {
 
 	/***************************************
 	 * Reset any value set by {@link #setX(int)} or {@link #setY(int)} to the

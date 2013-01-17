@@ -6,8 +6,8 @@ public class BindingError extends Error {
 	 ****************************************/
 	private static final long serialVersionUID = 4337530687537263766L;
 
-	public BindingError(final String explenation, final Throwable cause) {
-		super(	explenation,
+	public BindingError(final String explanation, final Throwable cause) {
+		super(	explanation,
 				cause);
 	}
 

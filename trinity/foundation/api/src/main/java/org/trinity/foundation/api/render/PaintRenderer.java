@@ -13,12 +13,14 @@ package org.trinity.foundation.api.render;
 
 import java.util.concurrent.Future;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 /***************************************
  * A QtJambi specific paint engine.
  * 
  *************************************** 
  */
-public interface Renderer {
+public interface PaintRenderer {
 
 	/***************************************
 	 * Invoke the given {@link PaintRoutine} for the given
@@ -32,7 +34,7 @@ public interface Renderer {
 	 * @return a {@link Future} result.
 	 *************************************** 
 	 */
-	<R> Future<R> invoke(	Object callerContext,
-							PaintRoutine<R, PaintContext> paintRoutine);
+	<R> ListenableFuture<R> invoke(	Object callerContext,
+									PaintRoutine<R, PaintContext> paintRoutine);
 
 }

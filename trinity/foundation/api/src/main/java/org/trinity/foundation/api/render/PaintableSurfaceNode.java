@@ -17,11 +17,11 @@
 // package org.trinity.foundation.api.render;
 //
 // /***************************************
-// * A {@link SurfaceNode} who's visual appearance can be modified.
+// * A {@link PaintSurfaceNode} who's visual appearance can be modified.
 // *
 // ***************************************
 // */
-// public interface PaintableSurfaceNode extends SurfaceNode {
+// public interface PaintableSurfaceNode extends PaintSurfaceNode {
 //
 // /***************************************
 // * The {@link Painter} of this <code>PaintableSurfaceNode</code>.

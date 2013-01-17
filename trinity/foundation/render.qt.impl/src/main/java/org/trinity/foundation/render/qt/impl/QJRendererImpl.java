@@ -14,13 +14,13 @@ package org.trinity.foundation.render.qt.impl;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
 import org.trinity.foundation.api.render.PaintContext;
+import org.trinity.foundation.api.render.PaintRenderer;
 import org.trinity.foundation.api.render.PaintRoutine;
-import org.trinity.foundation.api.render.Renderer;
 
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QCoreApplication;
 
@@ -45,14 +45,14 @@ import de.devsurf.injection.guice.annotations.Bind;
  */
 @Bind
 @Singleton
-public class QJRendererImpl implements Renderer {
+public class QJRendererImpl implements PaintRenderer {
 
 	QJRendererImpl() {
 	}
 
 	@Override
-	public <R> Future<R> invoke(final Object dataContext,
-								final PaintRoutine<R, PaintContext> paintInstruction) {
+	public <R> ListenableFuture<R> invoke(	final Object dataContext,
+											final PaintRoutine<R, PaintContext> paintInstruction) {
 
 		checkNotNull(dataContext);
 		checkNotNull(paintInstruction);
@@ -70,7 +70,7 @@ public class QJRendererImpl implements Renderer {
 			}
 		}
 
-		final FutureTask<R> futureTask = new FutureTask<R>(new Callable<R>() {
+		final ListenableFutureTask<R> futureTask = ListenableFutureTask.create(new Callable<R>() {
 			@Override
 			public R call() throws Exception {
 				final PaintContext qjPaintContext = new QJPaintContextImpl(dataContext);
