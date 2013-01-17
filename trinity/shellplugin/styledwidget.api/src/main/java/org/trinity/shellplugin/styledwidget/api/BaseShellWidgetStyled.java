@@ -14,7 +14,6 @@ package org.trinity.shellplugin.styledwidget.api;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.api.render.binding.model.View;
-import org.trinity.foundation.api.render.binding.model.ViewProperty;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
 
@@ -55,7 +54,6 @@ public class BaseShellWidgetStyled extends BaseShellWidget implements ShellWidge
 		this.name = name;
 	}
 
-	@ViewProperty
 	@Override
 	public String getName() {
 		return this.name;

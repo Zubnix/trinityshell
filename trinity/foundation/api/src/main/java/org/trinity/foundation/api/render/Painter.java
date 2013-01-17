@@ -11,8 +11,6 @@
  */
 package org.trinity.foundation.api.render;
 
-import java.util.concurrent.Future;
-
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.display.DisplaySurface;
 
@@ -36,19 +34,5 @@ public interface Painter extends DisplayAreaManipulator {
 	 */
 	Optional<DisplaySurface> getDislaySurface();
 
-	/**
-	 * Create a {@link DisplaySurface} for this view's {@link ShellWidget}.
-	 * <p>
-	 * Calling this method multiple times can have undesired effects and is
-	 * implementation dependent. As a general rule this should be avoided.
-	 * 
-	 * @param painter
-	 *            The {@link Painter} of the {@code ShellWidget}
-	 * @param closestParentWidget
-	 *            The closest parent that is of type {@link ShellWidget}.
-	 * @return A {@link Future} who's {@link Future#get()} method will block
-	 *         until the {@code DisplaySurface} has been created.
-	 */
-
-	void bindView(Optional<?> closestParentPaintable);
+	void bindView();
 }

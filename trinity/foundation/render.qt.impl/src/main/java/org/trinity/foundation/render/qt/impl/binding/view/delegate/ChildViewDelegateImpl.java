@@ -9,8 +9,10 @@ import java.util.concurrent.Future;
 import org.trinity.foundation.api.render.PaintContext;
 import org.trinity.foundation.api.render.PaintRoutine;
 import org.trinity.foundation.api.render.Renderer;
+import org.trinity.foundation.api.render.binding.error.BindingError;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 
+import com.google.common.base.Throwables;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -40,7 +42,7 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
 	@Override
 	public <T> T newView(	final Object parentView,
 							final Class<T> childViewType,
-							final int position) throws ExecutionException {
+							final int position) {
 		checkArgument(	parentView instanceof QWidget,
 						format(	"Expected parent view should be of type %s",
 								QWidget.class.getName()));
@@ -75,7 +77,11 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
 		try {
 			return newChildViewFuture.get();
 		} catch (final InterruptedException e) {
-			throw new ExecutionException(e);
+			throw new BindingError(	"",
+									e);
+		} catch (final ExecutionException e) {
+			Throwables.propagate(e);
+			return null;
 		}
 	}
 

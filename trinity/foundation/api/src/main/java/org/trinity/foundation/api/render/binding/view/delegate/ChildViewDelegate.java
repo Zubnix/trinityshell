@@ -11,7 +11,6 @@
  */
 package org.trinity.foundation.api.render.binding.view.delegate;
 
-import java.util.concurrent.ExecutionException;
 
 /***************************************
  * A delegate to handle the life cycle of a child view element. This delegate
@@ -30,13 +29,12 @@ public interface ChildViewDelegate {
 	 *            The type of the new view instance.
 	 * @param position
 	 *            The position (index) of the new view, relative to it's parent.
-	 * @return a new view instnace.
-	 * @throws ExecutionException
+	 * @return a new view instance.
 	 *************************************** 
 	 */
 	<T> T newView(	Object parentView,
 					Class<T> childViewType,
-					int position) throws ExecutionException;
+					int position);
 
 	/***************************************
 	 * Destroy a view instance.
@@ -47,12 +45,11 @@ public interface ChildViewDelegate {
 	 *            The view that should be destroyed.
 	 * @param deletedPosition
 	 *            The index of the view that should be destroyed.
-	 * @throws ExecutionException
 	 *************************************** 
 	 */
 	void destroyView(	Object parentView,
 						Object deletedChildView,
-						int deletedPosition) throws ExecutionException;
+						int deletedPosition);
 
 	/***************************************
 	 * Update the position (index) of a view instance, relative to it's parent.
@@ -65,11 +62,10 @@ public interface ChildViewDelegate {
 	 *            The old position.
 	 * @param newPosition
 	 *            The new position.
-	 * @throws ExecutionException
 	 *************************************** 
 	 */
 	void updateChildViewPosition(	Object parentView,
 									Object childView,
 									int oldPosition,
-									int newPosition) throws ExecutionException;
+									int newPosition);
 }

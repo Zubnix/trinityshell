@@ -20,7 +20,6 @@ import org.trinity.shell.api.node.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
-import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
@@ -78,10 +77,10 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 		this.painter = painterFactory.createPainter(this);
 	}
 
-	protected void init(final BaseShellWidget closestParentWidget) {
+	protected void init() {
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			this);
-		this.painter.bindView(Optional.fromNullable(closestParentWidget));
+		this.painter.bindView();
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			getDisplaySurface());
 		addShellNodeEventHandler(new DestroyCallback());

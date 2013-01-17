@@ -66,7 +66,7 @@ public class ShellRootWidgetImpl extends BaseShellWidgetStyled implements ShellR
 	public void construct() {
 		setParent(this.shellRootSurface);
 		doReparent(false);
-		init(null);
+		init();
 		setWidth(this.shellRootSurface.getWidth());
 		setHeight(this.shellRootSurface.getHeight());
 		doResize();

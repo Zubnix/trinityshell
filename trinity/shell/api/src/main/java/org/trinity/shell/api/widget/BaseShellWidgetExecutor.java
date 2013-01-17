@@ -73,10 +73,8 @@ public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 
 	@Override
 	protected void initializeShellSurface(final ShellNodeParent parent) {
-		// initialize the area with the closest typed parent.
-
 		final BaseShellWidget shellWidgetImpl = getShellNode();
-		final BaseShellWidget closestParentWidget = findClosestSameTypeSurface(parent);
-		shellWidgetImpl.init(closestParentWidget);
+		shellWidgetImpl.init();
+		reparent(parent);
 	}
 }

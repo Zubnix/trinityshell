@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.api.display.input.Input;
-import org.trinity.foundation.api.render.Renderer;
+import org.trinity.foundation.api.render.binding.error.BindingError;
 import org.trinity.foundation.api.render.binding.view.DataContext;
 import org.trinity.foundation.api.render.binding.view.InputSignal;
 import org.trinity.foundation.api.render.binding.view.InputSignals;
@@ -71,8 +71,7 @@ public class BinderImpl implements Binder {
 	private final Map<Object, Map<Object, DataContext>> dataContextByViewByParentDataContextValue = new WeakHashMap<Object, Map<Object, DataContext>>();
 
 	@Inject
-	BinderImpl(	final Renderer renderer,
-				final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate,
+	BinderImpl(	final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate,
 				final InputListenerInstallerDelegate inputListenerInstallerDelegate,
 				final ChildViewDelegate childViewDelegate,
 				final ViewElementTypes viewElementTypes) {
@@ -84,7 +83,7 @@ public class BinderImpl implements Binder {
 
 	@Override
 	public void bind(	final Object model,
-						final Object view) throws ExecutionException {
+						final Object view) {
 		checkNotNull(model);
 		checkNotNull(view);
 
@@ -98,7 +97,7 @@ public class BinderImpl implements Binder {
 
 	@Override
 	public void updateBinding(	final Object model,
-								final String propertyName) throws ExecutionException {
+								final String propertyName) {
 		checkNotNull(model);
 		checkNotNull(propertyName);
 
@@ -109,7 +108,7 @@ public class BinderImpl implements Binder {
 	}
 
 	protected void updateDataContextBinding(final Object model,
-											final String propertyName) throws ExecutionException {
+											final String propertyName) {
 		checkNotNull(model);
 		checkNotNull(propertyName);
 
@@ -142,7 +141,7 @@ public class BinderImpl implements Binder {
 	}
 
 	protected void updateProperties(final Object model,
-									final String propertyName) throws ExecutionException {
+									final String propertyName) {
 		checkNotNull(model);
 		checkNotNull(propertyName);
 
@@ -167,14 +166,22 @@ public class BinderImpl implements Binder {
 					}
 				}
 			}
-		} catch (final IllegalAccessException e) {
-			throw new ExecutionException(e);
-		} catch (final IllegalArgumentException e) {
-			throw new ExecutionException(e);
-		} catch (final InvocationTargetException e) {
-			throw new ExecutionException(e);
-		}
 
+		} catch (final IllegalAccessException e) {
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
+		} catch (final IllegalArgumentException e) {
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
+		} catch (final InvocationTargetException e) {
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
+		} catch (final ExecutionException e) {
+			Throwables.propagate(e);
+		}
 	}
 
 	protected void bindViewElement(	final Object inheritedDataContext,
@@ -182,8 +189,7 @@ public class BinderImpl implements Binder {
 									final Optional<DataContext> optionalFieldLevelDataContext,
 									final Optional<InputSignals> optionalFieldLEvelInputSignals,
 									final Optional<ObservableCollection> optionalFieldLevelObservableCollection,
-									final Optional<PropertySlots> optionalFieldLevelPropertySlots)
-			throws ExecutionException {
+									final Optional<PropertySlots> optionalFieldLevelPropertySlots) {
 		checkNotNull(inheritedDataContext);
 		checkNotNull(view);
 
@@ -241,16 +247,18 @@ public class BinderImpl implements Binder {
 
 	protected void bindObservableCollection(final Object dataContext,
 											final Object view,
-											final ObservableCollection observableCollection) throws ExecutionException {
+											final ObservableCollection observableCollection) {
 		checkNotNull(dataContext);
 		checkNotNull(view);
 		checkNotNull(observableCollection);
 
-		final String collectionProperty = observableCollection.value();
-		final Method collectionGetter = findGetter(	dataContext.getClass(),
-													collectionProperty);
 		try {
+			final String collectionProperty = observableCollection.value();
+
+			final Method collectionGetter = findGetter(	dataContext.getClass(),
+														collectionProperty);
 			final Object collection = collectionGetter.invoke(dataContext);
+
 			checkArgument(	collection instanceof EventList,
 							format(	"Observable collection must be bound to a property of type %s @ dataContext: %s, view: %s, observable collection: %s",
 									EventList.class.getName(),
@@ -280,29 +288,33 @@ public class BinderImpl implements Binder {
 
 				@Override
 				public void listChanged(final ListEvent<Object> listChanges) {
-					try {
-						handleListChanged(	view,
-											childViewClass,
-											this.shadowChildDataContextList,
-											listChanges);
-					} catch (final ExecutionException e) {
-						Throwables.propagate(e);
-					}
+					handleListChanged(	view,
+										childViewClass,
+										this.shadowChildDataContextList,
+										listChanges);
 				}
 			});
 		} catch (final IllegalAccessException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
 		} catch (final IllegalArgumentException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
 		} catch (final InvocationTargetException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
+		} catch (final ExecutionException e) {
+			Throwables.propagate(e);
 		}
 	}
 
 	protected void handleListChanged(	final Object view,
 										final Class<?> childViewClass,
 										final List<Object> shadowChildDataContextList,
-										final ListEvent<Object> listChanges) throws ExecutionException {
+										final ListEvent<Object> listChanges) {
 		while (listChanges.next()) {
 			final int sourceIndex = listChanges.getIndex();
 			final int changeType = listChanges.getType();
@@ -333,12 +345,8 @@ public class BinderImpl implements Binder {
 																						childViewClass,
 																						sourceIndex);
 					checkNotNull(childView);
-					try {
-						bind(	childViewDataContext,
-								childView);
-					} catch (final ExecutionException e) {
-						Throwables.propagate(e);
-					}
+					bind(	childViewDataContext,
+							childView);
 
 					break;
 				}
@@ -373,12 +381,8 @@ public class BinderImpl implements Binder {
 						final Object childView = BinderImpl.this.viewsByDataContextValue.get(oldChildViewDataContext);
 						checkNotNull(childView);
 
-						try {
-							bind(	newChildViewDataContext,
-									childView);
-						} catch (final ExecutionException e) {
-							Throwables.propagate(e);
-						}
+						bind(	newChildViewDataContext,
+								childView);
 					}
 
 					break;
@@ -429,7 +433,7 @@ public class BinderImpl implements Binder {
 
 	protected void bindPropertySlots(	final Object dataContext,
 										final Object view,
-										final PropertySlots propertySlots) throws ExecutionException {
+										final PropertySlots propertySlots) {
 		checkNotNull(dataContext);
 		checkNotNull(view);
 		checkNotNull(propertySlots);
@@ -445,7 +449,7 @@ public class BinderImpl implements Binder {
 
 	protected void bindPropertySlot(final Object dataContext,
 									final Object view,
-									final PropertySlot propertySlot) throws ExecutionException {
+									final PropertySlot propertySlot) {
 		checkNotNull(dataContext);
 		checkNotNull(view);
 		checkNotNull(propertySlot);
@@ -464,18 +468,26 @@ public class BinderImpl implements Binder {
 								propertySlot,
 								propertyInstance);
 		} catch (final IllegalAccessException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
 		} catch (final IllegalArgumentException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
 		} catch (final InvocationTargetException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
+		} catch (final ExecutionException e) {
+			Throwables.propagate(e);
 		}
 
 	}
 
 	protected void invokePropertySlot(	final Object view,
 										final PropertySlot propertySlot,
-										final Object propertyValue) throws ExecutionException {
+										final Object propertyValue) {
 		checkNotNull(view);
 		checkNotNull(propertySlot);
 		checkNotNull(propertyValue);
@@ -495,19 +507,27 @@ public class BinderImpl implements Binder {
 												targetViewMethod,
 												argument);
 		} catch (final NoSuchMethodException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
 		} catch (final SecurityException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
 		} catch (final InstantiationException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
 		} catch (final IllegalAccessException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
 		}
 	}
 
 	protected Optional<Object> getDataContextValue(	final Object parentDataContextValue,
 													final Object view,
-													final DataContext dataContext) throws ExecutionException {
+													final DataContext dataContext) {
 		checkNotNull(parentDataContextValue);
 		checkNotNull(view);
 		checkNotNull(dataContext);
@@ -558,7 +578,7 @@ public class BinderImpl implements Binder {
 	}
 
 	protected void bindChildViewElements(	final Object inheritedModel,
-											final Object view) throws ExecutionException {
+											final Object view) {
 		checkNotNull(inheritedModel);
 		checkNotNull(view);
 
@@ -604,9 +624,13 @@ public class BinderImpl implements Binder {
 
 			}
 		} catch (final IllegalArgumentException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
 		} catch (final IllegalAccessException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
 		}
 	}
 
@@ -617,7 +641,7 @@ public class BinderImpl implements Binder {
 	}
 
 	protected Optional<Object> getDataContextValue(	final Object model,
-													final Iterable<String> propertyNames) throws ExecutionException {
+													final Iterable<String> propertyNames) {
 		checkNotNull(model);
 		checkNotNull(propertyNames);
 
@@ -640,28 +664,29 @@ public class BinderImpl implements Binder {
 				currentModel = foundMethod.invoke(currentModel);
 			}
 		} catch (final IllegalAccessException e) {
-			throw new ExecutionException(	String.format(	"Can not access getter on %s. Is it a no argument public method?",
-															currentModel),
-											e);
+			throw new BindingError(	String.format(	"Can not access getter on %s. Is it a no argument public method?",
+													currentModel),
+									e);
 		} catch (final IllegalArgumentException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
 		} catch (final InvocationTargetException e) {
-			throw new ExecutionException(e);
+			// TODO explanation
+			throw new BindingError(	"",
+									e);
+		} catch (final ExecutionException e) {
+			Throwables.propagate(e);
 		}
 		return Optional.fromNullable(currentModel);
 	}
 
 	protected Method findGetter(final Class<?> modelClass,
-								final String propertyName) {
+								final String propertyName) throws ExecutionException {
 		checkNotNull(modelClass);
 		checkNotNull(propertyName);
-
-		try {
-			return getGetterMethod(	modelClass,
-									propertyName);
-		} catch (final ExecutionException e) {
-			throw new RuntimeException(e);
-		}
+		return getGetterMethod(	modelClass,
+								propertyName);
 	}
 
 	protected Method getGetterMethod(	final Class<?> modelClass,
@@ -689,18 +714,21 @@ public class BinderImpl implements Binder {
 													try {
 														foundMethod = modelClass.getMethod(getterMethodName);
 													} catch (final NoSuchMethodException e1) {
-														throw new NullPointerException(format(	"Property %s could not be found on %s.",
-																								propertyName,
-																								modelClass.getName()));
-													} catch (final SecurityException e1) {
-														throw new IllegalAccessError(format("Property %s is not accessible on %s. Did you declare it as public?",
-																							propertyName,
-																							modelClass.getName()));
-													}
-												} catch (final SecurityException e) {
-													throw new IllegalAccessError(format("Property %s is not accessible on %s. Did you declare it as public?",
+														throw new BindingError(	format(	"Property %s could not be found on %s.",
 																						propertyName,
-																						modelClass.getName()));
+																						modelClass.getName()),
+																				e1);
+													} catch (final SecurityException e2) {
+														throw new BindingError(	format(	"Property %s is not accessible on %s. Did you declare it as public?",
+																						propertyName,
+																						modelClass.getName()),
+																				e2);
+													}
+												} catch (final SecurityException e3) {
+													throw new BindingError(	format(	"Property %s is not accessible on %s. Did you declare it as public?",
+																					propertyName,
+																					modelClass.getName()),
+																			e3);
 												}
 												return foundMethod;
 											}

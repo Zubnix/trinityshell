@@ -11,7 +11,7 @@
  */
 package org.trinity.foundation.api.render.binding;
 
-import java.util.concurrent.ExecutionException;
+import org.trinity.foundation.api.render.binding.error.BindingError;
 
 /***************************************
  * Binds views to models and keeps them in sync.
@@ -27,12 +27,12 @@ public interface Binder {
 	 *            The model that changed.
 	 * @param propertyName
 	 *            The name of the property that changed.
-	 * @throws ExecutionException
-	 *             Thrown if illegal model or property is encountered.
+	 * @throws BindingError
+	 *             If an Illegal binding construction is encountered.
 	 *************************************** 
 	 */
 	void updateBinding(	Object changedModel,
-						String propertyName) throws ExecutionException;
+						String propertyName);
 
 	/***************************************
 	 * Bind a view to a model so it reflects the model's state.
@@ -41,11 +41,14 @@ public interface Binder {
 	 *            The model to visually represent
 	 * @param view
 	 *            The visual representation of the model
-	 * @throws ExecutionException
-	 *             Thrown if illegal model or property is encountered.
+	 * @throws BindingError
+	 *             If an Illegal binding construction is encountered.
 	 *************************************** 
 	 */
 	void bind(	Object model,
-				Object view) throws ExecutionException;
+				Object view);
+
+	// TODO
+	// void unbind(Object view);
 
 }

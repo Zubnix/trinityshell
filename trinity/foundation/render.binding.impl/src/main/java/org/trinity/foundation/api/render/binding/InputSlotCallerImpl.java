@@ -11,7 +11,7 @@ import org.trinity.foundation.api.display.input.Keyboard;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
 import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
-import org.trinity.foundation.api.render.binding.view.BoundInputEvent;
+import org.trinity.foundation.api.render.binding.view.delegate.BoundInputEvent;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
@@ -24,21 +24,21 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class InputSlotCallerImpl implements InputSlotCaller {
 
-	private final BindingAnnotationScanner bindingAnnotationScanner;
+	private final BindingAnnotationScannerImpl bindingAnnotationScannerImpl;
 	private final Keyboard keyboard;
 
 	@Inject
-	InputSlotCallerImpl(final BindingAnnotationScanner bindingAnnotationScanner, final Keyboard keyboard) {
-		this.bindingAnnotationScanner = bindingAnnotationScanner;
+	InputSlotCallerImpl(final BindingAnnotationScannerImpl bindingAnnotationScannerImpl, final Keyboard keyboard) {
+		this.bindingAnnotationScannerImpl = bindingAnnotationScannerImpl;
 		this.keyboard = keyboard;
 	}
 
 	@Override
 	public void callInputSlot(	final Object model,
-											final BoundInputEvent boundInputEvent) {
+								final BoundInputEvent boundInputEvent) {
 		try {
 			final Input input = boundInputEvent.getInput();
-			final Optional<Method> optionalInputSlot = this.bindingAnnotationScanner
+			final Optional<Method> optionalInputSlot = this.bindingAnnotationScannerImpl
 					.lookupInputSlot(	model.getClass(),
 										input.getClass(),
 										boundInputEvent.getInputSlotName());
