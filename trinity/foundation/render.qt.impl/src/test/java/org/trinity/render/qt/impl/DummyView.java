@@ -1,10 +1,6 @@
 package org.trinity.render.qt.impl;
 
-import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.PaintContext;
-import org.trinity.foundation.api.render.binding.view.InputSignal;
-import org.trinity.foundation.api.render.binding.view.InputSignals;
-import org.trinity.foundation.api.render.binding.view.PropertySlot;
 
 import com.trolltech.qt.gui.QLayout;
 import com.trolltech.qt.gui.QPushButton;
@@ -37,18 +33,15 @@ public class DummyView extends QWidget {
 		this.layout.layout();
 	}
 
-	@PropertySlot("slot0")
 	public void viewSlot0(final Object arg) {
 
 	}
 
-	@PropertySlot({ "slot0", "slot1" })
 	public void viewSlot1(	final PaintContext paintContext,
 							final Object arg) {
 
 	}
 
-	@InputSignals(@InputSignal(name = "onClick", inputType = PointerInput.class))
 	public QWidget button() {
 		return this.button;
 	}

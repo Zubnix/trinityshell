@@ -57,6 +57,8 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 		}
 	}
 
+	private final DestroyCallback destroyCallback = new DestroyCallback();
+
 	private final Painter painter;
 	private final BaseShellWidgetExecutor shellNodeExecutor;
 	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
@@ -83,7 +85,7 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 		this.painter.bindView();
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			getDisplaySurface());
-		addShellNodeEventHandler(new DestroyCallback());
+		addShellNodeEventHandler(this.destroyCallback);
 	}
 
 	@Override
