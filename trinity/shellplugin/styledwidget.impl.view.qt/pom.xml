@@ -9,8 +9,8 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>shellplugin.styledwidget.view.qt.impl</artifactId>
-	<name>Shellplugin Styled Widget implementation</name>
+	<artifactId>shellplugin.widget.impl.view.qt</artifactId>
+	<name>Shellplugin Widget View implementation</name>
 
 	<repositories>
 		<repository>

@@ -6,7 +6,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.api.render.binding.error.BindingError;
-import org.trinity.foundation.api.render.binding.model.View;
+import org.trinity.foundation.api.render.binding.model.ViewReference;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
@@ -63,7 +63,7 @@ public class ViewDiscovery {
 				throw new BindingError(String.format(	"Can not find view getter on class %s for model %s. Did you annotate a getter with %s ?",
 														modelClass.getName(),
 														model,
-														View.class.getName()));
+														ViewReference.class.getName()));
 			}
 		} catch (final ExecutionException e1) {
 			Throwables.propagate(e1);
@@ -76,12 +76,12 @@ public class ViewDiscovery {
 		Method foundMethod = null;
 		final Method[] methods = clazz.getMethods();
 		for (final Method method : methods) {
-			final View view = method.getAnnotation(View.class);
-			if ((view != null) && (foundMethod != null)) {
+			final ViewReference viewReference = method.getAnnotation(ViewReference.class);
+			if ((viewReference != null) && (foundMethod != null)) {
 				throw new BindingError(String.format(	"Found multiple %s on %s",
-														View.class.getName(),
+														ViewReference.class.getName(),
 														clazz.getName()));
-			} else if (view != null) {
+			} else if (viewReference != null) {
 				foundMethod = method;
 			}
 		}

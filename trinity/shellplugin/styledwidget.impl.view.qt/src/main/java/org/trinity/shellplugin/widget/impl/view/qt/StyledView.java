@@ -1,14 +1,16 @@
-package org.trinity.shellplugin.styledwidget.view.qt.impl;
+package org.trinity.shellplugin.widget.impl.view.qt;
 
 import javax.inject.Named;
+
+import org.trinity.foundation.api.render.binding.view.View;
 
 import com.trolltech.qt.core.Qt.WidgetAttribute;
 import com.trolltech.qt.core.Qt.WindowType;
 import com.trolltech.qt.gui.QFrame;
 
-public abstract class StyledView extends QFrame {
+public class StyledView extends QFrame implements View{
 
-	protected StyledView() {
+	StyledView() {
 		setWindowFlags(WindowType.X11BypassWindowManagerHint);
 		setAttribute(	WidgetAttribute.WA_DeleteOnClose,
 						true);

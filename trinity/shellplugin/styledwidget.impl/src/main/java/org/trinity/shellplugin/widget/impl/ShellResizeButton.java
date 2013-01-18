@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.styledwidget.impl;
+package org.trinity.shellplugin.widget.impl;
 // /*
 // * Trinity Window Manager and Desktop Shell Copyright (C) 2012 Erik De Rijcke
 // * This program is free software: you can redistribute it and/or modify it
@@ -15,7 +15,7 @@ package org.trinity.shellplugin.styledwidget.impl;
 // * details. You should have received a copy of the GNU General Public License
 // * along with this program. If not, see <http://www.gnu.org/licenses/>.
 // */
-// package org.trinity.shellplugin.styledwidget.impl;
+// package org.trinity.shellplugin.widget.impl;
 //
 // import org.trinity.foundation.render.api.PainterFactory;
 // import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;

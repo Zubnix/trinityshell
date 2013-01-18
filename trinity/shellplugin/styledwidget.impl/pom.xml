@@ -9,14 +9,6 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>shellplugin.styledwidget.impl</artifactId>
-	<name>Shellplugin Styled Widget implementation</name>
-
-	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>shellplugin.styledwidget.api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-	</dependencies>
+	<artifactId>shellplugin.widget.impl</artifactId>
+	<name>Shellplugin Widget implementation</name>
 </project>

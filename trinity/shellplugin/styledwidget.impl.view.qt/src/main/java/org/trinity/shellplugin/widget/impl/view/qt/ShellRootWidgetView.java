@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.styledwidget.view.qt.impl;
+package org.trinity.shellplugin.widget.impl.view.qt;
 
 import javax.inject.Named;
 

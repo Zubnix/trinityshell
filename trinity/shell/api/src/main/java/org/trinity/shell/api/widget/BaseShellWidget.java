@@ -30,8 +30,8 @@ import de.devsurf.injection.guice.annotations.Bind;
  * {@link PaintableSurfaceNode} implementation.
  * <p>
  * A <code>BaseShellWidget</code> is manipulated through a {@link Painter} that
- * can talk to a paint back-end. This is done by an enclosed {@link View}
- * object. The <code>View</code> object receives state change notifications of
+ * can talk to a paint back-end. This is done by an enclosed {@link ViewReference}
+ * object. The <code>ViewReference</code> object receives state change notifications of
  * the <code>BaseShellWidget</code> and in turn talks to the {@code Painter} of
  * the <code>BaseShellWidget</code>.
  * <p>

@@ -9,15 +9,17 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.shellplugin.styledwidget.impl;
+package org.trinity.shellplugin.widget.impl;
 
 import org.trinity.foundation.api.render.PainterFactory;
+import org.trinity.foundation.api.render.binding.model.ViewReference;
+import org.trinity.foundation.api.render.binding.view.View;
 import org.trinity.shell.api.node.ShellNodeParent;
 import org.trinity.shell.api.node.manager.ShellLayoutManager;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
+import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shell.api.widget.ShellRootWidget;
-import org.trinity.shellplugin.styledwidget.api.BaseShellWidgetStyled;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -39,21 +41,27 @@ import de.devsurf.injection.guice.annotations.Bind;
  * 
  */
 @Bind
-public class ShellRootWidgetImpl extends BaseShellWidgetStyled implements ShellRootWidget {
+public class ShellRootWidgetImpl extends BaseShellWidget implements ShellRootWidget {
 
 	private final ShellSurfaceParent shellRootSurface;
+	private final View view;
 
 	@Inject
 	ShellRootWidgetImpl(final EventBus eventBus,
 						final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 						final PainterFactory painterFactory,
 						@Named("ShellRootSurface") final ShellSurfaceParent shellRootSurface,
-						@Named("ShellRootView") final Object view) {
+						@Named("ShellRootWidgetView") final View view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
-				painterFactory,
-				view);
+				painterFactory);
 		this.shellRootSurface = shellRootSurface;
+		this.view = view;
+	}
+
+	@ViewReference
+	public View getView() {
+		return view;
 	}
 
 	@Override
@@ -67,6 +75,7 @@ public class ShellRootWidgetImpl extends BaseShellWidgetStyled implements ShellR
 		setParent(this.shellRootSurface);
 		doReparent(false);
 		init();
+
 		setWidth(this.shellRootSurface.getWidth());
 		setHeight(this.shellRootSurface.getHeight());
 		doResize();

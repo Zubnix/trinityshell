@@ -12,7 +12,7 @@
 
 	<modules>
 		<module>styledwidget.impl</module>
-		<module>styledwidget.view.qt.impl</module>
+		<module>styledwidget.impl.view.qt</module>
 		<module>wm.api</module>
 		<module>wm.impl</module>
 	</modules>
