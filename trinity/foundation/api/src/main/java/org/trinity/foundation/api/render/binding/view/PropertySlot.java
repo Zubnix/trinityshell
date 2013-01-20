@@ -27,6 +27,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({})
 public @interface PropertySlot {
+
+	/**
+	 * The datacontext of this specific annotation, relative to current active
+	 * datacontext.
+	 * 
+	 * @return
+	 */
+	String dataContext() default "";
+
 	/***************************************
 	 * The model property name.
 	 * 

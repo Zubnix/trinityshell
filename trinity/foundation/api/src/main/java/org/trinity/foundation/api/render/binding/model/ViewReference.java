@@ -16,9 +16,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.trinity.foundation.api.render.binding.Binder;
+
 /***************************************
  * Marks a method as returning the view of an object (ie a model).
  * 
+ * @see Binder#bind(Object, Object)
  *************************************** 
  */
 @Retention(RetentionPolicy.RUNTIME)

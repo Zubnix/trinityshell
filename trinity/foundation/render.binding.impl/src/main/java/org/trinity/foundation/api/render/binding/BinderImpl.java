@@ -50,7 +50,8 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class BinderImpl implements Binder {
 
-	private static final Cache<Class<?>, Cache<String, Method>> getterCache = CacheBuilder.newBuilder().build();
+	private static final Cache<Class<?>, Cache<String, Optional<Method>>> getterCache = CacheBuilder.newBuilder()
+			.build();
 	private static final Cache<Class<?>, Field[]> childViewCache = CacheBuilder.newBuilder().build();
 
 	private static final String GET_BOOLEAN_PREFIX = "is";
@@ -146,8 +147,12 @@ public class BinderImpl implements Binder {
 		checkNotNull(propertyName);
 
 		try {
-			final Object propertyValue = findGetter(model.getClass(),
-													propertyName).invoke(model);
+			Optional<Method> optionalGetter = findGetter(	model.getClass(),
+															propertyName);
+			if (!optionalGetter.isPresent()) {
+				return;
+			}
+			final Object propertyValue = optionalGetter.get().invoke(model);
 			final Set<Object> views = this.viewsByDataContextValue.get(model);
 			if (views == null) {
 				return;
@@ -208,9 +213,9 @@ public class BinderImpl implements Binder {
 
 		Object dataContext = inheritedDataContext;
 		if (optionalDataContext.isPresent()) {
-			final Optional<Object> optionalDataContextValue = getDataContextValue(	dataContext,
-																					view,
-																					optionalDataContext.get());
+			final Optional<Object> optionalDataContextValue = getDataContextValueForView(	dataContext,
+																							view,
+																							optionalDataContext.get());
 			if (optionalDataContextValue.isPresent()) {
 				dataContext = optionalDataContextValue.get();
 			} else {
@@ -255,9 +260,13 @@ public class BinderImpl implements Binder {
 		try {
 			final String collectionProperty = observableCollection.value();
 
-			final Method collectionGetter = findGetter(	dataContext.getClass(),
-														collectionProperty);
-			final Object collection = collectionGetter.invoke(dataContext);
+			final Optional<Method> collectionGetter = findGetter(	dataContext.getClass(),
+																	collectionProperty);
+			if (!collectionGetter.isPresent()) {
+				return;
+			}
+
+			final Object collection = collectionGetter.get().invoke(dataContext);
 
 			checkArgument(	collection instanceof EventList,
 							format(	"Observable collection must be bound to a property of type %s @ dataContext: %s, view: %s, observable collection: %s",
@@ -455,18 +464,31 @@ public class BinderImpl implements Binder {
 		checkNotNull(propertySlot);
 
 		try {
-			final String propertyName = propertySlot.propertyName();
-			final Method getter = findGetter(	dataContext.getClass(),
-												propertyName);
-			if (getter == null) {
-				throw new NullPointerException(format(	"Property %s not found on %s",
-														propertyName,
-														dataContext));
+			String propertySlotDataContext = propertySlot.dataContext();
+			Object propertyDataContext;
+			if (propertySlotDataContext.isEmpty()) {
+				propertyDataContext = dataContext;
+			} else {
+				propertyDataContext = getDataContextValue(	dataContext,
+															propertySlotDataContext);
 			}
-			final Object propertyInstance = getter.invoke(dataContext);
-			invokePropertySlot(	view,
-								propertySlot,
-								propertyInstance);
+			final String propertyName = propertySlot.propertyName();
+			final Optional<Method> getter = findGetter(	propertyDataContext.getClass(),
+														propertyName);
+			if (getter.isPresent()) {
+				final Object propertyInstance = getter.get().invoke(propertyDataContext);
+				invokePropertySlot(	view,
+									propertySlot,
+									propertyInstance);
+
+			}
+			// else{
+			// throw new NullPointerException(format(
+			// "Property %s not found on %s",
+			// propertyName,
+			// dataContext));
+			// }
+
 		} catch (final IllegalAccessException e) {
 			// TODO explanation
 			throw new BindingError(	"",
@@ -525,9 +547,9 @@ public class BinderImpl implements Binder {
 		}
 	}
 
-	protected Optional<Object> getDataContextValue(	final Object parentDataContextValue,
-													final Object view,
-													final DataContext dataContext) {
+	protected Optional<Object> getDataContextValueForView(	final Object parentDataContextValue,
+															final Object view,
+															final DataContext dataContext) {
 		checkNotNull(parentDataContextValue);
 		checkNotNull(view);
 		checkNotNull(dataContext);
@@ -543,10 +565,8 @@ public class BinderImpl implements Binder {
 								dataContext);
 
 		final String propertyChain = dataContext.value();
-		final Iterable<String> propertyNames = toPropertyNames(propertyChain);
-
 		return getDataContextValue(	parentDataContextValue,
-									propertyNames);
+									propertyChain);
 	}
 
 	protected Field[] findChildViews(final Class<?> modelClass) throws ExecutionException {
@@ -641,9 +661,11 @@ public class BinderImpl implements Binder {
 	}
 
 	protected Optional<Object> getDataContextValue(	final Object model,
-													final Iterable<String> propertyNames) {
+													String propertyChain) {
 		checkNotNull(model);
-		checkNotNull(propertyNames);
+		checkNotNull(propertyChain);
+
+		final Iterable<String> propertyNames = toPropertyNames(propertyChain);
 
 		Object currentModel = model;
 		try {
@@ -653,15 +675,18 @@ public class BinderImpl implements Binder {
 					break;
 				}
 				final Class<?> currentModelClass = currentModel.getClass();
-				final Method foundMethod = findGetter(	currentModelClass,
-														propertyName);
-				if (foundMethod == null) {
-					throw new NullPointerException(format(	"Data context path %s starting from %s can not find the property %s.",
-															propertyNames,
-															model,
-															propertyName));
+				final Optional<Method> foundMethod = findGetter(currentModelClass,
+																propertyName);
+				if (foundMethod.isPresent()) {
+					currentModel = foundMethod.get().invoke(currentModel);
 				}
-				currentModel = foundMethod.invoke(currentModel);
+				// else {
+				// throw new NullPointerException(format(
+				// "Data context path %s starting from %s can not find the property %s.",
+				// propertyNames,
+				// model,
+				// propertyName));
+				// }
 			}
 		} catch (final IllegalAccessException e) {
 			throw new BindingError(	String.format(	"Can not access getter on %s. Is it a no argument public method?",
@@ -681,27 +706,27 @@ public class BinderImpl implements Binder {
 		return Optional.fromNullable(currentModel);
 	}
 
-	protected Method findGetter(final Class<?> modelClass,
-								final String propertyName) throws ExecutionException {
+	protected Optional<Method> findGetter(	final Class<?> modelClass,
+											final String propertyName) throws ExecutionException {
 		checkNotNull(modelClass);
 		checkNotNull(propertyName);
 		return getGetterMethod(	modelClass,
 								propertyName);
 	}
 
-	protected Method getGetterMethod(	final Class<?> modelClass,
-										final String propertyName) throws ExecutionException {
+	protected Optional<Method> getGetterMethod(	final Class<?> modelClass,
+												final String propertyName) throws ExecutionException {
 		return getterCache.get(	modelClass,
-								new Callable<Cache<String, Method>>() {
+								new Callable<Cache<String, Optional<Method>>>() {
 									@Override
-									public Cache<String, Method> call() {
+									public Cache<String, Optional<Method>> call() {
 
 										return CacheBuilder.newBuilder().build();
 									}
 								}).get(	propertyName,
-										new Callable<Method>() {
+										new Callable<Optional<Method>>() {
 											@Override
-											public Method call() {
+											public Optional<Method> call() {
 												Method foundMethod = null;
 												String getterMethodName = toGetterMethodName(propertyName);
 
@@ -714,10 +739,13 @@ public class BinderImpl implements Binder {
 													try {
 														foundMethod = modelClass.getMethod(getterMethodName);
 													} catch (final NoSuchMethodException e1) {
-														throw new BindingError(	format(	"Property %s could not be found on %s.",
-																						propertyName,
-																						modelClass.getName()),
-																				e1);
+														// throw new
+														// BindingError( format(
+														// "Property %s could not be found on %s.",
+														// propertyName,
+														// modelClass.getName()),
+														// e1);
+
 													} catch (final SecurityException e2) {
 														throw new BindingError(	format(	"Property %s is not accessible on %s. Did you declare it as public?",
 																						propertyName,
@@ -730,7 +758,7 @@ public class BinderImpl implements Binder {
 																					modelClass.getName()),
 																			e3);
 												}
-												return foundMethod;
+												return Optional.fromNullable(foundMethod);
 											}
 										});
 	}
