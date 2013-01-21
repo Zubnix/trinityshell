@@ -13,6 +13,11 @@ package org.trinity.foundation.api.shared;
 
 public class Margins {
 
+	/**
+	 * Short for {@code new Margins(0,0,0,0)}
+	 */
+	public static final Margins NO_MARGINS = new Margins(0);
+
 	private final int bottom, left, right, top;
 
 	public Margins(final int margins) {
