@@ -36,7 +36,7 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 
 	@Inject
 	public ShellKeysBindingImpl(@Named("ShellRootSurface") final ShellSurface root,
-								@Named("shellEventBus") final EventBus shellEventBus,
+								@Named("ShellEventBus") final EventBus shellEventBus,
 								@Assisted final List<Key> keys,
 								@Assisted final InputModifiers inputModifiers,
 								@Assisted final Runnable action) {

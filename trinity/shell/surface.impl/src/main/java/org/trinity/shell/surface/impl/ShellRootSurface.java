@@ -39,14 +39,14 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 	private final DisplaySurface displaySurface;
 
 	@Inject
-	ShellRootSurface(	final EventBus eventBus,
+	ShellRootSurface(	final EventBus nodeEventBus,
 						final DisplayServer displayServer,
 						final ShellDisplayEventDispatcher shellDisplayEventDispatcher) {
-		super(eventBus);
+		super(nodeEventBus);
 		this.shellNodeExecutor = new ShellSurfaceExecutorImpl(this);
 		this.displaySurface = displayServer.getRootDisplayArea();
 		syncGeoToDisplaySurface();
-		shellDisplayEventDispatcher.registerDisplayEventSourceListener(	eventBus,
+		shellDisplayEventDispatcher.registerDisplayEventSourceListener(	nodeEventBus,
 																		this.displaySurface);
 	}
 

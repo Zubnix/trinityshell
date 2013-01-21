@@ -61,7 +61,7 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 	private final EventBus shellEventBus;
 
 	@Inject
-	ShellDisplayEventDispatcherImpl(@Named("shellEventBus") final EventBus shellEventBus,
+	ShellDisplayEventDispatcherImpl(@Named("ShellEventBus") final EventBus shellEventBus,
 									final ShellClientSurfaceFactory shellClientSurfaceFactory,
 									final DisplayServer displayServer) {
 		this.shellEventBus = shellEventBus;

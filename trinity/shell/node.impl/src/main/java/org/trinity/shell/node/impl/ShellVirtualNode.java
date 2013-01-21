@@ -47,8 +47,8 @@ public class ShellVirtualNode extends AbstractShellNodeParent {
 	private ShellLayoutManager shellLayoutManager;
 
 	@Inject
-	protected ShellVirtualNode(final EventBus eventBus) {
-		super(eventBus);
+	protected ShellVirtualNode(final EventBus nodeEventBus) {
+		super(nodeEventBus);
 		this.shellNodeExecutor = new ShellVirtualNodeExecutor(this);
 	}
 

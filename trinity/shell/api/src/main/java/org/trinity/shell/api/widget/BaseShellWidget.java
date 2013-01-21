@@ -30,10 +30,10 @@ import de.devsurf.injection.guice.annotations.Bind;
  * {@link PaintableSurfaceNode} implementation.
  * <p>
  * A <code>BaseShellWidget</code> is manipulated through a {@link Painter} that
- * can talk to a paint back-end. This is done by an enclosed {@link ViewReference}
- * object. The <code>ViewReference</code> object receives state change notifications of
- * the <code>BaseShellWidget</code> and in turn talks to the {@code Painter} of
- * the <code>BaseShellWidget</code>.
+ * can talk to a paint back-end. This is done by an enclosed
+ * {@link ViewReference} object. The <code>ViewReference</code> object receives
+ * state change notifications of the <code>BaseShellWidget</code> and in turn
+ * talks to the {@code Painter} of the <code>BaseShellWidget</code>.
  * <p>
  * A <code>BaseShellWidget</code> is lazily initialized. This means that it is
  * fully initialized by the paint back-end when the <code>BaseShellWidget</code>
@@ -67,7 +67,7 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 	/**
 	 * Create an uninitialized <code>BaseShellWidget</code>.A
 	 * <code>BaseShellWidget</code> will only be fully functional when it is
-	 * assigned to an already initialized parent <code>BaseShellWidget</code>.
+	 * assigned to an initialized parent <code>BaseShellWidget</code>.
 	 */
 	protected BaseShellWidget(	final EventBus eventBus,
 								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,

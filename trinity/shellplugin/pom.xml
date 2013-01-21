@@ -11,6 +11,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>widget.api</module>
 		<module>widget.impl</module>
 		<module>widget.impl.view.qt</module>
 		<module>wm.impl</module>

@@ -98,5 +98,11 @@ public class PropertyBindingTest {
 									SubView.class.getMethod("handleBooleanProperty",
 															boolean.class),
 									false);
+		// once for binding init
+		verify(	propertySlotInvocatorDelegate,
+				times(1)).invoke(	view,
+									View.class.getMethod(	"setClassName",
+															String.class),
+									model.getClass().getName());
 	}
 }

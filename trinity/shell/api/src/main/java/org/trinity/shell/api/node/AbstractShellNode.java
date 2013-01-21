@@ -561,7 +561,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Reparent the current node but the actual delegated execution by this
+	 * Reparents the current node but the actual delegated execution by this
 	 * node's {@link ShellNodeExecutor} is conditional. This call will affect
 	 * the node's state.
 	 * 
