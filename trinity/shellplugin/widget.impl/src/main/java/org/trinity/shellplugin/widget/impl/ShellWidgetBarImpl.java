@@ -5,19 +5,23 @@ import org.trinity.foundation.api.render.binding.model.ViewReference;
 import org.trinity.foundation.api.render.binding.view.View;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
+import org.trinity.shellplugin.widget.api.ShellWidgetBar;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
-public class ShellWidgetBar extends BaseShellWidget {
+import de.devsurf.injection.guice.annotations.Bind;
+
+@Bind
+public class ShellWidgetBarImpl extends BaseShellWidget implements ShellWidgetBar {
 
 	private final View view;
 
 	@Inject
-	ShellWidgetBar(	final EventBus eventBus,
-					final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-					final PainterFactory painterFactory,
-					final View view) {
+	ShellWidgetBarImpl(	final EventBus eventBus,
+						final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
+						final PainterFactory painterFactory,
+						final View view) {
 
 		super(	eventBus,
 				shellDisplayEventDispatcher,

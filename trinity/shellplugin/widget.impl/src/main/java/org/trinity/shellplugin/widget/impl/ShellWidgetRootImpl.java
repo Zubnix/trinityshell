@@ -19,7 +19,7 @@ import org.trinity.shell.api.node.manager.ShellLayoutManager;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 import org.trinity.shell.api.widget.BaseShellWidget;
-import org.trinity.shell.api.widget.ShellRootWidget;
+import org.trinity.shellplugin.widget.api.ShellWidgetRoot;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -28,28 +28,15 @@ import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
-// TODO override binding
-// TODO implement resizing+moving? (with XRANDR extension in x11)
-/**
- * A <code>RealRoot</code> represents a <code>BaseShellWidget</code> that is
- * backed by the native root window. It is the base of the
- * <code>ShellNode</code> tree hierarchy for a <code>ManagedDisplay</code>.
- * Multiple <code>RealRoot</code> widgets can be constructed from the same
- * <code>ManagedDisplay</code> but will represent the same on-screen drawable,
- * it is thus recommended to use the
- * {@link ShellDisplay#getRealRootRenderArea()} method to reference the real
- * root.
- * 
- */
 @Bind
 @Singleton
-public class ShellWidgetRoot extends BaseShellWidget implements ShellRootWidget {
+public class ShellWidgetRootImpl extends BaseShellWidget implements ShellWidgetRoot {
 
 	private final ShellSurfaceParent shellRootSurface;
 	private final View view;
 
 	@Inject
-	ShellWidgetRoot(final EventBus eventBus,
+	ShellWidgetRootImpl(final EventBus eventBus,
 						final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 						final PainterFactory painterFactory,
 						@Named("ShellRootSurface") final ShellSurfaceParent shellRootSurface,

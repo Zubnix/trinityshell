@@ -1,8 +1,6 @@
 package org.trinity.shellplugin.widget.impl.view.qt;
 
 import org.trinity.foundation.api.render.PaintRenderer;
-import org.trinity.foundation.api.render.binding.view.PropertySlot;
-import org.trinity.foundation.api.render.binding.view.PropertySlots;
 import org.trinity.foundation.api.render.binding.view.View;
 
 import com.google.inject.Inject;

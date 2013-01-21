@@ -9,14 +9,16 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.shell.api.widget;
+package org.trinity.shellplugin.widget.api;
+
+import org.trinity.shell.api.widget.ShellWidget;
 
 /**
  * 
  * The parent of all {@link ShellWidget}s.
  * 
  */
-public interface ShellRootWidget extends ShellWidget {
+public interface ShellWidgetRoot extends ShellWidget {
 
 	void construct();
 }
