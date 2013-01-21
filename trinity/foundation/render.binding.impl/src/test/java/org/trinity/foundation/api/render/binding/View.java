@@ -9,6 +9,7 @@ import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 
 @ObservableCollection(value = "dummySubModels", view = CollectionElementView.class)
+@PropertySlots(@PropertySlot(dataContext = "class", propertyName = "name", methodName = "setClassName", argumentTypes = String.class))
 public class View {
 
 	@DataContext("otherSubModel.subSubModel")
@@ -17,6 +18,8 @@ public class View {
 
 	@InputSignals(@InputSignal(name = "onKey", inputType = KeyboardInput.class))
 	private SubView keyInputSubView = new SubView();
+
+	private String className;
 
 	public SubView getMouseInputSubView() {
 		return this.mouseInputSubView;
@@ -32,5 +35,13 @@ public class View {
 
 	public void setKeyInputSubView(final SubView keyInputSubView) {
 		this.keyInputSubView = keyInputSubView;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
+	public String getClassName() {
+		return className;
 	}
 }

@@ -469,8 +469,13 @@ public class BinderImpl implements Binder {
 			if (propertySlotDataContext.isEmpty()) {
 				propertyDataContext = dataContext;
 			} else {
-				propertyDataContext = getDataContextValue(	dataContext,
-															propertySlotDataContext);
+				Optional<Object> optionalRelativeDataContext = getDataContextValue(	dataContext,
+																					propertySlotDataContext);
+				if (optionalRelativeDataContext.isPresent()) {
+					propertyDataContext = optionalRelativeDataContext.get();
+				} else {
+					return;
+				}
 			}
 			final String propertyName = propertySlot.propertyName();
 			final Optional<Method> getter = findGetter(	propertyDataContext.getClass(),
