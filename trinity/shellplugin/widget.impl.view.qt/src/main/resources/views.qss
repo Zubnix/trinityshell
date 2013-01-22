@@ -1,6 +1,7 @@
-ShellWidgetRootImpl {
-	background: grey;
-
-ShellWidgetBarImpl {
+#ShellWidgetRootImpl {
+	background-color: grey;
+}
+#ShellWidgetBarImpl {
+	background-color: white;
 	border: 1px solid black;
 }
