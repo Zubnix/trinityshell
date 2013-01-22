@@ -11,7 +11,6 @@
  */
 package org.trinity.foundation.api.render.binding.view.delegate;
 
-
 /***************************************
  * A delegate to handle the life cycle of a child view element. This delegate
  * should be implemented for a specific widget toolkit.

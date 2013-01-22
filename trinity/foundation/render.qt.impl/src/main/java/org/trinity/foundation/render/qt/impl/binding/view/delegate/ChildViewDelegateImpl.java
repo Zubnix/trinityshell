@@ -7,8 +7,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.trinity.foundation.api.render.PaintContext;
-import org.trinity.foundation.api.render.PaintRoutine;
 import org.trinity.foundation.api.render.PaintRenderer;
+import org.trinity.foundation.api.render.PaintRoutine;
 import org.trinity.foundation.api.render.binding.error.BindingError;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 
@@ -52,28 +52,27 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
 
 		final QWidget parentViewInstance = (QWidget) parentView;
 
+		final PaintRoutine<T, PaintContext> newChildViewRoutine = new PaintRoutine<T, PaintContext>() {
+			@Override
+			public T call(final PaintContext paintContext) {
+
+				final T childView = ChildViewDelegateImpl.this.injector.getInstance(childViewType);
+				final QWidget childViewInstance = (QWidget) childView;
+
+				childViewInstance.setParent(parentViewInstance);
+				final QLayout layout = parentViewInstance.layout();
+				if (layout != null) {
+					addChildToLayout(	layout,
+										childViewInstance,
+										position);
+
+				}
+				return (T) childViewInstance;
+			}
+		};
+
 		final Future<T> newChildViewFuture = this.paintRenderer.invoke(	this,
-																	new PaintRoutine<T, PaintContext>() {
-																		@Override
-																		public T call(final PaintContext paintContext) {
-
-																			final T childView = ChildViewDelegateImpl.this.injector
-																					.getInstance(childViewType);
-																			final QWidget childViewInstance = (QWidget) childView;
-
-																			childViewInstance
-																					.setParent(parentViewInstance);
-																			final QLayout layout = parentViewInstance
-																					.layout();
-																			if (layout != null) {
-																				addChildToLayout(	layout,
-																									childViewInstance,
-																									position);
-
-																			}
-																			return (T) childViewInstance;
-																		}
-																	});
+																		newChildViewRoutine);
 		try {
 			return newChildViewFuture.get();
 		} catch (final InterruptedException e) {
@@ -115,15 +114,17 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
 						format(	"Expected child view should be of type %s",
 								QWidget.class.getName()));
 
+		final PaintRoutine<Void, PaintContext> destroyChildViewRoutine = new PaintRoutine<Void, PaintContext>() {
+			@Override
+			public Void call(final PaintContext paintContext) throws ExecutionException {
+				final QWidget deletedChildViewInstance = (QWidget) deletedChildView;
+				deletedChildViewInstance.close();
+				return null;
+			}
+		};
+
 		this.paintRenderer.invoke(	this,
-								new PaintRoutine<Void, PaintContext>() {
-									@Override
-									public Void call(final PaintContext paintContext) throws ExecutionException {
-										final QWidget deletedChildViewInstance = (QWidget) deletedChildView;
-										deletedChildViewInstance.close();
-										return null;
-									}
-								});
+									destroyChildViewRoutine);
 	}
 
 	@Override
@@ -142,20 +143,22 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
 		final QWidget parentViewInstance = (QWidget) parentView;
 		final QWidget childViewInstance = (QWidget) childView;
 
-		this.paintRenderer.invoke(	this,
-								new PaintRoutine<Void, PaintContext>() {
-									@Override
-									public Void call(final PaintContext paintContext) throws ExecutionException {
-										final QLayout layout = parentViewInstance.layout();
-										if (layout != null) {
-											layout.removeWidget(childViewInstance);
-											addChildToLayout(	layout,
-																childViewInstance,
-																newPosition);
+		final PaintRoutine<Void, PaintContext> updateChildViewPositionRoutine = new PaintRoutine<Void, PaintContext>() {
+			@Override
+			public Void call(final PaintContext paintContext) throws ExecutionException {
+				final QLayout layout = parentViewInstance.layout();
+				if (layout != null) {
+					layout.removeWidget(childViewInstance);
+					addChildToLayout(	layout,
+										childViewInstance,
+										newPosition);
 
-										}
-										return null;
-									}
-								});
+				}
+				return null;
+			}
+		};
+
+		this.paintRenderer.invoke(	this,
+									updateChildViewPositionRoutine);
 	}
 }

@@ -16,7 +16,8 @@ import org.trinity.shell.api.surface.ShellSurfaceParent;
 
 /**
  * 
- * Provides visual interaction for the user in the shell scene graph.
+ * Provides visual elements for the user to interact with in the shell scene
+ * graph.
  * 
  */
 public interface ShellWidget extends ShellSurfaceParent {

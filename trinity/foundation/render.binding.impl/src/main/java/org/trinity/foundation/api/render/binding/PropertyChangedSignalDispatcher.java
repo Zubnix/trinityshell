@@ -33,7 +33,7 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 
 		for (final String propertyName : changedPropertyNames) {
 			getBinder().updateBinding(	changedModel,
-									propertyName);
+										propertyName);
 		}
 
 		return invocationResult;

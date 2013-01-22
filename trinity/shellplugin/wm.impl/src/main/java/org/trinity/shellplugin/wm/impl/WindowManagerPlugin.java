@@ -19,6 +19,7 @@ import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
+// TODO split this class up
 @Bind(multiple = true)
 @Singleton
 public class WindowManagerPlugin implements ShellPlugin {
@@ -34,11 +35,11 @@ public class WindowManagerPlugin implements ShellPlugin {
 	private ShellWidgetBar bottomBar;
 
 	@Inject
-	WindowManagerPlugin(@Named("ShellEventBus") EventBus shellEventBus,
-						ShellWidgetRoot shellWidgetRoot,
-						ShellLayoutManagerLine shellLayoutManagerLine,
-						Provider<ShellWidgetBar> shellWidgetBarProvider,
-						@Named("ShellVirtualNode") Provider<ShellNodeParent> shellVirtualNodeProvider) {
+	WindowManagerPlugin(@Named("ShellEventBus") final EventBus shellEventBus,
+						final ShellWidgetRoot shellWidgetRoot,
+						final ShellLayoutManagerLine shellLayoutManagerLine,
+						final Provider<ShellWidgetBar> shellWidgetBarProvider,
+						@Named("ShellVirtualNode") final Provider<ShellNodeParent> shellVirtualNodeProvider) {
 		this.shellEventBus = shellEventBus;
 		this.shellWidgetRoot = shellWidgetRoot;
 		this.shellLayoutManagerLine = shellLayoutManagerLine;
@@ -48,37 +49,41 @@ public class WindowManagerPlugin implements ShellPlugin {
 
 	@Override
 	public void start() {
-		shellWidgetRoot.construct();
-		shellLayoutManagerLine.setHorizontalDirection(false);
-		shellLayoutManagerLine.setInverseDirection(false);
-		shellWidgetRoot.setLayoutManager(shellLayoutManagerLine);
+		this.shellWidgetRoot.construct();
+		this.shellLayoutManagerLine.setHorizontalDirection(false);
+		this.shellLayoutManagerLine.setInverseDirection(false);
+		this.shellWidgetRoot.setLayoutManager(this.shellLayoutManagerLine);
 
 		// setup topbar, client display area and bottombar.
 		// topbar
-		topBar = shellWidgetBarProvider.get();
-		ShellLayoutPropertyLine layoutPropertyTopBar = new ShellLayoutPropertyLine(	0,
-																					Margins.NO_MARGINS);
-		shellLayoutManagerLine.addChildNode(topBar,
-											layoutPropertyTopBar);
-		topBar.setParent(shellWidgetRoot);
+		this.topBar = this.shellWidgetBarProvider.get();
+		this.topBar.setHeight(25);
+		this.topBar.doResize();
+		final ShellLayoutPropertyLine layoutPropertyTopBar = new ShellLayoutPropertyLine(	0,
+																							Margins.NO_MARGINS);
+		this.shellLayoutManagerLine.addChildNode(	this.topBar,
+													layoutPropertyTopBar);
+		this.topBar.setParent(this.shellWidgetRoot);
 
 		// client display area
-		clientDisplayArea = shellVirtualNodeProvider.get();
-		ShellLayoutPropertyLine layoutPropertyClientDisplayArea = new ShellLayoutPropertyLine(	1,
-																								new Margins(5));
-		shellLayoutManagerLine.addChildNode(clientDisplayArea,
-											layoutPropertyClientDisplayArea);
-		clientDisplayArea.setParent(shellWidgetRoot);
+		this.clientDisplayArea = this.shellVirtualNodeProvider.get();
+		final ShellLayoutPropertyLine layoutPropertyClientDisplayArea = new ShellLayoutPropertyLine(1,
+																									new Margins(5));
+		this.shellLayoutManagerLine.addChildNode(	this.clientDisplayArea,
+													layoutPropertyClientDisplayArea);
+		this.clientDisplayArea.setParent(this.shellWidgetRoot);
 
 		// bottombar
-		bottomBar = shellWidgetBarProvider.get();
-		ShellLayoutPropertyLine layoutPropertyBottomBar = new ShellLayoutPropertyLine(	0,
-																						Margins.NO_MARGINS);
-		shellLayoutManagerLine.addChildNode(bottomBar,
-											layoutPropertyBottomBar);
-		topBar.setParent(shellWidgetRoot);
+		this.bottomBar = this.shellWidgetBarProvider.get();
+		this.bottomBar.setHeight(25);
+		this.bottomBar.doResize();
+		final ShellLayoutPropertyLine layoutPropertyBottomBar = new ShellLayoutPropertyLine(0,
+																							Margins.NO_MARGINS);
+		this.shellLayoutManagerLine.addChildNode(	this.bottomBar,
+													layoutPropertyBottomBar);
+		this.topBar.setParent(this.shellWidgetRoot);
 
-		shellWidgetRoot.doShow();
+		this.shellWidgetRoot.doShow();
 
 		this.shellEventBus.register(this);
 	}
@@ -86,13 +91,13 @@ public class WindowManagerPlugin implements ShellPlugin {
 	@Override
 	public void stop() {
 		this.shellEventBus.unregister(this);
-		shellWidgetRoot.doHide();
-		shellWidgetRoot.doDestroy();
+		this.shellWidgetRoot.doHide();
+		this.shellWidgetRoot.doDestroy();
 	}
 
 	@Subscribe
-	public void handleShellSurfaceCreated(ShellSurfaceCreatedEvent shellSurfaceCreatedEvent) {
-		ShellSurface shellSurface = shellSurfaceCreatedEvent.getClient();
+	public void handleShellSurfaceCreated(final ShellSurfaceCreatedEvent shellSurfaceCreatedEvent) {
+		final ShellSurface shellSurface = shellSurfaceCreatedEvent.getClient();
 		// TODO manage client
 	}
 }

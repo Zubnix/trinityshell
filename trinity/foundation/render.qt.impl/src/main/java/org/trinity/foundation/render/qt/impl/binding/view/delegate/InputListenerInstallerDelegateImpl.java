@@ -58,19 +58,19 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 		};
 
 		this.paintRenderer.invoke(	this,
-								new PaintRoutine<Void, PaintContext>() {
-									@Override
-									public Void call(final PaintContext paintContext) throws ExecutionException {
-										final QObject viewInstance = (QObject) view;
+									new PaintRoutine<Void, PaintContext>() {
+										@Override
+										public Void call(final PaintContext paintContext) throws ExecutionException {
+											final QObject viewInstance = (QObject) view;
 
-										final QObject inputListener = InputListenerInstallerDelegateImpl.this.inputListeners
-												.get(	Integer.valueOf(inputListenerHash),
-														inputListenerCreator);
+											final QObject inputListener = InputListenerInstallerDelegateImpl.this.inputListeners
+													.get(	Integer.valueOf(inputListenerHash),
+															inputListenerCreator);
 
-										viewInstance.installEventFilter(inputListener);
-										return null;
-									};
-								});
+											viewInstance.installEventFilter(inputListener);
+											return null;
+										};
+									});
 	}
 
 	@Override
@@ -95,18 +95,18 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 		};
 
 		this.paintRenderer.invoke(	this,
-								new PaintRoutine<Void, PaintContext>() {
-									@Override
-									public Void call(final PaintContext paintContext) throws ExecutionException {
-										final QObject viewInstance = (QObject) view;
+									new PaintRoutine<Void, PaintContext>() {
+										@Override
+										public Void call(final PaintContext paintContext) throws ExecutionException {
+											final QObject viewInstance = (QObject) view;
 
-										final QObject inputListener = InputListenerInstallerDelegateImpl.this.inputListeners
-												.get(	Integer.valueOf(inputListenerHash),
-														inputListenerCreator);
-										viewInstance.removeEventFilter(inputListener);
+											final QObject inputListener = InputListenerInstallerDelegateImpl.this.inputListeners
+													.get(	Integer.valueOf(inputListenerHash),
+															inputListenerCreator);
+											viewInstance.removeEventFilter(inputListener);
 
-										return null;
-									}
-								});
+											return null;
+										}
+									});
 	}
 }

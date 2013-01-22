@@ -30,21 +30,21 @@ public class PropertySlotInvocatorDelegateImpl implements PropertySlotInvocatorD
 						final Method viewMethod,
 						final Object argument) {
 		this.paintRenderer.invoke(	this,
-								new PaintRoutine<Void, PaintContext>() {
-									@Override
-									public Void call(final PaintContext paintContext) throws ExecutionException {
-										try {
-											viewMethod.invoke(	view,
-																argument);
-										} catch (final IllegalAccessException e) {
-											throw new ExecutionException(e);
-										} catch (final IllegalArgumentException e) {
-											throw new ExecutionException(e);
-										} catch (final InvocationTargetException e) {
-											throw new ExecutionException(e);
+									new PaintRoutine<Void, PaintContext>() {
+										@Override
+										public Void call(final PaintContext paintContext) throws ExecutionException {
+											try {
+												viewMethod.invoke(	view,
+																	argument);
+											} catch (final IllegalAccessException e) {
+												throw new ExecutionException(e);
+											} catch (final IllegalArgumentException e) {
+												throw new ExecutionException(e);
+											} catch (final InvocationTargetException e) {
+												throw new ExecutionException(e);
+											}
+											return null;
 										}
-										return null;
-									}
-								});
+									});
 	}
 }
