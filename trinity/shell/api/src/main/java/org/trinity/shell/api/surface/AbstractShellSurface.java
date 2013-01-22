@@ -90,7 +90,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 
 	@Override
 	public void setInputFocus() {
-		getDisplaySurface().setInputFocus();
+		getDisplaySurface().get().setInputFocus();
 	}
 
 	/**
@@ -371,7 +371,11 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 */
 	@Override
 	public void syncGeoToDisplaySurface() {
-		final Rectangle rectangle = getDisplaySurface().getGeometry();
+		// TODO in future version we might want to take a geometry delegate into
+		// account to map from and to shell scene geometry and on screen
+		// geometry.
+
+		final Rectangle rectangle = getDisplaySurface().get().getGeometry();
 		setX(rectangle.getX());
 		setY(rectangle.getY());
 

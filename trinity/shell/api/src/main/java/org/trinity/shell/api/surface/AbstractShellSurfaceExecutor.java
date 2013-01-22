@@ -28,8 +28,7 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 		if (shellSurface == null) {
 			return false;
 		}
-		final boolean initialized = ((ShellSurface) shellSurface).getDisplaySurface() != null;
-		return initialized;
+		return ((ShellSurface) shellSurface).getDisplaySurface().isPresent();
 	}
 
 	@Override

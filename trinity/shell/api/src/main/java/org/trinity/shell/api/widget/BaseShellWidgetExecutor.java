@@ -75,7 +75,6 @@ public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 	protected void initializeShellSurface(final ShellNodeParent parent) {
 		final BaseShellWidget shellWidgetImpl = getShellNode();
 		shellWidgetImpl.init();
-		shellWidgetImpl.doResize();
 		reparent(parent);
 	}
 }

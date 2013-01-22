@@ -16,6 +16,8 @@ import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 
+import com.google.common.base.Optional;
+
 /***************************************
  * Wraps a {@link DisplaySurface} and provides additional basic functionality
  * like state information, minimum, maximum, current and requested dimensions.
@@ -78,10 +80,11 @@ public interface ShellSurface extends ShellNode {
 	 * to display it's contents. A display surface can be shared, so multiple
 	 * shell surface's can use the same display surface.
 	 * 
-	 * @return a {@link DisplaySurface}.
+	 * @return an optional {@link DisplaySurface}. If the {@code DisplaySurface}
+	 *         is absent, then this node is not yet initialized.
 	 *************************************** 
 	 */
-	DisplaySurface getDisplaySurface();
+	Optional<DisplaySurface> getDisplaySurface();
 
 	/***************************************
 	 * The constant absolute delta of the old and new width when this surface's

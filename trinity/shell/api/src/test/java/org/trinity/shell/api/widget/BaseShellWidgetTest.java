@@ -17,22 +17,24 @@ import com.google.common.eventbus.EventBus;
 
 public class BaseShellWidgetTest {
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testInit() {
 		// given
 		final EventBus eventBus = mock(EventBus.class);
 		final ShellDisplayEventDispatcher shellDisplayEventDispatcher = mock(ShellDisplayEventDispatcher.class);
 		final PainterFactory painterFactory = mock(PainterFactory.class);
-		final ShellWidget parentWidget = mock(ShellWidget.class);
+		final BaseShellWidget parentWidget = mock(BaseShellWidget.class);
 		final DisplaySurface displaySurface = mock(DisplaySurface.class);
-		when(parentWidget.getDisplaySurface()).thenReturn(displaySurface);
+		when(parentWidget.getDisplaySurface()).thenReturn(Optional.of(displaySurface));
 		final Painter painter = mock(Painter.class);
 		when(painterFactory.createPainter(any())).thenReturn(painter);
 		final BaseShellWidget baseShellWidget = new BaseShellWidget(eventBus,
 																	shellDisplayEventDispatcher,
 																	painterFactory);
 
-		when(painter.getDislaySurface()).thenReturn(Optional.of(displaySurface));
+		when(painter.getDislaySurface()).thenReturn(Optional.<DisplaySurface> absent(),
+													Optional.<DisplaySurface> of(displaySurface));
 
 		baseShellWidget.setX(50);
 		baseShellWidget.setY(75);
@@ -45,11 +47,10 @@ public class BaseShellWidgetTest {
 
 		// then
 		verify(	painter,
-				times(1)).move(	50,
-								75);
-		verify(	painter,
-				times(1)).resize(	100,
-									200);
+				times(1)).moveResize(	50,
+										75,
+										100,
+										200);
 
 	}
 }
