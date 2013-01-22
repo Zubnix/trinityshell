@@ -21,31 +21,31 @@ import org.trinity.foundation.api.display.input.Button;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.render.PaintContext;
+import org.trinity.foundation.api.render.PaintRenderer;
 import org.trinity.foundation.api.render.PaintRoutine;
 import org.trinity.foundation.api.render.Painter;
-import org.trinity.foundation.api.render.PaintRenderer;
 import org.trinity.foundation.api.render.binding.Binder;
 import org.trinity.foundation.render.qt.impl.painter.routine.QJGetDisplaySurfaceRoutine;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
-import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.trolltech.qt.gui.QWidget;
 
 public class QJPainter implements Painter {
 
 	private final PaintRenderer renderEngine;
-	private final DisplayArea model;
+	private final Object model;
 	private final Binder binder;
 	private final ViewDiscovery viewDiscovery = new ViewDiscovery();
 	private final DisplaySurfaceFactory displaySurfaceFactory;
 
-	@Inject
+	@AssistedInject
 	QJPainter(	final PaintRenderer qFRenderEngine,
 				final DisplaySurfaceFactory displaySurfaceFactory,
 				final Binder binder,
-				@Assisted final DisplayArea model) {
+				@Assisted final Object model) {
 		this.binder = binder;
 		this.renderEngine = qFRenderEngine;
 		this.model = model;

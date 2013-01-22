@@ -57,7 +57,7 @@
 		<!-- scene -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>shell.node.impl</artifactId>
+			<artifactId>shell.scene.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- surface -->
@@ -87,11 +87,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<!-- window management -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>shellplugin.wm.api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>shellplugin.wm.impl</artifactId>

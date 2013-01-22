@@ -23,10 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.trinity.foundation.display.x11.impl.XConnection;
-import org.trinity.foundation.display.x11.impl.XTime;
-import org.trinity.foundation.display.x11.impl.XWindow;
-import org.trinity.foundation.display.x11.impl.XWindowHandle;
 
 import xcb.LibXcb;
 import xcb.LibXcbConstants;

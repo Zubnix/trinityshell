@@ -23,8 +23,6 @@ import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-import de.devsurf.injection.guice.annotations.Bind;
-
 /**
  * An {@link AbstractShellSurfaceParent} with a base
  * {@link PaintableSurfaceNode} implementation.
@@ -44,7 +42,6 @@ import de.devsurf.injection.guice.annotations.Bind;
  * <code>BaseShellWidget</code> will be draw on. Note that multiple
  * <code>BaseShellWidget</code>s can share the same <code>DisplaySurface</code>.
  */
-@Bind
 public class BaseShellWidget extends AbstractShellSurfaceParent implements ShellWidget {
 
 	private class DestroyCallback {

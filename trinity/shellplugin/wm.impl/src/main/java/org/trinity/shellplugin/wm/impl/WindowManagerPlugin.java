@@ -83,6 +83,9 @@ public class WindowManagerPlugin implements ShellPlugin {
 													layoutPropertyBottomBar);
 		this.topBar.setParent(this.shellWidgetRoot);
 
+		this.topBar.doShow();
+		this.clientDisplayArea.doShow();
+		this.bottomBar.doShow();
 		this.shellWidgetRoot.doShow();
 
 		this.shellEventBus.register(this);

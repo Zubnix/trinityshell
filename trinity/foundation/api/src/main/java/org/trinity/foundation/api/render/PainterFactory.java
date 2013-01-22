@@ -18,14 +18,5 @@ package org.trinity.foundation.api.render;
  */
 public interface PainterFactory {
 
-	/***************************************
-	 * Create a new {@link Painter} that will be bound to the given
-	 * {@link PaintableSurfaceNode}.
-	 * 
-	 * @param paintableSurfaceNode
-	 *            a {@link PaintableSurfaceNode}
-	 * @return a {@link Painter}.
-	 *************************************** 
-	 */
-	Painter createPainter(Object dataContext);
+	Painter createPainter(final Object model);
 }
