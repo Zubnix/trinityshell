@@ -9,15 +9,13 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.shell.api.surface;
+package org.trinity.shell.api.scene.manager;
 
-import org.trinity.foundation.api.display.DisplayArea;
-import org.trinity.shell.api.scene.ShellNodeExecutor;
-
-/**
- * Geometry delegate for a {@link ShellSurface}.
+/***************************************
+ * Marker interface for child layout properties.
  * 
+ *************************************** 
  */
-public interface ShellSurfaceExecutor extends ShellNodeExecutor {
-	DisplayArea getSurfacePeer();
+public interface ShellLayoutProperty {
+
 }

@@ -13,8 +13,8 @@ package org.trinity.shell.api.surface;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.event.ShellNodeEvent;
+import org.trinity.shell.api.scene.ShellNode;
+import org.trinity.shell.api.scene.event.ShellNodeEvent;
 
 /***************************************
  * Wraps a {@link DisplaySurface} and provides additional basic functionality

@@ -12,8 +12,8 @@
 package org.trinity.shell.surface.impl;
 
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.shell.api.node.ShellNodeParent;
-import org.trinity.shell.api.node.event.ShellNodeDestroyedEvent;
+import org.trinity.shell.api.scene.ShellNodeParent;
+import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 

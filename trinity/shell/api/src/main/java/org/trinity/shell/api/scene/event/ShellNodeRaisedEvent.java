@@ -9,15 +9,20 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.shell.api.surface;
+package org.trinity.shell.api.scene.event;
 
-import org.trinity.foundation.api.display.DisplayArea;
-import org.trinity.shell.api.scene.ShellNodeExecutor;
+import org.trinity.shell.api.scene.ShellNode;
+import org.trinity.shell.api.scene.ShellNodeTransformation;
 
-/**
- * Geometry delegate for a {@link ShellSurface}.
+/**************************************
+ * Informs that the {@link ShellNode} that emitted this event, is raised.
  * 
+ *************************************** 
  */
-public interface ShellSurfaceExecutor extends ShellNodeExecutor {
-	DisplayArea getSurfacePeer();
+public class ShellNodeRaisedEvent extends ShellNodeStackingEvent {
+
+	public ShellNodeRaisedEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
+		super(	shellNode,
+				shellNodeTransformation);
+	}
 }

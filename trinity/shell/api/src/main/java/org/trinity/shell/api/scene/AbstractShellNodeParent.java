@@ -9,12 +9,11 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.shell.api.surface;
+package org.trinity.shell.api.scene;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
@@ -22,7 +21,12 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.eventbus.EventBus;
 
-public abstract class AbstractShellSurfaceParent extends AbstractShellSurface implements ShellSurfaceParent {
+/***************************************
+ * An abstract base implementation of a {@link ShellNodeParent}.
+ * 
+ *************************************** 
+ */
+public abstract class AbstractShellNodeParent extends AbstractShellNode implements ShellNodeParent {
 
 	private final EventBus nodeEventBus;
 
@@ -30,11 +34,16 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 
 	private ShellLayoutManager shellLayoutManager;
 
-	public AbstractShellSurfaceParent(final EventBus nodeEventBus) {
+	public AbstractShellNodeParent(final EventBus nodeEventBus) {
 		super(nodeEventBus);
 		this.nodeEventBus = nodeEventBus;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * The returned array is a copy of the internal array.
+	 */
 	@Override
 	public ShellNode[] getChildren() {
 		return this.children.toArray(new ShellNode[this.children.size()]);
@@ -70,6 +79,13 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 	protected void doMoveResize(final boolean execute) {
 		super.doMoveResize(execute);
 		updateChildrenPosition();
+		layout();
+	}
+
+	@Override
+	protected void doResize(final boolean execute) {
+		super.doResize(execute);
+		layout();
 	}
 
 	@Override
@@ -89,14 +105,18 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * This call has no effect if no {@link ShellLayoutManager} is set for this
+	 * node.
+	 */
 	@Override
 	public void layout() {
 		final ShellLayoutManager layoutManager = getLayoutManager();
 		if (layoutManager == null) {
 			return;
 		}
-
 		getLayoutManager().layout(this);
 	}
-
 }

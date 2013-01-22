@@ -11,12 +11,11 @@
  */
 package org.trinity.shell.api.widget;
 
-import javax.swing.text.View;
-
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
-import org.trinity.shell.api.node.event.ShellNodeDestroyedEvent;
+import org.trinity.foundation.api.render.binding.model.ViewReference;
+import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 

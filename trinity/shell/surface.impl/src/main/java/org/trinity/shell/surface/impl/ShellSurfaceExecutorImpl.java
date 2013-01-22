@@ -13,8 +13,8 @@ package org.trinity.shell.surface.impl;
 
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.ShellNodeParent;
+import org.trinity.shell.api.scene.ShellNode;
+import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 

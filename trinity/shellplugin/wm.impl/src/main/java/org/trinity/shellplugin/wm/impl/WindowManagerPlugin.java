@@ -1,10 +1,10 @@
 package org.trinity.shellplugin.wm.impl;
 
 import org.trinity.foundation.api.shared.Margins;
-import org.trinity.shell.api.node.ShellNodeParent;
-import org.trinity.shell.api.node.manager.ShellLayoutManagerLine;
-import org.trinity.shell.api.node.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.plugin.ShellPlugin;
+import org.trinity.shell.api.scene.ShellNodeParent;
+import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
+import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.event.ShellSurfaceCreatedEvent;
 import org.trinity.shellplugin.widget.api.ShellWidgetBar;

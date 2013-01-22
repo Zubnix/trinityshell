@@ -9,15 +9,30 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.shell.api.surface;
+package org.trinity.shell.api.scene.manager;
 
-import org.trinity.foundation.api.display.DisplayArea;
-import org.trinity.shell.api.scene.ShellNodeExecutor;
+import org.trinity.foundation.api.shared.Margins;
 
-/**
- * Geometry delegate for a {@link ShellSurface}.
+/***************************************
+ * Child node property to be used with a {@link ShellLayoutManagerLine}.
  * 
+ *************************************** 
  */
-public interface ShellSurfaceExecutor extends ShellNodeExecutor {
-	DisplayArea getSurfacePeer();
+public class ShellLayoutPropertyLine implements ShellLayoutProperty {
+
+	private final int weight;
+	private final Margins margins;
+
+	public ShellLayoutPropertyLine(final int weight, final Margins margins) {
+		this.weight = weight;
+		this.margins = margins;
+	}
+
+	public int getWeight() {
+		return this.weight;
+	}
+
+	public Margins getMargins() {
+		return this.margins;
+	}
 }

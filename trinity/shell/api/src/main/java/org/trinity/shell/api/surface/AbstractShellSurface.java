@@ -18,8 +18,8 @@ import org.trinity.foundation.api.display.event.HideNotifyEvent;
 import org.trinity.foundation.api.display.event.ShowNotifyEvent;
 import org.trinity.foundation.api.display.event.ShowRequestEvent;
 import org.trinity.foundation.api.shared.Rectangle;
-import org.trinity.shell.api.node.AbstractShellNode;
-import org.trinity.shell.api.node.ShellNode;
+import org.trinity.shell.api.scene.AbstractShellNode;
+import org.trinity.shell.api.scene.ShellNode;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;

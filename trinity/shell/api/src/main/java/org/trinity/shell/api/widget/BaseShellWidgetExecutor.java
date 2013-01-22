@@ -12,8 +12,8 @@
 package org.trinity.shell.api.widget;
 
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
-import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.ShellNodeParent;
+import org.trinity.shell.api.scene.ShellNode;
+import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 
@@ -75,6 +75,7 @@ public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 	protected void initializeShellSurface(final ShellNodeParent parent) {
 		final BaseShellWidget shellWidgetImpl = getShellNode();
 		shellWidgetImpl.init();
+		shellWidgetImpl.doResize();
 		reparent(parent);
 	}
 }

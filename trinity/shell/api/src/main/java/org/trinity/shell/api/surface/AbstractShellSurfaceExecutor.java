@@ -14,10 +14,10 @@ package org.trinity.shell.api.surface;
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.shell.api.node.AbstractShellNodeExecutor;
-import org.trinity.shell.api.node.ShellNode;
-import org.trinity.shell.api.node.ShellNodeExecutor;
-import org.trinity.shell.api.node.ShellNodeParent;
+import org.trinity.shell.api.scene.AbstractShellNodeExecutor;
+import org.trinity.shell.api.scene.ShellNode;
+import org.trinity.shell.api.scene.ShellNodeExecutor;
+import org.trinity.shell.api.scene.ShellNodeParent;
 
 public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExecutor implements ShellSurfaceExecutor {
 
