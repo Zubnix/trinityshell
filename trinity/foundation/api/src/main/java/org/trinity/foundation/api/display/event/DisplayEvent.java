@@ -25,7 +25,7 @@ public class DisplayEvent {
 
 	/****************************************
 	 * Construct a generic <code>DisplayEvent</code> with the given
-	 * {@link DisplayEventTarget} as the originating resource.
+	 * {@link DisplayEventTarget} as the targeted resource.
 	 * 
 	 * @param displayEventTarget
 	 *            A {@link DisplayEventTarget}
@@ -36,7 +36,7 @@ public class DisplayEvent {
 	}
 
 	/****************************************
-	 * Get the {@link DisplayEventTarget} where this event originated from.
+	 * The {@link DisplayEventTarget} that this event targets.
 	 * 
 	 * @return A {@link DisplayEventTarget}
 	 *************************************** 

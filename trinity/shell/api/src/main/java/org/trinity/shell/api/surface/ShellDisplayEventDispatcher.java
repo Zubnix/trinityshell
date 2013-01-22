@@ -11,16 +11,61 @@
  */
 package org.trinity.shell.api.surface;
 
+import org.trinity.foundation.api.display.DisplayServer;
+import org.trinity.foundation.api.display.event.DisplayEvent;
+
 import com.google.common.eventbus.EventBus;
 
 public interface ShellDisplayEventDispatcher {
+
+	/***************************************
+	 * Read a {@link DisplayEvent} from
+	 * {@link DisplayServer#getNextDisplayEvent()} and forward it to the
+	 * associated {@link EventBus}ses.
+	 * 
+	 * @param block
+	 *            Blocks the calling thread if no event is available.
+	 *************************************** 
+	 */
 	void dispatchDisplayEvent(final boolean block);
 
-	void registerDisplayEventSourceListener(final EventBus nodeEventBus,
+	/***************************************
+	 * Notifies the shell event dispatcher that events with the given target
+	 * should be forwarded to the given {@code EventBus}.
+	 * 
+	 * @param eventBus
+	 *            The {@link EventBus} that will receive the forwarded events.
+	 * @param displayEventTarget
+	 *            An event target as specified by
+	 *            {@link DisplayEvent#getDisplayEventTarget()}.
+	 *************************************** 
+	 */
+	void registerDisplayEventSourceListener(final EventBus eventBus,
 											final Object displayEventTarget);
 
-	void unregisterDisplayEventSourceListener(	EventBus nodeEventBus,
+	/***************************************
+	 * Notifies the shell event dispatcher that events with the given target
+	 * should no longer be forwarded to the given node {@code EventBus}.
+	 * 
+	 * @param eventBus
+	 *            The {@link EventBus} that will no longer receive the forwarded
+	 *            events.
+	 * @param displayEventTarget
+	 *            An event target as specified by
+	 *            {@link DisplayEvent#getDisplayEventTarget()}.
+	 *************************************** 
+	 */
+	void unregisterDisplayEventSourceListener(	EventBus eventBus,
 												Object displayEventTarget);
 
+	/***************************************
+	 * Notifies the shell event dispatcher that events with the given target
+	 * should no longer be forwarded to all associated {@code EventBus}ses.
+	 * 
+	 * @param displayEventTarget
+	 *            An event target as specified by
+	 *            {@link DisplayEvent#getDisplayEventTarget()}.
+	 *************************************** 
+	 */
 	void unregisterAllDisplayEventSourceListeners(Object displayEventTarget);
 }

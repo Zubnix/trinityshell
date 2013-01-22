@@ -19,7 +19,7 @@ import org.trinity.shell.api.surface.ShellSurface;
 
 // TODO documentation
 /**
- * A delegate for managing a {@link BaseShellWidget}'s geometry.
+ * A delegate to manage a {@link BaseShellWidget}'s geometry.
  * 
  */
 public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
