@@ -452,8 +452,5 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	public void handleShowRequestEvent(final ShowRequestEvent showRequestEvent) {
 		requestShow();
 	}
-
-	@Override
-	public abstract ShellSurfaceExecutor getShellNodeExecutor();
 	/* end display event handling */
 }

@@ -31,8 +31,6 @@ import com.google.common.base.Optional;
  *************************************** 
  */
 public interface ShellSurface extends ShellNode {
-	@Override
-	ShellSurfaceExecutor getShellNodeExecutor();
 
 	/***************************************
 	 * The constant absolute delta of the old and new height when this surface's

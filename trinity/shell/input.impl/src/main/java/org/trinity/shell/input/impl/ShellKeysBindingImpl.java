@@ -66,8 +66,8 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 	public void bind() {
 		this.shellEventBus.register(this);
 		for (final Key grabKey : this.keys) {
-			this.root.getDisplaySurface().grabKey(	grabKey,
-													this.inputModifiers);
+			this.root.getDisplaySurface().get().grabKey(grabKey,
+														this.inputModifiers);
 		}
 	}
 
@@ -82,8 +82,8 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 	@Override
 	public void unbind() {
 		for (final Key grabKey : this.keys) {
-			this.root.getDisplaySurface().ungrabKey(grabKey,
-													this.inputModifiers);
+			this.root.getDisplaySurface().get().ungrabKey(	grabKey,
+															this.inputModifiers);
 		}
 		this.shellEventBus.unregister(this);
 	}

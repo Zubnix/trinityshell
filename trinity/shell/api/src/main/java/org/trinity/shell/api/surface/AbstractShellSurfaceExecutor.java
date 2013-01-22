@@ -19,7 +19,7 @@ import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeExecutor;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
-public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExecutor implements ShellSurfaceExecutor {
+public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExecutor implements ShellNodeExecutor {
 
 	@Override
 	public abstract ShellSurface getShellNode();
@@ -175,10 +175,10 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 
 	protected abstract ShellSurface findClosestSameTypeSurface(final ShellNode square);
 
-	@Override
-	public DisplayArea getSurfacePeer() {
-		return getSurfacePeer(getShellNode());
-	}
+	// @Override
+	// public DisplayArea getSurfacePeer() {
+	// return getSurfacePeer(getShellNode());
+	// }
 
 	protected abstract DisplayArea getSurfacePeer(final ShellSurface shellSurface);
 

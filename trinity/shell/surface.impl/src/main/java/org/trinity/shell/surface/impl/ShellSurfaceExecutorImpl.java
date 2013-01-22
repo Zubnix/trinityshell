@@ -28,7 +28,7 @@ public class ShellSurfaceExecutorImpl extends AbstractShellSurfaceExecutor {
 
 	@Override
 	protected DisplaySurface getSurfacePeer(final ShellSurface shellSurface) {
-		return shellSurface.getDisplaySurface();
+		return shellSurface.getDisplaySurface().get();
 	}
 
 	@Override
@@ -62,6 +62,6 @@ public class ShellSurfaceExecutorImpl extends AbstractShellSurfaceExecutor {
 
 	@Override
 	public DisplayAreaManipulator getShellNodeManipulator() {
-		return getShellNode().getDisplaySurface();
+		return getShellNode().getDisplaySurface().get();
 	}
 }
