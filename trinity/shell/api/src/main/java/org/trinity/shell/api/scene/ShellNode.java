@@ -11,17 +11,57 @@
  */
 package org.trinity.shell.api.scene;
 
-import java.awt.LayoutManager;
-
-import org.trinity.foundation.api.render.PaintSurfaceNode;
+import org.trinity.foundation.api.display.DisplayArea;
+import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
+import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
+import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 
 /***************************************
  * The super interface of all nodes that live in the shell scene graph.
  * 
  *************************************** 
  */
-public interface ShellNode extends PaintSurfaceNode {
+public interface ShellNode extends DisplayArea, Rectangle {
+
+	/***************************************
+	 * The absolute X value of this node.
+	 * <p>
+	 * The absolute value is the distance, implementation dependent but usually
+	 * in pixels, to root parent's position.
+	 * 
+	 * @return An absolute X coordinate.
+	 *************************************** 
+	 */
+	int getAbsoluteX();
+
+	/***************************************
+	 * The absolute Y value of this node.
+	 * <p>
+	 * The absolute value is the distance, implementation dependent but usually
+	 * in pixels, to root parent's position.
+	 * 
+	 * @return An absolute Y coordinate.
+	 *************************************** 
+	 */
+	int getAbsoluteY();
+
+	/**
+	 * Indicates if this ndoe is visible. This is implementation dependent. A
+	 * <code>PaintSurfaceNode</code> is usually only visible if it's parent is
+	 * visible. So even though this method may return true, the
+	 * <code>PaintSurfaceNode</code> will only be physically visible if all it's
+	 * parents are physically visible as well.
+	 * 
+	 * @return
+	 */
+	boolean isVisible();
 
 	/***************************************
 	 * Reset any value set by {@link #setX(int)} or {@link #setY(int)} to the
@@ -115,50 +155,92 @@ public interface ShellNode extends PaintSurfaceNode {
 	boolean isDestroyed();
 
 	/***************************************
-	 * Request the closest parent {@link LayoutManager} to lower this node.
+	 * Request that this node is lowered. This will cause any subscribed node
+	 * listener, e.g. a layout manager, to receive a
+	 * {@link ShellNodeLowerRequestEvent}. Optionally, responding to the request
+	 * can then be done by any of the listeners by calling {@link #doLower()}.
+	 * 
+	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
 	void requestLower();
 
 	/***************************************
-	 * Request the closest parent {@link LayoutManager} to move this node.
+	 * Request that this node is moved. This will cause any subscribed node
+	 * listener, e.g. a layout manager, to receive a
+	 * {@link ShellNodeMoveRequestEvent}. Optionally, responding to the request
+	 * can then be done by any of the listeners by calling {@link #doMove()}.
+	 * 
+	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
 	void requestMove();
 
 	/***************************************
-	 * Request the closest parent {@link LayoutManager} to move and resize this
-	 * node.
+	 * Request that this node is moved and resized. This will cause any
+	 * subscribed node listener, e.g. a layout manager, to receive a
+	 * {@link ShellNodeMoveResizeRequestEvent}. Optionally, responding to the
+	 * request can then be done by any of the listeners by calling
+	 * {@link #doMoveResize()}.
+	 * 
+	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
 	void requestMoveResize();
 
 	/***************************************
-	 * Request the closest parent {@link LayoutManager} to raise this node.
+	 * Request that this node is raised. This will cause any subscribed node
+	 * listener, e.g. a layout manager, to receive a
+	 * {@link ShellNodeRaiseRequestEvent}. Optionally, responding to the request
+	 * can then be done by any of the listeners by calling {@link #doRaise()}.
+	 * 
+	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
 	void requestRaise();
 
 	/***************************************
-	 * Request the closest parent {@link LayoutManager} to reparent this node.
+	 * Request that this node is reparented. This will cause any subscribed node
+	 * listener, e.g. a layout manager, to receive a
+	 * {@link ShellNodeReparentRequestEvent}. Optionally, responding to the
+	 * request can then be done by any of the listeners by calling
+	 * {@link #doReparent()}.
+	 * 
+	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
 	void requestReparent();
 
 	/***************************************
-	 * Request the closest parent {@link LayoutManager} to resize this node.
+	 * Request that this node is resized. This will cause any subscribed node
+	 * listener, e.g. a layout manager, to receive a
+	 * {@link ShellNodeResizeRequestEvent}. Optionally, responding to the
+	 * request can then be done by any of the listeners by calling
+	 * {@link #doResize()}.
+	 * 
+	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
 	void requestResize();
 
 	/***************************************
-	 * Request the closest parent {@link LayoutManager} to show this node.
+	 * Request that this node is shown. This will cause any subscribed node
+	 * listener, e.g. a layout manager, to receive a
+	 * {@link ShellNodeShowRequestEvent}. Optionally, responding to the request
+	 * can then be done by any of the listeners by calling {@link #doShow()}.
+	 * 
+	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
 	void requestShow();
 
 	/***************************************
-	 * Request the closest parent {@link LayoutManager} to hide this node.
+	 * Request that this node is hidden. This will cause any subscribed node
+	 * listener, e.g. a layout manager, to receive a
+	 * {@link ShellNodeHiddenEvent}. Optionally, responding to the request can
+	 * then be done by any of the listeners by calling {@link #doHide()}.
+	 * 
+	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
 	void requestHide();
@@ -229,7 +311,6 @@ public interface ShellNode extends PaintSurfaceNode {
 	/**
 	 * The direct parent of this node.
 	 */
-	@Override
 	ShellNodeParent getParent();
 
 	/***************************************
