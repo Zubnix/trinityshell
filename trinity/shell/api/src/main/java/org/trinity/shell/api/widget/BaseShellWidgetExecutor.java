@@ -59,22 +59,10 @@ public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 		return findClosestSameTypeSurface(parent);
 	}
 
-	// @Override
-	// public BaseShellWidget getSurfacePeer() {
-	// return getShellNode();
-	// }
-
 	@Override
 	protected BaseShellWidget getSurfacePeer(final ShellSurface shellSurface) {
 		// if the cast fails then somebody is trying to combine a non
 		// BaseShellWidget with one that is, which shouldn'be a allowed.
 		return (BaseShellWidget) shellSurface;
-	}
-
-	@Override
-	protected void initializeShellSurface(final ShellNodeParent parent) {
-		final BaseShellWidget shellWidgetImpl = getShellNode();
-		shellWidgetImpl.init();
-		reparent(parent);
 	}
 }

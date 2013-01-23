@@ -24,40 +24,22 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 	@Override
 	public abstract ShellSurface getShellNode();
 
-	protected boolean isAreaInitialized(final ShellNode shellSurface) {
-		if (shellSurface == null) {
-			return false;
-		}
-		return ((ShellSurface) shellSurface).getDisplaySurface().isPresent();
-	}
-
 	@Override
 	public void move(	final int relativeX,
 						final int relativeY) {
 		final ShellNode shellNode = getShellNode();
-		if (isAreaInitialized(shellNode)) {
-			final int newX = relativeX;
-			final int newY = relativeY;
-			final ShellNodeParent directParent = shellNode.getParent();
-			final Coordinate newRelativePosition = calculateRelativePosition(	directParent,
-																				newX,
-																				newY);
 
-			final int newRelativeX = newRelativePosition.getX();
-			final int newRelativeY = newRelativePosition.getY();
-			getShellNodeManipulator().move(	newRelativeX,
-											newRelativeY);
-		}
-	}
+		final int newX = relativeX;
+		final int newY = relativeY;
+		final ShellNodeParent directParent = shellNode.getParent();
+		final Coordinate newRelativePosition = calculateRelativePosition(	directParent,
+																			newX,
+																			newY);
 
-	@Override
-	public void resize(	final int width,
-						final int height) {
-		final ShellNode shellNode = getShellNode();
-		if (isAreaInitialized(shellNode)) {
-			super.resize(	width,
-							height);
-		}
+		final int newRelativeX = newRelativePosition.getX();
+		final int newRelativeY = newRelativePosition.getY();
+		getShellNodeManipulator().move(	newRelativeX,
+										newRelativeY);
 	}
 
 	@Override
@@ -66,27 +48,25 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 							final int width,
 							final int height) {
 		final ShellNode shellNode = getShellNode();
-		final boolean areaInitialized = isAreaInitialized(shellNode);
-		if (areaInitialized) {
-			final int newX = relativeX;
-			final int newY = relativeY;
-			final int newWidth = width;
-			final int newHeight = height;
-			final ShellNodeParent directParent = shellNode.getParent();
 
-			final Coordinate newRelativePosition = calculateRelativePosition(	directParent,
-																				newX,
-																				newY);
+		final int newX = relativeX;
+		final int newY = relativeY;
+		final int newWidth = width;
+		final int newHeight = height;
+		final ShellNodeParent directParent = shellNode.getParent();
 
-			final int newRelativeX = newRelativePosition.getX();
-			final int newRelativeY = newRelativePosition.getY();
+		final Coordinate newRelativePosition = calculateRelativePosition(	directParent,
+																			newX,
+																			newY);
 
-			final DisplayAreaManipulator areaManipulator = getShellNodeManipulator();
-			areaManipulator.moveResize(	newRelativeX,
-										newRelativeY,
-										newWidth,
-										newHeight);
-		}
+		final int newRelativeX = newRelativePosition.getX();
+		final int newRelativeY = newRelativePosition.getY();
+
+		final DisplayAreaManipulator areaManipulator = getShellNodeManipulator();
+		areaManipulator.moveResize(	newRelativeX,
+									newRelativeY,
+									newWidth,
+									newHeight);
 	}
 
 	protected Coordinate calculateRelativePosition(	final ShellNodeParent directParent,
@@ -116,95 +96,33 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 	}
 
 	@Override
-	public void init(final ShellNodeParent parent) {
-		final ShellNode nodeToInit = getShellNode();
-
-		initializeShellSurface(parent);
-		if (nodeToInit instanceof ShellNodeParent) {
-
-			final ShellNode[] children = ((ShellNodeParent) nodeToInit).getChildren();
-			for (final ShellNode child : children) {
-				final ShellNodeExecutor childShellNodeExecutor = child.getShellNodeExecutor();
-				childShellNodeExecutor.init((ShellNodeParent) nodeToInit);
-			}
-		}
-	}
-
-	protected abstract void initializeShellSurface(final ShellNodeParent parent);
-
-	@Override
 	public void reparent(final ShellNodeParent parent) {
 		final ShellNode currentSurface = getShellNode();
 		final ShellNodeParent newParent = parent;
 		final ShellSurface newParentSurface = findClosestSameTypeSurface(newParent);
 
-		final boolean newParentInitialized = isAreaInitialized(newParentSurface);
-		final boolean currentShellSurfaceInitialized = isAreaInitialized(currentSurface);
+		final int newX = currentSurface.getX();
+		final int newY = currentSurface.getY();
 
-		if (newParentInitialized && !currentShellSurfaceInitialized) {
-			// parent is ready but we are not. we initialize ourself with
-			// our ready parent as argument.
-			init(newParent);
-		} else if (newParentInitialized && currentShellSurfaceInitialized) {
-			// we are ready and our new parent is ready. we start the
-			// procedure to change to our new ready parent.
-			final int newX = currentSurface.getX();
-			final int newY = currentSurface.getY();
+		if (currentSurface.equals(newParentSurface)) {
+			throw new IllegalArgumentException("Can not reparent to self.");
+		} else {
+			final Coordinate newRelativePosition = calculateRelativePosition(	newParent,
+																				newX,
+																				newY);
 
-			if (currentSurface.equals(newParentSurface)) {
-				throw new IllegalArgumentException("Can not reparent to self.");
-			} else {
-				final Coordinate newRelativePosition = calculateRelativePosition(	newParent,
-																					newX,
-																					newY);
+			final int newRelativeX = newRelativePosition.getX();
+			final int newRelativeY = newRelativePosition.getY();
 
-				final int newRelativeX = newRelativePosition.getX();
-				final int newRelativeY = newRelativePosition.getY();
+			final DisplayArea parentAreaPeer = getSurfacePeer(newParentSurface);
 
-				final DisplayArea parentAreaPeer = getSurfacePeer(newParentSurface);
-
-				getShellNodeManipulator().setParent(parentAreaPeer,
-													newRelativeX,
-													newRelativeY);
-			}
-		} else if (currentShellSurfaceInitialized && !newParentInitialized) {
-			// we are ready but our new parent isn't.
-			// getShellNodeManipulator(shellNode).hide();
+			getShellNodeManipulator().setParent(parentAreaPeer,
+												newRelativeX,
+												newRelativeY);
 		}
 	}
 
 	protected abstract ShellSurface findClosestSameTypeSurface(final ShellNode square);
 
-	// @Override
-	// public DisplayArea getSurfacePeer() {
-	// return getSurfacePeer(getShellNode());
-	// }
-
 	protected abstract DisplayArea getSurfacePeer(final ShellSurface shellSurface);
-
-	@Override
-	public void hide() {
-		final ShellNode shellNode = getShellNode();
-
-		if (isAreaInitialized(shellNode)) {
-			super.hide();
-		}
-	}
-
-	@Override
-	public void show() {
-		final ShellNode shellNode = getShellNode();
-
-		if (isAreaInitialized(shellNode)) {
-			super.show();
-		}
-	}
-
-	@Override
-	public void destroy() {
-		final ShellNode shellNode = getShellNode();
-		if (isAreaInitialized(shellNode)) {
-			super.destroy();
-		}
-	}
 }

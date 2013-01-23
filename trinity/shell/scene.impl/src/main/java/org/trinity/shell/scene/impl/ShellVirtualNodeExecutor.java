@@ -152,9 +152,4 @@ public class ShellVirtualNodeExecutor implements ShellNodeExecutor {
 			}
 		}
 	}
-
-	@Override
-	public void init(final ShellNodeParent parent) {
-		reparent(parent);
-	}
 }

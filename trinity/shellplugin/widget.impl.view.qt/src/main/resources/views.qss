@@ -1,4 +1,4 @@
-#ShellWidgetRootImpl {
+#ShellWidgetImpl {
 	background-color: grey;
 }
 #ShellWidgetBarImpl {

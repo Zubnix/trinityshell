@@ -6,9 +6,10 @@ import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
 import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.surface.ShellSurface;
+import org.trinity.shell.api.surface.ShellSurfaceParent;
 import org.trinity.shell.api.surface.event.ShellSurfaceCreatedEvent;
+import org.trinity.shell.api.widget.ShellWidget;
 import org.trinity.shellplugin.widget.api.ShellWidgetBar;
-import org.trinity.shellplugin.widget.api.ShellWidgetRoot;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -25,7 +26,8 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class WindowManagerPlugin implements ShellPlugin {
 
 	private final EventBus shellEventBus;
-	private final ShellWidgetRoot shellWidgetRoot;
+	private final ShellSurfaceParent shellRootSurface;
+	private final ShellWidget shellWidgetRoot;
 	private final ShellLayoutManagerLine shellLayoutManagerLine;
 	private final Provider<ShellWidgetBar> shellWidgetBarProvider;
 	private final Provider<ShellNodeParent> shellVirtualNodeProvider;
@@ -36,11 +38,13 @@ public class WindowManagerPlugin implements ShellPlugin {
 
 	@Inject
 	WindowManagerPlugin(@Named("ShellEventBus") final EventBus shellEventBus,
-						final ShellWidgetRoot shellWidgetRoot,
+						@Named("ShellRootSurface") final ShellSurfaceParent shellRootSurface,
+						final ShellWidget shellWidgetRoot,
 						final ShellLayoutManagerLine shellLayoutManagerLine,
 						final Provider<ShellWidgetBar> shellWidgetBarProvider,
 						@Named("ShellVirtualNode") final Provider<ShellNodeParent> shellVirtualNodeProvider) {
 		this.shellEventBus = shellEventBus;
+		this.shellRootSurface = shellRootSurface;
 		this.shellWidgetRoot = shellWidgetRoot;
 		this.shellLayoutManagerLine = shellLayoutManagerLine;
 		this.shellWidgetBarProvider = shellWidgetBarProvider;
@@ -49,7 +53,13 @@ public class WindowManagerPlugin implements ShellPlugin {
 
 	@Override
 	public void start() {
-		this.shellWidgetRoot.construct();
+		// this.shellWidgetRoot.construct();
+		final int rootWidth = this.shellRootSurface.getWidth();
+		final int rootHeight = this.shellRootSurface.getHeight();
+		this.shellWidgetRoot.setWidth(rootWidth);
+		this.shellWidgetRoot.setHeight(rootHeight);
+		this.shellWidgetRoot.doResize();
+
 		this.shellLayoutManagerLine.setHorizontalDirection(false);
 		this.shellLayoutManagerLine.setInverseDirection(false);
 		this.shellWidgetRoot.setLayoutManager(this.shellLayoutManagerLine);
@@ -64,6 +74,7 @@ public class WindowManagerPlugin implements ShellPlugin {
 		this.shellLayoutManagerLine.addChildNode(	this.topBar,
 													layoutPropertyTopBar);
 		this.topBar.setParent(this.shellWidgetRoot);
+		this.topBar.doReparent();
 
 		// client display area
 		this.clientDisplayArea = this.shellVirtualNodeProvider.get();
@@ -72,6 +83,7 @@ public class WindowManagerPlugin implements ShellPlugin {
 		this.shellLayoutManagerLine.addChildNode(	this.clientDisplayArea,
 													layoutPropertyClientDisplayArea);
 		this.clientDisplayArea.setParent(this.shellWidgetRoot);
+		this.clientDisplayArea.doReparent();
 
 		// bottombar
 		this.bottomBar = this.shellWidgetBarProvider.get();
@@ -81,7 +93,10 @@ public class WindowManagerPlugin implements ShellPlugin {
 																							Margins.NO_MARGINS);
 		this.shellLayoutManagerLine.addChildNode(	this.bottomBar,
 													layoutPropertyBottomBar);
-		this.topBar.setParent(this.shellWidgetRoot);
+		this.bottomBar.setParent(this.shellWidgetRoot);
+		this.bottomBar.doReparent();
+
+		this.shellWidgetRoot.layout();
 
 		this.topBar.doShow();
 		this.clientDisplayArea.doShow();

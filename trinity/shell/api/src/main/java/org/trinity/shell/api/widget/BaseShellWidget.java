@@ -18,10 +18,13 @@ import org.trinity.foundation.api.render.binding.model.ViewReference;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
+import org.trinity.shell.api.surface.ShellSurfaceParent;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 /**
  * An {@link AbstractShellSurfaceParent} with a base
@@ -76,12 +79,21 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 		this.painter = painterFactory.createPainter(this);
 	}
 
-	protected void init() {
+	@Inject
+	protected void init(@Named("ShellRootSurface") final ShellSurfaceParent shellRootSurface) {
+		// init will be called with the injected instance immediately after our
+		// widget is constructed.
+
+		setParent(shellRootSurface);
+		doReparent(false);
+
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			this);
-		this.painter.bindView();
 		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
 																			getDisplaySurface());
+		// searches for a @ViewReference annotated getter and binds the
+		// resulting view to this widget.
+		this.painter.bindView();
 		addShellNodeEventHandler(this.destroyCallback);
 	}
 

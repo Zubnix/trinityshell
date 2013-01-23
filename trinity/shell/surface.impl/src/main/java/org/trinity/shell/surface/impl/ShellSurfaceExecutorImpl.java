@@ -56,11 +56,6 @@ public class ShellSurfaceExecutorImpl extends AbstractShellSurfaceExecutor {
 	}
 
 	@Override
-	protected void initializeShellSurface(final ShellNodeParent parent) {
-		// No need to initialize
-	}
-
-	@Override
 	public DisplayAreaManipulator getShellNodeManipulator() {
 		return getShellNode().getDisplaySurface().get();
 	}

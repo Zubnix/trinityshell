@@ -17,56 +17,42 @@ import org.trinity.foundation.api.render.binding.view.View;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
-import org.trinity.shell.api.surface.ShellSurfaceParent;
 import org.trinity.shell.api.widget.BaseShellWidget;
-import org.trinity.shellplugin.widget.api.ShellWidgetRoot;
+import org.trinity.shell.api.widget.ShellWidget;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
+import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind
-@Singleton
-public class ShellWidgetRootImpl extends BaseShellWidget implements ShellWidgetRoot {
+@To(value = Type.INTERFACES, customs = ShellWidget.class)
+public class ShellWidgetImpl extends BaseShellWidget {
 
-	private final ShellSurfaceParent shellRootSurface;
+	// private final ShellSurfaceParent shellRootSurface;
 	private final View view;
 
 	@Inject
-	ShellWidgetRootImpl(final EventBus eventBus,
-						final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-						final PainterFactory painterFactory,
-						@Named("ShellRootSurface") final ShellSurfaceParent shellRootSurface,
-						final View view) {
+	ShellWidgetImpl(final EventBus eventBus,
+					final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
+					final PainterFactory painterFactory,
+					final View view) {
 		super(	eventBus,
 				shellDisplayEventDispatcher,
 				painterFactory);
-		this.shellRootSurface = shellRootSurface;
 		this.view = view;
 	}
 
 	@ViewReference
 	public View getView() {
-		return view;
+		return this.view;
 	}
 
 	@Override
 	protected ShellLayoutManager getParentLayoutManager(final ShellNodeParent parent) {
 
 		return getLayoutManager();
-	}
-
-	@Override
-	public void construct() {
-		setParent(this.shellRootSurface);
-		doReparent(false);
-		init();
-
-		setWidth(this.shellRootSurface.getWidth());
-		setHeight(this.shellRootSurface.getHeight());
-		doResize();
 	}
 }

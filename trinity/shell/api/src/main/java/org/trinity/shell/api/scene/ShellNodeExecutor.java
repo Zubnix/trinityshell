@@ -100,15 +100,4 @@ public interface ShellNodeExecutor {
 	 * Execute the actual destroy process of the handled <code>ShellNode</code>.
 	 */
 	void destroy();
-
-	/***************************************
-	 * Initialize the handled <code>ShellNode</code> so it is operational in the
-	 * shell scene graph. The parent argument is the direct parent of the
-	 * handled <code>ShellNode</code>.
-	 * 
-	 * @param parent
-	 *            a {@link ShellNodeParent}.
-	 *************************************** 
-	 */
-	void init(ShellNodeParent parent);
 }
