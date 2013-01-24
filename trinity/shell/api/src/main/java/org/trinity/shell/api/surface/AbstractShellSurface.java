@@ -90,7 +90,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 
 	@Override
 	public void setInputFocus() {
-		getDisplaySurface().get().setInputFocus();
+		getDisplaySurface().setInputFocus();
 	}
 
 	/**
@@ -375,7 +375,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 		// account to map from and to shell scene geometry and on screen
 		// geometry.
 
-		final Rectangle rectangle = getDisplaySurface().get().getGeometry();
+		final Rectangle rectangle = getDisplaySurface().getGeometry();
 		setX(rectangle.getX());
 		setY(rectangle.getY());
 

@@ -134,8 +134,10 @@ public class ShellVirtualNodeExecutor implements ShellNodeExecutor {
 
 		final boolean nodeVisible = shellNode.isVisible();
 		for (final ShellNode child : children) {
-			// update underlying platform specific parent of
-			// the child
+			// reparent children to ourself, this will trigger an update of
+			// these children who will search for a compatible
+			// grand-parent for them to be a child of in the underlying
+			// relation.
 			child.getShellNodeExecutor().reparent(shellNode);
 
 			updateChildVisibility(	child,

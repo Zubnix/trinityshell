@@ -12,7 +12,6 @@ import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
-import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 
 public class BaseShellWidgetTest {
@@ -26,15 +25,14 @@ public class BaseShellWidgetTest {
 		final PainterFactory painterFactory = mock(PainterFactory.class);
 		final BaseShellWidget parentWidget = mock(BaseShellWidget.class);
 		final DisplaySurface displaySurface = mock(DisplaySurface.class);
-		when(parentWidget.getDisplaySurface()).thenReturn(Optional.of(displaySurface));
+		when(parentWidget.getDisplaySurface()).thenReturn(displaySurface);
 		final Painter painter = mock(Painter.class);
 		when(painterFactory.createPainter(any())).thenReturn(painter);
 		final BaseShellWidget baseShellWidget = new BaseShellWidget(eventBus,
 																	shellDisplayEventDispatcher,
 																	painterFactory);
 
-		when(painter.getDislaySurface()).thenReturn(Optional.<DisplaySurface> absent(),
-													Optional.<DisplaySurface> of(displaySurface));
+		when(painter.getDislaySurface()).thenReturn(displaySurface);
 
 		baseShellWidget.setX(50);
 		baseShellWidget.setY(75);

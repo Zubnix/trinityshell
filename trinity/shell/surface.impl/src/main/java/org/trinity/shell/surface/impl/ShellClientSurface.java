@@ -17,7 +17,6 @@ import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
-import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -49,7 +48,7 @@ public class ShellClientSurface extends AbstractShellSurface {
 	}
 
 	private final ShellSurfaceExecutorImpl shellSurfaceExecutorImpl;
-	private final Optional<DisplaySurface> displaySurface;
+	private final DisplaySurface displaySurface;
 
 	@Inject
 	ShellClientSurface(	final EventBus nodeEventBus,
@@ -57,7 +56,7 @@ public class ShellClientSurface extends AbstractShellSurface {
 						@Named("ShellRootSurface") final ShellNodeParent root,
 						@Assisted final DisplaySurface displaySurface) {
 		super(nodeEventBus);
-		this.displaySurface = Optional.of(displaySurface);
+		this.displaySurface = displaySurface;
 		this.shellSurfaceExecutorImpl = new ShellSurfaceExecutorImpl(this);
 
 		shellDisplayEventDispatcher.registerDisplayEventSourceListener(	nodeEventBus,
@@ -75,7 +74,7 @@ public class ShellClientSurface extends AbstractShellSurface {
 	}
 
 	@Override
-	public Optional<DisplaySurface> getDisplaySurface() {
+	public DisplaySurface getDisplaySurface() {
 		return this.displaySurface;
 	}
 }

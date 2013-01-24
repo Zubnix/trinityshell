@@ -144,7 +144,6 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 	public void unregisterDisplayEventSourceListener(	final EventBus nodeEventBus,
 														final Object displayEventTarget) {
 		synchronized (this.eventRecipients) {
-
 			final List<EventBus> nodeEventBusses = this.eventRecipients.get(displayEventTarget);
 			if (nodeEventBusses != null) {
 				nodeEventBusses.remove(nodeEventBus);

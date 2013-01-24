@@ -22,7 +22,6 @@ import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
-import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -37,7 +36,7 @@ import de.devsurf.injection.guice.annotations.To;
 public class ShellRootSurface extends AbstractShellSurfaceParent {
 
 	private final ShellNodeExecutor shellNodeExecutor;
-	private final Optional<DisplaySurface> displaySurface;
+	private final DisplaySurface displaySurface;
 
 	@Inject
 	ShellRootSurface(	final EventBus nodeEventBus,
@@ -45,7 +44,7 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 						final ShellDisplayEventDispatcher shellDisplayEventDispatcher) {
 		super(nodeEventBus);
 		this.shellNodeExecutor = new ShellSurfaceExecutorImpl(this);
-		this.displaySurface = Optional.of(displayServer.getRootDisplayArea());
+		this.displaySurface = displayServer.getRootDisplayArea();
 		syncGeoToDisplaySurface();
 		shellDisplayEventDispatcher.registerDisplayEventSourceListener(	nodeEventBus,
 																		this.displaySurface);
@@ -82,7 +81,7 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 	}
 
 	@Override
-	public Optional<DisplaySurface> getDisplaySurface() {
+	public DisplaySurface getDisplaySurface() {
 		return this.displaySurface;
 	}
 }

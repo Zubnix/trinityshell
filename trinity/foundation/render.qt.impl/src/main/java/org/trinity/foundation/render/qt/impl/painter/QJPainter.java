@@ -27,7 +27,6 @@ import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.binding.Binder;
 import org.trinity.foundation.render.qt.impl.painter.routine.QJGetDisplaySurfaceRoutine;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -313,7 +312,7 @@ public class QJPainter implements Painter {
 	}
 
 	@Override
-	public Optional<DisplaySurface> getDislaySurface() {
+	public DisplaySurface getDislaySurface() {
 		DisplaySurface displaySurface = null;
 
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
@@ -330,6 +329,6 @@ public class QJPainter implements Painter {
 			Throwables.propagate(e);
 		}
 
-		return Optional.fromNullable(displaySurface);
+		return displaySurface;
 	}
 }

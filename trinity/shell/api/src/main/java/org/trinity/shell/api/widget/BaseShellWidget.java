@@ -20,7 +20,6 @@ import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
-import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -114,7 +113,7 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 	}
 
 	@Override
-	public Optional<DisplaySurface> getDisplaySurface() {
+	public DisplaySurface getDisplaySurface() {
 		return this.painter.getDislaySurface();
 	}
 }

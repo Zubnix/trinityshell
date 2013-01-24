@@ -14,8 +14,6 @@ package org.trinity.foundation.api.render;
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.display.DisplaySurface;
 
-import com.google.common.base.Optional;
-
 /****************************************
  * The gatekeeper to the underlying paint back-end. It talks to a paint back-end
  * by feeding it {@link PaintRoutine}s that will be processed by the paint
@@ -32,7 +30,7 @@ public interface Painter extends DisplayAreaManipulator {
 	 * 
 	 * @return A {@link DisplaySurface}.
 	 */
-	Optional<DisplaySurface> getDislaySurface();
+	DisplaySurface getDislaySurface();
 
 	void bindView();
 }
