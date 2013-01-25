@@ -16,7 +16,6 @@ import com.google.common.eventbus.EventBus;
 
 public class BaseShellWidgetTest {
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testInit() {
 		// given

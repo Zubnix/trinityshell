@@ -46,6 +46,9 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 																								new Margins(0));
 
 	private class ChildGeoListener {
+		// unused methods are used by guava's eventbus.
+
+		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildMoveResizeRequest(final ShellNodeMoveResizeRequestEvent shellNodeMoveResizeRequestEvent) {
 			final ShellNode child = shellNodeMoveResizeRequestEvent.getSource();
@@ -57,6 +60,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 			}
 		}
 
+		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildDestroyed(final ShellNodeDestroyedEvent shellNodeDestroyedEvent) {
 			final ShellNode child = shellNodeDestroyedEvent.getSource();
@@ -64,6 +68,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 			layout(child.getParent());
 		}
 
+		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildReparentRequest(final ShellNodeReparentRequestEvent shellNodeReparentRequestEvent) {
 			final ShellNodeParent oldParent = shellNodeReparentRequestEvent.getSource().getParent();
@@ -71,21 +76,25 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 			layout(oldParent);
 		}
 
+		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildShowRequest(final ShellNodeShowRequestEvent shellNodeShowRequestEvent) {
 			shellNodeShowRequestEvent.getSource().doShow();
 		}
 
+		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildHideRequest(final ShellNodeHideRequestEvent shellNodeHideRequestEvent) {
 			shellNodeHideRequestEvent.getSource().doHide();
 		}
 
+		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildLowerRequest(final ShellNodeLowerRequestEvent shellNodeLowerRequestEvent) {
 			shellNodeLowerRequestEvent.getSource().doLower();
 		}
 
+		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildRaiseRequest(final ShellNodeRaiseRequestEvent shellNodeRaiseRequestEvent) {
 			shellNodeRaiseRequestEvent.getSource().doRaise();

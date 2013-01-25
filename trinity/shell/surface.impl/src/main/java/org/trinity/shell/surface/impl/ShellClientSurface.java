@@ -41,6 +41,8 @@ public class ShellClientSurface extends AbstractShellSurface {
 			this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		}
 
+		// method is used by guava's eventbus.
+		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleDestroyNotify(final ShellNodeDestroyedEvent destroyEvent) {
 			this.shellDisplayEventDispatcher.unregisterAllDisplayEventSourceListeners(getDisplaySurface());

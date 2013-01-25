@@ -47,6 +47,8 @@ import com.google.inject.name.Named;
 public class BaseShellWidget extends AbstractShellSurfaceParent implements ShellWidget {
 
 	private class DestroyCallback {
+		// method is used by guava's eventbusFS
+		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleDestroy(final ShellNodeDestroyedEvent destroyEvent) {
 			BaseShellWidget.this.shellDisplayEventDispatcher
