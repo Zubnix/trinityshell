@@ -6,14 +6,17 @@ import static java.lang.String.format;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import javax.inject.Named;
+
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.PaintContext;
-import org.trinity.foundation.api.render.PaintRoutine;
 import org.trinity.foundation.api.render.PaintRenderer;
+import org.trinity.foundation.api.render.PaintRoutine;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.eventbus.EventBus;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.inject.Inject;
@@ -29,10 +32,13 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 	private final HashFunction hashFunction = Hashing.goodFastHash(16);
 	private final Cache<Integer, QObject> inputListeners = CacheBuilder.newBuilder().softValues().build();
 
+	private final EventBus displayEventBus;
 	private final PaintRenderer paintRenderer;
 
 	@Inject
-	InputListenerInstallerDelegateImpl(final PaintRenderer paintRenderer) {
+	InputListenerInstallerDelegateImpl(	@Named("DisplayEventBus") final EventBus displayEventBus,
+										final PaintRenderer paintRenderer) {
+		this.displayEventBus = displayEventBus;
 		this.paintRenderer = paintRenderer;
 	}
 
@@ -51,7 +57,8 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 		final Callable<QObject> inputListenerCreator = new Callable<QObject>() {
 			@Override
 			public QObject call() throws Exception {
-				return new BoundInputListener(	inputType,
+				return new BoundInputListener(	InputListenerInstallerDelegateImpl.this.displayEventBus,
+												inputType,
 												inputEventTarget,
 												inputSlotName);
 			}
@@ -88,7 +95,8 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 		final Callable<QObject> inputListenerCreator = new Callable<QObject>() {
 			@Override
 			public QObject call() throws Exception {
-				return new BoundInputListener(	inputType,
+				return new BoundInputListener(	InputListenerInstallerDelegateImpl.this.displayEventBus,
+												inputType,
 												inputEventTarget,
 												inputSlotName);
 			}

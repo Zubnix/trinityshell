@@ -10,6 +10,7 @@ import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.binding.view.delegate.BoundButtonInputEvent;
 import org.trinity.foundation.api.render.binding.view.delegate.BoundKeyInputEvent;
 
+import com.google.common.eventbus.EventBus;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.core.QObject;
@@ -18,12 +19,16 @@ import com.trolltech.qt.gui.QMouseEvent;
 
 public class BoundInputListener extends QObject {
 
+	private final EventBus displayEventBus;
 	private final Class<? extends Input> inputType;
 	private final Object inputEventTarget;
 	private final String inputSlotName;
 
-	BoundInputListener(final Class<? extends Input> inputType, final Object inputEventTarget, final String inputSlotName) {
-
+	BoundInputListener(	final EventBus displayEventBus,
+						final Class<? extends Input> inputType,
+						final Object inputEventTarget,
+						final String inputSlotName) {
+		this.displayEventBus = displayEventBus;
 		this.inputType = inputType;
 		this.inputEventTarget = inputEventTarget;
 		this.inputSlotName = inputSlotName;
@@ -55,6 +60,7 @@ public class BoundInputListener extends QObject {
 			final BoundKeyInputEvent boundKeyInputEvent = new BoundKeyInputEvent(	this.inputEventTarget,
 																					keyboardInput,
 																					this.inputSlotName);
+			this.displayEventBus.post(boundKeyInputEvent);
 			return false;
 		}
 
@@ -79,6 +85,7 @@ public class BoundInputListener extends QObject {
 			final BoundKeyInputEvent boundKeyInputEvent = new BoundKeyInputEvent(	this.inputEventTarget,
 																					keyboardInput,
 																					this.inputSlotName);
+			this.displayEventBus.post(boundKeyInputEvent);
 			return false;
 		}
 
@@ -107,6 +114,7 @@ public class BoundInputListener extends QObject {
 			final BoundButtonInputEvent buttonInputEvent = new BoundButtonInputEvent(	this.inputEventTarget,
 																						pointerInput,
 																						this.inputSlotName);
+			this.displayEventBus.post(buttonInputEvent);
 			return false;
 		}
 
@@ -135,7 +143,7 @@ public class BoundInputListener extends QObject {
 			final BoundButtonInputEvent buttonInputEvent = new BoundButtonInputEvent(	this.inputEventTarget,
 																						pointerInput,
 																						this.inputSlotName);
-
+			this.displayEventBus.post(buttonInputEvent);
 			return false;
 		}
 
