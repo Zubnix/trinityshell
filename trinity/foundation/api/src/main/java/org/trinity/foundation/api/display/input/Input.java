@@ -13,13 +13,12 @@ package org.trinity.foundation.api.display.input;
 
 /***************************************
  * Represents any form of user input.
- * 
  *************************************** 
  */
 public class Input {
 
-	private Momentum momentum;
-	private InputModifiers inputModifiers;
+	private final Momentum momentum;
+	private final InputModifiers inputModifiers;
 
 	/***************************************
 	 * Construct new <code>Input</code> with the given {@link Momentum}. The
@@ -30,7 +29,8 @@ public class Input {
 	 *            a {@link Momentum}.
 	 *************************************** 
 	 */
-	public Input(final Momentum momentum, InputModifiers inputModifiers) {
+	public Input(	final Momentum momentum,
+					final InputModifiers inputModifiers) {
 		this.momentum = momentum;
 		this.inputModifiers = inputModifiers;
 	}
@@ -46,7 +46,7 @@ public class Input {
 	}
 
 	public InputModifiers getInputModifiers() {
-		return inputModifiers;
+		return this.inputModifiers;
 	}
 
 }

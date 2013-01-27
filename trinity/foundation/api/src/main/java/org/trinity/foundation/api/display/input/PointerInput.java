@@ -12,7 +12,7 @@
 package org.trinity.foundation.api.display.input;
 
 /****************************************
- * User input that came from a pointing device.
+ * User input that came from a pointing device, like a mouse.
  *************************************** 
  */
 public class PointerInput extends Input {

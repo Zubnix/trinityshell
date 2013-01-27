@@ -12,7 +12,8 @@
 package org.trinity.foundation.api.display.input;
 
 /***************************************
- * Can modify the behavior of user input by accompanying {@link Input}.
+ * Can modify the meaning of user input by accompanying {@link Input}. These are
+ * usually buttons like 'ctrl', 'alt' etc.
  * 
  *************************************** 
  */
@@ -58,8 +59,8 @@ public interface InputModifier {
 
 	/***************************************
 	 * The native mask of this <code>InputModifier</code>. This mask can be
-	 * logically and'ed with a logically or'ed integer of masks to verifiy if
-	 * this <code>InputModifier</code> is active.
+	 * logically and'ed (&) with a logically or'ed (|) integer of masks to
+	 * verifiy if this <code>InputModifier</code> is active.
 	 * 
 	 * @return
 	 *************************************** 

@@ -177,8 +177,9 @@ public interface Keyboard {
 	/***************************************
 	 * Translate a <code>Key</code> with the given <code>InputModifiers</code>
 	 * to it's textual representation. Usually this is one of the characters
-	 * that is present on the physical key. For special cases check any of the
-	 * statically defined key names in {@link Keyboard}.
+	 * that is present on the physical key. For special cases where no clear
+	 * physical character can be deduced, one of the statically defined key
+	 * names in {@code Keyboard} is used.
 	 * 
 	 * @param key
 	 *            a {@link Key}

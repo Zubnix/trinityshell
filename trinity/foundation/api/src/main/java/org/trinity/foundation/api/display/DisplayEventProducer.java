@@ -21,7 +21,7 @@ import org.trinity.foundation.api.display.event.DisplayEvent;
 public interface DisplayEventProducer {
 
 	/***************************************
-	 * Start constructing {@link DisplayEvent}s and place them on the
+	 * Start reading {@link DisplayEvent}s and place them on the
 	 * {@link DisplayServer}'s event queue.
 	 *************************************** 
 	 */

@@ -20,12 +20,12 @@ package org.trinity.foundation.api.display.event;
 public abstract class PointerVisitationNotifyEvent extends DisplayEvent {
 
 	/***************************************
-	 * Construct a new <code>PointerVisitationNotifyEvent</code> that originated
-	 * from the given {@link DisplayEventTarget} who's boundary has been
-	 * crossed.
+	 * Construct a new <code>PointerVisitationNotifyEvent</code> that targets
+	 * the given display resource.
 	 * 
 	 * @param displayEventTarget
-	 *            a {@link DisplayEventTarget}
+	 *            The receiver of this event. eg the display resource that was
+	 *            left by the pointer.
 	 *************************************** 
 	 */
 	public PointerVisitationNotifyEvent(final Object displayEventTarget) {

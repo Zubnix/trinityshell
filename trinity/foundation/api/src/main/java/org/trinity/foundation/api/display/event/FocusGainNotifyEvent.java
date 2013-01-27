@@ -12,18 +12,19 @@
 package org.trinity.foundation.api.display.event;
 
 /***************************************
- * Indicates that a {@link DisplayEventTarget} has gained the input focus.
+ * Indicates that a display resource has gained the input focus.
  * 
  *************************************** 
  */
 public class FocusGainNotifyEvent extends FocusNotifyEvent {
 
 	/***************************************
-	 * Create a new <code>FocusGainNotifyEvent</code> with the provided instance
-	 * as the focused {@link DisplayEventTarget}.
+	 * Create a new <code>FocusGainNotifyEvent</code> with the provided target
+	 * as the focused resource.
 	 * 
 	 * @param displayEventTarget
-	 *            An {@link DisplayEventTarget}
+	 *            The receiver of this event. eg the display resource that
+	 *            gained the focus.
 	 *************************************** 
 	 */
 	public FocusGainNotifyEvent(final Object displayEventTarget) {

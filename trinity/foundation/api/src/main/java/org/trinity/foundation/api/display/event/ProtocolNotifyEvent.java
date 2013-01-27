@@ -15,8 +15,7 @@ package org.trinity.foundation.api.display.event;
  * Indicates a native underlying protocol hint. The implementation and meaning
  * is implementation dependent.
  * <p>
- * For X this would be the name of a changed atom of a
- * {@link DisplayEventTarget}.
+ * For X this would be the name of an atom
  * 
  *************************************** 
  */
@@ -25,16 +24,18 @@ public class ProtocolNotifyEvent extends DisplayEvent {
 	private final String protocol;
 
 	/***************************************
-	 * Construct a new <code>ProtocolNotifyEvent</code> that originated from the
-	 * given {@link DisplayEventTarget} who's native protocol has changed.
+	 * Construct a new <code>ProtocolNotifyEvent</code> that targets the given
+	 * display resource who's native protocol has changed.
 	 * 
 	 * @param displayEventTarget
-	 *            a {@link DisplayEventTarget}
+	 *            The receiver of this event. eg the display resource who's
+	 *            native protocol has changed.
 	 * @param protocol
 	 *            a native protocol id.
 	 *************************************** 
 	 */
-	public ProtocolNotifyEvent(final Object displayEventTarget, final String protocol) {
+	public ProtocolNotifyEvent(	final Object displayEventTarget,
+								final String protocol) {
 		super(displayEventTarget);
 		this.protocol = protocol;
 	}

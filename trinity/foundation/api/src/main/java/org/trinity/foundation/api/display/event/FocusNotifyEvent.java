@@ -19,11 +19,10 @@ package org.trinity.foundation.api.display.event;
 public abstract class FocusNotifyEvent extends DisplayEvent {
 
 	/***************************************
-	 * Create a new focus event that originated from the given
-	 * {@link DisplayEventTarget}.
+	 * Create a new focus event that targets the given object.
 	 * 
 	 * @param displayEventTarget
-	 *            a {@link DisplayEventTarget}.
+	 *            The receiver of this focus related event.
 	 *************************************** 
 	 */
 	public FocusNotifyEvent(final Object displayEventTarget) {

@@ -12,19 +12,19 @@
 package org.trinity.foundation.api.display.event;
 
 /***************************************
- * Indicates when a pointer device has entered the area of a
- * {@link DisplayEventTarget}.
+ * Indicates when a pointer device has entered a display resource.
  * 
  *************************************** 
  */
 public class PointerEnterNotifyEvent extends PointerVisitationNotifyEvent {
 
 	/***************************************
-	 * Construct a new <code>PointerEnterNotifyEvent</code> that originated from
-	 * the given {@link DisplayEventTarget}.
+	 * Construct a new <code>PointerEnterNotifyEvent</code> that targets the
+	 * given display resource.
 	 * 
 	 * @param displayEventTarget
-	 *            A {@link DisplayEventTarget}.
+	 *            The receiver of this event. eg the display resource that was
+	 *            entered by the pointer.
 	 *************************************** 
 	 */
 	public PointerEnterNotifyEvent(final Object displayEventTarget) {

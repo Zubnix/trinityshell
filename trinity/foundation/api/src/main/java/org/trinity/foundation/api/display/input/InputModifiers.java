@@ -13,7 +13,6 @@ package org.trinity.foundation.api.display.input;
 
 /***************************************
  * A group of {@link InputModifier}s.
- * 
  *************************************** 
  */
 public class InputModifiers {

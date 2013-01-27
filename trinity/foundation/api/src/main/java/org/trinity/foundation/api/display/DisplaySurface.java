@@ -16,7 +16,8 @@ import org.trinity.foundation.api.shared.Rectangle;
 
 /**
  * Represents a native isolated graphical area. Usually a
- * <code>DisplaySurface</code> maps to a native window from a native display.
+ * <code>DisplaySurface</code> maps to a native window from a native display
+ * server.
  * 
  */
 public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator {
@@ -26,7 +27,7 @@ public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator {
 	 * are implementation dependent but are usually in pixels.
 	 * 
 	 * @return a {@link Rectangle} corresponding to this {@link DisplaySurface}
-	 *         's parent relative position, a with and a hight.
+	 *         's parent relative position, a width and a height.
 	 *************************************** 
 	 */
 	Rectangle getGeometry();

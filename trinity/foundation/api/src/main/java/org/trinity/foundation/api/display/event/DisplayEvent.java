@@ -14,9 +14,7 @@ package org.trinity.foundation.api.display.event;
 import org.trinity.foundation.api.display.DisplayServer;
 
 /**
- * Information coming from a <code>Display</code>. A <code>DisplayEvent</code>
- * is usually send on the behalf of another resource living on the
- * {@link DisplayServer}.
+ * Information coming from a {@link DisplayServer}.
  * 
  */
 public class DisplayEvent {
@@ -24,11 +22,11 @@ public class DisplayEvent {
 	private final Object displayEventTarget;
 
 	/****************************************
-	 * Construct a generic <code>DisplayEvent</code> with the given
-	 * {@link DisplayEventTarget} as the targeted resource.
+	 * Construct a generic <code>DisplayEvent</code> with the given target
+	 * object as the receiver.
 	 * 
 	 * @param displayEventTarget
-	 *            A {@link DisplayEventTarget}
+	 *            the receiving object.
 	 *************************************** 
 	 */
 	public DisplayEvent(final Object displayEventTarget) {
@@ -36,9 +34,10 @@ public class DisplayEvent {
 	}
 
 	/****************************************
-	 * The {@link DisplayEventTarget} that this event targets.
+	 * The object that this event targets. The targeted object is the preferred
+	 * object for handling this event.
 	 * 
-	 * @return A {@link DisplayEventTarget}
+	 * @return An event target
 	 *************************************** 
 	 */
 	public Object getDisplayEventTarget() {

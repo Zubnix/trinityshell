@@ -19,17 +19,18 @@ import org.trinity.foundation.api.display.input.PointerInput;
 public class ButtonNotifyEvent extends InputNotifyEvent<PointerInput> {
 
 	/***************************************
-	 * Create a new <code>ButtonNotifyEvent</code> with the given
-	 * {@link DisplayEventTarget} as the surface where the pointer input
-	 * originated.
+	 * Create a new <code>ButtonNotifyEvent</code> with the given event target
+	 * as the receiver of this event. Ideally, the receiving object should
+	 * correspond to the object that was clicked.
 	 * 
 	 * @param displayEventTarget
-	 *            The source of this {@link DisplayEvent}.
+	 *            The receiver of this event.
 	 * @param pointerInput
 	 *            The {@link PointerInput} details.
 	 *************************************** 
 	 */
-	public ButtonNotifyEvent(final Object displayEventTarget, final PointerInput pointerInput) {
+	public ButtonNotifyEvent(	final Object displayEventTarget,
+								final PointerInput pointerInput) {
 		super(	displayEventTarget,
 				pointerInput);
 	}

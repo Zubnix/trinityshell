@@ -13,7 +13,6 @@ package org.trinity.foundation.api.display.input;
 
 /***************************************
  * Identifies a pointing device's button ie. a mouse button.
- * 
  *************************************** 
  */
 public class Button {

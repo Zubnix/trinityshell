@@ -12,19 +12,19 @@
 package org.trinity.foundation.api.display.event;
 
 /***************************************
- * Indicates when a pointer device has left the area of a
- * {@link DisplayEventTarget}.
+ * Indicates when a pointer device has left a display resource.
  * 
  *************************************** 
  */
 public class PointerLeaveNotifyEvent extends PointerVisitationNotifyEvent {
 
 	/***************************************
-	 * Construct a new <code>PointerLeaveNotifyEvent</code> that originated from
-	 * the given {@link DisplayEventTarget}.
+	 * Construct a new <code>PointerLeaveNotifyEvent</code> that targets the
+	 * given display resource.
 	 * 
 	 * @param displayEventTarget
-	 *            A {@link DisplayEventTarget}.
+	 *            The receiver of this event. eg the display resource that was
+	 *            left by the pointer.
 	 *************************************** 
 	 */
 	public PointerLeaveNotifyEvent(final Object displayEventTarget) {

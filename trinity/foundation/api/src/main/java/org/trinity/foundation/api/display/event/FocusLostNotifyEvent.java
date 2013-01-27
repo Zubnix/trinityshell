@@ -12,7 +12,7 @@
 package org.trinity.foundation.api.display.event;
 
 /***************************************
- * Indicates that a {@link DisplayEventTarget} has lost the input focus.
+ * Indicates that a display resource has lost the input focus.
  * 
  *************************************** 
  */
@@ -20,10 +20,11 @@ public class FocusLostNotifyEvent extends FocusNotifyEvent {
 
 	/***************************************
 	 * Create a new <code>FocusGainNotifyEvent</code> with the provided instance
-	 * as the unfocused {@link DisplayEventTarget}.
+	 * as the unfocused display resource.
 	 * 
 	 * @param displayEventTarget
-	 *            An {@link DisplayEventTarget}
+	 *            The receiver of this event. eg the display resource that lost
+	 *            the focus.
 	 *************************************** 
 	 */
 	public FocusLostNotifyEvent(final Object displayEventTarget) {

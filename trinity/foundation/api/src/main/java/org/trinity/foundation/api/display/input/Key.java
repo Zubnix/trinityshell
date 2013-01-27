@@ -13,7 +13,6 @@ package org.trinity.foundation.api.display.input;
 
 /***************************************
  * Identifies a text input device's key, ie a keyboard key.
- * 
  *************************************** 
  */
 public class Key {
