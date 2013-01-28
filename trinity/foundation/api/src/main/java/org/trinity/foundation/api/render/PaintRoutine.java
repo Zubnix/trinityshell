@@ -14,7 +14,8 @@ package org.trinity.foundation.api.render;
 import java.util.concurrent.ExecutionException;
 
 /***************************************
- * Wraps a paint operation.
+ * Wraps a future paint operation. A {@code PaintRoutine} is submitted to a
+ * {@link PaintRenderer} for invocation.
  * 
  * @param <R>
  *            The type of the <b>R</b>esult when this <code>PaintRoutine</code>
@@ -27,7 +28,7 @@ import java.util.concurrent.ExecutionException;
 public interface PaintRoutine<R, P extends PaintContext> {
 
 	/***************************************
-	 * Called by the paint back-end.
+	 * Called by the paint thread.
 	 * 
 	 * @param paintContext
 	 *            A {@link PaintContext}.

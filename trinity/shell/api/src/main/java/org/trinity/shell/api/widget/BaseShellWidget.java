@@ -44,10 +44,11 @@ import com.google.inject.name.Named;
  * <code>BaseShellWidget</code> will be draw on. Note that multiple
  * <code>BaseShellWidget</code>s can share the same <code>DisplaySurface</code>.
  */
-public class BaseShellWidget extends AbstractShellSurfaceParent implements ShellWidget {
+public class BaseShellWidget extends AbstractShellSurfaceParent implements
+		ShellWidget {
 
 	private class DestroyCallback {
-		// method is used by guava's eventbusFS
+		// method is used by guava's eventbus
 		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleDestroy(final ShellNodeDestroyedEvent destroyEvent) {
@@ -81,17 +82,21 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 	}
 
 	@Inject
-	protected void init(@Named("ShellRootSurface") final ShellSurfaceParent shellRootSurface) {
+	protected
+			void
+			init(@Named("ShellRootSurface") final ShellSurfaceParent shellRootSurface) {
 		// init will be called with the injected instance immediately after our
 		// widget is constructed.
 
 		setParent(shellRootSurface);
 		doReparent(false);
 
-		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
-																			this);
-		this.shellDisplayEventDispatcher.registerDisplayEventSourceListener(this.eventBus,
-																			getDisplaySurface());
+		this.shellDisplayEventDispatcher
+				.registerDisplayEventSourceListener(this.eventBus,
+													this);
+		this.shellDisplayEventDispatcher
+				.registerDisplayEventSourceListener(this.eventBus,
+													getDisplaySurface());
 		// searches for a @ViewReference annotated getter and binds the
 		// resulting view to this widget.
 		this.painter.bindView();

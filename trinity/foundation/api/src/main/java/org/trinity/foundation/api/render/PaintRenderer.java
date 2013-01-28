@@ -11,27 +11,25 @@
  */
 package org.trinity.foundation.api.render;
 
-import java.util.concurrent.Future;
-
 import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
- * A QtJambi specific paint engine.
+ * An an interface to submit asynchronous paint operations.
  * 
  *************************************** 
  */
 public interface PaintRenderer {
 
 	/***************************************
-	 * Invoke the given {@link PaintRoutine} for the given
-	 * {@link PaintableSurfaceNode}. Invocation is usually done by a seperate
-	 * paint thread.
+	 * Invoke the given {@link PaintRoutine} with the given caller context.
+	 * Actual invocation of the {@code PaintRoutine} is done later in a separate
+	 * dedicated paint thread.
 	 * 
 	 * @param callerContext
 	 *            the calling instance.
 	 * @param paintRoutine
 	 *            a {@link PaintRoutine}
-	 * @return a {@link Future} result.
+	 * @return a {@link ListenableFuture} result.
 	 *************************************** 
 	 */
 	<R> ListenableFuture<R> invoke(	Object callerContext,

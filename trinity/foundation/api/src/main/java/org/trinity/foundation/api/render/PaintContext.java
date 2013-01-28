@@ -12,19 +12,21 @@
 package org.trinity.foundation.api.render;
 
 /***************************************
- * The context in which a paint operation takes place. A {@code PaintContext}
- * can be extended by a paint back-end to provide specific paint operations.
+ * The context in which a paint operation takes place. Optionally, a
+ * {@code PaintContext} can be extended by a specific paint back-end API to
+ * provide additional paint operations.
  * 
  *************************************** 
  */
 public interface PaintContext {
 
 	/***************************************
-	 * The object that issues the painting.
+	 * The object that issues the painting. This is the caller context
+	 * {@code Object} argument as passed in to
+	 * {@link PaintRenderer#invoke(Object, PaintRoutine)}
 	 * 
-	 * @return an Object
+	 * @return a caller context {@code Object}.
 	 *************************************** 
 	 */
 	Object getCaller();
-
 }

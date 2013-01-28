@@ -12,11 +12,21 @@
 package org.trinity.foundation.api.render;
 
 /***************************************
- * Creates new {@link Painter}s for {@link PaintableSurfaceNode}s.
+ * Creates new {@link Painter} delegates for a view model.
  * 
  *************************************** 
  */
 public interface PainterFactory {
 
+	/**
+	 * Creates a new {@code Painter} for the given view model. Multiple calls
+	 * with the same model should create a new {@code Painter} instance each
+	 * time.
+	 * 
+	 * @param model
+	 *            The view model that the created {@code Painter} will use as a
+	 *            visual base.
+	 * @return a new {@link Painter}
+	 */
 	Painter createPainter(final Object model);
 }
