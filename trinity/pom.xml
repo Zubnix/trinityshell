@@ -111,6 +111,32 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 		</dependency>
 	</dependencies>
 	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -122,23 +148,15 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 						<groups>
 							<group>
 								<title>Foundation API</title>
-								<packages>org.trinity.foundation.display.api*:org.trinity.foundation.input.api*:org.trinity.foundation.render.api*:org.trinity.foundation.shared.geometry.api*</packages>
+								<packages>org.trinity.foundation.api*</packages>
 							</group>
 							<group>
-								<title>Render QtJambi API</title>
-								<packages>org.trinity.render.qt.api*</packages>
-							</group>
-							<group>
-								<title>Shell Core API</title>
+								<title>Shell API</title>
 								<packages>org.trinity.shell.api*</packages>
 							</group>
 							<group>
-								<title>Shell Plugins API</title>
-								<packages>org.trinity.shellplugin.wm.api*:org.trinity.shellplugin.widget.api*</packages>
-							</group>
-							<group>
-								<title>Fusion-Qt</title>
-								<packages>org.fusion.qt*</packages>
+								<title>Shell Plugins Widget API</title>
+								<packages>org.trinity.shellplugin.widget.api*</packages>
 							</group>
 						</groups>
 						<excludePackageNames>*impl*:org.trinity.bootstrap</excludePackageNames>
