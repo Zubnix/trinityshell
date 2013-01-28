@@ -23,7 +23,7 @@ public interface Binder {
 	/***************************************
 	 * Updates the bound views to reflect the state of the changed model.
 	 * 
-	 * @param changedModel
+	 * @param changedViewModel
 	 *            The model that changed.
 	 * @param propertyName
 	 *            The name of the property that changed.
@@ -31,13 +31,13 @@ public interface Binder {
 	 *             If an Illegal binding construction is encountered.
 	 *************************************** 
 	 */
-	void updateBinding(	Object changedModel,
+	void updateBinding(	Object changedViewModel,
 						String propertyName);
 
 	/***************************************
 	 * Bind a view to a model so it reflects the model's state.
 	 * 
-	 * @param model
+	 * @param viewModel
 	 *            The model to visually represent
 	 * @param view
 	 *            The visual representation of the model
@@ -45,7 +45,7 @@ public interface Binder {
 	 *             If an Illegal binding construction is encountered.
 	 *************************************** 
 	 */
-	void bind(	Object model,
+	void bind(	Object viewModel,
 				Object view);
 
 	// TODO

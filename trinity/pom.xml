@@ -36,7 +36,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 		<!-- test dep versions -->
 		<junit.version>4.5</junit.version>
 		<mockito.version>1.8.5</mockito.version>
-		<jukito.version>1.1</jukito.version>
 
 		<!-- java version -->
 		<maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
@@ -50,9 +49,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modules>
 		<module>foundation</module>
-		<module>display</module>
-		<module>looknfeel</module>
-		<module>render</module>
 		<module>shell</module>
 		<module>shellplugin</module>
 		<module>bootstrap</module>
@@ -106,12 +102,6 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>${mockito.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jukito</groupId>
-			<artifactId>jukito</artifactId>
-			<version>${jukito.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
