@@ -38,24 +38,28 @@ public class MapNotifyConversion implements XEventConversion {
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	MapNotifyConversion(@Named("xEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
+	MapNotifyConversion(@Named("XEventBus") final EventBus xEventBus,
+						final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_map_notify_event_t map_notify_event_t = new xcb_map_notify_event_t(	xcb_generic_event_t.getCPtr(event_t),
+		final xcb_map_notify_event_t map_notify_event_t = new xcb_map_notify_event_t(	xcb_generic_event_t
+																								.getCPtr(event_t),
 																						true);
 
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
-											map_notify_event_t.getClass().getSimpleName()));
+											map_notify_event_t.getClass()
+													.getSimpleName()));
 
 		this.xEventBus.post(map_notify_event_t);
 
 		final int windowId = map_notify_event_t.getWindow();
-		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
+		final XWindow displayEventSource = this.xWindowCache
+				.getWindow(windowId);
 
 		final DisplayEvent displayEvent = new ShowNotifyEvent(displayEventSource);
 

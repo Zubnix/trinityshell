@@ -24,7 +24,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
-@Bind(multiple = true, to = @To(value = Type.CUSTOM, customs = DisplayEventProducer.class))
+@Bind(	multiple = true,
+		to = @To(	value = Type.CUSTOM,
+					customs = DisplayEventProducer.class))
 public class XEventProducer implements DisplayEventProducer, Runnable {
 
 	private final XConnection connection;
@@ -33,7 +35,8 @@ public class XEventProducer implements DisplayEventProducer, Runnable {
 	private Thread producerThread;
 
 	@Inject
-	XEventProducer(final XConnection connection, @Named("xEventBus") final EventBus xEventBus) {
+	XEventProducer(	final XConnection connection,
+					@Named("XEventBus") final EventBus xEventBus) {
 		this.connection = connection;
 		this.xEventBus = xEventBus;
 	}
@@ -65,9 +68,12 @@ public class XEventProducer implements DisplayEventProducer, Runnable {
 		xEventLoop:
 		while (!Thread.interrupted()) {
 			try {
-				final xcb_generic_event_t event_t = LibXcb.xcb_wait_for_event(this.connection.getConnectionReference());
+				final xcb_generic_event_t event_t = LibXcb
+						.xcb_wait_for_event(this.connection
+								.getConnectionReference());
 
-				if (LibXcb.xcb_connection_has_error(this.connection.getConnectionReference()) != 0) {
+				if (LibXcb.xcb_connection_has_error(this.connection
+						.getConnectionReference()) != 0) {
 					throw new Error("X11 connection was closed unexpectedly - maybe your X server terminated / crashed?\n");
 				}
 				this.xEventBus.post(event_t);

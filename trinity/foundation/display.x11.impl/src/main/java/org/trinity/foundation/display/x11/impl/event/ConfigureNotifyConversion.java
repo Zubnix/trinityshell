@@ -34,13 +34,15 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class ConfigureNotifyConversion implements XEventConversion {
 
-	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_CONFIGURE_NOTIFY);
+	private final Integer eventCode = Integer
+			.valueOf(LibXcb.XCB_CONFIGURE_NOTIFY);
 
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
 
 	@Inject
-	ConfigureNotifyConversion(final XWindowCache xWindowCache, @Named("xEventBus") final EventBus xEventBus) {
+	ConfigureNotifyConversion(	final XWindowCache xWindowCache,
+								@Named("XEventBus") final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -53,12 +55,14 @@ public class ConfigureNotifyConversion implements XEventConversion {
 
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
-											configure_notify_event_t.getClass().getSimpleName()));
+											configure_notify_event_t.getClass()
+													.getSimpleName()));
 
 		this.xEventBus.post(configure_notify_event_t);
 
 		final int windowId = configure_notify_event_t.getWindow();
-		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
+		final XWindow displayEventSource = this.xWindowCache
+				.getWindow(windowId);
 
 		final int x = configure_notify_event_t.getX();
 		final int y = configure_notify_event_t.getY();

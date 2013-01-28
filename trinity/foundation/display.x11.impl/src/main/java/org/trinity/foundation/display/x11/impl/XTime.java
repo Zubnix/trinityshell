@@ -33,7 +33,7 @@ public class XTime {
 	private volatile int time = 0;
 
 	@Inject
-	XTime(@Named("xEventBus") final EventBus xEventBus) {
+	XTime(@Named("XEventBus") final EventBus xEventBus) {
 		xEventBus.register(this);
 	}
 
@@ -42,7 +42,8 @@ public class XTime {
 	}
 
 	@Subscribe
-	public void handleButtonPressed(final xcb_button_press_event_t press_event_t) {
+	public void
+			handleButtonPressed(final xcb_button_press_event_t press_event_t) {
 		// press&release have the same type
 		this.time = press_event_t.getTime();
 	}
@@ -54,12 +55,16 @@ public class XTime {
 	}
 
 	@Subscribe
-	public void handlePropertyNotify(final xcb_property_notify_event_t property_notify_event_t) {
+	public
+			void
+			handlePropertyNotify(final xcb_property_notify_event_t property_notify_event_t) {
 		this.time = property_notify_event_t.getTime();
 	}
 
 	@Subscribe
-	public void handleEnterNotify(final xcb_enter_notify_event_t enter_notify_event_t) {
+	public
+			void
+			handleEnterNotify(final xcb_enter_notify_event_t enter_notify_event_t) {
 		// enter & leave have the same type
 		this.time = enter_notify_event_t.getTime();
 	}

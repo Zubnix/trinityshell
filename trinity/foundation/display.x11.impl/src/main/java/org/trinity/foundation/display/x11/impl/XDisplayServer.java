@@ -44,7 +44,7 @@ public class XDisplayServer implements DisplayServer {
 	@Inject
 	XDisplayServer(	final XConnection xConnection,
 					final XWindowCache xWindowCache,
-					@Named("displayEventBus") final EventBus displayEventBus,
+					@Named("DisplayEventBus") final EventBus displayEventBus,
 					final Set<DisplayEventProducer> displayEventProducers) {
 
 		displayEventBus.register(this);
@@ -56,7 +56,8 @@ public class XDisplayServer implements DisplayServer {
 		final String displayName = System.getenv("DISPLAY");
 		this.xConnection.open(	displayName,
 								0);
-		if (LibXcb.xcb_connection_has_error(this.xConnection.getConnectionReference()) != 0) {
+		if (LibXcb.xcb_connection_has_error(this.xConnection
+				.getConnectionReference()) != 0) {
 			throw new Error("Cannot open display\n");
 		}
 		startUp();
@@ -104,7 +105,8 @@ public class XDisplayServer implements DisplayServer {
 
 	@Override
 	public DisplaySurface getRootDisplayArea() {
-		return this.xWindowCache.getWindow(this.xConnection.getScreenReference().getRoot());
+		return this.xWindowCache.getWindow(this.xConnection
+				.getScreenReference().getRoot());
 	}
 
 	public void startUp() {

@@ -32,13 +32,14 @@ public class GenericErrorConversion implements XEventConversion {
 	private final EventBus xEventBus;
 
 	@Inject
-	GenericErrorConversion(@Named("xEventBus") final EventBus xEventBus) {
+	GenericErrorConversion(@Named("XEventBus") final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 	}
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_generic_error_t request_error_t = new xcb_generic_error_t(xcb_generic_event_t.getCPtr(event_t),
+		final xcb_generic_error_t request_error_t = new xcb_generic_error_t(xcb_generic_event_t
+																					.getCPtr(event_t),
 																			true);
 		this.xEventBus.post(request_error_t);
 

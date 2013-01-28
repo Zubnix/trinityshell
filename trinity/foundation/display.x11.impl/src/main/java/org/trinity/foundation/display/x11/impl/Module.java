@@ -26,10 +26,13 @@ public class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(EventBus.class).annotatedWith(Names.named("xEventBus")).toInstance(new EventBus());
-		bind(EventBus.class).annotatedWith(Names.named("displayEventBus")).toInstance(new EventBus());
+		bind(EventBus.class).annotatedWith(Names.named("XEventBus"))
+				.toInstance(new EventBus());
+		bind(EventBus.class).annotatedWith(Names.named("DisplayEventBus"))
+				.toInstance(new EventBus());
 
 		install(new FactoryModuleBuilder().implement(	DisplaySurface.class,
-														XWindow.class).build(DisplaySurfaceFactory.class));
+														XWindow.class)
+				.build(DisplaySurfaceFactory.class));
 	}
 }

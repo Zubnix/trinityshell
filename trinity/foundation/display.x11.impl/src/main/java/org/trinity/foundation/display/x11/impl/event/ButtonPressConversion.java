@@ -40,7 +40,8 @@ public class ButtonPressConversion implements XEventConversion {
 	private final EventBus xEventBus;
 
 	@Inject
-	ButtonPressConversion(final XWindowCache windowCache, @Named("xEventBus") final EventBus xEventBus) {
+	ButtonPressConversion(	final XWindowCache windowCache,
+							@Named("XEventBus") final EventBus xEventBus) {
 		this.windowCache = windowCache;
 		this.xEventBus = xEventBus;
 	}
@@ -48,12 +49,14 @@ public class ButtonPressConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
-		final xcb_button_press_event_t button_press_event_t = new xcb_button_press_event_t(	xcb_generic_event_t.getCPtr(event_t),
+		final xcb_button_press_event_t button_press_event_t = new xcb_button_press_event_t(	xcb_generic_event_t
+																									.getCPtr(event_t),
 																							true);
 
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
-											button_press_event_t.getClass().getSimpleName()));
+											button_press_event_t.getClass()
+													.getSimpleName()));
 
 		this.xEventBus.post(button_press_event_t);
 

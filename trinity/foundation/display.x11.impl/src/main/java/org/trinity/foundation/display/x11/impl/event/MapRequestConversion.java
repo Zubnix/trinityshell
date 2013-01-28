@@ -38,7 +38,8 @@ public class MapRequestConversion implements XEventConversion {
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	MapRequestConversion(@Named("xEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
+	MapRequestConversion(	@Named("XEventBus") final EventBus xEventBus,
+							final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -46,17 +47,20 @@ public class MapRequestConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
-		final xcb_map_request_event_t map_request_event_t = new xcb_map_request_event_t(xcb_generic_event_t.getCPtr(event_t),
+		final xcb_map_request_event_t map_request_event_t = new xcb_map_request_event_t(xcb_generic_event_t
+																								.getCPtr(event_t),
 																						true);
 
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
-											map_request_event_t.getClass().getSimpleName()));
+											map_request_event_t.getClass()
+													.getSimpleName()));
 
 		this.xEventBus.post(map_request_event_t);
 
 		final int windowId = map_request_event_t.getWindow();
-		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
+		final XWindow displayEventSource = this.xWindowCache
+				.getWindow(windowId);
 
 		displayEventSource.configureClientEvents();
 
