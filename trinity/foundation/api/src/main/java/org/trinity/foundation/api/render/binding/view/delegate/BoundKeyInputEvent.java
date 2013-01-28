@@ -27,11 +27,27 @@ import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
  * @see InputSlotCaller
  *************************************** 
  */
-public class BoundKeyInputEvent extends KeyNotifyEvent implements BoundInputEvent {
+public class BoundKeyInputEvent extends KeyNotifyEvent implements
+		BoundInputEvent {
 
 	private final String inputSlotName;
 
-	public BoundKeyInputEvent(final Object inputTarget, final KeyboardInput input, final String inputSlotName) {
+	/**
+	 * Create a new {@code BoundKeyInputEvent}. The given event target is
+	 * usually the data context of the view that generated the input. The
+	 * {@code KeyboardInput} is detail of the key input. The input slot name
+	 * identifies the {@link InputSlot} of the event target.
+	 * 
+	 * @param inputTarget
+	 *            an object with an {@link InputSlot}.
+	 * @param input
+	 *            a {@link KeyboardInput}
+	 * @param inputSlotName
+	 *            an input slot name.
+	 */
+	public BoundKeyInputEvent(	final Object inputTarget,
+								final KeyboardInput input,
+								final String inputSlotName) {
 		super(	inputTarget,
 				input);
 		this.inputSlotName = inputSlotName;

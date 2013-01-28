@@ -18,7 +18,8 @@ import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 
 /***************************************
- * Delegate to invoke a view method when a bound model property changes.
+ * Delegate to invoke a view method when a bound model property changes. This
+ * delegate should be implemented for a specific widget toolkit.
  * 
  * @see PropertySlots
  * @see PropertySlot

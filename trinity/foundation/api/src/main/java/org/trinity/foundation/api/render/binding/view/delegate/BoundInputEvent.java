@@ -18,7 +18,6 @@ import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
 /***************************************
  * An input event meant to invoke a bound {@link InputSlot}.
  * 
- * 
  * @see InputSlotCaller
  *************************************** 
  */

@@ -27,10 +27,24 @@ import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
  * @see InputSlotCaller
  *************************************** 
  */
-public class BoundButtonInputEvent extends ButtonNotifyEvent implements BoundInputEvent {
+public class BoundButtonInputEvent extends ButtonNotifyEvent implements
+		BoundInputEvent {
 
 	private final String inputSlotName;
 
+	/**
+	 * Create a new {@code BoundButtonInputEvent}. The given event target is
+	 * usually the data context of the view that generated the input. The
+	 * {@code PointerInput} is detail of the button input. The input slot name
+	 * identifies the {@link InputSlot} of the event target.
+	 * 
+	 * @param displayEventTarget
+	 *            an object with an {@link InputSlot}
+	 * @param pointerInput
+	 *            a {@link PointerInput}
+	 * @param inputSlotName
+	 *            an input slot name
+	 */
 	public BoundButtonInputEvent(	final Object displayEventTarget,
 									final PointerInput pointerInput,
 									final String inputSlotName) {

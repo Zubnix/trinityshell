@@ -19,10 +19,9 @@ import java.lang.annotation.Target;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 
 /***************************************
- * Binds every child view of the marked view to the respective element of the
- * referenced collection property. Correctly handling these child views is
- * delegated to the {@link ChildViewDelegate}.
- * 
+ * Bind every child view of the marked view to the respective element of the
+ * referenced collection. Correctly handling these child views is delegated to
+ * the {@link ChildViewDelegate}.
  *************************************** 
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -39,7 +38,8 @@ public @interface ObservableCollection {
 	String value();
 
 	/***************************************
-	 * The child view class to use when instantiating a new child view.
+	 * The child view class to use when instantiating a new child view. This can
+	 * be any view class that can be instantiated by Guice.
 	 * 
 	 * @return a view type.
 	 *************************************** 

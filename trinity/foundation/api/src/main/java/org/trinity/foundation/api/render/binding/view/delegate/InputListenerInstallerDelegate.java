@@ -18,7 +18,8 @@ import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
 /***************************************
  * A delegate to listen for specific user input on a view instance. When input
  * arrives, a corresponding {@link BoundInputEvent} should be created and passed
- * to the target view model.
+ * to the target view model. This delegate should be implemented for a specific
+ * widget toolkit.
  * 
  * @see InputSlotCaller
  *************************************** 

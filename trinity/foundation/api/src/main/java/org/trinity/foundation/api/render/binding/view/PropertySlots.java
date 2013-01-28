@@ -17,8 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /***************************************
- * Groups all {@link PropertySlot}s of a view.
- * 
+ * Groups all {@link PropertySlot}s installed on a view.
  *************************************** 
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -26,7 +25,7 @@ import java.lang.annotation.Target;
 public @interface PropertySlots {
 
 	/***************************************
-	 * Available {@link PropertySlot}s on annotated view.
+	 * The installed {@link PropertySlot}s on the view.
 	 * 
 	 * @return {@link PropertySlot}s
 	 *************************************** 

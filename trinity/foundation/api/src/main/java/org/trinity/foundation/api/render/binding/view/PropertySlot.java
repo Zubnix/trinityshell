@@ -17,10 +17,13 @@ import java.lang.annotation.Target;
 
 /***************************************
  * Marks a view method as the handler method for a changed model property. A
- * property is linked to a slot by matching the model property name to
- * {@link #propertyName()}.
+ * model property is linked to a view slot by matching the model property name
+ * to the {@link #propertyName()}.
  * <p>
  * A {@code PropertySlot} is used as an argument of {@link PropertySlots}.
+ * <p>
+ * A property slot is invoked when a view is bound to its data context for the
+ * first time, or when the property value changes.
  * 
  *************************************** 
  */
@@ -30,9 +33,11 @@ public @interface PropertySlot {
 
 	/**
 	 * The datacontext of this specific annotation, relative to current active
-	 * datacontext.
+	 * datacontext, either implicit (inherited) or explicit from a
+	 * {@link DataContext}.
 	 * 
-	 * @return
+	 * @return A property path consisting of 1 or more property names seperated
+	 *         by a dot eg. "foo.bar.baz".
 	 */
 	String dataContext() default "";
 
@@ -45,8 +50,7 @@ public @interface PropertySlot {
 	String propertyName();
 
 	/***************************************
-	 * The name of the view method that should be invoked when the model
-	 * property changes.
+	 * The name of the view method that should be invoked.
 	 * 
 	 * @return a view method name.
 	 *************************************** 
@@ -54,17 +58,16 @@ public @interface PropertySlot {
 	String methodName();
 
 	/***************************************
-	 * The argument types of the view method that should be invoked when the
-	 * model property changes.
+	 * The argument types of the view method that should be invoked.
 	 * 
-	 * @return the argument types.
+	 * @return the argument types, in order.
 	 *************************************** 
 	 */
 	Class<?>[] argumentTypes();
 
 	/***************************************
 	 * An optional {@link PropertyAdapter} that will be used to transform the
-	 * model property to match the arguments of the method view.
+	 * model property value to match the arguments of the method view.
 	 * 
 	 * @return a {@link PropertyAdapter}.
 	 *************************************** 

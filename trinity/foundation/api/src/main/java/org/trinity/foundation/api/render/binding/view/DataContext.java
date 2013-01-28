@@ -17,10 +17,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /***************************************
- * Bind the annotated child view element to a property. The property is resolved
- * relative to the parent view's model. The property path is constructed by 1 or
- * more properties, seperated by a dot eg. "foo.bar.baz", which would translate
- * to getFoo().getBar().getBaz().
+ * Bind the annotated view element to a property. The property path is
+ * constructed by 1 or more properties, seperated by a dot eg. "foo.bar.baz",
+ * which would translate to getFoo().getBar().getBaz(). The property is resolved
+ * relative to the parent model, that is, the data context of the enclosing view
+ * element.
+ * <p>
+ * When this annotation is placed on class level, then all instances of that
+ * class are considered as having this annotation on field level. When this
+ * annotation is placed on both class and field level, the field level
+ * annotation will have precedence.
  *************************************** 
  */
 @Target({ ElementType.FIELD, ElementType.TYPE })

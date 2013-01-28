@@ -17,8 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /***************************************
- * Groups all {@link InputSignal}s of a view.
- * 
+ * Groups all installed {@link InputSignal}s of a view.
  *************************************** 
  */
 @Retention(RetentionPolicy.RUNTIME)

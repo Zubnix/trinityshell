@@ -22,7 +22,7 @@ import org.trinity.foundation.api.render.binding.view.delegate.BoundInputEvent;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 
 /***************************************
- * Mark a view as a generator of {@link BoundInputEvent}s. It's up to the
+ * Mark a view as a producer of {@link BoundInputEvent}s. It's up to the
  * {@link InputListenerInstallerDelegate} to make sure the correct input
  * listeners are installed and the correct {@code BoundInputEvent}s are received
  * by the model of the marked view.

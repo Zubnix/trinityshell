@@ -14,17 +14,17 @@ package org.trinity.foundation.api.render.binding;
 import org.trinity.foundation.api.render.binding.error.BindingError;
 
 /***************************************
- * Binds views to models and keeps them in sync.
+ * Binds views to models.
  * 
  *************************************** 
  */
 public interface Binder {
 
 	/***************************************
-	 * Updates the bound views to reflect the state of the changed model.
+	 * Update the bound views so they reflect the state of the changed model.
 	 * 
 	 * @param changedViewModel
-	 *            The model that changed.
+	 *            The view model that changed.
 	 * @param propertyName
 	 *            The name of the property that changed.
 	 * @throws BindingError
@@ -35,7 +35,8 @@ public interface Binder {
 						String propertyName);
 
 	/***************************************
-	 * Bind a view to a model so it reflects the model's state.
+	 * Bind a view to a model so it reflects the model's state. The given view
+	 * model will be the data context of the given view.
 	 * 
 	 * @param viewModel
 	 *            The model to visually represent
@@ -50,5 +51,4 @@ public interface Binder {
 
 	// TODO
 	// void unbind(Object view);
-
 }
