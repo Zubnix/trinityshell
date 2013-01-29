@@ -11,8 +11,6 @@
  */
 package org.trinity.shell.api.scene;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
@@ -31,12 +29,12 @@ import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeResizedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowedEvent;
-import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
+import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 
 // TODO Let geo events travel downwards to children to notify them that one of
-// their parents has changed
+// their parents has changed?
 // TODO move all layoutmanager checking to AbstractShellNodeParent, as well as
 // the javadoc that mentions it.
 
@@ -106,23 +104,12 @@ public abstract class AbstractShellNode implements ShellNode {
 		this.desiredParent = parent;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * A {@link ShellNodeReparentRequestEvent} will be emitted by this node. If
-	 * no {@link ShellLayoutManager} is set for this node, {@link #doReparent()}
-	 * will take place after all node subscribers are notified of the request.
-	 */
 	@Override
 	public void requestReparent() {
 		// update parent to new parent
 		final ShellNodeEvent event = new ShellNodeReparentRequestEvent(	this,
 																		toGeoTransformation());
 		getNodeEventBus().post(event);
-		final ShellLayoutManager shellLayoutManager = getParentLayoutManager(getParent());
-		if (shellLayoutManager == null) {
-			doReparent();
-		}
 	}
 
 	/**
@@ -132,7 +119,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	 */
 	@Override
 	public int getAbsoluteX() {
-		if ((getParent() == null) || getParent().equals(this)) {
+		if (getParent() == null || getParent().equals(this)) {
 			return getX();
 		}
 		return getParent().getAbsoluteX() + getX();
@@ -145,7 +132,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	 */
 	@Override
 	public int getAbsoluteY() {
-		if ((getParent() == null) || getParent().equals(this)) {
+		if (getParent() == null || getParent().equals(this)) {
 			return getY();
 		}
 		return getParent().getAbsoluteY() + getY();
@@ -183,17 +170,19 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	@Override
 	public void setWidth(final int width) {
-		checkArgument(	width > 0,
-						"Argument was %s but expected nonzero nonnegative",
-						width);
+		Preconditions
+				.checkArgument(	width > 0,
+								"Argument was %s but expected nonzero nonnegative value",
+								width);
 		this.desiredWidth = width;
 	}
 
 	@Override
 	public void setHeight(final int height) {
-		checkArgument(	height > 0,
-						"Argument was %s but expected nonzero nonnegative",
-						this.width);
+		Preconditions
+				.checkArgument(	height > 0,
+								"Argument was %s but expected nonzero nonnegative value",
+								this.width);
 		this.desiredHeight = height;
 	}
 
@@ -216,112 +205,44 @@ public abstract class AbstractShellNode implements ShellNode {
 		}
 
 		// check if our parent is visible.
-		final boolean parentVisible = (getParent() != null) && getParent().isVisible();
+		final boolean parentVisible = getParent() != null
+				&& getParent().isVisible();
 		return parentVisible;
 	}
 
-	protected ShellLayoutManager getParentLayoutManager(final ShellNodeParent parent) {
-		if (parent == null) {
-			return null;
-		}
-
-		final ShellLayoutManager parentLayoutManager = parent.getLayoutManager();
-		final ShellNodeParent grandParent = parent.getParent();
-		if ((parent != grandParent) && (parentLayoutManager == null)) {
-			return getParentLayoutManager(parent.getParent());
-		}
-
-		return parentLayoutManager;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * A {@link ShellNodeMoveRequestEvent} will be emitted by this node. If no
-	 * {@link ShellLayoutManager} is set for this node, {@link #doMove()} will
-	 * take place after all node subscribers have been notified of the request.
-	 */
 	@Override
 	public void requestMove() {
 		final ShellNodeMoveRequestEvent event = new ShellNodeMoveRequestEvent(	this,
 																				toGeoTransformation());
 		getNodeEventBus().post(event);
-		final ShellLayoutManager shellLayoutManager = getParentLayoutManager(getParent());
-		if (shellLayoutManager == null) {
-			doMove();
-		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * A {@link ShellNodeResizeRequestEvent} will be emitted by this node. If no
-	 * {@link ShellLayoutManager} is set for this node, {@link #doResize()} will
-	 * take place after all node subscribers have been notified of the request.
-	 */
 	@Override
 	public void requestResize() {
 		final ShellNodeEvent event = new ShellNodeResizeRequestEvent(	this,
 																		toGeoTransformation());
 		getNodeEventBus().post(event);
-		final ShellLayoutManager shellLayoutManager = getParentLayoutManager(getParent());
-		if (shellLayoutManager == null) {
-			doResize();
-		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * A {@link ShellNodeMovedResizedEvent} will be emitted by this node. If no
-	 * {@link ShellLayoutManager} is set for this node, {@link #doMoveResize()}
-	 * will take place after all node subscribers have been notified of the
-	 * request.
-	 */
 	@Override
 	public void requestMoveResize() {
 		final ShellNodeMoveResizeRequestEvent event = new ShellNodeMoveResizeRequestEvent(	this,
 																							toGeoTransformation());
 		getNodeEventBus().post(event);
-		final ShellLayoutManager shellLayoutManager = getParentLayoutManager(getParent());
-		if (shellLayoutManager == null) {
-			doMoveResize();
-		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * A {@link ShellNodeRaiseRequestEvent} will be emitted by this node. If no
-	 * {@link ShellLayoutManager} is set for this node, {@link #doRaise()} will
-	 * take place after all node subscribers have been notified of the request.
-	 */
 	@Override
 	public void requestRaise() {
 		final ShellNodeEvent event = new ShellNodeRaiseRequestEvent(this,
 																	toGeoTransformation());
 		getNodeEventBus().post(event);
-		final ShellLayoutManager shellLayoutManager = getParentLayoutManager(getParent());
-		if (shellLayoutManager == null) {
-			doRaise();
-		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * A {@link ShellNodeLowerRequestEvent} will be emitted by this node. If no
-	 * {@link ShellLayoutManager} is set for this node, {@link #doLower()} will
-	 * take place after all node subscribers have been notified of the request.
-	 */
 	@Override
 	public void requestLower() {
 		final ShellNodeLowerRequestEvent event = new ShellNodeLowerRequestEvent(this,
 																				toGeoTransformation());
 		getNodeEventBus().post(event);
-		if (getParentLayoutManager(getParent()) == null) {
-			doLower();
-		}
 	}
 
 	@Override
@@ -360,7 +281,10 @@ public abstract class AbstractShellNode implements ShellNode {
 									getDesiredY());
 	}
 
-	private void flushPlaceValues() {
+	/**
+	 * Make the desired position the actual position.
+	 */
+	protected void flushPlaceValues() {
 		this.x = getDesiredX();
 		this.y = getDesiredY();
 	}
@@ -368,7 +292,6 @@ public abstract class AbstractShellNode implements ShellNode {
 	@Override
 	public void doResize() {
 		doResize(true);
-
 	}
 
 	/***************************************
@@ -402,7 +325,10 @@ public abstract class AbstractShellNode implements ShellNode {
 										getDesiredHeight());
 	}
 
-	private void flushSizeValues() {
+	/**
+	 * Make the desired dimensions the current dimension.
+	 */
+	protected void flushSizeValues() {
 		this.width = getDesiredWidth();
 		this.height = getDesiredHeight();
 	}
@@ -410,7 +336,6 @@ public abstract class AbstractShellNode implements ShellNode {
 	@Override
 	public void doMoveResize() {
 		doMoveResize(true);
-
 	}
 
 	/***************************************
@@ -446,7 +371,11 @@ public abstract class AbstractShellNode implements ShellNode {
 											getDesiredHeight());
 	}
 
-	private void flushSizePlaceValues() {
+	/**
+	 * Make both the desired position and the desired dimension, the current
+	 * position and dimension.
+	 */
+	protected void flushSizePlaceValues() {
 		flushPlaceValues();
 		flushSizeValues();
 	}
@@ -582,7 +511,6 @@ public abstract class AbstractShellNode implements ShellNode {
 		doMoveResize(execute);
 		final ShellNodeReparentedEvent geoEvent = new ShellNodeReparentedEvent(	this,
 																				toGeoTransformation());
-
 		getNodeEventBus().post(geoEvent);
 	}
 
@@ -747,37 +675,17 @@ public abstract class AbstractShellNode implements ShellNode {
 		getShellNodeExecutor().hide();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * A {@link ShellNodeShowRequestEvent} will be emitted by this node. If no
-	 * {@link ShellLayoutManager} is set for this node, {@link #doShow()} will
-	 * take place after all node subscribers have been notified of the request.
-	 */
 	@Override
 	public void requestShow() {
 		final ShellNodeShowRequestEvent event = new ShellNodeShowRequestEvent(	this,
 																				toGeoTransformation());
 		getNodeEventBus().post(event);
-		if (getParentLayoutManager(getParent()) == null) {
-			doShow();
-		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * A {@link ShellNodeHiddenEvent} will be emitted by this node. If no
-	 * {@link ShellLayoutManager} is set for this node, {@link #doHide()} will
-	 * take place after all node subscribers have been notified of the request.
-	 */
 	@Override
 	public void requestHide() {
 		final ShellNodeHideRequestEvent event = new ShellNodeHideRequestEvent(	this,
 																				toGeoTransformation());
 		getNodeEventBus().post(event);
-		if (getParentLayoutManager(getParent()) == null) {
-			doHide();
-		}
 	}
 }

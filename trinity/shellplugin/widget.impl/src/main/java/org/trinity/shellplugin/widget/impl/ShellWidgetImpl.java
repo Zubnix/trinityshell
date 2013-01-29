@@ -14,8 +14,6 @@ package org.trinity.shellplugin.widget.impl;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
 import org.trinity.foundation.api.render.binding.view.View;
-import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shell.api.widget.ShellWidget;
@@ -28,10 +26,10 @@ import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind
-@To(value = Type.INTERFACES, customs = ShellWidget.class)
+@To(value = Type.INTERFACES,
+	customs = ShellWidget.class)
 public class ShellWidgetImpl extends BaseShellWidget {
 
-	// private final ShellSurfaceParent shellRootSurface;
 	private final View view;
 
 	@Inject
@@ -48,11 +46,5 @@ public class ShellWidgetImpl extends BaseShellWidget {
 	@ViewReference
 	public View getView() {
 		return this.view;
-	}
-
-	@Override
-	protected ShellLayoutManager getParentLayoutManager(final ShellNodeParent parent) {
-
-		return getLayoutManager();
 	}
 }

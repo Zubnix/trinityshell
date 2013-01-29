@@ -16,7 +16,6 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeExecutor;
 import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
@@ -30,8 +29,10 @@ import com.google.inject.name.Named;
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 
-@Bind(value = @Named("ShellRootSurface"), to = @To(value = To.Type.CUSTOM, customs = { ShellSurfaceParent.class,
-		ShellSurface.class, ShellNodeParent.class, ShellNode.class }))
+@Bind(	value = @Named("ShellRootSurface"),
+		to = @To(	value = To.Type.CUSTOM,
+					customs = { ShellSurfaceParent.class, ShellSurface.class,
+							ShellNodeParent.class, ShellNode.class }))
 @Singleton
 public class ShellRootSurface extends AbstractShellSurfaceParent {
 
@@ -46,8 +47,9 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 		this.shellNodeExecutor = new ShellSurfaceExecutorImpl(this);
 		this.displaySurface = displayServer.getRootDisplayArea();
 		syncGeoToDisplaySurface();
-		shellDisplayEventDispatcher.registerDisplayEventSourceListener(	nodeEventBus,
-																		this.displaySurface);
+		shellDisplayEventDispatcher
+				.registerDisplayEventSourceListener(nodeEventBus,
+													this.displaySurface);
 	}
 
 	@Override
@@ -63,11 +65,6 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 	@Override
 	public int getAbsoluteY() {
 		return getY();
-	}
-
-	@Override
-	protected ShellLayoutManager getParentLayoutManager(final ShellNodeParent parent) {
-		return getLayoutManager();
 	}
 
 	@Override

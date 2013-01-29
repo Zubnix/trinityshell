@@ -15,7 +15,6 @@ import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeExecutor;
 import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -40,11 +39,11 @@ import de.devsurf.injection.guice.annotations.To.Type;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(value = @Named("ShellVirtualNode"), to = @To(value = Type.CUSTOM, customs = { ShellNode.class,
-		ShellNodeParent.class }))
+@Bind(	value = @Named("ShellVirtualNode"),
+		to = @To(	value = Type.CUSTOM,
+					customs = { ShellNode.class, ShellNodeParent.class }))
 public class ShellVirtualNode extends AbstractShellNodeParent {
 	private final ShellNodeExecutor shellNodeExecutor;
-	private ShellLayoutManager shellLayoutManager;
 
 	@Inject
 	protected ShellVirtualNode(final EventBus nodeEventBus) {
@@ -55,18 +54,5 @@ public class ShellVirtualNode extends AbstractShellNodeParent {
 	@Override
 	public ShellNodeExecutor getShellNodeExecutor() {
 		return this.shellNodeExecutor;
-	}
-
-	@Override
-	public ShellLayoutManager getLayoutManager() {
-		return this.shellLayoutManager;
-	}
-
-	/**
-	 * @param shellLayoutManager
-	 */
-	@Override
-	public void setLayoutManager(final ShellLayoutManager shellLayoutManager) {
-		this.shellLayoutManager = shellLayoutManager;
 	}
 }

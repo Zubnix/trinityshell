@@ -19,6 +19,7 @@ import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 
 /***************************************
@@ -26,13 +27,15 @@ import com.google.common.eventbus.EventBus;
  * 
  *************************************** 
  */
-public abstract class AbstractShellNodeParent extends AbstractShellNode implements ShellNodeParent {
+public abstract class AbstractShellNodeParent extends AbstractShellNode
+		implements ShellNodeParent {
 
 	private final EventBus nodeEventBus;
 
 	private final Set<ShellNode> children = new HashSet<ShellNode>();
 
-	private ShellLayoutManager shellLayoutManager;
+	private Optional<ShellLayoutManager> optionalLayoutManager = Optional
+			.absent();
 
 	public AbstractShellNodeParent(final EventBus nodeEventBus) {
 		super(nodeEventBus);
@@ -59,13 +62,13 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 	}
 
 	@Override
-	public ShellLayoutManager getLayoutManager() {
-		return this.shellLayoutManager;
+	public Optional<ShellLayoutManager> getLayoutManager() {
+		return this.optionalLayoutManager;
 	}
 
 	@Override
 	public void setLayoutManager(final ShellLayoutManager shellLayoutManager) {
-		this.shellLayoutManager = shellLayoutManager;
+		this.optionalLayoutManager = Optional.of(shellLayoutManager);
 		this.nodeEventBus.register(shellLayoutManager);
 	}
 
@@ -113,10 +116,9 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 	 */
 	@Override
 	public void layout() {
-		final ShellLayoutManager layoutManager = getLayoutManager();
-		if (layoutManager == null) {
-			return;
+		final Optional<ShellLayoutManager> optionalLayoutManager = getLayoutManager();
+		if (optionalLayoutManager.isPresent()) {
+			optionalLayoutManager.get().layout(this);
 		}
-		getLayoutManager().layout(this);
 	}
 }

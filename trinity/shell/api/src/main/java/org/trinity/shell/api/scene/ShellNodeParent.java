@@ -13,6 +13,8 @@ package org.trinity.shell.api.scene;
 
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
+import com.google.common.base.Optional;
+
 /***************************************
  * A {@link ShellNode} that can have child <code>ShellNode</code>s. A node's
  * parent can be changed by calling {@link ShellNode#setParent(ShellNodeParent)}
@@ -34,7 +36,7 @@ public interface ShellNodeParent extends ShellNode {
 	 * @return A {@link ShellLayoutManager}.
 	 *************************************** 
 	 */
-	ShellLayoutManager getLayoutManager();
+	Optional<ShellLayoutManager> getLayoutManager();
 
 	/***************************************
 	 * Layout all child <code>ShellNode</code>s.

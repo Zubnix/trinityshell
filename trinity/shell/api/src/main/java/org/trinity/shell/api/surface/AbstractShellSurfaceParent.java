@@ -20,15 +20,17 @@ import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 
-public abstract class AbstractShellSurfaceParent extends AbstractShellSurface implements ShellSurfaceParent {
+public abstract class AbstractShellSurfaceParent extends AbstractShellSurface
+		implements ShellSurfaceParent {
 
 	private final EventBus nodeEventBus;
 
 	private final Set<ShellNode> children = new HashSet<ShellNode>();
 
-	private ShellLayoutManager shellLayoutManager;
+	private Optional<ShellLayoutManager> shellLayoutManager = Optional.absent();
 
 	public AbstractShellSurfaceParent(final EventBus nodeEventBus) {
 		super(nodeEventBus);
@@ -50,13 +52,13 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 	}
 
 	@Override
-	public ShellLayoutManager getLayoutManager() {
+	public Optional<ShellLayoutManager> getLayoutManager() {
 		return this.shellLayoutManager;
 	}
 
 	@Override
 	public void setLayoutManager(final ShellLayoutManager shellLayoutManager) {
-		this.shellLayoutManager = shellLayoutManager;
+		this.shellLayoutManager = Optional.of(shellLayoutManager);
 		this.nodeEventBus.register(shellLayoutManager);
 	}
 
@@ -91,12 +93,9 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 
 	@Override
 	public void layout() {
-		final ShellLayoutManager layoutManager = getLayoutManager();
-		if (layoutManager == null) {
-			return;
+		final Optional<ShellLayoutManager> layoutManager = getLayoutManager();
+		if (layoutManager.isPresent()) {
+			layoutManager.get().layout(this);
 		}
-
-		getLayoutManager().layout(this);
 	}
-
 }
