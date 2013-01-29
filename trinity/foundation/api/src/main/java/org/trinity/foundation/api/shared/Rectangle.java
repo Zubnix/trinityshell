@@ -12,16 +12,37 @@
 package org.trinity.foundation.api.shared;
 
 /***************************************
- * A 2 dimensional rectangle with a position.
+ * A 2 dimensional rectangle with a position and a dimension.
  * 
  *************************************** 
  */
 public interface Rectangle {
+
+	/**
+	 * Horizontal position of the rectangle, measured from the top left corner.
+	 * 
+	 * @return an X position.
+	 */
 	int getX();
 
+	/**
+	 * Vertical position of the rectangle, measure from the top left corner.
+	 * 
+	 * @return a Y position.
+	 */
 	int getY();
 
+	/**
+	 * Horizontal size of the rectangle.
+	 * 
+	 * @return A width.
+	 */
 	int getWidth();
 
+	/**
+	 * Vertical size of the rectangle.
+	 * 
+	 * @return a height.
+	 */
 	int getHeight();
 }

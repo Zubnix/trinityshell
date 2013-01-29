@@ -1,4 +1,4 @@
 /**
- * General useful classes and objects used throughout the foundation API.
+ * General useful classes and objects.
  */
 package org.trinity.foundation.api.shared;

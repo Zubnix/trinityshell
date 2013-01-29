@@ -13,13 +13,19 @@ package org.trinity.foundation.api.shared;
 
 /***************************************
  * A fixed size, fixed width {@link Rectangle}.
- * 
  *************************************** 
  */
 public class ImmutableRectangle implements Rectangle {
 
 	private final int x, y, width, height;
 
+	/**
+	 * Create a new {@code ImmutableRectangle} with the same geometry as the
+	 * given {@code Rectangle}.
+	 * 
+	 * @param rectangle
+	 *            a {@link Rectangle}
+	 */
 	public ImmutableRectangle(final Rectangle rectangle) {
 		this(	rectangle.getX(),
 				rectangle.getY(),
@@ -27,14 +33,43 @@ public class ImmutableRectangle implements Rectangle {
 				rectangle.getHeight());
 	}
 
-	public ImmutableRectangle(final Coordinate position, final int width, final int height) {
+	/**
+	 * Create a new {@code ImmutableRectangle} with the given {@code Coordinate}
+	 * as the position, and the given width & height as its dimension.
+	 * 
+	 * @param position
+	 *            A {@link Coordinate}
+	 * @param width
+	 *            an int, depicting the horizontal size.
+	 * @param height
+	 *            an int, depicting the vertical size.
+	 */
+	public ImmutableRectangle(	final Coordinate position,
+								final int width,
+								final int height) {
 		this(	position.getX(),
 				position.getY(),
 				width,
 				height);
 	}
 
-	public ImmutableRectangle(final int x, final int y, final int width, final int height) {
+	/**
+	 * Create a new {@code ImmutableRectangle} with the given x and y value as
+	 * the position, and the given width & height as its dimension.
+	 * 
+	 * @param x
+	 *            an int, depicting the horizontal position.
+	 * @param y
+	 *            an int, depicting the vertical position.
+	 * @param width
+	 *            an int, depicting the horizontal size.
+	 * @param height
+	 *            an int, depicting the vertical size.
+	 */
+	public ImmutableRectangle(	final int x,
+								final int y,
+								final int width,
+								final int height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;

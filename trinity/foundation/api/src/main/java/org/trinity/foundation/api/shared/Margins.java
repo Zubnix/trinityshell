@@ -11,6 +11,11 @@
  */
 package org.trinity.foundation.api.shared;
 
+/**
+ * 
+ * The extra space between an object and it's neighbors.
+ * 
+ */
 public class Margins {
 
 	/**
@@ -20,37 +25,90 @@ public class Margins {
 
 	private final int bottom, left, right, top;
 
-	public Margins(final int margins) {
-		this(	margins,
-				margins);
+	/**
+	 * Short for {@code new Margins(m,m,m,m)}
+	 * 
+	 * @param m
+	 *            margin size to use for all borders (left, right,bottom,top).
+	 */
+	public Margins(final int m) {
+		this(	m,
+				m);
 	}
 
-	public Margins(final int horiz, final int vert) {
-		this(	horiz,
-				horiz,
-				vert,
-				vert);
+	/**
+	 * Short for {@code new Margins(h,h,v,v)}
+	 * 
+	 * @param h
+	 *            horizontal size to use for horizontal borders (left,right)
+	 * @param v
+	 *            vertical size to use for vertical borders (bottom,top)
+	 */
+	public Margins(	final int h,
+					final int v) {
+		this(	h,
+				h,
+				v,
+				v);
 	}
 
-	public Margins(final int left, final int right, final int bottom, final int top) {
+	/**
+	 * Create new {@code Margins} with a given left, right, bottom and top
+	 * distance.
+	 * 
+	 * @param left
+	 *            The distance on the left between the object and it's neighbor.
+	 * @param right
+	 *            The distance to the right between the object and it's
+	 *            neighbor.
+	 * @param bottom
+	 *            The distance at the bottom between the object and it's
+	 *            neighbor.
+	 * @param top
+	 *            The distance at the top between the object and it's neighbor.
+	 */
+	public Margins(	final int left,
+					final int right,
+					final int bottom,
+					final int top) {
 		this.bottom = bottom;
 		this.right = right;
 		this.left = left;
 		this.top = top;
 	}
 
+	/**
+	 * The distance at the bottom between the object and it's neighbor.
+	 * 
+	 * @return a distance
+	 */
 	public int getBottom() {
 		return this.bottom;
 	}
 
+	/**
+	 * The distance on the left between the object and it's neighbor.
+	 * 
+	 * @return a distance
+	 */
 	public int getLeft() {
 		return this.left;
 	}
 
+	/**
+	 * The distance to the right between the object and it's neighbor.
+	 * 
+	 * @return a distance
+	 */
 	public int getRight() {
 		return this.right;
 	}
 
+	/**
+	 * The distance at the top between the object and it's neighbor.
+	 * 
+	 * @return a distance
+	 */
 	public int getTop() {
 		return this.top;
 	}

@@ -13,18 +13,33 @@ package org.trinity.foundation.api.shared;
 
 /***************************************
  * A coordinate in 2D space, in natural numbers.
- * 
  *************************************** 
  */
 public class Coordinate {
 
 	private final int x, y;
 
-	public Coordinate(final int x, final int y) {
+	/**
+	 * Create a new {@code Coordinate} with the given X and Y value.
+	 * 
+	 * @param x
+	 *            an int, depicting the horizontal position on the screen.
+	 * @param y
+	 *            an int, depicting the vertical position on the screen.
+	 */
+	public Coordinate(	final int x,
+						final int y) {
 		this.x = x;
 		this.y = y;
 	}
 
+	/**
+	 * Create a new {@code Coordinate} with the same values as the given
+	 * {@code Coordinate}.
+	 * 
+	 * @param coordinates
+	 *            The {@link Coordinate} who's values to copy.
+	 */
 	public Coordinate(final Coordinate coordinates) {
 		this(	coordinates.getX(),
 				coordinates.getY());
