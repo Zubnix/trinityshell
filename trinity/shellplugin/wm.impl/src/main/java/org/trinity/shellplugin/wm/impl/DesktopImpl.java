@@ -55,8 +55,7 @@ public class DesktopImpl {
 		// topbar
 		this.shellWidgetBarTop.setHeight(25);
 		this.shellWidgetBarTop.doResize();
-		final ShellLayoutPropertyLine layoutPropertyTopBar = new ShellLayoutPropertyLine(	0,
-																							Margins.NO_MARGINS);
+		final ShellLayoutPropertyLine layoutPropertyTopBar = new ShellLayoutPropertyLine(0);
 		this.shellLayoutManagerLineRoot.addChildNode(	this.shellWidgetBarTop,
 														layoutPropertyTopBar);
 		this.shellWidgetBarTop.setParent(this.shellWidgetRoot);
@@ -65,20 +64,23 @@ public class DesktopImpl {
 		// client display area
 		final ShellLayoutPropertyLine layoutPropertyClientDisplayArea = new ShellLayoutPropertyLine(1,
 																									new Margins(5));
-		this.shellLayoutManagerLineRoot.addChildNode(	this.shellNodeParentClient,
-														layoutPropertyClientDisplayArea);
+		this.shellLayoutManagerLineRoot
+				.addChildNode(	this.shellNodeParentClient,
+								layoutPropertyClientDisplayArea);
 		this.shellNodeParentClient.setParent(this.shellWidgetRoot);
 		this.shellNodeParentClient.doReparent();
 
-		this.shellNodeParentClient.setLayoutManager(this.shellLayoutManagerLineClient);
+		this.shellNodeParentClient
+				.setLayoutManager(this.shellLayoutManagerLineClient);
 
 		// bottombar
 		this.shellWidgetBarBottom.setHeight(25);
 		this.shellWidgetBarBottom.doResize();
 		final ShellLayoutPropertyLine layoutPropertyBottomBar = new ShellLayoutPropertyLine(0,
 																							Margins.NO_MARGINS);
-		this.shellLayoutManagerLineRoot.addChildNode(	this.shellWidgetBarBottom,
-														layoutPropertyBottomBar);
+		this.shellLayoutManagerLineRoot
+				.addChildNode(	this.shellWidgetBarBottom,
+								layoutPropertyBottomBar);
 		this.shellWidgetBarBottom.setParent(this.shellWidgetRoot);
 		this.shellWidgetBarBottom.doReparent();
 
@@ -96,9 +98,10 @@ public class DesktopImpl {
 	}
 
 	public void addClient(final ShellSurface shellSurfaceClient) {
-		this.shellLayoutManagerLineClient.addChildNode(	shellSurfaceClient,
-														new ShellLayoutPropertyLine(1,
-																					new Margins(2)));
+		this.shellLayoutManagerLineClient
+				.addChildNode(	shellSurfaceClient,
+								new ShellLayoutPropertyLine(1,
+															new Margins(1)));
 		shellSurfaceClient.setParent(this.shellNodeParentClient);
 		shellSurfaceClient.doReparent();
 

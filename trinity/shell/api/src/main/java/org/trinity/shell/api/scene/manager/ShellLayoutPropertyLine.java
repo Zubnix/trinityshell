@@ -23,9 +23,15 @@ public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 	private final int weight;
 	private final Margins margins;
 
-	public ShellLayoutPropertyLine(final int weight, final Margins margins) {
+	public ShellLayoutPropertyLine(	final int weight,
+									final Margins margins) {
 		this.weight = weight;
 		this.margins = margins;
+	}
+
+	public ShellLayoutPropertyLine(final int weight) {
+		this(	weight,
+				Margins.NO_MARGINS);
 	}
 
 	public int getWeight() {
