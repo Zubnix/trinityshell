@@ -30,8 +30,6 @@ import com.google.common.eventbus.EventBus;
 public abstract class AbstractShellNodeParent extends AbstractShellNode
 		implements ShellNodeParent {
 
-	private final EventBus nodeEventBus;
-
 	private final Set<ShellNode> children = new HashSet<ShellNode>();
 
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional
@@ -39,7 +37,6 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode
 
 	public AbstractShellNodeParent(final EventBus nodeEventBus) {
 		super(nodeEventBus);
-		this.nodeEventBus = nodeEventBus;
 	}
 
 	/**
@@ -69,7 +66,7 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode
 	@Override
 	public void setLayoutManager(final ShellLayoutManager shellLayoutManager) {
 		this.optionalLayoutManager = Optional.of(shellLayoutManager);
-		this.nodeEventBus.register(shellLayoutManager);
+		getNodeEventBus().register(shellLayoutManager);
 	}
 
 	@Override
@@ -99,12 +96,12 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode
 			// child.removeShellNodeEventHandler(this);
 			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
 															toGeoTransformation());
-			this.nodeEventBus.post(shellNodeEvent);
+			getNodeEventBus().post(shellNodeEvent);
 		} else {
 			this.children.add(child);
 			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
 															toGeoTransformation());
-			this.nodeEventBus.post(shellNodeEvent);
+			getNodeEventBus().post(shellNodeEvent);
 		}
 	}
 

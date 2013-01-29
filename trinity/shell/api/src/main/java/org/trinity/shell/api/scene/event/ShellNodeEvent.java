@@ -24,7 +24,19 @@ public class ShellNodeEvent {
 	private final ShellNode shellNode;
 	private final ShellNodeTransformation shellNodeTransformation;
 
-	public ShellNodeEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
+	/**
+	 * Create a new {@code ShellNodeChildAddedEvent} with the given
+	 * {@code ShellNode} as the node that emitted the event, and the given
+	 * {@code ShellNodeTransformation} as the details coming from the given node
+	 * e.g. {@link ShellNode#toGeoTransformation()}
+	 * 
+	 * @param shellNode
+	 *            the emitting {@link ShellNode}
+	 * @param shellNodeTransformation
+	 *            a {@link ShellNodeTransformation}
+	 */
+	public ShellNodeEvent(	final ShellNode shellNode,
+							final ShellNodeTransformation shellNodeTransformation) {
 		this.shellNode = shellNode;
 		this.shellNodeTransformation = shellNodeTransformation;
 	}

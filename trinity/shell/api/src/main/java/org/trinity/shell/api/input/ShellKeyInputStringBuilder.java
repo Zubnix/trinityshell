@@ -14,14 +14,15 @@ package org.trinity.shell.api.input;
 import org.trinity.foundation.api.display.event.KeyNotifyEvent;
 
 /***************************************
- * Convenience class to build a {@link String} with {@link KeyNotifyEvent}s.
+ * Convenience class to build a {@code String} with {@link KeyNotifyEvent}s. A
+ * call to {@code toString()} reads out the underlying {@code String}.
  * 
  *************************************** 
  */
 public interface ShellKeyInputStringBuilder {
 
 	/***************************************
-	 * Append the given {@link String} to the underlying string buffer.
+	 * Append the given {@code String} to the underlying {@code String}.
 	 * 
 	 * @param string
 	 *            a {@link String}
@@ -30,8 +31,10 @@ public interface ShellKeyInputStringBuilder {
 	void append(String string);
 
 	/***************************************
-	 * Append the {@link String} derived from the given {@link KeyNotifyEvent}
-	 * to the underlying string buffer.
+	 * Append the character derived from the given {@code KeyNotifyEvent} to the
+	 * underlying {@code String}. Backspace will deduct the last character from
+	 * the underlying String. Special keys with no clear interpretation, like
+	 * alt, ctrl, f1, ... will be ignored.
 	 * 
 	 * @param input
 	 *            a {@link KeyNotifyEvent}
@@ -40,7 +43,7 @@ public interface ShellKeyInputStringBuilder {
 	void append(KeyNotifyEvent input);
 
 	/***************************************
-	 * Clear the underlying string buffer.
+	 * Clear the underlying {@code String}.
 	 *************************************** 
 	 */
 	void clear();

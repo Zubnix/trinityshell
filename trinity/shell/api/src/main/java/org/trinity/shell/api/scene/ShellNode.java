@@ -24,7 +24,7 @@ import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 
 /***************************************
- * The super interface of all nodes that live in the shell scene graph.
+ * The super interface of all nodes that live in the shell scene.
  * 
  *************************************** 
  */
@@ -59,7 +59,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * <code>PaintSurfaceNode</code> will only be physically visible if all it's
 	 * parents are physically visible as well.
 	 * 
-	 * @return
+	 * @return true if visible, false if not
 	 */
 	boolean isVisible();
 
@@ -336,9 +336,9 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	/**
 	 * The desired transformation of this node. The "0" named properties match
 	 * this node's current state, the "1" named properties match this node's
-	 * desired state. I call to {@link #setWidth(int)} with a value of 10 will
-	 * thus be reflected by the returned
-	 * {@link ShellNodeTransformation#getWidth1()} also returning 10.
+	 * desired state. A call to {@link #setWidth(int)} with a value of 10 will
+	 * thus be reflected by {@link ShellNodeTransformation#getWidth1()}
+	 * returning 10.
 	 * 
 	 * @return A {@link ShellNodeTransformation}.
 	 */

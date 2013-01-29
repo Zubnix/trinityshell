@@ -20,6 +20,17 @@ import org.trinity.shell.api.scene.ShellNodeTransformation;
  */
 public class ShellNodeVisibilityRequestEvent extends ShellNodeEvent {
 
+	/**
+	 * Create a new {@code ShellNodeChildAddedEvent} with the given
+	 * {@code ShellNode} as the node that emitted the event, and the given
+	 * {@code ShellNodeTransformation} as the details coming from the given node
+	 * e.g. {@link ShellNode#toGeoTransformation()}
+	 * 
+	 * @param shellNode
+	 *            the emitting {@link ShellNode}
+	 * @param shellNodeTransformation
+	 *            a {@link ShellNodeTransformation}
+	 */
 	public ShellNodeVisibilityRequestEvent(	final ShellNode shellNode,
 											final ShellNodeTransformation shellNodeTransformation) {
 		super(	shellNode,

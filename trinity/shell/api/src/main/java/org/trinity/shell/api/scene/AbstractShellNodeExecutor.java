@@ -14,17 +14,19 @@ package org.trinity.shell.api.scene;
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 
 /****************************************
- * An abstract base implemenation of a {@link ShellNodeExecutor} for use with an
- * {@link AbstractShellNode}.
+ * An abstract base implementation of a {@link ShellNodeExecutor} for use with
+ * an {@link AbstractShellNode}.
  * 
  *************************************** 
  */
 public abstract class AbstractShellNodeExecutor implements ShellNodeExecutor {
 
+	/**
+	 * The geometry manipulator of node returned by {@link #getShellNode()}.
+	 * 
+	 * @return a {@link DisplayAreaManipulator}
+	 */
 	public abstract DisplayAreaManipulator getShellNodeManipulator();
-
-	@Override
-	public abstract ShellNode getShellNode();
 
 	@Override
 	public void lower() {

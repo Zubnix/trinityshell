@@ -17,17 +17,15 @@ import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 
 /***************************************
- * A specific keybinding. The keybinding will not be bound until a call to
- * {@link ShellKeysBinding#bind()} is made. A bound
- * <code>ShellKeysBinding</code> will be activated as soon as any of the
- * required {@link Key}s is pressed and the required {@link InputModifiers} are
- * active.
- * 
+ * A key binding bound to a {@link Runnable}. The key binding will not be active
+ * until a call to {@link ShellKeysBinding#bind()} is made. A bound
+ * <code>ShellKeysBinding</code> will be executed as soon as any of the required
+ * {@link Key}s is pressed and the required {@link InputModifiers} are active.
  *************************************** 
  */
 public interface ShellKeysBinding {
 	/***************************************
-	 * The action to perform when this keybinding is executed.
+	 * The action to perform when this key binding is executed.
 	 * 
 	 * @return a {@link Runnable}
 	 *************************************** 
@@ -35,8 +33,9 @@ public interface ShellKeysBinding {
 	Runnable getAction();
 
 	/***************************************
-	 * A group of possible <code>Keys</code> for this keybinding to become
-	 * active.
+	 * A group of possible <code>Keys</code> for this key binding to become
+	 * active. Note that not all keys have to be active for the key binding to
+	 * be executed, only one will suffice.
 	 * 
 	 * @return {@link Key}s
 	 *************************************** 
@@ -44,7 +43,8 @@ public interface ShellKeysBinding {
 	List<Key> getKeys();
 
 	/***************************************
-	 * The <code>InputModifiers</code> that are required to be active.
+	 * The <code>InputModifiers</code> that are required to be active. Note that
+	 * unlike {@link #getKeys()}, all input modifiers are required to be active.
 	 * 
 	 * @return {@link InputModifiers}
 	 *************************************** 
@@ -52,7 +52,7 @@ public interface ShellKeysBinding {
 	InputModifiers getInputModifiers();
 
 	/***************************************
-	 * Make this keybinding eligible for execution.
+	 * Active and make this key binding eligible for execution.
 	 *************************************** 
 	 */
 	void bind();

@@ -15,14 +15,26 @@ import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 /***************************************
- * Informs that a child {@link ShellNodeEvent} was removed from the node that
- * emitted this event.
+ * Informs that a child {@link ShellNode} was removed from the node that emitted
+ * this event.
  * 
  *************************************** 
  */
 public class ShellNodeChildLeftEvent extends ShellNodeChildEvent {
 
-	public ShellNodeChildLeftEvent(final ShellNode shellNode, final ShellNodeTransformation shellNodeTransformation) {
+	/**
+	 * Create a new {@code ShellNodeChildAddedEvent} with the given
+	 * {@code ShellNode} as the node that emitted the event, and the given
+	 * {@code ShellNodeTransformation} as the details coming from the given node
+	 * e.g. {@link ShellNode#toGeoTransformation()}
+	 * 
+	 * @param shellNode
+	 *            the emitting {@link ShellNode}
+	 * @param shellNodeTransformation
+	 *            a {@link ShellNodeTransformation}
+	 */
+	public ShellNodeChildLeftEvent(	final ShellNode shellNode,
+									final ShellNodeTransformation shellNodeTransformation) {
 		super(	shellNode,
 				shellNodeTransformation);
 	}

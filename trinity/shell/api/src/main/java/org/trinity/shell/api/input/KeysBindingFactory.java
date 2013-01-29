@@ -17,19 +17,25 @@ import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 
 /***************************************
- * Creates key bindings with a specific action.
+ * Creates key bindings with a specific action. A created key binding is not
+ * immediately active, but has to made active explicitly.
  * 
  *************************************** 
  */
 public interface KeysBindingFactory {
 
 	/****************************************
-	 * Create a new keybinding.
+	 * Create a new inactive key binding.
 	 * 
 	 * @param keys
+	 *            A {@link List} of {@link Key}s of which at least one should be
+	 *            pressed.
 	 * @param inputModifiers
+	 *            {@link InputModifiers} that should be active.
 	 * @param action
-	 * @return
+	 *            The {@link Runnable} that should be executed when the correct
+	 *            keys are pressed.
+	 * @return a new {@link ShellKeysBinding}.
 	 *************************************** 
 	 */
 	ShellKeysBinding createKeysBinding(	List<Key> keys,

@@ -12,8 +12,8 @@
 package org.trinity.foundation.api.display.event;
 
 /****************************************
- * Indicates when a pointer device has crossed the boundary of a
- * {@link DisplayEventTarget}.
+ * Indicates when a pointer device has crossed the boundary of a a display
+ * resource.
  * 
  *************************************** 
  */

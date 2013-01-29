@@ -11,7 +11,6 @@
  */
 package org.trinity.shell.api.scene;
 
-// TODO documentation
 /**
  * Executes the actual geometry changes for a {@link ShellNode}. A
  * <code>ShellNodeExecutor</code> is a delegate for a <code>ShellNode</code> to

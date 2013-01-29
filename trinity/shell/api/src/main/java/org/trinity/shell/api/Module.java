@@ -14,7 +14,7 @@ import de.devsurf.injection.guice.annotations.GuiceModule;
  * objects are registered:
  * <p>
  * <ul>
- * <li>An {@link EventBus} which is {@link Named} "shellEventBus". This eventbus
+ * <li>An {@link EventBus} which is {@link Named} "ShellEventBus". This eventbus
  * is the primary means of communication between independent {@link ShellPlugin}
  * s and informs any subscribed listener to changes of the shell. This eventbus
  * is driven by a single shell thread, subscribers should thus not block their
@@ -28,6 +28,7 @@ public class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(EventBus.class).annotatedWith(Names.named("ShellEventBus")).toInstance(new EventBus());
+		bind(EventBus.class).annotatedWith(Names.named("ShellEventBus"))
+				.toInstance(new EventBus());
 	}
 }

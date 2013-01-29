@@ -19,8 +19,12 @@ import org.trinity.shell.api.Module;
  * shell when a plugin is started and stopped respectively. Calls to
  * {@code start()} and {@code stop} should be non-blocking and should not spawn
  * any additional threads unless absolutely necessary. Instead a shell plugin
- * should hook into the shell thread itself. This keeps for a more thread safe
- * and more predictable behavior of shell plugins. See the shell {@link Module}.
+ * should hook into the shell thread itself. Should a shell plugin start a new
+ * thread then this thread should not call any objects that live outside it's
+ * own shell plugin. This keeps for a more thread safe and more predictable
+ * behavior of shell plugins.
+ * 
+ * @see {@link Module}.
  * 
  ****************************************/
 public interface ShellPlugin {
