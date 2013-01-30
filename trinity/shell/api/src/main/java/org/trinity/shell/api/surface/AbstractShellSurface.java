@@ -23,9 +23,6 @@ import org.trinity.shell.api.scene.ShellNode;
 
 import com.google.common.eventbus.Subscribe;
 
-// TODO documentation
-// TODO redesign/evaluate input manager integration/method delegation.
-
 /**
  * An abstract base implementation of {@link ShellSurface}. Implementations that
  * wish to concretely represent an on-screen area are encouraged to extend from
@@ -93,9 +90,11 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
-	 * Set the minimum height. The minimum height is guaranteed to be respected.
-	 * A smaller height than the minimum height can be requested and executed
-	 * but will result in the minimum height being set.
+	 * {@inheritDoc}
+	 * <p>
+	 * The minimum height is guaranteed to be respected. A smaller height than
+	 * the minimum height can be requested and executed but will result in the
+	 * minimum height being set.
 	 * 
 	 * @param minHeight
 	 *            The desired minimum height in pixels.
@@ -106,9 +105,11 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
-	 * Set the minimum width. The minimum width is guaranteed to be respected. A
-	 * smaller width than the minimum width can be requested and executed but
-	 * will result in the minimum width being set.
+	 * {@inheritDoc}
+	 * <p>
+	 * The minimum width is guaranteed to be respected. A smaller width than the
+	 * minimum width can be requested and executed but will result in the
+	 * minimum width being set.
 	 * 
 	 * @param minWidth
 	 *            The desired minimum width in pixels.
@@ -119,6 +120,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
 	 * @return The minimum width in pixels.
 	 * @see AbstractShellSurface#setMinWidth(int)
 	 */
@@ -128,6 +131,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
 	 * @return The minimum height in pixels.
 	 * @see AbstractShellSurface#setMinHeight(int)
 	 */
@@ -137,9 +142,11 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
-	 * Set the maximum width. The maximum width is guaranteed to be respected. A
-	 * greater width than the maximum width can be requested and executed but
-	 * will result in the maximum width being set.
+	 * {@inheritDoc}
+	 * <p>
+	 * The maximum width is guaranteed to be respected. A greater width than the
+	 * maximum width can be requested and executed but will result in the
+	 * maximum width being set.
 	 * 
 	 * @param maxWidth
 	 *            The desired maxium width in pixels.
@@ -150,9 +157,11 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
-	 * Set the maximum height. The maximum height is guaranteed to be respected.
-	 * A greater height than the maximum height can be requested and executed
-	 * but will result in the maximum height being set.
+	 * {@inheritDoc}
+	 * <p>
+	 * The maximum height is guaranteed to be respected. A greater height than
+	 * the maximum height can be requested and executed but will result in the
+	 * maximum height being set.
 	 * 
 	 * @param maxHeight
 	 *            The desired maximum height in pixels.
@@ -163,6 +172,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see AbstractShellSurface#setMaxHeight(int)
 	 * @return The maximum height in pixels.
 	 */
@@ -172,6 +183,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see AbstractShellSurface#setMaxWidth(int)
 	 * @return the maximum width in pixels.
 	 */
@@ -205,35 +218,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
-	 * The <code>PlatformRenderArea</code> that this
-	 * <code>AbstractShellSurface</code> wraps.
-	 * <p>
-	 * The returned <code>PlatformRenderArea</code> is the representation of a
-	 * native window on the native display platform.
-	 * <p>
-	 * The returned <code>PlatformRenderArea</code> is used to represent the
-	 * visualization of this <code>AbstractShellSurface</code> on the native
-	 * display server. The visual representation of this
-	 * <code>PlatformRenderArea</code> is never manipulated directly but through
-	 * an external program or toolkit, in case this
-	 * <code>AbstractShellSurface</code> is extended by a
-	 * <code>ShellClient</code> or a <code>Widget</code> respectively.
-	 * <p>
-	 * If this <code>AbstractShellSurface</code> is the owner of the returned
-	 * <code>PlatformRenderArea</code>, the <code>AbstractShellSurface</code> 's
-	 * geometry will reflect the geometry of the returned
-	 * <code>PlatformRenderArea</code>.
-	 * 
-	 * @return A {@link DisplaySurface}.
-	 */
-	// @Override
-	// public DisplaySurface getDisplaySurface() {
-	// return this.displaySurface;
-	// }
-
-	/**
-	 * Indicates if this object can movedor not. A non movable object can have a
-	 * new position set but requests to execute this new position will have no
+	 * Indicates if this object can moved. A non movable object can have a new
+	 * position set but requests to execute this new position will have no
 	 * effect.
 	 * 
 	 * @return True if movable, false if not.
@@ -247,9 +233,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
-	 * Indicates if this object can resize or not. A non resizable object can
-	 * have a new size set but requests to execute this new size will have no
-	 * effect.
+	 * Indicates if this object can resize. A non resizable object can have a
+	 * new size set but requests to execute this new size will have no effect.
 	 * 
 	 * @return True if resizable, false if not.
 	 * @see ShellNode#requestMoveResize()
@@ -360,8 +345,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 
 	/**
 	 * Update the geometric information of this
-	 * <code>AbstractShellSurface</code> so it reflects it's
-	 * <code>DisplaySurface</code>.
+	 * <code>AbstractShellSurface</code> so it reflects the
+	 * <code>DisplaySurface</code> returned in {@link #getDisplaySurface()}.
 	 * <p>
 	 * This method is only useful if this <code>AbstractShellSurface</code> is
 	 * the embodiment of it's <code>DisplaySurface</code>. Extending classes
@@ -403,6 +388,12 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	// TODO protocol handling?
 	// TODO stacking handling?
 
+	/**
+	 * Called when an {@code DestroyNotifyEvent} arrives for this surface.
+	 * 
+	 * @param destroyNotifyEvent
+	 *            a {@link DestroyNotifyEvent}
+	 */
 	@Subscribe
 	public
 			void
@@ -410,6 +401,12 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 		doDestroy(false);
 	}
 
+	/**
+	 * Called when an {@code GeometryNotifyEvent} arrives for this surface.
+	 * 
+	 * @param geometryNotifyEvent
+	 *            a {@link GeometryNotifyEvent}
+	 */
 	@Subscribe
 	public
 			void
@@ -422,6 +419,12 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 		doMoveResize(false);
 	}
 
+	/**
+	 * Called when an {@code GeometryRequestEvent} arrives for this surface.
+	 * 
+	 * @param geometryRequestEvent
+	 *            a {@link GeometryRequestEvent}
+	 */
 	@Subscribe
 	public
 			void
@@ -444,16 +447,34 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 		requestMoveResize();
 	}
 
+	/**
+	 * Called when an {@code HideNotifyEvent} arrives for this surface.
+	 * 
+	 * @param hideNotifyEvent
+	 *            a {@link HideNotifyEvent}
+	 */
 	@Subscribe
 	public void handleHideNotifyEvent(final HideNotifyEvent hideNotifyEvent) {
 		doHide(false);
 	}
 
+	/**
+	 * Called when an {@code ShowNotifyEventt} arrives for this surface.
+	 * 
+	 * @param showNotifyEvent
+	 *            a {@link ShowNotifyEvent}
+	 */
 	@Subscribe
 	public void handleShowNotifyEvent(final ShowNotifyEvent showNotifyEvent) {
 		doShow(false);
 	}
 
+	/**
+	 * Called when an {@code ShowRequestEvent} arrives for this surface.
+	 * 
+	 * @param showRequestEvent
+	 *            a {@link ShowRequestEvent}
+	 */
 	@Subscribe
 	public void handleShowRequestEvent(final ShowRequestEvent showRequestEvent) {
 		requestShow();

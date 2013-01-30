@@ -72,7 +72,7 @@ public interface ShellSurface extends ShellNode {
 	int getMinWidth();
 
 	/***************************************
-	 * The underlying, wrapped display surface that this shell surface will use
+	 * The underlying, {@code DisplaySurface} that this shell surface will use
 	 * to display it's contents. A display surface can be shared, so multiple
 	 * shell surface's can use the same display surface.
 	 * 

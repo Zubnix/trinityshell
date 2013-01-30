@@ -25,7 +25,8 @@ import org.trinity.shell.api.scene.ShellNodeParent;
 public interface ShellLayoutManager {
 
 	/***************************************
-	 * Register a child so it can be managed by this layout manger.
+	 * Register a child with no {@link ShellLayoutProperty} so it can be managed
+	 * by this layout manger.
 	 * 
 	 * @param child
 	 *            A child {@link ShellNode}.
@@ -34,19 +35,22 @@ public interface ShellLayoutManager {
 	void addChildNode(ShellNode child);
 
 	/***************************************
-	 * Register a child with a specific property so it can be managed by this
-	 * layout manager.
+	 * Register a child with a specific {@code ShellLayoutProperty} so it can be
+	 * managed by this layout manager. The {@code ShellLayoutProperty} will
+	 * influence how the child is layed out.
 	 * 
 	 * @param child
+	 *            A child {@link ShellNode}
 	 * @param layoutProperty
+	 *            a {@link ShellLayoutProperty}
 	 *************************************** 
 	 */
 	void addChildNode(	final ShellNode child,
 						final ShellLayoutProperty layoutProperty);
 
 	/***************************************
-	 * The layout property that was registered together with the given child
-	 * {@link ShellNode}.
+	 * The {@code ShellLayoutProperty} that was registered together with the
+	 * given child {@link ShellNode}.
 	 * 
 	 * @param child
 	 *            A child {@link ShellNode}
@@ -92,7 +96,8 @@ public interface ShellLayoutManager {
 	void removeChild(final int index);
 
 	/***************************************
-	 * Layout all child {@link ShellNode}s.
+	 * Layout all child {@link ShellNode}s. This method should only be called by
+	 * a {@link ShellNodeParent}.
 	 * 
 	 * @param containerNode
 	 *            The parent {@link ShellNode}.

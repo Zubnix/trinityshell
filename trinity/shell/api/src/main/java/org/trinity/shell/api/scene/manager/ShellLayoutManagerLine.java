@@ -14,12 +14,13 @@ package org.trinity.shell.api.scene.manager;
 import org.trinity.shell.api.scene.ShellNode;
 
 /***************************************
- * Lays out child {@link ShellNode}s in a single continuous line. Children can
- * be position vertically, horizontally and left to right or right to left. Each
- * child node can be assigned a weight. Each child weight is then compared to
- * the weight of all children to calculate a child's relative weight. This
- * relative weight is used to calculate the child's change in size. Children
- * with a weight of zero will be interpreted as have a static size.
+ * Lays out child {@link ShellNode}s in a single continuous line ie in a single
+ * row (horizontal), or a single column (vertical). Children can be position
+ * vertically, horizontally and left to right or right to left. Each child node
+ * can be assigned a weight. Each child weight is then compared to the weight of
+ * all children to calculate a child's relative weight. This relative weight is
+ * used to calculate the child's change in size. Children with a weight of zero
+ * will be interpreted as have a static size.
  *************************************** 
  */
 public interface ShellLayoutManagerLine extends ShellLayoutManager {
@@ -41,5 +42,8 @@ public interface ShellLayoutManagerLine extends ShellLayoutManager {
 	 *************************************** 
 	 */
 	void setInverseDirection(boolean inverseDirection);
+
+	@Override
+	public ShellLayoutPropertyLine getLayoutProperty(ShellNode child);
 
 }

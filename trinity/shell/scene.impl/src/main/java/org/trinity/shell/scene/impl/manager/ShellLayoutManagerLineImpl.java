@@ -29,6 +29,7 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
 import org.trinity.shell.api.scene.manager.ShellLayoutProperty;
 import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 
+import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 
 import de.devsurf.injection.guice.annotations.Bind;
@@ -39,8 +40,10 @@ import de.devsurf.injection.guice.annotations.To.Type;
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
 // be negative. childs with size 0, ...)
 // TODO refactor to reuse code and for cleaner reading
-@Bind(to = @To(value = Type.CUSTOM, customs = ShellLayoutManagerLine.class))
-public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
+@Bind(to = @To(	value = Type.CUSTOM,
+				customs = ShellLayoutManagerLine.class))
+public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager
+		implements ShellLayoutManagerLine {
 
 	private final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(1,
 																								new Margins(0));
@@ -50,7 +53,9 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleChildMoveResizeRequest(final ShellNodeMoveResizeRequestEvent shellNodeMoveResizeRequestEvent) {
+		public
+				void
+				handleChildMoveResizeRequest(final ShellNodeMoveResizeRequestEvent shellNodeMoveResizeRequestEvent) {
 			final ShellNode child = shellNodeMoveResizeRequestEvent.getSource();
 			if (getLayoutProperty(child).getWeight() == 0) {
 				child.doResize();
@@ -62,7 +67,9 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleChildDestroyed(final ShellNodeDestroyedEvent shellNodeDestroyedEvent) {
+		public
+				void
+				handleChildDestroyed(final ShellNodeDestroyedEvent shellNodeDestroyedEvent) {
 			final ShellNode child = shellNodeDestroyedEvent.getSource();
 			removeChild(shellNodeDestroyedEvent.getSource());
 			layout(child.getParent());
@@ -70,33 +77,44 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleChildReparentRequest(final ShellNodeReparentRequestEvent shellNodeReparentRequestEvent) {
-			final ShellNodeParent oldParent = shellNodeReparentRequestEvent.getSource().getParent();
+		public
+				void
+				handleChildReparentRequest(final ShellNodeReparentRequestEvent shellNodeReparentRequestEvent) {
+			final ShellNodeParent oldParent = shellNodeReparentRequestEvent
+					.getSource().getParent();
 			shellNodeReparentRequestEvent.getSource().doReparent();
 			layout(oldParent);
 		}
 
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleChildShowRequest(final ShellNodeShowRequestEvent shellNodeShowRequestEvent) {
+		public
+				void
+				handleChildShowRequest(final ShellNodeShowRequestEvent shellNodeShowRequestEvent) {
 			shellNodeShowRequestEvent.getSource().doShow();
 		}
 
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleChildHideRequest(final ShellNodeHideRequestEvent shellNodeHideRequestEvent) {
+		public
+				void
+				handleChildHideRequest(final ShellNodeHideRequestEvent shellNodeHideRequestEvent) {
 			shellNodeHideRequestEvent.getSource().doHide();
 		}
 
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleChildLowerRequest(final ShellNodeLowerRequestEvent shellNodeLowerRequestEvent) {
+		public
+				void
+				handleChildLowerRequest(final ShellNodeLowerRequestEvent shellNodeLowerRequestEvent) {
 			shellNodeLowerRequestEvent.getSource().doLower();
 		}
 
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleChildRaiseRequest(final ShellNodeRaiseRequestEvent shellNodeRaiseRequestEvent) {
+		public
+				void
+				handleChildRaiseRequest(final ShellNodeRaiseRequestEvent shellNodeRaiseRequestEvent) {
 			shellNodeRaiseRequestEvent.getSource().doRaise();
 		}
 	}
@@ -175,13 +193,15 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 				childWeight = child.toGeoTransformation().getWidth1();
 			}
 
-			final int vMargins = layoutProperty.getMargins().getTop() + layoutProperty.getMargins().getBottom();
+			final int vMargins = layoutProperty.getMargins().getTop()
+					+ layoutProperty.getMargins().getBottom();
 			child.setHeight(fixedSize - vMargins);
 			// calculate new width
 			final double desiredChildWidth = childWeight * resizeFactor;
 			final int newChildWidth = (int) Math.round(desiredChildWidth);
 
-			final int hMargins = layoutProperty.getMargins().getLeft() + layoutProperty.getMargins().getRight();
+			final int hMargins = layoutProperty.getMargins().getLeft()
+					+ layoutProperty.getMargins().getRight();
 			child.setWidth(newChildWidth - hMargins);
 
 			final int leftMargin = layoutProperty.getMargins().getLeft();
@@ -252,14 +272,16 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 				resizeFactor = 1;
 				childWeight = child.toGeoTransformation().getHeight1();
 			}
-			final int hMargins = layoutProperty.getMargins().getLeft() + layoutProperty.getMargins().getRight();
+			final int hMargins = layoutProperty.getMargins().getLeft()
+					+ layoutProperty.getMargins().getRight();
 			child.setWidth(fixedSize - hMargins);
 			// calculate new height
 			final double desiredChildHeight = childWeight * resizeFactor;
 
 			final int newChildHeight = (int) Math.round(desiredChildHeight);
 
-			final int vMargins = layoutProperty.getMargins().getTop() + layoutProperty.getMargins().getBottom();
+			final int vMargins = layoutProperty.getMargins().getTop()
+					+ layoutProperty.getMargins().getBottom();
 			child.setHeight(newChildHeight - vMargins);
 
 			final int topMargin = layoutProperty.getMargins().getTop();
@@ -280,6 +302,8 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	@Override
 	public void addChildNode(	final ShellNode child,
 								final ShellLayoutProperty layoutProperty) {
+		Preconditions
+				.checkArgument(layoutProperty instanceof ShellLayoutPropertyLine);
 
 		child.addShellNodeEventHandler(this.childGeoListener);
 		super.addChildNode(	child,
@@ -304,8 +328,15 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		}
 	}
 
+	@Override
+	public ShellLayoutPropertyLine getLayoutProperty(final ShellNode child) {
+		return (ShellLayoutPropertyLine) super.getLayoutProperty(child);
+	}
+
 	@Subscribe
-	public void handleContainerMoveResize(final ShellNodeMovedResizedEvent moveResizeEvent) {
+	public
+			void
+			handleContainerMoveResize(final ShellNodeMovedResizedEvent moveResizeEvent) {
 		layout((ShellNodeParent) moveResizeEvent.getSource());
 	}
 
