@@ -23,10 +23,10 @@ public interface PainterFactory {
 	 * with the same model should create a new {@code Painter} instance each
 	 * time.
 	 * 
-	 * @param model
+	 * @param viewModel
 	 *            The view model that the created {@code Painter} will use as a
 	 *            visual base.
 	 * @return a new {@link Painter}
 	 */
-	Painter createPainter(final Object model);
+	Painter createPainter(final Object viewModel);
 }

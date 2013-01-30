@@ -125,7 +125,7 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 	}
 
 	@Override
-	public void registerDisplayEventSourceListener(	final EventBus nodeEventBus,
+	public void registerDisplayEventTarget(	final EventBus nodeEventBus,
 													final Object displayEventTarget) {
 		List<EventBus> nodeEventBusses;
 		synchronized (this.eventRecipients) {
@@ -141,7 +141,7 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 	}
 
 	@Override
-	public void unregisterDisplayEventSourceListener(	final EventBus nodeEventBus,
+	public void unregisterDisplayEventTarget(	final EventBus nodeEventBus,
 														final Object displayEventTarget) {
 		synchronized (this.eventRecipients) {
 			final List<EventBus> nodeEventBusses = this.eventRecipients.get(displayEventTarget);
@@ -152,7 +152,7 @@ public class ShellDisplayEventDispatcherImpl implements ShellDisplayEventDispatc
 	}
 
 	@Override
-	public void unregisterAllDisplayEventSourceListeners(final Object displayEventTarget) {
+	public void unregisterAllDisplayEventTarget(final Object displayEventTarget) {
 		synchronized (this.eventRecipients) {
 			this.eventRecipients.remove(displayEventTarget);
 		}

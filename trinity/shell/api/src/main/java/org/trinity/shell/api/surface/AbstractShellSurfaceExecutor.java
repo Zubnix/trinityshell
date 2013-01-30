@@ -19,10 +19,15 @@ import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeExecutor;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
+/***************************************
+ * A {@link ShellNodeExecutor} for use with an {@link AbstractShellSurface}.
+ * 
+ *************************************** 
+ */
 public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExecutor implements ShellNodeExecutor {
 
 	@Override
-	public abstract ShellSurface getShellNode();
+	public abstract AbstractShellSurface getShellNode();
 
 	@Override
 	public void move(	final int relativeX,
@@ -69,6 +74,24 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 									newHeight);
 	}
 
+	/***************************************
+	 * Calculate a new position, relative to the closest parent node of the same
+	 * type. This is needed as not all shell nodes are known by the underlying
+	 * display system ie they live in a different space. This method translates
+	 * the current relative coordinates in 'shell space' to 'display space' used
+	 * by managed {@link ShellSurface}.
+	 * 
+	 * @param directParent
+	 *            the current direct parent of the managed {@code ShellSurface}.
+	 * @param directRelativeX
+	 *            The current relative X coordinate of the managed
+	 *            {@code ShellSurface}, in 'shell space'.
+	 * @param directRelativeY
+	 *            the current relative Y coordinate of the managed
+	 *            {@code ShellSurface}, in 'shell space'.
+	 * @return a {@link Coordinate} in 'display space'.
+	 *************************************** 
+	 */
 	protected Coordinate calculateRelativePosition(	final ShellNodeParent directParent,
 													final int directRelativeX,
 													final int directRelativeY) {
@@ -122,7 +145,25 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 		}
 	}
 
-	protected abstract ShellSurface findClosestSameTypeSurface(final ShellNode square);
+	/***************************************
+	 * Find the closest parent node that lives in the same space as the given
+	 * node.
+	 * 
+	 * @param node
+	 *            The {@link ShellNode} who's parent to search for.
+	 * @return A found {@link ShellSurface} parent.
+	 *************************************** 
+	 */
+	protected abstract ShellSurface findClosestSameTypeSurface(final ShellNode node);
 
+	/***************************************
+	 * The object functioning as the {@code DisplayArea} for the given
+	 * {@link ShellSurface}.
+	 * 
+	 * @param shellSurface
+	 *            The {@link ShellSurface} who's {@code DisplayArea} to return.
+	 * @return a {@link DisplayArea}.
+	 *************************************** 
+	 */
 	protected abstract DisplayArea getSurfacePeer(final ShellSurface shellSurface);
 }

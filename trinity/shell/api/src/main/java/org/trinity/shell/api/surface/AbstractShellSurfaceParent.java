@@ -22,8 +22,12 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
 
-public abstract class AbstractShellSurfaceParent extends AbstractShellSurface
-		implements ShellSurfaceParent {
+/***************************************
+ * An {@link AbstractShellSurface} that can have child {@link ShellNode}s.
+ * 
+ *************************************** 
+ */
+public abstract class AbstractShellSurfaceParent extends AbstractShellSurface implements ShellSurfaceParent {
 
 	private final Set<ShellNode> children = new HashSet<ShellNode>();
 
@@ -34,6 +38,12 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface
 		return this.children.toArray(new ShellNode[this.children.size()]);
 	}
 
+	/***************************************
+	 * Update all children's position. This method is called after this parent
+	 * node has moved as to make sure all children have the correct position in
+	 * shell space.
+	 *************************************** 
+	 */
 	protected void updateChildrenPosition() {
 		for (final ShellNode child : getChildren()) {
 			final int childX = child.getX();

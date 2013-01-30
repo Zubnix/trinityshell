@@ -15,14 +15,15 @@ import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
+import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 
 public class ShellSurfaceExecutorImpl extends AbstractShellSurfaceExecutor {
 
-	private final ShellSurface abstractShellSurface;
+	private final AbstractShellSurface abstractShellSurface;
 
-	public ShellSurfaceExecutorImpl(final ShellSurface shellSurface) {
+	public ShellSurfaceExecutorImpl(final AbstractShellSurface shellSurface) {
 		this.abstractShellSurface = shellSurface;
 	}
 
@@ -51,7 +52,7 @@ public class ShellSurfaceExecutorImpl extends AbstractShellSurfaceExecutor {
 	}
 
 	@Override
-	public ShellSurface getShellNode() {
+	public AbstractShellSurface getShellNode() {
 		return this.abstractShellSurface;
 	}
 

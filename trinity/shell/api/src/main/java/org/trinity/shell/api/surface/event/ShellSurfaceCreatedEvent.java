@@ -34,12 +34,18 @@ public class ShellSurfaceCreatedEvent {
 	 * been created.
 	 * 
 	 * @param client
-	 *            The client {@link ShellSurface}.
+	 *            The newly created client {@link ShellSurface}.
 	 */
 	public ShellSurfaceCreatedEvent(final ShellSurface client) {
 		this.client = client;
 	}
 
+	/****************************************
+	 * The newly created client {@link ShellSurface}.
+	 * 
+	 * @return a {@link ShellSurface}.
+	 *************************************** 
+	 */
 	public ShellSurface getClient() {
 		return this.client;
 	}

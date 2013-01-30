@@ -46,7 +46,7 @@ public class ShellClientSurface extends AbstractShellSurface {
 		public void
 				handleDestroyNotify(final ShellNodeDestroyedEvent destroyEvent) {
 			this.shellDisplayEventDispatcher
-					.unregisterAllDisplayEventSourceListeners(getDisplaySurface());
+					.unregisterAllDisplayEventTarget(getDisplaySurface());
 		}
 	}
 
@@ -61,7 +61,7 @@ public class ShellClientSurface extends AbstractShellSurface {
 		this.shellSurfaceExecutorImpl = new ShellSurfaceExecutorImpl(this);
 
 		shellDisplayEventDispatcher
-				.registerDisplayEventSourceListener(getNodeEventBus(),
+				.registerDisplayEventTarget(getNodeEventBus(),
 													displaySurface);
 		addShellNodeEventHandler(new DestroyCallback(shellDisplayEventDispatcher));
 

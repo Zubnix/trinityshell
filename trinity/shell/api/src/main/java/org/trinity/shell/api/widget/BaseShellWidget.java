@@ -15,6 +15,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
+import org.trinity.foundation.api.render.binding.view.View;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
@@ -25,36 +26,26 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 /**
- * An {@link AbstractShellSurfaceParent} with a base
+ * An {@link AbstractShellSurfaceParent} with a basic
  * {@link PaintableSurfaceNode} implementation.
  * <p>
  * A <code>BaseShellWidget</code> is manipulated through a {@link Painter} that
- * can talk to a paint back-end. This is done by an enclosed
- * {@link ViewReference} object. The <code>ViewReference</code> object receives
- * state change notifications of the <code>BaseShellWidget</code> and in turn
- * talks to the {@code Painter} of the <code>BaseShellWidget</code>.
- * <p>
- * A <code>BaseShellWidget</code> is lazily initialized. This means that it is
- * fully initialized by the paint back-end when the <code>BaseShellWidget</code>
- * is assigned to an already initialized parent <code>BaseShellWidget</code>.
- * <p>
- * An initialized <code>BaseShellWidget</code> will have a
- * {@link DisplaySurface} . This surface maps to the native window that the
- * <code>BaseShellWidget</code> will be draw on. Note that multiple
- * <code>BaseShellWidget</code>s can share the same <code>DisplaySurface</code>.
+ * can talk to a paint back-end. This is done by injecting the widget with a
+ * {@link View} and exposing it to the {@code Painter} with a
+ * {@link ViewReference} annotation. This <code>View</code> object is then bound
+ * to the widget through binding annotations. see
+ * 
+ * @see org.trinity.foundation.api.render.binding
  */
-public class BaseShellWidget extends AbstractShellSurfaceParent implements
-		ShellWidget {
+public class BaseShellWidget extends AbstractShellSurfaceParent implements ShellWidget {
 
 	private class DestroyCallback {
-		// method is used by guava's eventbus
+		// method is used by the widget's eventbus
 		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleDestroy(final ShellNodeDestroyedEvent destroyEvent) {
-			BaseShellWidget.this.shellDisplayEventDispatcher
-					.unregisterAllDisplayEventSourceListeners(getDisplaySurface());
-			BaseShellWidget.this.shellDisplayEventDispatcher
-					.unregisterAllDisplayEventSourceListeners(BaseShellWidget.this);
+			BaseShellWidget.this.shellDisplayEventDispatcher.unregisterAllDisplayEventTarget(getDisplaySurface());
+			BaseShellWidget.this.shellDisplayEventDispatcher.unregisterAllDisplayEventTarget(BaseShellWidget.this);
 		}
 	}
 
@@ -76,22 +67,27 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements
 		this.painter = painterFactory.createPainter(this);
 	}
 
+	/***************************************
+	 * Initializes the widget and marks is as a child of the given root
+	 * {@link ShellSurfaceParent}. This method is automatically called after
+	 * construction of the widget and should generally not be called manually.
+	 * 
+	 * @param shellRootSurface
+	 *            The root node of shell scene.
+	 *************************************** 
+	 */
 	@Inject
-	protected
-			void
-			init(@Named("ShellRootSurface") final ShellSurfaceParent shellRootSurface) {
+	protected void init(@Named("ShellRootSurface") final ShellSurfaceParent shellRootSurface) {
 		// init will be called with the injected instance immediately after our
 		// widget is constructed.
 
 		setParent(shellRootSurface);
 		doReparent(false);
 
-		this.shellDisplayEventDispatcher
-				.registerDisplayEventSourceListener(getNodeEventBus(),
-													this);
-		this.shellDisplayEventDispatcher
-				.registerDisplayEventSourceListener(getNodeEventBus(),
-													getDisplaySurface());
+		this.shellDisplayEventDispatcher.registerDisplayEventTarget(getNodeEventBus(),
+																	this);
+		this.shellDisplayEventDispatcher.registerDisplayEventTarget(getNodeEventBus(),
+																	getDisplaySurface());
 		// searches for a @ViewReference annotated getter and binds the
 		// resulting view to this widget.
 		this.painter.bindView();

@@ -45,7 +45,7 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 		this.displaySurface = displayServer.getRootDisplayArea();
 		syncGeoToDisplaySurface();
 		shellDisplayEventDispatcher
-				.registerDisplayEventSourceListener(getNodeEventBus(),
+				.registerDisplayEventTarget(getNodeEventBus(),
 													this.displaySurface);
 	}
 

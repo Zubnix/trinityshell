@@ -59,7 +59,7 @@ public class ShellEventDispatcherImplTest {
 																												shellClientSurfaceFactory,
 																												displayServer);
 
-		shellEventDispatcherImpl.registerDisplayEventSourceListener(nodeEventBus,
+		shellEventDispatcherImpl.registerDisplayEventTarget(nodeEventBus,
 																	displayEventTarget);
 		shellEventDispatcherImpl.dispatchDisplayEvent(false);
 		shellEventDispatcherImpl.dispatchDisplayEvent(false);

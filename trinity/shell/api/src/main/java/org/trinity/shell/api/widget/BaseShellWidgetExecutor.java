@@ -13,19 +13,28 @@ package org.trinity.shell.api.widget;
 
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.shell.api.scene.ShellNode;
+import org.trinity.shell.api.scene.ShellNodeExecutor;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 
 // TODO documentation
 /**
- * A delegate to manage a {@link BaseShellWidget}'s geometry.
+ * A {@link ShellNodeExecutor} for a {@link BaseShellWidget}.
  * 
  */
 public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 
 	private final BaseShellWidget shellWidget;
 
+	/***************************************
+	 * Create a new {@code BaseShellWidgetExecutor} for the given
+	 * {@code BaseShellWidget}.
+	 * 
+	 * @param shellWidget
+	 *            the {@link BaseShellWidget} to manage.
+	 *************************************** 
+	 */
 	public BaseShellWidgetExecutor(final BaseShellWidget shellWidget) {
 		this.shellWidget = shellWidget;
 	}
