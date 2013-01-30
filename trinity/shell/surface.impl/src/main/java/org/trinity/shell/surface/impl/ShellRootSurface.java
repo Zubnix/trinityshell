@@ -21,7 +21,6 @@ import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
-import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -40,15 +39,13 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 	private final DisplaySurface displaySurface;
 
 	@Inject
-	ShellRootSurface(	final EventBus nodeEventBus,
-						final DisplayServer displayServer,
+	ShellRootSurface(	final DisplayServer displayServer,
 						final ShellDisplayEventDispatcher shellDisplayEventDispatcher) {
-		super(nodeEventBus);
 		this.shellNodeExecutor = new ShellSurfaceExecutorImpl(this);
 		this.displaySurface = displayServer.getRootDisplayArea();
 		syncGeoToDisplaySurface();
 		shellDisplayEventDispatcher
-				.registerDisplayEventSourceListener(nodeEventBus,
+				.registerDisplayEventSourceListener(getNodeEventBus(),
 													this.displaySurface);
 	}
 

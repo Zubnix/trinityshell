@@ -64,10 +64,9 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	private boolean destroyed;
 
-	private final EventBus nodeEventBus;
+	private final EventBus nodeEventBus = new EventBus();
 
-	protected AbstractShellNode(final EventBus nodeEventBus) {
-		this.nodeEventBus = nodeEventBus;
+	protected AbstractShellNode() {
 		this.nodeEventBus.register(this);
 	}
 

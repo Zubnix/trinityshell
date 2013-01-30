@@ -20,7 +20,6 @@ import org.trinity.shell.api.scene.event.ShellNodeEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 
 /***************************************
  * An abstract base implementation of a {@link ShellNodeParent}.
@@ -34,10 +33,6 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode
 
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional
 			.absent();
-
-	public AbstractShellNodeParent(final EventBus nodeEventBus) {
-		super(nodeEventBus);
-	}
 
 	/**
 	 * {@inheritDoc}

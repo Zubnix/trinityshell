@@ -1,37 +1,35 @@
 package org.trinity.shell.api.widget;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
-
-import com.google.common.eventbus.EventBus;
 
 public class BaseShellWidgetTest {
 
 	@Test
 	public void testInit() {
 		// given
-		final EventBus eventBus = mock(EventBus.class);
-		final ShellDisplayEventDispatcher shellDisplayEventDispatcher = mock(ShellDisplayEventDispatcher.class);
-		final PainterFactory painterFactory = mock(PainterFactory.class);
-		final BaseShellWidget parentWidget = mock(BaseShellWidget.class);
-		final DisplaySurface displaySurface = mock(DisplaySurface.class);
-		when(parentWidget.getDisplaySurface()).thenReturn(displaySurface);
-		final Painter painter = mock(Painter.class);
-		when(painterFactory.createPainter(any())).thenReturn(painter);
-		final BaseShellWidget baseShellWidget = new BaseShellWidget(eventBus,
-																	shellDisplayEventDispatcher,
+		final ShellDisplayEventDispatcher shellDisplayEventDispatcher = Mockito
+				.mock(ShellDisplayEventDispatcher.class);
+		final PainterFactory painterFactory = Mockito
+				.mock(PainterFactory.class);
+		final BaseShellWidget parentWidget = Mockito
+				.mock(BaseShellWidget.class);
+		final DisplaySurface displaySurface = Mockito
+				.mock(DisplaySurface.class);
+		Mockito.when(parentWidget.getDisplaySurface())
+				.thenReturn(displaySurface);
+		final Painter painter = Mockito.mock(Painter.class);
+		Mockito.when(painterFactory.createPainter(Matchers.any()))
+				.thenReturn(painter);
+		final BaseShellWidget baseShellWidget = new BaseShellWidget(shellDisplayEventDispatcher,
 																	painterFactory);
 
-		when(painter.getDislaySurface()).thenReturn(displaySurface);
+		Mockito.when(painter.getDislaySurface()).thenReturn(displaySurface);
 
 		baseShellWidget.setX(50);
 		baseShellWidget.setY(75);
@@ -43,11 +41,11 @@ public class BaseShellWidgetTest {
 		baseShellWidget.doReparent();
 
 		// then
-		verify(	painter,
-				times(1)).moveResize(	50,
-										75,
-										100,
-										200);
+		Mockito.verify(	painter,
+						Mockito.times(1)).moveResize(	50,
+														75,
+														100,
+														200);
 
 	}
 }

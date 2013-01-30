@@ -21,7 +21,6 @@ import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNode;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 // TODO documentation
@@ -33,7 +32,8 @@ import com.google.common.eventbus.Subscribe;
  * <code>AbstractShellSurface</code>.
  * 
  */
-public abstract class AbstractShellSurface extends AbstractShellNode implements ShellSurface {
+public abstract class AbstractShellSurface extends AbstractShellNode implements
+		ShellSurface {
 
 	public static final boolean DEFAULT_IS_RESIZABLE = true;
 	public static final boolean DEFAULT_IS_MOVABLE = true;
@@ -59,8 +59,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	/**
 	 * Create new <code>AbstractShellSurface</code>
 	 */
-	protected AbstractShellSurface(final EventBus nodeEventBus) {
-		super(nodeEventBus);
+	protected AbstractShellSurface() {
 		initBasics();
 	}
 
@@ -294,8 +293,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 */
 	protected int normalizedWidth(final int newWidth) {
 
-		int normalizedWidth = newWidth < getMinWidth() ? getMinWidth() : newWidth > getMaxWidth() ? getMaxWidth()
-				: newWidth;
+		int normalizedWidth = newWidth < getMinWidth() ? getMinWidth()
+				: newWidth > getMaxWidth() ? getMaxWidth() : newWidth;
 
 		normalizedWidth -= (normalizedWidth - getWidth()) % getWidthIncrement();
 
@@ -314,7 +313,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 		int normalizedHeight = newHeight < getMinHeight() ? getMinHeight()
 				: newHeight > getMaxHeight() ? getMaxHeight() : newHeight;
 
-		normalizedHeight -= (normalizedHeight - getHeight()) % getHeightIncrement();
+		normalizedHeight -= (normalizedHeight - getHeight())
+				% getHeightIncrement();
 
 		return normalizedHeight;
 	}
@@ -404,12 +404,16 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	// TODO stacking handling?
 
 	@Subscribe
-	public void handleDestroyNotifyEvent(final DestroyNotifyEvent destroyNotifyEvent) {
+	public
+			void
+			handleDestroyNotifyEvent(final DestroyNotifyEvent destroyNotifyEvent) {
 		doDestroy(false);
 	}
 
 	@Subscribe
-	public void handleGeometryNotifyEvent(final GeometryNotifyEvent geometryNotifyEvent) {
+	public
+			void
+			handleGeometryNotifyEvent(final GeometryNotifyEvent geometryNotifyEvent) {
 		final Rectangle geometry = geometryNotifyEvent.getGeometry();
 		setX(geometry.getX());
 		setY(geometry.getY());
@@ -419,7 +423,9 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	}
 
 	@Subscribe
-	public void handleGeometryRequestEvent(final GeometryRequestEvent geometryRequestEvent) {
+	public
+			void
+			handleGeometryRequestEvent(final GeometryRequestEvent geometryRequestEvent) {
 
 		final Rectangle geometry = geometryRequestEvent.getGeometry();
 		if (geometryRequestEvent.configureX()) {

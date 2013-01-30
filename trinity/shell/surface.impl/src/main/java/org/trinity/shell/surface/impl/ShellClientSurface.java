@@ -17,7 +17,6 @@ import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
@@ -41,11 +40,13 @@ public class ShellClientSurface extends AbstractShellSurface {
 			this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
 		}
 
-		// method is used by guava's eventbus.
+		// method is used by node eventbus.
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleDestroyNotify(final ShellNodeDestroyedEvent destroyEvent) {
-			this.shellDisplayEventDispatcher.unregisterAllDisplayEventSourceListeners(getDisplaySurface());
+		public void
+				handleDestroyNotify(final ShellNodeDestroyedEvent destroyEvent) {
+			this.shellDisplayEventDispatcher
+					.unregisterAllDisplayEventSourceListeners(getDisplaySurface());
 		}
 	}
 
@@ -53,16 +54,15 @@ public class ShellClientSurface extends AbstractShellSurface {
 	private final DisplaySurface displaySurface;
 
 	@Inject
-	ShellClientSurface(	final EventBus nodeEventBus,
-						final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
+	ShellClientSurface(	final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 						@Named("ShellRootSurface") final ShellNodeParent root,
 						@Assisted final DisplaySurface displaySurface) {
-		super(nodeEventBus);
 		this.displaySurface = displaySurface;
 		this.shellSurfaceExecutorImpl = new ShellSurfaceExecutorImpl(this);
 
-		shellDisplayEventDispatcher.registerDisplayEventSourceListener(	nodeEventBus,
-																		displaySurface);
+		shellDisplayEventDispatcher
+				.registerDisplayEventSourceListener(getNodeEventBus(),
+													displaySurface);
 		addShellNodeEventHandler(new DestroyCallback(shellDisplayEventDispatcher));
 
 		setParent(root);

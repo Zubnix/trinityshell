@@ -20,7 +20,6 @@ import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -64,19 +63,15 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements
 	private final Painter painter;
 	private final BaseShellWidgetExecutor shellNodeExecutor;
 	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
-	private final EventBus eventBus;
 
 	/**
 	 * Create an uninitialized <code>BaseShellWidget</code>.A
 	 * <code>BaseShellWidget</code> will only be fully functional when it is
 	 * assigned to an initialized parent <code>BaseShellWidget</code>.
 	 */
-	protected BaseShellWidget(	final EventBus eventBus,
-								final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
+	protected BaseShellWidget(	final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 								final PainterFactory painterFactory) {
-		super(eventBus);
 		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
-		this.eventBus = eventBus;
 		this.shellNodeExecutor = new BaseShellWidgetExecutor(this);
 		this.painter = painterFactory.createPainter(this);
 	}
@@ -92,10 +87,10 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements
 		doReparent(false);
 
 		this.shellDisplayEventDispatcher
-				.registerDisplayEventSourceListener(this.eventBus,
+				.registerDisplayEventSourceListener(getNodeEventBus(),
 													this);
 		this.shellDisplayEventDispatcher
-				.registerDisplayEventSourceListener(this.eventBus,
+				.registerDisplayEventSourceListener(getNodeEventBus(),
 													getDisplaySurface());
 		// searches for a @ViewReference annotated getter and binds the
 		// resulting view to this widget.

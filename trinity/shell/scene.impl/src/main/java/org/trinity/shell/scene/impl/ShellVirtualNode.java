@@ -16,8 +16,6 @@ import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeExecutor;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
@@ -43,13 +41,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
 		to = @To(	value = Type.CUSTOM,
 					customs = { ShellNode.class, ShellNodeParent.class }))
 public class ShellVirtualNode extends AbstractShellNodeParent {
-	private final ShellNodeExecutor shellNodeExecutor;
-
-	@Inject
-	protected ShellVirtualNode(final EventBus nodeEventBus) {
-		super(nodeEventBus);
-		this.shellNodeExecutor = new ShellVirtualNodeExecutor(this);
-	}
+	private final ShellNodeExecutor shellNodeExecutor = new ShellVirtualNodeExecutor(this);
 
 	@Override
 	public ShellNodeExecutor getShellNodeExecutor() {

@@ -21,21 +21,13 @@ import org.trinity.shell.api.scene.event.ShellNodeEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 
 public abstract class AbstractShellSurfaceParent extends AbstractShellSurface
 		implements ShellSurfaceParent {
 
-	private final EventBus nodeEventBus;
-
 	private final Set<ShellNode> children = new HashSet<ShellNode>();
 
 	private Optional<ShellLayoutManager> shellLayoutManager = Optional.absent();
-
-	public AbstractShellSurfaceParent(final EventBus nodeEventBus) {
-		super(nodeEventBus);
-		this.nodeEventBus = nodeEventBus;
-	}
 
 	@Override
 	public ShellNode[] getChildren() {
@@ -59,7 +51,7 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface
 	@Override
 	public void setLayoutManager(final ShellLayoutManager shellLayoutManager) {
 		this.shellLayoutManager = Optional.of(shellLayoutManager);
-		this.nodeEventBus.register(shellLayoutManager);
+		getNodeEventBus().register(shellLayoutManager);
 	}
 
 	@Override
@@ -82,12 +74,12 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface
 			// child.removeShellNodeEventHandler(this);
 			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
 															toGeoTransformation());
-			this.nodeEventBus.post(shellNodeEvent);
+			getNodeEventBus().post(shellNodeEvent);
 		} else {
 			this.children.add(child);
 			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
 															toGeoTransformation());
-			this.nodeEventBus.post(shellNodeEvent);
+			getNodeEventBus().post(shellNodeEvent);
 		}
 	}
 

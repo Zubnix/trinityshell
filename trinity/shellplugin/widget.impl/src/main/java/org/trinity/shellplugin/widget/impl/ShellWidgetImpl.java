@@ -18,7 +18,6 @@ import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shell.api.widget.ShellWidget;
 
-import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import de.devsurf.injection.guice.annotations.Bind;
@@ -33,12 +32,10 @@ public class ShellWidgetImpl extends BaseShellWidget {
 	private final View view;
 
 	@Inject
-	ShellWidgetImpl(final EventBus eventBus,
-					final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
+	ShellWidgetImpl(final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
 					final PainterFactory painterFactory,
 					final View view) {
-		super(	eventBus,
-				shellDisplayEventDispatcher,
+		super(	shellDisplayEventDispatcher,
 				painterFactory);
 		this.view = view;
 	}
