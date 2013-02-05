@@ -11,6 +11,9 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import org.freedesktop.xcb.LibXcbConstants;
+import org.freedesktop.xcb.xcb_button_press_event_t;
+import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.ButtonNotifyEvent;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.input.Button;
@@ -20,10 +23,6 @@ import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
-
-import xcb.LibXcbConstants;
-import xcb.xcb_button_press_event_t;
-import xcb.xcb_generic_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -40,8 +39,7 @@ public class ButtonPressConversion implements XEventConversion {
 	private final EventBus xEventBus;
 
 	@Inject
-	ButtonPressConversion(	final XWindowCache windowCache,
-							@Named("XEventBus") final EventBus xEventBus) {
+	ButtonPressConversion(final XWindowCache windowCache, @Named("XEventBus") final EventBus xEventBus) {
 		this.windowCache = windowCache;
 		this.xEventBus = xEventBus;
 	}
@@ -49,14 +47,12 @@ public class ButtonPressConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
-		final xcb_button_press_event_t button_press_event_t = new xcb_button_press_event_t(	xcb_generic_event_t
-																									.getCPtr(event_t),
+		final xcb_button_press_event_t button_press_event_t = new xcb_button_press_event_t(	xcb_generic_event_t.getCPtr(event_t),
 																							true);
 
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
-											button_press_event_t.getClass()
-													.getSimpleName()));
+											button_press_event_t.getClass().getSimpleName()));
 
 		this.xEventBus.post(button_press_event_t);
 

@@ -14,14 +14,14 @@ package org.trinity.foundation.display.x11.impl;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import xcb.LibXcb;
-import xcb.SWIGTYPE_p_xcb_connection_t;
-import xcb.xcb_cw_t;
-import xcb.xcb_event_mask_t;
-import xcb.xcb_generic_error_t;
-import xcb.xcb_screen_iterator_t;
-import xcb.xcb_screen_t;
-import xcb.xcb_void_cookie_t;
+import org.freedesktop.xcb.LibXcb;
+import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
+import org.freedesktop.xcb.xcb_cw_t;
+import org.freedesktop.xcb.xcb_event_mask_t;
+import org.freedesktop.xcb.xcb_generic_error_t;
+import org.freedesktop.xcb.xcb_screen_iterator_t;
+import org.freedesktop.xcb.xcb_screen_t;
+import org.freedesktop.xcb.xcb_void_cookie_t;
 
 import com.google.inject.Singleton;
 

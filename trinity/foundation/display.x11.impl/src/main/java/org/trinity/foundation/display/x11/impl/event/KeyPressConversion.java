@@ -11,6 +11,9 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import org.freedesktop.xcb.LibXcb;
+import org.freedesktop.xcb.xcb_generic_event_t;
+import org.freedesktop.xcb.xcb_key_press_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.KeyNotifyEvent;
 import org.trinity.foundation.api.display.input.InputModifiers;
@@ -20,10 +23,6 @@ import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
-
-import xcb.LibXcb;
-import xcb.xcb_generic_event_t;
-import xcb.xcb_key_press_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;

@@ -14,10 +14,10 @@ package org.trinity.foundation.display.x11.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import xcb.LibXcb;
-import xcb.xcb_generic_error_t;
-import xcb.xcb_intern_atom_cookie_t;
-import xcb.xcb_intern_atom_reply_t;
+import org.freedesktop.xcb.LibXcb;
+import org.freedesktop.xcb.xcb_generic_error_t;
+import org.freedesktop.xcb.xcb_intern_atom_cookie_t;
+import org.freedesktop.xcb.xcb_intern_atom_reply_t;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

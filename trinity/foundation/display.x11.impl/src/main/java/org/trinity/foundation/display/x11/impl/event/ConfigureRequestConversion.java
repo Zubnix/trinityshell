@@ -11,6 +11,10 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import org.freedesktop.xcb.LibXcb;
+import org.freedesktop.xcb.xcb_config_window_t;
+import org.freedesktop.xcb.xcb_configure_request_event_t;
+import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.GeometryRequestEvent;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
@@ -18,11 +22,6 @@ import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
-
-import xcb.LibXcb;
-import xcb.xcb_config_window_t;
-import xcb.xcb_configure_request_event_t;
-import xcb.xcb_generic_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -35,15 +34,13 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class ConfigureRequestConversion implements XEventConversion {
 
-	private final Integer eventInteger = Integer
-			.valueOf(LibXcb.XCB_CONFIGURE_REQUEST);
+	private final Integer eventInteger = Integer.valueOf(LibXcb.XCB_CONFIGURE_REQUEST);
 
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
 
 	@Inject
-	ConfigureRequestConversion(	@Named("XEventBus") final EventBus xEventBus,
-								final XWindowCache xWindowCache) {
+	ConfigureRequestConversion(@Named("XEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -51,20 +48,17 @@ public class ConfigureRequestConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
-		final xcb_configure_request_event_t request_event_t = new xcb_configure_request_event_t(xcb_generic_event_t
-																										.getCPtr(event_t),
+		final xcb_configure_request_event_t request_event_t = new xcb_configure_request_event_t(xcb_generic_event_t.getCPtr(event_t),
 																								true);
 
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
-											request_event_t.getClass()
-													.getSimpleName()));
+											request_event_t.getClass().getSimpleName()));
 
 		this.xEventBus.post(request_event_t);
 
 		final int windowId = request_event_t.getWindow();
-		final XWindow displayEventSource = this.xWindowCache
-				.getWindow(windowId);
+		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int x = request_event_t.getX();
 		final int y = request_event_t.getY();

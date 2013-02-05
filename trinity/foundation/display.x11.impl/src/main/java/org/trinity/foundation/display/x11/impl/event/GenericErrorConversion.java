@@ -11,12 +11,11 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import org.freedesktop.xcb.xcb_generic_error_t;
+import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XcbErrorUtil;
-
-import xcb.xcb_generic_error_t;
-import xcb.xcb_generic_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -38,8 +37,7 @@ public class GenericErrorConversion implements XEventConversion {
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_generic_error_t request_error_t = new xcb_generic_error_t(xcb_generic_event_t
-																					.getCPtr(event_t),
+		final xcb_generic_error_t request_error_t = new xcb_generic_error_t(xcb_generic_event_t.getCPtr(event_t),
 																			true);
 		this.xEventBus.post(request_error_t);
 

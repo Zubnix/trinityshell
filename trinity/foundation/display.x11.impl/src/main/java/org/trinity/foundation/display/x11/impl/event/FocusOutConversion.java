@@ -11,15 +11,14 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import org.freedesktop.xcb.LibXcb;
+import org.freedesktop.xcb.xcb_focus_in_event_t;
+import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.FocusLostNotifyEvent;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
-
-import xcb.LibXcb;
-import xcb.xcb_focus_in_event_t;
-import xcb.xcb_generic_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -38,8 +37,7 @@ public class FocusOutConversion implements XEventConversion {
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	FocusOutConversion(	@Named("XEventBus") final EventBus xEventBus,
-						final XWindowCache xWindowCache) {
+	FocusOutConversion(@Named("XEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -47,19 +45,16 @@ public class FocusOutConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 		// focus in structure is the same as focus out.
-		final xcb_focus_in_event_t focus_out_event_t = new xcb_focus_in_event_t(xcb_generic_event_t
-																						.getCPtr(event_t),
+		final xcb_focus_in_event_t focus_out_event_t = new xcb_focus_in_event_t(xcb_generic_event_t.getCPtr(event_t),
 																				true);
 
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
-											focus_out_event_t.getClass()
-													.getSimpleName()));
+											focus_out_event_t.getClass().getSimpleName()));
 
 		this.xEventBus.post(focus_out_event_t);
 
-		final XWindow xWindow = this.xWindowCache.getWindow(focus_out_event_t
-				.getEvent());
+		final XWindow xWindow = this.xWindowCache.getWindow(focus_out_event_t.getEvent());
 		final DisplayEvent displayEvent = new FocusLostNotifyEvent(xWindow);
 
 		return displayEvent;

@@ -11,9 +11,8 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-
-import xcb.xcb_generic_event_t;
 
 public interface XEventConversion {
 	DisplayEvent convert(xcb_generic_event_t event_t);

@@ -15,9 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-
-import xcb.xcb_generic_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -59,8 +58,7 @@ public final class XEventConverter {
 
 		final int eventCode = responseType & 0x7f;
 
-		final XEventConversion eventConversion = this.conversionMap.get(Integer
-				.valueOf(eventCode));
+		final XEventConversion eventConversion = this.conversionMap.get(Integer.valueOf(eventCode));
 		if (eventConversion == null) {
 			return;
 		}

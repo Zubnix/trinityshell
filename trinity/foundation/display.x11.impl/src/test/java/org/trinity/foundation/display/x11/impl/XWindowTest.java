@@ -15,6 +15,12 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import org.freedesktop.xcb.LibXcb;
+import org.freedesktop.xcb.LibXcbConstants;
+import org.freedesktop.xcb.xcb_screen_iterator_t;
+import org.freedesktop.xcb.xcb_screen_t;
+import org.freedesktop.xcb.xcb_setup_t;
+import org.freedesktop.xcb.xcb_window_class_t;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -24,17 +30,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import xcb.LibXcb;
-import xcb.LibXcbConstants;
-import xcb.xcb_screen_iterator_t;
-import xcb.xcb_screen_t;
-import xcb.xcb_setup_t;
-import xcb.xcb_window_class_t;
 import xcb4j.LibXcbLoader;
 
 @RunWith(MockitoJUnitRunner.class)
-public class XWindowTest // extends AbstractXTest
-{
+public class XWindowTest {
 
 	private XWindow xWindow;
 	private int windowId;

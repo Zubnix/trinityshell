@@ -14,9 +14,8 @@ package org.trinity.foundation.display.x11.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.freedesktop.xcb.xcb_mod_mask_t;
 import org.trinity.foundation.api.display.input.InputModifier;
-
-import xcb.xcb_mod_mask_t;
 
 import com.google.inject.Singleton;
 

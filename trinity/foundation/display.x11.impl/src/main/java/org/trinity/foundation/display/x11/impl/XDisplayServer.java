@@ -14,12 +14,11 @@ package org.trinity.foundation.display.x11.impl;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import org.freedesktop.xcb.LibXcb;
 import org.trinity.foundation.api.display.DisplayEventProducer;
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-
-import xcb.LibXcb;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
@@ -56,8 +55,7 @@ public class XDisplayServer implements DisplayServer {
 		final String displayName = System.getenv("DISPLAY");
 		this.xConnection.open(	displayName,
 								0);
-		if (LibXcb.xcb_connection_has_error(this.xConnection
-				.getConnectionReference()) != 0) {
+		if (LibXcb.xcb_connection_has_error(this.xConnection.getConnectionReference()) != 0) {
 			throw new Error("Cannot open display\n");
 		}
 		startUp();
@@ -105,8 +103,7 @@ public class XDisplayServer implements DisplayServer {
 
 	@Override
 	public DisplaySurface getRootDisplayArea() {
-		return this.xWindowCache.getWindow(this.xConnection
-				.getScreenReference().getRoot());
+		return this.xWindowCache.getWindow(this.xConnection.getScreenReference().getRoot());
 	}
 
 	public void startUp() {

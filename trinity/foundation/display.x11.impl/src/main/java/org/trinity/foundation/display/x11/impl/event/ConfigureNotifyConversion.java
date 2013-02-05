@@ -11,6 +11,9 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import org.freedesktop.xcb.LibXcb;
+import org.freedesktop.xcb.xcb_configure_notify_event_t;
+import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.GeometryNotifyEvent;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
@@ -18,10 +21,6 @@ import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
-
-import xcb.LibXcb;
-import xcb.xcb_configure_notify_event_t;
-import xcb.xcb_generic_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -34,15 +33,13 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class ConfigureNotifyConversion implements XEventConversion {
 
-	private final Integer eventCode = Integer
-			.valueOf(LibXcb.XCB_CONFIGURE_NOTIFY);
+	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_CONFIGURE_NOTIFY);
 
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
 
 	@Inject
-	ConfigureNotifyConversion(	final XWindowCache xWindowCache,
-								@Named("XEventBus") final EventBus xEventBus) {
+	ConfigureNotifyConversion(final XWindowCache xWindowCache, @Named("XEventBus") final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -55,14 +52,12 @@ public class ConfigureNotifyConversion implements XEventConversion {
 
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
-											configure_notify_event_t.getClass()
-													.getSimpleName()));
+											configure_notify_event_t.getClass().getSimpleName()));
 
 		this.xEventBus.post(configure_notify_event_t);
 
 		final int windowId = configure_notify_event_t.getWindow();
-		final XWindow displayEventSource = this.xWindowCache
-				.getWindow(windowId);
+		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int x = configure_notify_event_t.getX();
 		final int y = configure_notify_event_t.getY();

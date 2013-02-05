@@ -11,10 +11,10 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
-import xcb.xcb_button_press_event_t;
-import xcb.xcb_enter_notify_event_t;
-import xcb.xcb_key_press_event_t;
-import xcb.xcb_property_notify_event_t;
+import org.freedesktop.xcb.xcb_button_press_event_t;
+import org.freedesktop.xcb.xcb_enter_notify_event_t;
+import org.freedesktop.xcb.xcb_key_press_event_t;
+import org.freedesktop.xcb.xcb_property_notify_event_t;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -42,8 +42,7 @@ public class XTime {
 	}
 
 	@Subscribe
-	public void
-			handleButtonPressed(final xcb_button_press_event_t press_event_t) {
+	public void handleButtonPressed(final xcb_button_press_event_t press_event_t) {
 		// press&release have the same type
 		this.time = press_event_t.getTime();
 	}
@@ -55,16 +54,12 @@ public class XTime {
 	}
 
 	@Subscribe
-	public
-			void
-			handlePropertyNotify(final xcb_property_notify_event_t property_notify_event_t) {
+	public void handlePropertyNotify(final xcb_property_notify_event_t property_notify_event_t) {
 		this.time = property_notify_event_t.getTime();
 	}
 
 	@Subscribe
-	public
-			void
-			handleEnterNotify(final xcb_enter_notify_event_t enter_notify_event_t) {
+	public void handleEnterNotify(final xcb_enter_notify_event_t enter_notify_event_t) {
 		// enter & leave have the same type
 		this.time = enter_notify_event_t.getTime();
 	}

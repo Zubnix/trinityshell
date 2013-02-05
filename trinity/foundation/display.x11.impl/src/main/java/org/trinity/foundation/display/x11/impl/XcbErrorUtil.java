@@ -11,7 +11,7 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
-import xcb.xcb_generic_error_t;
+import org.freedesktop.xcb.xcb_generic_error_t;
 
 public class XcbErrorUtil {
 	public static final int SUCCESS = 0;
