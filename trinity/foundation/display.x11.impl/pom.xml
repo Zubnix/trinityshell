@@ -17,12 +17,12 @@
 		<dependency>
 			<groupId>org.trinity</groupId>
 			<artifactId>XCB4J</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.trinity</groupId>
 			<artifactId>foundation.api</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>
