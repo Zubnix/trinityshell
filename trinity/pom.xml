@@ -27,6 +27,10 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 		</developer>
 	</developers>
 
+	<scm>
+		<developerConnection>https://github.com/Zubnix/trinityshell/trinity.git</developerConnection>
+	</scm>
+
 	<properties>
 		<!-- dep versions -->
 		<guice.version>3.0</guice.version>
