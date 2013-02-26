@@ -18,29 +18,24 @@ public class WindowManagerPlugin implements ShellPlugin {
 
 	private final EventBus shellEventBus;
 
-	private final DesktopImpl desktopImpl;
-
 	@Inject
-	WindowManagerPlugin(@Named("ShellEventBus") final EventBus shellEventBus, final DesktopImpl desktopImpl) {
+	WindowManagerPlugin(@Named("ShellEventBus") final EventBus shellEventBus) {
 		this.shellEventBus = shellEventBus;
-		this.desktopImpl = desktopImpl;
 	}
 
 	@Override
 	public void start() {
-		this.desktopImpl.setup();
 		this.shellEventBus.register(this);
 	}
 
 	@Override
 	public void stop() {
 		this.shellEventBus.unregister(this);
-		this.desktopImpl.tearDown();
 	}
 
 	@Subscribe
 	public void handleShellSurfaceCreated(final ShellSurfaceCreatedEvent shellSurfaceCreatedEvent) {
 		final ShellSurface shellSurface = shellSurfaceCreatedEvent.getClient();
-		this.desktopImpl.addClient(shellSurface);
+
 	}
 }

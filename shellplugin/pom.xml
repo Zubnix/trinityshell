@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>trinity</artifactId>
 		<groupId>org.trinity</groupId>
@@ -10,9 +11,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>widget.api</module>
-		<module>widget.impl</module>
-		<module>widget.impl.view.qt</module>
+		<module>widget.view.qt.api</module>
 		<module>wm.impl</module>
 	</modules>
 
