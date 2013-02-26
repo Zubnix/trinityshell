@@ -11,7 +11,7 @@ import com.google.inject.name.Named;
 public class ShellRootWidget extends BaseShellWidget {
 
 	@Inject
-	@Named("ShellRootView")
+	@Named("RootView")
 	private Object view;
 
 	@Inject

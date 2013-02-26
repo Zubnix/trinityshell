@@ -5,7 +5,7 @@ import org.trinity.shellplugin.widget.impl.view.qt.AbstractQWidgetViewProvider;
 
 import com.google.inject.Inject;
 
-public class ShellRootViewProvider extends AbstractQWidgetViewProvider<ShellRootView> {
+public class ShellRootViewProvider extends AbstractQWidgetViewProvider<RootView> {
 
 	@Inject
 	protected ShellRootViewProvider(final PaintRenderer paintRenderer) {
@@ -13,7 +13,7 @@ public class ShellRootViewProvider extends AbstractQWidgetViewProvider<ShellRoot
 	}
 
 	@Override
-	protected ShellRootView createView() {
-		return new ShellRootView();
+	protected RootView createView() {
+		return new RootView();
 	}
 }
