@@ -2,3 +2,5 @@
 /.settings
 /.classpath
 /.project
+/bin
+/pom.xml.releaseBackup

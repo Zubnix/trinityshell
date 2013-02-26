@@ -3,3 +3,5 @@
 /.project
 /target
 /shell.core.impl.surface.iml
+/bin
+/pom.xml.releaseBackup

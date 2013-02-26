@@ -3,3 +3,5 @@
 /.classpath
 /.project
 /render.qt.impl.iml
+/bin
+/pom.xml.releaseBackup

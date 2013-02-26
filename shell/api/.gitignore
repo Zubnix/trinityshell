@@ -3,3 +3,5 @@
 /.classpath
 /.project
 /shell.core.api.iml
+/bin
+/pom.xml.releaseBackup
