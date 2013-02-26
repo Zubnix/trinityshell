@@ -1,0 +1,7 @@
+#ShellWidgetImpl {
+	background-color: grey;
+}
+#ShellWidgetBarImpl {
+	background-color: white;
+	border: 1px solid black;
+}
