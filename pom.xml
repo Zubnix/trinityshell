@@ -28,7 +28,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 	</developers>
 
 	<scm>
-		<developerConnection>scm:git:https://github.com/Zubnix/trinityshell/trinity.git</developerConnection>
+		<developerConnection>scm:git:https://github.com/Zubnix/trinityshell.git</developerConnection>
 	</scm>
 
 	<properties>
