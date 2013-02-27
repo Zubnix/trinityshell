@@ -1,0 +1,11 @@
+.RootView {
+
+}
+
+.RootView > .BarView {
+
+}
+
+.RootView > .BarView > .BarItemView {
+
+}
