@@ -32,6 +32,16 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Singleton
 public final class XEventConverter {
 
+	/*
+	 * Singletons are eagerly created in Guice by default. So even though nobody
+	 * needs an instance, it's still created anyway. I'm not 100% happy with
+	 * this, as I'd rather tell Guice explicitly to create an instance
+	 * immediately instead of it being Guice behavior. In the case of
+	 * XEventConverter, when Guice creates it (at binding time at startup), it
+	 * immediately subscribes itself to the XEventBus and starts processing x
+	 * events in it's @Subscribe method as soon as events arrive.
+	 */
+
 	private final Map<Integer, XEventConversion> conversionMap = new HashMap<Integer, XEventConversion>();
 
 	private final EventBus xEventBus;
