@@ -268,32 +268,41 @@ public class BinderImpl implements Binder {
 			final EventList<?> contextCollection = (EventList<?>) collection;
 			final Class<?> childViewClass = observableCollection.view();
 
-			for (int i = 0; i < contextCollection.size(); i++) {
-				final Object childViewDataContext = contextCollection.get(i);
-				final Object childView = this.childViewDelegate.newView(view,
-						childViewClass, i);
-				checkNotNull(childView);
+			try {
+				contextCollection.getReadWriteLock().readLock().lock();
 
-				bind(childViewDataContext, childView);
+				for (int i = 0; i < contextCollection.size(); i++) {
+					final Object childViewDataContext = contextCollection
+							.get(i);
+					final Object childView = this.childViewDelegate.newView(
+							view, childViewClass, i);
+					checkNotNull(childView);
+
+					bind(childViewDataContext, childView);
+				}
+
+				contextCollection
+						.addListEventListener(new ListEventListener<Object>() {
+
+							// We use a shadow list because glazedlists does not
+							// give us the
+							// deleted object...
+							private final List<Object> shadowChildDataContextList = new ArrayList<Object>(
+									contextCollection);
+
+							@Override
+							public void listChanged(
+									final ListEvent<Object> listChanges) {
+								handleListChanged(view, childViewClass,
+										this.shadowChildDataContextList,
+										listChanges);
+							}
+						});
+
+			} finally {
+				contextCollection.getReadWriteLock().readLock().unlock();
 			}
 
-			contextCollection
-					.addListEventListener(new ListEventListener<Object>() {
-
-						// We use a shadow list because glazedlists does not
-						// give us the
-						// deleted object...
-						private final List<Object> shadowChildDataContextList = new ArrayList<Object>(
-								contextCollection);
-
-						@Override
-						public void listChanged(
-								final ListEvent<Object> listChanges) {
-							handleListChanged(view, childViewClass,
-									this.shadowChildDataContextList,
-									listChanges);
-						}
-					});
 		} catch (final IllegalAccessException e) {
 			// TODO explanation
 			throw new BindingError("", e);
