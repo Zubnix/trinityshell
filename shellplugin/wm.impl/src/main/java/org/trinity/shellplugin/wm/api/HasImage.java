@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.wm.impl;
+package org.trinity.shellplugin.wm.api;
 
 public interface HasImage {
 
