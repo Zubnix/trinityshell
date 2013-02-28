@@ -34,7 +34,8 @@ public class WindowManagerPlugin implements ShellPlugin {
 	}
 
 	@Subscribe
-	public void handleShellSurfaceCreated(final ShellSurfaceCreatedEvent shellSurfaceCreatedEvent) {
+	public void handleShellSurfaceCreated(
+			final ShellSurfaceCreatedEvent shellSurfaceCreatedEvent) {
 		final ShellSurface shellSurface = shellSurfaceCreatedEvent.getClient();
 
 	}

@@ -1,5 +1,5 @@
 package org.trinity.shellplugin.wm.impl;
 
-public interface BarItem {
+public interface HasText {
 	String getText();
 }

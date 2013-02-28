@@ -6,6 +6,7 @@ import com.trolltech.qt.core.QChildEvent;
 import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QFrame;
 import com.trolltech.qt.gui.QHBoxLayout;
+import com.trolltech.qt.gui.QSizePolicy;
 import com.trolltech.qt.gui.QVBoxLayout;
 import com.trolltech.qt.gui.QWidget;
 
@@ -18,6 +19,8 @@ class RootView extends QFrame {
 
 		{
 			setLayout(this.topBarLayout);
+			setSizePolicy(new QSizePolicy(QSizePolicy.Policy.Maximum,
+					QSizePolicy.Policy.Fixed));
 		}
 
 		@Override
@@ -37,6 +40,8 @@ class RootView extends QFrame {
 
 		{
 			setLayout(this.bottomBarLayout);
+			setSizePolicy(new QSizePolicy(QSizePolicy.Policy.Maximum,
+					QSizePolicy.Policy.Fixed));
 		}
 
 		@Override
