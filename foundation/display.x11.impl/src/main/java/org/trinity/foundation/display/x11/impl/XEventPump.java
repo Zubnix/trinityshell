@@ -13,7 +13,10 @@ package org.trinity.foundation.display.x11.impl;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
@@ -28,18 +31,25 @@ import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(value = Type.IMPLEMENTATION))
+@NotThreadSafe
 public class XEventPump implements Runnable {
 
 	private final XConnection connection;
 	private final EventBus xEventBus;
-	private final ExecutorService xEventPumpExecutor = Executors
-			.newSingleThreadExecutor();
+	private final ExecutorService xEventPumpExecutor = Executors.newSingleThreadExecutor(new ThreadFactory() {
+
+		@Override
+		public Thread newThread(final Runnable r) {
+			return new Thread(	r,
+								"x-event-pump");
+		}
+	});
 	private final ListeningExecutorService xExecutor;
 
 	@Inject
-	XEventPump(final XConnection connection,
-			@Named("XEventBus") final EventBus xEventBus,
-			@Named("XExecutor") ListeningExecutorService xExecutor) {
+	XEventPump(	final XConnection connection,
+				@Named("XEventBus") final EventBus xEventBus,
+				@Named("XExecutor") final ListeningExecutorService xExecutor) {
 		this.connection = connection;
 		this.xEventBus = xEventBus;
 		this.xExecutor = xExecutor;
@@ -47,39 +57,37 @@ public class XEventPump implements Runnable {
 
 	@Override
 	public void run() {
-		final xcb_generic_event_t event_t = LibXcb
-				.xcb_wait_for_event(this.connection.getConnectionReference());
+		final xcb_generic_event_t event_t = LibXcb.xcb_wait_for_event(this.connection.getConnectionReference());
 
-		if (LibXcb.xcb_connection_has_error(this.connection
-				.getConnectionReference()) != 0) {
-			throw new Error(
-					"X11 connection was closed unexpectedly - maybe your X server terminated / crashed?");
+		if (LibXcb.xcb_connection_has_error(this.connection.getConnectionReference()) != 0) {
+			throw new Error("X11 connection was closed unexpectedly - maybe your X server terminated / crashed?");
 		}
 
-		xExecutor.submit(new Runnable() {
+		this.xExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				xEventBus.post(event_t);
+				XEventPump.this.xEventBus.post(event_t);
 			}
 		});
 
 		// schedule next event retrieval
-		xEventPumpExecutor.submit(this);
+		this.xEventPumpExecutor.submit(this);
 	}
 
 	public void start() {
-		xEventPumpExecutor.submit(this);
+		this.xEventPumpExecutor.submit(this);
 	}
 
 	public void stop() {
-		xEventPumpExecutor.shutdown();
+		this.xEventPumpExecutor.shutdown();
 		try {
-			if (xEventPumpExecutor.awaitTermination(10, TimeUnit.SECONDS)) {
+			if (this.xEventPumpExecutor.awaitTermination(	10,
+															TimeUnit.SECONDS)) {
 				return;
 			}
 			// TODO log error
 			System.err.println("X event pump could not terminate gracefully!");
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

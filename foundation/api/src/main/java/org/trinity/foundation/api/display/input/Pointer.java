@@ -16,8 +16,7 @@ public interface Pointer extends InputDevice {
 	 *************************************** 
 	 */
 	// TODO pointer notify
-	ListenableFuture<Coordinate> getPointerCoordinate(
-			DisplaySurface displaySurface);
+	ListenableFuture<Coordinate> getPointerCoordinate(DisplaySurface displaySurface);
 
 	/***************************************
 	 * Grab a {@link Button} of the bound {@link DisplayArea} or any of its
@@ -35,8 +34,9 @@ public interface Pointer extends InputDevice {
 	 *************************************** 
 	 */
 	// TODO grab button notify
-	ListenableFuture<Void> grabButton(DisplaySurface displaySurface,
-			Button grabButton, InputModifiers withModifiers);
+	ListenableFuture<Void> grabButton(	DisplaySurface displaySurface,
+										Button grabButton,
+										InputModifiers withModifiers);
 
 	/***************************************
 	 * Grab the entire pointing device of the bound {@link DisplayArea} or any
@@ -70,5 +70,6 @@ public interface Pointer extends InputDevice {
 	 */
 	// TODO ungrab button notify
 	ListenableFuture<Void> ungrabButton(DisplaySurface displaySurface,
-			Button ungrabButton, InputModifiers withModifiers);
+										Button ungrabButton,
+										InputModifiers withModifiers);
 }

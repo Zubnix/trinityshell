@@ -11,10 +11,13 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 /**
  * Notifies that a display resource is destroyed.
  * 
  */
+@Immutable
 public class DestroyNotify extends DisplayEvent {
 
 }

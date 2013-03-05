@@ -169,19 +169,17 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	@Override
 	public void setWidth(final int width) {
-		Preconditions
-				.checkArgument(	width > 0,
-								"Argument was %s but expected nonzero nonnegative value",
-								width);
+		Preconditions.checkArgument(width > 0,
+									"Argument was %s but expected nonzero nonnegative value",
+									width);
 		this.desiredWidth = width;
 	}
 
 	@Override
 	public void setHeight(final int height) {
-		Preconditions
-				.checkArgument(	height > 0,
-								"Argument was %s but expected nonzero nonnegative value",
-								this.width);
+		Preconditions.checkArgument(height > 0,
+									"Argument was %s but expected nonzero nonnegative value",
+									this.width);
 		this.desiredHeight = height;
 	}
 
@@ -204,8 +202,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		}
 
 		// check if our parent is visible.
-		final boolean parentVisible = getParent() != null
-				&& getParent().isVisible();
+		final boolean parentVisible = getParent() != null && getParent().isVisible();
 		return parentVisible;
 	}
 

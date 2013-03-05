@@ -11,8 +11,10 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.concurrent.Immutable;
 
 import org.trinity.foundation.api.display.input.Keyboard;
 
@@ -24,10 +26,11 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
+@Immutable
 public class XKeySymbolMapping {
 
-	private final Map<Integer, String> keySymbolToName = new HashMap<Integer, String>();
-	private final Map<String, Integer> nameToKeySymbol = new HashMap<String, Integer>();
+	private final Map<Integer, String> keySymbolToName = new ConcurrentHashMap<Integer, String>();
+	private final Map<String, Integer> nameToKeySymbol = new ConcurrentHashMap<String, Integer>();
 
 	XKeySymbolMapping() {
 		staticMappings();

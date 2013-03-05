@@ -15,6 +15,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.Callable;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_config_window_t;
@@ -39,6 +41,7 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 
+@ThreadSafe
 public class XWindow implements DisplaySurface, XEventTarget {
 
 	private final DisplaySurfaceHandle resourceHandle;
@@ -49,27 +52,29 @@ public class XWindow implements DisplaySurface, XEventTarget {
 	private final EventBus xWindowEventBus = new EventBus();
 
 	@Inject
-	XWindow(final XTime xTime, final XConnection xConnection,
+	XWindow(final XTime xTime,
+			final XConnection xConnection,
 			@Assisted final DisplaySurfaceHandle resourceHandle,
-			@Named("XExecutor") ListeningExecutorService xExecutor) {
+			@Named("XExecutor") final ListeningExecutorService xExecutor) {
 		this.xTime = xTime;
 		this.xConnection = xConnection;
 		this.resourceHandle = resourceHandle;
 		this.xExecutor = xExecutor;
 	}
 
-	public void post(DisplayEvent displayEvent) {
-		xWindowEventBus.post(displayEvent);
+	@Override
+	public void post(final DisplayEvent displayEvent) {
+		this.xWindowEventBus.post(displayEvent);
 	}
 
 	@Override
-	public void addListener(Object listener) {
-		xWindowEventBus.register(listener);
+	public void addListener(final Object listener) {
+		this.xWindowEventBus.register(listener);
 	}
 
 	@Override
-	public void removeListener(Object listener) {
-		xWindowEventBus.unregister(listener);
+	public void removeListener(final Object listener) {
+		this.xWindowEventBus.unregister(listener);
 	}
 
 	@Override
@@ -80,24 +85,24 @@ public class XWindow implements DisplaySurface, XEventTarget {
 	@Override
 	public ListenableFuture<Void> destroy() {
 		final int winId = getWindowId();
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				LibXcb.xcb_destroy_window(getConnectionRef(), winId);
-			}
-		}, null);
+											@Override
+											public void run() {
+												LibXcb.xcb_destroy_window(	getConnectionRef(),
+																			winId);
+											}
+										},
+										null);
 	}
 
 	private int getWindowId() {
-		final int windowId = ((Integer) this.resourceHandle.getNativeHandle())
-				.intValue();
+		final int windowId = ((Integer) this.resourceHandle.getNativeHandle()).intValue();
 		return windowId;
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection
-				.getConnectionReference();
+		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection.getConnectionReference();
 		return connection_t;
 	}
 
@@ -107,186 +112,212 @@ public class XWindow implements DisplaySurface, XEventTarget {
 		final int winId = getWindowId();
 		final int time = this.xTime.getTime();
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				LibXcb.xcb_set_input_focus(getConnectionRef(),
-						(short) xcb_input_focus_t.XCB_INPUT_FOCUS_NONE, winId,
-						time);
-			}
-		}, null);
+											@Override
+											public void run() {
+												LibXcb.xcb_set_input_focus(	getConnectionRef(),
+																			(short) xcb_input_focus_t.XCB_INPUT_FOCUS_NONE,
+																			winId,
+																			time);
+											}
+										},
+										null);
 	}
 
 	@Override
 	public ListenableFuture<Void> lower() {
 
 		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
-		final ByteBuffer value_list = ByteBuffer.allocateDirect(4).order(
-				ByteOrder.nativeOrder());
+		final ByteBuffer value_list = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 		final int xcb_stack_mode_above = xcb_stack_mode_t.XCB_STACK_MODE_BELOW;
 		value_list.putInt(xcb_stack_mode_above);
 		final int winId = getWindowId();
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				LibXcb.xcb_configure_window(getConnectionRef(), winId,
-						value_mask, value_list);
-			}
-		}, null);
+											@Override
+											public void run() {
+												LibXcb.xcb_configure_window(getConnectionRef(),
+																			winId,
+																			value_mask,
+																			value_list);
+											}
+										},
+										null);
 	}
 
 	@Override
 	public ListenableFuture<Void> show() {
 		final int winId = getWindowId();
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
+											@Override
+											public void run() {
 
-				LibXcb.xcb_map_window(getConnectionRef(), winId);
-			}
-		}, null);
+												LibXcb.xcb_map_window(	getConnectionRef(),
+																		winId);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public ListenableFuture<Void> move(final int x, final int y) {
+	public ListenableFuture<Void> move(	final int x,
+										final int y) {
 
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
-		final ByteBuffer value_list = ByteBuffer.allocateDirect(8).order(
-				ByteOrder.nativeOrder());
+		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X | xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+		final ByteBuffer value_list = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder());
 		value_list.putInt(x).putInt(y);
 		final int winId = getWindowId();
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				LibXcb.xcb_configure_window(getConnectionRef(), winId,
-						value_mask, value_list);
-			}
-		}, null);
+											@Override
+											public void run() {
+												LibXcb.xcb_configure_window(getConnectionRef(),
+																			winId,
+																			value_mask,
+																			value_list);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public ListenableFuture<Void> moveResize(final int x, final int y,
-			final int width, final int height) {
+	public ListenableFuture<Void> moveResize(	final int x,
+												final int y,
+												final int width,
+												final int height) {
 
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_Y
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
-		final ByteBuffer value_list = ByteBuffer.allocateDirect(16).order(
-				ByteOrder.nativeOrder());
+		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X | xcb_config_window_t.XCB_CONFIG_WINDOW_Y
+				| xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH | xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+		final ByteBuffer value_list = ByteBuffer.allocateDirect(16).order(ByteOrder.nativeOrder());
 		value_list.putInt(x).putInt(y).putInt(width).putInt(height);
 		final int winId = getWindowId();
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				LibXcb.xcb_configure_window(getConnectionRef(), winId,
-						value_mask, value_list);
-			}
-		}, null);
+											@Override
+											public void run() {
+												LibXcb.xcb_configure_window(getConnectionRef(),
+																			winId,
+																			value_mask,
+																			value_list);
+											}
+										},
+										null);
 	}
 
 	@Override
 	public ListenableFuture<Void> raise() {
 
 		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
-		final ByteBuffer value_list = ByteBuffer.allocateDirect(4).order(
-				ByteOrder.nativeOrder());
+		final ByteBuffer value_list = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 		final int xcb_stack_mode_above = xcb_stack_mode_t.XCB_STACK_MODE_ABOVE;
 		value_list.putInt(xcb_stack_mode_above);
 		final int winId = getWindowId();
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				LibXcb.xcb_configure_window(getConnectionRef(), winId,
-						value_mask, value_list);
-			}
-		}, null);
+											@Override
+											public void run() {
+												LibXcb.xcb_configure_window(getConnectionRef(),
+																			winId,
+																			value_mask,
+																			value_list);
+											}
+										},
+										null);
 	}
 
 	@Override
 	public ListenableFuture<Void> setParent(final DisplayArea parent,
-			final int x, final int y) {
+											final int x,
+											final int y) {
 
-		final int parentId = ((Integer) (((DisplaySurface) parent)
-				.getDisplaySurfaceHandle()).getNativeHandle()).intValue();
+		final int parentId = ((Integer) (((DisplaySurface) parent).getDisplaySurfaceHandle()).getNativeHandle())
+				.intValue();
 		final int winId = getWindowId();
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				LibXcb.xcb_reparent_window(getConnectionRef(), winId, parentId,
-						(short) x, (short) y);
-			}
-		}, null);
+											@Override
+											public void run() {
+												LibXcb.xcb_reparent_window(	getConnectionRef(),
+																			winId,
+																			parentId,
+																			(short) x,
+																			(short) y);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public ListenableFuture<Void> resize(final int width, final int height) {
+	public ListenableFuture<Void> resize(	final int width,
+											final int height) {
 
 		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
 				| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
 
-		final ByteBuffer value_list = ByteBuffer.allocateDirect(8).order(
-				ByteOrder.nativeOrder());
+		final ByteBuffer value_list = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder());
 		value_list.putInt(width).putInt(height);
 		final int winId = getWindowId();
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				LibXcb.xcb_configure_window(getConnectionRef(), winId,
-						value_mask, value_list);
-			}
-		}, null);
+											@Override
+											public void run() {
+												LibXcb.xcb_configure_window(getConnectionRef(),
+																			winId,
+																			value_mask,
+																			value_list);
+											}
+										},
+										null);
 	}
 
 	@Override
 	public ListenableFuture<Void> hide() {
 		final int winId = getWindowId();
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				LibXcb.xcb_unmap_window(getConnectionRef(), winId);
-			}
-		}, null);
+											@Override
+											public void run() {
+												LibXcb.xcb_unmap_window(getConnectionRef(),
+																		winId);
+											}
+										},
+										null);
 	}
 
 	@Override
 	public ListenableFuture<Rectangle> getGeometry() {
 		final int winId = getWindowId();
 
-		return xExecutor.submit(new Callable<Rectangle>() {
+		return this.xExecutor.submit(new Callable<Rectangle>() {
 
 			@Override
 			public Rectangle call() {
-				final xcb_get_geometry_cookie_t cookie_t = LibXcb
-						.xcb_get_geometry(getConnectionRef(), winId);
+				final xcb_get_geometry_cookie_t cookie_t = LibXcb.xcb_get_geometry(	getConnectionRef(),
+																					winId);
 
 				final xcb_generic_error_t e = new xcb_generic_error_t();
-				final xcb_get_geometry_reply_t reply = LibXcb
-						.xcb_get_geometry_reply(getConnectionRef(), cookie_t, e);
+				final xcb_get_geometry_reply_t reply = LibXcb.xcb_get_geometry_reply(	getConnectionRef(),
+																						cookie_t,
+																						e);
 				checkError(e);
 				final int width = reply.getWidth();
 				final int height = reply.getHeight();
 				final int x = reply.getX();
 				final int y = reply.getY();
 
-				return new ImmutableRectangle(x, y, width, height);
+				return new ImmutableRectangle(	x,
+												y,
+												width,
+												height);
 			}
 		});
 
@@ -317,8 +348,7 @@ public class XWindow implements DisplaySurface, XEventTarget {
 
 	public void configureClientEvents() {
 
-		final ByteBuffer values = ByteBuffer.allocateDirect(4).order(
-				ByteOrder.nativeOrder());
+		final ByteBuffer values = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE //
 				| xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW //
 				| xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW //
@@ -326,19 +356,21 @@ public class XWindow implements DisplaySurface, XEventTarget {
 		);
 		final int winId = getWindowId();
 
-		xExecutor.submit(new Runnable() {
+		this.xExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				LibXcb.xcb_change_window_attributes(
-						xConnection.getConnectionReference(), winId,
-						xcb_cw_t.XCB_CW_EVENT_MASK, values);
+				LibXcb.xcb_change_window_attributes(XWindow.this.xConnection.getConnectionReference(),
+													winId,
+													xcb_cw_t.XCB_CW_EVENT_MASK,
+													values);
 			}
 		});
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s=%s", getClass().getSimpleName(),
-				getDisplaySurfaceHandle().getNativeHandle());
+		return String.format(	"%s=%s",
+								getClass().getSimpleName(),
+								getDisplaySurfaceHandle().getNativeHandle());
 	}
 }

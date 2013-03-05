@@ -11,12 +11,15 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.trinity.foundation.api.display.DisplayServer;
 
 /**
  * Information coming from a {@link DisplayServer}.
  * 
  */
+@Immutable
 public class DisplayEvent {
 
 }

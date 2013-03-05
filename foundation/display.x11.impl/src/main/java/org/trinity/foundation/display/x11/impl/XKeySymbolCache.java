@@ -17,6 +17,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.LibXcbConstants;
 import org.freedesktop.xcb.SWIGTYPE_p__XCBKeySymbols;
@@ -35,6 +37,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
+@NotThreadSafe
 public class XKeySymbolCache {
 
 	private final Map<Integer, Map<Integer, Integer>> resolvedKeySymbols = new HashMap<Integer, Map<Integer, Integer>>();
@@ -42,7 +45,8 @@ public class XKeySymbolCache {
 	private final SWIGTYPE_p__XCBKeySymbols xcbKeySymbols;
 
 	@Inject
-	XKeySymbolCache(final XConnection xConnection, @Named("XEventBus") final EventBus xEventBus) {
+	XKeySymbolCache(final XConnection xConnection,
+					@Named("XEventBus") final EventBus xEventBus) {
 		this.xcbKeySymbols = LibXcb.xcb_key_symbols_alloc(xConnection.getConnectionReference());
 		xEventBus.register(this);
 	}

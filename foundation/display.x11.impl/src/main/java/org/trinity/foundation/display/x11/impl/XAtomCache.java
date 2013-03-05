@@ -14,6 +14,8 @@ package org.trinity.foundation.display.x11.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_intern_atom_cookie_t;
@@ -28,6 +30,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
+@NotThreadSafe
 public class XAtomCache {
 
 	private final XConnection xConnection;

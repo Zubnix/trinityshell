@@ -19,8 +19,8 @@ class RootView extends QFrame {
 
 		{
 			setLayout(this.topBarLayout);
-			setSizePolicy(new QSizePolicy(QSizePolicy.Policy.Maximum,
-					QSizePolicy.Policy.Fixed));
+			setSizePolicy(new QSizePolicy(	QSizePolicy.Policy.Maximum,
+											QSizePolicy.Policy.Fixed));
 		}
 
 		@Override
@@ -35,13 +35,12 @@ class RootView extends QFrame {
 	@ObservableCollection(value = "bottomBar", view = BarItemView.class)
 	BarView bottomBarView = new BarView(this) {
 
-		QHBoxLayout bottomBarLayout = new QHBoxLayout(
-				RootView.this.bottomBarView);
+		QHBoxLayout bottomBarLayout = new QHBoxLayout(RootView.this.bottomBarView);
 
 		{
 			setLayout(this.bottomBarLayout);
-			setSizePolicy(new QSizePolicy(QSizePolicy.Policy.Maximum,
-					QSizePolicy.Policy.Fixed));
+			setSizePolicy(new QSizePolicy(	QSizePolicy.Policy.Maximum,
+											QSizePolicy.Policy.Fixed));
 		}
 
 		@Override

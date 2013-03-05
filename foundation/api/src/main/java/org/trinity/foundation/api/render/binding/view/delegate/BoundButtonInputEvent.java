@@ -27,8 +27,7 @@ import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
  * @see InputSlotCaller
  *************************************** 
  */
-public class BoundButtonInputEvent extends ButtonNotify implements
-		BoundInputEvent {
+public class BoundButtonInputEvent extends ButtonNotify implements BoundInputEvent {
 
 	private final String inputSlotName;
 
@@ -45,8 +44,8 @@ public class BoundButtonInputEvent extends ButtonNotify implements
 	 * @param inputSlotName
 	 *            an input slot name
 	 */
-	public BoundButtonInputEvent(final PointerInput pointerInput,
-			final String inputSlotName) {
+	public BoundButtonInputEvent(	final PointerInput pointerInput,
+									final String inputSlotName) {
 		super(pointerInput);
 		this.inputSlotName = inputSlotName;
 

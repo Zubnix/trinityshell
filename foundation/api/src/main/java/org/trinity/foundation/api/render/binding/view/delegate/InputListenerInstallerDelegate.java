@@ -45,9 +45,10 @@ public interface InputListenerInstallerDelegate {
 	 *************************************** 
 	 */
 	// TODO some kind of notify event?
-	ListenableFuture<Void> installInputListener(
-			Class<? extends Input> inputType, Object view,
-			Object inputEventTarget, String inputSlotName);
+	ListenableFuture<Void> installInputListener(Class<? extends Input> inputType,
+												Object view,
+												Object inputEventTarget,
+												String inputSlotName);
 
 	/***************************************
 	 * Remove a previously installed input listener.
@@ -65,7 +66,8 @@ public interface InputListenerInstallerDelegate {
 	 *************************************** 
 	 */
 	// TODO some kind of notify event?
-	ListenableFuture<Void> removeInputListener(
-			Class<? extends Input> inputType, Object view,
-			Object inputEventTarget, String inputSlotName);
+	ListenableFuture<Void> removeInputListener(	Class<? extends Input> inputType,
+												Object view,
+												Object inputEventTarget,
+												String inputSlotName);
 }

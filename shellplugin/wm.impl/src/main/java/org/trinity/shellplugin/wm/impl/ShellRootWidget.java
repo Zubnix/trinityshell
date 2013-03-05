@@ -23,10 +23,10 @@ public class ShellRootWidget extends BaseShellWidget {
 	private EventList<Object> bottomBar = new BasicEventList<Object>();
 
 	@Inject
-	protected ShellRootWidget(
-			final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-			final PainterFactory painterFactory) {
-		super(shellDisplayEventDispatcher, painterFactory);
+	protected ShellRootWidget(	final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
+								final PainterFactory painterFactory) {
+		super(	shellDisplayEventDispatcher,
+				painterFactory);
 	}
 
 	@ViewReference

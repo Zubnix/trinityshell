@@ -11,12 +11,15 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_focus_in_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.FocusLostNotify;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
@@ -29,6 +32,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
+@Immutable
 public class FocusOutConversion implements XEventConversion {
 
 	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_FOCUS_OUT);
@@ -37,7 +41,8 @@ public class FocusOutConversion implements XEventConversion {
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	FocusOutConversion(@Named("XEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
+	FocusOutConversion(	@Named("XEventBus") final EventBus xEventBus,
+						final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -45,19 +50,27 @@ public class FocusOutConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 		// focus in structure is the same as focus out.
-		final xcb_focus_in_event_t focus_out_event_t = new xcb_focus_in_event_t(xcb_generic_event_t.getCPtr(event_t),
-																				true);
-
+		final xcb_focus_in_event_t focus_out_event_t = cast(event_t);
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
 											focus_out_event_t.getClass().getSimpleName()));
-
 		this.xEventBus.post(focus_out_event_t);
-
-		final XWindow xWindow = this.xWindowCache.getWindow(focus_out_event_t.getEvent());
-		final DisplayEvent displayEvent = new FocusLostNotify(xWindow);
-
+		final DisplayEvent displayEvent = new FocusLostNotify();
 		return displayEvent;
+	}
+
+	private xcb_focus_in_event_t cast(final xcb_generic_event_t event_t) {
+		return new xcb_focus_in_event_t(xcb_generic_event_t.getCPtr(event_t),
+										true);
+	}
+
+	@Override
+	public XEventTarget getTarget(final xcb_generic_event_t event_t) {
+		// focus in structure is the same as focus out.
+		final xcb_focus_in_event_t focus_out_event_t = cast(event_t);
+		final XWindow xWindow = this.xWindowCache.getWindow(focus_out_event_t.getEvent());
+
+		return xWindow;
 	}
 
 	@Override

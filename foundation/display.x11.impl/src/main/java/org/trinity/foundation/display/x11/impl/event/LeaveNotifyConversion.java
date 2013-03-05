@@ -11,12 +11,15 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.PointerLeaveNotify;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
@@ -29,6 +32,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
+@Immutable
 public class LeaveNotifyConversion implements XEventConversion {
 
 	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_LEAVE_NOTIFY);
@@ -37,7 +41,8 @@ public class LeaveNotifyConversion implements XEventConversion {
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	LeaveNotifyConversion(@Named("XEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
+	LeaveNotifyConversion(	@Named("XEventBus") final EventBus xEventBus,
+							final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -45,21 +50,29 @@ public class LeaveNotifyConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 		// enter has same structure as leave
-		final xcb_enter_notify_event_t enter_notify_event_t = new xcb_enter_notify_event_t(	xcb_generic_event_t.getCPtr(event_t),
-																							true);
+		final xcb_enter_notify_event_t enter_notify_event_t = cast(event_t);
 
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
 											enter_notify_event_t.getClass().getSimpleName()));
 
 		this.xEventBus.post(enter_notify_event_t);
-
-		final int windowId = enter_notify_event_t.getEvent();
-		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
-
-		final DisplayEvent displayEvent = new PointerLeaveNotify(displayEventSource);
+		final DisplayEvent displayEvent = new PointerLeaveNotify();
 
 		return displayEvent;
+	}
+
+	private xcb_enter_notify_event_t cast(final xcb_generic_event_t event_t) {
+		return new xcb_enter_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
+											true);
+	}
+
+	@Override
+	public XEventTarget getTarget(final xcb_generic_event_t event_t) {
+		final xcb_enter_notify_event_t enter_notify_event_t = cast(event_t);
+		final int windowId = enter_notify_event_t.getEvent();
+		final XWindow displayEventTarget = this.xWindowCache.getWindow(windowId);
+		return displayEventTarget;
 	}
 
 	@Override

@@ -11,6 +11,8 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.trinity.foundation.api.display.input.Input;
 
 // TODO documentation
@@ -18,6 +20,7 @@ import org.trinity.foundation.api.display.input.Input;
  * Represents a general user input notification. This can be, for example, a
  * keyboard key that was pressed or a mouse button that was released.
  */
+@Immutable
 public class InputNotify<I extends Input> extends DisplayEvent {
 
 	private final I input;

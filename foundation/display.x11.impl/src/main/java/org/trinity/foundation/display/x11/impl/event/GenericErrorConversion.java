@@ -11,19 +11,25 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XcbErrorUtil;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
+@Singleton
+@Immutable
 public class GenericErrorConversion implements XEventConversion {
 
 	private final Integer eventCode = Integer.valueOf(0);
@@ -42,6 +48,13 @@ public class GenericErrorConversion implements XEventConversion {
 		this.xEventBus.post(request_error_t);
 
 		throw new RuntimeException(XcbErrorUtil.toString(request_error_t));
+		// TODO error event
+	}
+
+	@Override
+	public XEventTarget getTarget(final xcb_generic_event_t event_t) {
+		// TODO return display server
+		return null;
 	}
 
 	@Override

@@ -11,10 +11,13 @@
  */
 package org.trinity.foundation.api.shared;
 
+import javax.annotation.concurrent.Immutable;
+
 /***************************************
  * A coordinate in 2D space, in natural numbers.
  *************************************** 
  */
+@Immutable
 public class Coordinate {
 
 	private final int x, y;

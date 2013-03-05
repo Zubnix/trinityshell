@@ -13,6 +13,8 @@ package org.trinity.foundation.display.x11.impl;
 
 import java.util.concurrent.Callable;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.freedesktop.xcb.LibXcb;
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -29,6 +31,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton
+@ThreadSafe
 public class XDisplayServer implements DisplayServer, XEventTarget {
 
 	private final XConnection xConnection;
@@ -36,14 +39,14 @@ public class XDisplayServer implements DisplayServer, XEventTarget {
 	private final XEventPump xEventPump;
 	private final ListeningExecutorService xExecutor;
 
-	private EventBus displayEventBus = new EventBus();
+	private final EventBus displayEventBus = new EventBus();
 
 	@Inject
-	XDisplayServer(final XConnection xConnection,
-			final XWindowCache xWindowCache,
-			@Named("DisplayEventBus") final EventBus displayEventBus,
-			XEventPump xEventPump,
-			@Named("XExecutor") ListeningExecutorService xExecutor) {
+	XDisplayServer(	final XConnection xConnection,
+					final XWindowCache xWindowCache,
+					@Named("DisplayEventBus") final EventBus displayEventBus,
+					final XEventPump xEventPump,
+					@Named("XExecutor") final ListeningExecutorService xExecutor) {
 
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
@@ -54,23 +57,24 @@ public class XDisplayServer implements DisplayServer, XEventTarget {
 	@Override
 	public ListenableFuture<Void> close() {
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				xEventPump.stop();
-				xConnection.close();
-			}
-		}, null);
+											@Override
+											public void run() {
+												XDisplayServer.this.xEventPump.stop();
+												XDisplayServer.this.xConnection.close();
+											}
+										},
+										null);
 	}
 
 	@Override
 	public ListenableFuture<DisplaySurface> getRootDisplayArea() {
-		return xExecutor.submit(new Callable<DisplaySurface>() {
+		return this.xExecutor.submit(new Callable<DisplaySurface>() {
 
 			@Override
 			public DisplaySurface call() {
-				return xWindowCache.getWindow(xConnection.getScreenReference()
+				return XDisplayServer.this.xWindowCache.getWindow(XDisplayServer.this.xConnection.getScreenReference()
 						.getRoot());
 			}
 		});
@@ -81,33 +85,35 @@ public class XDisplayServer implements DisplayServer, XEventTarget {
 		// FIXME from config
 		final String displayName = System.getenv("DISPLAY");
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				xConnection.open(displayName, 0);
-				if (LibXcb.xcb_connection_has_error(xConnection
-						.getConnectionReference()) != 0) {
-					throw new Error("Cannot open display\n");
-				}
-				xEventPump.start();
+											@Override
+											public void run() {
+												XDisplayServer.this.xConnection.open(	displayName,
+																						0);
+												if (LibXcb.xcb_connection_has_error(XDisplayServer.this.xConnection
+														.getConnectionReference()) != 0) {
+													throw new Error("Cannot open display\n");
+												}
+												XDisplayServer.this.xEventPump.start();
 
-			}
-		}, null);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public void addListener(Object listener) {
+	public void addListener(final Object listener) {
 		this.displayEventBus.register(listener);
 	}
 
 	@Override
-	public void post(DisplayEvent displayEvent) {
+	public void post(final DisplayEvent displayEvent) {
 		this.displayEventBus.post(displayEvent);
 	}
 
 	@Override
-	public void removeListener(Object listener) {
+	public void removeListener(final Object listener) {
 		this.displayEventBus.unregister(listener);
 	}
 }

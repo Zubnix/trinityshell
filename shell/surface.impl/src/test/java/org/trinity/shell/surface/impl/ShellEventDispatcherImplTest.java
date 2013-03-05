@@ -60,7 +60,7 @@ public class ShellEventDispatcherImplTest {
 																												displayServer);
 
 		shellEventDispatcherImpl.registerDisplayEventTarget(nodeEventBus,
-																	displayEventTarget);
+															displayEventTarget);
 		shellEventDispatcherImpl.dispatchDisplayEvent(false);
 		shellEventDispatcherImpl.dispatchDisplayEvent(false);
 		shellEventDispatcherImpl.dispatchDisplayEvent(false);

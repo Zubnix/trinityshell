@@ -2,6 +2,8 @@ package org.trinity.foundation.display.x11.impl;
 
 import java.util.concurrent.Callable;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.LibXcbConstants;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
@@ -27,28 +29,28 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton
+@ThreadSafe
 public class XPointer implements Pointer {
 	private final XConnection xConnection;
 	private final XTime xTime;
 	private final ListeningExecutorService xExecutor;
 
 	@Inject
-	XPointer(XConnection xConnection, XTime xTime,
-			@Named("XExecutor") ListeningExecutorService xExecutor) {
+	XPointer(	final XConnection xConnection,
+				final XTime xTime,
+				@Named("XExecutor") final ListeningExecutorService xExecutor) {
 		this.xConnection = xConnection;
 		this.xTime = xTime;
 		this.xExecutor = xExecutor;
 	}
 
-	private int getWindowId(DisplaySurface displaySurface) {
-		final int windowId = ((Integer) displaySurface
-				.getDisplaySurfaceHandle().getNativeHandle()).intValue();
+	private int getWindowId(final DisplaySurface displaySurface) {
+		final int windowId = ((Integer) displaySurface.getDisplaySurfaceHandle().getNativeHandle()).intValue();
 		return windowId;
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection
-				.getConnectionReference();
+		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection.getConnectionReference();
 		return connection_t;
 	}
 
@@ -61,8 +63,9 @@ public class XPointer implements Pointer {
 	}
 
 	@Override
-	public ListenableFuture<Void> grabButton(DisplaySurface displaySurface,
-			final Button catchButton, final InputModifiers withModifiers) {
+	public ListenableFuture<Void> grabButton(	final DisplaySurface displaySurface,
+												final Button catchButton,
+												final InputModifiers withModifiers) {
 
 		final int buttonCode = catchButton.getButtonCode();
 		final int modifiers = withModifiers.getInputModifiersState();
@@ -74,20 +77,27 @@ public class XPointer implements Pointer {
 		final int cursor = LibXcbConstants.XCB_NONE;
 		final int winId = getWindowId(displaySurface);
 
-		return this.xExecutor.submit(new Runnable() {
-			@Override
-			public void run() {
-				LibXcb.xcb_grab_button(getConnectionRef(), (short) 0, winId,
-						event_mask, (short) pointer_mode,
-						(short) keyboard_mode, confine_to, cursor,
-						(short) buttonCode, modifiers);
+		return this.xExecutor.submit(	new Runnable() {
+											@Override
+											public void run() {
+												LibXcb.xcb_grab_button(	getConnectionRef(),
+																		(short) 0,
+																		winId,
+																		event_mask,
+																		(short) pointer_mode,
+																		(short) keyboard_mode,
+																		confine_to,
+																		cursor,
+																		(short) buttonCode,
+																		modifiers);
 
-			}
-		}, null);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public ListenableFuture<Void> grabPointer(DisplaySurface displaySurface) {
+	public ListenableFuture<Void> grabPointer(final DisplaySurface displaySurface) {
 
 		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS
 				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE;
@@ -98,72 +108,87 @@ public class XPointer implements Pointer {
 		final int winId = getWindowId(displaySurface);
 		final int time = this.xTime.getTime();
 
-		return this.xExecutor.submit(new Runnable() {
-			@Override
-			public void run() {
-				final xcb_grab_pointer_cookie_t grab_pointer_cookie_t = LibXcb
-						.xcb_grab_pointer(getConnectionRef(), (short) 0, winId,
-								event_mask, (short) pointer_mode,
-								(short) keyboard_mode, confine_to, cursor, time);
-				final xcb_generic_error_t e = new xcb_generic_error_t();
-				// TODO check if grab was successful and return boolean
-				LibXcb.xcb_grab_pointer_reply(getConnectionRef(),
-						grab_pointer_cookie_t, e);
-				checkError(e);
-			}
-		}, null);
+		return this.xExecutor.submit(	new Runnable() {
+											@Override
+											public void run() {
+												final xcb_grab_pointer_cookie_t grab_pointer_cookie_t = LibXcb
+														.xcb_grab_pointer(	getConnectionRef(),
+																			(short) 0,
+																			winId,
+																			event_mask,
+																			(short) pointer_mode,
+																			(short) keyboard_mode,
+																			confine_to,
+																			cursor,
+																			time);
+												final xcb_generic_error_t e = new xcb_generic_error_t();
+												// TODO check if grab was
+												// successful and return boolean
+												LibXcb.xcb_grab_pointer_reply(	getConnectionRef(),
+																				grab_pointer_cookie_t,
+																				e);
+												checkError(e);
+											}
+										},
+										null);
 	}
 
 	@Override
 	public ListenableFuture<Void> ungrabPointer() {
 		final int time = this.xTime.getTime();
 
-		return this.xExecutor.submit(new Runnable() {
-			@Override
-			public void run() {
-				LibXcb.xcb_ungrab_pointer(xConnection.getConnectionReference(),
-						time);
-			}
-		}, null);
+		return this.xExecutor.submit(	new Runnable() {
+											@Override
+											public void run() {
+												LibXcb.xcb_ungrab_pointer(	XPointer.this.xConnection
+																					.getConnectionReference(),
+																			time);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public ListenableFuture<Void> ungrabButton(DisplaySurface displaySurface,
-			final Button likeButton, final InputModifiers withModifiers) {
+	public ListenableFuture<Void> ungrabButton(	final DisplaySurface displaySurface,
+												final Button likeButton,
+												final InputModifiers withModifiers) {
 
 		final int button = likeButton.getButtonCode();
 		final int modifiers = withModifiers.getInputModifiersState();
 		final int winId = getWindowId(displaySurface);
 
-		return this.xExecutor.submit(new Runnable() {
-			@Override
-			public void run() {
-				LibXcb.xcb_ungrab_button(getConnectionRef(), (short) button,
-						winId, modifiers);
-			}
-		}, null);
+		return this.xExecutor.submit(	new Runnable() {
+											@Override
+											public void run() {
+												LibXcb.xcb_ungrab_button(	getConnectionRef(),
+																			(short) button,
+																			winId,
+																			modifiers);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public ListenableFuture<Coordinate> getPointerCoordinate(
-			DisplaySurface displaySurface) {
+	public ListenableFuture<Coordinate> getPointerCoordinate(final DisplaySurface displaySurface) {
 		final int winId = getWindowId(displaySurface);
 
 		return this.xExecutor.submit(new Callable<Coordinate>() {
 			@Override
 			public Coordinate call() {
-				final xcb_query_pointer_cookie_t cookie_t = LibXcb
-						.xcb_query_pointer(getConnectionRef(), winId);
+				final xcb_query_pointer_cookie_t cookie_t = LibXcb.xcb_query_pointer(	getConnectionRef(),
+																						winId);
 				final xcb_generic_error_t e = new xcb_generic_error_t();
-				final xcb_query_pointer_reply_t reply_t = LibXcb
-						.xcb_query_pointer_reply(getConnectionRef(), cookie_t,
-								e);
+				final xcb_query_pointer_reply_t reply_t = LibXcb.xcb_query_pointer_reply(	getConnectionRef(),
+																							cookie_t,
+																							e);
 				checkError(e);
 
 				final int x = reply_t.getWin_x();
 				final int y = reply_t.getWin_y();
 
-				return new Coordinate(x, y);
+				return new Coordinate(	x,
+										y);
 			}
 		});
 	}

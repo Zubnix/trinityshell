@@ -11,11 +11,14 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.trinity.foundation.api.display.input.KeyboardInput;
 
 /**
  * Notifies that a keyboard key's state (pressed, released) has changed.
  */
+@Immutable
 public class KeyNotify extends InputNotify<KeyboardInput> {
 
 	/***************************************

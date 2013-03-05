@@ -15,9 +15,9 @@ public abstract class AbstractQJKeyConversion implements QJRenderEventConversion
 
 	@Override
 	public KeyNotify convertEvent(	final Object eventTarget,
-										final Object view,
-										final QObject qObject,
-										final QEvent qEvent) {
+									final Object view,
+									final QObject qObject,
+									final QEvent qEvent) {
 
 		qEvent.accept();
 		final QKeyEvent keyEvent = (QKeyEvent) qEvent;
@@ -37,7 +37,7 @@ public abstract class AbstractQJKeyConversion implements QJRenderEventConversion
 														inputModifiers);
 
 		final KeyNotify keyNotify = new KeyNotify(	eventTarget,
-																	input);
+													input);
 
 		return keyNotify;
 	}

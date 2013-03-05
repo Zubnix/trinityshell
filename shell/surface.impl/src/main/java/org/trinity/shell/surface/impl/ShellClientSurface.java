@@ -43,10 +43,8 @@ public class ShellClientSurface extends AbstractShellSurface {
 		// method is used by node eventbus.
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void
-				handleDestroyNotify(final ShellNodeDestroyedEvent destroyEvent) {
-			this.shellDisplayEventDispatcher
-					.unregisterAllDisplayEventTarget(getDisplaySurface());
+		public void handleDestroyNotify(final ShellNodeDestroyedEvent destroyEvent) {
+			this.shellDisplayEventDispatcher.unregisterAllDisplayEventTarget(getDisplaySurface());
 		}
 	}
 
@@ -60,9 +58,8 @@ public class ShellClientSurface extends AbstractShellSurface {
 		this.displaySurface = displaySurface;
 		this.shellSurfaceExecutorImpl = new ShellSurfaceExecutorImpl(this);
 
-		shellDisplayEventDispatcher
-				.registerDisplayEventTarget(getNodeEventBus(),
-													displaySurface);
+		shellDisplayEventDispatcher.registerDisplayEventTarget(	getNodeEventBus(),
+																displaySurface);
 		addShellNodeEventHandler(new DestroyCallback(shellDisplayEventDispatcher));
 
 		setParent(root);

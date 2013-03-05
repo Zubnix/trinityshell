@@ -11,11 +11,14 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 /****************************************
  * A generic abstract class for focus related events.
  * 
  *************************************** 
  */
-public abstract class FocusNotify extends DisplayEvent {
+@Immutable
+public class FocusNotify extends DisplayEvent {
 
 }

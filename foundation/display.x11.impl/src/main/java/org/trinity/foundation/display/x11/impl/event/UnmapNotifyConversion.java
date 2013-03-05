@@ -11,12 +11,15 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_unmap_notify_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
@@ -29,6 +32,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
+@Immutable
 public class UnmapNotifyConversion implements XEventConversion {
 
 	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_UNMAP_NOTIFY);
@@ -37,33 +41,38 @@ public class UnmapNotifyConversion implements XEventConversion {
 	private final EventBus xEventBus;
 
 	@Inject
-	UnmapNotifyConversion(@Named("XEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
+	UnmapNotifyConversion(	@Named("XEventBus") final EventBus xEventBus,
+							final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-
-		final xcb_unmap_notify_event_t unmap_notify_event_t = new xcb_unmap_notify_event_t(	xcb_generic_event_t.getCPtr(event_t),
-																							true);
-
+		final xcb_unmap_notify_event_t unmap_notify_event_t = cast(event_t);
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
 											unmap_notify_event_t.getClass().getSimpleName()));
-
 		this.xEventBus.post(unmap_notify_event_t);
+		final DisplayEvent displayEvent = new HideNotify();
+		return displayEvent;
+	}
 
+	private xcb_unmap_notify_event_t cast(final xcb_generic_event_t event_t) {
+		return new xcb_unmap_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
+											true);
+	}
+
+	@Override
+	public XEventTarget getTarget(final xcb_generic_event_t event_t) {
+		final xcb_unmap_notify_event_t unmap_notify_event_t = cast(event_t);
 		final int windowId = unmap_notify_event_t.getWindow();
 		final int reportWindowId = unmap_notify_event_t.getEvent();
 		if (windowId != reportWindowId) {
 			return null;
 		}
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
-
-		final DisplayEvent displayEvent = new HideNotify(displayEventSource);
-
-		return displayEvent;
+		return displayEventSource;
 	}
 
 	@Override

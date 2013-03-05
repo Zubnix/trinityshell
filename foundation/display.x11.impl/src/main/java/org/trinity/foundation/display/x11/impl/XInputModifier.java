@@ -11,14 +11,18 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.trinity.foundation.api.display.input.InputModifier;
 
+@Immutable
 public class XInputModifier implements InputModifier {
 
 	private final String name;
 	private final int mask;
 
-	public XInputModifier(final int mask, final String name) {
+	public XInputModifier(	final int mask,
+							final String name) {
 		this.name = name;
 		this.mask = mask;
 	}

@@ -14,6 +14,8 @@ package org.trinity.foundation.display.x11.impl;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_cw_t;
@@ -31,6 +33,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
+@NotThreadSafe
 public class XConnection {
 
 	private SWIGTYPE_p_xcb_connection_t connection_t;
@@ -74,6 +77,7 @@ public class XConnection {
 	}
 
 	public void close() {
+
 		LibXcb.xcb_disconnect(this.connection_t);
 	}
 

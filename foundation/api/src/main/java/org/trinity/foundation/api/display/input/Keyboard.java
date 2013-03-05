@@ -195,7 +195,8 @@ public interface Keyboard extends InputDevice {
 	 *************************************** 
 	 */
 	// TODO return listanablefuture?
-	String asKeySymbolName(Key key, InputModifiers inputModifiers);
+	ListenableFuture<String> asKeySymbolName(	Key key,
+												InputModifiers inputModifiers);
 
 	/***************************************
 	 * Translate the given keysymbol name to all possible {@link Key}s. A
@@ -209,7 +210,7 @@ public interface Keyboard extends InputDevice {
 	 *************************************** 
 	 */
 	// TODO return listanablefuture?
-	List<Key> asKeys(String keySymbolName);
+	ListenableFuture<List<Key>> asKeys(String keySymbolName);
 
 	/***************************************
 	 * Create an <code>InputModifier</code> based on it's name. For a valid name
@@ -252,8 +253,9 @@ public interface Keyboard extends InputDevice {
 	 *************************************** 
 	 */
 	// TODO grab key notify
-	ListenableFuture<Void> grabKey(DisplaySurface displaySurface, Key grabKey,
-			InputModifiers withModifiers);
+	ListenableFuture<Void> grabKey(	DisplaySurface displaySurface,
+									Key grabKey,
+									InputModifiers withModifiers);
 
 	/***************************************
 	 * Release the grab on the specific {@link Key} with the specific
@@ -267,8 +269,9 @@ public interface Keyboard extends InputDevice {
 	 *************************************** 
 	 */
 	// TODO ungrab key notify
-	ListenableFuture<Void> ungrabKey(DisplaySurface displaySurface,
-			Key ungrabKey, InputModifiers withModifiers);
+	ListenableFuture<Void> ungrabKey(	DisplaySurface displaySurface,
+										Key ungrabKey,
+										InputModifiers withModifiers);
 
 	/***************************************
 	 * Release the grab of the keyboard of the bound {@link DisplayArea}.

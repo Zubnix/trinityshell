@@ -11,10 +11,13 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 /****************************************
  * A request to make a display resource visible.
  *************************************** 
  */
+@Immutable
 public class ShowRequest extends DisplayEvent {
 
 }

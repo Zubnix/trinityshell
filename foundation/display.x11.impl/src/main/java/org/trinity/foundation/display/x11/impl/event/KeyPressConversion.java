@@ -11,6 +11,8 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
@@ -21,6 +23,7 @@ import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
@@ -32,6 +35,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
+@Immutable
 public class KeyPressConversion implements XEventConversion {
 
 	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_KEY_PRESS);
@@ -40,24 +44,21 @@ public class KeyPressConversion implements XEventConversion {
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	KeyPressConversion(final EventBus xEventBus, final XWindowCache xWindowCache) {
+	KeyPressConversion(	final EventBus xEventBus,
+						final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_key_press_event_t key_press_event_t = new xcb_key_press_event_t(	xcb_generic_event_t.getCPtr(event_t),
-																					true);
+		final xcb_key_press_event_t key_press_event_t = cast(event_t);
 
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
 											key_press_event_t.getClass().getSimpleName()));
 
 		this.xEventBus.post(key_press_event_t);
-
-		final int windowId = key_press_event_t.getEvent();
-		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int keyCode = key_press_event_t.getDetail();
 		final Key key = new Key(keyCode);
@@ -68,10 +69,22 @@ public class KeyPressConversion implements XEventConversion {
 														key,
 														inputModifiers);
 
-		final DisplayEvent displayEvent = new KeyNotify(	displayEventSource,
-																input);
+		final DisplayEvent displayEvent = new KeyNotify(input);
 
 		return displayEvent;
+	}
+
+	private xcb_key_press_event_t cast(final xcb_generic_event_t event_t) {
+		return new xcb_key_press_event_t(	xcb_generic_event_t.getCPtr(event_t),
+											true);
+	}
+
+	@Override
+	public XEventTarget getTarget(final xcb_generic_event_t event_t) {
+		final xcb_key_press_event_t key_press_event_t = cast(event_t);
+		final int windowId = key_press_event_t.getEvent();
+		final XWindow displayEventTarget = this.xWindowCache.getWindow(windowId);
+		return displayEventTarget;
 	}
 
 	@Override

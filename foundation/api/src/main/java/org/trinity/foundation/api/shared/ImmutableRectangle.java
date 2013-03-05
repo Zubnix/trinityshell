@@ -11,10 +11,13 @@
  */
 package org.trinity.foundation.api.shared;
 
+import javax.annotation.concurrent.Immutable;
+
 /***************************************
  * A fixed size, fixed width {@link Rectangle}.
  *************************************** 
  */
+@Immutable
 public class ImmutableRectangle implements Rectangle {
 
 	private final int x, y, width, height;

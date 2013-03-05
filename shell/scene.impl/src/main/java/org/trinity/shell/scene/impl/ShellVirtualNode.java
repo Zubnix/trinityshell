@@ -37,9 +37,8 @@ import de.devsurf.injection.guice.annotations.To.Type;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(	value = @Named("ShellVirtualNode"),
-		to = @To(	value = Type.CUSTOM,
-					customs = { ShellNode.class, ShellNodeParent.class }))
+@Bind(value = @Named("ShellVirtualNode"), to = @To(value = Type.CUSTOM, customs = { ShellNode.class,
+		ShellNodeParent.class }))
 public class ShellVirtualNode extends AbstractShellNodeParent {
 	private final ShellNodeExecutor shellNodeExecutor = new ShellVirtualNodeExecutor(this);
 

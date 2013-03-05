@@ -28,10 +28,8 @@ import com.google.inject.name.Named;
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 
-@Bind(	value = @Named("ShellRootSurface"),
-		to = @To(	value = To.Type.CUSTOM,
-					customs = { ShellSurfaceParent.class, ShellSurface.class,
-							ShellNodeParent.class, ShellNode.class }))
+@Bind(value = @Named("ShellRootSurface"), to = @To(value = To.Type.CUSTOM, customs = { ShellSurfaceParent.class,
+		ShellSurface.class, ShellNodeParent.class, ShellNode.class }))
 @Singleton
 public class ShellRootSurface extends AbstractShellSurfaceParent {
 
@@ -44,9 +42,8 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 		this.shellNodeExecutor = new ShellSurfaceExecutorImpl(this);
 		this.displaySurface = displayServer.getRootDisplayArea();
 		syncGeoToDisplaySurface();
-		shellDisplayEventDispatcher
-				.registerDisplayEventTarget(getNodeEventBus(),
-													this.displaySurface);
+		shellDisplayEventDispatcher.registerDisplayEventTarget(	getNodeEventBus(),
+																this.displaySurface);
 	}
 
 	@Override

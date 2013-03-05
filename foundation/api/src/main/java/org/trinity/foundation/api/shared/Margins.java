@@ -11,11 +11,14 @@
  */
 package org.trinity.foundation.api.shared;
 
+import javax.annotation.concurrent.Immutable;
+
 /**
  * 
  * The extra space between an object and it's neighbors.
  * 
  */
+@Immutable
 public class Margins {
 
 	/**

@@ -11,12 +11,15 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 /****************************************
  * Indicates when a pointer device has crossed the boundary of a a display
  * resource.
  * 
  *************************************** 
  */
-public abstract class PointerVisitationNotify extends DisplayEvent {
+@Immutable
+public class PointerVisitationNotify extends DisplayEvent {
 
 }

@@ -11,12 +11,15 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.trinity.foundation.api.shared.Rectangle;
 
 /**
  * A request from a display resource for a new geometry.
  * 
  */
+@Immutable
 public class GeometryRequest extends DisplayEvent {
 
 	private final Rectangle geometry;
@@ -46,9 +49,11 @@ public class GeometryRequest extends DisplayEvent {
 	 *            Indicates if the height value should be configured.
 	 *************************************** 
 	 */
-	public GeometryRequest(final Rectangle geometry, final boolean configureX,
-			final boolean configureY, final boolean configureWidth,
-			final boolean configureHeight) {
+	public GeometryRequest(	final Rectangle geometry,
+							final boolean configureX,
+							final boolean configureY,
+							final boolean configureWidth,
+							final boolean configureHeight) {
 		this.geometry = geometry;
 		this.configureX = configureX;
 		this.configureY = configureY;

@@ -44,8 +44,8 @@ public class BoundKeyInputEvent extends KeyNotify implements BoundInputEvent {
 	 * @param inputSlotName
 	 *            an input slot name.
 	 */
-	public BoundKeyInputEvent(final KeyboardInput input,
-			final String inputSlotName) {
+	public BoundKeyInputEvent(	final KeyboardInput input,
+								final String inputSlotName) {
 		super(input);
 		this.inputSlotName = inputSlotName;
 	}

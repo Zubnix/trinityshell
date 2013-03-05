@@ -42,7 +42,7 @@ public abstract class AbstractQJButtonConversion implements QJRenderEventConvers
 															rootY);
 
 		final ButtonNotify buttonNotify = new ButtonNotify(	eventTarget,
-																			pointerInput);
+															pointerInput);
 
 		return buttonNotify;
 	}

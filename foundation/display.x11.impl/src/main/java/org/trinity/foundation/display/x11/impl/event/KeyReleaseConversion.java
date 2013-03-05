@@ -11,6 +11,8 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
@@ -21,6 +23,7 @@ import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
@@ -33,6 +36,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
+@Immutable
 public class KeyReleaseConversion implements XEventConversion {
 
 	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_KEY_RELEASE);
@@ -41,7 +45,8 @@ public class KeyReleaseConversion implements XEventConversion {
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	KeyReleaseConversion(@Named("XEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
+	KeyReleaseConversion(	@Named("XEventBus") final EventBus xEventBus,
+							final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -50,30 +55,37 @@ public class KeyReleaseConversion implements XEventConversion {
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
 		// press has same structure as release.
-		final xcb_key_press_event_t key_release_event_t = new xcb_key_press_event_t(xcb_generic_event_t.getCPtr(event_t),
-																					true);
+		final xcb_key_press_event_t key_release_event_t = cast(event_t);
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
 											key_release_event_t.getClass().getSimpleName()));
-
 		this.xEventBus.post(key_release_event_t);
-
-		final int windowId = key_release_event_t.getEvent();
-		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
-
 		final int keyCode = key_release_event_t.getDetail();
 		final Key key = new Key(keyCode);
-
 		final int inputModifiersMask = key_release_event_t.getState();
 		final InputModifiers inputModifiers = new InputModifiers(inputModifiersMask);
 
 		final KeyboardInput input = new KeyboardInput(	Momentum.STOPPED,
 														key,
 														inputModifiers);
-		final DisplayEvent displayEvent = new KeyNotify(	displayEventSource,
-																input);
+		final DisplayEvent displayEvent = new KeyNotify(input);
 
 		return displayEvent;
+	}
+
+	private xcb_key_press_event_t cast(final xcb_generic_event_t event_t) {
+		return new xcb_key_press_event_t(	xcb_generic_event_t.getCPtr(event_t),
+											true);
+	}
+
+	@Override
+	public XEventTarget getTarget(final xcb_generic_event_t event_t) {
+		// press has same structure as release.
+		final xcb_key_press_event_t key_release_event_t = cast(event_t);
+		final int windowId = key_release_event_t.getEvent();
+		final XWindow displayEventTarget = this.xWindowCache.getWindow(windowId);
+
+		return displayEventTarget;
 	}
 
 	@Override

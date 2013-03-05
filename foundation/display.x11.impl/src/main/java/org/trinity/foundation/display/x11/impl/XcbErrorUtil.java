@@ -11,8 +11,11 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.freedesktop.xcb.xcb_generic_error_t;
 
+@Immutable
 public class XcbErrorUtil {
 	public static final int SUCCESS = 0;
 	public static final int BAD_REQUEST = 1;

@@ -11,8 +11,10 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.concurrent.Immutable;
 
 import org.freedesktop.xcb.xcb_mod_mask_t;
 import org.trinity.foundation.api.display.input.InputModifier;
@@ -25,8 +27,9 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
+@Immutable
 public class XInputModifierMaskMapping {
-	private final Map<String, Integer> nameToXInputModifierMask = new HashMap<String, Integer>();
+	private final Map<String, Integer> nameToXInputModifierMask = new ConcurrentHashMap<String, Integer>();
 
 	XInputModifierMaskMapping() {
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_1,

@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DestroyNotify;
@@ -33,12 +35,24 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(value = Type.IMPLEMENTATION))
 @Singleton
+@NotThreadSafe
 public class XWindowCache {
 
-	// TODO make use of guava cache?
+	private class DestroyListener {
+		private final XWindow window;
 
-	private final Cache<Integer, XWindow> xWindows = CacheBuilder.newBuilder()
-			.weakValues().build();
+		public DestroyListener(final XWindow window) {
+			this.window = window;
+		}
+
+		@Subscribe
+		public void destroyed(final DestroyNotify destroyNotify) {
+			XWindowCache.this.xWindows.invalidate(this.window.getDisplaySurfaceHandle().getNativeHandle());
+			this.window.removeListener(this);
+		}
+	}
+
+	private final Cache<Integer, XWindow> xWindows = CacheBuilder.newBuilder().weakValues().build();
 	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
 
 	private final DisplaySurfaceFactory displaySurfaceFactory;
@@ -54,23 +68,16 @@ public class XWindowCache {
 		final Integer windowID = Integer.valueOf(windowId);
 		final DisplaySurfaceHandle resourceHandle = new XWindowHandle(windowID);
 		try {
-			window = this.xWindows.get(Integer.valueOf(windowId),
-					new Callable<XWindow>() {
-						@Override
-						public XWindow call() throws Exception {
-							XWindow xWindow = (XWindow) XWindowCache.this.displaySurfaceFactory
-									.createDisplaySurface(resourceHandle);
-							xWindow.addListener(new Object() {
-								@Subscribe
-								public void destroyed(
-										DestroyNotify destroyNotify) {
-									xWindows.invalidate(Integer
-											.valueOf(windowId));
-								}
-							});
-							return xWindow;
-						}
-					});
+			window = this.xWindows.get(	Integer.valueOf(windowId),
+										new Callable<XWindow>() {
+											@Override
+											public XWindow call() throws Exception {
+												final XWindow xWindow = (XWindow) XWindowCache.this.displaySurfaceFactory
+														.createDisplaySurface(resourceHandle);
+												xWindow.addListener(new DestroyListener(xWindow));
+												return xWindow;
+											}
+										});
 		} catch (final ExecutionException e) {
 			Throwables.propagate(e);
 		}

@@ -11,12 +11,15 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.trinity.foundation.api.shared.Rectangle;
 
 /**
  * Notifies that the geometry (size, place) of a display resource has changed.
  * 
  */
+@Immutable
 public class GeometryNotify extends DisplayEvent {
 
 	private final Rectangle geometry;

@@ -11,11 +11,14 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 /***************************************
  * Indicates that a display resource has gained the input focus.
  * 
  *************************************** 
  */
+@Immutable
 public class FocusGainNotify extends FocusNotify {
 
 }

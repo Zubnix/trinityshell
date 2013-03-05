@@ -34,8 +34,8 @@ public class EventInterceptionTest {
 		final Object eventTarget = mock(Object.class);
 		final DisplayEvent focusGainNotifyEvent = new FocusGainNotify(eventTarget);
 		final Optional<DisplayEvent> optionalFocusGainNotifyEvent = Optional.of(focusGainNotifyEvent);
-		final DisplayEvent buttonNotifyEvent = new ButtonNotify(	eventTarget,
-																		null);
+		final DisplayEvent buttonNotifyEvent = new ButtonNotify(eventTarget,
+																null);
 		final Optional<DisplayEvent> optionalButtonNotifyEvent = Optional.of(buttonNotifyEvent);
 
 		final Thread guiThread = new Thread() {
@@ -100,8 +100,8 @@ public class EventInterceptionTest {
 		final Object eventTarget = mock(Object.class);
 		final DisplayEvent focusGainNotifyEvent = new FocusGainNotify(eventTarget);
 		final Optional<DisplayEvent> optionalFocusGainNotifyEvent = Optional.of(focusGainNotifyEvent);
-		final DisplayEvent buttonNotifyEvent = new ButtonNotify(	eventTarget,
-																		null);
+		final DisplayEvent buttonNotifyEvent = new ButtonNotify(eventTarget,
+																null);
 		final Optional<DisplayEvent> optionalButtonNotifyEvent = Optional.of(buttonNotifyEvent);
 
 		final Thread guiThread = new Thread() {

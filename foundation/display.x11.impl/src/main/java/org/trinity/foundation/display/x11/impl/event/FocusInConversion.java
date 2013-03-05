@@ -11,12 +11,15 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_focus_in_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.FocusGainNotify;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
@@ -28,6 +31,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
+@Immutable
 public class FocusInConversion implements XEventConversion {
 
 	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_FOCUS_IN);
@@ -36,7 +40,8 @@ public class FocusInConversion implements XEventConversion {
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	FocusInConversion(final EventBus xEventBus, final XWindowCache xWindowCache) {
+	FocusInConversion(	final EventBus xEventBus,
+						final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -44,24 +49,32 @@ public class FocusInConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
-		final xcb_focus_in_event_t focus_in_event_t = new xcb_focus_in_event_t(	xcb_generic_event_t.getCPtr(event_t),
-																				true);
+		final xcb_focus_in_event_t focus_in_event_t = cast(event_t);
 
 		// TODO logging
 		System.err.println(String.format(	"Received %s",
 											focus_in_event_t.getClass().getSimpleName()));
 
 		this.xEventBus.post(focus_in_event_t);
-
-		final int windowId = focus_in_event_t.getEvent();
-		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
-		final DisplayEvent displayEvent = new FocusGainNotify(displayEventSource);
-
+		final DisplayEvent displayEvent = new FocusGainNotify();
 		return displayEvent;
+	}
+
+	private xcb_focus_in_event_t cast(final xcb_generic_event_t event_t) {
+		return new xcb_focus_in_event_t(xcb_generic_event_t.getCPtr(event_t),
+										true);
 	}
 
 	@Override
 	public Integer getEventCode() {
 		return this.eventCode;
+	}
+
+	@Override
+	public XEventTarget getTarget(final xcb_generic_event_t event_t) {
+		final xcb_focus_in_event_t focus_in_event_t = cast(event_t);
+		final int windowId = focus_in_event_t.getEvent();
+		final XWindow displayEventTarget = this.xWindowCache.getWindow(windowId);
+		return displayEventTarget;
 	}
 }

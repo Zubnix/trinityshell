@@ -11,11 +11,14 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.trinity.foundation.api.display.input.PointerInput;
 
 /**
  * Notifies that a mouse button's state has changed.
  */
+@Immutable
 public class ButtonNotify extends InputNotify<PointerInput> {
 
 	/***************************************

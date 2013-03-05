@@ -11,11 +11,14 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 /***************************************
  * Indicates when a pointer device has left a display resource.
  * 
  *************************************** 
  */
+@Immutable
 public class PointerLeaveNotify extends PointerVisitationNotify {
 
 }

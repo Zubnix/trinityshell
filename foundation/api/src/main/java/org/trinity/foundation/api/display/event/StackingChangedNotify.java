@@ -11,10 +11,13 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 /***************************************
  * Notifies that the stacking position of a display resource has changed
  *************************************** 
  */
+@Immutable
 public class StackingChangedNotify extends DisplayEvent {
 
 }

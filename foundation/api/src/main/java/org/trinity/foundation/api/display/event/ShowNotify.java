@@ -11,11 +11,13 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 /***************************************
  * Notifies that a display resource has become visible.
  *************************************** 
  */
+@Immutable
 public class ShowNotify extends DisplayEvent {
-
 
 }

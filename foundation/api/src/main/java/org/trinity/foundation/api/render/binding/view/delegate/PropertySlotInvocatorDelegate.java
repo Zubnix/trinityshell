@@ -44,6 +44,7 @@ public interface PropertySlotInvocatorDelegate {
 	 *************************************** 
 	 */
 	// TODO some kind of notify event?
-	ListenableFuture<Void> invoke(Object view, Method viewMethod,
-			Object argument);
+	ListenableFuture<Void> invoke(	Object view,
+									Method viewMethod,
+									Object argument);
 }

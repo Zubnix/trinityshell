@@ -29,8 +29,7 @@ import com.google.common.eventbus.Subscribe;
  * <code>AbstractShellSurface</code>.
  * 
  */
-public abstract class AbstractShellSurface extends AbstractShellNode implements
-		ShellSurface {
+public abstract class AbstractShellSurface extends AbstractShellNode implements ShellSurface {
 
 	public static final boolean DEFAULT_IS_RESIZABLE = true;
 	public static final boolean DEFAULT_IS_MOVABLE = true;
@@ -278,8 +277,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	 */
 	protected int normalizedWidth(final int newWidth) {
 
-		int normalizedWidth = newWidth < getMinWidth() ? getMinWidth()
-				: newWidth > getMaxWidth() ? getMaxWidth() : newWidth;
+		int normalizedWidth = newWidth < getMinWidth() ? getMinWidth() : newWidth > getMaxWidth() ? getMaxWidth()
+				: newWidth;
 
 		normalizedWidth -= (normalizedWidth - getWidth()) % getWidthIncrement();
 
@@ -298,8 +297,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 		int normalizedHeight = newHeight < getMinHeight() ? getMinHeight()
 				: newHeight > getMaxHeight() ? getMaxHeight() : newHeight;
 
-		normalizedHeight -= (normalizedHeight - getHeight())
-				% getHeightIncrement();
+		normalizedHeight -= (normalizedHeight - getHeight()) % getHeightIncrement();
 
 		return normalizedHeight;
 	}
@@ -395,9 +393,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	 *            a {@link DestroyNotify}
 	 */
 	@Subscribe
-	public
-			void
-			handleDestroyNotifyEvent(final DestroyNotify destroyNotify) {
+	public void handleDestroyNotifyEvent(final DestroyNotify destroyNotify) {
 		doDestroy(false);
 	}
 
@@ -408,9 +404,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	 *            a {@link GeometryNotify}
 	 */
 	@Subscribe
-	public
-			void
-			handleGeometryNotifyEvent(final GeometryNotify geometryNotify) {
+	public void handleGeometryNotifyEvent(final GeometryNotify geometryNotify) {
 		final Rectangle geometry = geometryNotify.getGeometry();
 		setX(geometry.getX());
 		setY(geometry.getY());
@@ -426,9 +420,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	 *            a {@link GeometryRequest}
 	 */
 	@Subscribe
-	public
-			void
-			handleGeometryRequestEvent(final GeometryRequest geometryRequest) {
+	public void handleGeometryRequestEvent(final GeometryRequest geometryRequest) {
 
 		final Rectangle geometry = geometryRequest.getGeometry();
 		if (geometryRequest.configureX()) {

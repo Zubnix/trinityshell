@@ -15,10 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 
-import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -31,6 +32,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
+@NotThreadSafe
 public final class XEventConverter {
 
 	/*
@@ -47,12 +49,12 @@ public final class XEventConverter {
 
 	@Inject
 	XEventConverter(final Set<XEventConversion> eventConversions,
-			@Named("XEventBus") final EventBus xEventBus) {
+					@Named("XEventBus") final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 
 		for (final XEventConversion eventConversion : eventConversions) {
-			this.conversionMap.put(eventConversion.getEventCode(),
-					eventConversion);
+			this.conversionMap.put(	eventConversion.getEventCode(),
+									eventConversion);
 		}
 
 		this.xEventBus.register(this);
@@ -65,19 +67,21 @@ public final class XEventConverter {
 		// TODO handle error cases
 		final int eventCode = responseType & 0x7f;
 
-		final XEventConversion eventConversion = this.conversionMap.get(Integer
-				.valueOf(eventCode));
+		final XEventConversion eventConversion = this.conversionMap.get(Integer.valueOf(eventCode));
 		if (eventConversion == null) {
 			return;
 		}
+
 		final DisplayEvent displayEvent = eventConversion.convert(event_t);
 		if (displayEvent == null) {
 			return;
 		}
-		Optional<? extends XEventTarget> target = eventConversion
-				.getTarget(event_t);
-		if (target.isPresent()) {
-			target.get().post(displayEvent);
+
+		final XEventTarget target = eventConversion.getTarget(event_t);
+		if (target == null) {
+			return;
 		}
+
+		target.post(displayEvent);
 	}
 }

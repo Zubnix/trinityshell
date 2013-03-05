@@ -13,6 +13,9 @@ package org.trinity.foundation.display.x11.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
@@ -35,6 +38,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton
+@ThreadSafe
 public class XKeyboard implements Keyboard {
 
 	private final XKeySymbolMapping xKeySymbolMapping;
@@ -45,11 +49,12 @@ public class XKeyboard implements Keyboard {
 	private final ListeningExecutorService xExecutor;
 
 	@Inject
-	XKeyboard(final XKeySymbolMapping xKeySymbolMapping,
-			final XKeySymbolCache xKeySymbolCache,
-			final XInputModifierMaskMapping xInputModifierMaskMapping,
-			XConnection xConnection, XTime xTime,
-			@Named("XExecutor") ListeningExecutorService xExecutor) {
+	XKeyboard(	final XKeySymbolMapping xKeySymbolMapping,
+				final XKeySymbolCache xKeySymbolCache,
+				final XInputModifierMaskMapping xInputModifierMaskMapping,
+				final XConnection xConnection,
+				final XTime xTime,
+				@Named("XExecutor") final ListeningExecutorService xExecutor) {
 		this.xKeySymbolMapping = xKeySymbolMapping;
 		this.xKeySymbolCache = xKeySymbolCache;
 		this.xInputModifierMaskMapping = xInputModifierMaskMapping;
@@ -58,15 +63,13 @@ public class XKeyboard implements Keyboard {
 		this.xExecutor = xExecutor;
 	}
 
-	private int getWindowId(DisplaySurface displaySurface) {
-		final int windowId = ((Integer) displaySurface
-				.getDisplaySurfaceHandle().getNativeHandle()).intValue();
+	private int getWindowId(final DisplaySurface displaySurface) {
+		final int windowId = ((Integer) displaySurface.getDisplaySurfaceHandle().getNativeHandle()).intValue();
 		return windowId;
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection
-				.getConnectionReference();
+		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection.getConnectionReference();
 		return connection_t;
 	}
 
@@ -79,44 +82,52 @@ public class XKeyboard implements Keyboard {
 	}
 
 	@Override
-	public ListenableFuture<Void> grabKey(final DisplaySurface displaySurface,
-			final Key catchKey, final InputModifiers withModifiers) {
+	public ListenableFuture<Void> grabKey(	final DisplaySurface displaySurface,
+											final Key catchKey,
+											final InputModifiers withModifiers) {
 
 		final int keyCode = catchKey.getKeyCode();
 		final int modifiers = withModifiers.getInputModifiersState();
 		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				LibXcb.xcb_grab_key(getConnectionRef(), (short) 0,
-						getWindowId(displaySurface), modifiers,
-						(short) keyCode, (short) pointer_mode,
-						(short) keyboard_mode);
-			}
-		}, null);
+											@Override
+											public void run() {
+												LibXcb.xcb_grab_key(getConnectionRef(),
+																	(short) 0,
+																	getWindowId(displaySurface),
+																	modifiers,
+																	(short) keyCode,
+																	(short) pointer_mode,
+																	(short) keyboard_mode);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public ListenableFuture<Void> ungrabKey(
-			final DisplaySurface displaySurface, final Key catchKey,
-			final InputModifiers withModifiers) {
+	public ListenableFuture<Void> ungrabKey(final DisplaySurface displaySurface,
+											final Key catchKey,
+											final InputModifiers withModifiers) {
 
 		final int key = catchKey.getKeyCode();
 		final int modifiers = withModifiers.getInputModifiersState();
 		final int winId = getWindowId(displaySurface);
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				LibXcb.xcb_ungrab_key(getConnectionRef(), (short) key, winId,
-						modifiers);
+											@Override
+											public void run() {
+												LibXcb.xcb_ungrab_key(	getConnectionRef(),
+																		(short) key,
+																		winId,
+																		modifiers);
 
-			}
-		}, null);
+											}
+										},
+										null);
 	}
 
 	@Override
@@ -124,76 +135,92 @@ public class XKeyboard implements Keyboard {
 
 		final int time = this.xTime.getTime();
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				LibXcb.xcb_ungrab_keyboard(getConnectionRef(), time);
+											@Override
+											public void run() {
+												LibXcb.xcb_ungrab_keyboard(	getConnectionRef(),
+																			time);
 
-			}
-		}, null);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public ListenableFuture<Void> grabKeyboard(DisplaySurface displaySurface) {
+	public ListenableFuture<Void> grabKeyboard(final DisplaySurface displaySurface) {
 		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 		final int time = this.xTime.getTime();
 		final int winId = getWindowId(displaySurface);
 
-		return xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				final xcb_grab_keyboard_cookie_t grab_keyboard_cookie_t = LibXcb
-						.xcb_grab_keyboard(getConnectionRef(), (short) 0,
-								winId, time, (short) pointer_mode,
-								(short) keyboard_mode);
-				final xcb_generic_error_t e = new xcb_generic_error_t();
-				// TODO check if grab was successful and return boolean
-				LibXcb.xcb_grab_keyboard_reply(getConnectionRef(),
-						grab_keyboard_cookie_t, e);
-				checkError(e);
-			}
-		}, null);
+											@Override
+											public void run() {
+												final xcb_grab_keyboard_cookie_t grab_keyboard_cookie_t = LibXcb
+														.xcb_grab_keyboard(	getConnectionRef(),
+																			(short) 0,
+																			winId,
+																			time,
+																			(short) pointer_mode,
+																			(short) keyboard_mode);
+												final xcb_generic_error_t e = new xcb_generic_error_t();
+												// TODO check if grab was
+												// successful and
+												// return boolean
+												LibXcb.xcb_grab_keyboard_reply(	getConnectionRef(),
+																				grab_keyboard_cookie_t,
+																				e);
+												checkError(e);
+											}
+										},
+										null);
 
 	}
 
 	@Override
-	public String asKeySymbolName(final Key key,
-			final InputModifiers inputModifiers) {
+	public ListenableFuture<String> asKeySymbolName(final Key key,
+													final InputModifiers inputModifiers) {
 
 		final int keyCode = key.getKeyCode();
 		final int inputModifiersState = inputModifiers.getInputModifiersState();
 
-		final Integer keySymbol = this.xKeySymbolCache.getKeySymbol(keyCode,
-				inputModifiersState);
+		return this.xExecutor.submit(new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				final Integer keySymbol = XKeyboard.this.xKeySymbolCache.getKeySymbol(	keyCode,
+																						inputModifiersState);
 
-		final String keySymbolName = this.xKeySymbolMapping.toString(keySymbol);
-		return keySymbolName;
+				final String keySymbolName = XKeyboard.this.xKeySymbolMapping.toString(keySymbol);
+				return keySymbolName;
+			}
+		});
 	}
 
 	@Override
-	public List<Key> asKeys(final String keySymbolName) {
-		final Integer keySymbol = this.xKeySymbolMapping
-				.toKeySymbol(keySymbolName);
-		final List<Integer> keyCodes = this.xKeySymbolCache
-				.getKeyCodes(keySymbol);
+	public ListenableFuture<List<Key>> asKeys(final String keySymbolName) {
+		final Integer keySymbol = this.xKeySymbolMapping.toKeySymbol(keySymbolName);
+		final List<Integer> keyCodes = this.xKeySymbolCache.getKeyCodes(keySymbol);
 
-		final List<Key> keys = new ArrayList<Key>(keyCodes.size());
-		for (final Integer keyCode : keyCodes) {
-			final Key key = new Key(keyCode.intValue());
-			keys.add(key);
-		}
-		return keys;
+		return this.xExecutor.submit(new Callable<List<Key>>() {
+			@Override
+			public List<Key> call() throws Exception {
+				final List<Key> keys = new ArrayList<Key>(keyCodes.size());
+				for (final Integer keyCode : keyCodes) {
+					final Key key = new Key(keyCode.intValue());
+					keys.add(key);
+				}
+				return keys;
+			}
+		});
 	}
 
 	@Override
 	public InputModifier modifier(final String modifierName) {
-		final int mask = this.xInputModifierMaskMapping
-				.getXInputModifierMask(modifierName);
-		final XInputModifier xInputModifier = new XInputModifier(mask,
-				modifierName);
+		final int mask = this.xInputModifierMaskMapping.getXInputModifierMask(modifierName);
+		final XInputModifier xInputModifier = new XInputModifier(	mask,
+																	modifierName);
 		return xInputModifier;
 	}
 
@@ -201,8 +228,7 @@ public class XKeyboard implements Keyboard {
 	public InputModifiers modifiers(final String... modifierNames) {
 		int inputModifiersState = 0;
 		for (final String modifierName : modifierNames) {
-			inputModifiersState |= this.xInputModifierMaskMapping
-					.getXInputModifierMask(modifierName);
+			inputModifiersState |= this.xInputModifierMaskMapping.getXInputModifierMask(modifierName);
 		}
 		return new InputModifiers(inputModifiersState);
 	}

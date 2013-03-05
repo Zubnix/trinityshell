@@ -33,7 +33,9 @@ public interface ChildViewDelegate {
 	 * @return a new view instance.
 	 *************************************** 
 	 */
-	<T> T newView(Object parentView, Class<T> childViewType, int position);
+	<T> T newView(	Object parentView,
+					Class<T> childViewType,
+					int position);
 
 	/***************************************
 	 * Destroy a view instance.
@@ -47,8 +49,9 @@ public interface ChildViewDelegate {
 	 *************************************** 
 	 */
 	// TODO some kind of notify event?
-	ListenableFuture<Void> destroyView(Object parentView,
-			Object deletedChildView, int deletedPosition);
+	ListenableFuture<Void> destroyView(	Object parentView,
+										Object deletedChildView,
+										int deletedPosition);
 
 	/***************************************
 	 * Update the position (index) of a view instance, relative to it's parent.
@@ -64,6 +67,8 @@ public interface ChildViewDelegate {
 	 *************************************** 
 	 */
 	// TODO some kind of notify event?
-	ListenableFuture<Void> updateChildViewPosition(Object parentView,
-			Object childView, int oldPosition, int newPosition);
+	ListenableFuture<Void> updateChildViewPosition(	Object parentView,
+													Object childView,
+													int oldPosition,
+													int newPosition);
 }

@@ -11,6 +11,10 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.freedesktop.xcb.xcb_button_press_event_t;
 import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
@@ -28,9 +32,10 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
+@ThreadSafe
 public class XTime {
 
-	private volatile int time = 0;
+	private final AtomicInteger time = new AtomicInteger();
 
 	@Inject
 	XTime(@Named("XEventBus") final EventBus xEventBus) {
@@ -38,29 +43,29 @@ public class XTime {
 	}
 
 	public int getTime() {
-		return this.time;
+		return this.time.get();
 	}
 
 	@Subscribe
 	public void handleButtonPressed(final xcb_button_press_event_t press_event_t) {
 		// press&release have the same type
-		this.time = press_event_t.getTime();
+		this.time.set(press_event_t.getTime());
 	}
 
 	@Subscribe
 	public void handleKeyPressed(final xcb_key_press_event_t key_press_event_t) {
 		// press&release have the same type
-		this.time = key_press_event_t.getTime();
+		this.time.set(key_press_event_t.getTime());
 	}
 
 	@Subscribe
 	public void handlePropertyNotify(final xcb_property_notify_event_t property_notify_event_t) {
-		this.time = property_notify_event_t.getTime();
+		this.time.set(property_notify_event_t.getTime());
 	}
 
 	@Subscribe
 	public void handleEnterNotify(final xcb_enter_notify_event_t enter_notify_event_t) {
 		// enter & leave have the same type
-		this.time = enter_notify_event_t.getTime();
+		this.time.set(enter_notify_event_t.getTime());
 	}
 }

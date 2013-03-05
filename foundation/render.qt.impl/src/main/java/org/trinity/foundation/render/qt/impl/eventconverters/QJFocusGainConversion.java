@@ -38,10 +38,10 @@ public class QJFocusGainConversion implements QJRenderEventConversion {
 	}
 
 	@Override
-	public FocusNotify convertEvent(	final Object eventTarget,
-											final Object view,
-											final QObject eventProducer,
-											final QEvent qEvent) {
+	public FocusNotify convertEvent(final Object eventTarget,
+									final Object view,
+									final QObject eventProducer,
+									final QEvent qEvent) {
 		return new FocusGainNotify(eventTarget);
 	}
 

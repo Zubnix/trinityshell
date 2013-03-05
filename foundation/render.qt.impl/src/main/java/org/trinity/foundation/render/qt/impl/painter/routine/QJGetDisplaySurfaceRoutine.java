@@ -14,7 +14,8 @@ public class QJGetDisplaySurfaceRoutine implements PaintRoutine<DisplaySurface, 
 	private final QWidget view;
 	private final DisplaySurfaceFactory displaySurfaceFactory;
 
-	public QJGetDisplaySurfaceRoutine(final DisplaySurfaceFactory displaySurfaceFactory, final QWidget view) {
+	public QJGetDisplaySurfaceRoutine(	final DisplaySurfaceFactory displaySurfaceFactory,
+										final QWidget view) {
 
 		this.view = view;
 		this.displaySurfaceFactory = displaySurfaceFactory;

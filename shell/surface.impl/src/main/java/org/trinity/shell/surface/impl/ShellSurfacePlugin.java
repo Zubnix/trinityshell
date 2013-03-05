@@ -31,7 +31,8 @@ public class ShellSurfacePlugin implements ShellPlugin, Runnable {
 	private Thread shellThread;
 
 	@Inject
-	ShellSurfacePlugin(final DisplayServer display, final ShellDisplayEventDispatcher shellDisplayEventDispatcherImpl) {
+	ShellSurfacePlugin(	final DisplayServer display,
+						final ShellDisplayEventDispatcher shellDisplayEventDispatcherImpl) {
 		this.display = display;
 		this.shellDisplayEventDispatcherImpl = shellDisplayEventDispatcherImpl;
 	}

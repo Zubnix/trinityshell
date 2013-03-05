@@ -69,8 +69,8 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	@Override
 	public void removeChild(final int index) {
 
-		final Iterator<Entry<ShellNode, ShellLayoutProperty>> it = this.childrenWithLayoutProperty
-				.entrySet().iterator();
+		final Iterator<Entry<ShellNode, ShellLayoutProperty>> it = this.childrenWithLayoutProperty.entrySet()
+				.iterator();
 
 		final int i = 0;
 		while (it.hasNext()) {
@@ -91,8 +91,8 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	public ShellNode getChild(final int index) {
 		Preconditions.checkArgument(index >= 0);
 
-		final Iterator<Entry<ShellNode, ShellLayoutProperty>> it = this.childrenWithLayoutProperty
-				.entrySet().iterator();
+		final Iterator<Entry<ShellNode, ShellLayoutProperty>> it = this.childrenWithLayoutProperty.entrySet()
+				.iterator();
 
 		ShellNode child = null;
 		for (int i = 0; it.hasNext(); i++, child = it.next().getKey()) {
@@ -141,8 +141,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	 *************************************** 
 	 */
 	@Subscribe
-	public void
-			onMoveResizeRequest(final ShellNodeMoveResizeRequestEvent geoEvent) {
+	public void onMoveResizeRequest(final ShellNodeMoveResizeRequestEvent geoEvent) {
 		geoEvent.getSource().doMoveResize();
 	}
 
@@ -202,8 +201,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	 *************************************** 
 	 */
 	@Subscribe
-	public void
-			onChangeParentRequest(final ShellNodeReparentRequestEvent geoEvent) {
+	public void onChangeParentRequest(final ShellNodeReparentRequestEvent geoEvent) {
 		geoEvent.getSource().doReparent();
 	}
 }

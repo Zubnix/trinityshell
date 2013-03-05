@@ -26,13 +26,11 @@ import com.google.common.base.Optional;
  * 
  *************************************** 
  */
-public abstract class AbstractShellNodeParent extends AbstractShellNode
-		implements ShellNodeParent {
+public abstract class AbstractShellNodeParent extends AbstractShellNode implements ShellNodeParent {
 
 	private final Set<ShellNode> children = new HashSet<ShellNode>();
 
-	private Optional<ShellLayoutManager> optionalLayoutManager = Optional
-			.absent();
+	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
 	/**
 	 * {@inheritDoc}

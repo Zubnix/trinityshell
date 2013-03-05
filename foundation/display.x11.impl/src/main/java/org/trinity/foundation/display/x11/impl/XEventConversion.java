@@ -14,12 +14,10 @@ package org.trinity.foundation.display.x11.impl;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 
-import com.google.common.base.Optional;
-
 public interface XEventConversion {
 	DisplayEvent convert(xcb_generic_event_t event_t);
 
-	Optional<? extends XEventTarget> getTarget(xcb_generic_event_t event_t);
+	XEventTarget getTarget(xcb_generic_event_t event_t);
 
 	Integer getEventCode();
 }

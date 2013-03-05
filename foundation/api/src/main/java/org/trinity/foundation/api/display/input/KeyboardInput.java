@@ -33,7 +33,9 @@ public class KeyboardInput extends Input {
 	 *            creation of this <code>KeyboardInput</code>.
 	 *************************************** 
 	 */
-	public KeyboardInput(final Momentum momentum, final Key key, final InputModifiers inputModifiers) {
+	public KeyboardInput(	final Momentum momentum,
+							final Key key,
+							final InputModifiers inputModifiers) {
 		super(	momentum,
 				inputModifiers);
 		this.key = key;

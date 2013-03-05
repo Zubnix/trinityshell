@@ -30,14 +30,11 @@ public class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(EventBus.class).annotatedWith(Names.named("XEventBus"))
-				.toInstance(new EventBus());
-		bind(ListeningExecutorService.class).annotatedWith(
-				Names.named("XExecutor")).toInstance(
-				MoreExecutors.listeningDecorator(Executors
-						.newSingleThreadExecutor()));
+		bind(EventBus.class).annotatedWith(Names.named("XEventBus")).toInstance(new EventBus());
+		bind(ListeningExecutorService.class).annotatedWith(Names.named("XExecutor"))
+				.toInstance(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()));
 
-		install(new FactoryModuleBuilder().implement(DisplaySurface.class,
-				XWindow.class).build(DisplaySurfaceFactory.class));
+		install(new FactoryModuleBuilder().implement(	DisplaySurface.class,
+														XWindow.class).build(DisplaySurfaceFactory.class));
 	}
 }

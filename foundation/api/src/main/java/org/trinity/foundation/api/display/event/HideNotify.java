@@ -11,10 +11,13 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.concurrent.Immutable;
+
 /**
  * Notifies when a display resource is made invisible.
  * 
  */
+@Immutable
 public class HideNotify extends DisplayEvent {
 
 }

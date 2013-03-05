@@ -39,10 +39,10 @@ public class QJMouseLeaveConversion implements QJRenderEventConversion {
 	}
 
 	@Override
-	public PointerVisitationNotify convertEvent(	final Object eventTarget,
-														final Object view,
-														final QObject eventProducer,
-														final QEvent qEventz) {
+	public PointerVisitationNotify convertEvent(final Object eventTarget,
+												final Object view,
+												final QObject eventProducer,
+												final QEvent qEventz) {
 		return new PointerLeaveNotify(eventTarget);
 	}
 

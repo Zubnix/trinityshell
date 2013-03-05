@@ -73,7 +73,8 @@ public interface DisplayAreaManipulator {
 	 *            dependent.
 	 *************************************** 
 	 */
-	ListenableFuture<Void> move(int x, int y);
+	ListenableFuture<Void> move(int x,
+								int y);
 
 	/***************************************
 	 * Perform a move and resize operation on the bound {@link DisplayArea}.
@@ -96,7 +97,10 @@ public interface DisplayAreaManipulator {
 	 * @see #resize(int, int)
 	 *************************************** 
 	 */
-	ListenableFuture<Void> moveResize(int x, int y, int width, int height);
+	ListenableFuture<Void> moveResize(	int x,
+										int y,
+										int width,
+										int height);
 
 	/***************************************
 	 * Raise the bound {@link DisplayArea}. A raised {@link DisplayArea} will
@@ -125,7 +129,9 @@ public interface DisplayAreaManipulator {
 	 * @see #move(int, int)
 	 *************************************** 
 	 */
-	ListenableFuture<Void> setParent(DisplayArea parent, int x, int y);
+	ListenableFuture<Void> setParent(	DisplayArea parent,
+										int x,
+										int y);
 
 	/***************************************
 	 * Set the size of the bound {@link DisplayArea}.
@@ -138,7 +144,8 @@ public interface DisplayAreaManipulator {
 	 *            dependent.
 	 *************************************** 
 	 */
-	ListenableFuture<Void> resize(int width, int height);
+	ListenableFuture<Void> resize(	int width,
+									int height);
 
 	/***************************************
 	 * Hide the bound {@link DisplayArea}.

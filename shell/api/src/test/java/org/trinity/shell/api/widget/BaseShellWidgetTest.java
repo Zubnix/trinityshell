@@ -13,19 +13,13 @@ public class BaseShellWidgetTest {
 	@Test
 	public void testInit() {
 		// given
-		final ShellDisplayEventDispatcher shellDisplayEventDispatcher = Mockito
-				.mock(ShellDisplayEventDispatcher.class);
-		final PainterFactory painterFactory = Mockito
-				.mock(PainterFactory.class);
-		final BaseShellWidget parentWidget = Mockito
-				.mock(BaseShellWidget.class);
-		final DisplaySurface displaySurface = Mockito
-				.mock(DisplaySurface.class);
-		Mockito.when(parentWidget.getDisplaySurface())
-				.thenReturn(displaySurface);
+		final ShellDisplayEventDispatcher shellDisplayEventDispatcher = Mockito.mock(ShellDisplayEventDispatcher.class);
+		final PainterFactory painterFactory = Mockito.mock(PainterFactory.class);
+		final BaseShellWidget parentWidget = Mockito.mock(BaseShellWidget.class);
+		final DisplaySurface displaySurface = Mockito.mock(DisplaySurface.class);
+		Mockito.when(parentWidget.getDisplaySurface()).thenReturn(displaySurface);
 		final Painter painter = Mockito.mock(Painter.class);
-		Mockito.when(painterFactory.createPainter(Matchers.any()))
-				.thenReturn(painter);
+		Mockito.when(painterFactory.createPainter(Matchers.any())).thenReturn(painter);
 		final BaseShellWidget baseShellWidget = new BaseShellWidget(shellDisplayEventDispatcher,
 																	painterFactory);
 
