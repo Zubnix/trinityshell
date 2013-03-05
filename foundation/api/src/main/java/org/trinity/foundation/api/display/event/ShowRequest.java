@@ -11,30 +11,10 @@
  */
 package org.trinity.foundation.api.display.event;
 
-import org.trinity.foundation.api.display.DisplaySurface;
-
 /****************************************
  * A request to make a display resource visible.
  *************************************** 
  */
 public class ShowRequest extends DisplayEvent {
 
-	private DisplaySurface client;
-
-	/***************************************
-	 * Construct a new <code>ShowRequest</code> that targets the given display
-	 * resource that wants to become visible.
-	 * 
-	 * @param displayEventTarget
-	 *            The receiver of this event. eg the display resource that wants
-	 *            to become visible.
-	 *************************************** 
-	 */
-	public ShowRequest(final DisplaySurface client) {
-		this.client = client;
-	}
-
-	public DisplaySurface getClient() {
-		return client;
-	}
 }

@@ -20,9 +20,11 @@ import org.trinity.foundation.api.display.event.GeometryRequest;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -34,13 +36,15 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class ConfigureRequestConversion implements XEventConversion {
 
-	private final Integer eventInteger = Integer.valueOf(LibXcb.XCB_CONFIGURE_REQUEST);
+	private final Integer eventInteger = Integer
+			.valueOf(LibXcb.XCB_CONFIGURE_REQUEST);
 
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
 
 	@Inject
-	ConfigureRequestConversion(@Named("XEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
+	ConfigureRequestConversion(@Named("XEventBus") final EventBus xEventBus,
+			final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -48,26 +52,19 @@ public class ConfigureRequestConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
-		final xcb_configure_request_event_t request_event_t = new xcb_configure_request_event_t(xcb_generic_event_t.getCPtr(event_t),
-																								true);
+		final xcb_configure_request_event_t request_event_t = cast(event_t);
 
 		// TODO logging
-		System.err.println(String.format(	"Received %s",
-											request_event_t.getClass().getSimpleName()));
+		System.err.println(String.format("Received %s", request_event_t
+				.getClass().getSimpleName()));
 
 		this.xEventBus.post(request_event_t);
-
-		final int windowId = request_event_t.getWindow();
-		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
 		final int x = request_event_t.getX();
 		final int y = request_event_t.getY();
 		final int width = request_event_t.getWidth();
 		final int height = request_event_t.getHeight();
-		final Rectangle geometry = new ImmutableRectangle(	x,
-															y,
-															width,
-															height);
+		final Rectangle geometry = new ImmutableRectangle(x, y, width, height);
 
 		final int valueMask = request_event_t.getValue_mask();
 		final boolean configureX = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_X) != 0;
@@ -75,16 +72,32 @@ public class ConfigureRequestConversion implements XEventConversion {
 		final boolean configureWidth = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH) != 0;
 		final boolean configureHeight = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT) != 0;
 
-		displayEventSource.configureClientEvents();
-
-		final DisplayEvent displayEvent = new GeometryRequest(	displayEventSource,
-																	geometry,
-																	configureX,
-																	configureY,
-																	configureWidth,
-																	configureHeight);
+		final DisplayEvent displayEvent = new GeometryRequest(geometry,
+				configureX, configureY, configureWidth, configureHeight);
 
 		return displayEvent;
+	}
+
+	private xcb_configure_request_event_t cast(final xcb_generic_event_t event_t) {
+		return new xcb_configure_request_event_t(
+				xcb_generic_event_t.getCPtr(event_t), true);
+	}
+
+	@Override
+	public Optional<? extends XEventTarget> getTarget(
+			xcb_generic_event_t event_t) {
+		final xcb_configure_request_event_t request_event_t = cast(event_t);
+		final int windowId = request_event_t.getWindow();
+
+		boolean present = this.xWindowCache.isPresent(windowId);
+		final XWindow displayEventSource = this.xWindowCache
+				.getWindow(windowId);
+		if (!present) {
+			displayEventSource.configureClientEvents();
+			// TODO post CreateEvent on displayserver.
+		}
+
+		return null;
 	}
 
 	@Override

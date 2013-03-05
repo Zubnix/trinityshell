@@ -35,7 +35,8 @@ public class XWindowCache {
 
 	// TODO make use of guava cache?
 
-	private final Cache<Integer, XWindow> xWindows = CacheBuilder.newBuilder().weakValues().build();
+	private final Cache<Integer, XWindow> xWindows = CacheBuilder.newBuilder()
+			.weakValues().build();
 	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
 
 	private final DisplaySurfaceFactory displaySurfaceFactory;
@@ -51,17 +52,21 @@ public class XWindowCache {
 		final Integer windowID = Integer.valueOf(windowId);
 		final DisplaySurfaceHandle resourceHandle = new XWindowHandle(windowID);
 		try {
-			window = this.xWindows.get(	Integer.valueOf(windowId),
-										new Callable<XWindow>() {
-											@Override
-											public XWindow call() throws Exception {
-												return (XWindow) XWindowCache.this.displaySurfaceFactory
-														.createDisplaySurface(resourceHandle);
-											}
-										});
+			window = this.xWindows.get(Integer.valueOf(windowId),
+					new Callable<XWindow>() {
+						@Override
+						public XWindow call() throws Exception {
+							return (XWindow) XWindowCache.this.displaySurfaceFactory
+									.createDisplaySurface(resourceHandle);
+						}
+					});
 		} catch (final ExecutionException e) {
 			Throwables.propagate(e);
 		}
 		return window;
+	}
+
+	public boolean isPresent(final int windowId) {
+		return this.xWindows.getIfPresent(Integer.valueOf(windowId)) != null;
 	}
 }

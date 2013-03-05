@@ -40,4 +40,8 @@ public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator {
 	 *************************************** 
 	 */
 	DisplaySurfaceHandle getDisplaySurfaceHandle();
+
+	void addListener(Object listener);
+
+	void removeListener(Object listener);
 }

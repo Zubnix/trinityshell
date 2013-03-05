@@ -20,6 +20,7 @@ import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -31,13 +32,15 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class CirculateNotifyConversion implements XEventConversion {
 
-	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_CIRCULATE_NOTIFY);
+	private final Integer eventCode = Integer
+			.valueOf(LibXcb.XCB_CIRCULATE_NOTIFY);
 
 	private final EventBus xEventBus;
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	CirculateNotifyConversion(@Named("XEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
+	CirculateNotifyConversion(@Named("XEventBus") final EventBus xEventBus,
+			final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -45,21 +48,29 @@ public class CirculateNotifyConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
-		final xcb_circulate_notify_event_t circulate_notify_event_t = new xcb_circulate_notify_event_t(	xcb_generic_event_t
-																												.getCPtr(event_t),
-																										true);
+		final xcb_circulate_notify_event_t circulate_notify_event_t = cast(event_t);
 		// TODO logging
-		System.err.println(String.format(	"Received %s",
-											circulate_notify_event_t.getClass().getSimpleName()));
+		System.err.println(String.format("Received %s",
+				circulate_notify_event_t.getClass().getSimpleName()));
 
 		this.xEventBus.post(circulate_notify_event_t);
 
-		final int windowId = circulate_notify_event_t.getWindow();
-		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
-
-		final DisplayEvent displayEvent = new StackingChangedNotify(displayEventSource);
+		final DisplayEvent displayEvent = new StackingChangedNotify();
 
 		return displayEvent;
+	}
+
+	private xcb_circulate_notify_event_t cast(final xcb_generic_event_t event_t) {
+		return new xcb_circulate_notify_event_t(
+				xcb_generic_event_t.getCPtr(event_t), true);
+	}
+
+	@Override
+	public Optional<XWindow> getTarget(xcb_generic_event_t event_t) {
+		final xcb_circulate_notify_event_t circulate_notify_event_t = cast(event_t);
+		final int windowId = circulate_notify_event_t.getWindow();
+		final XWindow displayEvenTarget = this.xWindowCache.getWindow(windowId);
+		return Optional.of(displayEvenTarget);
 	}
 
 	@Override

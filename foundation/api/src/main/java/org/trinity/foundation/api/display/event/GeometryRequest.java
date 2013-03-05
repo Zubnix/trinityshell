@@ -11,7 +11,6 @@
  */
 package org.trinity.foundation.api.display.event;
 
-import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.Rectangle;
 
 /**
@@ -19,8 +18,6 @@ import org.trinity.foundation.api.shared.Rectangle;
  * 
  */
 public class GeometryRequest extends DisplayEvent {
-
-	private DisplaySurface client;
 
 	private final Rectangle geometry;
 	private final boolean configureX;
@@ -49,11 +46,9 @@ public class GeometryRequest extends DisplayEvent {
 	 *            Indicates if the height value should be configured.
 	 *************************************** 
 	 */
-	public GeometryRequest(final DisplaySurface client,
-			final Rectangle geometry, final boolean configureX,
+	public GeometryRequest(final Rectangle geometry, final boolean configureX,
 			final boolean configureY, final boolean configureWidth,
 			final boolean configureHeight) {
-		this.client = client;
 		this.geometry = geometry;
 		this.configureX = configureX;
 		this.configureY = configureY;
@@ -109,9 +104,5 @@ public class GeometryRequest extends DisplayEvent {
 	 */
 	public Rectangle getGeometry() {
 		return this.geometry;
-	}
-
-	public DisplaySurface getClient() {
-		return client;
 	}
 }

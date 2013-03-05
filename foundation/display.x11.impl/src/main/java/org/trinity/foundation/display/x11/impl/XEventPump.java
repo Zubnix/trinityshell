@@ -19,6 +19,7 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -31,14 +32,17 @@ public class XEventPump implements Runnable {
 
 	private final XConnection connection;
 	private final EventBus xEventBus;
-	private final ExecutorService eventPumpExecutor = Executors
+	private final ExecutorService xEventPumpExecutor = Executors
 			.newSingleThreadExecutor();
+	private final ListeningExecutorService xExecutor;
 
 	@Inject
 	XEventPump(final XConnection connection,
-			@Named("XEventBus") final EventBus xEventBus) {
+			@Named("XEventBus") final EventBus xEventBus,
+			@Named("XExecutor") ListeningExecutorService xExecutor) {
 		this.connection = connection;
 		this.xEventBus = xEventBus;
+		this.xExecutor = xExecutor;
 	}
 
 	@Override
@@ -51,20 +55,30 @@ public class XEventPump implements Runnable {
 			throw new Error(
 					"X11 connection was closed unexpectedly - maybe your X server terminated / crashed?");
 		}
-		this.xEventBus.post(event_t);
+
+		xExecutor.submit(new Runnable() {
+			@Override
+			public void run() {
+				xEventBus.post(event_t);
+			}
+		});
 
 		// schedule next event retrieval
-		eventPumpExecutor.submit(this);
+		xEventPumpExecutor.submit(this);
 	}
 
 	public void start() {
-		eventPumpExecutor.submit(this);
+		xEventPumpExecutor.submit(this);
 	}
 
 	public void stop() {
-		eventPumpExecutor.shutdown();
+		xEventPumpExecutor.shutdown();
 		try {
-			eventPumpExecutor.awaitTermination(5, TimeUnit.SECONDS);
+			if (xEventPumpExecutor.awaitTermination(10, TimeUnit.SECONDS)) {
+				return;
+			}
+			// TODO log error
+			System.err.println("X event pump could not terminate gracefully!");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

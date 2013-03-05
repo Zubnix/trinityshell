@@ -28,21 +28,25 @@ import org.freedesktop.xcb.xcb_stack_mode_t;
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 
+import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 
-public class XWindow implements DisplaySurface {
+public class XWindow implements DisplaySurface, XEventTarget {
 
 	private final DisplaySurfaceHandle resourceHandle;
 	private final XConnection xConnection;
 	private final XTime xTime;
 	private final ListeningExecutorService xExecutor;
+
+	private final EventBus xWindowEventBus = new EventBus();
 
 	@Inject
 	XWindow(final XTime xTime, final XConnection xConnection,
@@ -52,6 +56,20 @@ public class XWindow implements DisplaySurface {
 		this.xConnection = xConnection;
 		this.resourceHandle = resourceHandle;
 		this.xExecutor = xExecutor;
+	}
+
+	public void post(DisplayEvent displayEvent) {
+		xWindowEventBus.post(displayEvent);
+	}
+
+	@Override
+	public void addListener(Object listener) {
+		xWindowEventBus.register(listener);
+	}
+
+	@Override
+	public void removeListener(Object listener) {
+		xWindowEventBus.unregister(listener);
 	}
 
 	@Override
