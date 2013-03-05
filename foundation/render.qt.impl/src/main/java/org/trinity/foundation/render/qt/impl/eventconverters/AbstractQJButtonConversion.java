@@ -1,6 +1,6 @@
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
-import org.trinity.foundation.api.display.event.ButtonNotifyEvent;
+import org.trinity.foundation.api.display.event.ButtonNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.input.Button;
 import org.trinity.foundation.api.display.input.InputModifiers;
@@ -41,10 +41,10 @@ public abstract class AbstractQJButtonConversion implements QJRenderEventConvers
 															rootX,
 															rootY);
 
-		final ButtonNotifyEvent buttonNotifyEvent = new ButtonNotifyEvent(	eventTarget,
+		final ButtonNotify buttonNotify = new ButtonNotify(	eventTarget,
 																			pointerInput);
 
-		return buttonNotifyEvent;
+		return buttonNotify;
 	}
 
 	public abstract Momentum getMomentum();

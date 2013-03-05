@@ -15,7 +15,7 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_circulate_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.StackingChangedNotifyEvent;
+import org.trinity.foundation.api.display.event.StackingChangedNotify;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
@@ -57,7 +57,7 @@ public class CirculateNotifyConversion implements XEventConversion {
 		final int windowId = circulate_notify_event_t.getWindow();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
-		final DisplayEvent displayEvent = new StackingChangedNotifyEvent(displayEventSource);
+		final DisplayEvent displayEvent = new StackingChangedNotify(displayEventSource);
 
 		return displayEvent;
 	}

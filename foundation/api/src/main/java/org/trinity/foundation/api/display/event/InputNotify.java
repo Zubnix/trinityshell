@@ -11,27 +11,40 @@
  */
 package org.trinity.foundation.api.display.event;
 
-import org.trinity.foundation.api.display.input.KeyboardInput;
+import org.trinity.foundation.api.display.input.Input;
 
+// TODO documentation
 /**
- * Notifies that a keyboard key's state (pressed, released) has changed.
+ * Represents a general user input notification. This can be, for example, a
+ * keyboard key that was pressed or a mouse button that was released.
  */
-public class KeyNotifyEvent extends InputNotifyEvent<KeyboardInput> {
+public class InputNotify<I extends Input> extends DisplayEvent {
+
+	private final I input;
 
 	/***************************************
-	 * Create a new <code>KeyNotifyEvent</code> with the given display resource
-	 * as the target object.
+	 * Create a new <code>InputNotify</code> that targets the given display
+	 * resource. The input detail is described by the given {@link Input}
+	 * argument.
 	 * 
 	 * @param displayEventTarget
 	 *            The receiver of this event. eg the display resource that has
-	 *            the focus at the time of keyboard input.
+	 *            the focus at the time of user input.
 	 * @param input
-	 *            {@link KeyboardInput}
+	 *            an {@link Input}
 	 *************************************** 
 	 */
-	public KeyNotifyEvent(	final Object displayEventTarget,
-							final KeyboardInput input) {
-		super(	displayEventTarget,
-				input);
+	public InputNotify(final I input) {
+		this.input = input;
+	}
+
+	/***************************************
+	 * The object describing the user input.
+	 * 
+	 * @return {@link Input}
+	 *************************************** 
+	 */
+	public I getInput() {
+		return this.input;
 	}
 }

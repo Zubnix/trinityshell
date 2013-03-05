@@ -15,7 +15,7 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.KeyNotifyEvent;
+import org.trinity.foundation.api.display.event.KeyNotify;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.KeyboardInput;
@@ -70,7 +70,7 @@ public class KeyReleaseConversion implements XEventConversion {
 		final KeyboardInput input = new KeyboardInput(	Momentum.STOPPED,
 														key,
 														inputModifiers);
-		final DisplayEvent displayEvent = new KeyNotifyEvent(	displayEventSource,
+		final DisplayEvent displayEvent = new KeyNotify(	displayEventSource,
 																input);
 
 		return displayEvent;

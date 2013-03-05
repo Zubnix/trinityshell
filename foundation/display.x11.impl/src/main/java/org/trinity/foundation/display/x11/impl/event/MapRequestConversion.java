@@ -15,7 +15,7 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_map_request_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.ShowRequestEvent;
+import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
@@ -59,7 +59,7 @@ public class MapRequestConversion implements XEventConversion {
 
 		displayEventSource.configureClientEvents();
 
-		final DisplayEvent displayEvent = new ShowRequestEvent(displayEventSource);
+		final DisplayEvent displayEvent = new ShowRequest(displayEventSource);
 
 		return displayEvent;
 	}

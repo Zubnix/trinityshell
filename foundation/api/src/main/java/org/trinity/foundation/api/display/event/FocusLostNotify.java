@@ -12,22 +12,10 @@
 package org.trinity.foundation.api.display.event;
 
 /***************************************
- * Notifies that the stacking position of a display resource has changed
+ * Indicates that a display resource has lost the input focus.
+ * 
  *************************************** 
  */
-public class StackingChangedNotifyEvent extends DisplayEvent {
-
-	/***************************************
-	 * Construct a new <code>StackingChangedNotifyEvent</code> that targets the
-	 * given display resource who's stacking has changed.
-	 * 
-	 * @param displayEventTarget
-	 *            The receiver of this event. eg the display resource who's
-	 *            stacking has changed.
-	 *************************************** 
-	 */
-	public StackingChangedNotifyEvent(final Object displayEventTarget) {
-		super(displayEventTarget);
-	}
+public class FocusLostNotify extends FocusNotify {
 
 }

@@ -17,18 +17,6 @@ package org.trinity.foundation.api.display.event;
  * 
  *************************************** 
  */
-public abstract class PointerVisitationNotifyEvent extends DisplayEvent {
+public abstract class PointerVisitationNotify extends DisplayEvent {
 
-	/***************************************
-	 * Construct a new <code>PointerVisitationNotifyEvent</code> that targets
-	 * the given display resource.
-	 * 
-	 * @param displayEventTarget
-	 *            The receiver of this event. eg the display resource that was
-	 *            left by the pointer.
-	 *************************************** 
-	 */
-	public PointerVisitationNotifyEvent(final Object displayEventTarget) {
-		super(displayEventTarget);
-	}
 }

@@ -13,13 +13,19 @@ package org.trinity.foundation.api.display.input;
 
 import java.util.List;
 
+import org.trinity.foundation.api.display.DisplayArea;
+import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.event.KeyNotify;
+
+import com.google.common.util.concurrent.ListenableFuture;
+
 /***************************************
  * A text input device. It offers functionality to map to and from {@link Key}
  * input to key symbols, that is, the name or the character the key represents.
  * 
  *************************************** 
  */
-public interface Keyboard {
+public interface Keyboard extends InputDevice {
 
 	/**
 	 * 'Left shift' key name.
@@ -188,8 +194,8 @@ public interface Keyboard {
 	 * @return The keysymbol name.
 	 *************************************** 
 	 */
-	String asKeySymbolName(	Key key,
-							InputModifiers inputModifiers);
+	// TODO return listanablefuture?
+	String asKeySymbolName(Key key, InputModifiers inputModifiers);
 
 	/***************************************
 	 * Translate the given keysymbol name to all possible {@link Key}s. A
@@ -202,6 +208,7 @@ public interface Keyboard {
 	 * @return All possible {@link Key}s.
 	 *************************************** 
 	 */
+	// TODO return listanablefuture?
 	List<Key> asKeys(String keySymbolName);
 
 	/***************************************
@@ -213,6 +220,7 @@ public interface Keyboard {
 	 * @return an {@link InputModifier}
 	 *************************************** 
 	 */
+	// TODO return listanablefuture?
 	InputModifier modifier(String modifierName);
 
 	/***************************************
@@ -225,5 +233,59 @@ public interface Keyboard {
 	 * @return {@link InputModifiers}
 	 *************************************** 
 	 */
+	// TODO return listanablefuture?
 	InputModifiers modifiers(String... modifierNames);
+
+	/***************************************
+	 * Grab a {@link Key} of the bound {@link DisplayArea} or any of its
+	 * children. Grabbing a {@link Key} will override the delivery of the
+	 * corresponding {@link KeyNotify} event so it is only delivered to the
+	 * grabber instead of delivering it anyone that is interested.
+	 * <p>
+	 * This method is usually used to install keybindings.
+	 * 
+	 * @param grabKey
+	 *            The {@link Key} that should be grabbed
+	 * @param withModifiers
+	 *            The {@link InputModifiers} that should be active if a grab is
+	 *            to take place.
+	 *************************************** 
+	 */
+	// TODO grab key notify
+	ListenableFuture<Void> grabKey(DisplaySurface displaySurface, Key grabKey,
+			InputModifiers withModifiers);
+
+	/***************************************
+	 * Release the grab on the specific {@link Key} with the specific
+	 * {@link InputModifiers}.
+	 * 
+	 * @param ungrabKey
+	 *            The {@link Key} that will be ungrabbed.
+	 * @param withModifiers
+	 *            the {@link InputModifiers}/
+	 * @see #grabKey(Key, InputModifiers)
+	 *************************************** 
+	 */
+	// TODO ungrab key notify
+	ListenableFuture<Void> ungrabKey(DisplaySurface displaySurface,
+			Key ungrabKey, InputModifiers withModifiers);
+
+	/***************************************
+	 * Release the grab of the keyboard of the bound {@link DisplayArea}.
+	 * 
+	 * @see #grabKeyboard()
+	 *************************************** 
+	 */
+	// TODO grab notify
+	ListenableFuture<Void> ungrabKeyboard();
+
+	/***************************************
+	 * Grab the entire keyboard of the bound {@link DisplayArea} or any of its
+	 * children. All {@link KeyNotify}s will be redirected.
+	 * 
+	 * @see #grabKey(Key, InputModifiers)
+	 *************************************** 
+	 */
+	// TODO grab keyboard notify
+	ListenableFuture<Void> grabKeyboard(DisplaySurface displaySurface);
 }

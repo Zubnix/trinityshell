@@ -14,7 +14,7 @@ package org.trinity.foundation.display.x11.impl.event;
 import org.freedesktop.xcb.LibXcbConstants;
 import org.freedesktop.xcb.xcb_button_press_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
-import org.trinity.foundation.api.display.event.ButtonNotifyEvent;
+import org.trinity.foundation.api.display.event.ButtonNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.input.Button;
 import org.trinity.foundation.api.display.input.InputModifiers;
@@ -76,9 +76,9 @@ public class ButtonPressConversion implements XEventConversion {
 															rootX,
 															rootY);
 
-		final ButtonNotifyEvent buttonNotifyEvent = new ButtonNotifyEvent(	window,
+		final ButtonNotify buttonNotify = new ButtonNotify(	window,
 																			pointerInput);
-		return buttonNotifyEvent;
+		return buttonNotify;
 	}
 
 	@Override

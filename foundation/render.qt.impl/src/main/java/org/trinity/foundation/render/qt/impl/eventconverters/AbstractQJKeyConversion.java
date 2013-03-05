@@ -1,6 +1,6 @@
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
-import org.trinity.foundation.api.display.event.KeyNotifyEvent;
+import org.trinity.foundation.api.display.event.KeyNotify;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.KeyboardInput;
@@ -14,7 +14,7 @@ import com.trolltech.qt.gui.QKeyEvent;
 public abstract class AbstractQJKeyConversion implements QJRenderEventConversion {
 
 	@Override
-	public KeyNotifyEvent convertEvent(	final Object eventTarget,
+	public KeyNotify convertEvent(	final Object eventTarget,
 										final Object view,
 										final QObject qObject,
 										final QEvent qEvent) {
@@ -36,10 +36,10 @@ public abstract class AbstractQJKeyConversion implements QJRenderEventConversion
 														key,
 														inputModifiers);
 
-		final KeyNotifyEvent keyNotifyEvent = new KeyNotifyEvent(	eventTarget,
+		final KeyNotify keyNotify = new KeyNotify(	eventTarget,
 																	input);
 
-		return keyNotifyEvent;
+		return keyNotify;
 	}
 
 	public abstract Momentum getMomemtum();

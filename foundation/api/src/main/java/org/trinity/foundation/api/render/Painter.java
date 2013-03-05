@@ -14,6 +14,8 @@ package org.trinity.foundation.api.render;
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.display.DisplaySurface;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 /****************************************
  * The gatekeeper to the underlying paint back-end. It talks to a paint back-end
  * by feeding it {@link PaintRoutine}s that will be processed by the paint
@@ -30,7 +32,8 @@ public interface Painter extends DisplayAreaManipulator {
 	 * 
 	 * @return A {@link DisplaySurface}.
 	 */
-	DisplaySurface getDislaySurface();
+	// TODO client event?
+	ListenableFuture<DisplaySurface> getDislaySurface();
 
 	void bindView();
 }

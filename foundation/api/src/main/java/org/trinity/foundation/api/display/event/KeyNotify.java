@@ -11,27 +11,25 @@
  */
 package org.trinity.foundation.api.display.event;
 
-import org.trinity.foundation.api.display.input.PointerInput;
+import org.trinity.foundation.api.display.input.KeyboardInput;
 
 /**
- * Notifies that a mouse button's state has changed.
+ * Notifies that a keyboard key's state (pressed, released) has changed.
  */
-public class ButtonNotifyEvent extends InputNotifyEvent<PointerInput> {
+public class KeyNotify extends InputNotify<KeyboardInput> {
 
 	/***************************************
-	 * Create a new <code>ButtonNotifyEvent</code> with the given event target
-	 * as the receiver of this event. Ideally, the receiving object should
-	 * correspond to the object that was clicked.
+	 * Create a new <code>KeyNotify</code> with the given display resource as
+	 * the target object.
 	 * 
 	 * @param displayEventTarget
-	 *            The receiver of this event.
-	 * @param pointerInput
-	 *            The {@link PointerInput} details.
+	 *            The receiver of this event. eg the display resource that has
+	 *            the focus at the time of keyboard input.
+	 * @param input
+	 *            {@link KeyboardInput}
 	 *************************************** 
 	 */
-	public ButtonNotifyEvent(	final Object displayEventTarget,
-								final PointerInput pointerInput) {
-		super(	displayEventTarget,
-				pointerInput);
+	public KeyNotify(final KeyboardInput input) {
+		super(input);
 	}
 }

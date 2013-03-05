@@ -15,7 +15,7 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_focus_in_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.FocusGainNotifyEvent;
+import org.trinity.foundation.api.display.event.FocusGainNotify;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
@@ -55,7 +55,7 @@ public class FocusInConversion implements XEventConversion {
 
 		final int windowId = focus_in_event_t.getEvent();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
-		final DisplayEvent displayEvent = new FocusGainNotifyEvent(displayEventSource);
+		final DisplayEvent displayEvent = new FocusGainNotify(displayEventSource);
 
 		return displayEvent;
 	}

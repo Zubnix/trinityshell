@@ -15,7 +15,7 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_focus_in_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.FocusLostNotifyEvent;
+import org.trinity.foundation.api.display.event.FocusLostNotify;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
@@ -55,7 +55,7 @@ public class FocusOutConversion implements XEventConversion {
 		this.xEventBus.post(focus_out_event_t);
 
 		final XWindow xWindow = this.xWindowCache.getWindow(focus_out_event_t.getEvent());
-		final DisplayEvent displayEvent = new FocusLostNotifyEvent(xWindow);
+		final DisplayEvent displayEvent = new FocusLostNotify(xWindow);
 
 		return displayEvent;
 	}

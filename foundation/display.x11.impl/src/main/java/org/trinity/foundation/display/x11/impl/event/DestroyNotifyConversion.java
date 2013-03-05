@@ -14,7 +14,7 @@ package org.trinity.foundation.display.x11.impl.event;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_destroy_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
-import org.trinity.foundation.api.display.event.DestroyNotifyEvent;
+import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
@@ -57,7 +57,7 @@ public class DestroyNotifyConversion implements XEventConversion {
 		final int eventWindow = destroy_notify_event_t.getWindow();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(eventWindow);
 
-		final DisplayEvent displayEvent = new DestroyNotifyEvent(displayEventSource);
+		final DisplayEvent displayEvent = new DestroyNotify(displayEventSource);
 
 		return displayEvent;
 	}

@@ -11,11 +11,7 @@
  */
 package org.trinity.foundation.api.display;
 
-import org.trinity.foundation.api.display.event.ButtonNotifyEvent;
-import org.trinity.foundation.api.display.event.KeyNotifyEvent;
-import org.trinity.foundation.api.display.input.Button;
-import org.trinity.foundation.api.display.input.InputModifiers;
-import org.trinity.foundation.api.display.input.Key;
+import com.google.common.util.concurrent.ListenableFuture;
 
 /****************************************
  * Provides the operations that are available for manipulating and interacting
@@ -32,7 +28,7 @@ public interface DisplayAreaManipulator {
 	 * {@link DisplayAreaManipulator}.
 	 *************************************** 
 	 */
-	void destroy();
+	ListenableFuture<Void> destroy();
 
 	/***************************************
 	 * Set the input focus to the bound {@link DisplayArea}. Generated input
@@ -43,7 +39,7 @@ public interface DisplayAreaManipulator {
 	 * </p>
 	 *************************************** 
 	 */
-	void setInputFocus();
+	ListenableFuture<Void> setInputFocus();
 
 	/***************************************
 	 * Lower the bound {@link DisplayArea}. A lowered {@link DisplayArea} will
@@ -54,7 +50,7 @@ public interface DisplayAreaManipulator {
 	 * </p>
 	 *************************************** 
 	 */
-	void lower();
+	ListenableFuture<Void> lower();
 
 	/***************************************
 	 * Make the bound {@link DisplayArea} visible if it was previously
@@ -62,7 +58,7 @@ public interface DisplayAreaManipulator {
 	 * effect.
 	 *************************************** 
 	 */
-	void show();
+	ListenableFuture<Void> show();
 
 	/***************************************
 	 * Move the bound {@link DisplayArea} to the given coordinates, relative to
@@ -77,8 +73,7 @@ public interface DisplayAreaManipulator {
 	 *            dependent.
 	 *************************************** 
 	 */
-	void move(	int x,
-				int y);
+	ListenableFuture<Void> move(int x, int y);
 
 	/***************************************
 	 * Perform a move and resize operation on the bound {@link DisplayArea}.
@@ -101,10 +96,7 @@ public interface DisplayAreaManipulator {
 	 * @see #resize(int, int)
 	 *************************************** 
 	 */
-	void moveResize(int x,
-					int y,
-					int width,
-					int height);
+	ListenableFuture<Void> moveResize(int x, int y, int width, int height);
 
 	/***************************************
 	 * Raise the bound {@link DisplayArea}. A raised {@link DisplayArea} will
@@ -115,7 +107,7 @@ public interface DisplayAreaManipulator {
 	 * </p>
 	 *************************************** 
 	 */
-	void raise();
+	ListenableFuture<Void> raise();
 
 	/***************************************
 	 * Set the parent of the bound {@link DisplayArea}. The {@link DisplayArea}
@@ -133,9 +125,7 @@ public interface DisplayAreaManipulator {
 	 * @see #move(int, int)
 	 *************************************** 
 	 */
-	void setParent(	DisplayArea parent,
-					int x,
-					int y);
+	ListenableFuture<Void> setParent(DisplayArea parent, int x, int y);
 
 	/***************************************
 	 * Set the size of the bound {@link DisplayArea}.
@@ -148,114 +138,11 @@ public interface DisplayAreaManipulator {
 	 *            dependent.
 	 *************************************** 
 	 */
-	void resize(int width,
-				int height);
+	ListenableFuture<Void> resize(int width, int height);
 
 	/***************************************
 	 * Hide the bound {@link DisplayArea}.
 	 *************************************** 
 	 */
-	void hide();
-
-	// Coordinate translateCoordinates(DisplayArea source,
-	// int sourceX,
-	// int sourceY);
-
-	/***************************************
-	 * Grab a {@link Button} of the bound {@link DisplayArea} or any of its
-	 * children. Grabbing a {@link Button} will override the delivery of the
-	 * corresponding {@link ButtonNotifyEvent} event so it is only delivered to
-	 * the grabber instead of delivering it anyone that is interested.
-	 * <p>
-	 * This method is usually used to install mousebindings.
-	 * 
-	 * @param grabButton
-	 *            The {@link Button} that should be grabbed.
-	 * @param withModifiers
-	 *            The {@link InputModifiers} that should be active if a grab is
-	 *            to take place.
-	 *************************************** 
-	 */
-	void grabButton(Button grabButton,
-					InputModifiers withModifiers);
-
-	/***************************************
-	 * Grab the entire pointing device of the bound {@link DisplayArea} or any
-	 * of its children. Every {@link ButtonNotifyEvent} shall be redirected.
-	 * 
-	 * @see #grabButton(Button, InputModifiers)
-	 *************************************** 
-	 */
-	void grabPointer();
-
-	/***************************************
-	 * Release the grab on the pointing device.
-	 * 
-	 * @see #grabPointer()
-	 *************************************** 
-	 */
-	void ungrabPointer();
-
-	/***************************************
-	 * Release the grab on the specific {@link Button} with the specific
-	 * {@link InputModifiers}.
-	 * 
-	 * @param ungrabButton
-	 *            The {@link Button} that will be ungrabbed.
-	 * @param withModifiers
-	 *            The {@link InputModifiers}.
-	 * @see #grabButton(Button, InputModifiers)
-	 *************************************** 
-	 */
-	void ungrabButton(	Button ungrabButton,
-						InputModifiers withModifiers);
-
-	/***************************************
-	 * Grab a {@link Key} of the bound {@link DisplayArea} or any of its
-	 * children. Grabbing a {@link Key} will override the delivery of the
-	 * corresponding {@link KeyNotifyEvent} event so it is only delivered to the
-	 * grabber instead of delivering it anyone that is interested.
-	 * <p>
-	 * This method is usually used to install keybindings.
-	 * 
-	 * @param grabKey
-	 *            The {@link Key} that should be grabbed
-	 * @param withModifiers
-	 *            The {@link InputModifiers} that should be active if a grab is
-	 *            to take place.
-	 *************************************** 
-	 */
-	void grabKey(	Key grabKey,
-					InputModifiers withModifiers);
-
-	/***************************************
-	 * Release the grab on the specific {@link Key} with the specific
-	 * {@link InputModifiers}.
-	 * 
-	 * @param ungrabKey
-	 *            The {@link Key} that will be ungrabbed.
-	 * @param withModifiers
-	 *            the {@link InputModifiers}/
-	 * @see #grabKey(Key, InputModifiers)
-	 *************************************** 
-	 */
-	void ungrabKey(	Key ungrabKey,
-					InputModifiers withModifiers);
-
-	/***************************************
-	 * Release the grab of the keyboard of the bound {@link DisplayArea}.
-	 * 
-	 * @see #grabKeyboard()
-	 *************************************** 
-	 */
-	void ungrabKeyboard();
-
-	/***************************************
-	 * Grab the entire keyboard of the bound {@link DisplayArea} or any of its
-	 * children. All {@link KeyNotifyEvent}s will be redirected.
-	 * 
-	 * @see #grabKey(Key, InputModifiers)
-	 *************************************** 
-	 */
-	void grabKeyboard();
+	ListenableFuture<Void> hide();
 }

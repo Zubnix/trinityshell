@@ -11,24 +11,10 @@
  */
 package org.trinity.foundation.api.display.event;
 
-/***************************************
- * Indicates when a pointer device has entered a display resource.
+/**
+ * Notifies when a display resource is made invisible.
  * 
- *************************************** 
  */
-public class PointerEnterNotifyEvent extends PointerVisitationNotifyEvent {
-
-	/***************************************
-	 * Construct a new <code>PointerEnterNotifyEvent</code> that targets the
-	 * given display resource.
-	 * 
-	 * @param displayEventTarget
-	 *            The receiver of this event. eg the display resource that was
-	 *            entered by the pointer.
-	 *************************************** 
-	 */
-	public PointerEnterNotifyEvent(final Object displayEventTarget) {
-		super(displayEventTarget);
-	}
+public class HideNotify extends DisplayEvent {
 
 }

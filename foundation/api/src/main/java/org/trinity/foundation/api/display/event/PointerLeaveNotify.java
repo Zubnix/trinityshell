@@ -11,22 +11,11 @@
  */
 package org.trinity.foundation.api.display.event;
 
-/****************************************
- * A request to make a display resource visible.
+/***************************************
+ * Indicates when a pointer device has left a display resource.
+ * 
  *************************************** 
  */
-public class ShowRequestEvent extends DisplayEvent {
+public class PointerLeaveNotify extends PointerVisitationNotify {
 
-	/***************************************
-	 * Construct a new <code>ShowRequestEvent</code> that targets the given
-	 * display resource that wants to become visible.
-	 * 
-	 * @param displayEventTarget
-	 *            The receiver of this event. eg the display resource that wants
-	 *            to become visible.
-	 *************************************** 
-	 */
-	public ShowRequestEvent(final Object displayEventTarget) {
-		super(displayEventTarget);
-	}
 }

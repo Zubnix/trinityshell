@@ -14,7 +14,7 @@ package org.trinity.shell.input.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.trinity.foundation.api.display.event.KeyNotifyEvent;
+import org.trinity.foundation.api.display.event.KeyNotify;
 import org.trinity.foundation.api.display.input.Keyboard;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.shell.api.input.ShellKeyInputStringBuilder;
@@ -88,7 +88,7 @@ public class ShellKeyInputStringBuilderImpl implements ShellKeyInputStringBuilde
 	}
 
 	@Override
-	public void append(final KeyNotifyEvent input) {
+	public void append(final KeyNotify input) {
 		final KeyboardInput keyboardInput = input.getInput();
 		final String keyName = this.keyboard.asKeySymbolName(	keyboardInput.getKey(),
 																keyboardInput.getInputModifiers());

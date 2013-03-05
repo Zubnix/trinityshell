@@ -11,10 +11,14 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import java.util.concurrent.Executors;
+
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
@@ -30,9 +34,12 @@ public class Module extends AbstractModule {
 				.toInstance(new EventBus());
 		bind(EventBus.class).annotatedWith(Names.named("DisplayEventBus"))
 				.toInstance(new EventBus());
+		bind(ListeningExecutorService.class).annotatedWith(
+				Names.named("XExecutor")).toInstance(
+				MoreExecutors.listeningDecorator(Executors
+						.newSingleThreadExecutor()));
 
-		install(new FactoryModuleBuilder().implement(	DisplaySurface.class,
-														XWindow.class)
-				.build(DisplaySurfaceFactory.class));
+		install(new FactoryModuleBuilder().implement(DisplaySurface.class,
+				XWindow.class).build(DisplaySurfaceFactory.class));
 	}
 }

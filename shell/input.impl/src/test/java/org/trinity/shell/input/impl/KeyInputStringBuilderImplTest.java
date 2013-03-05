@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.trinity.foundation.api.display.event.KeyNotifyEvent;
+import org.trinity.foundation.api.display.event.KeyNotify;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.Keyboard;
@@ -22,21 +22,21 @@ public class KeyInputStringBuilderImplTest {
 		final KeyboardInput dKeyboardInput = mock(KeyboardInput.class);
 		when(dKeyboardInput.getKey()).thenReturn(d);
 		when(dKeyboardInput.getInputModifiers()).thenReturn(inputModifiers);
-		final KeyNotifyEvent dInput = mock(KeyNotifyEvent.class);
+		final KeyNotify dInput = mock(KeyNotify.class);
 		when(dInput.getInput()).thenReturn(dKeyboardInput);
 
 		final Key alt = mock(Key.class);
 		final KeyboardInput altKeyboardInput = mock(KeyboardInput.class);
 		when(altKeyboardInput.getKey()).thenReturn(alt);
 		when(altKeyboardInput.getInputModifiers()).thenReturn(inputModifiers);
-		final KeyNotifyEvent altInput = mock(KeyNotifyEvent.class);
+		final KeyNotify altInput = mock(KeyNotify.class);
 		when(altInput.getInput()).thenReturn(altKeyboardInput);
 
 		final Key backspace = mock(Key.class);
 		final KeyboardInput backspaceKeyboardInput = mock(KeyboardInput.class);
 		when(backspaceKeyboardInput.getKey()).thenReturn(backspace);
 		when(backspaceKeyboardInput.getInputModifiers()).thenReturn(inputModifiers);
-		final KeyNotifyEvent backspaceInput = mock(KeyNotifyEvent.class);
+		final KeyNotify backspaceInput = mock(KeyNotify.class);
 		when(backspaceInput.getInput()).thenReturn(backspaceKeyboardInput);
 
 		final Keyboard keyboard = mock(Keyboard.class);

@@ -15,7 +15,7 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_map_notify_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.ShowNotifyEvent;
+import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
@@ -56,7 +56,7 @@ public class MapNotifyConversion implements XEventConversion {
 		final int windowId = map_notify_event_t.getWindow();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
-		final DisplayEvent displayEvent = new ShowNotifyEvent(displayEventSource);
+		final DisplayEvent displayEvent = new ShowNotify(displayEventSource);
 
 		return displayEvent;
 	}

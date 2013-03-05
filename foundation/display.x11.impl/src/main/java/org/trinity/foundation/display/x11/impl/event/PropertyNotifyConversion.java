@@ -15,7 +15,7 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.ProtocolNotifyEvent;
+import org.trinity.foundation.api.display.event.ProtocolNotify;
 import org.trinity.foundation.display.x11.impl.XAtomCache;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
@@ -62,7 +62,7 @@ public class PropertyNotifyConversion implements XEventConversion {
 		final int atomId = property_notify_event_t.getAtom();
 		final String xProperty = this.xAtomCache.getAtom(atomId);
 
-		final DisplayEvent displayEvent = new ProtocolNotifyEvent(	displayEventSource,
+		final DisplayEvent displayEvent = new ProtocolNotify(	displayEventSource,
 																	xProperty);
 
 		return displayEvent;

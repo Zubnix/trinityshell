@@ -11,8 +11,9 @@
  */
 package org.trinity.foundation.api.display;
 
-import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.Rectangle;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Represents a native isolated graphical area. Usually a
@@ -30,16 +31,7 @@ public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator {
 	 *         's parent relative position, a width and a height.
 	 *************************************** 
 	 */
-	Rectangle getGeometry();
-
-	/***************************************
-	 * The position of the pointer as seen from this <code>DisplaySurface</code>
-	 * 's coordinate system.
-	 * 
-	 * @return The pointer position {@link Coordinate}.
-	 *************************************** 
-	 */
-	Coordinate getPointerCoordinate();
+	ListenableFuture<Rectangle> getGeometry();
 
 	/***************************************
 	 * Return the handle of the underlying native resource.

@@ -17,6 +17,8 @@ import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 /***************************************
  * Delegate to invoke a view method when a bound model property changes. This
  * delegate should be implemented for a specific widget toolkit.
@@ -41,7 +43,7 @@ public interface PropertySlotInvocatorDelegate {
 	 *            {@link Method#invoke(Object, Object...)}.
 	 *************************************** 
 	 */
-	void invoke(Object view,
-				Method viewMethod,
-				Object argument);
+	// TODO some kind of notify event?
+	ListenableFuture<Void> invoke(Object view, Method viewMethod,
+			Object argument);
 }

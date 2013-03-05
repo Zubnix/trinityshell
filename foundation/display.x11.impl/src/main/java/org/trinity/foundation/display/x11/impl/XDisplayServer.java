@@ -11,18 +11,15 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
-import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Callable;
 
 import org.freedesktop.xcb.LibXcb;
-import org.trinity.foundation.api.display.DisplayEventProducer;
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.DisplayEvent;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -33,82 +30,73 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class XDisplayServer implements DisplayServer {
 
-	private static final int QUEUE_SIZE = 32;
-	private final ArrayBlockingQueue<DisplayEvent> displayEvents = new ArrayBlockingQueue<DisplayEvent>(XDisplayServer.QUEUE_SIZE);
-
 	private final XConnection xConnection;
 	private final XWindowCache xWindowCache;
-	private final Set<DisplayEventProducer> displayEventProducers;
+	private final XEventPump xEventPump;
+	private final ListeningExecutorService xExecutor;
 
 	@Inject
-	XDisplayServer(	final XConnection xConnection,
-					final XWindowCache xWindowCache,
-					@Named("DisplayEventBus") final EventBus displayEventBus,
-					final Set<DisplayEventProducer> displayEventProducers) {
+	XDisplayServer(final XConnection xConnection,
+			final XWindowCache xWindowCache,
+			@Named("DisplayEventBus") final EventBus displayEventBus,
+			XEventPump xEventPump,
+			@Named("XExecutor") ListeningExecutorService xExecutor) {
 
 		displayEventBus.register(this);
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
-		this.displayEventProducers = displayEventProducers;
+		this.xEventPump = xEventPump;
+		this.xExecutor = xExecutor;
+	}
 
+	@Override
+	public ListenableFuture<Void> close() {
+
+		return xExecutor.submit(new Runnable() {
+
+			@Override
+			public void run() {
+				xEventPump.stop();
+				xConnection.close();
+			}
+		}, null);
+	}
+
+	@Override
+	public ListenableFuture<DisplaySurface> getRootDisplayArea() {
+		return xExecutor.submit(new Callable<DisplaySurface>() {
+
+			@Override
+			public DisplaySurface call() {
+				return xWindowCache.getWindow(xConnection.getScreenReference()
+						.getRoot());
+			}
+		});
+	}
+
+	@Override
+	public ListenableFuture<Void> open() {
 		// FIXME from config
 		final String displayName = System.getenv("DISPLAY");
-		this.xConnection.open(	displayName,
-								0);
-		if (LibXcb.xcb_connection_has_error(this.xConnection.getConnectionReference()) != 0) {
-			throw new Error("Cannot open display\n");
-		}
-		startUp();
-	}
 
-	@Subscribe
-	@AllowConcurrentEvents
-	public void handleDisplayEvent(final DisplayEvent displayEvent) {
-		try {
-			if (displayEvent == null) {
-				return;
+		return xExecutor.submit(new Runnable() {
+
+			@Override
+			public void run() {
+				xConnection.open(displayName, 0);
+				if (LibXcb.xcb_connection_has_error(xConnection
+						.getConnectionReference()) != 0) {
+					throw new Error("Cannot open display\n");
+				}
+				xEventPump.start();
+
 			}
-			this.displayEvents.put(displayEvent);
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		}, null);
 	}
 
 	@Override
-	public boolean hasNextDisplayEvent() {
-		return this.displayEvents.size() != 0;
-	}
+	public void addListener(Object listener) {
+		// TODO listen for client requests & display notifications
 
-	@Override
-	public DisplayEvent getNextDisplayEvent() {
-		try {
-			LibXcb.xcb_flush(this.xConnection.getConnectionReference());
-			return this.displayEvents.take();
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public void shutDown() {
-		for (final DisplayEventProducer displayEventProducer : this.displayEventProducers) {
-			displayEventProducer.stopDisplayEventProduction();
-		}
-		this.xConnection.close();
-		this.displayEvents.clear();
-	}
-
-	@Override
-	public DisplaySurface getRootDisplayArea() {
-		return this.xWindowCache.getWindow(this.xConnection.getScreenReference().getRoot());
-	}
-
-	public void startUp() {
-		for (final DisplayEventProducer displayEventProducer : this.displayEventProducers) {
-			displayEventProducer.startDisplayEventProduction();
-		}
 	}
 }

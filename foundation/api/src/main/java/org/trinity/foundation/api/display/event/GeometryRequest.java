@@ -11,13 +11,16 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.Rectangle;
 
 /**
  * A request from a display resource for a new geometry.
  * 
  */
-public class GeometryRequestEvent extends DisplayEvent {
+public class GeometryRequest extends DisplayEvent {
+
+	private DisplaySurface client;
 
 	private final Rectangle geometry;
 	private final boolean configureX;
@@ -26,8 +29,8 @@ public class GeometryRequestEvent extends DisplayEvent {
 	private final boolean configureHeight;
 
 	/***************************************
-	 * Create a new <code>GeometryRequestEvent</code> that targets the given
-	 * display resource.. The requested geometry is specified by the given
+	 * Create a new <code>GeometryRequest</code> that targets the given display
+	 * resource.. The requested geometry is specified by the given
 	 * {@link Rectangle} together with a set of booleans to indicate what values
 	 * of the <code>Rectangle</code> should be interpreted.
 	 * 
@@ -46,13 +49,11 @@ public class GeometryRequestEvent extends DisplayEvent {
 	 *            Indicates if the height value should be configured.
 	 *************************************** 
 	 */
-	public GeometryRequestEvent(final Object displayEventTarget,
-								final Rectangle geometry,
-								final boolean configureX,
-								final boolean configureY,
-								final boolean configureWidth,
-								final boolean configureHeight) {
-		super(displayEventTarget);
+	public GeometryRequest(final DisplaySurface client,
+			final Rectangle geometry, final boolean configureX,
+			final boolean configureY, final boolean configureWidth,
+			final boolean configureHeight) {
+		this.client = client;
 		this.geometry = geometry;
 		this.configureX = configureX;
 		this.configureY = configureY;
@@ -108,5 +109,9 @@ public class GeometryRequestEvent extends DisplayEvent {
 	 */
 	public Rectangle getGeometry() {
 		return this.geometry;
+	}
+
+	public DisplaySurface getClient() {
+		return client;
 	}
 }

@@ -11,42 +11,39 @@
  */
 package org.trinity.foundation.api.display.event;
 
-import org.trinity.foundation.api.display.input.Input;
+import org.trinity.foundation.api.shared.Rectangle;
 
-// TODO documentation
 /**
- * Represents a general user input notification. This can be, for example, a
- * keyboard key that was pressed or a mouse button that was released.
+ * Notifies that the geometry (size, place) of a display resource has changed.
+ * 
  */
-public class InputNotifyEvent<I extends Input> extends DisplayEvent {
+public class GeometryNotify extends DisplayEvent {
 
-	private final I input;
+	private final Rectangle geometry;
 
 	/***************************************
-	 * Create a new <code>InputNotifyEvent</code> that targets the given display
-	 * resource. The input detail is described by the given {@link Input}
+	 * Create a new <code>GeometryNotify</code> that targets the given display
+	 * resource object. The new geometry is specified by the {@link Rectangle}
 	 * argument.
 	 * 
 	 * @param displayEventTarget
-	 *            The receiver of this event. eg the display resource that has
-	 *            the focus at the time of user input.
-	 * @param input
-	 *            an {@link Input}
+	 *            The receiver of this event. eg the display resource who's
+	 *            geometry has changed.
+	 * @param geometry
+	 *            The new geometry as a {@link Rectangle}.
 	 *************************************** 
 	 */
-	public InputNotifyEvent(final Object displayEventTarget,
-							final I input) {
-		super(displayEventTarget);
-		this.input = input;
+	public GeometryNotify(final Rectangle geometry) {
+		this.geometry = geometry;
 	}
 
 	/***************************************
-	 * The object describing the user input.
+	 * The new geometry of the targeted display resource.
 	 * 
-	 * @return {@link Input}
+	 * @return The new geometry as a {@link Rectangle}.
 	 *************************************** 
 	 */
-	public I getInput() {
-		return this.input;
+	public Rectangle getGeometry() {
+		return this.geometry;
 	}
 }

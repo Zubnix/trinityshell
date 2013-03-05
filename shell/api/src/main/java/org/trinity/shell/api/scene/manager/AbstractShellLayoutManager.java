@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.trinity.foundation.api.display.event.ShowRequestEvent;
+import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
@@ -174,7 +174,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	 * Called when a child {@link ShellNode} requests to be shown.
 	 * 
 	 * @param geoEvent
-	 *            The child {@link ShowRequestEvent}.
+	 *            The child {@link ShowRequest}.
 	 *************************************** 
 	 */
 	@Subscribe

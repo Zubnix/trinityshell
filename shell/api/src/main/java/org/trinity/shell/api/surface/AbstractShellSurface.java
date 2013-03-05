@@ -11,12 +11,12 @@
  */
 package org.trinity.shell.api.surface;
 
-import org.trinity.foundation.api.display.event.DestroyNotifyEvent;
-import org.trinity.foundation.api.display.event.GeometryNotifyEvent;
-import org.trinity.foundation.api.display.event.GeometryRequestEvent;
-import org.trinity.foundation.api.display.event.HideNotifyEvent;
-import org.trinity.foundation.api.display.event.ShowNotifyEvent;
-import org.trinity.foundation.api.display.event.ShowRequestEvent;
+import org.trinity.foundation.api.display.event.DestroyNotify;
+import org.trinity.foundation.api.display.event.GeometryNotify;
+import org.trinity.foundation.api.display.event.GeometryRequest;
+import org.trinity.foundation.api.display.event.HideNotify;
+import org.trinity.foundation.api.display.event.ShowNotify;
+import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNode;
@@ -389,29 +389,29 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	// TODO stacking handling?
 
 	/**
-	 * Called when an {@code DestroyNotifyEvent} arrives for this surface.
+	 * Called when an {@code DestroyNotify} arrives for this surface.
 	 * 
-	 * @param destroyNotifyEvent
-	 *            a {@link DestroyNotifyEvent}
+	 * @param destroyNotify
+	 *            a {@link DestroyNotify}
 	 */
 	@Subscribe
 	public
 			void
-			handleDestroyNotifyEvent(final DestroyNotifyEvent destroyNotifyEvent) {
+			handleDestroyNotifyEvent(final DestroyNotify destroyNotify) {
 		doDestroy(false);
 	}
 
 	/**
-	 * Called when an {@code GeometryNotifyEvent} arrives for this surface.
+	 * Called when an {@code GeometryNotify} arrives for this surface.
 	 * 
-	 * @param geometryNotifyEvent
-	 *            a {@link GeometryNotifyEvent}
+	 * @param geometryNotify
+	 *            a {@link GeometryNotify}
 	 */
 	@Subscribe
 	public
 			void
-			handleGeometryNotifyEvent(final GeometryNotifyEvent geometryNotifyEvent) {
-		final Rectangle geometry = geometryNotifyEvent.getGeometry();
+			handleGeometryNotifyEvent(final GeometryNotify geometryNotify) {
+		final Rectangle geometry = geometryNotify.getGeometry();
 		setX(geometry.getX());
 		setY(geometry.getY());
 		setWidth(geometry.getWidth());
@@ -420,27 +420,27 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
-	 * Called when an {@code GeometryRequestEvent} arrives for this surface.
+	 * Called when an {@code GeometryRequest} arrives for this surface.
 	 * 
-	 * @param geometryRequestEvent
-	 *            a {@link GeometryRequestEvent}
+	 * @param geometryRequest
+	 *            a {@link GeometryRequest}
 	 */
 	@Subscribe
 	public
 			void
-			handleGeometryRequestEvent(final GeometryRequestEvent geometryRequestEvent) {
+			handleGeometryRequestEvent(final GeometryRequest geometryRequest) {
 
-		final Rectangle geometry = geometryRequestEvent.getGeometry();
-		if (geometryRequestEvent.configureX()) {
+		final Rectangle geometry = geometryRequest.getGeometry();
+		if (geometryRequest.configureX()) {
 			setX(geometry.getX());
 		}
-		if (geometryRequestEvent.configureY()) {
+		if (geometryRequest.configureY()) {
 			setY(geometry.getY());
 		}
-		if (geometryRequestEvent.configureWidth()) {
+		if (geometryRequest.configureWidth()) {
 			setWidth(geometry.getWidth());
 		}
-		if (geometryRequestEvent.configureHeight()) {
+		if (geometryRequest.configureHeight()) {
 			setHeight(geometry.getHeight());
 		}
 
@@ -448,35 +448,35 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements
 	}
 
 	/**
-	 * Called when an {@code HideNotifyEvent} arrives for this surface.
+	 * Called when an {@code HideNotify} arrives for this surface.
 	 * 
-	 * @param hideNotifyEvent
-	 *            a {@link HideNotifyEvent}
+	 * @param hideNotify
+	 *            a {@link HideNotify}
 	 */
 	@Subscribe
-	public void handleHideNotifyEvent(final HideNotifyEvent hideNotifyEvent) {
+	public void handleHideNotifyEvent(final HideNotify hideNotify) {
 		doHide(false);
 	}
 
 	/**
 	 * Called when an {@code ShowNotifyEventt} arrives for this surface.
 	 * 
-	 * @param showNotifyEvent
-	 *            a {@link ShowNotifyEvent}
+	 * @param showNotify
+	 *            a {@link ShowNotify}
 	 */
 	@Subscribe
-	public void handleShowNotifyEvent(final ShowNotifyEvent showNotifyEvent) {
+	public void handleShowNotifyEvent(final ShowNotify showNotify) {
 		doShow(false);
 	}
 
 	/**
-	 * Called when an {@code ShowRequestEvent} arrives for this surface.
+	 * Called when an {@code ShowRequest} arrives for this surface.
 	 * 
-	 * @param showRequestEvent
-	 *            a {@link ShowRequestEvent}
+	 * @param showRequest
+	 *            a {@link ShowRequest}
 	 */
 	@Subscribe
-	public void handleShowRequestEvent(final ShowRequestEvent showRequestEvent) {
+	public void handleShowRequestEvent(final ShowRequest showRequest) {
 		requestShow();
 	}
 	/* end display event handling */

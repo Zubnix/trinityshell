@@ -11,23 +11,25 @@
  */
 package org.trinity.foundation.api.display.event;
 
-/***************************************
- * Indicates that a display resource has gained the input focus.
- * 
- *************************************** 
+import org.trinity.foundation.api.display.input.PointerInput;
+
+/**
+ * Notifies that a mouse button's state has changed.
  */
-public class FocusGainNotifyEvent extends FocusNotifyEvent {
+public class ButtonNotify extends InputNotify<PointerInput> {
 
 	/***************************************
-	 * Create a new <code>FocusGainNotifyEvent</code> with the provided target
-	 * as the focused resource.
+	 * Create a new <code>ButtonNotify</code> with the given event target as the
+	 * receiver of this event. Ideally, the receiving object should correspond
+	 * to the object that was clicked.
 	 * 
 	 * @param displayEventTarget
-	 *            The receiver of this event. eg the display resource that
-	 *            gained the focus.
+	 *            The receiver of this event.
+	 * @param pointerInput
+	 *            The {@link PointerInput} details.
 	 *************************************** 
 	 */
-	public FocusGainNotifyEvent(final Object displayEventTarget) {
-		super(displayEventTarget);
+	public ButtonNotify(final PointerInput pointerInput) {
+		super(pointerInput);
 	}
 }

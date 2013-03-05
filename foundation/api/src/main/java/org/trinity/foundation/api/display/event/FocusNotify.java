@@ -11,23 +11,11 @@
  */
 package org.trinity.foundation.api.display.event;
 
-/***************************************
- * Notifies that a display resource has become visible.
+/****************************************
+ * A generic abstract class for focus related events.
+ * 
  *************************************** 
  */
-public class ShowNotifyEvent extends DisplayEvent {
-
-	/***************************************
-	 * Construct a new <code>ShowNotifyEvent</code> that targets the given
-	 * display resource that became visible.
-	 * 
-	 * @param displayEventTarget
-	 *            The receiver of this event. eg the display resource that
-	 *            became visible.
-	 *************************************** 
-	 */
-	public ShowNotifyEvent(final Object displayEventTarget) {
-		super(displayEventTarget);
-	}
+public abstract class FocusNotify extends DisplayEvent {
 
 }

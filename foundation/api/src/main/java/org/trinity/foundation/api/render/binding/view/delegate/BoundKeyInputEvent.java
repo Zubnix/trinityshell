@@ -12,14 +12,14 @@
 package org.trinity.foundation.api.render.binding.view.delegate;
 
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.KeyNotifyEvent;
+import org.trinity.foundation.api.display.event.KeyNotify;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
 import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
 
 /***************************************
  * A base implementation of a {@link BoundInputEvent} for {@link KeyboardInput}.
- * A bound button input event is both a {@link KeyNotifyEvent} and a
+ * A bound button input event is both a {@link KeyNotify} and a
  * {@code BoundInputEvent}, so it can be used as an ordinary
  * {@link DisplayEvent} with additional information to invoke the correct
  * {@link InputSlot}.
@@ -27,8 +27,7 @@ import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
  * @see InputSlotCaller
  *************************************** 
  */
-public class BoundKeyInputEvent extends KeyNotifyEvent implements
-		BoundInputEvent {
+public class BoundKeyInputEvent extends KeyNotify implements BoundInputEvent {
 
 	private final String inputSlotName;
 
@@ -45,11 +44,9 @@ public class BoundKeyInputEvent extends KeyNotifyEvent implements
 	 * @param inputSlotName
 	 *            an input slot name.
 	 */
-	public BoundKeyInputEvent(	final Object inputTarget,
-								final KeyboardInput input,
-								final String inputSlotName) {
-		super(	inputTarget,
-				input);
+	public BoundKeyInputEvent(final KeyboardInput input,
+			final String inputSlotName) {
+		super(input);
 		this.inputSlotName = inputSlotName;
 	}
 

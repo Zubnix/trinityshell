@@ -15,7 +15,7 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_configure_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.GeometryNotifyEvent;
+import org.trinity.foundation.api.display.event.GeometryNotify;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
@@ -68,7 +68,7 @@ public class ConfigureNotifyConversion implements XEventConversion {
 															width,
 															height);
 
-		final DisplayEvent displayEvent = new GeometryNotifyEvent(	displayEventSource,
+		final DisplayEvent displayEvent = new GeometryNotify(	displayEventSource,
 																	geometry);
 
 		return displayEvent;

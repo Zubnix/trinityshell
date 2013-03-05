@@ -13,7 +13,7 @@ package org.trinity.shell.input.impl;
 
 import java.util.List;
 
-import org.trinity.foundation.api.display.event.KeyNotifyEvent;
+import org.trinity.foundation.api.display.event.KeyNotify;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.KeyboardInput;
@@ -72,8 +72,8 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 	}
 
 	@Subscribe
-	public void handleKeyEvent(final KeyNotifyEvent keyNotifyEvent) {
-		final KeyboardInput keyboardInput = keyNotifyEvent.getInput();
+	public void handleKeyEvent(final KeyNotify keyNotify) {
+		final KeyboardInput keyboardInput = keyNotify.getInput();
 		if (this.keys.contains(keyboardInput.getKey()) && this.inputModifiers.equals(keyboardInput.getInputModifiers())) {
 			this.action.run();
 		}

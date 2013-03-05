@@ -19,35 +19,4 @@ import org.trinity.foundation.api.display.DisplayServer;
  */
 public class DisplayEvent {
 
-	private final Object displayEventTarget;
-
-	/****************************************
-	 * Construct a generic <code>DisplayEvent</code> with the given target
-	 * object as the receiver.
-	 * 
-	 * @param displayEventTarget
-	 *            the receiving object.
-	 *************************************** 
-	 */
-	public DisplayEvent(final Object displayEventTarget) {
-		this.displayEventTarget = displayEventTarget;
-	}
-
-	/****************************************
-	 * The object that this event targets. The targeted object is the preferred
-	 * object for handling this event.
-	 * 
-	 * @return An event target
-	 *************************************** 
-	 */
-	public Object getDisplayEventTarget() {
-		return this.displayEventTarget;
-	}
-
-	@Override
-	public String toString() {
-		return String.format(	"%s=>[%s]",
-								getClass().getSimpleName(),
-								getDisplayEventTarget());
-	}
 }

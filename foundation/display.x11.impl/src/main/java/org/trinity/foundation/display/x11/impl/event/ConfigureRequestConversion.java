@@ -16,7 +16,7 @@ import org.freedesktop.xcb.xcb_config_window_t;
 import org.freedesktop.xcb.xcb_configure_request_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.GeometryRequestEvent;
+import org.trinity.foundation.api.display.event.GeometryRequest;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
@@ -77,7 +77,7 @@ public class ConfigureRequestConversion implements XEventConversion {
 
 		displayEventSource.configureClientEvents();
 
-		final DisplayEvent displayEvent = new GeometryRequestEvent(	displayEventSource,
+		final DisplayEvent displayEvent = new GeometryRequest(	displayEventSource,
 																	geometry,
 																	configureX,
 																	configureY,

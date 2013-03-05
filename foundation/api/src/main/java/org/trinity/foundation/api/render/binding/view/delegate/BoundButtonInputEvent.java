@@ -11,7 +11,7 @@
  */
 package org.trinity.foundation.api.render.binding.view.delegate;
 
-import org.trinity.foundation.api.display.event.ButtonNotifyEvent;
+import org.trinity.foundation.api.display.event.ButtonNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
@@ -19,7 +19,7 @@ import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
 
 /***************************************
  * A base implementation of a {@link BoundInputEvent} for {@link PointerInput}.
- * A bound button input event is both a {@link ButtonNotifyEvent} and a
+ * A bound button input event is both a {@link ButtonNotify} and a
  * {@code BoundInputEvent}, so it can be used as an ordinary
  * {@link DisplayEvent} with additional information to invoke the correct
  * {@link InputSlot}.
@@ -27,7 +27,7 @@ import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
  * @see InputSlotCaller
  *************************************** 
  */
-public class BoundButtonInputEvent extends ButtonNotifyEvent implements
+public class BoundButtonInputEvent extends ButtonNotify implements
 		BoundInputEvent {
 
 	private final String inputSlotName;
@@ -45,11 +45,9 @@ public class BoundButtonInputEvent extends ButtonNotifyEvent implements
 	 * @param inputSlotName
 	 *            an input slot name
 	 */
-	public BoundButtonInputEvent(	final Object displayEventTarget,
-									final PointerInput pointerInput,
-									final String inputSlotName) {
-		super(	displayEventTarget,
-				pointerInput);
+	public BoundButtonInputEvent(final PointerInput pointerInput,
+			final String inputSlotName) {
+		super(pointerInput);
 		this.inputSlotName = inputSlotName;
 
 	}

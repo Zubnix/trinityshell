@@ -9,30 +9,12 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.foundation.api.render;
-
-import com.google.common.util.concurrent.ListenableFuture;
+package org.trinity.foundation.api.display.event;
 
 /***************************************
- * An an interface to submit asynchronous paint operations.
- * 
+ * Notifies that the stacking position of a display resource has changed
  *************************************** 
  */
-public interface PaintRenderer {
-
-	/***************************************
-	 * Invoke the given {@link PaintRoutine} with the given caller context.
-	 * Actual invocation of the {@code PaintRoutine} is done later in a separate
-	 * dedicated paint thread.
-	 * 
-	 * @param callerContext
-	 *            the calling instance.
-	 * @param paintRoutine
-	 *            a {@link PaintRoutine}
-	 * @return a {@link ListenableFuture} result.
-	 *************************************** 
-	 */
-	<R> ListenableFuture<R> invoke(	Object callerContext,
-									PaintRoutine<R, PaintContext> paintRoutine);
+public class StackingChangedNotify extends DisplayEvent {
 
 }

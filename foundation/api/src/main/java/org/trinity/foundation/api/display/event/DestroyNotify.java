@@ -11,21 +11,10 @@
  */
 package org.trinity.foundation.api.display.event;
 
-/****************************************
- * A generic abstract class for focus related events.
+/**
+ * Notifies that a display resource is destroyed.
  * 
- *************************************** 
  */
-public abstract class FocusNotifyEvent extends DisplayEvent {
+public class DestroyNotify extends DisplayEvent {
 
-	/***************************************
-	 * Create a new focus event that targets the given object.
-	 * 
-	 * @param displayEventTarget
-	 *            The receiver of this focus related event.
-	 *************************************** 
-	 */
-	public FocusNotifyEvent(final Object displayEventTarget) {
-		super(displayEventTarget);
-	}
 }

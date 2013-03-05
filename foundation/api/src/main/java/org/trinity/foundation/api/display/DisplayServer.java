@@ -13,6 +13,8 @@ package org.trinity.foundation.api.display;
 
 import org.trinity.foundation.api.display.event.DisplayEvent;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 /**
  * Provides basic capabilities to talk to the underlying native display server.
  * One of the most fundamental aspects of the <code>DisplayServer</code> is the
@@ -31,24 +33,10 @@ public interface DisplayServer {
 	 * @return a {@link DisplaySurface}
 	 *************************************** 
 	 */
-	DisplaySurface getRootDisplayArea();
+	// TODO client notify?
+	ListenableFuture<DisplaySurface> getRootDisplayArea();
 
-	/**
-	 * Indicates if there are any pending <code>DisplayEvent</code>s on the
-	 * queue.
-	 * 
-	 * @return True if there are {@link DisplayEvent}s queued, false if not.
-	 */
-	boolean hasNextDisplayEvent();
-
-	/**
-	 * Retrieves ands removes the head {@link DisplayEvent} from the queue.
-	 * Whether or not this call blocks is implementation dependent, but usually
-	 * it should.
-	 * 
-	 * @return The next {@link DisplayEvent}.
-	 */
-	DisplayEvent getNextDisplayEvent();
+	void addListener(Object listener);
 
 	/**
 	 * Orderly shut down this <code>DisplayServer</code>. All resources living
@@ -57,5 +45,7 @@ public interface DisplayServer {
 	 * This method does not shut down the underlying native display, it merely
 	 * closes the connection to the underlying native display.
 	 */
-	void shutDown();
+	ListenableFuture<Void> close();
+
+	ListenableFuture<Void> open();
 }

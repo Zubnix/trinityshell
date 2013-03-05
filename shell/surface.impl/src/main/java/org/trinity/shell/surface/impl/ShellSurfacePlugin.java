@@ -56,7 +56,7 @@ public class ShellSurfacePlugin implements ShellPlugin, Runnable {
 		if (this.shellThread.isAlive()) {
 			this.shellThread.stop();
 		}
-		this.display.shutDown();
+		this.display.close();
 	}
 
 	@Override

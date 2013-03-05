@@ -15,7 +15,7 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.display.event.PointerLeaveNotifyEvent;
+import org.trinity.foundation.api.display.event.PointerLeaveNotify;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
@@ -57,7 +57,7 @@ public class EnterNotifyConversion implements XEventConversion {
 		final int windowId = enter_notify_event_t.getEvent();
 		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
 
-		final DisplayEvent displayEvent = new PointerLeaveNotifyEvent(displayEventSource);
+		final DisplayEvent displayEvent = new PointerLeaveNotify(displayEventSource);
 
 		return displayEvent;
 	}
