@@ -2,7 +2,7 @@ package org.trinity.foundation.api.display.event;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 
-public class CreationNotify {
+public class CreationNotify extends DisplayEvent {
 	private final DisplaySurface displaySurface;
 
 	public CreationNotify(DisplaySurface displaySurface) {

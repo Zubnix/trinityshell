@@ -38,6 +38,8 @@ public interface DisplayServer {
 
 	void addListener(Object listener);
 
+	void removeListener(Object listener);
+
 	/**
 	 * Orderly shut down this <code>DisplayServer</code>. All resources living
 	 * on this <code>DisplayServer</code> will be shut down as well.

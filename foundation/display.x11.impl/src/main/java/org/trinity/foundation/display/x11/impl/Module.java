@@ -32,8 +32,6 @@ public class Module extends AbstractModule {
 	protected void configure() {
 		bind(EventBus.class).annotatedWith(Names.named("XEventBus"))
 				.toInstance(new EventBus());
-		bind(EventBus.class).annotatedWith(Names.named("DisplayEventBus"))
-				.toInstance(new EventBus());
 		bind(ListeningExecutorService.class).annotatedWith(
 				Names.named("XExecutor")).toInstance(
 				MoreExecutors.listeningDecorator(Executors

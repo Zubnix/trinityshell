@@ -18,10 +18,12 @@ import java.util.concurrent.ExecutionException;
 
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.foundation.api.display.event.DestroyNotify;
 
 import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -56,8 +58,17 @@ public class XWindowCache {
 					new Callable<XWindow>() {
 						@Override
 						public XWindow call() throws Exception {
-							return (XWindow) XWindowCache.this.displaySurfaceFactory
+							XWindow xWindow = (XWindow) XWindowCache.this.displaySurfaceFactory
 									.createDisplaySurface(resourceHandle);
+							xWindow.addListener(new Object() {
+								@Subscribe
+								public void destroyed(
+										DestroyNotify destroyNotify) {
+									xWindows.invalidate(Integer
+											.valueOf(windowId));
+								}
+							});
+							return xWindow;
 						}
 					});
 		} catch (final ExecutionException e) {

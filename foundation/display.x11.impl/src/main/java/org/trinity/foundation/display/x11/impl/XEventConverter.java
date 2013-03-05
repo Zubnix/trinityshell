@@ -44,14 +44,11 @@ public final class XEventConverter {
 	private final Map<Integer, XEventConversion> conversionMap = new HashMap<Integer, XEventConversion>();
 
 	private final EventBus xEventBus;
-	private final EventBus displayEventBus;
 
 	@Inject
 	XEventConverter(final Set<XEventConversion> eventConversions,
-			@Named("XEventBus") final EventBus xEventBus,
-			@Named("DisplayEventBus") final EventBus displayEventBus) {
+			@Named("XEventBus") final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
-		this.displayEventBus = displayEventBus;
 
 		for (final XEventConversion eventConversion : eventConversions) {
 			this.conversionMap.put(eventConversion.getEventCode(),
@@ -82,7 +79,5 @@ public final class XEventConverter {
 		if (target.isPresent()) {
 			target.get().post(displayEvent);
 		}
-
-		this.displayEventBus.post(displayEvent);
 	}
 }

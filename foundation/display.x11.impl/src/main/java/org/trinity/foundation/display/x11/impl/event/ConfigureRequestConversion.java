@@ -15,10 +15,13 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_config_window_t;
 import org.freedesktop.xcb.xcb_configure_request_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.trinity.foundation.api.display.DisplayServer;
+import org.trinity.foundation.api.display.event.CreationNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.GeometryRequest;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.display.x11.impl.XDisplayServer;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XWindow;
@@ -41,12 +44,14 @@ public class ConfigureRequestConversion implements XEventConversion {
 
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
+	private final DisplayServer displayServer;
 
 	@Inject
 	ConfigureRequestConversion(@Named("XEventBus") final EventBus xEventBus,
-			final XWindowCache xWindowCache) {
+			final XWindowCache xWindowCache, final DisplayServer displayServer) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
+		this.displayServer = displayServer;
 	}
 
 	@Override
@@ -90,14 +95,18 @@ public class ConfigureRequestConversion implements XEventConversion {
 		final int windowId = request_event_t.getWindow();
 
 		boolean present = this.xWindowCache.isPresent(windowId);
-		final XWindow displayEventSource = this.xWindowCache
+		final XWindow displayEventTarget = this.xWindowCache
 				.getWindow(windowId);
 		if (!present) {
-			displayEventSource.configureClientEvents();
-			// TODO post CreateEvent on displayserver.
+			displayEventTarget.configureClientEvents();
+			// this is a bit of a dirty hack to work around X's model of client
+			// discovery.
+			CreationNotify creationNotify = new CreationNotify(
+					displayEventTarget);
+			((XDisplayServer) displayServer).post(creationNotify);
 		}
 
-		return null;
+		return Optional.of(displayEventTarget);
 	}
 
 	@Override

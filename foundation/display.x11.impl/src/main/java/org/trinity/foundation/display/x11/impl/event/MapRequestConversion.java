@@ -14,12 +14,17 @@ package org.trinity.foundation.display.x11.impl.event;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_map_request_event_t;
+import org.trinity.foundation.api.display.DisplayServer;
+import org.trinity.foundation.api.display.event.CreationNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.ShowRequest;
+import org.trinity.foundation.display.x11.impl.XDisplayServer;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -35,33 +40,54 @@ public class MapRequestConversion implements XEventConversion {
 
 	private final EventBus xEventBus;
 	private final XWindowCache xWindowCache;
+	private final DisplayServer displayServer;
 
 	@Inject
-	MapRequestConversion(@Named("XEventBus") final EventBus xEventBus, final XWindowCache xWindowCache) {
+	MapRequestConversion(@Named("XEventBus") final EventBus xEventBus,
+			final XWindowCache xWindowCache, DisplayServer displayServer) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
+		this.displayServer = displayServer;
 	}
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
-		final xcb_map_request_event_t map_request_event_t = new xcb_map_request_event_t(xcb_generic_event_t.getCPtr(event_t),
-																						true);
+		final xcb_map_request_event_t map_request_event_t = cast(event_t);
 
 		// TODO logging
-		System.err.println(String.format(	"Received %s",
-											map_request_event_t.getClass().getSimpleName()));
+		System.err.println(String.format("Received %s", map_request_event_t
+				.getClass().getSimpleName()));
 
 		this.xEventBus.post(map_request_event_t);
 
-		final int windowId = map_request_event_t.getWindow();
-		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
-
-		displayEventSource.configureClientEvents();
-
-		final DisplayEvent displayEvent = new ShowRequest(displayEventSource);
+		final DisplayEvent displayEvent = new ShowRequest();
 
 		return displayEvent;
+	}
+
+	private xcb_map_request_event_t cast(xcb_generic_event_t event_t) {
+		return new xcb_map_request_event_t(
+				xcb_generic_event_t.getCPtr(event_t), true);
+	}
+
+	@Override
+	public Optional<? extends XEventTarget> getTarget(
+			xcb_generic_event_t event_t) {
+		final xcb_map_request_event_t map_request_event_t = cast(event_t);
+		final int windowId = map_request_event_t.getWindow();
+		boolean present = this.xWindowCache.isPresent(windowId);
+		final XWindow displayEventTarget = this.xWindowCache
+				.getWindow(windowId);
+		if (!present) {
+			displayEventTarget.configureClientEvents();
+			// this is a bit of a dirty hack to work around X's model of client
+			// discovery.
+			CreationNotify creationNotify = new CreationNotify(
+					displayEventTarget);
+			((XDisplayServer) displayServer).post(creationNotify);
+		}
+		return Optional.of(displayEventTarget);
 	}
 
 	@Override

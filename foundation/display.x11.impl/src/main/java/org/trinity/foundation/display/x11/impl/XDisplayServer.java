@@ -16,6 +16,7 @@ import java.util.concurrent.Callable;
 import org.freedesktop.xcb.LibXcb;
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.event.DisplayEvent;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -28,12 +29,14 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton
-public class XDisplayServer implements DisplayServer {
+public class XDisplayServer implements DisplayServer, XEventTarget {
 
 	private final XConnection xConnection;
 	private final XWindowCache xWindowCache;
 	private final XEventPump xEventPump;
 	private final ListeningExecutorService xExecutor;
+
+	private EventBus displayEventBus = new EventBus();
 
 	@Inject
 	XDisplayServer(final XConnection xConnection,
@@ -42,7 +45,6 @@ public class XDisplayServer implements DisplayServer {
 			XEventPump xEventPump,
 			@Named("XExecutor") ListeningExecutorService xExecutor) {
 
-		displayEventBus.register(this);
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
 		this.xEventPump = xEventPump;
@@ -96,7 +98,16 @@ public class XDisplayServer implements DisplayServer {
 
 	@Override
 	public void addListener(Object listener) {
-		// TODO listen for client requests & display notifications
+		this.displayEventBus.register(listener);
+	}
 
+	@Override
+	public void post(DisplayEvent displayEvent) {
+		this.displayEventBus.post(displayEvent);
+	}
+
+	@Override
+	public void removeListener(Object listener) {
+		this.displayEventBus.unregister(listener);
 	}
 }
