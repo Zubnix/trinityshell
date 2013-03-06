@@ -12,6 +12,7 @@
 package org.trinity.foundation.api.display;
 
 import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.api.shared.Listenable;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -25,7 +26,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Reading of a <code>DisplayEvent</code> from the queue happens is done with a
  * call to {@link #getNextDisplayEvent()}.
  */
-public interface DisplayServer {
+public interface DisplayServer extends Listenable {
 
 	/***************************************
 	 * The root {@link DisplaySurface} of the {@link DisplaySurface} hierarchy.
@@ -35,10 +36,6 @@ public interface DisplayServer {
 	 */
 	// TODO client notify?
 	ListenableFuture<DisplaySurface> getRootDisplayArea();
-
-	void addListener(Object listener);
-
-	void removeListener(Object listener);
 
 	/**
 	 * Orderly shut down this <code>DisplayServer</code>. All resources living

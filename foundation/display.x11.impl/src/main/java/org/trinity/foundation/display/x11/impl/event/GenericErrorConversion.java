@@ -16,8 +16,8 @@ import javax.annotation.concurrent.Immutable;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
-import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XcbErrorUtil;
 
 import com.google.common.eventbus.EventBus;
@@ -52,7 +52,7 @@ public class GenericErrorConversion implements XEventConversion {
 	}
 
 	@Override
-	public XEventTarget getTarget(final xcb_generic_event_t event_t) {
+	public Listenable getTarget(final xcb_generic_event_t event_t) {
 		// TODO return display server
 		return null;
 	}

@@ -1,9 +1,5 @@
 package org.trinity.foundation.api.render.binding;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.lang.String.format;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,6 +25,7 @@ import org.trinity.foundation.api.render.binding.view.ViewElementTypes;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
+import org.trinity.foundation.api.shared.Listenable;
 
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
@@ -45,6 +42,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import static java.lang.String.format;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Bind
 @Singleton
@@ -147,8 +148,8 @@ public class BinderImpl implements Binder {
 		checkNotNull(propertyName);
 
 		try {
-			Optional<Method> optionalGetter = findGetter(	model.getClass(),
-															propertyName);
+			final Optional<Method> optionalGetter = findGetter(	model.getClass(),
+																propertyName);
 			if (!optionalGetter.isPresent()) {
 				return;
 			}
@@ -415,15 +416,16 @@ public class BinderImpl implements Binder {
 		checkNotNull(dataContext);
 		checkNotNull(view);
 		checkNotNull(inputSignals);
+		checkArgument(dataContext instanceof Listenable);
 
 		for (final InputSignal inputSignal : inputSignals) {
 			final Class<? extends Input> inputType = inputSignal.inputType();
 			final String inputSlotName = inputSignal.name();
 
-			this.inputListenerInstallerDelegate.installInputListener(	inputType,
-																		view,
-																		dataContext,
-																		inputSlotName);
+			this.inputListenerInstallerDelegate.installViewInputListener(	inputType,
+																			view,
+																			(Listenable) dataContext,
+																			inputSlotName);
 		}
 	}
 
@@ -473,13 +475,13 @@ public class BinderImpl implements Binder {
 		checkNotNull(propertySlot);
 
 		try {
-			String propertySlotDataContext = propertySlot.dataContext();
+			final String propertySlotDataContext = propertySlot.dataContext();
 			Object propertyDataContext;
 			if (propertySlotDataContext.isEmpty()) {
 				propertyDataContext = dataContext;
 			} else {
-				Optional<Object> optionalRelativeDataContext = getDataContextValue(	dataContext,
-																					propertySlotDataContext);
+				final Optional<Object> optionalRelativeDataContext = getDataContextValue(	dataContext,
+																							propertySlotDataContext);
 				if (optionalRelativeDataContext.isPresent()) {
 					propertyDataContext = optionalRelativeDataContext.get();
 				} else {
@@ -675,7 +677,7 @@ public class BinderImpl implements Binder {
 	}
 
 	protected Optional<Object> getDataContextValue(	final Object model,
-													String propertyChain) {
+													final String propertyChain) {
 		checkNotNull(model);
 		checkNotNull(propertyChain);
 

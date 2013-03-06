@@ -18,8 +18,7 @@ import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.core.QObject;
 
 public interface QJRenderEventConversion {
-	DisplayEvent convertEvent(	Object eventTarget,
-								Object view,
+	DisplayEvent convertEvent(	Object view,
 								QObject eventProducer,
 								QEvent qEvent);
 

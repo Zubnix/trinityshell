@@ -22,8 +22,8 @@ import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.Momentum;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
-import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
@@ -80,7 +80,7 @@ public class KeyPressConversion implements XEventConversion {
 	}
 
 	@Override
-	public XEventTarget getTarget(final xcb_generic_event_t event_t) {
+	public Listenable getTarget(final xcb_generic_event_t event_t) {
 		final xcb_key_press_event_t key_press_event_t = cast(event_t);
 		final int windowId = key_press_event_t.getEvent();
 		final XWindow displayEventTarget = this.xWindowCache.getWindow(windowId);

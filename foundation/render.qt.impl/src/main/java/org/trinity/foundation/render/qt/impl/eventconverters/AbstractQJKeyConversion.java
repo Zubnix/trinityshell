@@ -14,8 +14,7 @@ import com.trolltech.qt.gui.QKeyEvent;
 public abstract class AbstractQJKeyConversion implements QJRenderEventConversion {
 
 	@Override
-	public KeyNotify convertEvent(	final Object eventTarget,
-									final Object view,
+	public KeyNotify convertEvent(	final Object view,
 									final QObject qObject,
 									final QEvent qEvent) {
 
@@ -36,8 +35,7 @@ public abstract class AbstractQJKeyConversion implements QJRenderEventConversion
 														key,
 														inputModifiers);
 
-		final KeyNotify keyNotify = new KeyNotify(	eventTarget,
-													input);
+		final KeyNotify keyNotify = new KeyNotify(input);
 
 		return keyNotify;
 	}

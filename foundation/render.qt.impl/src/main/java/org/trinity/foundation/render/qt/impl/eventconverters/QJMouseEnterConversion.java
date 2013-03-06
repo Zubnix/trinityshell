@@ -39,11 +39,10 @@ public class QJMouseEnterConversion implements QJRenderEventConversion {
 	}
 
 	@Override
-	public PointerVisitationNotify convertEvent(final Object eventTarget,
-												final Object view,
+	public PointerVisitationNotify convertEvent(final Object view,
 												final QObject evenetProducer,
 												final QEvent qEvent) {
-		return new PointerEnterNotify(eventTarget);
+		return new PointerEnterNotify();
 	}
 
 	@Override

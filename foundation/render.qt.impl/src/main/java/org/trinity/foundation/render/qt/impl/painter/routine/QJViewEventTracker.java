@@ -11,27 +11,22 @@
  */
 package org.trinity.foundation.render.qt.impl.painter.routine;
 
-import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConverter;
 
-import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.core.QObject;
 
 public class QJViewEventTracker extends QObject {
 
-	private final Object eventTarget;
-	private final EventBus displayEventBus;
+	private final Listenable eventTarget;
 	private final QJRenderEventConverter renderEventConverter;
 	private final QObject view;
 
-	QJViewEventTracker(	final EventBus displayEventBus,
-						final QJRenderEventConverter qjRenderEventConverter,
-						final Object target,
+	QJViewEventTracker(	final QJRenderEventConverter qjRenderEventConverter,
+						final Listenable target,
 						final QObject view) {
-		this.displayEventBus = displayEventBus;
 		this.renderEventConverter = qjRenderEventConverter;
 		this.eventTarget = target;
 		this.view = view;
@@ -46,16 +41,10 @@ public class QJViewEventTracker extends QObject {
 		if (isViewEvent(eventProducer,
 						qEvent)) {
 
-			final Optional<DisplayEvent> displayEvent = this.renderEventConverter
-					.convertRenderEvent(this.eventTarget,
-										this.view,
-										eventProducer,
-										qEvent);
-
-			if (displayEvent.isPresent()) {
-				this.displayEventBus.post(displayEvent.get());
-				eventConsumed = true;
-			}
+			eventConsumed = this.renderEventConverter.convertRenderEvent(	this.eventTarget,
+																			this.view,
+																			eventProducer,
+																			qEvent);
 		}
 		return eventConsumed;
 	}

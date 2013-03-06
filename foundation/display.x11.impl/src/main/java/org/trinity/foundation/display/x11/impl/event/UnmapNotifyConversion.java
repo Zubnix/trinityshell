@@ -18,8 +18,8 @@ import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_unmap_notify_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.HideNotify;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
-import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
@@ -64,7 +64,7 @@ public class UnmapNotifyConversion implements XEventConversion {
 	}
 
 	@Override
-	public XEventTarget getTarget(final xcb_generic_event_t event_t) {
+	public Listenable getTarget(final xcb_generic_event_t event_t) {
 		final xcb_unmap_notify_event_t unmap_notify_event_t = cast(event_t);
 		final int windowId = unmap_notify_event_t.getWindow();
 		final int reportWindowId = unmap_notify_event_t.getEvent();

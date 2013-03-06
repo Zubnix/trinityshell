@@ -11,34 +11,47 @@
  */
 package org.trinity.foundation.render.qt.impl;
 
-import org.trinity.foundation.api.display.DisplayEventProducer;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 
+import javax.annotation.concurrent.ThreadSafe;
+
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableFutureTask;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.trolltech.qt.core.QCoreApplication;
 import com.trolltech.qt.gui.QApplication;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 
-@Bind(multiple = true, to = @To(value = To.Type.CUSTOM, customs = { DisplayEventProducer.class }))
-public class QJDisplayEventProducer implements DisplayEventProducer, Runnable {
+@Bind(to = @To(value = To.Type.IMPLEMENTATION))
+@ThreadSafe
+public class QJDisplayEventProducer implements Runnable {
 
-	private Thread renderThread;
+	private final ListeningExecutorService qRenderEventPump = MoreExecutors.listeningDecorator(Executors
+			.newSingleThreadExecutor());
 
-	@Override
-	public void startDisplayEventProduction() {
-		this.renderThread = new Thread(	this,
-										"Qt Jambi Render Thread");
-		this.renderThread.start();
+	public ListenableFuture<Void> start() {
+		return this.qRenderEventPump.submit(this,
+											null);
 	}
 
-	@Override
-	public void stopDisplayEventProduction() {
-		QCoreApplication.invokeLater(new Runnable() {
+	public ListenableFuture<Void> stop() {
+
+		final Callable<Void> updateChildViewPositionRoutine = new Callable<Void>() {
 			@Override
-			public void run() {
+			public Void call() throws ExecutionException {
 				QCoreApplication.quit();
+				return null;
 			}
-		});
+		};
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(updateChildViewPositionRoutine);
+
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
@@ -50,5 +63,4 @@ public class QJDisplayEventProducer implements DisplayEventProducer, Runnable {
 			throw new RuntimeException("Qt Jambi exited with error: " + r);
 		}
 	}
-
 }

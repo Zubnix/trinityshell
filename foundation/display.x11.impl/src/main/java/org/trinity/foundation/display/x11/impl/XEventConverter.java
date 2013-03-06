@@ -19,6 +19,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.api.shared.Listenable;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -49,12 +50,12 @@ public final class XEventConverter {
 
 	@Inject
 	XEventConverter(final Set<XEventConversion> eventConversions,
-					@Named("XEventBus") final EventBus xEventBus) {
+			@Named("XEventBus") final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 
 		for (final XEventConversion eventConversion : eventConversions) {
-			this.conversionMap.put(	eventConversion.getEventCode(),
-									eventConversion);
+			this.conversionMap.put(eventConversion.getEventCode(),
+					eventConversion);
 		}
 
 		this.xEventBus.register(this);
@@ -67,7 +68,8 @@ public final class XEventConverter {
 		// TODO handle error cases
 		final int eventCode = responseType & 0x7f;
 
-		final XEventConversion eventConversion = this.conversionMap.get(Integer.valueOf(eventCode));
+		final XEventConversion eventConversion = this.conversionMap.get(Integer
+				.valueOf(eventCode));
 		if (eventConversion == null) {
 			return;
 		}
@@ -77,7 +79,7 @@ public final class XEventConverter {
 			return;
 		}
 
-		final XEventTarget target = eventConversion.getTarget(event_t);
+		final Listenable target = eventConversion.getTarget(event_t);
 		if (target == null) {
 			return;
 		}

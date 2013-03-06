@@ -16,6 +16,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 
 import com.trolltech.qt.core.QCoreApplication;
@@ -23,6 +25,7 @@ import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QWidget;
 
+@ThreadSafe
 public class QJDisplaySurfaceHandle implements DisplaySurfaceHandle {
 
 	private final WeakReference<QWidget> visualReference;

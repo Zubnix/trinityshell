@@ -15,8 +15,7 @@ import com.trolltech.qt.gui.QMouseEvent;
 public abstract class AbstractQJButtonConversion implements QJRenderEventConversion {
 
 	@Override
-	public DisplayEvent convertEvent(	final Object eventTarget,
-										final Object view,
+	public DisplayEvent convertEvent(	final Object view,
 										final QObject eventProducer,
 										final QEvent qEvent) {
 		qEvent.accept();
@@ -41,8 +40,7 @@ public abstract class AbstractQJButtonConversion implements QJRenderEventConvers
 															rootX,
 															rootY);
 
-		final ButtonNotify buttonNotify = new ButtonNotify(	eventTarget,
-															pointerInput);
+		final ButtonNotify buttonNotify = new ButtonNotify(pointerInput);
 
 		return buttonNotify;
 	}

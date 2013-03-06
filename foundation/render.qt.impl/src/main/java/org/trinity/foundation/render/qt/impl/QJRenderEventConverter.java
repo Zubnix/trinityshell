@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.api.shared.Listenable;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -41,21 +42,22 @@ public class QJRenderEventConverter {
 		}
 	}
 
-	public Optional<DisplayEvent> convertRenderEvent(	final Object eventTarget,
-														final Object view,
-														final QObject eventProducer,
-														final QEvent event) {
+	public boolean convertRenderEvent(	final Listenable eventTarget,
+										final Object view,
+										final QObject eventProducer,
+										final QEvent event) {
 
 		final Optional<QJRenderEventConversion> eventConverter = this.conversionByQEventType.get(event.type());
 		DisplayEvent displayEvent = null;
 		if (eventConverter.isPresent()) {
-			displayEvent = eventConverter.get().convertEvent(	eventTarget,
-																view,
+			displayEvent = eventConverter.get().convertEvent(	view,
 																eventProducer,
 																event);
 
+			eventTarget.post(displayEvent);
+			return true;
 		}
 
-		return Optional.fromNullable(displayEvent);
+		return false;
 	}
 }

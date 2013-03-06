@@ -22,10 +22,9 @@ import org.trinity.foundation.api.display.event.CreationNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.GeometryRequest;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.api.shared.Rectangle;
-import org.trinity.foundation.display.x11.impl.XDisplayServer;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
-import org.trinity.foundation.display.x11.impl.XEventTarget;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
@@ -95,7 +94,7 @@ public class ConfigureRequestConversion implements XEventConversion {
 	}
 
 	@Override
-	public XEventTarget getTarget(final xcb_generic_event_t event_t) {
+	public Listenable getTarget(final xcb_generic_event_t event_t) {
 		final xcb_configure_request_event_t request_event_t = cast(event_t);
 		final int windowId = request_event_t.getWindow();
 
@@ -106,7 +105,7 @@ public class ConfigureRequestConversion implements XEventConversion {
 			// this is a bit of a dirty hack to work around X's model of client
 			// discovery.
 			final CreationNotify creationNotify = new CreationNotify(displayEventTarget);
-			((XDisplayServer) this.displayServer).post(creationNotify);
+			this.displayServer.post(creationNotify);
 		}
 
 		return displayEventTarget;

@@ -13,27 +13,22 @@ package org.trinity.foundation.render.qt.impl.painter.routine;
 
 import java.util.List;
 
-import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConverter;
 
-import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 import com.trolltech.qt.core.QChildEvent;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QObject;
 
 public class QJViewInputTracker extends QObject {
 
-	private final Object eventTarget;
-	private final EventBus displayEventBus;
+	private final Listenable eventTarget;
 	private final QJRenderEventConverter renderEventConverter;
 	private final QObject view;
 
-	QJViewInputTracker(	final EventBus displayEventBus,
-						final QJRenderEventConverter qjRenderEventConverter,
-						final Object eventTarget,
+	QJViewInputTracker(	final QJRenderEventConverter qjRenderEventConverter,
+						final Listenable eventTarget,
 						final QObject view) {
-		this.displayEventBus = displayEventBus;
 		this.renderEventConverter = qjRenderEventConverter;
 		this.eventTarget = eventTarget;
 		this.view = view;
@@ -78,42 +73,36 @@ public class QJViewInputTracker extends QObject {
 				break;
 			}
 			case KeyPress: {
-				eventConsumed = handleInputEvent(	eventProducer,
-													qEvent);
+				eventConsumed = this.renderEventConverter.convertRenderEvent(	this.eventTarget,
+																				this.view,
+																				eventProducer,
+																				qEvent);
 				break;
 			}
 			case KeyRelease: {
-				eventConsumed = handleInputEvent(	eventProducer,
-													qEvent);
+				eventConsumed = this.renderEventConverter.convertRenderEvent(	this.eventTarget,
+																				this.view,
+																				eventProducer,
+																				qEvent);
 				break;
 			}
 			case MouseButtonPress: {
-				eventConsumed = handleInputEvent(	eventProducer,
-													qEvent);
+				eventConsumed = this.renderEventConverter.convertRenderEvent(	this.eventTarget,
+																				this.view,
+																				eventProducer,
+																				qEvent);
 				break;
 			}
 			case MouseButtonRelease: {
-				eventConsumed = handleInputEvent(	eventProducer,
-													qEvent);
+				eventConsumed = this.renderEventConverter.convertRenderEvent(	this.eventTarget,
+																				this.view,
+																				eventProducer,
+																				qEvent);
 				break;
 			}
 			default:
 				break;
 		}
 		return eventConsumed;
-	}
-
-	private boolean handleInputEvent(	final QObject eventProducer,
-										final QEvent qEvent) {
-		final Optional<DisplayEvent> displayEvent = this.renderEventConverter.convertRenderEvent(	this.eventTarget,
-																									this.view,
-																									eventProducer,
-																									qEvent);
-
-		if (displayEvent.isPresent()) {
-			this.displayEventBus.post(displayEvent.get());
-			return true;
-		}
-		return false;
 	}
 }

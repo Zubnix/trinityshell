@@ -29,11 +29,10 @@ public class QJDestroyConversion implements QJRenderEventConversion {
 	}
 
 	@Override
-	public DestroyNotify convertEvent(	final Object eventTarget,
-										final Object view,
+	public DestroyNotify convertEvent(	final Object view,
 										final QObject eventProducer,
 										final QEvent qEventz) {
-		return new DestroyNotify(eventTarget);
+		return new DestroyNotify();
 	}
 
 	@Override

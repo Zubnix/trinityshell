@@ -38,7 +38,7 @@ public class InputSlotBindingTest {
 					view);
 
 		verify(	inputListenerInstallerDelegate,
-				times(1)).installInputListener(	KeyboardInput.class,
+				times(1)).installViewInputListener(	KeyboardInput.class,
 												view.getKeyInputSubView(),
 												model.getDummySubModel(),
 												"onKey");
@@ -66,7 +66,7 @@ public class InputSlotBindingTest {
 		binder.updateBinding(	model,
 								"otherSubModel");
 		verify(	inputListenerInstallerDelegate,
-				times(2)).installInputListener(	PointerInput.class,
+				times(2)).installViewInputListener(	PointerInput.class,
 												view.getMouseInputSubView(),
 												model.getOtherSubModel().getSubSubModel(),
 												"onClick");

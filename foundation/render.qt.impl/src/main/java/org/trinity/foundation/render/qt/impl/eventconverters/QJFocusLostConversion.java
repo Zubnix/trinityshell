@@ -38,11 +38,10 @@ public class QJFocusLostConversion implements QJRenderEventConversion {
 	}
 
 	@Override
-	public FocusNotify convertEvent(final Object eventTarget,
-									final Object view,
+	public FocusNotify convertEvent(final Object view,
 									final QObject eventProducer,
 									final QEvent qEvent) {
-		return new FocusLostNotify(eventTarget);
+		return new FocusLostNotify();
 	}
 
 	@Override

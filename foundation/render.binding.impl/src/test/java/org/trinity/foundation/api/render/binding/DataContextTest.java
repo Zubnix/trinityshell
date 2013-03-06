@@ -44,7 +44,7 @@ public class DataContextTest {
 															String.class),
 									"false");
 		verify(	inputListenerInstallerDelegate,
-				times(2)).installInputListener(	PointerInput.class,
+				times(2)).installViewInputListener(	PointerInput.class,
 												view.getMouseInputSubView(),
 												model.getOtherSubModel().getSubSubModel(),
 												"onClick");

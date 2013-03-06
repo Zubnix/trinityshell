@@ -11,296 +11,278 @@
  */
 package org.trinity.foundation.render.qt.impl.painter;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.Callable;
 
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
-import org.trinity.foundation.api.display.input.Button;
-import org.trinity.foundation.api.display.input.InputModifiers;
-import org.trinity.foundation.api.display.input.Key;
-import org.trinity.foundation.api.render.PaintContext;
-import org.trinity.foundation.api.render.PaintRenderer;
-import org.trinity.foundation.api.render.PaintRoutine;
+import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.binding.Binder;
-import org.trinity.foundation.render.qt.impl.painter.routine.QJGetDisplaySurfaceRoutine;
+import org.trinity.foundation.render.qt.impl.QJDisplaySurfaceHandle;
 
-import com.google.common.base.Throwables;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
 public class QJPainter implements Painter {
 
-	private final PaintRenderer renderEngine;
 	private final Object model;
 	private final Binder binder;
 	private final ViewDiscovery viewDiscovery = new ViewDiscovery();
 	private final DisplaySurfaceFactory displaySurfaceFactory;
 
 	@AssistedInject
-	QJPainter(	final PaintRenderer qFRenderEngine,
-				final DisplaySurfaceFactory displaySurfaceFactory,
+	QJPainter(	final DisplaySurfaceFactory displaySurfaceFactory,
 				final Binder binder,
 				@Assisted final Object model) {
 		this.binder = binder;
-		this.renderEngine = qFRenderEngine;
 		this.model = model;
 		this.displaySurfaceFactory = displaySurfaceFactory;
 	}
 
 	@Override
-	public void destroy() {
+	public ListenableFuture<Void> destroy() {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.close();
-											return null;
-										}
-									});
+
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.close();
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void setInputFocus() {
+	public ListenableFuture<Void> setInputFocus() {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.setFocus();
-											return null;
-										}
-									});
+
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.setFocus();
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void lower() {
+	public ListenableFuture<Void> lower() {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.lower();
-											return null;
-										}
-									});
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.lower();
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void show() {
+	public ListenableFuture<Void> show() {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.show();
-											return null;
-										}
-									});
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.show();
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void move(	final int x,
-						final int y) {
+	public ListenableFuture<Void> move(	final int x,
+										final int y) {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.move(	x,
-														y);
-											return null;
-										}
-									});
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.move(	x,
+							y);
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void moveResize(	final int x,
-							final int y,
-							final int width,
-							final int height) {
+	public ListenableFuture<Void> moveResize(	final int x,
+												final int y,
+												final int width,
+												final int height) {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.setGeometry(	x,
-																y,
-																width,
-																height);
-											return null;
-										}
-									});
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.setGeometry(	x,
+									y,
+									width,
+									height);
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void raise() {
+	public ListenableFuture<Void> raise() {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.raise();
-											return null;
-										}
-									});
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.raise();
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void setParent(	final DisplayArea parent,
-							final int x,
-							final int y) {
+	public ListenableFuture<Void> setParent(final DisplayArea parent,
+											final int x,
+											final int y) {
 		final QWidget parentView = this.viewDiscovery.lookupView(parent);
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.setParent(parentView);
-											view.move(	x,
-														y);
-											return null;
-										}
-									});
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.setParent(parentView);
+				view.move(	x,
+							y);
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void resize(	final int width,
-						final int height) {
+	public ListenableFuture<Void> resize(	final int width,
+											final int height) {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.resize(width,
-														height);
-											return null;
-										}
-									});
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.resize(width,
+							height);
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void hide() {
+	public ListenableFuture<Void> hide() {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.hide();
-											return null;
-										}
-									});
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.hide();
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void grabKeyboard() {
+	public ListenableFuture<Void> grabKeyboard() {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.grabKeyboard();
-											return null;
-										}
-									});
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.grabKeyboard();
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void grabButton(	final Button grabButton,
-							final InputModifiers withModifiers) {
-		// this.qFRenderEngine.invoke( this.paintableSurfaceNode,
-		// new PaintRoutine<Void, QJPaintContext>() {
-		// @Override
-		// public Void call(final QJPaintContext paintContext) {
-		// // ???
-		// return null;
-		// }
-		// });
-	}
-
-	@Override
-	public void grabPointer() {
+	public ListenableFuture<Void> grabPointer() {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.grabMouse();
-											return null;
-										}
-									});
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.grabMouse();
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void ungrabPointer() {
+	public ListenableFuture<Void> ungrabPointer() {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.releaseMouse();
-											return null;
-										}
-									});
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.releaseMouse();
+				return null;
+			}
+		};
+
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
-	public void ungrabButton(	final Button ungrabButton,
-								final InputModifiers withModifiers) {
-		// this.qFRenderEngine.invoke( this.paintableSurfaceNode,
-		// new PaintRoutine<Void, QJPaintContext>() {
-		// @Override
-		// public Void call(final QJPaintContext paintContext) {
-		// // ???
-		// return null;
-		// }
-		// });
-
-	}
-
-	@Override
-	public void grabKey(final Key grabKey,
-						final InputModifiers withModifiers) {
-		// this.qFRenderEngine.invoke( this.paintableSurfaceNode,
-		// new PaintRoutine<Void, QJPaintContext>() {
-		// @Override
-		// public Void call(final QJPaintContext paintContext) {
-		// // ???
-		// return null;
-		// }
-		// });
-	}
-
-	@Override
-	public void ungrabKey(	final Key ungrabKey,
-							final InputModifiers withModifiers) {
-		// this.qFRenderEngine.invoke( this.paintableSurfaceNode,
-		// new PaintRoutine<Void, QJPaintContext>() {
-		// @Override
-		// public Void call(final QJPaintContext paintContext) {
-		// // ???
-		// return null;
-		// }
-		// });
-
-	}
-
-	@Override
-	public void ungrabKeyboard() {
+	public ListenableFuture<Void> ungrabKeyboard() {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		this.renderEngine.invoke(	this.model,
-									new PaintRoutine<Void, PaintContext>() {
-										@Override
-										public Void call(final PaintContext paintContext) {
-											view.releaseKeyboard();
-											return null;
-										}
-									});
+		final Callable<Void> callable = new Callable<Void>() {
+			@Override
+			public Void call() {
+				view.releaseKeyboard();
+				return null;
+			}
+		};
 
+		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 
 	@Override
@@ -308,27 +290,24 @@ public class QJPainter implements Painter {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
 		this.binder.bind(	this.model,
 							view);
-		// TODO set the correct parent.
 	}
 
 	@Override
-	public DisplaySurface getDislaySurface() {
-		DisplaySurface displaySurface = null;
+	public ListenableFuture<DisplaySurface> getDislaySurface() {
 
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
+		final Callable<DisplaySurface> callable = new Callable<DisplaySurface>() {
+			@Override
+			public DisplaySurface call() {
+				final DisplaySurfaceHandle displaySurfaceHandle = new QJDisplaySurfaceHandle(view);
+				final DisplaySurface displaySurface = QJPainter.this.displaySurfaceFactory
+						.createDisplaySurface(displaySurfaceHandle);
+				return displaySurface;
+			}
+		};
 
-		final Future<DisplaySurface> dislaySurfaceFuture = this.renderEngine
-				.invoke(this.model,
-						new QJGetDisplaySurfaceRoutine(	this.displaySurfaceFactory,
-														view));
-		try {
-			displaySurface = dislaySurfaceFuture.get();
-		} catch (final InterruptedException e) {
-			Throwables.propagate(e);
-		} catch (final ExecutionException e) {
-			Throwables.propagate(e);
-		}
-
-		return displaySurface;
+		final ListenableFutureTask<DisplaySurface> futureTask = ListenableFutureTask.create(callable);
+		QApplication.invokeLater(futureTask);
+		return futureTask;
 	}
 }

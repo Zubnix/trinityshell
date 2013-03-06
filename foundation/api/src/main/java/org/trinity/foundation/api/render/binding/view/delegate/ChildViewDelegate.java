@@ -33,9 +33,9 @@ public interface ChildViewDelegate {
 	 * @return a new view instance.
 	 *************************************** 
 	 */
-	<T> T newView(	Object parentView,
-					Class<T> childViewType,
-					int position);
+	<T> ListenableFuture<T> newView(Object parentView,
+									Class<T> childViewType,
+									int position);
 
 	/***************************************
 	 * Destroy a view instance.
