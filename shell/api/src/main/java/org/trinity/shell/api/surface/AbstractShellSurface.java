@@ -364,6 +364,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	@Override
 	public void syncGeoToDisplaySurface() {
 
+		// callback executed in same thread, should block (?)
 		addCallback(getDisplaySurface(),
 					new FutureCallback<DisplaySurface>() {
 						@Override
@@ -380,6 +381,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	}
 
 	protected void syncGeoToDisplaySurfaceCb(final DisplaySurface result) {
+
+		// callback executed in same thread, should block (?)
 		addCallback(result.getGeometry(),
 					new FutureCallback<Rectangle>() {
 						@Override
@@ -403,8 +406,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 							// TODO Auto-generated method stub
 							t.printStackTrace();
 						}
-					},
-					this.shellExecutor);
+					});
 	}
 
 	@Override
