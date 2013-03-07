@@ -1,8 +1,12 @@
 package org.trinity.shell.api;
 
+import java.util.concurrent.Executors;
+
 import org.trinity.shell.api.plugin.ShellPlugin;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
@@ -29,5 +33,7 @@ public class Module extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(EventBus.class).annotatedWith(Names.named("ShellEventBus")).toInstance(new EventBus());
+		bind(ListeningExecutorService.class).annotatedWith(Names.named("ShellExecutor"))
+				.toInstance(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()));
 	}
 }
