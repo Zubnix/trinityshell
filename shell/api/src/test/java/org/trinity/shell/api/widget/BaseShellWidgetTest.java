@@ -1,5 +1,7 @@
 package org.trinity.shell.api.widget;
 
+import java.util.concurrent.ExecutionException;
+
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
@@ -8,22 +10,26 @@ import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 public class BaseShellWidgetTest {
 
 	@Test
-	public void testInit() {
+	public void testInit() throws InterruptedException, ExecutionException {
 		// given
 		final ShellDisplayEventDispatcher shellDisplayEventDispatcher = Mockito.mock(ShellDisplayEventDispatcher.class);
 		final PainterFactory painterFactory = Mockito.mock(PainterFactory.class);
 		final BaseShellWidget parentWidget = Mockito.mock(BaseShellWidget.class);
 		final DisplaySurface displaySurface = Mockito.mock(DisplaySurface.class);
-		Mockito.when(parentWidget.getDisplaySurface()).thenReturn(displaySurface);
+		final ListenableFuture<DisplaySurface> listenableFuture = Mockito.mock(ListenableFuture.class);
+		Mockito.when(listenableFuture.get()).thenReturn(displaySurface);
+		Mockito.when(parentWidget.getDisplaySurface()).thenReturn(listenableFuture);
 		final Painter painter = Mockito.mock(Painter.class);
 		Mockito.when(painterFactory.createPainter(Matchers.any())).thenReturn(painter);
 		final BaseShellWidget baseShellWidget = new BaseShellWidget(shellDisplayEventDispatcher,
 																	painterFactory);
 
-		Mockito.when(painter.getDislaySurface()).thenReturn(displaySurface);
+		Mockito.when(painter.getDislaySurface()).thenReturn(listenableFuture);
 
 		baseShellWidget.setX(50);
 		baseShellWidget.setY(75);
