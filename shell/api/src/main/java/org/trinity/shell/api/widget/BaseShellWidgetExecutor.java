@@ -11,6 +11,8 @@
  */
 package org.trinity.shell.api.widget;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeExecutor;
@@ -23,6 +25,7 @@ import org.trinity.shell.api.surface.ShellSurface;
  * A {@link ShellNodeExecutor} for a {@link BaseShellWidget}.
  * 
  */
+@NotThreadSafe
 public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 
 	private final BaseShellWidget shellWidget;

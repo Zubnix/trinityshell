@@ -16,6 +16,8 @@ import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 /***************************************
  * Wraps a {@link DisplaySurface} and provides additional basic functionality
  * like state information, minimum, maximum, current and requested dimensions.
@@ -28,6 +30,8 @@ import org.trinity.shell.api.scene.event.ShellNodeEvent;
  * 
  *************************************** 
  */
+// TODO we could make all methods async, that way shellplugins can run in their
+// own thread
 public interface ShellSurface extends ShellNode {
 
 	/***************************************
@@ -80,7 +84,7 @@ public interface ShellSurface extends ShellNode {
 	 *         is absent, then this node is not yet initialized.
 	 *************************************** 
 	 */
-	DisplaySurface getDisplaySurface();
+	ListenableFuture<DisplaySurface> getDisplaySurface();
 
 	/***************************************
 	 * The constant absolute delta of the old and new width when this surface's
@@ -186,10 +190,4 @@ public interface ShellSurface extends ShellNode {
 	 *************************************** 
 	 */
 	void syncGeoToDisplaySurface();
-
-	/***************************************
-	 * Make this surface the source of all user input.
-	 *************************************** 
-	 */
-	void setInputFocus();
 }

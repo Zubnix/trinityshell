@@ -11,8 +11,9 @@
  */
 package org.trinity.shell.api.surface;
 
-import static com.google.common.util.concurrent.Futures.addCallback;
+import javax.annotation.concurrent.NotThreadSafe;
 
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.GeometryNotify;
 import org.trinity.foundation.api.display.event.GeometryRequest;
@@ -25,8 +26,11 @@ import org.trinity.shell.api.scene.ShellNode;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+import static com.google.common.util.concurrent.Futures.addCallback;
 
 /**
  * An abstract base implementation of {@link ShellSurface}. Implementations that
@@ -34,6 +38,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * <code>AbstractShellSurface</code>.
  * 
  */
+@NotThreadSafe
 public abstract class AbstractShellSurface extends AbstractShellNode implements ShellSurface {
 
 	public static final boolean DEFAULT_IS_RESIZABLE = true;
@@ -57,13 +62,14 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	private int widthIncrement;
 	private int heightIncrement;
 
-	private final ListeningExecutorService shellExecutor;
+	@Inject
+	@Named("ShellExecutor")
+	private ListeningExecutorService shellExecutor;
 
 	/**
 	 * Create new <code>AbstractShellSurface</code>
 	 */
-	protected AbstractShellSurface(final ListeningExecutorService shellExecutor) {
-		this.shellExecutor = shellExecutor;
+	protected AbstractShellSurface() {
 		initBasics();
 	}
 
@@ -89,11 +95,6 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 		setMaxHeight(AbstractShellSurface.DEFAULT_MAX_HEIGHT);
 		setWidthIncrement(AbstractShellSurface.DEFAULT_WIDTH_INC);
 		setHeightIncrement(AbstractShellSurface.DEFAULT_HEIGHT_INC);
-	}
-
-	@Override
-	public void setInputFocus() {
-		getDisplaySurface().setInputFocus();
 	}
 
 	/**
@@ -362,27 +363,45 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 */
 	@Override
 	public void syncGeoToDisplaySurface() {
-		// TODO in future version we might want to take a geometry delegate into
-		// account to map from and to shell scene geometry and on screen
-		// geometry.
-		final ListenableFuture<Rectangle> rectangleFuture = getDisplaySurface().getGeometry();
-		addCallback(rectangleFuture,
+
+		addCallback(getDisplaySurface(),
+					new FutureCallback<DisplaySurface>() {
+						@Override
+						public void onSuccess(final DisplaySurface result) {
+							syncGeoToDisplaySurfaceCb(result);
+						}
+
+						@Override
+						public void onFailure(final Throwable t) {
+							// TODO Auto-generated method stub
+							t.printStackTrace();
+						}
+					});
+	}
+
+	protected void syncGeoToDisplaySurfaceCb(final DisplaySurface result) {
+		addCallback(result.getGeometry(),
 					new FutureCallback<Rectangle>() {
 						@Override
 						public void onSuccess(final Rectangle result) {
+							// TODO in future version we might want to take a
+							// geometry delegate into
+							// account to map from and to shell scene geometry
+							// and on screen
+							// geometry.
+
 							setX(result.getX());
 							setY(result.getY());
 
 							setWidth(result.getWidth());
 							setHeight(result.getHeight());
 							doMoveResize(false);
-
 						}
 
 						@Override
 						public void onFailure(final Throwable t) {
 							// TODO Auto-generated method stub
-
+							t.printStackTrace();
 						}
 					},
 					this.shellExecutor);

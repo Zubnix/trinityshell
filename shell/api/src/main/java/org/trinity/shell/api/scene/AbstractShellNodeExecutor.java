@@ -11,6 +11,8 @@
  */
 package org.trinity.shell.api.scene;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 
 /****************************************
@@ -19,6 +21,7 @@ import org.trinity.foundation.api.display.DisplayAreaManipulator;
  * 
  *************************************** 
  */
+@NotThreadSafe
 public abstract class AbstractShellNodeExecutor implements ShellNodeExecutor {
 
 	/**

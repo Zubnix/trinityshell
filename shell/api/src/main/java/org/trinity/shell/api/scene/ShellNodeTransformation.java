@@ -11,6 +11,8 @@
  */
 package org.trinity.shell.api.scene;
 
+import javax.annotation.concurrent.Immutable;
+
 /**
  * A geometric transformation. Current geometric property names end in 0, new
  * ones in 1. A Delta value is the subtraction of the new value with the current
@@ -19,6 +21,7 @@ package org.trinity.shell.api.scene;
  * <br/>
  * returns true.
  */
+@Immutable
 public class ShellNodeTransformation {
 	private final int x0;
 	private final int y0;

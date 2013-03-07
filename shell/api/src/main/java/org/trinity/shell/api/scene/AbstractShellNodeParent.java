@@ -14,6 +14,8 @@ package org.trinity.shell.api.scene;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
@@ -26,6 +28,7 @@ import com.google.common.base.Optional;
  * 
  *************************************** 
  */
+@NotThreadSafe
 public abstract class AbstractShellNodeParent extends AbstractShellNode implements ShellNodeParent {
 
 	private final Set<ShellNode> children = new HashSet<ShellNode>();

@@ -11,6 +11,8 @@
  */
 package org.trinity.shell.api.surface;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.shared.Coordinate;
@@ -24,6 +26,7 @@ import org.trinity.shell.api.scene.ShellNodeParent;
  * 
  *************************************** 
  */
+@NotThreadSafe
 public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExecutor implements ShellNodeExecutor {
 
 	@Override

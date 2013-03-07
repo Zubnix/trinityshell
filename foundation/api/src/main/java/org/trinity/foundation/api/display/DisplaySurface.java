@@ -22,8 +22,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * server.
  * 
  */
-public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator,
-		Listenable {
+public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator, Listenable {
 
 	/***************************************
 	 * Query geometry information. The values of the returned {@link Rectangle}

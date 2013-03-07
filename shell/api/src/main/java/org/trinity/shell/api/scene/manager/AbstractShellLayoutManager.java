@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
@@ -36,6 +38,7 @@ import com.google.common.eventbus.Subscribe;
 /**
  * Abstract base class for a {@link ShellLayoutManager}.
  */
+@NotThreadSafe
 public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	private final Map<ShellNode, ShellLayoutProperty> childrenWithLayoutProperty = new LinkedHashMap<ShellNode, ShellLayoutProperty>();

@@ -11,6 +11,8 @@
  */
 package org.trinity.shell.api.widget;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
@@ -22,6 +24,7 @@ import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
 import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -37,6 +40,7 @@ import com.google.inject.name.Named;
  * 
  * @see org.trinity.foundation.api.render.binding
  */
+@NotThreadSafe
 public class BaseShellWidget extends AbstractShellSurfaceParent implements ShellWidget {
 
 	private class DestroyCallback {
@@ -105,13 +109,7 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 	}
 
 	@Override
-	public void setInputFocus() {
-
-		getPainter().setInputFocus();
-	}
-
-	@Override
-	public DisplaySurface getDisplaySurface() {
+	public ListenableFuture<DisplaySurface> getDisplaySurface() {
 		return this.painter.getDislaySurface();
 	}
 }

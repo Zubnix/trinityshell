@@ -11,6 +11,8 @@
  */
 package org.trinity.shell.api.scene.event;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeTransformation;
 
@@ -18,6 +20,7 @@ import org.trinity.shell.api.scene.ShellNodeTransformation;
  * General event to inform about visibility (show, hide) related operations.
  *************************************** 
  */
+@Immutable
 public class ShellNodeVisibilityEvent extends ShellNodeEvent {
 
 	/**

@@ -11,6 +11,8 @@
  */
 package org.trinity.shell.api.surface;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.shell.api.scene.ShellNode;
@@ -24,6 +26,7 @@ import com.google.common.eventbus.EventBus;
  * 
  *************************************** 
  */
+@NotThreadSafe
 public interface ShellDisplayEventDispatcher {
 
 	/***************************************

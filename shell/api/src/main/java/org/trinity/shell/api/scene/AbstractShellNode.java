@@ -11,6 +11,8 @@
  */
 package org.trinity.shell.api.scene;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
@@ -43,6 +45,7 @@ import com.google.common.eventbus.EventBus;
  * 
  *************************************** 
  */
+@NotThreadSafe
 public abstract class AbstractShellNode implements ShellNode {
 
 	private int x;
@@ -118,7 +121,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	 */
 	@Override
 	public int getAbsoluteX() {
-		if (getParent() == null || getParent().equals(this)) {
+		if ((getParent() == null) || getParent().equals(this)) {
 			return getX();
 		}
 		return getParent().getAbsoluteX() + getX();
@@ -131,7 +134,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	 */
 	@Override
 	public int getAbsoluteY() {
-		if (getParent() == null || getParent().equals(this)) {
+		if ((getParent() == null) || getParent().equals(this)) {
 			return getY();
 		}
 		return getParent().getAbsoluteY() + getY();
@@ -202,7 +205,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		}
 
 		// check if our parent is visible.
-		final boolean parentVisible = getParent() != null && getParent().isVisible();
+		final boolean parentVisible = (getParent() != null) && getParent().isVisible();
 		return parentVisible;
 	}
 

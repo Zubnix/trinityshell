@@ -23,9 +23,9 @@ import org.trinity.shell.api.surface.ShellSurfaceParent;
 public interface ShellWidget extends ShellSurfaceParent {
 
 	/***************************************
-	 * The {@code Painter} to use with the paint back-end. A {@code Painter} is
-	 * dedicate a single {@code ShellWidget} instance. {@code Painter} instances
-	 * are constructed in the {@link PainterFactory}.
+	 * The {@code Painter} to use with the paint back-end. A {@code Painter}
+	 * instance is dedicated to a single {@code ShellWidget} instance.
+	 * {@code Painter} instances are constructed in the {@link PainterFactory}.
 	 * 
 	 * @return a {@link Painter}.
 	 *************************************** 

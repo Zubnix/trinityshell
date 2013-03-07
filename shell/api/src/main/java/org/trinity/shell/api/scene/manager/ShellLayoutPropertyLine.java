@@ -11,6 +11,8 @@
  */
 package org.trinity.shell.api.scene.manager;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.trinity.foundation.api.shared.Margins;
 import org.trinity.shell.api.scene.ShellNode;
 
@@ -19,6 +21,7 @@ import org.trinity.shell.api.scene.ShellNode;
  * 
  *************************************** 
  */
+@Immutable
 public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 
 	private final int weight;
