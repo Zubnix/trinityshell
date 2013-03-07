@@ -1,7 +1,5 @@
 package org.trinity.render.qt.impl;
 
-import org.trinity.foundation.api.render.PaintContext;
-
 import com.trolltech.qt.gui.QLayout;
 import com.trolltech.qt.gui.QPushButton;
 import com.trolltech.qt.gui.QVBoxLayout;
@@ -37,8 +35,7 @@ public class DummyView extends QWidget {
 
 	}
 
-	public void viewSlot1(	final PaintContext paintContext,
-							final Object arg) {
+	public void viewSlot1(final Object arg) {
 
 	}
 

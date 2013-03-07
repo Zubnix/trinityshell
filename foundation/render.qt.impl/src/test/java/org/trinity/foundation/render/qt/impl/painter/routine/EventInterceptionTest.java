@@ -1,15 +1,10 @@
 package org.trinity.foundation.render.qt.impl.painter.routine;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import org.junit.Test;
 import org.trinity.foundation.api.display.event.ButtonNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.FocusGainNotify;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConverter;
 import org.trinity.render.qt.impl.DummyQJRenderEngine;
 import org.trinity.render.qt.impl.DummyView;
@@ -25,17 +20,22 @@ import com.trolltech.qt.gui.QFocusEvent;
 import com.trolltech.qt.gui.QMouseEvent;
 import com.trolltech.qt.gui.QWidget;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
 public class EventInterceptionTest {
 
 	@Test
 	public void testViewEvents() throws InterruptedException {
 		final EventBus displayEventBus = mock(EventBus.class);
 
-		final Object eventTarget = mock(Object.class);
-		final DisplayEvent focusGainNotifyEvent = new FocusGainNotify(eventTarget);
+		final Listenable eventTarget = mock(Listenable.class);
+		final DisplayEvent focusGainNotifyEvent = new FocusGainNotify();
 		final Optional<DisplayEvent> optionalFocusGainNotifyEvent = Optional.of(focusGainNotifyEvent);
-		final DisplayEvent buttonNotifyEvent = new ButtonNotify(eventTarget,
-																null);
+		final DisplayEvent buttonNotifyEvent = new ButtonNotify(null);
 		final Optional<DisplayEvent> optionalButtonNotifyEvent = Optional.of(buttonNotifyEvent);
 
 		final Thread guiThread = new Thread() {
@@ -60,14 +60,13 @@ public class EventInterceptionTest {
 				when(qjRenderEventConverter.convertRenderEvent(	eventTarget,
 																view,
 																view,
-																mouseClickEvent)).thenReturn(optionalButtonNotifyEvent);
+																mouseClickEvent)).thenReturn(Boolean.TRUE);
 				when(qjRenderEventConverter.convertRenderEvent(	eventTarget,
 																view,
 																view,
-																focusEvent)).thenReturn(optionalFocusGainNotifyEvent);
+																focusEvent)).thenReturn(Boolean.TRUE);
 
-				new QJViewEventTracker(	displayEventBus,
-										qjRenderEventConverter,
+				new QJViewEventTracker(	qjRenderEventConverter,
 										eventTarget,
 										view);
 
@@ -97,11 +96,10 @@ public class EventInterceptionTest {
 	public void testInputEvents() throws InterruptedException {
 		final EventBus displayEventBus = mock(EventBus.class);
 
-		final Object eventTarget = mock(Object.class);
-		final DisplayEvent focusGainNotifyEvent = new FocusGainNotify(eventTarget);
+		final Listenable eventTarget = mock(Listenable.class);
+		final DisplayEvent focusGainNotifyEvent = new FocusGainNotify();
 		final Optional<DisplayEvent> optionalFocusGainNotifyEvent = Optional.of(focusGainNotifyEvent);
-		final DisplayEvent buttonNotifyEvent = new ButtonNotify(eventTarget,
-																null);
+		final DisplayEvent buttonNotifyEvent = new ButtonNotify(null);
 		final Optional<DisplayEvent> optionalButtonNotifyEvent = Optional.of(buttonNotifyEvent);
 
 		final Thread guiThread = new Thread() {
@@ -123,22 +121,21 @@ public class EventInterceptionTest {
 				when(qjRenderEventConverter.convertRenderEvent(	eventTarget,
 																view,
 																view,
-																mouseEvent)).thenReturn(optionalButtonNotifyEvent);
+																mouseEvent)).thenReturn(Boolean.TRUE);
 				when(qjRenderEventConverter.convertRenderEvent(	eventTarget,
 																view,
 																view.getPushButton0(),
-																mouseEvent)).thenReturn(optionalButtonNotifyEvent);
+																mouseEvent)).thenReturn(Boolean.TRUE);
 				when(qjRenderEventConverter.convertRenderEvent(	eventTarget,
 																view,
 																view.getPushButton1(),
-																mouseEvent)).thenReturn(optionalButtonNotifyEvent);
+																mouseEvent)).thenReturn(Boolean.TRUE);
 				when(qjRenderEventConverter.convertRenderEvent(	eventTarget,
 																view,
 																view,
-																focusEvent)).thenReturn(optionalFocusGainNotifyEvent);
+																focusEvent)).thenReturn(Boolean.TRUE);
 
-				new QJViewInputTracker(	displayEventBus,
-										qjRenderEventConverter,
+				new QJViewInputTracker(	qjRenderEventConverter,
 										eventTarget,
 										view);
 
@@ -155,7 +152,7 @@ public class EventInterceptionTest {
 				when(qjRenderEventConverter.convertRenderEvent(	eventTarget,
 																view,
 																extraChild,
-																mouseEvent)).thenReturn(optionalButtonNotifyEvent);
+																mouseEvent)).thenReturn(Boolean.TRUE);
 				extraChild.setParent(view);
 
 				QApplication.sendEvent(	extraChild,
