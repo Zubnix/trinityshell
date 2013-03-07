@@ -1,10 +1,5 @@
 package org.trinity.foundation.api.render.binding;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
@@ -13,10 +8,17 @@ import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 public class ObservableCollectionBindingTest {
 
 	@Test
-	public void testBinding() throws ExecutionException {
+	public void testBinding() throws ExecutionException, InterruptedException {
 		final Model model = new Model();
 		final View view = new View();
 
@@ -25,9 +27,11 @@ public class ObservableCollectionBindingTest {
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		final ListenableFuture<CollectionElementView> listenableFuture = mock(ListenableFuture.class);
+		when(listenableFuture.get()).thenReturn(new CollectionElementView());
 		when(childViewDelegate.newView(	view,
 										CollectionElementView.class,
-										0)).thenReturn(new CollectionElementView());
+										0)).thenReturn(listenableFuture);
 		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
 												inputListenerInstallerDelegate,
 												childViewDelegate,
@@ -42,7 +46,7 @@ public class ObservableCollectionBindingTest {
 	}
 
 	@Test
-	public void testInsert() throws ExecutionException {
+	public void testInsert() throws ExecutionException, InterruptedException {
 		final Model model = new Model();
 		final View view = new View();
 
@@ -51,12 +55,14 @@ public class ObservableCollectionBindingTest {
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		final ListenableFuture<CollectionElementView> listenableFuture = mock(ListenableFuture.class);
+		when(listenableFuture.get()).thenReturn(new CollectionElementView());
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
-																0)).thenReturn(new CollectionElementView());
+																0)).thenReturn(listenableFuture);
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
-																1)).thenReturn(new CollectionElementView());
+																1)).thenReturn(listenableFuture);
 		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
 												inputListenerInstallerDelegate,
 												childViewDelegate,
@@ -80,7 +86,7 @@ public class ObservableCollectionBindingTest {
 	}
 
 	@Test
-	public void testDelete() throws ExecutionException {
+	public void testDelete() throws ExecutionException, InterruptedException {
 		final Model model = new Model();
 		final View view = new View();
 
@@ -90,9 +96,11 @@ public class ObservableCollectionBindingTest {
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final CollectionElementView collectionElementView = new CollectionElementView();
+		final ListenableFuture<CollectionElementView> listenableFuture = mock(ListenableFuture.class);
+		when(listenableFuture.get()).thenReturn(collectionElementView);
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
-																0)).thenReturn(collectionElementView);
+																0)).thenReturn(listenableFuture);
 		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
 												inputListenerInstallerDelegate,
 												childViewDelegate,
@@ -108,7 +116,7 @@ public class ObservableCollectionBindingTest {
 	}
 
 	@Test
-	public void testReorder() throws ExecutionException {
+	public void testReorder() throws ExecutionException, InterruptedException {
 		final Model model = new Model();
 		final View view = new View();
 
@@ -117,15 +125,17 @@ public class ObservableCollectionBindingTest {
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		final ListenableFuture<CollectionElementView> listenableFuture = mock(ListenableFuture.class);
+		when(listenableFuture.get()).thenReturn(new CollectionElementView());
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
-																0)).thenReturn(new CollectionElementView());
+																0)).thenReturn(listenableFuture);
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
-																1)).thenReturn(new CollectionElementView());
+																1)).thenReturn(listenableFuture);
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
-																2)).thenReturn(new CollectionElementView());
+																2)).thenReturn(listenableFuture);
 		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
 												inputListenerInstallerDelegate,
 												childViewDelegate,
