@@ -73,6 +73,40 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 		initBasics();
 	}
 
+	public void subscribeToDisplaySurfaceEvents() {
+		addCallback(getDisplaySurface(),
+					new FutureCallback<DisplaySurface>() {
+						@Override
+						public void onSuccess(final DisplaySurface result) {
+							result.addListener(AbstractShellSurface.this);
+						}
+
+						@Override
+						public void onFailure(final Throwable t) {
+							// TODO Auto-generated method stub
+							t.printStackTrace();
+						}
+					},
+					this.shellExecutor);
+	}
+
+	public void unsubscribeToDisplaySurfaceEvents() {
+		addCallback(getDisplaySurface(),
+					new FutureCallback<DisplaySurface>() {
+						@Override
+						public void onSuccess(final DisplaySurface result) {
+							result.removeListener(AbstractShellSurface.this);
+						}
+
+						@Override
+						public void onFailure(final Throwable t) {
+							// TODO Auto-generated method stub
+							t.printStackTrace();
+						}
+					},
+					this.shellExecutor);
+	}
+
 	/**
 	 * Set the default geometric preferences.
 	 * <p>
@@ -364,7 +398,6 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	@Override
 	public void syncGeoToDisplaySurface() {
 
-		// callback executed in same thread, should block (?)
 		addCallback(getDisplaySurface(),
 					new FutureCallback<DisplaySurface>() {
 						@Override
@@ -377,7 +410,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 							// TODO Auto-generated method stub
 							t.printStackTrace();
 						}
-					});
+					},
+					this.shellExecutor);
 	}
 
 	protected void syncGeoToDisplaySurfaceCb(final DisplaySurface result) {
@@ -406,7 +440,8 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 							// TODO Auto-generated method stub
 							t.printStackTrace();
 						}
-					});
+					},
+					this.shellExecutor);
 	}
 
 	@Override
@@ -425,93 +460,133 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	// TODO focus handling?
 	// TODO key input handling?
 	// TODO pointer enter/leave handling?
-	// TODO protocol handling?
 	// TODO stacking handling?
 
 	/**
 	 * Called when an {@code DestroyNotify} arrives for this surface.
+	 * <p>
+	 * IMPORTANT: This method is called by the display thread!
 	 * 
 	 * @param destroyNotify
 	 *            a {@link DestroyNotify}
 	 */
 	@Subscribe
 	public void handleDestroyNotifyEvent(final DestroyNotify destroyNotify) {
-		doDestroy(false);
+		this.shellExecutor.submit(new Runnable() {
+			@Override
+			public void run() {
+				doDestroy(false);
+			}
+		});
 	}
 
 	/**
 	 * Called when an {@code GeometryNotify} arrives for this surface.
+	 * <p>
+	 * IMPORTANT: This method is called by the display thread!
 	 * 
 	 * @param geometryNotify
 	 *            a {@link GeometryNotify}
 	 */
 	@Subscribe
 	public void handleGeometryNotifyEvent(final GeometryNotify geometryNotify) {
-		final Rectangle geometry = geometryNotify.getGeometry();
-		setX(geometry.getX());
-		setY(geometry.getY());
-		setWidth(geometry.getWidth());
-		setHeight(geometry.getHeight());
-		doMoveResize(false);
+		this.shellExecutor.submit(new Runnable() {
+			@Override
+			public void run() {
+				final Rectangle geometry = geometryNotify.getGeometry();
+				setX(geometry.getX());
+				setY(geometry.getY());
+				setWidth(geometry.getWidth());
+				setHeight(geometry.getHeight());
+				doMoveResize(false);
+			}
+		});
 	}
 
 	/**
 	 * Called when an {@code GeometryRequest} arrives for this surface.
+	 * <p>
+	 * IMPORTANT: This method is called by the display thread!
 	 * 
 	 * @param geometryRequest
 	 *            a {@link GeometryRequest}
 	 */
 	@Subscribe
 	public void handleGeometryRequestEvent(final GeometryRequest geometryRequest) {
+		this.shellExecutor.submit(new Runnable() {
+			@Override
+			public void run() {
+				final Rectangle geometry = geometryRequest.getGeometry();
+				if (geometryRequest.configureX()) {
+					setX(geometry.getX());
+				}
+				if (geometryRequest.configureY()) {
+					setY(geometry.getY());
+				}
+				if (geometryRequest.configureWidth()) {
+					setWidth(geometry.getWidth());
+				}
+				if (geometryRequest.configureHeight()) {
+					setHeight(geometry.getHeight());
+				}
 
-		final Rectangle geometry = geometryRequest.getGeometry();
-		if (geometryRequest.configureX()) {
-			setX(geometry.getX());
-		}
-		if (geometryRequest.configureY()) {
-			setY(geometry.getY());
-		}
-		if (geometryRequest.configureWidth()) {
-			setWidth(geometry.getWidth());
-		}
-		if (geometryRequest.configureHeight()) {
-			setHeight(geometry.getHeight());
-		}
-
-		requestMoveResize();
+				requestMoveResize();
+			}
+		});
 	}
 
 	/**
 	 * Called when an {@code HideNotify} arrives for this surface.
+	 * <p>
+	 * IMPORTANT: This method is called by the display thread!
 	 * 
 	 * @param hideNotify
 	 *            a {@link HideNotify}
 	 */
 	@Subscribe
 	public void handleHideNotifyEvent(final HideNotify hideNotify) {
-		doHide(false);
+		this.shellExecutor.submit(new Runnable() {
+			@Override
+			public void run() {
+				doHide(false);
+			}
+		});
 	}
 
 	/**
 	 * Called when an {@code ShowNotifyEventt} arrives for this surface.
+	 * <p>
+	 * IMPORTANT: This method is called by the display thread!
 	 * 
 	 * @param showNotify
 	 *            a {@link ShowNotify}
 	 */
 	@Subscribe
 	public void handleShowNotifyEvent(final ShowNotify showNotify) {
-		doShow(false);
+		this.shellExecutor.submit(new Runnable() {
+			@Override
+			public void run() {
+				doShow(false);
+			}
+		});
 	}
 
 	/**
 	 * Called when an {@code ShowRequest} arrives for this surface.
+	 * <p>
+	 * IMPORTANT: This method is called by the display thread!
 	 * 
 	 * @param showRequest
 	 *            a {@link ShowRequest}
 	 */
 	@Subscribe
 	public void handleShowRequestEvent(final ShowRequest showRequest) {
-		requestShow();
+		this.shellExecutor.submit(new Runnable() {
+			@Override
+			public void run() {
+				requestShow();
+			}
+		});
 	}
 	/* end display event handling */
 }

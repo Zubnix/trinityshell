@@ -41,7 +41,7 @@ public interface ShellSurface extends ShellNode {
 	 * @return A height delta, implementation dependent but usually in pixels.
 	 *************************************** 
 	 */
-	int getHeightIncrement();
+	ListenableFuture<Integer> getHeightIncrement();
 
 	/***************************************
 	 * The maximum height of this surface.
@@ -49,7 +49,7 @@ public interface ShellSurface extends ShellNode {
 	 * @return a height, implementation dependent but usually in pixels.
 	 *************************************** 
 	 */
-	int getMaxHeight();
+	ListenableFuture<Integer> getMaxHeight();
 
 	/***************************************
 	 * The maximum width of this surface.
@@ -57,7 +57,7 @@ public interface ShellSurface extends ShellNode {
 	 * @return a width, implementation dependent but usually in pixels.
 	 *************************************** 
 	 */
-	int getMaxWidth();
+	ListenableFuture<Integer> getMaxWidth();
 
 	/***************************************
 	 * The minimum height of this surface.
@@ -65,7 +65,7 @@ public interface ShellSurface extends ShellNode {
 	 * @return a height, implementation dependent but usually in pixels.
 	 *************************************** 
 	 */
-	int getMinHeight();
+	ListenableFuture<Integer> getMinHeight();
 
 	/***************************************
 	 * The minimum width of this surface.
@@ -73,7 +73,7 @@ public interface ShellSurface extends ShellNode {
 	 * @return a width, implementation dependent but usually in pixels.
 	 *************************************** 
 	 */
-	int getMinWidth();
+	ListenableFuture<Integer> getMinWidth();
 
 	/***************************************
 	 * The underlying, {@code DisplaySurface} that this shell surface will use
@@ -93,7 +93,7 @@ public interface ShellSurface extends ShellNode {
 	 * @return A height delta, implementation dependent but usually in pixels.
 	 *************************************** 
 	 */
-	int getWidthIncrement();
+	ListenableFuture<Integer> getWidthIncrement();
 
 	/***************************************
 	 * Indicates if this surface can be moved.
@@ -101,7 +101,7 @@ public interface ShellSurface extends ShellNode {
 	 * @return True if this surface can be moved, false if not.
 	 *************************************** 
 	 */
-	boolean isMovable();
+	ListenableFuture<Boolean> isMovable();
 
 	/***************************************
 	 * Indicates if this surface can be resized.
@@ -109,7 +109,7 @@ public interface ShellSurface extends ShellNode {
 	 * @return True if this surface can be resized, false if not.
 	 *************************************** 
 	 */
-	boolean isResizable();
+	ListenableFuture<Boolean> isResizable();
 
 	/***************************************
 	 * Set the height delta when the height is changed.
@@ -119,7 +119,7 @@ public interface ShellSurface extends ShellNode {
 	 *            pixels.
 	 *************************************** 
 	 */
-	void setHeightIncrement(final int heightIncrement);
+	ListenableFuture<Void> setHeightIncrement(final int heightIncrement);
 
 	/***************************************
 	 * Set the maximum height of this surface.
@@ -128,7 +128,7 @@ public interface ShellSurface extends ShellNode {
 	 *            a height, implementation dependent but usually in pixels.
 	 *************************************** 
 	 */
-	void setMaxHeight(final int maxHeight);
+	ListenableFuture<Void> setMaxHeight(final int maxHeight);
 
 	/***************************************
 	 * Set the maximum width of this surface.
@@ -137,7 +137,7 @@ public interface ShellSurface extends ShellNode {
 	 *            a width, implementation dependent but usually in pixels.
 	 *************************************** 
 	 */
-	void setMaxWidth(final int maxWidth);
+	ListenableFuture<Void> setMaxWidth(final int maxWidth);
 
 	/***************************************
 	 * Set the minimum height of this surface.
@@ -146,7 +146,7 @@ public interface ShellSurface extends ShellNode {
 	 *            a height, implementation dependent but usually in pixels.
 	 *************************************** 
 	 */
-	void setMinHeight(final int minHeight);
+	ListenableFuture<Void> setMinHeight(final int minHeight);
 
 	/***************************************
 	 * Set the minimum width of this surface.
@@ -155,7 +155,7 @@ public interface ShellSurface extends ShellNode {
 	 *            a width, implementation dependent but usually in pixels.
 	 *************************************** 
 	 */
-	void setMinWidth(final int minWidth);
+	ListenableFuture<Void> setMinWidth(final int minWidth);
 
 	/***************************************
 	 * Indicate if this surface is movable.
@@ -164,7 +164,7 @@ public interface ShellSurface extends ShellNode {
 	 *            True if this surface should be movable, false if not.
 	 *************************************** 
 	 */
-	void setMovable(final boolean movable);
+	ListenableFuture<Void> setMovable(final boolean movable);
 
 	/***************************************
 	 * Indicate if this surface is resizable.
@@ -173,7 +173,7 @@ public interface ShellSurface extends ShellNode {
 	 *            True if this surface should be resizable, false if not.
 	 *************************************** 
 	 */
-	void setResizable(final boolean isResizable);
+	ListenableFuture<Void> setResizable(final boolean isResizable);
 
 	/***************************************
 	 * Set the width delta when the width is changed.
@@ -182,12 +182,12 @@ public interface ShellSurface extends ShellNode {
 	 *            A width delta, implementation dependent but usually in pixels.
 	 *************************************** 
 	 */
-	void setWidthIncrement(final int widthIncrement);
+	ListenableFuture<Void> setWidthIncrement(final int widthIncrement);
 
 	/***************************************
 	 * Make this surface's geometry match the geometry of the backing
 	 * {@link DisplaySurface}.
 	 *************************************** 
 	 */
-	void syncGeoToDisplaySurface();
+	ListenableFuture<Void> syncGeoToDisplaySurface();
 }

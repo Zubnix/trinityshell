@@ -38,6 +38,7 @@ import com.google.common.eventbus.Subscribe;
 /**
  * Abstract base class for a {@link ShellLayoutManager}.
  */
+// TODO make threadSafe
 @NotThreadSafe
 public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 

@@ -11,16 +11,18 @@
  */
 package org.trinity.shell.surface.impl;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeExecutor;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
-import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -31,16 +33,17 @@ import de.devsurf.injection.guice.annotations.To;
 @Bind(value = @Named("ShellRootSurface"), to = @To(value = To.Type.CUSTOM, customs = { ShellSurfaceParent.class,
 		ShellSurface.class, ShellNodeParent.class, ShellNode.class }))
 @Singleton
+// TODO make threadSafe
+@NotThreadSafe
 public class ShellRootSurface extends AbstractShellSurfaceParent {
 
 	private final ShellNodeExecutor shellNodeExecutor;
-	private final DisplaySurface displaySurface;
+	private final DisplayServer displayServer;
 
 	@Inject
-	ShellRootSurface(	final DisplayServer displayServer,
-						final ShellDisplayEventDispatcher shellDisplayEventDispatcher) {
+	ShellRootSurface(final DisplayServer displayServer) {
+		this.displayServer = displayServer;
 		this.shellNodeExecutor = new ShellSurfaceExecutorImpl(this);
-		this.displaySurface = displayServer.getRootDisplayArea();
 		syncGeoToDisplaySurface();
 		shellDisplayEventDispatcher.registerDisplayEventTarget(	getNodeEventBus(),
 																this.displaySurface);
@@ -72,7 +75,7 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 	}
 
 	@Override
-	public DisplaySurface getDisplaySurface() {
-		return this.displaySurface;
+	public ListenableFuture<DisplaySurface> getDisplaySurface() {
+		return this.displayServer.getRootDisplayArea();
 	}
 }

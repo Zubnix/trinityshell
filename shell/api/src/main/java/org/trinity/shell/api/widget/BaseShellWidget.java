@@ -18,12 +18,9 @@ import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
 import org.trinity.foundation.api.render.binding.view.View;
-import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
-import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
-import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -43,30 +40,27 @@ import com.google.inject.name.Named;
 @NotThreadSafe
 public class BaseShellWidget extends AbstractShellSurfaceParent implements ShellWidget {
 
-	private class DestroyCallback {
-		// method is used by the widget's eventbus
-		@SuppressWarnings("unused")
-		@Subscribe
-		public void handleDestroy(final ShellNodeDestroyedEvent destroyEvent) {
-			BaseShellWidget.this.shellDisplayEventDispatcher.unregisterAllDisplayEventTarget(getDisplaySurface());
-			BaseShellWidget.this.shellDisplayEventDispatcher.unregisterAllDisplayEventTarget(BaseShellWidget.this);
-		}
-	}
+	// private class DestroyCallback {
+	// // method is used by the widget's eventbus
+	// @SuppressWarnings("unused")
+	// @Subscribe
+	// public void handleDestroy(final ShellNodeDestroyedEvent destroyEvent) {
+	// BaseShellWidget.this.shellDisplayEventDispatcher.unregisterAllDisplayEventTarget(getDisplaySurface());
+	// BaseShellWidget.this.shellDisplayEventDispatcher.unregisterAllDisplayEventTarget(BaseShellWidget.this);
+	// }
+	// }
 
-	private final DestroyCallback destroyCallback = new DestroyCallback();
+	// private final DestroyCallback destroyCallback = new DestroyCallback();
 
 	private final Painter painter;
 	private final BaseShellWidgetExecutor shellNodeExecutor;
-	private final ShellDisplayEventDispatcher shellDisplayEventDispatcher;
 
 	/**
 	 * Create an uninitialized <code>BaseShellWidget</code>.A
 	 * <code>BaseShellWidget</code> will only be fully functional when it is
 	 * assigned to an initialized parent <code>BaseShellWidget</code>.
 	 */
-	protected BaseShellWidget(	final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-								final PainterFactory painterFactory) {
-		this.shellDisplayEventDispatcher = shellDisplayEventDispatcher;
+	protected BaseShellWidget(final PainterFactory painterFactory) {
 		this.shellNodeExecutor = new BaseShellWidgetExecutor(this);
 		this.painter = painterFactory.createPainter(this);
 	}
@@ -88,14 +82,14 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 		setParent(shellRootSurface);
 		doReparent(false);
 
-		this.shellDisplayEventDispatcher.registerDisplayEventTarget(getNodeEventBus(),
-																	this);
-		this.shellDisplayEventDispatcher.registerDisplayEventTarget(getNodeEventBus(),
-																	getDisplaySurface());
+		// this.shellDisplayEventDispatcher.registerDisplayEventTarget(getNodeEventBus(),
+		// this);
+		// this.shellDisplayEventDispatcher.registerDisplayEventTarget(getNodeEventBus(),
+		// getDisplaySurface());
 		// searches for a @ViewReference annotated getter and binds the
 		// resulting view to this widget.
 		this.painter.bindView();
-		addShellNodeEventHandler(this.destroyCallback);
+		// addListener(this.destroyCallback);
 	}
 
 	@Override

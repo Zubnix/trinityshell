@@ -14,6 +14,7 @@ package org.trinity.shell.api.scene;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
  * A {@link ShellNode} that can have child <code>ShellNode</code>s. A node's
@@ -36,13 +37,13 @@ public interface ShellNodeParent extends ShellNode {
 	 * @return A {@link ShellLayoutManager}.
 	 *************************************** 
 	 */
-	Optional<ShellLayoutManager> getLayoutManager();
+	ListenableFuture<Optional<ShellLayoutManager>> getLayoutManager();
 
 	/***************************************
 	 * Layout all child <code>ShellNode</code>s.
 	 *************************************** 
 	 */
-	void layout();
+	ListenableFuture<Void> layout();
 
 	/***************************************
 	 * Change the layout manager of this parent to the desired layout manager.
@@ -51,7 +52,7 @@ public interface ShellNodeParent extends ShellNode {
 	 *            A {@link ShellLayoutManager}.f
 	 *************************************** 
 	 */
-	void setLayoutManager(ShellLayoutManager shellLayoutManager);
+	ListenableFuture<Void> setLayoutManager(ShellLayoutManager shellLayoutManager);
 
 	/***************************************
 	 * The direct child nodes of this parent.
@@ -59,7 +60,7 @@ public interface ShellNodeParent extends ShellNode {
 	 * @return an array of {@link ShellNode}s
 	 *************************************** 
 	 */
-	ShellNode[] getChildren();
+	ListenableFuture<ShellNode[]> getChildren();
 
 	/***************************************
 	 * Signal that a child has left or joined this parent.
@@ -68,5 +69,5 @@ public interface ShellNodeParent extends ShellNode {
 	 *            a {@link ShellNode}.
 	 *************************************** 
 	 */
-	void handleChildReparentEvent(ShellNode child);
+	ListenableFuture<Void> handleChildReparentEvent(ShellNode child);
 }

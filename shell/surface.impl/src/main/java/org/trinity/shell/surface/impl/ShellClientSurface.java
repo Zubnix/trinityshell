@@ -11,13 +11,18 @@
  */
 package org.trinity.shell.surface.impl;
 
+import java.util.concurrent.Callable;
+
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
-import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 
 import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
@@ -31,6 +36,7 @@ import com.google.inject.name.Named;
  * provides functionality to manage and manipulate the geometry and visibility
  * of the <code>PlatformRenderArea</code> it wraps.
  */
+@NotThreadSafe
 public class ShellClientSurface extends AbstractShellSurface {
 
 	private class DestroyCallback {
@@ -52,8 +58,7 @@ public class ShellClientSurface extends AbstractShellSurface {
 	private final DisplaySurface displaySurface;
 
 	@Inject
-	ShellClientSurface(	final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-						@Named("ShellRootSurface") final ShellNodeParent root,
+	ShellClientSurface(	@Named("ShellRootSurface") final ShellNodeParent root,
 						@Assisted final DisplaySurface displaySurface) {
 		this.displaySurface = displaySurface;
 		this.shellSurfaceExecutorImpl = new ShellSurfaceExecutorImpl(this);
@@ -73,7 +78,14 @@ public class ShellClientSurface extends AbstractShellSurface {
 	}
 
 	@Override
-	public DisplaySurface getDisplaySurface() {
-		return this.displaySurface;
+	public ListenableFuture<DisplaySurface> getDisplaySurface() {
+		// same thread, should block(?)
+		return MoreExecutors.sameThreadExecutor().submit(new Callable<DisplaySurface>() {
+			@Override
+			public DisplaySurface call() throws Exception {
+
+				return ShellClientSurface.this.displaySurface;
+			}
+		});
 	}
 }

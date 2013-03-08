@@ -29,6 +29,7 @@ import com.google.common.base.Optional;
  * 
  *************************************** 
  */
+// TODO make threadSafe
 @NotThreadSafe
 public abstract class AbstractShellSurfaceParent extends AbstractShellSurface implements ShellSurfaceParent {
 

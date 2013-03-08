@@ -12,8 +12,7 @@
 package org.trinity.shell.api.scene;
 
 import org.trinity.foundation.api.display.DisplayArea;
-import org.trinity.foundation.api.shared.Rectangle;
-import org.trinity.shell.api.scene.event.ShellNodeEvent;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
 import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
@@ -23,12 +22,22 @@ import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 /***************************************
  * The super interface of all nodes that live in the shell scene.
  * 
  *************************************** 
  */
-public interface ShellNode extends DisplayArea, Rectangle {
+public interface ShellNode extends DisplayArea, Listenable {
+
+	ListenableFuture<Integer> getX();
+
+	ListenableFuture<Integer> getY();
+
+	ListenableFuture<Integer> getWidth();
+
+	ListenableFuture<Integer> getHeight();
 
 	/***************************************
 	 * The absolute X value of this node.
@@ -39,7 +48,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * @return An absolute X coordinate.
 	 *************************************** 
 	 */
-	int getAbsoluteX();
+	ListenableFuture<Integer> getAbsoluteX();
 
 	/***************************************
 	 * The absolute Y value of this node.
@@ -50,7 +59,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * @return An absolute Y coordinate.
 	 *************************************** 
 	 */
-	int getAbsoluteY();
+	ListenableFuture<Integer> getAbsoluteY();
 
 	/**
 	 * Indicates if this ndoe is visible. This is implementation dependent. A
@@ -61,53 +70,53 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * 
 	 * @return true if visible, false if not
 	 */
-	boolean isVisible();
+	ListenableFuture<Boolean> isVisible();
 
 	/***************************************
 	 * Reset any value set by {@link #setX(int)} or {@link #setY(int)} to the
 	 * this node's current position.
 	 *************************************** 
 	 */
-	void cancelPendingMove();
+	ListenableFuture<Void> cancelPendingMove();
 
 	/***************************************
 	 * Reset any value set by {@link #setWidth(int)} and {@link #setHeight(int)}
 	 * to this node's current size.
 	 *************************************** 
 	 */
-	void cancelPendingResize();
+	ListenableFuture<Void> cancelPendingResize();
 
 	/***************************************
 	 * Destroy this node.
 	 *************************************** 
 	 */
-	void doDestroy();
+	ListenableFuture<Void> doDestroy();
 
 	/***************************************
 	 * Lower this node.
 	 *************************************** 
 	 */
-	void doLower();
+	ListenableFuture<Void> doLower();
 
 	/***************************************
 	 * Reparent this node to the parent that was specified in
 	 * {@link #setParent(ShellNodeParent)}.
 	 *************************************** 
 	 */
-	void doReparent();
+	ListenableFuture<Void> doReparent();
 
 	/***************************************
 	 * Move this node to the coordinate that was specified in {@link #setX(int)}
 	 * and {@link #setY(int)}.
 	 *************************************** 
 	 */
-	void doMove();
+	ListenableFuture<Void> doMove();
 
 	/***************************************
 	 * Raise this node.
 	 *************************************** 
 	 */
-	void doRaise();
+	ListenableFuture<Void> doRaise();
 
 	/***************************************
 	 * Move this node to the coordinate that was specified in {@link #setX(int)}
@@ -115,26 +124,26 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * {@link #setWidth(int)} and {@link #setHeight(int)}.
 	 *************************************** 
 	 */
-	void doMoveResize();
+	ListenableFuture<Void> doMoveResize();
 
 	/***************************************
 	 * Resize this node to the size that was specified in {@link #setWidth(int)}
 	 * and {@link #setHeight(int)}.
 	 *************************************** 
 	 */
-	void doResize();
+	ListenableFuture<Void> doResize();
 
 	/***************************************
 	 * Show this node.
 	 *************************************** 
 	 */
-	void doShow();
+	ListenableFuture<Void> doShow();
 
 	/***************************************
 	 * Hide this node.
 	 *************************************** 
 	 */
-	void doHide();
+	ListenableFuture<Void> doHide();
 
 	/***************************************
 	 * The node executor that is responsible for correctly executing all
@@ -143,6 +152,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * @return a {@link ShellNodeExecutor}.
 	 *************************************** 
 	 */
+	// TODO should this be part of public api?
 	ShellNodeExecutor getShellNodeExecutor();
 
 	/***************************************
@@ -152,7 +162,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * @return true if destroyed, false if not.
 	 *************************************** 
 	 */
-	boolean isDestroyed();
+	ListenableFuture<Boolean> isDestroyed();
 
 	/***************************************
 	 * Request that this node is lowered. This will cause any subscribed node
@@ -163,7 +173,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
-	void requestLower();
+	ListenableFuture<Void> requestLower();
 
 	/***************************************
 	 * Request that this node is moved. This will cause any subscribed node
@@ -174,7 +184,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
-	void requestMove();
+	ListenableFuture<Void> requestMove();
 
 	/***************************************
 	 * Request that this node is moved and resized. This will cause any
@@ -186,7 +196,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
-	void requestMoveResize();
+	ListenableFuture<Void> requestMoveResize();
 
 	/***************************************
 	 * Request that this node is raised. This will cause any subscribed node
@@ -197,7 +207,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
-	void requestRaise();
+	ListenableFuture<Void> requestRaise();
 
 	/***************************************
 	 * Request that this node is reparented. This will cause any subscribed node
@@ -209,7 +219,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
-	void requestReparent();
+	ListenableFuture<Void> requestReparent();
 
 	/***************************************
 	 * Request that this node is resized. This will cause any subscribed node
@@ -221,7 +231,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
-	void requestResize();
+	ListenableFuture<Void> requestResize();
 
 	/***************************************
 	 * Request that this node is shown. This will cause any subscribed node
@@ -232,7 +242,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
-	void requestShow();
+	ListenableFuture<Void> requestShow();
 
 	/***************************************
 	 * Request that this node is hidden. This will cause any subscribed node
@@ -243,7 +253,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
-	void requestHide();
+	ListenableFuture<Void> requestHide();
 
 	/***************************************
 	 * Set the desired width for this node. Actual resizing is done either
@@ -256,7 +266,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 *            pixels.
 	 *************************************** 
 	 */
-	void setWidth(final int width);
+	ListenableFuture<Void> setWidth(final int width);
 
 	/***************************************
 	 * Set the desired height for this node. Actual resizing is done either
@@ -269,7 +279,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 *            pixels.
 	 *************************************** 
 	 */
-	void setHeight(final int height);
+	ListenableFuture<Void> setHeight(final int height);
 
 	/***************************************
 	 * Set the desired parent of this node. Actually reparenting is done either
@@ -280,7 +290,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 *            the desired parent.
 	 *************************************** 
 	 */
-	void setParent(final ShellNodeParent parent);
+	ListenableFuture<Void> setParent(final ShellNodeParent parent);
 
 	/***************************************
 	 * Set the desired X coordinate for this node. Actual moving is done either
@@ -293,7 +303,7 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 *            in pixels.
 	 *************************************** 
 	 */
-	void setX(final int x);
+	ListenableFuture<Void> setX(final int x);
 
 	/***************************************
 	 * Set the desired Y coordinate for this node. Actual moving is done either
@@ -306,32 +316,12 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 *            in pixels.
 	 *************************************** 
 	 */
-	void setY(final int y);
+	ListenableFuture<Void> setY(final int y);
 
 	/**
 	 * The direct parent of this node.
 	 */
-	ShellNodeParent getParent();
-
-	/***************************************
-	 * Subscribe a node event listener to this node. A Listener will be notified
-	 * of this node's geometry changes and requests in the form of a
-	 * {@link ShellNodeEvent}.
-	 * 
-	 * @param shellNodeEventHandler
-	 *            A listener.
-	 *************************************** 
-	 */
-	void addShellNodeEventHandler(Object shellNodeEventHandler);
-
-	/***************************************
-	 * Unsubscribe a listener that was previously subscribed to this node.
-	 * 
-	 * @param shellNodeEventHandler
-	 *            a previosly subscribed listener.
-	 *************************************** 
-	 */
-	void removeShellNodeEventHandler(Object shellNodeEventHandler);
+	ListenableFuture<ShellNodeParent> getParent();
 
 	/**
 	 * The desired transformation of this node. The "0" named properties match
@@ -342,5 +332,5 @@ public interface ShellNode extends DisplayArea, Rectangle {
 	 * 
 	 * @return A {@link ShellNodeTransformation}.
 	 */
-	ShellNodeTransformation toGeoTransformation();
+	ListenableFuture<ShellNodeTransformation> toGeoTransformation();
 }
