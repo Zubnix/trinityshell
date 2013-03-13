@@ -19,6 +19,7 @@ import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Pointer;
 import org.trinity.foundation.api.shared.Coordinate;
 
+import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -26,6 +27,8 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
+
+import static com.google.common.util.concurrent.Futures.transform;
 
 @Bind
 @Singleton
@@ -90,7 +93,6 @@ public class XPointer implements Pointer {
 																		cursor,
 																		(short) buttonCode,
 																		modifiers);
-
 											}
 										},
 										null);
@@ -108,29 +110,48 @@ public class XPointer implements Pointer {
 		final int winId = getWindowId(displaySurface);
 		final int time = this.xTime.getTime();
 
-		return this.xExecutor.submit(	new Runnable() {
-											@Override
-											public void run() {
-												final xcb_grab_pointer_cookie_t grab_pointer_cookie_t = LibXcb
-														.xcb_grab_pointer(	getConnectionRef(),
-																			(short) 0,
-																			winId,
-																			event_mask,
-																			(short) pointer_mode,
-																			(short) keyboard_mode,
-																			confine_to,
-																			cursor,
-																			time);
-												final xcb_generic_error_t e = new xcb_generic_error_t();
-												// TODO check if grab was
-												// successful and return boolean
-												LibXcb.xcb_grab_pointer_reply(	getConnectionRef(),
-																				grab_pointer_cookie_t,
-																				e);
-												checkError(e);
-											}
-										},
-										null);
+		final ListenableFuture<xcb_grab_pointer_cookie_t> grabPointerFuture = this.xExecutor
+				.submit(new Callable<xcb_grab_pointer_cookie_t>() {
+					@Override
+					public xcb_grab_pointer_cookie_t call() {
+						final xcb_grab_pointer_cookie_t grab_pointer_cookie_t = LibXcb
+								.xcb_grab_pointer(	getConnectionRef(),
+													(short) 0,
+													winId,
+													event_mask,
+													(short) pointer_mode,
+													(short) keyboard_mode,
+													confine_to,
+													cursor,
+													time);
+						return grab_pointer_cookie_t;
+					}
+				});
+
+		return transform(	grabPointerFuture,
+							new AsyncFunction<xcb_grab_pointer_cookie_t, Void>() {
+								@Override
+								public ListenableFuture<Void> apply(final xcb_grab_pointer_cookie_t grab_pointer_cookie_t) {
+									return grabPointerReply(grab_pointer_cookie_t);
+								}
+							});
+	}
+
+	protected ListenableFuture<Void> grabPointerReply(final xcb_grab_pointer_cookie_t grab_pointer_cookie_t) {
+		return this.xExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() {
+				final xcb_generic_error_t e = new xcb_generic_error_t();
+				// TODO check if grab was
+				// successful and return boolean?
+				LibXcb.xcb_grab_pointer_reply(	getConnectionRef(),
+												grab_pointer_cookie_t,
+												e);
+				checkError(e);
+				return null;
+			}
+
+		});
 	}
 
 	@Override

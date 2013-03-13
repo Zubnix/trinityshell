@@ -11,77 +11,66 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.annotation.concurrent.NotThreadSafe;
-
-import org.freedesktop.xcb.LibXcb;
-import org.freedesktop.xcb.xcb_generic_error_t;
-import org.freedesktop.xcb.xcb_intern_atom_cookie_t;
-import org.freedesktop.xcb.xcb_intern_atom_reply_t;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
-
-@Bind(to = @To(Type.IMPLEMENTATION))
-@Singleton
-@NotThreadSafe
-public class XAtomCache {
-
-	private final XConnection xConnection;
-
-	private final Map<Integer, String> atomNameCodes = new HashMap<Integer, String>();
-	private final Map<String, Integer> atomCodeNames = new HashMap<String, Integer>();
-
-	@Inject
-	XAtomCache(final XConnection xConnection) {
-		this.xConnection = xConnection;
-	}
-
-	public int getAtom(final String atomName) {
-		synchronized (this.atomCodeNames) {
-			synchronized (this.atomNameCodes) {
-				Integer atomCode = this.atomCodeNames.get(atomName);
-				if (atomCode == null) {
-					atomCode = Integer.valueOf(internAtom(atomName));
-					this.atomCodeNames.put(	atomName,
-											atomCode);
-					this.atomNameCodes.put(	atomCode,
-											atomName);
-				}
-				return atomCode;
-			}
-		}
-	}
-
-	private int internAtom(final String atomName) {
-		final xcb_intern_atom_cookie_t cookie_t = LibXcb.xcb_intern_atom(	this.xConnection.getConnectionReference(),
-																			(short) 0,
-																			atomName.length(),
-																			atomName);
-		final xcb_generic_error_t e = new xcb_generic_error_t();
-		final xcb_intern_atom_reply_t reply_t = LibXcb.xcb_intern_atom_reply(	this.xConnection
-																						.getConnectionReference(),
-																				cookie_t,
-																				e);
-		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			throw new RuntimeException("xcb error");
-		}
-		final int atomId = reply_t.getAtom();
-		return atomId;
-	}
-
-	public String getAtom(final int atomId) {
-		synchronized (this.atomCodeNames) {
-			synchronized (this.atomNameCodes) {
-				return this.atomNameCodes.get(Integer.valueOf(atomId));
-			}
-		}
-	}
-
-}
+// TODO move this class to an XshellPlugin
+// @Bind(to = @To(Type.IMPLEMENTATION))
+// @Singleton
+// @NotThreadSafe
+// public class XAtomCache {
+//
+// private final XConnection xConnection;
+//
+// private final Map<Integer, String> atomNameCodes = new HashMap<Integer,
+// String>();
+// private final Map<String, Integer> atomCodeNames = new HashMap<String,
+// Integer>();
+//
+// @Inject
+// XAtomCache(final XConnection xConnection) {
+// this.xConnection = xConnection;
+// }
+//
+// public int getAtom(final String atomName) {
+// synchronized (this.atomCodeNames) {
+// synchronized (this.atomNameCodes) {
+// Integer atomCode = this.atomCodeNames.get(atomName);
+// if (atomCode == null) {
+// atomCode = Integer.valueOf(internAtom(atomName));
+// this.atomCodeNames.put( atomName,
+// atomCode);
+// this.atomNameCodes.put( atomCode,
+// atomName);
+// }
+// return atomCode;
+// }
+// }
+// }
+//
+// private int internAtom(final String atomName) {
+// final xcb_intern_atom_cookie_t cookie_t = LibXcb.xcb_intern_atom(
+// this.xConnection.getConnectionReference(),
+// (short) 0,
+// atomName.length(),
+// atomName);
+// final xcb_generic_error_t e = new xcb_generic_error_t();
+// final xcb_intern_atom_reply_t reply_t = LibXcb.xcb_intern_atom_reply(
+// this.xConnection
+// .getConnectionReference(),
+// cookie_t,
+// e);
+// if (xcb_generic_error_t.getCPtr(e) != 0) {
+// throw new RuntimeException("xcb error");
+// }
+// final int atomId = reply_t.getAtom();
+// return atomId;
+// }
+//
+// public String getAtom(final int atomId) {
+// synchronized (this.atomCodeNames) {
+// synchronized (this.atomNameCodes) {
+// return this.atomNameCodes.get(Integer.valueOf(atomId));
+// }
+// }
+// }
+//
+// }
