@@ -11,9 +11,12 @@
  */
 package org.trinity.shell.api.widget;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
+import org.trinity.shell.api.scene.AbstractAsyncShellNode;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeExecutor;
 import org.trinity.shell.api.scene.ShellNodeParent;
@@ -54,6 +57,8 @@ public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 
 	@Override
 	protected BaseShellWidget findClosestSameTypeSurface(final ShellNode square) {
+		checkArgument(square instanceof AbstractAsyncShellNode);
+
 		if (square == null) {
 			return null;
 		}
@@ -63,7 +68,7 @@ public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
 			return (BaseShellWidget) square;
 		}
 
-		final ShellNodeParent parent = square.getParent();
+		final ShellNodeParent parent = ((AbstractAsyncShellNode) square).getParentImpl();
 		if ((parent == null) || parent.equals(square)) {
 			return null;
 		}

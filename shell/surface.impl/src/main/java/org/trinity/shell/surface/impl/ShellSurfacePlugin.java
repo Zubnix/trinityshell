@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.surface.impl;
 
-import org.trinity.foundation.api.display.DisplayServer;
+import org.trinity.foundation.api.display.server.DisplayServer;
 import org.trinity.shell.api.plugin.ShellPlugin;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 

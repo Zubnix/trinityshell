@@ -11,7 +11,10 @@
  */
 package org.trinity.shell.api.surface;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.util.concurrent.Futures.addCallback;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DestroyNotify;
@@ -21,7 +24,6 @@ import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.foundation.api.shared.Rectangle;
-import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNode;
 
 import com.google.common.eventbus.Subscribe;
@@ -30,16 +32,14 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import static com.google.common.util.concurrent.Futures.addCallback;
-
 /**
  * An abstract base implementation of {@link ShellSurface}. Implementations that
  * wish to concretely represent an on-screen area are encouraged to extend from
  * <code>AbstractShellSurface</code>.
  * 
  */
-@NotThreadSafe
-public abstract class AbstractShellSurface extends AbstractShellNode implements ShellSurface {
+@ThreadSafe
+public abstract class AbstractShellSurface extends AbstractAsyncShellSurface implements ShellSurface {
 
 	public static final boolean DEFAULT_IS_RESIZABLE = true;
 	public static final boolean DEFAULT_IS_MOVABLE = true;
@@ -62,14 +62,15 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	private int widthIncrement;
 	private int heightIncrement;
 
-	@Inject
-	@Named("ShellExecutor")
-	private ListeningExecutorService shellExecutor;
+	private final ListeningExecutorService shellExecutor;
 
 	/**
 	 * Create new <code>AbstractShellSurface</code>
 	 */
-	protected AbstractShellSurface() {
+	@Inject
+	protected AbstractShellSurface(@Named("ShellExecutor") final ListeningExecutorService shellExecutor) {
+		super(shellExecutor);
+		this.shellExecutor = shellExecutor;
 		initBasics();
 	}
 
@@ -121,14 +122,14 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * </ul>
 	 */
 	protected void initBasics() {
-		setResizable(AbstractShellSurface.DEFAULT_IS_RESIZABLE);
-		setMovable(AbstractShellSurface.DEFAULT_IS_MOVABLE);
-		setMinWidth(AbstractShellSurface.DEFAULT_MIN_WIDTH);
-		setMinHeight(AbstractShellSurface.DEFAULT_MIN_HEIGHT);
-		setMaxWidth(AbstractShellSurface.DEFAULT_MAX_WIDTH);
-		setMaxHeight(AbstractShellSurface.DEFAULT_MAX_HEIGHT);
-		setWidthIncrement(AbstractShellSurface.DEFAULT_WIDTH_INC);
-		setHeightIncrement(AbstractShellSurface.DEFAULT_HEIGHT_INC);
+		setResizableImpl(AbstractShellSurface.DEFAULT_IS_RESIZABLE);
+		setMovableImpl(AbstractShellSurface.DEFAULT_IS_MOVABLE);
+		setMinWidthImpl(AbstractShellSurface.DEFAULT_MIN_WIDTH);
+		setMinHeightImpl(AbstractShellSurface.DEFAULT_MIN_HEIGHT);
+		setMaxWidthImpl(AbstractShellSurface.DEFAULT_MAX_WIDTH);
+		setMaxHeightImpl(AbstractShellSurface.DEFAULT_MAX_HEIGHT);
+		setWidthIncrementImpl(AbstractShellSurface.DEFAULT_WIDTH_INC);
+		setHeightIncrementImpl(AbstractShellSurface.DEFAULT_HEIGHT_INC);
 	}
 
 	/**
@@ -142,8 +143,9 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 *            The desired minimum height in pixels.
 	 */
 	@Override
-	public void setMinHeight(final int minHeight) {
+	public Void setMinHeightImpl(final int minHeight) {
 		this.minHeight = minHeight;
+		return null;
 	}
 
 	/**
@@ -157,8 +159,9 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 *            The desired minimum width in pixels.
 	 */
 	@Override
-	public void setMinWidth(final int minWidth) {
+	public Void setMinWidthImpl(final int minWidth) {
 		this.minWidth = minWidth;
+		return null;
 	}
 
 	/**
@@ -168,7 +171,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * @see AbstractShellSurface#setMinWidth(int)
 	 */
 	@Override
-	public int getMinWidth() {
+	public Integer getMinWidthImpl() {
 		return this.minWidth;
 	}
 
@@ -179,7 +182,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * @see AbstractShellSurface#setMinHeight(int)
 	 */
 	@Override
-	public int getMinHeight() {
+	public Integer getMinHeightImpl() {
 		return this.minHeight;
 	}
 
@@ -194,8 +197,9 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 *            The desired maxium width in pixels.
 	 */
 	@Override
-	public void setMaxWidth(final int maxWidth) {
+	public Void setMaxWidthImpl(final int maxWidth) {
 		this.maxWidth = maxWidth;
+		return null;
 	}
 
 	/**
@@ -209,8 +213,9 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 *            The desired maximum height in pixels.
 	 */
 	@Override
-	public void setMaxHeight(final int maxHeight) {
+	public Void setMaxHeightImpl(final int maxHeight) {
 		this.maxHeight = maxHeight;
+		return null;
 	}
 
 	/**
@@ -220,7 +225,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * @return The maximum height in pixels.
 	 */
 	@Override
-	public int getMaxHeight() {
+	public Integer getMaxHeightImpl() {
 		return this.maxHeight;
 	}
 
@@ -231,31 +236,31 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * @return the maximum width in pixels.
 	 */
 	@Override
-	public int getMaxWidth() {
+	public Integer getMaxWidthImpl() {
 		return this.maxWidth;
 	}
 
 	@Override
-	public int getWidthIncrement() {
+	public Integer getWidthIncrementImpl() {
 		return this.widthIncrement;
 	}
 
 	@Override
-	public void setWidthIncrement(final int widthIncrement) {
-		if (widthIncrement > 0) {
-			this.widthIncrement = widthIncrement;
-		}
+	public Void setWidthIncrementImpl(final int widthIncrement) {
+		checkArgument(widthIncrement > 0);
+		this.widthIncrement = widthIncrement;
+		return null;
 	}
 
 	@Override
-	public void setHeightIncrement(final int heightIncrement) {
-		if (heightIncrement > 0) {
-			this.heightIncrement = heightIncrement;
-		}
+	public Void setHeightIncrementImpl(final int heightIncrement) {
+		checkArgument(heightIncrement > 0);
+		this.heightIncrement = heightIncrement;
+		return null;
 	}
 
 	@Override
-	public int getHeightIncrement() {
+	public Integer getHeightIncrementImpl() {
 		return this.heightIncrement;
 	}
 
@@ -270,7 +275,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * @see AbstractShellSurface#isResizable()
 	 */
 	@Override
-	public boolean isMovable() {
+	public Boolean isMovableImpl() {
 		return this.movable;
 	}
 
@@ -284,7 +289,7 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * @see AbstractShellSurface#isMovable()
 	 */
 	@Override
-	public boolean isResizable() {
+	public Boolean isResizableImpl() {
 		return this.resizable;
 	}
 
@@ -295,8 +300,9 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * @see AbstractShellSurface#isMovable()
 	 */
 	@Override
-	public void setMovable(final boolean movable) {
+	public Void setMovableImpl(final boolean movable) {
 		this.movable = movable;
+		return null;
 	}
 
 	/**
@@ -306,8 +312,9 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * @see AbstractShellSurface#isResizable()
 	 */
 	@Override
-	public void setResizable(final boolean isResizable) {
+	public Void setResizableImpl(final boolean isResizable) {
 		this.resizable = isResizable;
+		return null;
 	}
 
 	/**
@@ -320,10 +327,10 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 */
 	protected int normalizedWidth(final int newWidth) {
 
-		int normalizedWidth = newWidth < getMinWidth() ? getMinWidth() : newWidth > getMaxWidth() ? getMaxWidth()
-				: newWidth;
+		int normalizedWidth = newWidth < getMinWidthImpl() ? getMinWidthImpl()
+				: newWidth > getMaxWidthImpl() ? getMaxWidthImpl() : newWidth;
 
-		normalizedWidth -= (normalizedWidth - getWidth()) % getWidthIncrement();
+		normalizedWidth -= (normalizedWidth - getGeometryImpl().getWidth()) % getWidthIncrementImpl();
 
 		return normalizedWidth;
 	}
@@ -337,51 +344,40 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * @see AbstractShellSurface#normalizedWidth(int)
 	 */
 	protected int normalizedHeight(final int newHeight) {
-		int normalizedHeight = newHeight < getMinHeight() ? getMinHeight()
-				: newHeight > getMaxHeight() ? getMaxHeight() : newHeight;
+		int normalizedHeight = newHeight < getMinHeightImpl() ? getMinHeightImpl()
+				: newHeight > getMaxHeightImpl() ? getMaxHeightImpl() : newHeight;
 
-		normalizedHeight -= (normalizedHeight - getHeight()) % getHeightIncrement();
+		normalizedHeight -= (normalizedHeight - getGeometryImpl().getHeight()) % getHeightIncrementImpl();
 
 		return normalizedHeight;
 	}
 
 	@Override
-	public void setWidth(final int width) {
-		if (isResizable()) {
-			super.setWidth(width);
+	public Void setSizeImpl(final int width,
+							final int height) {
+		if (isResizableImpl()) {
+			super.setSizeImpl(	width,
+								height);
 		}
+		return null;
 	}
 
 	@Override
-	public void setHeight(final int height) {
-		if (isResizable()) {
-			super.setHeight(height);
+	public Void setPositionImpl(final int x,
+								final int y) {
+		if (isMovableImpl()) {
+			super.setPositionImpl(	x,
+									y);
 		}
-	}
-
-	@Override
-	public void setX(final int x) {
-		if (isMovable()) {
-			super.setX(x);
-		}
-	}
-
-	@Override
-	public void setY(final int y) {
-		if (isMovable()) {
-			super.setY(y);
-		}
+		return null;
 	}
 
 	@Override
 	public String toString() {
-		return String.format(	"%s<%s>|%d+%d::%dx%d|",
+		return String.format(	"%s<%s>|%s|",
 								getClass().getSimpleName(),
 								getDisplaySurface(),
-								getX(),
-								getX(),
-								getWidth(),
-								getHeight());
+								getGeometryImpl());
 	}
 
 	/**
@@ -396,13 +392,13 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	 * unexpected behavior.
 	 */
 	@Override
-	public void syncGeoToDisplaySurface() {
+	public Void syncGeoToDisplaySurfaceImpl() {
 
 		addCallback(getDisplaySurface(),
 					new FutureCallback<DisplaySurface>() {
 						@Override
 						public void onSuccess(final DisplaySurface result) {
-							syncGeoToDisplaySurfaceCb(result);
+							syncGeoGetDisplaySurfaceCbImpl(result);
 						}
 
 						@Override
@@ -412,27 +408,17 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 						}
 					},
 					this.shellExecutor);
+		return null;
 	}
 
-	protected void syncGeoToDisplaySurfaceCb(final DisplaySurface result) {
+	protected void syncGeoGetDisplaySurfaceCbImpl(final DisplaySurface result) {
 
 		// callback executed in same thread, should block (?)
 		addCallback(result.getGeometry(),
 					new FutureCallback<Rectangle>() {
 						@Override
 						public void onSuccess(final Rectangle result) {
-							// TODO in future version we might want to take a
-							// geometry delegate into
-							// account to map from and to shell scene geometry
-							// and on screen
-							// geometry.
-
-							setX(result.getX());
-							setY(result.getY());
-
-							setWidth(result.getWidth());
-							setHeight(result.getHeight());
-							doMoveResize(false);
+							syncGeoGetGeometryCbImpl(result);
 						}
 
 						@Override
@@ -444,13 +430,31 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 					this.shellExecutor);
 	}
 
+	protected void syncGeoGetGeometryCbImpl(final Rectangle result) {
+		// TODO in future version we might want to take a
+		// geometry delegate into
+		// account to map from and to shell scene geometry
+		// and on screen
+		// geometry.
+
+		final int x = result.getX();
+		final int y = result.getY();
+		final int width = result.getWidth();
+		final int height = result.getHeight();
+		setPositionImpl(x,
+						y);
+		setSizeImpl(width,
+					height);
+		doMoveResize(false);
+	}
+
 	@Override
-	protected int getDesiredWidth() {
+	public int getDesiredWidth() {
 		return normalizedWidth(super.getDesiredWidth());
 	}
 
 	@Override
-	protected int getDesiredHeight() {
+	public int getDesiredHeight() {
 		return normalizedHeight(super.getDesiredHeight());
 	}
 
@@ -465,13 +469,13 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	/**
 	 * Called when an {@code DestroyNotify} arrives for this surface.
 	 * <p>
-	 * IMPORTANT: This method is called by the display thread!
+	 * This method is called by the display thread.
 	 * 
 	 * @param destroyNotify
 	 *            a {@link DestroyNotify}
 	 */
 	@Subscribe
-	public void handleDestroyNotifyEvent(final DestroyNotify destroyNotify) {
+	public final void handleDestroyNotifyEvent(final DestroyNotify destroyNotify) {
 		this.shellExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
@@ -483,21 +487,21 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	/**
 	 * Called when an {@code GeometryNotify} arrives for this surface.
 	 * <p>
-	 * IMPORTANT: This method is called by the display thread!
+	 * This method is called by the display thread.
 	 * 
 	 * @param geometryNotify
 	 *            a {@link GeometryNotify}
 	 */
 	@Subscribe
-	public void handleGeometryNotifyEvent(final GeometryNotify geometryNotify) {
+	public final void handleGeometryNotifyEvent(final GeometryNotify geometryNotify) {
 		this.shellExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
 				final Rectangle geometry = geometryNotify.getGeometry();
-				setX(geometry.getX());
-				setY(geometry.getY());
-				setWidth(geometry.getWidth());
-				setHeight(geometry.getHeight());
+				setPositionImpl(geometry.getX(),
+								geometry.getY());
+				setSizeImpl(geometry.getWidth(),
+							geometry.getHeight());
 				doMoveResize(false);
 			}
 		});
@@ -506,75 +510,90 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 	/**
 	 * Called when an {@code GeometryRequest} arrives for this surface.
 	 * <p>
-	 * IMPORTANT: This method is called by the display thread!
+	 * This method is called by the display thread.
 	 * 
 	 * @param geometryRequest
 	 *            a {@link GeometryRequest}
 	 */
 	@Subscribe
-	public void handleGeometryRequestEvent(final GeometryRequest geometryRequest) {
+	public final void handleGeometryRequestEvent(final GeometryRequest geometryRequest) {
 		this.shellExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				final Rectangle geometry = geometryRequest.getGeometry();
-				if (geometryRequest.configureX()) {
-					setX(geometry.getX());
-				}
-				if (geometryRequest.configureY()) {
-					setY(geometry.getY());
-				}
-				if (geometryRequest.configureWidth()) {
-					setWidth(geometry.getWidth());
-				}
-				if (geometryRequest.configureHeight()) {
-					setHeight(geometry.getHeight());
-				}
-
-				requestMoveResize();
+				handleGeometryRequestEventImpl(geometryRequest);
 			}
 		});
+	}
+
+	protected void handleGeometryRequestEventImpl(final GeometryRequest geometryRequest) {
+		final Rectangle currentGeometry = getGeometryImpl();
+		final Rectangle requestedGeometry = geometryRequest.getGeometry();
+		final int newX = geometryRequest.configureX() ? requestedGeometry.getX() : currentGeometry.getX();
+		final int newY = geometryRequest.configureY() ? requestedGeometry.getY() : currentGeometry.getY();
+		final int newWidth = geometryRequest.configureWidth() ? requestedGeometry.getWidth() : currentGeometry
+				.getWidth();
+		final int newHeight = geometryRequest.configureHeight() ? requestedGeometry.getHeight() : currentGeometry
+				.getHeight();
+
+		if (geometryRequest.configureX() || geometryRequest.configureY()) {
+			setPositionImpl(newX,
+							newY);
+		}
+		if (geometryRequest.configureWidth() || geometryRequest.configureHeight()) {
+			setSizeImpl(newWidth,
+						newHeight);
+		}
+		requestMoveResizeImpl();
 	}
 
 	/**
 	 * Called when an {@code HideNotify} arrives for this surface.
 	 * <p>
-	 * IMPORTANT: This method is called by the display thread!
+	 * This method is called by the display thread.
 	 * 
 	 * @param hideNotify
 	 *            a {@link HideNotify}
 	 */
 	@Subscribe
-	public void handleHideNotifyEvent(final HideNotify hideNotify) {
+	public final void handleHideNotifyEvent(final HideNotify hideNotify) {
 		this.shellExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				doHide(false);
+				handleHideNotifyEventImpl(hideNotify);
 			}
 		});
+	}
+
+	protected void handleHideNotifyEventImpl(final HideNotify hideNotify) {
+		doHide(false);
 	}
 
 	/**
 	 * Called when an {@code ShowNotifyEventt} arrives for this surface.
 	 * <p>
-	 * IMPORTANT: This method is called by the display thread!
+	 * This method is called by the display thread.
 	 * 
 	 * @param showNotify
 	 *            a {@link ShowNotify}
 	 */
 	@Subscribe
-	public void handleShowNotifyEvent(final ShowNotify showNotify) {
+	public final void handleShowNotifyEvent(final ShowNotify showNotify) {
 		this.shellExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				doShow(false);
+				handleShowNotifyEventImpl(showNotify);
 			}
 		});
+	}
+
+	protected void handleShowNotifyEventImpl(final ShowNotify showNotify) {
+		doShow(false);
 	}
 
 	/**
 	 * Called when an {@code ShowRequest} arrives for this surface.
 	 * <p>
-	 * IMPORTANT: This method is called by the display thread!
+	 * This method is called by the display thread.
 	 * 
 	 * @param showRequest
 	 *            a {@link ShowRequest}
@@ -584,9 +603,13 @@ public abstract class AbstractShellSurface extends AbstractShellNode implements 
 		this.shellExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				requestShow();
+				handleShowRequestEventImpl(showRequest);
 			}
 		});
+	}
+
+	protected void handleShowRequestEventImpl(final ShowRequest showRequest) {
+		requestShowImpl();
 	}
 	/* end display event handling */
 }

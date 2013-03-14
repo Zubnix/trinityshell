@@ -12,7 +12,6 @@
 package org.trinity.shell.api.widget;
 
 import org.trinity.foundation.api.render.Painter;
-import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
 /**
@@ -23,11 +22,12 @@ import org.trinity.shell.api.surface.ShellSurfaceParent;
 public interface ShellWidget extends ShellSurfaceParent {
 
 	/***************************************
-	 * The {@code Painter} to use with the paint back-end. A {@code Painter}
-	 * instance is dedicated to a single {@code ShellWidget} instance.
-	 * {@code Painter} instances are constructed in the {@link PainterFactory}.
+	 * The {@code PainterProxy} to use with the paint back-end. A
+	 * {@code PainterProxy} instance is dedicated to a single
+	 * {@code ShellWidget} instance. {@code PainterProxy} instances are
+	 * constructed in the {@link PainterProxyFactory}.
 	 * 
-	 * @return a {@link Painter}.
+	 * @return a {@link PainterProxy}.
 	 *************************************** 
 	 */
 	Painter getPainter();

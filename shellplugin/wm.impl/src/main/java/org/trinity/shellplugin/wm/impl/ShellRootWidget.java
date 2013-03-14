@@ -2,8 +2,8 @@ package org.trinity.shellplugin.wm.impl;
 
 import java.util.Set;
 
-import org.trinity.foundation.api.render.PainterFactory;
-import org.trinity.foundation.api.render.binding.model.ViewReference;
+import org.trinity.foundation.api.render.client.PainterProxyFactory;
+import org.trinity.foundation.api.render.client.binding.ViewReference;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.widget.BaseShellWidget;
 
@@ -24,9 +24,9 @@ public class ShellRootWidget extends BaseShellWidget {
 
 	@Inject
 	protected ShellRootWidget(	final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-								final PainterFactory painterFactory) {
+								final PainterProxyFactory painterProxyFactory) {
 		super(	shellDisplayEventDispatcher,
-				painterFactory);
+				painterProxyFactory);
 	}
 
 	@ViewReference

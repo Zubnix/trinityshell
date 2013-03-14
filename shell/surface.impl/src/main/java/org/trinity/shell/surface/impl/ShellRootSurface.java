@@ -13,8 +13,8 @@ package org.trinity.shell.surface.impl;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.trinity.foundation.api.display.DisplayServer;
-import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.server.DisplayServer;
+import org.trinity.foundation.api.display.server.DisplaySurface;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeExecutor;
 import org.trinity.shell.api.scene.ShellNodeParent;

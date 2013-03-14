@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.server.DisplaySurface;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.surface.AbstractShellSurface;

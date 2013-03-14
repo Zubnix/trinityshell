@@ -11,6 +11,8 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static com.google.common.util.concurrent.Futures.transform;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.Callable;
@@ -40,8 +42,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
-
-import static com.google.common.util.concurrent.Futures.transform;
 
 @ThreadSafe
 public class XWindow implements DisplaySurface {
@@ -298,7 +298,7 @@ public class XWindow implements DisplaySurface {
 	public ListenableFuture<Rectangle> getGeometry() {
 		final int winId = getWindowId();
 
-		final ListenableFuture<xcb_get_geometry_cookie_t> geometryFuture = this.xExecutor
+		final ListenableFuture<xcb_get_geometry_cookie_t> geometryRequest = this.xExecutor
 				.submit(new Callable<xcb_get_geometry_cookie_t>() {
 					@Override
 					public xcb_get_geometry_cookie_t call() {
@@ -308,13 +308,14 @@ public class XWindow implements DisplaySurface {
 					}
 				});
 
-		return transform(	geometryFuture,
-							new AsyncFunction<xcb_get_geometry_cookie_t, Rectangle>() {
-								@Override
-								public ListenableFuture<Rectangle> apply(final xcb_get_geometry_cookie_t input) {
-									return getGeometryReply(input);
-								}
-							});
+		final ListenableFuture<Rectangle> geometryReply = transform(geometryRequest,
+																	new AsyncFunction<xcb_get_geometry_cookie_t, Rectangle>() {
+																		@Override
+																		public ListenableFuture<Rectangle> apply(final xcb_get_geometry_cookie_t input) {
+																			return getGeometryReply(input);
+																		}
+																	});
+		return geometryReply;
 	}
 
 	protected ListenableFuture<Rectangle> getGeometryReply(final xcb_get_geometry_cookie_t cookie_t) {

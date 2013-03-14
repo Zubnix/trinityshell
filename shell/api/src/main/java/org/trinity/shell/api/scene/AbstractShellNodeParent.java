@@ -11,17 +11,21 @@
  */
 package org.trinity.shell.api.scene;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
+import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListeningExecutorService;
 
 /***************************************
  * An abstract base implementation of a {@link ShellNodeParent}.
@@ -29,11 +33,15 @@ import com.google.common.base.Optional;
  *************************************** 
  */
 @NotThreadSafe
-public abstract class AbstractShellNodeParent extends AbstractShellNode implements ShellNodeParent {
+public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodeParent implements ShellNodeParent {
 
-	private final Set<ShellNode> children = new HashSet<ShellNode>();
+	private final Set<AbstractShellNode> children = new HashSet<AbstractShellNode>();
 
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
+
+	protected AbstractShellNodeParent(final ListeningExecutorService shellExecutor) {
+		super(shellExecutor);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -41,64 +49,69 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 	 * The returned array is a copy of the internal array.
 	 */
 	@Override
-	public ShellNode[] getChildren() {
-		return this.children.toArray(new ShellNode[this.children.size()]);
+	public AbstractShellNode[] getChildrenImpl() {
+		return this.children.toArray(new AbstractShellNode[this.children.size()]);
 	}
 
 	protected void updateChildrenPosition() {
-		for (final ShellNode child : getChildren()) {
-			final int childX = child.getX();
-			final int childY = child.getY();
+		for (final AbstractShellNode child : getChildrenImpl()) {
+			final Rectangle childGeo = child.getGeometryImpl();
+			final int childX = childGeo.getX();
+			final int childY = childGeo.getY();
 			child.getShellNodeExecutor().move(	childX,
 												childY);
 		}
 	}
 
 	@Override
-	public Optional<ShellLayoutManager> getLayoutManager() {
+	public Optional<ShellLayoutManager> getLayoutManagerImpl() {
 		return this.optionalLayoutManager;
 	}
 
 	@Override
-	public void setLayoutManager(final ShellLayoutManager shellLayoutManager) {
+	public Void setLayoutManagerImpl(final ShellLayoutManager shellLayoutManager) {
 		this.optionalLayoutManager = Optional.of(shellLayoutManager);
 		getNodeEventBus().register(shellLayoutManager);
+		return null;
 	}
 
 	@Override
-	protected void doMove(final boolean execute) {
+	public void doMove(final boolean execute) {
 		super.doMove(execute);
 		updateChildrenPosition();
 	}
 
 	@Override
-	protected void doMoveResize(final boolean execute) {
+	public void doMoveResize(final boolean execute) {
 		super.doMoveResize(execute);
 		updateChildrenPosition();
 		layout();
 	}
 
 	@Override
-	protected void doResize(final boolean execute) {
+	public void doResize(final boolean execute) {
 		super.doResize(execute);
 		layout();
 	}
 
 	@Override
-	public void handleChildReparentEvent(final ShellNode child) {
+	public Void handleChildReparentEventImpl(final ShellNode child) {
+		checkArgument(child instanceof AbstractShellNode);
+
 		ShellNodeEvent shellNodeEvent;
 		if (this.children.contains(child)) {
 			this.children.remove(child);
 			// child.removeShellNodeEventHandler(this);
 			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
-															toGeoTransformation());
+															toGeoTransformationImpl());
 			getNodeEventBus().post(shellNodeEvent);
 		} else {
-			this.children.add(child);
+			this.children.add((AbstractShellNode) child);
 			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
-															toGeoTransformation());
+															toGeoTransformationImpl());
 			getNodeEventBus().post(shellNodeEvent);
 		}
+		return null;
 	}
 
 	/**
@@ -108,10 +121,11 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 	 * node.
 	 */
 	@Override
-	public void layout() {
-		final Optional<ShellLayoutManager> optionalLayoutManager = getLayoutManager();
+	public Void layoutImpl() {
+		final Optional<ShellLayoutManager> optionalLayoutManager = getLayoutManagerImpl();
 		if (optionalLayoutManager.isPresent()) {
 			optionalLayoutManager.get().layout(this);
 		}
+		return null;
 	}
 }

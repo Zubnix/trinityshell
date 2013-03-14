@@ -16,9 +16,9 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.trinity.foundation.api.display.DisplayServer;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.api.display.server.DisplayServer;
+import org.trinity.foundation.api.display.server.DisplaySurface;
+import org.trinity.foundation.api.display.shared.event.DisplayEvent;
 import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.event.ShellSurfaceCreatedEvent;

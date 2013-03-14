@@ -1,7 +1,7 @@
 package org.trinity.shellplugin.wm.impl.view;
 
-import org.trinity.foundation.api.render.binding.view.PropertySlot;
-import org.trinity.foundation.api.render.binding.view.PropertySlots;
+import org.trinity.foundation.api.render.server.binding.PropertySlot;
+import org.trinity.foundation.api.render.server.binding.PropertySlots;
 
 import com.google.common.base.Preconditions;
 import com.trolltech.qt.gui.QLabel;

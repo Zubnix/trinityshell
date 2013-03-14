@@ -11,17 +11,19 @@
  */
 package org.trinity.shell.api.widget;
 
+import java.util.concurrent.ExecutionException;
+
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
-import org.trinity.foundation.api.render.binding.view.View;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -29,9 +31,9 @@ import com.google.inject.name.Named;
  * An {@link AbstractShellSurfaceParent} with a basic
  * {@link PaintableSurfaceNode} implementation.
  * <p>
- * A <code>BaseShellWidget</code> is manipulated through a {@link Painter} that
- * can talk to a paint back-end. This is done by injecting the widget with a
- * {@link View} and exposing it to the {@code Painter} with a
+ * A <code>BaseShellWidget</code> is manipulated through a {@link PainterProxy}
+ * that can talk to a paint back-end. This is done by injecting the widget with
+ * a {@link View} and exposing it to the {@code PainterProxy} with a
  * {@link ViewReference} annotation. This <code>View</code> object is then bound
  * to the widget through binding annotations. see
  * 
@@ -60,9 +62,11 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 	 * <code>BaseShellWidget</code> will only be fully functional when it is
 	 * assigned to an initialized parent <code>BaseShellWidget</code>.
 	 */
-	protected BaseShellWidget(final PainterFactory painterFactory) {
+	protected BaseShellWidget(	@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
+								final PainterFactory painterProxyFactory) {
+		super(shellExecutor);
 		this.shellNodeExecutor = new BaseShellWidgetExecutor(this);
-		this.painter = painterFactory.createPainter(this);
+		this.painter = painterProxyFactory.createPainter(this);
 	}
 
 	/***************************************
@@ -103,7 +107,19 @@ public class BaseShellWidget extends AbstractShellSurfaceParent implements Shell
 	}
 
 	@Override
-	public ListenableFuture<DisplaySurface> getDisplaySurface() {
-		return this.painter.getDislaySurface();
+	public DisplaySurface getDisplaySurfaceImpl() {
+		final ListenableFuture<DisplaySurface> dsFuture = this.painter.getDislaySurface();
+
+		DisplaySurface ds = null;
+		try {
+			ds = dsFuture.get();
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ds;
 	}
 }

@@ -20,7 +20,7 @@ import java.util.Map.Entry;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.trinity.foundation.api.display.event.ShowRequest;
+import org.trinity.foundation.api.display.shared.event.ShowRequest;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;

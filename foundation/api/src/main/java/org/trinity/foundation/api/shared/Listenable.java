@@ -1,9 +1,11 @@
 package org.trinity.foundation.api.shared;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 public interface Listenable {
-	void addListener(Object listener);
+	ListenableFuture<Void> addListener(Object listener);
 
-	void removeListener(Object listener);
+	ListenableFuture<Void> removeListener(Object listener);
 
-	void post(Object event);
+	ListenableFuture<Void> post(Object event);
 }

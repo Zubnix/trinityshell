@@ -13,6 +13,7 @@ package org.trinity.shell.api.scene;
 
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
 import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
@@ -31,35 +32,9 @@ import com.google.common.util.concurrent.ListenableFuture;
  */
 public interface ShellNode extends DisplayArea, Listenable {
 
-	ListenableFuture<Integer> getX();
+	ListenableFuture<Rectangle> getGeometry();
 
-	ListenableFuture<Integer> getY();
-
-	ListenableFuture<Integer> getWidth();
-
-	ListenableFuture<Integer> getHeight();
-
-	/***************************************
-	 * The absolute X value of this node.
-	 * <p>
-	 * The absolute value is the distance, implementation dependent but usually
-	 * in pixels, to root parent's position.
-	 * 
-	 * @return An absolute X coordinate.
-	 *************************************** 
-	 */
-	ListenableFuture<Integer> getAbsoluteX();
-
-	/***************************************
-	 * The absolute Y value of this node.
-	 * <p>
-	 * The absolute value is the distance, implementation dependent but usually
-	 * in pixels, to root parent's position.
-	 * 
-	 * @return An absolute Y coordinate.
-	 *************************************** 
-	 */
-	ListenableFuture<Integer> getAbsoluteY();
+	ListenableFuture<Rectangle> getAbsoluteGeometry();
 
 	/**
 	 * Indicates if this ndoe is visible. This is implementation dependent. A
@@ -255,31 +230,11 @@ public interface ShellNode extends DisplayArea, Listenable {
 	 */
 	ListenableFuture<Void> requestHide();
 
-	/***************************************
-	 * Set the desired width for this node. Actual resizing is done either
-	 * directly through {@link #doResize()} or {@link #doMoveResize()}, or
-	 * indirectly through {@link #requestResize()} or
-	 * {@link #requestMoveResize()}.
-	 * 
-	 * @param height
-	 *            the desired width, implementation dependent but usually in
-	 *            pixels.
-	 *************************************** 
-	 */
-	ListenableFuture<Void> setWidth(final int width);
+	ListenableFuture<Void> setSize(	int width,
+									int height);
 
-	/***************************************
-	 * Set the desired height for this node. Actual resizing is done either
-	 * directly through {@link #doResize()} or {@link #doMoveResize()}, or
-	 * indirectly through {@link #requestResize()} or
-	 * {@link #requestMoveResize()}.
-	 * 
-	 * @param height
-	 *            the desired height, implementation dependent but usually in
-	 *            pixels.
-	 *************************************** 
-	 */
-	ListenableFuture<Void> setHeight(final int height);
+	ListenableFuture<Void> setPosition(	int x,
+										int y);
 
 	/***************************************
 	 * Set the desired parent of this node. Actually reparenting is done either
@@ -291,32 +246,6 @@ public interface ShellNode extends DisplayArea, Listenable {
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setParent(final ShellNodeParent parent);
-
-	/***************************************
-	 * Set the desired X coordinate for this node. Actual moving is done either
-	 * directly through {@link #doMove()} or {@link #doMoveResize()}, or
-	 * indirectly through {@link #requestMove()} or {@link #requestMoveResize()}
-	 * .
-	 * 
-	 * @param x
-	 *            the desired X coordinate, implementation dependent but usually
-	 *            in pixels.
-	 *************************************** 
-	 */
-	ListenableFuture<Void> setX(final int x);
-
-	/***************************************
-	 * Set the desired Y coordinate for this node. Actual moving is done either
-	 * directly through {@link #doMove()} or {@link #doMoveResize()}, or
-	 * indirectly through {@link #requestMove()} or {@link #requestMoveResize()}
-	 * .
-	 * 
-	 * @param y
-	 *            the desired Y coordinate, implementation dependent but usually
-	 *            in pixels.
-	 *************************************** 
-	 */
-	ListenableFuture<Void> setY(final int y);
 
 	/**
 	 * The direct parent of this node.

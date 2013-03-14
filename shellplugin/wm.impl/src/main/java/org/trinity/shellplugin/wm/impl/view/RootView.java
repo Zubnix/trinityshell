@@ -1,6 +1,6 @@
 package org.trinity.shellplugin.wm.impl.view;
 
-import org.trinity.foundation.api.render.binding.view.ObservableCollection;
+import org.trinity.foundation.api.render.server.binding.ObservableCollection;
 
 import com.trolltech.qt.core.QChildEvent;
 import com.trolltech.qt.core.QObject;

@@ -16,9 +16,9 @@ import java.util.Map;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.trinity.foundation.api.display.event.KeyNotify;
-import org.trinity.foundation.api.display.input.Keyboard;
-import org.trinity.foundation.api.display.input.KeyboardInput;
+import org.trinity.foundation.api.display.server.input.Keyboard;
+import org.trinity.foundation.api.display.shared.event.KeyNotify;
+import org.trinity.foundation.api.display.shared.input.KeyboardInput;
 import org.trinity.shell.api.input.ShellKeyInputStringBuilder;
 
 import com.google.common.util.concurrent.FutureCallback;

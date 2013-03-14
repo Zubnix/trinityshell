@@ -13,9 +13,9 @@ package org.trinity.shell.surface.impl;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.trinity.foundation.api.display.DisplayServer;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.api.display.server.DisplayServer;
+import org.trinity.foundation.api.display.server.DisplaySurface;
+import org.trinity.foundation.api.display.shared.event.DisplayEvent;
 
 import com.google.common.eventbus.EventBus;
 

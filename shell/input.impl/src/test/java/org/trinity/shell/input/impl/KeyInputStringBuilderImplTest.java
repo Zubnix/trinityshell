@@ -5,11 +5,11 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.trinity.foundation.api.display.event.KeyNotify;
-import org.trinity.foundation.api.display.input.InputModifiers;
-import org.trinity.foundation.api.display.input.Key;
-import org.trinity.foundation.api.display.input.Keyboard;
-import org.trinity.foundation.api.display.input.KeyboardInput;
+import org.trinity.foundation.api.display.server.input.Keyboard;
+import org.trinity.foundation.api.display.shared.event.KeyNotify;
+import org.trinity.foundation.api.display.shared.input.InputModifiers;
+import org.trinity.foundation.api.display.shared.input.Key;
+import org.trinity.foundation.api.display.shared.input.KeyboardInput;
 import org.trinity.shell.input.impl.ShellKeyInputStringBuilderImpl;
 
 public class KeyInputStringBuilderImplTest {
