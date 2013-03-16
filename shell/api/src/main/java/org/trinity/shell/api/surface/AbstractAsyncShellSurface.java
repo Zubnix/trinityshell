@@ -3,6 +3,7 @@ package org.trinity.shell.api.surface;
 import java.util.concurrent.Callable;
 
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.AbstractShellNode;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -31,52 +32,28 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNode implem
 	public abstract Integer getHeightIncrementImpl();
 
 	@Override
-	public final ListenableFuture<Integer> getMaxHeight() {
-		return this.shellExecutor.submit(new Callable<Integer>() {
+	public final ListenableFuture<Size> getMaxSize() {
+		return this.shellExecutor.submit(new Callable<Size>() {
 			@Override
-			public Integer call() throws Exception {
-				return getMaxHeightImpl();
+			public Size call() throws Exception {
+				return getMaxSizeImpl();
 			}
 		});
 	}
 
-	public abstract Integer getMaxHeightImpl();
+	public abstract Size getMaxSizeImpl();
 
 	@Override
-	public final ListenableFuture<Integer> getMaxWidth() {
-		return this.shellExecutor.submit(new Callable<Integer>() {
+	public final ListenableFuture<Size> getMinSize() {
+		return this.shellExecutor.submit(new Callable<Size>() {
 			@Override
-			public Integer call() throws Exception {
-				return getMaxWidthImpl();
+			public Size call() throws Exception {
+				return getMinSizeImpl();
 			}
 		});
 	}
 
-	public abstract Integer getMaxWidthImpl();
-
-	@Override
-	public final ListenableFuture<Integer> getMinHeight() {
-		return this.shellExecutor.submit(new Callable<Integer>() {
-			@Override
-			public Integer call() throws Exception {
-				return getMinHeightImpl();
-			}
-		});
-	}
-
-	public abstract Integer getMinHeightImpl();
-
-	@Override
-	public final ListenableFuture<Integer> getMinWidth() {
-		return this.shellExecutor.submit(new Callable<Integer>() {
-			@Override
-			public Integer call() throws Exception {
-				return getMinWidthImpl();
-			}
-		});
-	}
-
-	public abstract Integer getMinWidthImpl();
+	public abstract Size getMinSizeImpl();
 
 	@Override
 	public final ListenableFuture<DisplaySurface> getDisplaySurface() {
@@ -139,52 +116,28 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNode implem
 	public abstract Void setHeightIncrementImpl(int heightIncrement);
 
 	@Override
-	public final ListenableFuture<Void> setMaxHeight(final int maxHeight) {
+	public final ListenableFuture<Void> setMaxSize(final Size maxSize) {
 		return this.shellExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				return setMaxHeightImpl(maxHeight);
+				return setMaxSizeImpl(maxSize);
 			}
 		});
 	}
 
-	public abstract Void setMaxHeightImpl(int maxHeight);
+	public abstract Void setMaxSizeImpl(Size maxSize);
 
 	@Override
-	public final ListenableFuture<Void> setMaxWidth(final int maxWidth) {
+	public final ListenableFuture<Void> setMinSize(final Size minSize) {
 		return this.shellExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				return setMaxWidthImpl(maxWidth);
+				return setMinSizeImpl(minSize);
 			}
 		});
 	}
 
-	public abstract Void setMaxWidthImpl(int maxWidth);
-
-	@Override
-	public final ListenableFuture<Void> setMinHeight(final int minHeight) {
-		return this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				return setMinHeightImpl(minHeight);
-			}
-		});
-	}
-
-	public abstract Void setMinHeightImpl(int minHeight);
-
-	@Override
-	public final ListenableFuture<Void> setMinWidth(final int minWidth) {
-		return this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				return setMinWidthImpl(minWidth);
-			}
-		});
-	}
-
-	public abstract Void setMinWidthImpl(int minWidth);
+	public abstract Void setMinSizeImpl(Size maxSize);
 
 	@Override
 	public final ListenableFuture<Void> setMovable(final boolean movable) {

@@ -13,6 +13,9 @@ package org.trinity.shell.api.scene;
 
 import javax.annotation.concurrent.Immutable;
 
+import org.trinity.foundation.api.shared.ImmutableRectangle;
+import org.trinity.foundation.api.shared.Rectangle;
+
 /**
  * A geometric transformation. Current geometric property names end in 0, new
  * ones in 1. A Delta value is the subtraction of the new value with the current
@@ -23,221 +26,43 @@ import javax.annotation.concurrent.Immutable;
  */
 @Immutable
 public class ShellNodeTransformation {
-	private final int x0;
-	private final int y0;
-	private final int width0;
-	private final int height0;
-
-	private final int x1;
-	private final int y1;
-	private final int width1;
-	private final int height1;
-
-	private final int deltaX;
-	private final int deltaY;
-
-	private final int deltaWidth;
-	private final int deltaHeight;
-
+	private final Rectangle rect0;
+	private final Rectangle rect1;
+	private final Rectangle deltaRect;
 	private final ShellNode parent0;
 	private final ShellNode parent1;
 
-	/**
-	 * Create a new <code>ShellNodeTransformation</code> with a number of
-	 * current and new geometric values.
-	 * 
-	 * @param x0
-	 *            The current relative X coordinate in pixels.
-	 * @param y0
-	 *            The current relative Y coordinate in pixels.
-	 * @param width0
-	 *            The current horizontal size in pixels.
-	 * @param height0
-	 *            The current vertical size in pixels.
-	 * @param x1
-	 *            The new relative X coordinate in pixels.
-	 * @param y1
-	 *            The new relative Y coordinate in pixels.
-	 * @param width1
-	 *            The new horizontal size in pixels.
-	 * @param height1
-	 *            The new vertical size in pixels.
-	 * @param visible0
-	 *            The current visibility.
-	 * @param visible1
-	 *            The new visibility.
-	 */
-	public ShellNodeTransformation(	final int x0,
-									final int y0,
-									final int width0,
-									final int height0,
+	public ShellNodeTransformation(	final Rectangle rect0,
 									final ShellNode parent0,
-									final int x1,
-									final int y1,
-									final int width1,
-									final int height1,
+									final Rectangle rect1,
 									final ShellNode parent1) {
-		this.x0 = x0;
-		this.y0 = y0;
-		this.width0 = width0;
-		this.height0 = height0;
-
-		this.x1 = x1;
-		this.y1 = y1;
-		this.width1 = width1;
-		this.height1 = height1;
-
-		this.deltaX = this.x1 - this.x0;
-		this.deltaY = this.y1 - this.y0;
-
-		this.deltaWidth = this.width1 - this.width0;
-		this.deltaHeight = this.height1 - this.height0;
+		this.rect0 = rect0;
+		this.rect1 = rect1;
 
 		this.parent0 = parent0;
 		this.parent1 = parent1;
+
+		final int deltaX = rect1.getPosition().getX() - rect0.getPosition().getX();
+		final int deltaY = rect1.getPosition().getY() - rect0.getPosition().getY();
+		final int deltaWidth = rect1.getSize().getWidth() - rect0.getSize().getWidth();
+		final int deltaHeight = rect1.getSize().getWidth() - rect0.getSize().getHeight();
+		this.deltaRect = new ImmutableRectangle(deltaX,
+												deltaY,
+												deltaWidth,
+												deltaHeight);
 	}
 
-	/**
-	 * The absolute difference between the current vertical height and the new
-	 * vertical height.
-	 * <p>
-	 * This delta value is equal to:
-	 * <p>
-	 * <code>this.height1 - this.height0</code>
-	 * 
-	 * @return The delta height value.
-	 */
-	public int getDeltaHeight() {
-		return this.deltaHeight;
+	public Rectangle getRect0() {
+		return this.rect0;
 	}
 
-	/**
-	 * The absolute difference between the current horizontal height and the new
-	 * horizontal height.
-	 * <p>
-	 * This delta value is equal to:
-	 * <p>
-	 * <code>this.width1 - this.width0</code>
-	 * 
-	 * @return The delta width value.
-	 */
-	public int getDeltaWidth() {
-		return this.deltaWidth;
+	public Rectangle getDeltaRect() {
+		return this.deltaRect;
 	}
 
-	/**
-	 * The absolute difference between the current relative X coordinate and the
-	 * new relative X coordinate
-	 * <p>
-	 * This delta X value is equal to:
-	 * <p>
-	 * <code>this.x1 - this.x0</code>
-	 * 
-	 * @return The delta X value.
-	 */
-	public int getDeltaX() {
-		return this.deltaX;
+	public Rectangle getRect1() {
+		return this.rect1;
 	}
-
-	/**
-	 * The absolute difference between the current relative Y coordinate and the
-	 * new relative Y coordinate
-	 * <p>
-	 * This delta Y value is equal to:
-	 * <p>
-	 * <code>this.y1 - this.y0</code>
-	 * 
-	 * @return The delta Y value.
-	 */
-	public int getDeltaY() {
-		return this.deltaY;
-	}
-
-	/**
-	 * The current vertical size in pixels.
-	 * 
-	 * @return The current height in pixels.
-	 */
-	public int getHeight0() {
-		return this.height0;
-	}
-
-	/**
-	 * The new vertical size in pixels.
-	 * 
-	 * @return The new height in pixels.
-	 */
-	public int getHeight1() {
-		return this.height1;
-	}
-
-	/**
-	 * The current horizontal size in pixels.
-	 * 
-	 * @return The current width in pixels.
-	 */
-	public int getWidth0() {
-		return this.width0;
-	}
-
-	/**
-	 * The new horizontal size in pixels.
-	 * 
-	 * @return The new width in pixels.
-	 */
-	public int getWidth1() {
-		return this.width1;
-	}
-
-	/**
-	 * The current relative X coordinate value.
-	 * 
-	 * @return The current relative X coordinate in pixels.
-	 */
-	public int getX0() {
-		return this.x0;
-	}
-
-	/**
-	 * The new relative X coordinate value.
-	 * 
-	 * @return The new relative X coordinate in pixels.
-	 */
-	public int getX1() {
-		return this.x1;
-	}
-
-	/**
-	 * The current relative Y coordinate value.
-	 * 
-	 * @return The current relative Y coordinate in pixels.
-	 */
-	public int getY0() {
-		return this.y0;
-	}
-
-	/**
-	 * The new relative Y coordinate value.
-	 * 
-	 * @return The new relative Y coordinate in pixels.
-	 */
-	public int getY1() {
-		return this.y1;
-	}
-
-	// @Override
-	// public String toString() {
-	// return String
-	// .format("( x1:%d, y1:%d + width1:%d x height1:%d,\n visible1: %b, parent1: %s )\n -"
-	// +
-	// "( x0:%d, y0:%d + width0:%d x height0:%d,\n visible0: %b, parent0: %s )\n = "
-	// + "( deltaX:%d , deltaY:%d + deltaWidth:%d x deltaHeight:%d )",
-	// getX1(), getY1(), getWidth1(), getHeight1(),
-	// isVisible1(), getParent1(), getX0(), getY0(),
-	// getWidth0(), getHeight0(), isVisible0(), getParent0(),
-	// getDeltaX(), getDeltaY(), getDeltaWidth(),
-	// getDeltaHeight());
-	// }
 
 	/**
 	 * @return

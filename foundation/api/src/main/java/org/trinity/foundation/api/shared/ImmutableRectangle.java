@@ -20,7 +20,8 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class ImmutableRectangle implements Rectangle {
 
-	private final int x, y, width, height;
+	private final Coordinate position;
+	private final Size size;
 
 	/**
 	 * Create a new {@code ImmutableRectangle} with the same geometry as the
@@ -30,10 +31,8 @@ public class ImmutableRectangle implements Rectangle {
 	 *            a {@link Rectangle}
 	 */
 	public ImmutableRectangle(final Rectangle rectangle) {
-		this(	rectangle.getX(),
-				rectangle.getY(),
-				rectangle.getWidth(),
-				rectangle.getHeight());
+		this(	rectangle.getPosition(),
+				rectangle.getSize());
 	}
 
 	/**
@@ -56,6 +55,22 @@ public class ImmutableRectangle implements Rectangle {
 				height);
 	}
 
+	public ImmutableRectangle(	final int x,
+								final int y,
+								final Size size) {
+		this(	x,
+				y,
+				size.getWidth(),
+				size.getHeight());
+	}
+
+	public ImmutableRectangle(	final Coordinate position,
+								final Size size) {
+		this(	position,
+				size.getWidth(),
+				size.getHeight());
+	}
+
 	/**
 	 * Create a new {@code ImmutableRectangle} with the given x and y value as
 	 * the position, and the given width & height as its dimension.
@@ -73,29 +88,19 @@ public class ImmutableRectangle implements Rectangle {
 								final int y,
 								final int width,
 								final int height) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
+		this.position = new Coordinate(	x,
+										y);
+		this.size = new Size(	width,
+								height);
 	}
 
 	@Override
-	public int getX() {
-		return this.x;
+	public Coordinate getPosition() {
+		return this.position;
 	}
 
 	@Override
-	public int getY() {
-		return this.y;
-	}
-
-	@Override
-	public int getWidth() {
-		return this.width;
-	}
-
-	@Override
-	public int getHeight() {
-		return this.height;
+	public Size getSize() {
+		return this.size;
 	}
 }

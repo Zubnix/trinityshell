@@ -12,8 +12,10 @@
 package org.trinity.shell.api.scene;
 
 import org.trinity.foundation.api.display.DisplayArea;
+import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
 import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
@@ -34,7 +36,19 @@ public interface ShellNode extends DisplayArea, Listenable {
 
 	ListenableFuture<Rectangle> getGeometry();
 
-	ListenableFuture<Rectangle> getAbsoluteGeometry();
+	ListenableFuture<Void> setSize(	int width,
+									int height);
+
+	ListenableFuture<Void> setSize(Size size);
+
+	ListenableFuture<Void> setPosition(	int x,
+										int y);
+
+	ListenableFuture<Void> setPosition(Coordinate position);
+
+	ListenableFuture<Coordinate> getPosition();
+
+	ListenableFuture<Size> getSize();
 
 	/**
 	 * Indicates if this ndoe is visible. This is implementation dependent. A
@@ -229,12 +243,6 @@ public interface ShellNode extends DisplayArea, Listenable {
 	 *************************************** 
 	 */
 	ListenableFuture<Void> requestHide();
-
-	ListenableFuture<Void> setSize(	int width,
-									int height);
-
-	ListenableFuture<Void> setPosition(	int x,
-										int y);
 
 	/***************************************
 	 * Set the desired parent of this node. Actually reparenting is done either

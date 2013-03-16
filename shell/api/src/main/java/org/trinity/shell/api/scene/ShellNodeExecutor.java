@@ -11,6 +11,9 @@
  */
 package org.trinity.shell.api.scene;
 
+import org.trinity.foundation.api.shared.Coordinate;
+import org.trinity.foundation.api.shared.Size;
+
 /**
  * Executes the actual geometry changes for a {@link ShellNode}. A
  * <code>ShellNodeExecutor</code> is a delegate for a <code>ShellNode</code> to
@@ -44,37 +47,12 @@ public interface ShellNodeExecutor {
 	 */
 	void raise();
 
-	/**
-	 * Execute the actual moving of the handled <code>ShellNode</code>.
-	 * 
-	 * @param relativeX
-	 * @param relativeY
-	 */
-	void move(	int relativeX,
-				int relativeY);
+	void move(Coordinate desiredPosition);
 
-	/**
-	 * Execute the actual resizing of the handled <code>ShellNode</code>.
-	 * 
-	 * @param width
-	 * @param height
-	 */
-	void resize(int width,
-				int height);
+	void resize(Size desiredSize);
 
-	/**
-	 * Execute the actual resizing and moving of the handled
-	 * <code>ShellNode</code>.
-	 * 
-	 * @param relativeX
-	 * @param relativeY
-	 * @param width
-	 * @param height
-	 */
-	void moveResize(int relativeX,
-					int relativeY,
-					int width,
-					int height);
+	void moveResize(Coordinate desiredPosition,
+					Size desiredSize);
 
 	/***************************************
 	 * Execute the actual showing of the handled <code>ShellNode</code>.

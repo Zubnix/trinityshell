@@ -41,11 +41,11 @@ public class XDisplayServer implements DisplayServer {
 	private final EventBus displayEventBus = new EventBus();
 
 	@Inject
-	XDisplayServer(final XConnection xConnection,
-			final XWindowCache xWindowCache,
-			@Named("DisplayEventBus") final EventBus displayEventBus,
-			final XEventPump xEventPump,
-			@Named("XExecutor") final ListeningExecutorService xExecutor) {
+	XDisplayServer(	final XConnection xConnection,
+					final XWindowCache xWindowCache,
+					@Named("DisplayEventBus") final EventBus displayEventBus,
+					final XEventPump xEventPump,
+					@Named("XExecutor") final ListeningExecutorService xExecutor) {
 
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
@@ -56,14 +56,15 @@ public class XDisplayServer implements DisplayServer {
 	@Override
 	public ListenableFuture<Void> close() {
 
-		return this.xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				XDisplayServer.this.xEventPump.stop();
-				XDisplayServer.this.xConnection.close();
-			}
-		}, null);
+											@Override
+											public void run() {
+												XDisplayServer.this.xEventPump.stop();
+												XDisplayServer.this.xConnection.close();
+											}
+										},
+										null);
 	}
 
 	@Override
@@ -72,9 +73,8 @@ public class XDisplayServer implements DisplayServer {
 
 			@Override
 			public DisplaySurface call() {
-				return XDisplayServer.this.xWindowCache
-						.getWindow(XDisplayServer.this.xConnection
-								.getScreenReference().getRoot());
+				return XDisplayServer.this.xWindowCache.getWindow(XDisplayServer.this.xConnection.getScreenReference()
+						.getRoot());
 			}
 		});
 	}
@@ -84,34 +84,56 @@ public class XDisplayServer implements DisplayServer {
 		// FIXME from config
 		final String displayName = System.getenv("DISPLAY");
 
-		return this.xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				XDisplayServer.this.xConnection.open(displayName, 0);
-				if (LibXcb
-						.xcb_connection_has_error(XDisplayServer.this.xConnection
-								.getConnectionReference()) != 0) {
-					throw new Error("Cannot open display\n");
-				}
-				XDisplayServer.this.xEventPump.start();
+											@Override
+											public void run() {
+												XDisplayServer.this.xConnection.open(	displayName,
+																						0);
+												if (LibXcb.xcb_connection_has_error(XDisplayServer.this.xConnection
+														.getConnectionReference()) != 0) {
+													throw new Error("Cannot open display\n");
+												}
+												XDisplayServer.this.xEventPump.start();
 
-			}
-		}, null);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public void addListener(final Object listener) {
-		this.displayEventBus.register(listener);
+	public ListenableFuture<Void> addListener(final Object listener) {
+		return this.xExecutor.submit(	new Runnable() {
+
+											@Override
+											public void run() {
+												XDisplayServer.this.displayEventBus.register(listener);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public void post(final Object event) {
-		this.displayEventBus.post(event);
+	public ListenableFuture<Void> post(final Object event) {
+		return this.xExecutor.submit(	new Runnable() {
+
+											@Override
+											public void run() {
+												XDisplayServer.this.displayEventBus.post(event);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public void removeListener(final Object listener) {
-		this.displayEventBus.unregister(listener);
+	public ListenableFuture<Void> removeListener(final Object listener) {
+		return this.xExecutor.submit(	new Runnable() {
+
+											@Override
+											public void run() {
+												XDisplayServer.this.displayEventBus.unregister(listener);
+											}
+										},
+										null);
 	}
 }

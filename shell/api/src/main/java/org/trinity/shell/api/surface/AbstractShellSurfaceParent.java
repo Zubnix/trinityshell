@@ -18,7 +18,7 @@ import java.util.Set;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
@@ -58,11 +58,8 @@ public abstract class AbstractShellSurfaceParent extends AbstractAsyncShellSurfa
 
 	protected void updateChildrenPosition() {
 		for (final AbstractShellNode child : getChildrenImpl()) {
-			final Rectangle childGeo = child.getGeometryImpl();
-			final int childX = childGeo.getX();
-			final int childY = childGeo.getY();
-			child.getShellNodeExecutor().move(	childX,
-												childY);
+			final Coordinate childPosition = child.getPositionImpl();
+			child.getShellNodeExecutor().move(childPosition);
 		}
 	}
 

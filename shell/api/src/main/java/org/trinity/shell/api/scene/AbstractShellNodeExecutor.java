@@ -14,6 +14,7 @@ package org.trinity.shell.api.scene;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
+import org.trinity.foundation.api.shared.Size;
 
 /****************************************
  * An abstract base implementation of a {@link ShellNodeExecutor} for use with
@@ -42,10 +43,9 @@ public abstract class AbstractShellNodeExecutor implements ShellNodeExecutor {
 	}
 
 	@Override
-	public void resize(	final int width,
-						final int height) {
-		getShellNodeManipulator().resize(	width,
-											height);
+	public void resize(final Size size) {
+		getShellNodeManipulator().resize(	size.getWidth(),
+											size.getHeight());
 	}
 
 	@Override

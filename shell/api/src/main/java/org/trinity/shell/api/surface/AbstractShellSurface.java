@@ -13,6 +13,7 @@ package org.trinity.shell.api.surface;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.util.concurrent.Futures.addCallback;
+import static com.google.common.util.concurrent.Futures.transform;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -24,10 +25,13 @@ import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.ShellNode;
 
 import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -50,17 +54,16 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	public static final int DEFAULT_WIDTH_INC = 1;
 	public static final int DEFAULT_HEIGHT_INC = 1;
 
-	private boolean movable;
-	private boolean resizable;
+	private boolean movable = DEFAULT_IS_MOVABLE;
+	private boolean resizable = DEFAULT_IS_RESIZABLE;
 
-	private int minWidth;
-	private int minHeight;
+	private final Size minSize = new Size(	DEFAULT_MIN_WIDTH,
+											DEFAULT_MIN_HEIGHT);
+	private Size maxSize = new Size(DEFAULT_MAX_WIDTH,
+									DEFAULT_MAX_HEIGHT);
 
-	private int maxWidth;
-	private int maxHeight;
-
-	private int widthIncrement;
-	private int heightIncrement;
+	private int widthIncrement = DEFAULT_WIDTH_INC;
+	private int heightIncrement = DEFAULT_HEIGHT_INC;
 
 	private final ListeningExecutorService shellExecutor;
 
@@ -71,7 +74,6 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	protected AbstractShellSurface(@Named("ShellExecutor") final ListeningExecutorService shellExecutor) {
 		super(shellExecutor);
 		this.shellExecutor = shellExecutor;
-		initBasics();
 	}
 
 	public void subscribeToDisplaySurfaceEvents() {
@@ -108,136 +110,26 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 					this.shellExecutor);
 	}
 
-	/**
-	 * Set the default geometric preferences.
-	 * <p>
-	 * The default geometric preferences are:
-	 * <ul>
-	 * <li>resizable: {@value #DEFAULT_IS_RESIZABLE}</li>
-	 * <li>moveable: {@value #DEFAULT_IS_MOVABLE}</li>
-	 * <li>minimum width: {@value #DEFAULT_MIN_WIDTH} pixels</li>
-	 * <li>maximum width: {@value #DEFAULT_MAX_WIDTH} pixels</li>
-	 * <li>minimum height: {@value #DEFAULT_MIN_HEIGHT} pixels</li>
-	 * <li>maximum height: {@value #DEFAULT_MAX_HEIGHT} pixels</li>
-	 * </ul>
-	 */
-	protected void initBasics() {
-		setResizableImpl(AbstractShellSurface.DEFAULT_IS_RESIZABLE);
-		setMovableImpl(AbstractShellSurface.DEFAULT_IS_MOVABLE);
-		setMinWidthImpl(AbstractShellSurface.DEFAULT_MIN_WIDTH);
-		setMinHeightImpl(AbstractShellSurface.DEFAULT_MIN_HEIGHT);
-		setMaxWidthImpl(AbstractShellSurface.DEFAULT_MAX_WIDTH);
-		setMaxHeightImpl(AbstractShellSurface.DEFAULT_MAX_HEIGHT);
-		setWidthIncrementImpl(AbstractShellSurface.DEFAULT_WIDTH_INC);
-		setHeightIncrementImpl(AbstractShellSurface.DEFAULT_HEIGHT_INC);
+	@Override
+	public Size getMaxSizeImpl() {
+		return this.maxSize;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * The minimum height is guaranteed to be respected. A smaller height than
-	 * the minimum height can be requested and executed but will result in the
-	 * minimum height being set.
-	 * 
-	 * @param minHeight
-	 *            The desired minimum height in pixels.
-	 */
 	@Override
-	public Void setMinHeightImpl(final int minHeight) {
-		this.minHeight = minHeight;
+	public Void setMaxSizeImpl(final Size maxSize) {
+		this.maxSize = maxSize;
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * The minimum width is guaranteed to be respected. A smaller width than the
-	 * minimum width can be requested and executed but will result in the
-	 * minimum width being set.
-	 * 
-	 * @param minWidth
-	 *            The desired minimum width in pixels.
-	 */
 	@Override
-	public Void setMinWidthImpl(final int minWidth) {
-		this.minWidth = minWidth;
+	public Size getMinSizeImpl() {
+		return this.minSize;
+	}
+
+	@Override
+	public Void setMinSizeImpl(final Size maxSize) {
+		this.maxSize = maxSize;
 		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return The minimum width in pixels.
-	 * @see AbstractShellSurface#setMinWidth(int)
-	 */
-	@Override
-	public Integer getMinWidthImpl() {
-		return this.minWidth;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @return The minimum height in pixels.
-	 * @see AbstractShellSurface#setMinHeight(int)
-	 */
-	@Override
-	public Integer getMinHeightImpl() {
-		return this.minHeight;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * The maximum width is guaranteed to be respected. A greater width than the
-	 * maximum width can be requested and executed but will result in the
-	 * maximum width being set.
-	 * 
-	 * @param maxWidth
-	 *            The desired maxium width in pixels.
-	 */
-	@Override
-	public Void setMaxWidthImpl(final int maxWidth) {
-		this.maxWidth = maxWidth;
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * The maximum height is guaranteed to be respected. A greater height than
-	 * the maximum height can be requested and executed but will result in the
-	 * maximum height being set.
-	 * 
-	 * @param maxHeight
-	 *            The desired maximum height in pixels.
-	 */
-	@Override
-	public Void setMaxHeightImpl(final int maxHeight) {
-		this.maxHeight = maxHeight;
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see AbstractShellSurface#setMaxHeight(int)
-	 * @return The maximum height in pixels.
-	 */
-	@Override
-	public Integer getMaxHeightImpl() {
-		return this.maxHeight;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see AbstractShellSurface#setMaxWidth(int)
-	 * @return the maximum width in pixels.
-	 */
-	@Override
-	public Integer getMaxWidthImpl() {
-		return this.maxWidth;
 	}
 
 	@Override
@@ -317,39 +209,33 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 		return null;
 	}
 
-	/**
-	 * A new width that lies within the interval of a minimum and maximum width
-	 * (included).
-	 * 
-	 * @param newWidth
-	 * @return
-	 * @see AbstractShellSurface#normalizedHeight(int)
-	 */
-	protected int normalizedWidth(final int newWidth) {
+	protected Size normalizedSize(final Size newSize) {
 
-		int normalizedWidth = newWidth < getMinWidthImpl() ? getMinWidthImpl()
-				: newWidth > getMaxWidthImpl() ? getMaxWidthImpl() : newWidth;
+		final int newWidth = newSize.getWidth();
+		final int newHeight = newSize.getHeight();
 
-		normalizedWidth -= (normalizedWidth - getGeometryImpl().getWidth()) % getWidthIncrementImpl();
+		final Size minSize = getMinSizeImpl();
+		final int minWidth = minSize.getWidth();
+		final int minHeight = minSize.getHeight();
 
-		return normalizedWidth;
-	}
+		final Size maxSize = getMaxSizeImpl();
+		final int maxWidth = maxSize.getWidth();
+		final int maxHeight = maxSize.getHeight();
 
-	/**
-	 * A new height that lies within the interval of a minimum and maximum
-	 * height.
-	 * 
-	 * @param newHeight
-	 * @return
-	 * @see AbstractShellSurface#normalizedWidth(int)
-	 */
-	protected int normalizedHeight(final int newHeight) {
-		int normalizedHeight = newHeight < getMinHeightImpl() ? getMinHeightImpl()
-				: newHeight > getMaxHeightImpl() ? getMaxHeightImpl() : newHeight;
+		final Size currentSize = getSizeImpl();
+		final int currentWidth = currentSize.getWidth();
+		final int currentHeight = currentSize.getHeight();
 
-		normalizedHeight -= (normalizedHeight - getGeometryImpl().getHeight()) % getHeightIncrementImpl();
+		int normalizedWidth = newWidth < minWidth ? minWidth : newWidth > maxWidth ? maxWidth : newWidth;
+		normalizedWidth -= (normalizedWidth - currentWidth) % getWidthIncrementImpl();
 
-		return normalizedHeight;
+		int normalizedHeight = newHeight < minHeight ? minHeight : newHeight > maxHeight ? maxHeight : newHeight;
+		normalizedHeight -= (normalizedHeight - currentHeight) % getHeightIncrementImpl();
+
+		final Size normalizedSize = new Size(	normalizedWidth,
+												normalizedHeight);
+
+		return normalizedSize;
 	}
 
 	@Override
@@ -394,27 +280,18 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	@Override
 	public Void syncGeoToDisplaySurfaceImpl() {
 
-		addCallback(getDisplaySurface(),
-					new FutureCallback<DisplaySurface>() {
-						@Override
-						public void onSuccess(final DisplaySurface result) {
-							syncGeoGetDisplaySurfaceCbImpl(result);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							// TODO Auto-generated method stub
-							t.printStackTrace();
-						}
-					},
-					this.shellExecutor);
-		return null;
-	}
-
-	protected void syncGeoGetDisplaySurfaceCbImpl(final DisplaySurface result) {
-
-		// callback executed in same thread, should block (?)
-		addCallback(result.getGeometry(),
+		final ListenableFuture<DisplaySurface> displaySurfaceFuture = getDisplaySurface();
+		final ListenableFuture<Rectangle> displaySurfaceGeoFuture = transform(	displaySurfaceFuture,
+																				new AsyncFunction<DisplaySurface, Rectangle>() {
+																					@Override
+																					public ListenableFuture<Rectangle> apply(final DisplaySurface input)
+																							throws Exception {
+																						final ListenableFuture<Rectangle> displaySurfaceGeo = input
+																								.getGeometry();
+																						return displaySurfaceGeo;
+																					}
+																				});
+		addCallback(displaySurfaceGeoFuture,
 					new FutureCallback<Rectangle>() {
 						@Override
 						public void onSuccess(final Rectangle result) {
@@ -423,39 +300,27 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 
 						@Override
 						public void onFailure(final Throwable t) {
-							// TODO Auto-generated method stub
+							// TODO how to handle error?
 							t.printStackTrace();
 						}
 					},
 					this.shellExecutor);
+
+		return null;
 	}
 
 	protected void syncGeoGetGeometryCbImpl(final Rectangle result) {
-		// TODO in future version we might want to take a
-		// geometry delegate into
-		// account to map from and to shell scene geometry
-		// and on screen
+		// TODO in future version we might want to take a geometry delegate into
+		// account to map from and to shell scene geometry and on screen
 		// geometry.
-
-		final int x = result.getX();
-		final int y = result.getY();
-		final int width = result.getWidth();
-		final int height = result.getHeight();
-		setPositionImpl(x,
-						y);
-		setSizeImpl(width,
-					height);
+		setPositionImpl(result.getPosition());
+		setSizeImpl(result.getSize());
 		doMoveResize(false);
 	}
 
 	@Override
-	public int getDesiredWidth() {
-		return normalizedWidth(super.getDesiredWidth());
-	}
-
-	@Override
-	public int getDesiredHeight() {
-		return normalizedHeight(super.getDesiredHeight());
+	public Size getDesiredSize() {
+		return normalizedSize(super.getDesiredSize());
 	}
 
 	/* start display event handling: */
@@ -498,10 +363,8 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 			@Override
 			public void run() {
 				final Rectangle geometry = geometryNotify.getGeometry();
-				setPositionImpl(geometry.getX(),
-								geometry.getY());
-				setSizeImpl(geometry.getWidth(),
-							geometry.getHeight());
+				setPositionImpl(geometry.getPosition());
+				setSizeImpl(geometry.getSize());
 				doMoveResize(false);
 			}
 		});
@@ -528,12 +391,14 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	protected void handleGeometryRequestEventImpl(final GeometryRequest geometryRequest) {
 		final Rectangle currentGeometry = getGeometryImpl();
 		final Rectangle requestedGeometry = geometryRequest.getGeometry();
-		final int newX = geometryRequest.configureX() ? requestedGeometry.getX() : currentGeometry.getX();
-		final int newY = geometryRequest.configureY() ? requestedGeometry.getY() : currentGeometry.getY();
-		final int newWidth = geometryRequest.configureWidth() ? requestedGeometry.getWidth() : currentGeometry
-				.getWidth();
-		final int newHeight = geometryRequest.configureHeight() ? requestedGeometry.getHeight() : currentGeometry
-				.getHeight();
+		final int newX = geometryRequest.configureX() ? requestedGeometry.getPosition().getX() : currentGeometry
+				.getPosition().getX();
+		final int newY = geometryRequest.configureY() ? requestedGeometry.getPosition().getY() : currentGeometry
+				.getPosition().getY();
+		final int newWidth = geometryRequest.configureWidth() ? requestedGeometry.getSize().getWidth()
+				: currentGeometry.getSize().getWidth();
+		final int newHeight = geometryRequest.configureHeight() ? requestedGeometry.getSize().getHeight()
+				: currentGeometry.getSize().getHeight();
 
 		if (geometryRequest.configureX() || geometryRequest.configureY()) {
 			setPositionImpl(newX,

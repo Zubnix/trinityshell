@@ -65,18 +65,39 @@ public class XWindow implements DisplaySurface {
 	}
 
 	@Override
-	public void post(final Object event) {
-		this.xWindowEventBus.post(event);
+	public ListenableFuture<Void> addListener(final Object listener) {
+		return this.xExecutor.submit(	new Runnable() {
+
+											@Override
+											public void run() {
+												XWindow.this.xWindowEventBus.register(listener);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public void addListener(final Object listener) {
-		this.xWindowEventBus.register(listener);
+	public ListenableFuture<Void> post(final Object event) {
+		return this.xExecutor.submit(	new Runnable() {
+
+											@Override
+											public void run() {
+												XWindow.this.xWindowEventBus.post(event);
+											}
+										},
+										null);
 	}
 
 	@Override
-	public void removeListener(final Object listener) {
-		this.xWindowEventBus.unregister(listener);
+	public ListenableFuture<Void> removeListener(final Object listener) {
+		return this.xExecutor.submit(	new Runnable() {
+
+											@Override
+											public void run() {
+												XWindow.this.xWindowEventBus.unregister(listener);
+											}
+										},
+										null);
 	}
 
 	@Override

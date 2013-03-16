@@ -13,6 +13,7 @@ package org.trinity.shell.api.surface;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 
@@ -43,37 +44,9 @@ public interface ShellSurface extends ShellNode {
 	 */
 	ListenableFuture<Integer> getHeightIncrement();
 
-	/***************************************
-	 * The maximum height of this surface.
-	 * 
-	 * @return a height, implementation dependent but usually in pixels.
-	 *************************************** 
-	 */
-	ListenableFuture<Integer> getMaxHeight();
+	ListenableFuture<Size> getMaxSize();
 
-	/***************************************
-	 * The maximum width of this surface.
-	 * 
-	 * @return a width, implementation dependent but usually in pixels.
-	 *************************************** 
-	 */
-	ListenableFuture<Integer> getMaxWidth();
-
-	/***************************************
-	 * The minimum height of this surface.
-	 * 
-	 * @return a height, implementation dependent but usually in pixels.
-	 *************************************** 
-	 */
-	ListenableFuture<Integer> getMinHeight();
-
-	/***************************************
-	 * The minimum width of this surface.
-	 * 
-	 * @return a width, implementation dependent but usually in pixels.
-	 *************************************** 
-	 */
-	ListenableFuture<Integer> getMinWidth();
+	ListenableFuture<Size> getMinSize();
 
 	/***************************************
 	 * The underlying, {@code DisplaySurface} that this shell surface will use
@@ -121,41 +94,9 @@ public interface ShellSurface extends ShellNode {
 	 */
 	ListenableFuture<Void> setHeightIncrement(final int heightIncrement);
 
-	/***************************************
-	 * Set the maximum height of this surface.
-	 * 
-	 * @param maxHeight
-	 *            a height, implementation dependent but usually in pixels.
-	 *************************************** 
-	 */
-	ListenableFuture<Void> setMaxHeight(final int maxHeight);
+	ListenableFuture<Void> setMaxSize(final Size size);
 
-	/***************************************
-	 * Set the maximum width of this surface.
-	 * 
-	 * @param maxWidth
-	 *            a width, implementation dependent but usually in pixels.
-	 *************************************** 
-	 */
-	ListenableFuture<Void> setMaxWidth(final int maxWidth);
-
-	/***************************************
-	 * Set the minimum height of this surface.
-	 * 
-	 * @param minHeight
-	 *            a height, implementation dependent but usually in pixels.
-	 *************************************** 
-	 */
-	ListenableFuture<Void> setMinHeight(final int minHeight);
-
-	/***************************************
-	 * Set the minimum width of this surface.
-	 * 
-	 * @param minWidth
-	 *            a width, implementation dependent but usually in pixels.
-	 *************************************** 
-	 */
-	ListenableFuture<Void> setMinWidth(final int minWidth);
+	ListenableFuture<Void> setMinSize(final Size size);
 
 	/***************************************
 	 * Indicate if this surface is movable.

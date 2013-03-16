@@ -15,8 +15,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
+import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
@@ -55,17 +57,11 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 @NotThreadSafe
 public abstract class AbstractShellNode extends AbstractAsyncShellNode implements ShellNode {
 
-	private int x;
-	private int desiredX;
+	private Coordinate position;
+	private Coordinate desiredPosition;
 
-	private int y;
-	private int desiredY;
-
-	private int width;
-	private int desiredWidth;
-
-	private int height;
-	private int desiredHeight;
+	private Size size;
+	private Size desiredSize;
 
 	private boolean visible;
 
@@ -82,15 +78,10 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	@Override
 	public ShellNodeTransformation toGeoTransformationImpl() {
-		return new ShellNodeTransformation(	this.x,
-											this.y,
-											this.width,
-											this.height,
+		return new ShellNodeTransformation(	getGeometryImpl(),
 											getParentImpl(),
-											getDesiredX(),
-											getDesiredY(),
-											getDesiredWidth(),
-											getDesiredHeight(),
+											new ImmutableRectangle(	getDesiredPosition(),
+																	getDesiredSize()),
 											getDesiredParent());
 	}
 
@@ -126,28 +117,8 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	@Override
 	public Rectangle getGeometryImpl() {
-		return new ImmutableRectangle(	this.x,
-										this.y,
-										this.width,
-										this.height);
-	}
-
-	@Override
-	public Rectangle getAbsoluteGeometryImpl() {
-		if ((getParent() == null) || getParent().equals(this)) {
-			return getGeometryImpl();
-		}
-
-		final Rectangle absoluteParentGeometry = getParentImpl().getAbsoluteGeometryImpl();
-		final int absX = absoluteParentGeometry.getX() + this.x;
-		final int absY = absoluteParentGeometry.getY() + this.y;
-		final int absWidth = absoluteParentGeometry.getWidth() + this.width;
-		final int absHeight = absoluteParentGeometry.getHeight() + this.height;
-
-		return new ImmutableRectangle(	absX,
-										absY,
-										absWidth,
-										absHeight);
+		return new ImmutableRectangle(	getPositionImpl(),
+										getSizeImpl());
 	}
 
 	@Override
@@ -158,18 +129,19 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 									width);
 		Preconditions.checkArgument(height > 0,
 									"Argument was %s but expected nonzero nonnegative value",
-									this.width);
+									height);
 
-		this.desiredWidth = width;
-		this.desiredHeight = height;
+		this.desiredSize = new Size(width,
+									height);
+
 		return null;
 	}
 
 	@Override
 	public Void setPositionImpl(final int x,
 								final int y) {
-		this.desiredX = x;
-		this.desiredY = y;
+		this.desiredPosition = new Coordinate(	x,
+												y);
 		return null;
 	}
 
@@ -269,16 +241,14 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 *************************************** 
 	 */
 	public void execMove() {
-		getShellNodeExecutor().move(getDesiredX(),
-									getDesiredY());
+		getShellNodeExecutor().move(getDesiredPosition());
 	}
 
 	/**
 	 * Make the desired position the actual position.
 	 */
 	public void flushPlaceValues() {
-		this.x = getDesiredX();
-		this.y = getDesiredY();
+		this.position = getDesiredPosition();
 	}
 
 	@Override
@@ -314,8 +284,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 *************************************** 
 	 */
 	public Void execResize() {
-		getShellNodeExecutor().resize(	getDesiredWidth(),
-										getDesiredHeight());
+		getShellNodeExecutor().resize(getDesiredSize());
 		return null;
 	}
 
@@ -323,8 +292,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 * Make the desired dimensions the current dimension.
 	 */
 	public Void flushSizeValues() {
-		this.width = getDesiredWidth();
-		this.height = getDesiredHeight();
+		this.size = getDesiredSize();
 		return null;
 	}
 
@@ -361,10 +329,8 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 *************************************** 
 	 */
 	public Void execMoveResize() {
-		getShellNodeExecutor().moveResize(	getDesiredX(),
-											getDesiredY(),
-											getDesiredWidth(),
-											getDesiredHeight());
+		getShellNodeExecutor().moveResize(	getDesiredPosition(),
+											getDesiredSize());
 		return null;
 	}
 
@@ -531,56 +497,22 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	@Override
 	public Void cancelPendingMoveImpl() {
-		setPositionImpl(this.x,
-						this.y);
+		setPositionImpl(this.position);
 		return null;
 	}
 
 	@Override
 	public Void cancelPendingResizeImpl() {
-		setSizeImpl(this.width,
-					this.height);
+		setSizeImpl(this.size);
 		return null;
 	}
 
-	/***************************************
-	 * The desired height as set by {@link #setHeight(int)}.
-	 * 
-	 * @return height, implementation dependent but usually in pixels.
-	 *************************************** 
-	 */
-	public int getDesiredHeight() {
-		return this.desiredHeight;
+	public Coordinate getDesiredPosition() {
+		return this.desiredPosition;
 	}
 
-	/***************************************
-	 * The desired width as set by {@link #setWidth(int)}.
-	 * 
-	 * @return width, implementation dependent but usually in pixels.
-	 *************************************** 
-	 */
-	public int getDesiredWidth() {
-		return this.desiredWidth;
-	}
-
-	/***************************************
-	 * The desired X coordinate as set by {@link #setX(int)}.
-	 * 
-	 * @return X coordinate, implementation dependent but usually in pixels.
-	 *************************************** 
-	 */
-	public int getDesiredX() {
-		return this.desiredX;
-	}
-
-	/***************************************
-	 * The desired Y coordinate as set by {@link #setY(int)}.
-	 * 
-	 * @return Y coordinate, implementation dependent but usually in pixels.
-	 *************************************** 
-	 */
-	public int getDesiredY() {
-		return this.desiredY;
+	public Size getDesiredSize() {
+		return this.desiredSize;
 	}
 
 	/***************************************
@@ -697,6 +629,28 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	@Override
 	public Void postImpl(final Object event) {
 		getNodeEventBus().post(event);
+		return null;
+	}
+
+	@Override
+	public Coordinate getPositionImpl() {
+		return this.position;
+	}
+
+	@Override
+	public Size getSizeImpl() {
+		return this.size;
+	}
+
+	@Override
+	public Void setPositionImpl(final Coordinate position) {
+		this.desiredPosition = position;
+		return null;
+	}
+
+	@Override
+	public Void setSizeImpl(final Size size) {
+		this.desiredSize = size;
 		return null;
 	}
 }

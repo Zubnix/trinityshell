@@ -4,7 +4,9 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Named;
 
+import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.api.shared.Size;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -14,6 +16,54 @@ import com.google.inject.Inject;
 public abstract class AbstractAsyncShellNode implements ShellNode {
 
 	private final ListeningExecutorService shellExecutor;
+
+	@Override
+	public ListenableFuture<Coordinate> getPosition() {
+		return this.shellExecutor.submit(new Callable<Coordinate>() {
+			@Override
+			public Coordinate call() throws Exception {
+				return getPositionImpl();
+			}
+		});
+	}
+
+	public abstract Coordinate getPositionImpl();
+
+	@Override
+	public ListenableFuture<Size> getSize() {
+		return this.shellExecutor.submit(new Callable<Size>() {
+			@Override
+			public Size call() throws Exception {
+				return getSizeImpl();
+			}
+		});
+	}
+
+	public abstract Size getSizeImpl();
+
+	@Override
+	public ListenableFuture<Void> setPosition(final Coordinate position) {
+		return this.shellExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				return setPositionImpl(position);
+			}
+		});
+	}
+
+	public abstract Void setPositionImpl(final Coordinate position);
+
+	@Override
+	public ListenableFuture<Void> setSize(final Size size) {
+		return this.shellExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				return setSizeImpl(size);
+			}
+		});
+	}
+
+	public abstract Void setSizeImpl(final Size size);
 
 	@Inject
 	protected AbstractAsyncShellNode(@Named("ShellExecutor") final ListeningExecutorService shellExecutor) {
@@ -31,18 +81,6 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	public abstract Rectangle getGeometryImpl();
-
-	@Override
-	public final ListenableFuture<Rectangle> getAbsoluteGeometry() {
-		return this.shellExecutor.submit(new Callable<Rectangle>() {
-			@Override
-			public Rectangle call() throws Exception {
-				return getAbsoluteGeometryImpl();
-			}
-		});
-	}
-
-	public abstract Rectangle getAbsoluteGeometryImpl();
 
 	@Override
 	public final ListenableFuture<Boolean> isVisible() {
