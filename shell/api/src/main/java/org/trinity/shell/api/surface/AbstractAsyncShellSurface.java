@@ -4,13 +4,13 @@ import java.util.concurrent.Callable;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.Size;
-import org.trinity.shell.api.scene.AbstractShellNode;
+import org.trinity.shell.api.scene.AbstractShellNodeParent;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 // TODO from boilerplate code generator
-public abstract class AbstractAsyncShellSurface extends AbstractShellNode implements ShellSurface {
+public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent implements ShellSurface {
 
 	private final ListeningExecutorService shellExecutor;
 

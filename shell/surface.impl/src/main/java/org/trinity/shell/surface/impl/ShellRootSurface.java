@@ -11,10 +11,13 @@
  */
 package org.trinity.shell.surface.impl;
 
+import java.util.concurrent.ExecutionException;
+
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.trinity.foundation.api.display.server.DisplayServer;
-import org.trinity.foundation.api.display.server.DisplaySurface;
+import org.trinity.foundation.api.display.DisplayServer;
+import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeExecutor;
 import org.trinity.shell.api.scene.ShellNodeParent;
@@ -22,7 +25,7 @@ import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
-import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -41,31 +44,21 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 	private final DisplayServer displayServer;
 
 	@Inject
-	ShellRootSurface(final DisplayServer displayServer) {
+	ShellRootSurface(	@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
+						final DisplayServer displayServer) {
+		super(shellExecutor);
 		this.displayServer = displayServer;
 		this.shellNodeExecutor = new ShellSurfaceExecutorImpl(this);
 		syncGeoToDisplaySurface();
-		shellDisplayEventDispatcher.registerDisplayEventTarget(	getNodeEventBus(),
-																this.displaySurface);
 	}
 
 	@Override
-	public boolean isVisible() {
+	public Boolean isVisibleImpl() {
 		return true;
 	}
 
 	@Override
-	public int getAbsoluteX() {
-		return getX();
-	}
-
-	@Override
-	public int getAbsoluteY() {
-		return getY();
-	}
-
-	@Override
-	public ShellRootSurface getParent() {
+	public AbstractShellNodeParent getParentImpl() {
 		return this;
 	}
 
@@ -75,7 +68,17 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 	}
 
 	@Override
-	public ListenableFuture<DisplaySurface> getDisplaySurface() {
-		return this.displayServer.getRootDisplayArea();
+	public DisplaySurface getDisplaySurfaceImpl() {
+		try {
+			return this.displayServer.getRootDisplayArea().get();
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (final ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

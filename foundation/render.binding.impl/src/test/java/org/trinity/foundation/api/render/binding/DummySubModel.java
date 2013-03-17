@@ -6,6 +6,8 @@ import org.trinity.foundation.api.render.binding.model.InputSlot;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.api.shared.Listenable;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 public class DummySubModel implements Listenable {
 
 	private DummySubSubModel dummySubSubModel = new DummySubSubModel();
@@ -41,20 +43,20 @@ public class DummySubModel implements Listenable {
 	}
 
 	@Override
-	public void addListener(final Object listener) {
-		// TODO Auto-generated method stub
+	public ListenableFuture<Void> addListener(final Object listener) {
+		return null;
 
 	}
 
 	@Override
-	public void removeListener(final Object listener) {
-		// TODO Auto-generated method stub
+	public ListenableFuture<Void> removeListener(final Object listener) {
+		return null;
 
 	}
 
 	@Override
-	public void post(final Object event) {
-		// TODO Auto-generated method stub
+	public ListenableFuture<Void> post(final Object event) {
+		return null;
 
 	}
 }

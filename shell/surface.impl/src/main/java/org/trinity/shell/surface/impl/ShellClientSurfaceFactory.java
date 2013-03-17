@@ -11,7 +11,7 @@
  */
 package org.trinity.shell.surface.impl;
 
-import org.trinity.foundation.api.display.server.DisplaySurface;
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.shell.api.surface.ShellSurface;
 
 public interface ShellClientSurfaceFactory {

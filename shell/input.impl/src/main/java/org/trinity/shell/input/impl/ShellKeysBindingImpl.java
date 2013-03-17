@@ -11,16 +11,18 @@
  */
 package org.trinity.shell.input.impl;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+
 import java.util.List;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.trinity.foundation.api.display.server.DisplaySurface;
-import org.trinity.foundation.api.display.server.input.Keyboard;
-import org.trinity.foundation.api.display.shared.event.KeyNotify;
-import org.trinity.foundation.api.display.shared.input.InputModifiers;
-import org.trinity.foundation.api.display.shared.input.Key;
-import org.trinity.foundation.api.display.shared.input.KeyboardInput;
+import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.event.KeyNotify;
+import org.trinity.foundation.api.display.input.InputModifiers;
+import org.trinity.foundation.api.display.input.Key;
+import org.trinity.foundation.api.display.input.Keyboard;
+import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.shell.api.input.ShellKeysBinding;
 import org.trinity.shell.api.surface.ShellSurface;
 
@@ -30,8 +32,6 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
 
 @NotThreadSafe
 public class ShellKeysBindingImpl implements ShellKeysBinding {

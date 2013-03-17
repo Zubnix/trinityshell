@@ -16,6 +16,8 @@ import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeExecutor;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
@@ -40,6 +42,12 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Bind(value = @Named("ShellVirtualNode"), to = @To(value = Type.CUSTOM, customs = { ShellNode.class,
 		ShellNodeParent.class }))
 public class ShellVirtualNode extends AbstractShellNodeParent {
+
+	@Inject
+	protected ShellVirtualNode(@Named("ShellExecutor") final ListeningExecutorService shellExecutor) {
+		super(shellExecutor);
+	}
+
 	private final ShellNodeExecutor shellNodeExecutor = new ShellVirtualNodeExecutor(this);
 
 	@Override

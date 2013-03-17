@@ -55,7 +55,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 			final ShellNode child = shellNodeMoveResizeRequestEvent.getSource();
 			if (getLayoutProperty(child).getWeight() == 0) {
 				child.doResize();
-				layout(child.getParent());
+				layout(child.getParentImpl());
 			} else {
 				cancelMoveResize(child);
 			}
@@ -66,13 +66,13 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		public void handleChildDestroyed(final ShellNodeDestroyedEvent shellNodeDestroyedEvent) {
 			final ShellNode child = shellNodeDestroyedEvent.getSource();
 			removeChild(shellNodeDestroyedEvent.getSource());
-			layout(child.getParent());
+			layout(child.getParentImpl());
 		}
 
 		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildReparentRequest(final ShellNodeReparentRequestEvent shellNodeReparentRequestEvent) {
-			final ShellNodeParent oldParent = shellNodeReparentRequestEvent.getSource().getParent();
+			final ShellNodeParent oldParent = shellNodeReparentRequestEvent.getSource().getParentImpl();
 			shellNodeReparentRequestEvent.getSource().doReparent();
 			layout(oldParent);
 		}

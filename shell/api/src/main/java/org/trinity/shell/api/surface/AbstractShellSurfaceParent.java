@@ -36,7 +36,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  */
 // TODO make threadSafe
 @NotThreadSafe
-public abstract class AbstractShellSurfaceParent extends AbstractAsyncShellSurfaceParent {
+public abstract class AbstractShellSurfaceParent extends AbstractShellSurface implements ShellSurfaceParent {
 
 	private final Set<AbstractShellNode> children = new HashSet<AbstractShellNode>();
 
@@ -52,10 +52,11 @@ public abstract class AbstractShellSurfaceParent extends AbstractAsyncShellSurfa
 	 * The returned array is a copy of the internal array.
 	 */
 	@Override
-	protected AbstractShellNode[] getChildrenImpl() {
+	public AbstractShellNode[] getChildrenImpl() {
 		return this.children.toArray(new AbstractShellNode[this.children.size()]);
 	}
 
+	@Override
 	protected void updateChildrenPosition() {
 		for (final AbstractShellNode child : getChildrenImpl()) {
 			final Coordinate childPosition = child.getPositionImpl();
@@ -64,12 +65,12 @@ public abstract class AbstractShellSurfaceParent extends AbstractAsyncShellSurfa
 	}
 
 	@Override
-	protected Optional<ShellLayoutManager> getLayoutManagerImpl() {
+	public Optional<ShellLayoutManager> getLayoutManagerImpl() {
 		return this.optionalLayoutManager;
 	}
 
 	@Override
-	protected Void setLayoutManagerImpl(final ShellLayoutManager shellLayoutManager) {
+	public Void setLayoutManagerImpl(final ShellLayoutManager shellLayoutManager) {
 		this.optionalLayoutManager = Optional.of(shellLayoutManager);
 		getNodeEventBus().register(shellLayoutManager);
 		return null;
@@ -95,7 +96,7 @@ public abstract class AbstractShellSurfaceParent extends AbstractAsyncShellSurfa
 	}
 
 	@Override
-	protected Void handleChildReparentEventImpl(final ShellNode child) {
+	public Void handleChildReparentEventImpl(final ShellNode child) {
 		checkArgument(child instanceof AbstractShellNode);
 
 		ShellNodeEvent shellNodeEvent;
@@ -121,7 +122,7 @@ public abstract class AbstractShellSurfaceParent extends AbstractAsyncShellSurfa
 	 * node.
 	 */
 	@Override
-	protected Void layoutImpl() {
+	public Void layoutImpl() {
 		final Optional<ShellLayoutManager> optionalLayoutManager = getLayoutManagerImpl();
 		if (optionalLayoutManager.isPresent()) {
 			optionalLayoutManager.get().layout(this);

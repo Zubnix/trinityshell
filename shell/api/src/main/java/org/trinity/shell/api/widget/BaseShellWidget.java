@@ -19,6 +19,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
+import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
@@ -40,7 +41,7 @@ import com.google.inject.name.Named;
  * @see org.trinity.foundation.api.render.binding
  */
 @NotThreadSafe
-public class BaseShellWidget extends AbstractShellSurfaceParent implements ShellWidget {
+public class BaseShellWidget extends AbstractShellSurface implements ShellWidget {
 
 	// private class DestroyCallback {
 	// // method is used by the widget's eventbus
