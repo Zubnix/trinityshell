@@ -11,10 +11,14 @@
  */
 package org.trinity.shell.surface.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
+import org.trinity.shell.api.surface.AbstractAsyncShellSurface;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
@@ -29,21 +33,25 @@ public class ShellSurfaceExecutorImpl extends AbstractShellSurfaceExecutor {
 
 	@Override
 	protected DisplaySurface getSurfacePeer(final ShellSurface shellSurface) {
-		return shellSurface.getDisplaySurfaceImpl();
+		checkArgument(shellSurface instanceof AbstractShellSurface);
+
+		return ((AbstractAsyncShellSurface) shellSurface).getDisplaySurfaceImpl();
 	}
 
 	@Override
-	protected ShellSurface findClosestSameTypeSurface(final ShellNode square) {
+	protected AbstractShellSurface findClosestSameTypeSurface(final ShellNode square) {
+		checkArgument(square instanceof AbstractShellNode);
+
 		if (square == null) {
 			return null;
 		}
 
-		if (square instanceof ShellSurface) {
+		if (square instanceof AbstractShellSurface) {
 
-			return (ShellSurface) square;
+			return (AbstractShellSurface) square;
 		}
 
-		final ShellNodeParent parent = square.getParentImpl();
+		final ShellNodeParent parent = ((AbstractShellNode) square).getParentImpl();
 		if ((parent == null) || parent.equals(square)) {
 			return null;
 		}

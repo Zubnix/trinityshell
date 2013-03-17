@@ -128,8 +128,8 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		int newSize = 0;
 		int fixedSize = 0;
 
-		newSize = containerNode.getWidth();
-		fixedSize = containerNode.getHeight();
+		newSize = containerNode.getSizeImpl().getWidth();
+		fixedSize = containerNode.getSizeImpl().getHeight();
 
 		if (newSize == 0) {
 			return;
