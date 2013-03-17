@@ -61,17 +61,12 @@ public class ShellVirtualNodeExecutor implements ShellNodeExecutor {
 		final ShellNodeTransformation shellNodeTransformation = shellNode.toGeoTransformationImpl();
 
 		final Coordinate deltaPosition = shellNodeTransformation.getDeltaRect().getPosition();
-		final int deltaX = deltaPosition.getX();
-		final int deltaY = deltaPosition.getY();
 
 		final AbstractShellNode[] children = shellNode.getChildrenImpl();
 		for (final AbstractShellNode child : children) {
 			final Coordinate oldRelPosition = child.getPositionImpl();
-			final int oldRelX = oldRelPosition.getX();
-			final int oldRelY = oldRelPosition.getY();
 
-			final Coordinate newRelPosition = new Coordinate(	oldRelX + deltaX,
-																oldRelY + deltaY);
+			final Coordinate newRelPosition = oldRelPosition.add(deltaPosition);
 
 			// directly manipulated underlying platform specific geometry of the
 			// child

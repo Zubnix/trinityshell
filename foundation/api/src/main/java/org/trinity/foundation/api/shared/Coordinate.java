@@ -55,4 +55,14 @@ public class Coordinate {
 	public int getY() {
 		return this.y;
 	}
+
+	public Coordinate add(final Coordinate coordinate) {
+		return new Coordinate(	getX() + coordinate.getX(),
+								getY() + coordinate.getY());
+	}
+
+	public Coordinate subtract(final Coordinate coordinate) {
+		return new Coordinate(	getX() - coordinate.getX(),
+								getY() - coordinate.getY());
+	}
 }

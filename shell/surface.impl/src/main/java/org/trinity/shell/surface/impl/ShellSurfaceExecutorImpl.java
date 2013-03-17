@@ -29,7 +29,7 @@ public class ShellSurfaceExecutorImpl extends AbstractShellSurfaceExecutor {
 
 	@Override
 	protected DisplaySurface getSurfacePeer(final ShellSurface shellSurface) {
-		return shellSurface.getDisplaySurface();
+		return shellSurface.getDisplaySurfaceImpl();
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class ShellSurfaceExecutorImpl extends AbstractShellSurfaceExecutor {
 			return (ShellSurface) square;
 		}
 
-		final ShellNodeParent parent = square.getParent();
+		final ShellNodeParent parent = square.getParentImpl();
 		if ((parent == null) || parent.equals(square)) {
 			return null;
 		}
@@ -58,6 +58,6 @@ public class ShellSurfaceExecutorImpl extends AbstractShellSurfaceExecutor {
 
 	@Override
 	public DisplayAreaManipulator getShellNodeManipulator() {
-		return getShellNode().getDisplaySurface();
+		return getShellNode().getDisplaySurfaceImpl();
 	}
 }

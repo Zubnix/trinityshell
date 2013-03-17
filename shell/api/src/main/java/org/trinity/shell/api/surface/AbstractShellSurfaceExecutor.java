@@ -96,18 +96,11 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 			return newRelativePosition;
 		}
 
-		final Coordinate absolutePosition = getAbsolutePosition(directParent);
-
-		final int newAbsX = absolutePosition.getX() + newRelativePosition.getX();
-		final int newAbsY = absolutePosition.getY() + newRelativePosition.getY();
+		final Coordinate absolutePositionDirectParent = getAbsolutePosition(directParent);
+		final Coordinate newAbsolutePosition = absolutePositionDirectParent.add(newRelativePosition);
 
 		final Coordinate sameTypeParentPosition = getAbsolutePosition(parentTypedSurface);
-
-		final int newRelTypedX = newAbsX - sameTypeParentPosition.getX();
-		final int newRelTypedY = newAbsY - sameTypeParentPosition.getY();
-
-		final Coordinate corRelativeToTypedParent = new Coordinate(	newRelTypedX,
-																	newRelTypedY);
+		final Coordinate corRelativeToTypedParent = newAbsolutePosition.subtract(sameTypeParentPosition);
 
 		return corRelativeToTypedParent;
 	}
@@ -121,8 +114,8 @@ public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExec
 		}
 
 		final Coordinate absoluteParentPosition = getAbsolutePosition(directParent);
-		final Coordinate absolutePosition = new Coordinate(	childPosition.getX() + absoluteParentPosition.getX(),
-															childPosition.getY());
+		final Coordinate absolutePosition = childPosition.add(absoluteParentPosition);
+
 		return absolutePosition;
 	}
 
