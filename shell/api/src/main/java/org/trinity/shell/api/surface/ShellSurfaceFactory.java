@@ -9,22 +9,14 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.shell.surface.impl;
+package org.trinity.shell.api.surface;
 
-import org.trinity.shell.api.surface.ShellSurface;
+import org.trinity.foundation.api.display.DisplaySurface;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.common.util.concurrent.ListenableFuture;
 
-import de.devsurf.injection.guice.annotations.GuiceModule;
+public interface ShellSurfaceFactory {
+	ListenableFuture<ShellSurface> createShellClientSurface(DisplaySurface displaySurface);
 
-@GuiceModule
-public class Module extends AbstractModule {
-
-	@Override
-	protected void configure() {
-		install(new FactoryModuleBuilder().implement(	ShellSurface.class,
-														ShellClientSurface.class)
-				.build(ShellClientSurfaceFactory.class));
-	}
+	ListenableFuture<ShellSurfaceParent> getRootShellSurface();
 }

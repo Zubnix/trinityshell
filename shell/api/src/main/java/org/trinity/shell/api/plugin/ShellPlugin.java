@@ -13,8 +13,10 @@ package org.trinity.shell.api.plugin;
 
 import org.trinity.shell.api.Module;
 
+import com.google.common.util.concurrent.Service;
+
 /*****************************************
- * General interface for every shell plugin. Every shell plugin has a
+ * General marker interface for every shell plugin. Every shell plugin has a
  * <code>start()</code> and <code>stop()</code> method that is called by the
  * shell when a plugin is started and stopped respectively. Calls to
  * {@code start()} and {@code stop} should be non-blocking and should not spawn
@@ -27,16 +29,6 @@ import org.trinity.shell.api.Module;
  * @see {@link Module}.
  * 
  ****************************************/
-public interface ShellPlugin {
-	/***************************************
-	 * Start the plugin. This method should not block.
-	 *************************************** 
-	 */
-	void start();
+public interface ShellPlugin extends Service {
 
-	/***************************************
-	 * Stop the plugin. This method should not block.
-	 *************************************** 
-	 */
-	void stop();
 }

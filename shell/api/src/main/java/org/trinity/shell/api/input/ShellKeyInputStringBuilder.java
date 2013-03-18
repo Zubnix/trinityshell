@@ -13,9 +13,11 @@ package org.trinity.shell.api.input;
 
 import org.trinity.foundation.api.display.event.KeyNotify;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 /***************************************
  * Convenience class to build a {@code String} with {@link KeyNotify}s. A call
- * to {@code toString()} reads out the underlying {@code String}.
+ * to {@code getString()} reads out the underlying {@code String}.
  * 
  *************************************** 
  */
@@ -28,7 +30,7 @@ public interface ShellKeyInputStringBuilder {
 	 *            a {@link String}
 	 *************************************** 
 	 */
-	void append(String string);
+	ListenableFuture<Void> append(String string);
 
 	/***************************************
 	 * Append the character derived from the given {@code KeyNotify} to the
@@ -40,11 +42,13 @@ public interface ShellKeyInputStringBuilder {
 	 *            a {@link KeyNotify}
 	 *************************************** 
 	 */
-	void append(KeyNotify input);
+	ListenableFuture<Void> append(KeyNotify input);
 
 	/***************************************
 	 * Clear the underlying {@code String}.
 	 *************************************** 
 	 */
-	void clear();
+	ListenableFuture<Void> clear();
+
+	ListenableFuture<String> getString();
 }

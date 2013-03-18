@@ -18,30 +18,30 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.shell.api.scene.AbstractAsyncShellNode;
 import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeExecutor;
+import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
+import org.trinity.shell.api.surface.AbstractShellSurfaceGeometryDelegate;
 import org.trinity.shell.api.surface.ShellSurface;
 
 // TODO documentation
 /**
- * A {@link ShellNodeExecutor} for a {@link BaseShellWidget}.
+ * A {@link ShellNodeGeometryDelegate} for a {@link BaseShellWidget}.
  * 
  */
 @NotThreadSafe
-public class BaseShellWidgetExecutor extends AbstractShellSurfaceExecutor {
+public class BaseShellWidgetGeometryDelegate extends AbstractShellSurfaceGeometryDelegate {
 
 	private final BaseShellWidget shellWidget;
 
 	/***************************************
-	 * Create a new {@code BaseShellWidgetExecutor} for the given
+	 * Create a new {@code BaseShellWidgetGeometryDelegate} for the given
 	 * {@code BaseShellWidget}.
 	 * 
 	 * @param shellWidget
 	 *            the {@link BaseShellWidget} to manage.
 	 *************************************** 
 	 */
-	public BaseShellWidgetExecutor(final BaseShellWidget shellWidget) {
+	public BaseShellWidgetGeometryDelegate(final BaseShellWidget shellWidget) {
 		this.shellWidget = shellWidget;
 	}
 

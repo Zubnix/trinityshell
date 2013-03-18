@@ -11,9 +11,7 @@
  */
 package org.trinity.shell.api.scene;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
@@ -42,19 +40,17 @@ import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 // TODO Let geo events travel downwards to children to notify them that one of
 // their parents has changed?
-// TODO move all layoutmanager checking to AbstractShellNodeParent, as well as
-// the javadoc that mentions it.
 
 /***************************************
  * An abstract base implementation of a {@link ShellNode}.
  * 
  *************************************** 
  */
-// TODO make threadSafe
-// TODO split into async & impl part
-@NotThreadSafe
+@ThreadSafe
 public abstract class AbstractShellNode extends AbstractAsyncShellNode implements ShellNode {
 
 	private Coordinate position;
@@ -85,10 +81,6 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 											getDesiredParent());
 	}
 
-	public EventBus getNodeEventBus() {
-		return this.nodeEventBus;
-	}
-
 	@Override
 	public Boolean isDestroyedImpl() {
 		return Boolean.valueOf(AbstractShellNode.this.destroyed);
@@ -111,7 +103,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		// update parent to new parent
 		final ShellNodeEvent event = new ShellNodeReparentRequestEvent(	this,
 																		toGeoTransformationImpl());
-		getNodeEventBus().post(event);
+		postImpl(event);
 		return null;
 	}
 
@@ -172,7 +164,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestMoveImpl() {
 		final ShellNodeMoveRequestEvent event = new ShellNodeMoveRequestEvent(	this,
 																				toGeoTransformationImpl());
-		getNodeEventBus().post(event);
+		postImpl(event);
 		return null;
 	}
 
@@ -180,7 +172,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestResizeImpl() {
 		final ShellNodeEvent event = new ShellNodeResizeRequestEvent(	this,
 																		toGeoTransformationImpl());
-		getNodeEventBus().post(event);
+		postImpl(event);
 		return null;
 	}
 
@@ -188,7 +180,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestMoveResizeImpl() {
 		final ShellNodeMoveResizeRequestEvent event = new ShellNodeMoveResizeRequestEvent(	this,
 																							toGeoTransformationImpl());
-		getNodeEventBus().post(event);
+		postImpl(event);
 		return null;
 	}
 
@@ -196,7 +188,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestRaiseImpl() {
 		final ShellNodeEvent event = new ShellNodeRaiseRequestEvent(this,
 																	toGeoTransformationImpl());
-		getNodeEventBus().post(event);
+		postImpl(event);
 		return null;
 	}
 
@@ -204,7 +196,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestLowerImpl() {
 		final ShellNodeLowerRequestEvent event = new ShellNodeLowerRequestEvent(this,
 																				toGeoTransformationImpl());
-		getNodeEventBus().post(event);
+		postImpl(event);
 		return null;
 	}
 
@@ -216,13 +208,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	/***************************************
 	 * Move the current node but the actual delegated execution by this node's
-	 * {@link ShellNodeExecutor} is conditional. This call will affect the
-	 * node's state.
+	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
+	 * the node's state.
 	 * 
 	 * @param execute
 	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeExecutor}, false to ignore the low level
-	 *            execution.
+	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
+	 *            level execution.
 	 *************************************** 
 	 */
 	protected void doMove(final boolean execute) {
@@ -232,12 +224,12 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeMovedEvent geoEvent = new ShellNodeMovedEvent(	this,
 																		toGeoTransformationImpl());
-		getNodeEventBus().post(geoEvent);
+		postImpl(geoEvent);
 	}
 
 	/***************************************
-	 * Execute the move process by this node's {@link ShellNodeExecutor}. This
-	 * call does not affect the node's state.
+	 * Execute the move process by this node's {@link ShellNodeGeometryDelegate}
+	 * . This call does not affect the node's state.
 	 *************************************** 
 	 */
 	public void execMove() {
@@ -259,13 +251,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	/***************************************
 	 * Resize the current node but the actual delegated execution by this node's
-	 * {@link ShellNodeExecutor} is conditional. This call will affect the
-	 * node's state.
+	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
+	 * the node's state.
 	 * 
 	 * @param execute
 	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeExecutor}, false to ignore the low level
-	 *            execution.
+	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
+	 *            level execution.
 	 *************************************** 
 	 */
 	protected void doResize(final boolean execute) {
@@ -275,12 +267,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeResizedEvent geoEvent = new ShellNodeResizedEvent(	this,
 																			toGeoTransformationImpl());
-		getNodeEventBus().post(geoEvent);
+		postImpl(geoEvent);
 	}
 
 	/***************************************
-	 * Execute the resize process by this node's {@link ShellNodeExecutor}. This
-	 * call does not affect the node's state.
+	 * Execute the resize process by this node's
+	 * {@link ShellNodeGeometryDelegate}. This call does not affect the node's
+	 * state.
 	 *************************************** 
 	 */
 	public Void execResize() {
@@ -304,13 +297,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	/***************************************
 	 * Move and resize the current node but the actual delegated execution by
-	 * this node's {@link ShellNodeExecutor} is conditional. This call will
-	 * affect the node's state.
+	 * this node's {@link ShellNodeGeometryDelegate} is conditional. This call
+	 * will affect the node's state.
 	 * 
 	 * @param execute
 	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeExecutor}, false to ignore the low level
-	 *            execution.
+	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
+	 *            level execution.
 	 *************************************** 
 	 */
 	protected void doMoveResize(final boolean execute) {
@@ -320,12 +313,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeMovedResizedEvent geoEvent = new ShellNodeMovedResizedEvent(	this,
 																					toGeoTransformationImpl());
-		getNodeEventBus().post(geoEvent);
+		postImpl(geoEvent);
 	}
 
 	/***************************************
 	 * Execute the move and resize process by this node's
-	 * {@link ShellNodeExecutor}. This call does not affect the node's state.
+	 * {@link ShellNodeGeometryDelegate}. This call does not affect the node's
+	 * state.
 	 *************************************** 
 	 */
 	public Void execMoveResize() {
@@ -352,13 +346,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	/***************************************
 	 * Destroy the current node but the actual delegated execution by this
-	 * node's {@link ShellNodeExecutor} is conditional. This call will affect
-	 * the node's state.
+	 * node's {@link ShellNodeGeometryDelegate} is conditional. This call will
+	 * affect the node's state.
 	 * 
 	 * @param execute
 	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeExecutor}, false to ignore the low level
-	 *            execution.
+	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
+	 *            level execution.
 	 *************************************** 
 	 */
 	protected void doDestroy(final boolean execute) {
@@ -368,12 +362,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeDestroyedEvent geoEvent = new ShellNodeDestroyedEvent(	this,
 																				toGeoTransformationImpl());
-		getNodeEventBus().post(geoEvent);
+		postImpl(geoEvent);
 	}
 
 	/***************************************
-	 * Execute the destroy process by this node's {@link ShellNodeExecutor}.
-	 * This call does not affect the node's state.
+	 * Execute the destroy process by this node's
+	 * {@link ShellNodeGeometryDelegate}. This call does not affect the node's
+	 * state.
 	 *************************************** 
 	 */
 	public void execDestroy() {
@@ -388,13 +383,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	/***************************************
 	 * Raise the current node but the actual delegated execution by this node's
-	 * {@link ShellNodeExecutor} is conditional. This call will affect the
-	 * node's state.
+	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
+	 * the node's state.
 	 * 
 	 * @param execute
 	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeExecutor}, false to ignore the low level
-	 *            execution.
+	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
+	 *            level execution.
 	 *************************************** 
 	 */
 	protected void doRaise(final boolean execute) {
@@ -403,12 +398,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeRaisedEvent geoEvent = new ShellNodeRaisedEvent(	this,
 																		toGeoTransformationImpl());
-		getNodeEventBus().post(geoEvent);
+		postImpl(geoEvent);
 	}
 
 	/***************************************
-	 * Execute the raise process by this node's {@link ShellNodeExecutor}. This
-	 * call does not affect the node's state.
+	 * Execute the raise process by this node's
+	 * {@link ShellNodeGeometryDelegate}. This call does not affect the node's
+	 * state.
 	 *************************************** 
 	 */
 	public void execRaise() {
@@ -423,13 +419,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	/***************************************
 	 * Lower the current node but the actual delegated execution by this node's
-	 * {@link ShellNodeExecutor} is conditional. This call will affect the
-	 * node's state.
+	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
+	 * the node's state.
 	 * 
 	 * @param execute
 	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeExecutor}, false to ignore the low level
-	 *            execution.
+	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
+	 *            level execution.
 	 *************************************** 
 	 */
 	protected void doLower(final boolean execute) {
@@ -438,12 +434,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeLoweredEvent geoEvent = new ShellNodeLoweredEvent(	this,
 																			toGeoTransformationImpl());
-		getNodeEventBus().post(geoEvent);
+		postImpl(geoEvent);
 	}
 
 	/***************************************
-	 * Execute the lower process by this node's {@link ShellNodeExecutor}. This
-	 * call does not affect the node's state.
+	 * Execute the lower process by this node's
+	 * {@link ShellNodeGeometryDelegate}. This call does not affect the node's
+	 * state.
 	 *************************************** 
 	 */
 	public void execLower() {
@@ -459,13 +456,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	/***************************************
 	 * Reparents the current node but the actual delegated execution by this
-	 * node's {@link ShellNodeExecutor} is conditional. This call will affect
-	 * the node's state.
+	 * node's {@link ShellNodeGeometryDelegate} is conditional. This call will
+	 * affect the node's state.
 	 * 
 	 * @param execute
 	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeExecutor}, false to ignore the low level
-	 *            execution.
+	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
+	 *            level execution.
 	 *************************************** 
 	 */
 	protected void doReparent(final boolean execute) {
@@ -479,12 +476,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		doMoveResize(execute);
 		final ShellNodeReparentedEvent geoEvent = new ShellNodeReparentedEvent(	this,
 																				toGeoTransformationImpl());
-		getNodeEventBus().post(geoEvent);
+		postImpl(geoEvent);
 	}
 
 	/***************************************
-	 * Execute the reparent process by this node's {@link ShellNodeExecutor}.
-	 * This call does not affect the node's state.
+	 * Execute the reparent process by this node's
+	 * {@link ShellNodeGeometryDelegate}. This call does not affect the node's
+	 * state.
 	 *************************************** 
 	 */
 	public void execReparent() {
@@ -533,13 +531,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	/***************************************
 	 * Show the current node but the actual delegated execution by this node's
-	 * {@link ShellNodeExecutor} is conditional. This call will affect the
-	 * node's state.
+	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
+	 * the node's state.
 	 * 
 	 * @param execute
 	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeExecutor}, false to ignore the low level
-	 *            execution.
+	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
+	 *            level execution.
 	 *************************************** 
 	 */
 	protected void doShow(final boolean execute) {
@@ -549,12 +547,12 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeShowedEvent geoEvent = new ShellNodeShowedEvent(	this,
 																		toGeoTransformationImpl());
-		getNodeEventBus().post(geoEvent);
+		postImpl(geoEvent);
 	}
 
 	/***************************************
-	 * Execute the show process by this node's {@link ShellNodeExecutor}. This
-	 * call does not affect the node's state.
+	 * Execute the show process by this node's {@link ShellNodeGeometryDelegate}
+	 * . This call does not affect the node's state.
 	 *************************************** 
 	 */
 	public Void execShow() {
@@ -570,13 +568,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	/***************************************
 	 * Hide the current node but the actual delegated execution by this node's
-	 * {@link ShellNodeExecutor} is conditional. This call will affect the
-	 * node's state.
+	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
+	 * the node's state.
 	 * 
 	 * @param execute
 	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeExecutor}, false to ignore the low level
-	 *            execution.
+	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
+	 *            level execution.
 	 *************************************** 
 	 */
 	protected void doHide(final boolean execute) {
@@ -586,12 +584,12 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeHiddenEvent geoEvent = new ShellNodeHiddenEvent(	this,
 																		toGeoTransformationImpl());
-		getNodeEventBus().post(geoEvent);
+		postImpl(geoEvent);
 	}
 
 	/***************************************
-	 * Execute the hide process by this node's {@link ShellNodeExecutor}. This
-	 * call does not affect the node's state.
+	 * Execute the hide process by this node's {@link ShellNodeGeometryDelegate}
+	 * . This call does not affect the node's state.
 	 *************************************** 
 	 */
 	public void execHide() {
@@ -602,7 +600,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestShowImpl() {
 		final ShellNodeShowRequestEvent event = new ShellNodeShowRequestEvent(	this,
 																				toGeoTransformationImpl());
-		getNodeEventBus().post(event);
+		postImpl(event);
 		return null;
 	}
 
@@ -610,25 +608,25 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestHideImpl() {
 		final ShellNodeHideRequestEvent event = new ShellNodeHideRequestEvent(	this,
 																				toGeoTransformationImpl());
-		getNodeEventBus().post(event);
+		postImpl(event);
 		return null;
 	}
 
 	@Override
 	public Void addListenerImpl(final Object listener) {
-		getNodeEventBus().register(listener);
+		this.nodeEventBus.register(listener);
 		return null;
 	}
 
 	@Override
 	public Void removeListenerImpl(final Object listener) {
-		getNodeEventBus().unregister(listener);
+		this.nodeEventBus.unregister(listener);
 		return null;
 	}
 
 	@Override
 	public Void postImpl(final Object event) {
-		getNodeEventBus().post(event);
+		this.nodeEventBus.post(event);
 		return null;
 	}
 

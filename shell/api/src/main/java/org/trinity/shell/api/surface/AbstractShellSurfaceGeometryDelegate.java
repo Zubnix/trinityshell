@@ -11,8 +11,6 @@
  */
 package org.trinity.shell.api.surface;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplayArea;
@@ -20,19 +18,23 @@ import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.AbstractShellNode;
-import org.trinity.shell.api.scene.AbstractShellNodeExecutor;
+import org.trinity.shell.api.scene.AbstractShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeExecutor;
+import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /***************************************
- * A {@link ShellNodeExecutor} for use with an {@link AbstractShellSurface}.
+ * A {@link ShellNodeGeometryDelegate} for use with an
+ * {@link AbstractShellSurface}.
  * 
  *************************************** 
  */
 @NotThreadSafe
-public abstract class AbstractShellSurfaceExecutor extends AbstractShellNodeExecutor implements ShellNodeExecutor {
+public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShellNodeGeometryDelegate implements
+		ShellNodeGeometryDelegate {
 
 	@Override
 	public abstract AbstractShellSurface getShellNode();

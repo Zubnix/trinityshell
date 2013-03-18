@@ -11,10 +11,6 @@
  */
 package org.trinity.shell.api.surface;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.util.concurrent.Futures.addCallback;
-import static com.google.common.util.concurrent.Futures.transform;
-
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -35,6 +31,11 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import static com.google.common.util.concurrent.Futures.addCallback;
+import static com.google.common.util.concurrent.Futures.transform;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * An abstract base implementation of {@link ShellSurface}. Implementations that
@@ -344,9 +345,13 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 		this.shellExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				doDestroy(false);
+				handleDestroyNotifyEventImpl(destroyNotify);
 			}
 		});
+	}
+
+	protected void handleDestroyNotifyEventImpl(final DestroyNotify destroyNotify) {
+		doDestroy(false);
 	}
 
 	/**
@@ -362,12 +367,17 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 		this.shellExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				final Rectangle geometry = geometryNotify.getGeometry();
-				setPositionImpl(geometry.getPosition());
-				setSizeImpl(geometry.getSize());
-				doMoveResize(false);
+				handleGeometryNotifyEventImpl(geometryNotify);
 			}
 		});
+	}
+
+	protected void handleGeometryNotifyEventImpl(final GeometryNotify geometryNotify) {
+		final Rectangle geometry = geometryNotify.getGeometry();
+		setPositionImpl(geometry.getPosition());
+		setSizeImpl(geometry.getSize());
+		doMoveResize(false);
+
 	}
 
 	/**

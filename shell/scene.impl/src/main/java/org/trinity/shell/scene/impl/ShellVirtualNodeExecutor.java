@@ -14,7 +14,7 @@ package org.trinity.shell.scene.impl;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.AbstractShellNode;
-import org.trinity.shell.api.scene.ShellNodeExecutor;
+import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.ShellNodeTransformation;
 
@@ -26,7 +26,7 @@ import org.trinity.shell.api.scene.ShellNodeTransformation;
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ShellVirtualNodeExecutor implements ShellNodeExecutor {
+public class ShellVirtualNodeExecutor implements ShellNodeGeometryDelegate {
 
 	private final ShellVirtualNode shellVirtualNode;
 

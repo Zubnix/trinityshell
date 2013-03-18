@@ -11,11 +11,16 @@
  */
 package org.trinity.shell.surface.impl;
 
+import java.util.concurrent.TimeUnit;
+
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.shell.api.plugin.ShellPlugin;
 
+import com.google.common.util.concurrent.AbstractIdleService;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
@@ -23,52 +28,30 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(multiple = true, to = @To(value = Type.CUSTOM, customs = ShellPlugin.class))
 @Singleton
-public class ShellSurfacePlugin implements ShellPlugin, Runnable {
+public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlugin {
 
 	private final DisplayServer display;
-	private Thread shellThread;
+	private final ListeningExecutorService shellExecutor;
 
 	@Inject
-	ShellSurfacePlugin(final DisplayServer display) {
+	ShellSurfacePlugin(	@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
+						final DisplayServer display) {
 		this.display = display;
+		this.shellExecutor = shellExecutor;
 	}
 
 	@Override
-	public void start() {
-		this.shellThread = new Thread(	this,
-										"Shell Core Plugin Thread");
-		this.shellThread.start();
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void stop() {
-		this.shellThread.interrupt();
-		try {
-			this.shellThread.join(3000);
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (this.shellThread.isAlive()) {
-			this.shellThread.stop();
-		}
-		this.display.close();
+	protected void startUp() throws Exception {
+		this.display.open().get(2,
+								TimeUnit.SECONDS);
 	}
 
 	@Override
-	public void run() {
-
-		while (!Thread.interrupted()) {
-			try {
-				this.shellDisplayEventDispatcherImpl.dispatchDisplayEvent(true);
-				Thread.yield();
-			} catch (final Exception e) {
-				e.printStackTrace();
-				if (e instanceof InterruptedException) {
-					break;
-				}
-			}
-		}
+	protected void shutDown() throws Exception {
+		this.display.close().get(	2,
+									TimeUnit.SECONDS);
+		this.shellExecutor.shutdown();
+		this.shellExecutor.awaitTermination(2,
+											TimeUnit.SECONDS);
 	}
 }

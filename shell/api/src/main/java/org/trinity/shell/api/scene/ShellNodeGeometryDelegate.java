@@ -16,18 +16,18 @@ import org.trinity.foundation.api.shared.Size;
 
 /**
  * Executes the actual geometry changes for a {@link ShellNode}. A
- * <code>ShellNodeExecutor</code> is a delegate for a <code>ShellNode</code> to
+ * <code>ShellNodeGeometryDelegate</code> is a delegate for a <code>ShellNode</code> to
  * execute the requested geometry changes.
  * <p>
- * A <code>ShellNodeExecutor</code> is needed because a tree structure of
+ * A <code>ShellNodeGeometryDelegate</code> is needed because a tree structure of
  * different <code>ShellNode</code> subclasses can have non-uniform and
  * undesired on-screen behavior when one of the node's geometry changes. A
- * <code>ShellNodeExecutor</code> implementation is needed to accommodate for
+ * <code>ShellNodeGeometryDelegate</code> implementation is needed to accommodate for
  * this and make sure a change in the geometry of its requester has the correct
  * and desired on-screen effect.
  * 
  */
-public interface ShellNodeExecutor {
+public interface ShellNodeGeometryDelegate {
 
 	/***************************************
 	 * The <code>ShellNode</code> on who's behalf this executer operates.

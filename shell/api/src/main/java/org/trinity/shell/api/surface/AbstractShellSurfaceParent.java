@@ -11,8 +11,6 @@
  */
 package org.trinity.shell.api.surface;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +26,8 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListeningExecutorService;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /***************************************
  * An {@link AbstractShellSurface} that can have child {@link ShellNode}s.
@@ -72,7 +72,7 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 	@Override
 	public Void setLayoutManagerImpl(final ShellLayoutManager shellLayoutManager) {
 		this.optionalLayoutManager = Optional.of(shellLayoutManager);
-		getNodeEventBus().register(shellLayoutManager);
+		addListenerImpl(shellLayoutManager);
 		return null;
 	}
 
@@ -105,12 +105,12 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 			// child.removeShellNodeEventHandler(this);
 			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
 															toGeoTransformationImpl());
-			getNodeEventBus().post(shellNodeEvent);
+			postImpl(shellNodeEvent);
 		} else {
 			this.children.add((AbstractShellNode) child);
 			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
 															toGeoTransformationImpl());
-			getNodeEventBus().post(shellNodeEvent);
+			postImpl(shellNodeEvent);
 		}
 		return null;
 	}

@@ -43,8 +43,8 @@
 //
 // final Object displayEventTarget = Mockito.mock(Object.class);
 //
-// final ShellClientSurfaceFactory shellClientSurfaceFactory =
-// Mockito.mock(ShellClientSurfaceFactory.class);
+// final ShellSurfaceFactory shellClientSurfaceFactory =
+// Mockito.mock(ShellSurfaceFactory.class);
 //
 // final DisplaySurface displaySurface = Mockito.mock(DisplaySurface.class);
 //

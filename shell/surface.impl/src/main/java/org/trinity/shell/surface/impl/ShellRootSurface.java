@@ -11,44 +11,26 @@
  */
 package org.trinity.shell.surface.impl;
 
-import java.util.concurrent.ExecutionException;
+import javax.annotation.concurrent.ThreadSafe;
 
-import javax.annotation.concurrent.NotThreadSafe;
-
-import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
-import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeExecutor;
-import org.trinity.shell.api.scene.ShellNodeParent;
+import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
-import org.trinity.shell.api.surface.ShellSurface;
-import org.trinity.shell.api.surface.ShellSurfaceParent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-
-@Bind(value = @Named("ShellRootSurface"), to = @To(value = To.Type.CUSTOM, customs = { ShellSurfaceParent.class,
-		ShellSurface.class, ShellNodeParent.class, ShellNode.class }))
-@Singleton
-// TODO make threadSafe
-@NotThreadSafe
+@ThreadSafe
 public class ShellRootSurface extends AbstractShellSurfaceParent {
 
-	private final ShellNodeExecutor shellNodeExecutor;
-	private final DisplayServer displayServer;
+	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellSurfaceGeometryDelegateImpl(this);
 
-	@Inject
-	ShellRootSurface(	@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
-						final DisplayServer displayServer) {
+	private final DisplaySurface displaySurface;
+
+	ShellRootSurface(	final ListeningExecutorService shellExecutor,
+						final DisplaySurface rootDisplaySurface) {
 		super(shellExecutor);
-		this.displayServer = displayServer;
-		this.shellNodeExecutor = new ShellSurfaceExecutorImpl(this);
+		this.displaySurface = rootDisplaySurface;
 		syncGeoToDisplaySurface();
 	}
 
@@ -63,22 +45,12 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 	}
 
 	@Override
-	public ShellNodeExecutor getShellNodeExecutor() {
-		return this.shellNodeExecutor;
+	public ShellNodeGeometryDelegate getShellNodeExecutor() {
+		return this.shellNodeGeometryDelegate;
 	}
 
 	@Override
 	public DisplaySurface getDisplaySurfaceImpl() {
-		try {
-			return this.displayServer.getRootDisplayArea().get();
-		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} catch (final ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+		return this.displaySurface;
 	}
 }

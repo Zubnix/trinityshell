@@ -20,14 +20,14 @@ import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractAsyncShellSurface;
 import org.trinity.shell.api.surface.AbstractShellSurface;
-import org.trinity.shell.api.surface.AbstractShellSurfaceExecutor;
+import org.trinity.shell.api.surface.AbstractShellSurfaceGeometryDelegate;
 import org.trinity.shell.api.surface.ShellSurface;
 
-public class ShellSurfaceExecutorImpl extends AbstractShellSurfaceExecutor {
+public class ShellSurfaceGeometryDelegateImpl extends AbstractShellSurfaceGeometryDelegate {
 
 	private final AbstractShellSurface abstractShellSurface;
 
-	public ShellSurfaceExecutorImpl(final AbstractShellSurface shellSurface) {
+	public ShellSurfaceGeometryDelegateImpl(final AbstractShellSurface shellSurface) {
 		this.abstractShellSurface = shellSurface;
 	}
 

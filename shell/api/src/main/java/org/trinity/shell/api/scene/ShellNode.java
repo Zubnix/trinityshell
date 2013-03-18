@@ -138,11 +138,11 @@ public interface ShellNode extends DisplayArea, Listenable {
 	 * The node executor that is responsible for correctly executing all
 	 * geometry operations of this node.
 	 * 
-	 * @return a {@link ShellNodeExecutor}.
+	 * @return a {@link ShellNodeGeometryDelegate}.
 	 *************************************** 
 	 */
 	// TODO should this be part of public api?
-	ShellNodeExecutor getShellNodeExecutor();
+	ShellNodeGeometryDelegate getShellNodeExecutor();
 
 	/***************************************
 	 * Signals if this node is destroyed. A destroyed node should not be able to

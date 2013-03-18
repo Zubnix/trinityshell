@@ -11,8 +11,7 @@
  */
 package org.trinity.shell.input.impl;
 
-import static com.google.common.util.concurrent.Futures.addCallback;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.concurrent.NotThreadSafe;
@@ -23,43 +22,42 @@ import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.Keyboard;
 import org.trinity.foundation.api.display.input.KeyboardInput;
+import org.trinity.shell.api.input.KeyBindAction;
 import org.trinity.shell.api.input.ShellKeysBinding;
 import org.trinity.shell.api.surface.ShellSurface;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+
 @NotThreadSafe
 public class ShellKeysBindingImpl implements ShellKeysBinding {
 
 	private final ShellSurface root;
-	private final EventBus shellEventBus;
 	private final List<Key> keys;
 	private final InputModifiers inputModifiers;
-	private final Runnable action;
+	private final KeyBindAction action;
 	private final Keyboard keyboard;
 
 	@Inject
 	public ShellKeysBindingImpl(@Named("ShellRootSurface") final ShellSurface root,
 								final Keyboard keyboard,
-								@Named("ShellEventBus") final EventBus shellEventBus,
 								@Assisted final List<Key> keys,
 								@Assisted final InputModifiers inputModifiers,
-								@Assisted final Runnable action) {
+								@Assisted final KeyBindAction action) {
 		this.root = root;
-		this.keys = keys;
+		this.keys = new ArrayList<Key>(keys);
 		this.inputModifiers = inputModifiers;
 		this.action = action;
-		this.shellEventBus = shellEventBus;
 		this.keyboard = keyboard;
 	}
 
 	@Override
-	public Runnable getAction() {
+	public KeyBindAction getAction() {
 		return this.action;
 	}
 
@@ -75,10 +73,9 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 
 	@Override
 	public void bind() {
-		this.shellEventBus.register(this);
+		this.root.addListener(this);
 		for (final Key grabKey : this.keys) {
 
-			// callback executed in same thread, should block (?)
 			addCallback(this.root.getDisplaySurface(),
 						new FutureCallback<DisplaySurface>() {
 							@Override
@@ -102,7 +99,7 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 	public void handleKeyEvent(final KeyNotify keyNotify) {
 		final KeyboardInput keyboardInput = keyNotify.getInput();
 		if (this.keys.contains(keyboardInput.getKey()) && this.inputModifiers.equals(keyboardInput.getInputModifiers())) {
-			this.action.run();
+			this.action.onKey(keyNotify);
 		}
 	}
 
@@ -128,6 +125,6 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 							}
 						});
 		}
-		this.shellEventBus.unregister(this);
+		this.root.removeListener(this);
 	}
 }

@@ -30,7 +30,7 @@ public interface ShellKeysBinding {
 	 * @return a {@link Runnable}
 	 *************************************** 
 	 */
-	Runnable getAction();
+	KeyBindAction getAction();
 
 	/***************************************
 	 * A group of possible <code>Keys</code> for this key binding to become

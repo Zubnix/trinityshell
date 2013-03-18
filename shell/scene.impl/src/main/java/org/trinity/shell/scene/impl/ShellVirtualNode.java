@@ -13,7 +13,7 @@ package org.trinity.shell.scene.impl;
 
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeExecutor;
+import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -48,10 +48,10 @@ public class ShellVirtualNode extends AbstractShellNodeParent {
 		super(shellExecutor);
 	}
 
-	private final ShellNodeExecutor shellNodeExecutor = new ShellVirtualNodeExecutor(this);
+	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellVirtualNodeExecutor(this);
 
 	@Override
-	public ShellNodeExecutor getShellNodeExecutor() {
-		return this.shellNodeExecutor;
+	public ShellNodeGeometryDelegate getShellNodeExecutor() {
+		return this.shellNodeGeometryDelegate;
 	}
 }

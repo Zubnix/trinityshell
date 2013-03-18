@@ -23,10 +23,12 @@ import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
+import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import static com.google.common.util.concurrent.Futures.addCallback;
 
 /**
  * An {@link AbstractShellSurfaceParent} with a basic
@@ -43,58 +45,38 @@ import com.google.inject.name.Named;
 @NotThreadSafe
 public class BaseShellWidget extends AbstractShellSurface implements ShellWidget {
 
-	// private class DestroyCallback {
-	// // method is used by the widget's eventbus
-	// @SuppressWarnings("unused")
-	// @Subscribe
-	// public void handleDestroy(final ShellNodeDestroyedEvent destroyEvent) {
-	// BaseShellWidget.this.shellDisplayEventDispatcher.unregisterAllDisplayEventTarget(getDisplaySurface());
-	// BaseShellWidget.this.shellDisplayEventDispatcher.unregisterAllDisplayEventTarget(BaseShellWidget.this);
-	// }
-	// }
-
-	// private final DestroyCallback destroyCallback = new DestroyCallback();
-
 	private final Painter painter;
-	private final BaseShellWidgetExecutor shellNodeExecutor;
+	private final BaseShellWidgetGeometryDelegate shellNodeGeometryDelegate = new BaseShellWidgetGeometryDelegate(this);
 
 	/**
 	 * Create an uninitialized <code>BaseShellWidget</code>.A
 	 * <code>BaseShellWidget</code> will only be fully functional when it is
 	 * assigned to an initialized parent <code>BaseShellWidget</code>.
 	 */
-	protected BaseShellWidget(	@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
+	protected BaseShellWidget(	final ShellSurfaceParent shellSurfaceParent,
+								@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
 								final PainterFactory painterProxyFactory) {
 		super(shellExecutor);
-		this.shellNodeExecutor = new BaseShellWidgetExecutor(this);
 		this.painter = painterProxyFactory.createPainter(this);
+		init(shellSurfaceParent);
 	}
 
-	/***************************************
-	 * Initializes the widget and marks is as a child of the given root
-	 * {@link ShellSurfaceParent}. This method is automatically called after
-	 * construction of the widget and should generally not be called manually.
-	 * 
-	 * @param shellRootSurface
-	 *            The root node of shell scene.
-	 *************************************** 
-	 */
-	@Inject
-	protected void init(@Named("ShellRootSurface") final ShellSurfaceParent shellRootSurface) {
-		// init will be called with the injected instance immediately after our
-		// widget is constructed.
+	protected void init(final ShellSurfaceParent shellRootSurface) {
+		final ListenableFuture<Void> setParentFuture = setParent(shellRootSurface);
+		addCallback(setParentFuture,
+					new FutureCallback<Void>() {
+						@Override
+						public void onSuccess(final Void result) {
+							doReparent(false);
+							BaseShellWidget.this.painter.bindView();
+						}
 
-		setParent(shellRootSurface);
-		doReparent(false);
-
-		// this.shellDisplayEventDispatcher.registerDisplayEventTarget(getNodeEventBus(),
-		// this);
-		// this.shellDisplayEventDispatcher.registerDisplayEventTarget(getNodeEventBus(),
-		// getDisplaySurface());
-		// searches for a @ViewReference annotated getter and binds the
-		// resulting view to this widget.
-		this.painter.bindView();
-		// addListener(this.destroyCallback);
+						@Override
+						public void onFailure(final Throwable t) {
+							t.printStackTrace();
+							// TODO Auto-generated method stub
+						}
+					});
 	}
 
 	@Override
@@ -103,8 +85,8 @@ public class BaseShellWidget extends AbstractShellSurface implements ShellWidget
 	}
 
 	@Override
-	public BaseShellWidgetExecutor getShellNodeExecutor() {
-		return this.shellNodeExecutor;
+	public BaseShellWidgetGeometryDelegate getShellNodeExecutor() {
+		return this.shellNodeGeometryDelegate;
 	}
 
 	@Override

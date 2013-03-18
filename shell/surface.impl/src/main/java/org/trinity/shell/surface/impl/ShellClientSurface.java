@@ -11,16 +11,14 @@
  */
 package org.trinity.shell.surface.impl;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.shell.api.scene.ShellNodeParent;
+import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.shell.api.surface.AbstractShellSurface;
+import org.trinity.shell.api.surface.ShellSurfaceParent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.name.Named;
 
 // TODO documentation
 /**
@@ -31,29 +29,35 @@ import com.google.inject.name.Named;
  * provides functionality to manage and manipulate the geometry and visibility
  * of the <code>PlatformRenderArea</code> it wraps.
  */
-@NotThreadSafe
+@ThreadSafe
 public class ShellClientSurface extends AbstractShellSurface {
 
-	private final ShellSurfaceExecutorImpl shellSurfaceExecutorImpl;
+	private final ShellSurfaceGeometryDelegateImpl shellSurfaceGeometryDelegateImpl;
 	private final DisplaySurface displaySurface;
 
-	@Inject
-	ShellClientSurface(	@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
-						@Named("ShellRootSurface") final ShellNodeParent root,
-						@Assisted final DisplaySurface displaySurface) {
+	ShellClientSurface(	final ListeningExecutorService shellExecutor,
+						final ShellSurfaceParent rootShellSurface,
+						final DisplaySurface clientDisplaySurface) {
 		super(shellExecutor);
-		this.displaySurface = displaySurface;
-		this.shellSurfaceExecutorImpl = new ShellSurfaceExecutorImpl(this);
+		this.displaySurface = clientDisplaySurface;
+		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegateImpl(this);
 
-		displaySurface.addListener(this);
-		setParent(root);
+		setParent(rootShellSurface);
 		doReparent(false);
 		syncGeoToDisplaySurface();
+
+		subscribeToDisplaySurfaceEvents();
 	}
 
 	@Override
-	public ShellSurfaceExecutorImpl getShellNodeExecutor() {
-		return this.shellSurfaceExecutorImpl;
+	protected void handleDestroyNotifyEventImpl(final DestroyNotify destroyNotify) {
+		unsubscribeToDisplaySurfaceEvents();
+		super.handleDestroyNotifyEventImpl(destroyNotify);
+	}
+
+	@Override
+	public ShellSurfaceGeometryDelegateImpl getShellNodeExecutor() {
+		return this.shellSurfaceGeometryDelegateImpl;
 	}
 
 	@Override
