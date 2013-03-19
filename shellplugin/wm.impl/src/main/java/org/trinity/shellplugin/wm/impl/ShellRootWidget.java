@@ -2,14 +2,15 @@ package org.trinity.shellplugin.wm.impl;
 
 import java.util.Set;
 
-import org.trinity.foundation.api.render.client.PainterProxyFactory;
-import org.trinity.foundation.api.render.client.binding.ViewReference;
-import org.trinity.shell.api.surface.ShellDisplayEventDispatcher;
+import org.trinity.foundation.api.render.PainterFactory;
+import org.trinity.foundation.api.render.binding.model.ViewReference;
+import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shell.api.widget.BaseShellWidget;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -19,14 +20,16 @@ public class ShellRootWidget extends BaseShellWidget {
 	@Named("RootView")
 	private Object view;
 
-	private EventList<Object> topBar = new BasicEventList<Object>();
-	private EventList<Object> bottomBar = new BasicEventList<Object>();
+	private final EventList<Object> topBar = new BasicEventList<Object>();
+	private final EventList<Object> bottomBar = new BasicEventList<Object>();
 
 	@Inject
-	protected ShellRootWidget(	final ShellDisplayEventDispatcher shellDisplayEventDispatcher,
-								final PainterProxyFactory painterProxyFactory) {
-		super(	shellDisplayEventDispatcher,
-				painterProxyFactory);
+	protected ShellRootWidget(	final ShellSurfaceFactory shellSurfaceFactory,
+								@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
+								final PainterFactory painterFactory) {
+		super(	shellSurfaceFactory,
+				shellExecutor,
+				painterFactory);
 	}
 
 	@ViewReference
@@ -35,30 +38,32 @@ public class ShellRootWidget extends BaseShellWidget {
 	}
 
 	public EventList<Object> getTopBar() {
-		return topBar;
+		return this.topBar;
 	}
 
+	@Inject
 	@Named("TopBarItem")
-	public void addTopBarItems(Set<?> topBarItems) {
+	public void addTopBarItems(final Set<?> topBarItems) {
 		try {
-			topBar.getReadWriteLock().writeLock().lock();
-			topBar.addAll(topBarItems);
+			this.topBar.getReadWriteLock().writeLock().lock();
+			this.topBar.addAll(topBarItems);
 		} finally {
-			topBar.getReadWriteLock().writeLock().unlock();
+			this.topBar.getReadWriteLock().writeLock().unlock();
 		}
 	}
 
 	public EventList<Object> getBottomBar() {
-		return bottomBar;
+		return this.bottomBar;
 	}
 
+	@Inject
 	@Named("BottomBarItem")
-	public void addBottomBarItems(Set<?> bottomBarItems) {
+	public void addBottomBarItems(final Set<?> bottomBarItems) {
 		try {
-			bottomBar.getReadWriteLock().writeLock().lock();
-			bottomBar.addAll(bottomBarItems);
+			this.bottomBar.getReadWriteLock().writeLock().lock();
+			this.bottomBar.addAll(bottomBarItems);
 		} finally {
-			bottomBar.getReadWriteLock().writeLock().unlock();
+			this.bottomBar.getReadWriteLock().writeLock().unlock();
 		}
 	}
 }

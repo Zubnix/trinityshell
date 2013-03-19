@@ -21,11 +21,13 @@ import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
+import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
@@ -48,35 +50,34 @@ public class BaseShellWidget extends AbstractShellSurface implements ShellWidget
 	private final Painter painter;
 	private final BaseShellWidgetGeometryDelegate shellNodeGeometryDelegate = new BaseShellWidgetGeometryDelegate(this);
 
-	/**
-	 * Create an uninitialized <code>BaseShellWidget</code>.A
-	 * <code>BaseShellWidget</code> will only be fully functional when it is
-	 * assigned to an initialized parent <code>BaseShellWidget</code>.
-	 */
-	protected BaseShellWidget(	final ShellSurfaceParent shellSurfaceParent,
+	@Inject
+	protected BaseShellWidget(	final ShellSurfaceFactory shellSurfaceFactory,
 								@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
-								final PainterFactory painterProxyFactory) {
+								final PainterFactory painterFactory) {
 		super(shellExecutor);
-		this.painter = painterProxyFactory.createPainter(this);
-		init(shellSurfaceParent);
-	}
-
-	protected void init(final ShellSurfaceParent shellRootSurface) {
-		final ListenableFuture<Void> setParentFuture = setParent(shellRootSurface);
-		addCallback(setParentFuture,
-					new FutureCallback<Void>() {
+		this.painter = painterFactory.createPainter(this);
+		final ListenableFuture<ShellSurfaceParent> rootShellSurfaceFuture = shellSurfaceFactory.getRootShellSurface();
+		addCallback(rootShellSurfaceFuture,
+					new FutureCallback<ShellSurfaceParent>() {
 						@Override
-						public void onSuccess(final Void result) {
-							doReparent(false);
-							BaseShellWidget.this.painter.bindView();
+						public void onSuccess(final ShellSurfaceParent rootShellSurface) {
+							init(rootShellSurface);
 						}
 
 						@Override
 						public void onFailure(final Throwable t) {
-							t.printStackTrace();
 							// TODO Auto-generated method stub
+							t.printStackTrace();
 						}
-					});
+					},
+					shellExecutor);
+
+	}
+
+	protected void init(final ShellSurfaceParent shellRootSurface) {
+		setParentImpl(shellRootSurface);
+		doReparent(false);
+		this.painter.bindView();
 	}
 
 	@Override

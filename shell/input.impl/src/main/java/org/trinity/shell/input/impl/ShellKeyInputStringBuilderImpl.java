@@ -11,26 +11,26 @@
  */
 package org.trinity.shell.input.impl;
 
-import static com.google.common.util.concurrent.Futures.addCallback;
-
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.event.KeyNotify;
 import org.trinity.foundation.api.display.input.Keyboard;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.shell.api.input.ShellKeyInputStringBuilder;
 
-import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
+// TODO improve threading model for this class
 @Bind
-@NotThreadSafe
+@ThreadSafe
 public class ShellKeyInputStringBuilderImpl implements ShellKeyInputStringBuilder {
 
 	private final String[] ignoreKeys = { Keyboard.BACKSPACE, Keyboard.BEGIN, Keyboard.CAPS_LOCK, Keyboard.CLEAR,
@@ -41,13 +41,15 @@ public class ShellKeyInputStringBuilderImpl implements ShellKeyInputStringBuilde
 			Keyboard.R_HYPER, Keyboard.R_META, Keyboard.R_SHIFT, Keyboard.R_SUPER, Keyboard.RIGHT, Keyboard.SCRL_LOCK,
 			Keyboard.SHIFT_LOCK, Keyboard.SYS_REQ, Keyboard.TAB, Keyboard.UP };
 
-	interface StringMutatorOnInput {
-		void mutate(String keyName);
+	public interface StringMutatorOnInput {
+		void mutate(StringBuffer stringBuffer,
+					String keyName);
 	}
 
 	private final Keyboard keyboard;
 	private StringBuffer stringBuffer = new StringBuffer();
-	private final Map<String, StringMutatorOnInput> specialBuildActions;
+	private final Map<String, StringMutatorOnInput> specialBuildActions = Collections
+			.synchronizedMap(new HashMap<String, ShellKeyInputStringBuilderImpl.StringMutatorOnInput>());
 
 	/**
 	 * 
@@ -55,7 +57,6 @@ public class ShellKeyInputStringBuilderImpl implements ShellKeyInputStringBuilde
 	@Inject
 	ShellKeyInputStringBuilderImpl(final Keyboard keyboard) {
 		this.keyboard = keyboard;
-		this.specialBuildActions = new HashMap<String, ShellKeyInputStringBuilderImpl.StringMutatorOnInput>();
 		initSpecialBuildActions();
 	}
 
@@ -70,62 +71,73 @@ public class ShellKeyInputStringBuilderImpl implements ShellKeyInputStringBuilde
 			getSpecialBuildActions().put(	specialKeyName,
 											new StringMutatorOnInput() {
 												@Override
-												public void mutate(final String keyName) {
+												public void mutate(	final StringBuffer stringBuffer,
+																	final String keyName) {
 													// do nothing;
 												}
 											});
 		}
 
 		// next we initialize special keys that do need a specific action
-
 		getSpecialBuildActions().put(	Keyboard.BACKSPACE,
 										new StringMutatorOnInput() {
 											@Override
-											public void mutate(final String keyName) {
-												final int length = ShellKeyInputStringBuilderImpl.this.stringBuffer
-														.length();
+											public void mutate(	final StringBuffer stringBuffer,
+																final String keyName) {
+												final int length = stringBuffer.length();
 												if (length > 0) {
-													// backspace => delete
-													// last char
-													ShellKeyInputStringBuilderImpl.this.stringBuffer
-															.deleteCharAt(length - 1);
+													// backspace => delete last
+													// char
+													stringBuffer.deleteCharAt(length - 1);
 												}
 											}
 										});
 	}
 
 	@Override
-	public void append(final KeyNotify input) {
+	public synchronized void append(final KeyNotify input) {
 		final KeyboardInput keyboardInput = input.getInput();
 		final ListenableFuture<String> keyNameFuture = this.keyboard.asKeySymbolName(	keyboardInput.getKey(),
 																						keyboardInput
 																								.getInputModifiers());
+		String result;
+		try {
+			result = keyNameFuture.get();
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		} catch (final ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+		// addCallback(keyNameFuture,
+		// new FutureCallback<String>() {
+		// @Override
+		// public void onSuccess(final String result) {
+		final StringMutatorOnInput stringMutatorOnInput = getSpecialBuildActions().get(result);
 
-		addCallback(keyNameFuture,
-					new FutureCallback<String>() {
-						@Override
-						public void onSuccess(final String result) {
-							final StringMutatorOnInput stringMutatorOnInput = getSpecialBuildActions().get(result);
-
-							if (stringMutatorOnInput != null) {
-								stringMutatorOnInput.mutate(result);
-							} else {
-								// key is not a special key, append it.
-								ShellKeyInputStringBuilderImpl.this.stringBuffer.append(result);
-							}
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							// TODO Auto-generated method stub
-
-						}
-					});
+		if (stringMutatorOnInput != null) {
+			stringMutatorOnInput.mutate(ShellKeyInputStringBuilderImpl.this.stringBuffer,
+										result);
+		} else {
+			// key is not a special key, append it.
+			ShellKeyInputStringBuilderImpl.this.stringBuffer.append(result);
+		}
+		// }
+		//
+		// @Override
+		// public void onFailure(final Throwable t) {
+		// // TODO Auto-generated method stub
+		//
+		// }
+		// });
 
 	}
 
 	@Override
-	public void clear() {
+	public synchronized void clear() {
 		this.stringBuffer = new StringBuffer();
 	}
 
@@ -134,12 +146,12 @@ public class ShellKeyInputStringBuilderImpl implements ShellKeyInputStringBuilde
 	}
 
 	@Override
-	public void append(final String string) {
+	public synchronized void append(final String string) {
 		this.stringBuffer.append(string);
 	}
 
 	@Override
-	public String toString() {
+	public synchronized String getString() {
 		return this.stringBuffer.toString();
 	}
 }

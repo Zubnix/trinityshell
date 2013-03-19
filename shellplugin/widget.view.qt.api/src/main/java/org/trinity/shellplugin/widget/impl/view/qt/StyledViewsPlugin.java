@@ -10,6 +10,7 @@ import org.trinity.shell.api.plugin.ShellPlugin;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.CharStreams;
+import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.inject.Singleton;
 import com.trolltech.qt.gui.QApplication;
@@ -18,16 +19,22 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
-public class StyledViewsPlugin implements ShellPlugin {
+public class StyledViewsPlugin extends AbstractIdleService implements ShellPlugin {
 
 	private static final String STYLESHEET_NAME = "views.qss";
 
 	StyledViewsPlugin() {
 	}
 
-	@Override
-	public void start() {
+	private void loadStylelSheet() throws IOException {
+		final InputStream in = getClass().getClassLoader().getResourceAsStream(STYLESHEET_NAME);
+		final String content = CharStreams.toString(new InputStreamReader(	in,
+																			Charsets.UTF_8));
+		QApplication.instance().setStyleSheet(content);
+	}
 
+	@Override
+	protected void startUp() throws Exception {
 		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(new Callable<Void>() {
 			@Override
 			public Void call() {
@@ -40,17 +47,12 @@ public class StyledViewsPlugin implements ShellPlugin {
 			}
 		});
 		QApplication.invokeLater(futureTask);
-	}
 
-	private void loadStylelSheet() throws IOException {
-		final InputStream in = getClass().getClassLoader().getResourceAsStream(STYLESHEET_NAME);
-		final String content = CharStreams.toString(new InputStreamReader(	in,
-																			Charsets.UTF_8));
-		QApplication.instance().setStyleSheet(content);
 	}
 
 	@Override
-	public void stop() {
+	protected void shutDown() throws Exception {
 		// clear styles?
+
 	}
 }

@@ -1,7 +1,7 @@
 package org.trinity.shellplugin.wm.impl.view;
 
-import org.trinity.foundation.api.render.server.binding.PropertySlot;
-import org.trinity.foundation.api.render.server.binding.PropertySlots;
+import org.trinity.foundation.api.render.binding.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.view.PropertySlots;
 
 import com.google.common.base.Preconditions;
 import com.trolltech.qt.gui.QLabel;
@@ -19,23 +19,23 @@ public class BarItemView extends QLabel {
 	private int imageWidth;
 	private int imageHeight;
 
-	public void setImageData(byte[] imageData) {
-		Preconditions.checkState(	imageWidth > 0,
+	public void setImageData(final byte[] imageData) {
+		Preconditions.checkState(	this.imageWidth > 0,
 									"Image width must be > 0");
-		Preconditions.checkState(	imageHeight > 0,
+		Preconditions.checkState(	this.imageHeight > 0,
 									"Image height must be > 0");
 
-		QPixmap pixmapImage = new QPixmap(	imageWidth,
-											imageHeight);
+		final QPixmap pixmapImage = new QPixmap(this.imageWidth,
+												this.imageHeight);
 		pixmapImage.loadFromData(imageData);
 		setPixmap(pixmapImage);
 	}
 
-	public void setImageWidth(int width) {
+	public void setImageWidth(final int width) {
 		this.imageWidth = width;
 	}
 
-	public void setImageHeight(int height) {
+	public void setImageHeight(final int height) {
 		this.imageHeight = height;
 	}
 }

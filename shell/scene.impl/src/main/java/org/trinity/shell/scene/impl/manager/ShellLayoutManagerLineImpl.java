@@ -14,6 +14,8 @@ package org.trinity.shell.scene.impl.manager;
 import java.util.List;
 
 import org.trinity.foundation.api.shared.Margins;
+import org.trinity.foundation.api.shared.Size;
+import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
@@ -36,10 +38,14 @@ import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
+// TODO try to avoid castings
 // TODO refactor/rewrite
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
 // be negative. childs with size 0, ...)
 // TODO refactor to reuse code and for cleaner reading
+// =>rewrite this...
 @Bind(to = @To(value = Type.CUSTOM, customs = ShellLayoutManagerLine.class))
 public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
 
@@ -53,9 +59,10 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		@Subscribe
 		public void handleChildMoveResizeRequest(final ShellNodeMoveResizeRequestEvent shellNodeMoveResizeRequestEvent) {
 			final ShellNode child = shellNodeMoveResizeRequestEvent.getSource();
+			checkArgument(child instanceof AbstractShellNode);
 			if (getLayoutProperty(child).getWeight() == 0) {
 				child.doResize();
-				layout(child.getParentImpl());
+				layout(((AbstractShellNode) child).getParentImpl());
 			} else {
 				cancelMoveResize(child);
 			}
@@ -65,14 +72,17 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		@Subscribe
 		public void handleChildDestroyed(final ShellNodeDestroyedEvent shellNodeDestroyedEvent) {
 			final ShellNode child = shellNodeDestroyedEvent.getSource();
+			checkArgument(child instanceof AbstractShellNode);
 			removeChild(shellNodeDestroyedEvent.getSource());
-			layout(child.getParentImpl());
+			layout(((AbstractShellNode) child).getParentImpl());
 		}
 
 		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildReparentRequest(final ShellNodeReparentRequestEvent shellNodeReparentRequestEvent) {
-			final ShellNodeParent oldParent = shellNodeReparentRequestEvent.getSource().getParentImpl();
+			final ShellNode child = shellNodeReparentRequestEvent.getSource();
+			checkArgument(child instanceof AbstractShellNode);
+			final ShellNodeParent oldParent = ((AbstractShellNode) child).getParentImpl();
 			shellNodeReparentRequestEvent.getSource().doReparent();
 			layout(oldParent);
 		}
@@ -125,11 +135,13 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 	protected void layoutHorizontal(final ShellNode containerNode) {
 		// total available size of the container
+		checkArgument(containerNode instanceof AbstractShellNode);
+
 		int newSize = 0;
 		int fixedSize = 0;
-
-		newSize = containerNode.getSizeImpl().getWidth();
-		fixedSize = containerNode.getSizeImpl().getHeight();
+		final Size size = ((AbstractShellNode) containerNode).getSizeImpl();
+		newSize = size.getWidth();
+		fixedSize = size.getHeight();
 
 		if (newSize == 0) {
 			return;
@@ -158,7 +170,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		// new place of the next child
 		int newPlace = 0;
 		if (this.inverseDirection) {
-			newPlace = containerNode.getWidth();
+			newPlace = ((AbstractShellNode) containerNode).getSizeImpl().getWidth();
 		}
 
 		final List<ShellNode> children = getChildren();
@@ -283,14 +295,14 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 								final ShellLayoutProperty layoutProperty) {
 		Preconditions.checkArgument(layoutProperty instanceof ShellLayoutPropertyLine);
 
-		child.addShellNodeEventHandler(this.childGeoListener);
+		child.addListener(this.childGeoListener);
 		super.addChildNode(	child,
 							layoutProperty);
 	}
 
 	@Override
 	public void removeChild(final ShellNode child) {
-		child.removeShellNodeEventHandler(this.childGeoListener);
+		child.removeListener(this.childGeoListener);
 		super.removeChild(child);
 	}
 

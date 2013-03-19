@@ -14,7 +14,7 @@ package org.trinity.shell.input.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.KeyNotify;
@@ -34,7 +34,7 @@ import com.google.inject.name.Named;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
 
-@NotThreadSafe
+@ThreadSafe
 public class ShellKeysBindingImpl implements ShellKeysBinding {
 
 	private final ShellSurface root;
