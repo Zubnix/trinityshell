@@ -14,7 +14,7 @@ package org.trinity.foundation.api.render.binding.view.delegate;
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
 import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -48,7 +48,7 @@ public interface InputListenerInstallerDelegate {
 	// TODO some kind of notify event?
 	ListenableFuture<Void> installViewInputListener(Class<? extends Input> inputType,
 												Object view,
-												Listenable inputEventTarget,
+												AsyncListenable inputEventTarget,
 												String inputSlotName);
 
 	/***************************************
@@ -69,6 +69,6 @@ public interface InputListenerInstallerDelegate {
 	// TODO some kind of notify event?
 	ListenableFuture<Void> removeViewInputListener(	Class<? extends Input> inputType,
 												Object view,
-												Listenable inputEventTarget,
+												AsyncListenable inputEventTarget,
 												String inputSlotName);
 }

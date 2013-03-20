@@ -11,7 +11,7 @@
  */
 package org.trinity.foundation.render.qt.impl.painter.routine;
 
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConverter;
 
 import com.trolltech.qt.core.QEvent;
@@ -20,12 +20,12 @@ import com.trolltech.qt.core.QObject;
 
 public class QJViewEventTracker extends QObject {
 
-	private final Listenable eventTarget;
+	private final AsyncListenable eventTarget;
 	private final QJRenderEventConverter renderEventConverter;
 	private final QObject view;
 
 	QJViewEventTracker(	final QJRenderEventConverter qjRenderEventConverter,
-						final Listenable target,
+						final AsyncListenable target,
 						final QObject view) {
 		this.renderEventConverter = qjRenderEventConverter;
 		this.eventTarget = target;

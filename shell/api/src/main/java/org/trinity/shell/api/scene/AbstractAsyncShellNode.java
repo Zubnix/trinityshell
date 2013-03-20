@@ -399,40 +399,4 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	public abstract ShellNodeTransformation toGeoTransformationImpl();
-
-	@Override
-	public final ListenableFuture<Void> addListener(final Object listener) {
-		return this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				return addListenerImpl(listener);
-			}
-		});
-	}
-
-	public abstract Void addListenerImpl(Object listener);
-
-	@Override
-	public final ListenableFuture<Void> removeListener(final Object listener) {
-		return this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				return removeListenerImpl(listener);
-			}
-		});
-	}
-
-	public abstract Void removeListenerImpl(Object listener);
-
-	@Override
-	public final ListenableFuture<Void> post(final Object event) {
-		return this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				return postImpl(event);
-			}
-		});
-	}
-
-	public abstract Void postImpl(Object event);
 }

@@ -20,7 +20,7 @@ import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.event.CreationNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.ShowRequest;
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
@@ -74,7 +74,7 @@ public class MapRequestConversion implements XEventConversion {
 	}
 
 	@Override
-	public Listenable getTarget(final xcb_generic_event_t event_t) {
+	public AsyncListenable getTarget(final xcb_generic_event_t event_t) {
 		final xcb_map_request_event_t map_request_event_t = cast(event_t);
 		final int windowId = map_request_event_t.getWindow();
 		final boolean present = this.xWindowCache.isPresent(windowId);

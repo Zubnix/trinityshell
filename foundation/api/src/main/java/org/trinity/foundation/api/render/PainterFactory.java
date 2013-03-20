@@ -11,7 +11,7 @@
  */
 package org.trinity.foundation.api.render;
 
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 
 /***************************************
  * Creates new {@link Painter} delegates for a view model.
@@ -30,5 +30,5 @@ public interface PainterFactory {
 	 *            visual base.
 	 * @return a new {@link Painter}
 	 */
-	Painter createPainter(final Listenable viewModel);
+	Painter createPainter(final AsyncListenable viewModel);
 }

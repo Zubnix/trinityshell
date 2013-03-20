@@ -19,7 +19,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -79,7 +79,7 @@ public final class XEventConverter {
 			return;
 		}
 
-		final Listenable target = eventConversion.getTarget(event_t);
+		final AsyncListenable target = eventConversion.getTarget(event_t);
 		if (target == null) {
 			return;
 		}

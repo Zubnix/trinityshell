@@ -68,7 +68,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	@Override
 	public Void setLayoutManagerImpl(final ShellLayoutManager shellLayoutManager) {
 		this.optionalLayoutManager = Optional.of(shellLayoutManager);
-		addListenerImpl(shellLayoutManager);
+		register(shellLayoutManager);
 		return null;
 	}
 
@@ -106,7 +106,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
 															toGeoTransformationImpl());
 		}
-		postImpl(shellNodeEvent);
+		post(shellNodeEvent);
 		return null;
 	}
 

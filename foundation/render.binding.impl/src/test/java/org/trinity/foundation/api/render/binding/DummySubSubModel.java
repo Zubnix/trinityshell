@@ -1,11 +1,11 @@
 package org.trinity.foundation.api.render.binding;
 
+import java.util.concurrent.ExecutorService;
+
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
-public class DummySubSubModel implements Listenable {
+public class DummySubSubModel implements AsyncListenable {
 
 	private boolean booleanProperty;
 
@@ -19,23 +19,28 @@ public class DummySubSubModel implements Listenable {
 	}
 
 	@Override
-	public ListenableFuture<Void> addListener(final Object listener) {
-		return null;
+	public void register(final Object listener) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public ListenableFuture<Void> removeListener(final Object listener) {
-		return null;
+	public void register(	final Object listener,
+							final ExecutorService executor) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public ListenableFuture<Void> post(final Object event) {
-		return null;
+	public void unregister(final Object listener) {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void post(final Object event) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

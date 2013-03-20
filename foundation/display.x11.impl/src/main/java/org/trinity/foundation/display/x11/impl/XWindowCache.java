@@ -48,7 +48,7 @@ public class XWindowCache {
 		@Subscribe
 		public void destroyed(final DestroyNotify destroyNotify) {
 			XWindowCache.this.xWindows.invalidate(this.window.getDisplaySurfaceHandle().getNativeHandle());
-			this.window.removeListener(this);
+			this.window.unregister(this);
 		}
 	}
 
@@ -74,7 +74,7 @@ public class XWindowCache {
 											public XWindow call() throws Exception {
 												final XWindow xWindow = (XWindow) XWindowCache.this.displaySurfaceFactory
 														.createDisplaySurface(resourceHandle);
-												xWindow.addListener(new DestroyListener(xWindow));
+												xWindow.register(new DestroyListener(xWindow));
 												return xWindow;
 											}
 										});

@@ -12,12 +12,14 @@
 package org.trinity.foundation.display.x11.impl;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.freedesktop.xcb.LibXcb;
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -38,7 +40,7 @@ public class XDisplayServer implements DisplayServer {
 	private final XEventPump xEventPump;
 	private final ListeningExecutorService xExecutor;
 
-	private final EventBus displayEventBus = new EventBus();
+	private final AsyncListenableEventBus displayEventBus;
 
 	@Inject
 	XDisplayServer(	final XConnection xConnection,
@@ -51,6 +53,7 @@ public class XDisplayServer implements DisplayServer {
 		this.xConnection = xConnection;
 		this.xEventPump = xEventPump;
 		this.xExecutor = xExecutor;
+		this.displayEventBus = new AsyncListenableEventBus(this.xExecutor);
 	}
 
 	@Override
@@ -102,38 +105,25 @@ public class XDisplayServer implements DisplayServer {
 	}
 
 	@Override
-	public ListenableFuture<Void> addListener(final Object listener) {
-		return this.xExecutor.submit(	new Runnable() {
-
-											@Override
-											public void run() {
-												XDisplayServer.this.displayEventBus.register(listener);
-											}
-										},
-										null);
+	public void register(final Object listener) {
+		this.displayEventBus.register(listener);
 	}
 
 	@Override
-	public ListenableFuture<Void> post(final Object event) {
-		return this.xExecutor.submit(	new Runnable() {
+	public void register(	final Object listener,
+							final ExecutorService executor) {
+		this.displayEventBus.register(	listener,
+										executor);
 
-											@Override
-											public void run() {
-												XDisplayServer.this.displayEventBus.post(event);
-											}
-										},
-										null);
 	}
 
 	@Override
-	public ListenableFuture<Void> removeListener(final Object listener) {
-		return this.xExecutor.submit(	new Runnable() {
+	public void post(final Object event) {
+		this.displayEventBus.post(event);
+	}
 
-											@Override
-											public void run() {
-												XDisplayServer.this.displayEventBus.unregister(listener);
-											}
-										},
-										null);
+	@Override
+	public void unregister(final Object listener) {
+		this.displayEventBus.unregister(listener);
 	}
 }

@@ -1,7 +1,5 @@
 package org.trinity.shellplugin.wm.impl;
 
-import java.util.concurrent.Callable;
-
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.CreationNotify;
@@ -42,25 +40,17 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 
 	@Override
 	protected void startUp() throws Exception {
-		this.displayServer.addListener(this);
+		this.displayServer.register(this,
+									this.wmExecutor);
 	}
 
 	@Override
 	protected void shutDown() throws Exception {
-		this.displayServer.removeListener(this);
+		this.displayServer.unregister(this);
 	}
 
 	@Subscribe
-	public final void handleCreationNotify(final CreationNotify creationNotify) {
-		this.wmExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				return handleCreationNotifyImpl(creationNotify);
-			}
-		});
-	}
-
-	public Void handleCreationNotifyImpl(final CreationNotify creationNotify) {
+	public void handleCreationNotify(final CreationNotify creationNotify) {
 
 		final DisplaySurface displaySurface = creationNotify.getDisplaySurface();
 		final ListenableFuture<ShellSurface> shellSurfaceFuture = this.shellSurfaceFactory
@@ -80,8 +70,6 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 						}
 					},
 					this.wmExecutor);
-
-		return null;
 	}
 
 	public void handleShellSurface(final ShellSurface shellSurface) {

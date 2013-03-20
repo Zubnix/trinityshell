@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.trinity.foundation.api.display.event.ButtonNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.FocusGainNotify;
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.render.qt.impl.QJRenderEventConverter;
 import org.trinity.render.qt.impl.DummyQJRenderEngine;
 import org.trinity.render.qt.impl.DummyView;
@@ -32,7 +32,7 @@ public class EventInterceptionTest {
 	public void testViewEvents() throws InterruptedException {
 		final EventBus displayEventBus = mock(EventBus.class);
 
-		final Listenable eventTarget = mock(Listenable.class);
+		final AsyncListenable eventTarget = mock(AsyncListenable.class);
 		final DisplayEvent focusGainNotifyEvent = new FocusGainNotify();
 		final Optional<DisplayEvent> optionalFocusGainNotifyEvent = Optional.of(focusGainNotifyEvent);
 		final DisplayEvent buttonNotifyEvent = new ButtonNotify(null);
@@ -96,7 +96,7 @@ public class EventInterceptionTest {
 	public void testInputEvents() throws InterruptedException {
 		final EventBus displayEventBus = mock(EventBus.class);
 
-		final Listenable eventTarget = mock(Listenable.class);
+		final AsyncListenable eventTarget = mock(AsyncListenable.class);
 		final DisplayEvent focusGainNotifyEvent = new FocusGainNotify();
 		final Optional<DisplayEvent> optionalFocusGainNotifyEvent = Optional.of(focusGainNotifyEvent);
 		final DisplayEvent buttonNotifyEvent = new ButtonNotify(null);

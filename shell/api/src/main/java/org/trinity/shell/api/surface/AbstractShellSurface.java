@@ -82,7 +82,8 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 					new FutureCallback<DisplaySurface>() {
 						@Override
 						public void onSuccess(final DisplaySurface result) {
-							result.addListener(AbstractShellSurface.this);
+							result.register(AbstractShellSurface.this,
+											AbstractShellSurface.this.shellExecutor);
 						}
 
 						@Override
@@ -99,7 +100,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 					new FutureCallback<DisplaySurface>() {
 						@Override
 						public void onSuccess(final DisplaySurface result) {
-							result.removeListener(AbstractShellSurface.this);
+							result.unregister(AbstractShellSurface.this);
 						}
 
 						@Override
@@ -341,16 +342,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	 *            a {@link DestroyNotify}
 	 */
 	@Subscribe
-	public final void handleDestroyNotifyEvent(final DestroyNotify destroyNotify) {
-		this.shellExecutor.submit(new Runnable() {
-			@Override
-			public void run() {
-				handleDestroyNotifyEventImpl(destroyNotify);
-			}
-		});
-	}
-
-	protected void handleDestroyNotifyEventImpl(final DestroyNotify destroyNotify) {
+	public void handleDestroyNotifyEvent(final DestroyNotify destroyNotify) {
 		doDestroy(false);
 	}
 
@@ -363,21 +355,11 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	 *            a {@link GeometryNotify}
 	 */
 	@Subscribe
-	public final void handleGeometryNotifyEvent(final GeometryNotify geometryNotify) {
-		this.shellExecutor.submit(new Runnable() {
-			@Override
-			public void run() {
-				handleGeometryNotifyEventImpl(geometryNotify);
-			}
-		});
-	}
-
-	protected void handleGeometryNotifyEventImpl(final GeometryNotify geometryNotify) {
+	public void handleGeometryNotifyEvent(final GeometryNotify geometryNotify) {
 		final Rectangle geometry = geometryNotify.getGeometry();
 		setPositionImpl(geometry.getPosition());
 		setSizeImpl(geometry.getSize());
 		doMoveResize(false);
-
 	}
 
 	/**
@@ -389,16 +371,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	 *            a {@link GeometryRequest}
 	 */
 	@Subscribe
-	public final void handleGeometryRequestEvent(final GeometryRequest geometryRequest) {
-		this.shellExecutor.submit(new Runnable() {
-			@Override
-			public void run() {
-				handleGeometryRequestEventImpl(geometryRequest);
-			}
-		});
-	}
-
-	protected void handleGeometryRequestEventImpl(final GeometryRequest geometryRequest) {
+	public void handleGeometryRequestEvent(final GeometryRequest geometryRequest) {
 		final Rectangle currentGeometry = getGeometryImpl();
 		final Rectangle requestedGeometry = geometryRequest.getGeometry();
 		final int newX = geometryRequest.configureX() ? requestedGeometry.getPosition().getX() : currentGeometry
@@ -430,16 +403,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	 *            a {@link HideNotify}
 	 */
 	@Subscribe
-	public final void handleHideNotifyEvent(final HideNotify hideNotify) {
-		this.shellExecutor.submit(new Runnable() {
-			@Override
-			public void run() {
-				handleHideNotifyEventImpl(hideNotify);
-			}
-		});
-	}
-
-	protected void handleHideNotifyEventImpl(final HideNotify hideNotify) {
+	public void handleHideNotifyEvent(final HideNotify hideNotify) {
 		doHide(false);
 	}
 
@@ -452,16 +416,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	 *            a {@link ShowNotify}
 	 */
 	@Subscribe
-	public final void handleShowNotifyEvent(final ShowNotify showNotify) {
-		this.shellExecutor.submit(new Runnable() {
-			@Override
-			public void run() {
-				handleShowNotifyEventImpl(showNotify);
-			}
-		});
-	}
-
-	protected void handleShowNotifyEventImpl(final ShowNotify showNotify) {
+	public void handleShowNotifyEvent(final ShowNotify showNotify) {
 		doShow(false);
 	}
 
@@ -475,15 +430,6 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	 */
 	@Subscribe
 	public void handleShowRequestEvent(final ShowRequest showRequest) {
-		this.shellExecutor.submit(new Runnable() {
-			@Override
-			public void run() {
-				handleShowRequestEventImpl(showRequest);
-			}
-		});
-	}
-
-	protected void handleShowRequestEventImpl(final ShowRequest showRequest) {
 		requestShowImpl();
 	}
 	/* end display event handling */

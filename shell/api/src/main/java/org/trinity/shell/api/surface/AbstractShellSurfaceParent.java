@@ -72,7 +72,7 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 	@Override
 	public Void setLayoutManagerImpl(final ShellLayoutManager shellLayoutManager) {
 		this.optionalLayoutManager = Optional.of(shellLayoutManager);
-		addListenerImpl(shellLayoutManager);
+		register(shellLayoutManager);
 		return null;
 	}
 
@@ -105,12 +105,12 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 			// child.removeShellNodeEventHandler(this);
 			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
 															toGeoTransformationImpl());
-			postImpl(shellNodeEvent);
+			post(shellNodeEvent);
 		} else {
 			this.children.add((AbstractShellNode) child);
 			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
 															toGeoTransformationImpl());
-			postImpl(shellNodeEvent);
+			post(shellNodeEvent);
 		}
 		return null;
 	}

@@ -12,7 +12,7 @@
 package org.trinity.foundation.api.display;
 
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -26,7 +26,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Reading of a <code>DisplayEvent</code> from the queue happens is done with a
  * call to {@link #getNextDisplayEvent()}.
  */
-public interface DisplayServer extends Listenable {
+public interface DisplayServer extends AsyncListenable {
 
 	/***************************************
 	 * The root {@link DisplaySurface} of the {@link DisplaySurface} hierarchy.

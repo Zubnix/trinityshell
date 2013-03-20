@@ -7,7 +7,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -40,7 +40,7 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 	@Override
 	public ListenableFuture<Void> installViewInputListener(	final Class<? extends Input> inputType,
 															final Object view,
-															final Listenable inputEventTarget,
+															final AsyncListenable inputEventTarget,
 															final String inputSlotName) {
 		checkArgument(	view instanceof QObject,
 						format(	"Expected view should be of type %s",
@@ -80,7 +80,7 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 	@Override
 	public ListenableFuture<Void> removeViewInputListener(	final Class<? extends Input> inputType,
 															final Object view,
-															final Listenable inputEventTarget,
+															final AsyncListenable inputEventTarget,
 															final String inputSlotName) {
 		checkArgument(	view instanceof QObject,
 						format(	"Expected view should be of type %s",

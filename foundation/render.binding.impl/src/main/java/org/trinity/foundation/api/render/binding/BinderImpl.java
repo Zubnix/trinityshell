@@ -25,7 +25,7 @@ import org.trinity.foundation.api.render.binding.view.ViewElementTypes;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
@@ -416,7 +416,7 @@ public class BinderImpl implements Binder {
 		checkNotNull(dataContext);
 		checkNotNull(view);
 		checkNotNull(inputSignals);
-		checkArgument(dataContext instanceof Listenable);
+		checkArgument(dataContext instanceof AsyncListenable);
 
 		for (final InputSignal inputSignal : inputSignals) {
 			final Class<? extends Input> inputType = inputSignal.inputType();
@@ -424,7 +424,7 @@ public class BinderImpl implements Binder {
 
 			this.inputListenerInstallerDelegate.installViewInputListener(	inputType,
 																			view,
-																			(Listenable) dataContext,
+																			(AsyncListenable) dataContext,
 																			inputSlotName);
 		}
 	}

@@ -22,7 +22,7 @@ import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.Momentum;
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
@@ -79,7 +79,7 @@ public class KeyReleaseConversion implements XEventConversion {
 	}
 
 	@Override
-	public Listenable getTarget(final xcb_generic_event_t event_t) {
+	public AsyncListenable getTarget(final xcb_generic_event_t event_t) {
 		// press has same structure as release.
 		final xcb_key_press_event_t key_release_event_t = cast(event_t);
 		final int windowId = key_release_event_t.getEvent();

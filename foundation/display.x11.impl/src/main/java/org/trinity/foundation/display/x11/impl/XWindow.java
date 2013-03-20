@@ -11,11 +11,10 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
-import static com.google.common.util.concurrent.Futures.transform;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -32,16 +31,18 @@ import org.freedesktop.xcb.xcb_stack_mode_t;
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
+
+import static com.google.common.util.concurrent.Futures.transform;
 
 @ThreadSafe
 public class XWindow implements DisplaySurface {
@@ -51,7 +52,7 @@ public class XWindow implements DisplaySurface {
 	private final XTime xTime;
 	private final ListeningExecutorService xExecutor;
 
-	private final EventBus xWindowEventBus = new EventBus();
+	private final AsyncListenableEventBus xWindowEventBus;
 
 	@Inject
 	XWindow(final XTime xTime,
@@ -62,42 +63,29 @@ public class XWindow implements DisplaySurface {
 		this.xConnection = xConnection;
 		this.resourceHandle = resourceHandle;
 		this.xExecutor = xExecutor;
+		this.xWindowEventBus = new AsyncListenableEventBus(xExecutor);
 	}
 
 	@Override
-	public ListenableFuture<Void> addListener(final Object listener) {
-		return this.xExecutor.submit(	new Runnable() {
-
-											@Override
-											public void run() {
-												XWindow.this.xWindowEventBus.register(listener);
-											}
-										},
-										null);
+	public void register(final Object listener) {
+		this.xWindowEventBus.register(listener);
 	}
 
 	@Override
-	public ListenableFuture<Void> post(final Object event) {
-		return this.xExecutor.submit(	new Runnable() {
-
-											@Override
-											public void run() {
-												XWindow.this.xWindowEventBus.post(event);
-											}
-										},
-										null);
+	public void post(final Object event) {
+		this.xWindowEventBus.post(event);
 	}
 
 	@Override
-	public ListenableFuture<Void> removeListener(final Object listener) {
-		return this.xExecutor.submit(	new Runnable() {
+	public void unregister(final Object listener) {
+		this.xWindowEventBus.unregister(listener);
+	}
 
-											@Override
-											public void run() {
-												XWindow.this.xWindowEventBus.unregister(listener);
-											}
-										},
-										null);
+	@Override
+	public void register(	final Object listener,
+							final ExecutorService executor) {
+		this.xWindowEventBus.register(	listener,
+										executor);
 	}
 
 	@Override

@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -42,7 +42,7 @@ public class QJRenderEventConverter {
 		}
 	}
 
-	public boolean convertRenderEvent(	final Listenable eventTarget,
+	public boolean convertRenderEvent(	final AsyncListenable eventTarget,
 										final Object view,
 										final QObject eventProducer,
 										final QEvent event) {

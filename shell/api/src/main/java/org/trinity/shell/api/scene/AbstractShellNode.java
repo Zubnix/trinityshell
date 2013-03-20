@@ -11,8 +11,11 @@
  */
 package org.trinity.shell.api.scene;
 
+import java.util.concurrent.ExecutorService;
+
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
@@ -37,7 +40,6 @@ import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowedEvent;
 
 import com.google.common.base.Preconditions;
-import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -66,10 +68,11 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	private boolean destroyed;
 
-	private final EventBus nodeEventBus = new EventBus();
+	private final AsyncListenableEventBus nodeEventBus;
 
 	protected AbstractShellNode(final ListeningExecutorService shellExecutor) {
 		super(shellExecutor);
+		this.nodeEventBus = new AsyncListenableEventBus(shellExecutor);
 	}
 
 	@Override
@@ -103,7 +106,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		// update parent to new parent
 		final ShellNodeEvent event = new ShellNodeReparentRequestEvent(	this,
 																		toGeoTransformationImpl());
-		postImpl(event);
+		post(event);
 		return null;
 	}
 
@@ -164,7 +167,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestMoveImpl() {
 		final ShellNodeMoveRequestEvent event = new ShellNodeMoveRequestEvent(	this,
 																				toGeoTransformationImpl());
-		postImpl(event);
+		post(event);
 		return null;
 	}
 
@@ -172,7 +175,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestResizeImpl() {
 		final ShellNodeEvent event = new ShellNodeResizeRequestEvent(	this,
 																		toGeoTransformationImpl());
-		postImpl(event);
+		post(event);
 		return null;
 	}
 
@@ -180,7 +183,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestMoveResizeImpl() {
 		final ShellNodeMoveResizeRequestEvent event = new ShellNodeMoveResizeRequestEvent(	this,
 																							toGeoTransformationImpl());
-		postImpl(event);
+		post(event);
 		return null;
 	}
 
@@ -188,7 +191,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestRaiseImpl() {
 		final ShellNodeEvent event = new ShellNodeRaiseRequestEvent(this,
 																	toGeoTransformationImpl());
-		postImpl(event);
+		post(event);
 		return null;
 	}
 
@@ -196,7 +199,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestLowerImpl() {
 		final ShellNodeLowerRequestEvent event = new ShellNodeLowerRequestEvent(this,
 																				toGeoTransformationImpl());
-		postImpl(event);
+		post(event);
 		return null;
 	}
 
@@ -224,7 +227,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeMovedEvent geoEvent = new ShellNodeMovedEvent(	this,
 																		toGeoTransformationImpl());
-		postImpl(geoEvent);
+		post(geoEvent);
 	}
 
 	/***************************************
@@ -267,7 +270,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeResizedEvent geoEvent = new ShellNodeResizedEvent(	this,
 																			toGeoTransformationImpl());
-		postImpl(geoEvent);
+		post(geoEvent);
 	}
 
 	/***************************************
@@ -313,7 +316,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeMovedResizedEvent geoEvent = new ShellNodeMovedResizedEvent(	this,
 																					toGeoTransformationImpl());
-		postImpl(geoEvent);
+		post(geoEvent);
 	}
 
 	/***************************************
@@ -362,7 +365,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeDestroyedEvent geoEvent = new ShellNodeDestroyedEvent(	this,
 																				toGeoTransformationImpl());
-		postImpl(geoEvent);
+		post(geoEvent);
 	}
 
 	/***************************************
@@ -398,7 +401,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeRaisedEvent geoEvent = new ShellNodeRaisedEvent(	this,
 																		toGeoTransformationImpl());
-		postImpl(geoEvent);
+		post(geoEvent);
 	}
 
 	/***************************************
@@ -434,7 +437,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeLoweredEvent geoEvent = new ShellNodeLoweredEvent(	this,
 																			toGeoTransformationImpl());
-		postImpl(geoEvent);
+		post(geoEvent);
 	}
 
 	/***************************************
@@ -476,7 +479,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		doMoveResize(execute);
 		final ShellNodeReparentedEvent geoEvent = new ShellNodeReparentedEvent(	this,
 																				toGeoTransformationImpl());
-		postImpl(geoEvent);
+		post(geoEvent);
 	}
 
 	/***************************************
@@ -547,7 +550,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeShowedEvent geoEvent = new ShellNodeShowedEvent(	this,
 																		toGeoTransformationImpl());
-		postImpl(geoEvent);
+		post(geoEvent);
 	}
 
 	/***************************************
@@ -584,7 +587,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 		}
 		final ShellNodeHiddenEvent geoEvent = new ShellNodeHiddenEvent(	this,
 																		toGeoTransformationImpl());
-		postImpl(geoEvent);
+		post(geoEvent);
 	}
 
 	/***************************************
@@ -600,7 +603,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestShowImpl() {
 		final ShellNodeShowRequestEvent event = new ShellNodeShowRequestEvent(	this,
 																				toGeoTransformationImpl());
-		postImpl(event);
+		post(event);
 		return null;
 	}
 
@@ -608,25 +611,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void requestHideImpl() {
 		final ShellNodeHideRequestEvent event = new ShellNodeHideRequestEvent(	this,
 																				toGeoTransformationImpl());
-		postImpl(event);
-		return null;
-	}
-
-	@Override
-	public Void addListenerImpl(final Object listener) {
-		this.nodeEventBus.register(listener);
-		return null;
-	}
-
-	@Override
-	public Void removeListenerImpl(final Object listener) {
-		this.nodeEventBus.unregister(listener);
-		return null;
-	}
-
-	@Override
-	public Void postImpl(final Object event) {
-		this.nodeEventBus.post(event);
+		post(event);
 		return null;
 	}
 
@@ -650,5 +635,27 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	public Void setSizeImpl(final Size size) {
 		this.desiredSize = size;
 		return null;
+	}
+
+	@Override
+	public void register(final Object listener) {
+		this.nodeEventBus.register(listener);
+	}
+
+	@Override
+	public void register(	final Object listener,
+							final ExecutorService executor) {
+		this.nodeEventBus.register(	listener,
+									executor);
+	}
+
+	@Override
+	public void unregister(final Object listener) {
+		this.nodeEventBus.unregister(listener);
+	}
+
+	@Override
+	public void post(final Object event) {
+		this.nodeEventBus.post(event);
 	}
 }

@@ -11,7 +11,7 @@
  */
 package org.trinity.foundation.api.display;
 
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Rectangle;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -22,7 +22,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * server.
  * 
  */
-public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator, Listenable {
+public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator, AsyncListenable {
 
 	/***************************************
 	 * Query geometry information. The values of the returned {@link Rectangle}

@@ -73,7 +73,8 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 
 	@Override
 	public void bind() {
-		this.root.addListener(this);
+		// TODO use a (newly) given executor
+		this.root.register(this);
 		for (final Key grabKey : this.keys) {
 
 			addCallback(this.root.getDisplaySurface(),
@@ -125,6 +126,6 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 							}
 						});
 		}
-		this.root.removeListener(this);
+		this.root.unregister(this);
 	}
 }

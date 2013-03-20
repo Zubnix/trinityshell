@@ -50,9 +50,9 @@ public class ShellClientSurface extends AbstractShellSurface {
 	}
 
 	@Override
-	protected void handleDestroyNotifyEventImpl(final DestroyNotify destroyNotify) {
+	public void handleDestroyNotifyEvent(final DestroyNotify destroyNotify) {
 		unsubscribeToDisplaySurfaceEvents();
-		super.handleDestroyNotifyEventImpl(destroyNotify);
+		super.handleDestroyNotifyEvent(destroyNotify);
 	}
 
 	@Override

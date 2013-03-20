@@ -33,7 +33,7 @@
 	<properties>
 		<!-- dep versions -->
 		<guice.version>3.0</guice.version>
-		<guava.version>13.0.1</guava.version>
+		<guava.version>14.0.1</guava.version>
 		<autobind.version>0.8.7</autobind.version>
 
 		<!-- test dep versions -->
