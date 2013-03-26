@@ -17,9 +17,7 @@ import com.google.inject.name.Named;
 
 public class ShellRootWidget extends BaseShellWidget {
 
-	@Inject
-	@Named("RootView")
-	private Object view;
+	private final Object view;
 
 	private final EventList<Object> topBar = new BasicEventList<Object>();
 	private final EventList<Object> bottomBar = new BasicEventList<Object>();
@@ -28,13 +26,16 @@ public class ShellRootWidget extends BaseShellWidget {
 	protected ShellRootWidget(	final ShellSurfaceFactory shellSurfaceFactory,
 								@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
 								final PainterFactory painterFactory,
+								@Named("RootView") final Object view,
 								final Set<TopBarItem> topBarItems,
 								final Set<BottomBarItem> bottomBarItems) {
 		super(	shellSurfaceFactory,
 				shellExecutor,
-				painterFactory);
+				painterFactory.createPainter(this));
+		this.view = view;
 		addTopBarItems(topBarItems);
 		addBottomBarItems(bottomBarItems);
+
 	}
 
 	@Override

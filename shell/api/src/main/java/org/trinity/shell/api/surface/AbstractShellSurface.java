@@ -259,14 +259,6 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 		return null;
 	}
 
-	@Override
-	public String toString() {
-		return String.format(	"%s<%s>|%s|",
-								getClass().getSimpleName(),
-								getDisplaySurface(),
-								getGeometryImpl());
-	}
-
 	/**
 	 * Update the geometric information of this
 	 * <code>AbstractShellSurface</code> so it reflects the

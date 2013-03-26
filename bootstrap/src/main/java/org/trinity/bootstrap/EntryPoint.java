@@ -12,6 +12,7 @@
  */
 package org.trinity.bootstrap;
 
+import org.trinity.foundation.render.qt.impl.RenderApplication;
 import org.trinity.shell.api.plugin.ShellPluginsRunner;
 
 import xcb4j.LibXcbLoader;
@@ -29,6 +30,7 @@ public class EntryPoint {
 	public static void main(final String[] args) {
 
 		LibXcbLoader.load();
+		RenderApplication.start();
 
 		final Injector injector = Guice.createInjector(	Stage.PRODUCTION,
 														StartupModule.create(	ASMClasspathScanner.class,

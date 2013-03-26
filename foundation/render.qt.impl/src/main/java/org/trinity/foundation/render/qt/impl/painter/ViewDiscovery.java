@@ -40,7 +40,8 @@ public class ViewDiscovery {
 					if (view instanceof QWidget) {
 						return (QWidget) view;
 					} else {
-						throw new BindingError(String.format(	"Expected view instance on model %s to be of type %s",
+						throw new BindingError(String.format(	"Expected view %s of model %s to be of type %s",
+																view,
 																model,
 																QWidget.class.getName()));
 					}

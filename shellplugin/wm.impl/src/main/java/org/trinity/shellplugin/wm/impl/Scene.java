@@ -25,6 +25,7 @@ public class Scene {
 		this.rootLayoutManager = shellLayoutManagerLine;
 
 		this.shellRootWidget.setLayoutManager(this.rootLayoutManager);
+		this.shellRootWidget.doShow();
 	}
 
 	public void addClient(final ShellSurface client) {

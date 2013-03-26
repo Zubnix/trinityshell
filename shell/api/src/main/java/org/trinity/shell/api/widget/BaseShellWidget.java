@@ -11,13 +11,14 @@
  */
 package org.trinity.shell.api.widget;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.Painter;
-import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
@@ -29,8 +30,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
 
 /**
  * An {@link AbstractShellSurfaceParent} with a basic
@@ -53,15 +52,16 @@ public abstract class BaseShellWidget extends AbstractShellSurface implements Sh
 	@Inject
 	protected BaseShellWidget(	final ShellSurfaceFactory shellSurfaceFactory,
 								@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
-								final PainterFactory painterFactory) {
+								final Painter painter) {
 		super(shellExecutor);
-		this.painter = painterFactory.createPainter(this);
+		this.painter = painter;
 		final ListenableFuture<ShellSurfaceParent> rootShellSurfaceFuture = shellSurfaceFactory.getRootShellSurface();
 		addCallback(rootShellSurfaceFuture,
 					new FutureCallback<ShellSurfaceParent>() {
 						@Override
 						public void onSuccess(final ShellSurfaceParent rootShellSurface) {
-							init(rootShellSurface);
+							setParentImpl(rootShellSurface);
+							doReparent(false);
 						}
 
 						@Override
@@ -71,13 +71,6 @@ public abstract class BaseShellWidget extends AbstractShellSurface implements Sh
 						}
 					},
 					shellExecutor);
-
-	}
-
-	protected void init(final ShellSurfaceParent shellRootSurface) {
-		setParentImpl(shellRootSurface);
-		doReparent(false);
-		this.painter.bindView();
 	}
 
 	@ViewReference
