@@ -96,7 +96,10 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 
 	@Override
 	public Void setParentImpl(final ShellNodeParent parent) {
-		checkArgument(parent instanceof AbstractShellNodeParent);
+		checkArgument(	parent instanceof AbstractShellNodeParent,
+						"Expected parent %s to be of type %s",
+						parent,
+						parent.getClass().getName());
 		this.desiredParent = (AbstractShellNodeParent) parent;
 		return null;
 	}

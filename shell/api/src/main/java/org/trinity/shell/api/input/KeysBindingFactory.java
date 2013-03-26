@@ -40,5 +40,5 @@ public interface KeysBindingFactory {
 	 */
 	ShellKeysBinding createKeysBinding(	List<Key> keys,
 										InputModifiers inputModifiers,
-										Runnable action);
+										KeyBindAction action);
 }

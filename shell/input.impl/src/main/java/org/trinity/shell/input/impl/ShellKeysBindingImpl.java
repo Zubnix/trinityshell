@@ -12,6 +12,7 @@
 package org.trinity.shell.input.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.concurrent.ThreadSafe;
@@ -24,32 +25,35 @@ import org.trinity.foundation.api.display.input.Keyboard;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.shell.api.input.KeyBindAction;
 import org.trinity.shell.api.input.ShellKeysBinding;
-import org.trinity.shell.api.surface.ShellSurface;
+import org.trinity.shell.api.surface.ShellSurfaceFactory;
+import org.trinity.shell.api.surface.ShellSurfaceParent;
 
 import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.name.Named;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
+import static com.google.common.util.concurrent.Futures.transform;
 
 @ThreadSafe
 public class ShellKeysBindingImpl implements ShellKeysBinding {
 
-	private final ShellSurface root;
+	private final ShellSurfaceFactory shellSurfaceFactory;
 	private final List<Key> keys;
 	private final InputModifiers inputModifiers;
 	private final KeyBindAction action;
 	private final Keyboard keyboard;
 
 	@Inject
-	public ShellKeysBindingImpl(@Named("ShellRootSurface") final ShellSurface root,
+	public ShellKeysBindingImpl(final ShellSurfaceFactory shellSurfaceFactory,
 								final Keyboard keyboard,
 								@Assisted final List<Key> keys,
 								@Assisted final InputModifiers inputModifiers,
 								@Assisted final KeyBindAction action) {
-		this.root = root;
+		this.shellSurfaceFactory = shellSurfaceFactory;
 		this.keys = new ArrayList<Key>(keys);
 		this.inputModifiers = inputModifiers;
 		this.action = action;
@@ -63,7 +67,7 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 
 	@Override
 	public List<Key> getKeys() {
-		return this.keys;
+		return Collections.unmodifiableList(this.keys);
 	}
 
 	@Override
@@ -73,11 +77,20 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 
 	@Override
 	public void bind() {
-		// TODO use a (newly) given executor
-		this.root.register(this);
-		for (final Key grabKey : this.keys) {
+		final ListenableFuture<ShellSurfaceParent> shellRootSurface = this.shellSurfaceFactory.getRootShellSurface();
+		final ListenableFuture<DisplaySurface> rootDisplaySurfaceFuture = transform(shellRootSurface,
+																					new AsyncFunction<ShellSurfaceParent, DisplaySurface>() {
+																						@Override
+																						public ListenableFuture<DisplaySurface> apply(final ShellSurfaceParent input)
+																								throws Exception {
+																							input.register(ShellKeysBindingImpl.this);
+																							return input
+																									.getDisplaySurface();
+																						}
+																					});
 
-			addCallback(this.root.getDisplaySurface(),
+		for (final Key grabKey : getKeys()) {
+			addCallback(rootDisplaySurfaceFuture,
 						new FutureCallback<DisplaySurface>() {
 							@Override
 							public void onSuccess(final DisplaySurface result) {
@@ -106,10 +119,20 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 
 	@Override
 	public void unbind() {
-		for (final Key grabKey : this.keys) {
+		final ListenableFuture<ShellSurfaceParent> shellRootSurface = this.shellSurfaceFactory.getRootShellSurface();
+		final ListenableFuture<DisplaySurface> rootDisplaySurfaceFuture = transform(shellRootSurface,
+																					new AsyncFunction<ShellSurfaceParent, DisplaySurface>() {
+																						@Override
+																						public ListenableFuture<DisplaySurface> apply(final ShellSurfaceParent input)
+																								throws Exception {
+																							input.unregister(ShellKeysBindingImpl.this);
+																							return input
+																									.getDisplaySurface();
+																						}
+																					});
 
-			// callback executed in same thread, should block (?)
-			addCallback(this.root.getDisplaySurface(),
+		for (final Key grabKey : getKeys()) {
+			addCallback(rootDisplaySurfaceFuture,
 						new FutureCallback<DisplaySurface>() {
 							@Override
 							public void onSuccess(final DisplaySurface result) {
@@ -126,6 +149,5 @@ public class ShellKeysBindingImpl implements ShellKeysBinding {
 							}
 						});
 		}
-		this.root.unregister(this);
 	}
 }

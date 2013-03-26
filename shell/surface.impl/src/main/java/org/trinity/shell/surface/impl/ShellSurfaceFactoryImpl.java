@@ -61,7 +61,7 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 		final ListenableFuture<Boolean> hasRootShellSurfaceFuture = this.shellExecutor.submit(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				return Boolean.valueOf(ShellSurfaceFactoryImpl.this.rootShellSurface == null);
+				return Boolean.valueOf(ShellSurfaceFactoryImpl.this.rootShellSurface != null);
 			}
 		});
 

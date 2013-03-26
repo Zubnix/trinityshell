@@ -71,11 +71,10 @@ public class XDisplayServer implements DisplayServer {
 	@Override
 	public ListenableFuture<DisplaySurface> getRootDisplayArea() {
 		return this.xExecutor.submit(new Callable<DisplaySurface>() {
-
 			@Override
 			public DisplaySurface call() {
-				return XDisplayServer.this.xWindowCache.getWindow(XDisplayServer.this.xConnection.getScreenReference()
-						.getRoot());
+				final int rootWinId = XDisplayServer.this.xConnection.getScreenReference().getRoot();
+				return XDisplayServer.this.xWindowCache.getWindow(rootWinId);
 			}
 		});
 	}
