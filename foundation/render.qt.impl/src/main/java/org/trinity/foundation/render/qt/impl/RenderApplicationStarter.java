@@ -29,7 +29,7 @@ import de.devsurf.injection.guice.annotations.To;
 
 @Bind(to = @To(value = To.Type.IMPLEMENTATION))
 @ThreadSafe
-public class QJDisplayEventProducer implements Runnable {
+public class RenderApplicationStarter implements Runnable {
 
 	private final ListeningExecutorService qRenderEventPump = MoreExecutors.listeningDecorator(Executors
 			.newSingleThreadExecutor());

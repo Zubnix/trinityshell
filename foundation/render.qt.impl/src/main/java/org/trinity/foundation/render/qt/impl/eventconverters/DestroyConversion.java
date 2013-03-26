@@ -11,9 +11,8 @@
  */
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
-import org.trinity.foundation.api.display.event.FocusGainNotify;
-import org.trinity.foundation.api.display.event.FocusNotify;
-import org.trinity.foundation.render.qt.impl.QJRenderEventConversion;
+import org.trinity.foundation.api.display.event.DestroyNotify;
+import org.trinity.foundation.render.qt.impl.RenderEventConversion;
 
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
@@ -22,30 +21,22 @@ import com.trolltech.qt.core.QObject;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
-/**
- * A <code>QFusionDestroyConverter</code> takes a <code>QFocusEvent</code> and
- * it's <code>DisplayEventTarget</code> as input and converts it to a
- * <code>FocusNotify</code>.
- * 
- * @author Erik De Rijcke
- * @since 1.0
- */
 @Bind(multiple = true)
 @Singleton
-public class QJFocusGainConversion implements QJRenderEventConversion {
+public class DestroyConversion implements RenderEventConversion {
 
-	QJFocusGainConversion() {
+	DestroyConversion() {
 	}
 
 	@Override
-	public FocusNotify convertEvent(final Object view,
-									final QObject eventProducer,
-									final QEvent qEvent) {
-		return new FocusGainNotify();
+	public DestroyNotify convertEvent(	final Object view,
+										final QObject eventProducer,
+										final QEvent qEventz) {
+		return new DestroyNotify();
 	}
 
 	@Override
 	public Type getQEventType() {
-		return QEvent.Type.FocusIn;
+		return QEvent.Type.Close;
 	}
 }

@@ -9,7 +9,8 @@ import com.google.common.util.concurrent.MoreExecutors;
 public interface AsyncListenable {
 	/**
 	 * Register a listener who's {@link Subscribe}d methods will be invoked by
-	 * the {@link MoreExecutors#sameThreadExecutor()}.
+	 * the {@link MoreExecutors#sameThreadExecutor()}, ie the thread that calls
+	 * {@link #post(Object)} on this object.
 	 * 
 	 * @see {@link EventBus#register(Object)}
 	 * @param listener

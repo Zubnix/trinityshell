@@ -24,10 +24,10 @@ import de.devsurf.injection.guice.annotations.To;
 @Bind(multiple = true)
 @To(To.Type.INTERFACES)
 @Singleton
-public class QJKeyPressedConversion extends AbstractQJKeyConversion {
+public class KeyPressedConversion extends AbstractKeyConversion {
 
 	@Inject
-	QJKeyPressedConversion() {
+	KeyPressedConversion() {
 	}
 
 	@Override

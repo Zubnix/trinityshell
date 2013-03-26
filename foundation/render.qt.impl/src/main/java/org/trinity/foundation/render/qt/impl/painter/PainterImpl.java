@@ -19,29 +19,34 @@ import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.binding.Binder;
-import org.trinity.foundation.render.qt.impl.QJDisplaySurfaceHandle;
+import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.render.qt.impl.RenderDisplaySurfaceHandle;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
-public class QJPainter implements Painter {
+public class PainterImpl implements Painter {
 
-	private final Object model;
+	private final AsyncListenable model;
 	private final Binder binder;
 	private final ViewDiscovery viewDiscovery = new ViewDiscovery();
 	private final DisplaySurfaceFactory displaySurfaceFactory;
+	private final ViewEventTrackerFactory eventTrackerFactory;
 
 	@AssistedInject
-	QJPainter(	final DisplaySurfaceFactory displaySurfaceFactory,
+	PainterImpl(final DisplaySurfaceFactory displaySurfaceFactory,
+				final ViewEventTrackerFactory eventTrackerFactory,
 				final Binder binder,
-				@Assisted final Object model) {
+				@Assisted final AsyncListenable model) {
 		this.binder = binder;
 		this.model = model;
 		this.displaySurfaceFactory = displaySurfaceFactory;
+		this.eventTrackerFactory = eventTrackerFactory;
 	}
 
 	@Override
@@ -224,6 +229,16 @@ public class QJPainter implements Painter {
 	@Override
 	public void bindView() {
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
+		final Runnable eventTrackerInstaller = new Runnable() {
+			@Override
+			public void run() {
+				final QObject eventTracker = PainterImpl.this.eventTrackerFactory
+						.createQJEventTracker(	PainterImpl.this.model,
+												view);
+				view.installEventFilter(eventTracker);
+			}
+		};
+		QApplication.invokeLater(eventTrackerInstaller);
 		this.binder.bind(	this.model,
 							view);
 	}
@@ -235,8 +250,8 @@ public class QJPainter implements Painter {
 		final Callable<DisplaySurface> callable = new Callable<DisplaySurface>() {
 			@Override
 			public DisplaySurface call() {
-				final DisplaySurfaceHandle displaySurfaceHandle = new QJDisplaySurfaceHandle(view);
-				final DisplaySurface displaySurface = QJPainter.this.displaySurfaceFactory
+				final DisplaySurfaceHandle displaySurfaceHandle = new RenderDisplaySurfaceHandle(view);
+				final DisplaySurface displaySurface = PainterImpl.this.displaySurfaceFactory
 						.createDisplaySurface(displaySurfaceHandle);
 				return displaySurface;
 			}

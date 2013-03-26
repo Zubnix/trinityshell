@@ -16,6 +16,7 @@ import org.trinity.foundation.api.render.PainterFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.trolltech.qt.core.QObject;
 
 import de.devsurf.injection.guice.annotations.GuiceModule;
 
@@ -25,6 +26,8 @@ public class Module extends AbstractModule {
 	@Override
 	protected void configure() {
 		install(new FactoryModuleBuilder().implement(	Painter.class,
-														QJPainter.class).build(PainterFactory.class));
+														PainterImpl.class).build(PainterFactory.class));
+		install(new FactoryModuleBuilder().implement(	QObject.class,
+														ViewEventTracker.class).build(ViewEventTrackerFactory.class));
 	}
 }

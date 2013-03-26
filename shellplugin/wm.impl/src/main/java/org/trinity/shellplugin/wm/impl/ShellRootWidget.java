@@ -3,7 +3,6 @@ package org.trinity.shellplugin.wm.impl;
 import java.util.Set;
 
 import org.trinity.foundation.api.render.PainterFactory;
-import org.trinity.foundation.api.render.binding.model.ViewReference;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shell.api.widget.BaseShellWidget;
 
@@ -32,8 +31,8 @@ public class ShellRootWidget extends BaseShellWidget {
 				painterFactory);
 	}
 
-	@ViewReference
-	public Object getView() {
+	@Override
+	public Object getViewImpl() {
 		return this.view;
 	}
 

@@ -13,7 +13,7 @@ package org.trinity.foundation.render.qt.impl.eventconverters;
 
 import org.trinity.foundation.api.display.event.PointerEnterNotify;
 import org.trinity.foundation.api.display.event.PointerVisitationNotify;
-import org.trinity.foundation.render.qt.impl.QJRenderEventConversion;
+import org.trinity.foundation.render.qt.impl.RenderEventConversion;
 
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
@@ -33,9 +33,9 @@ import de.devsurf.injection.guice.annotations.Bind;
  */
 @Bind(multiple = true)
 @Singleton
-public class QJMouseEnterConversion implements QJRenderEventConversion {
+public class MouseEnterConversion implements RenderEventConversion {
 
-	QJMouseEnterConversion() {
+	MouseEnterConversion() {
 	}
 
 	@Override

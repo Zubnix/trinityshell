@@ -9,19 +9,34 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.foundation.render.qt.impl;
+package org.trinity.foundation.render.qt.impl.eventconverters;
 
-import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.api.display.input.Momentum;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
-import com.trolltech.qt.core.QObject;
 
-public interface QJRenderEventConversion {
-	DisplayEvent convertEvent(	Object view,
-								QObject eventProducer,
-								QEvent qEvent);
+import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
 
-	Type getQEventType();
+@Bind(multiple = true)
+@To(To.Type.INTERFACES)
+@Singleton
+public class ButtonReleasedConversion extends AbstractButtonConversion {
 
+	@Inject
+	ButtonReleasedConversion() {
+	}
+
+	@Override
+	public Type getQEventType() {
+		return QEvent.Type.MouseButtonRelease;
+	}
+
+	@Override
+	public Momentum getMomentum() {
+		return Momentum.STOPPED;
+	}
 }

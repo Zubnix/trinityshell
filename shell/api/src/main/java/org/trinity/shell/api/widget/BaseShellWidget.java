@@ -13,7 +13,7 @@ package org.trinity.shell.api.widget;
 
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.Painter;
@@ -44,8 +44,8 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  * 
  * @see org.trinity.foundation.api.render.binding
  */
-@NotThreadSafe
-public class BaseShellWidget extends AbstractShellSurface implements ShellWidget {
+@ThreadSafe
+public abstract class BaseShellWidget extends AbstractShellSurface implements ShellWidget {
 
 	private final Painter painter;
 	private final BaseShellWidgetGeometryDelegate shellNodeGeometryDelegate = new BaseShellWidgetGeometryDelegate(this);
@@ -79,6 +79,13 @@ public class BaseShellWidget extends AbstractShellSurface implements ShellWidget
 		doReparent(false);
 		this.painter.bindView();
 	}
+
+	@ViewReference
+	public final Object getView() {
+		return getViewImpl();
+	}
+
+	protected abstract Object getViewImpl();
 
 	@Override
 	public Painter getPainter() {

@@ -11,32 +11,32 @@
  */
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
-import org.trinity.foundation.api.display.event.DestroyNotify;
-import org.trinity.foundation.render.qt.impl.QJRenderEventConversion;
+import org.trinity.foundation.api.display.input.Momentum;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
-import com.trolltech.qt.core.QObject;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
 
 @Bind(multiple = true)
+@To(To.Type.INTERFACES)
 @Singleton
-public class QJDestroyConversion implements QJRenderEventConversion {
+public class ButtonPressedConversion extends AbstractButtonConversion {
 
-	QJDestroyConversion() {
-	}
-
-	@Override
-	public DestroyNotify convertEvent(	final Object view,
-										final QObject eventProducer,
-										final QEvent qEventz) {
-		return new DestroyNotify();
+	@Inject
+	ButtonPressedConversion() {
 	}
 
 	@Override
 	public Type getQEventType() {
-		return QEvent.Type.Close;
+		return QEvent.Type.MouseButtonPress;
+	}
+
+	@Override
+	public Momentum getMomentum() {
+		return Momentum.STARTED;
 	}
 }

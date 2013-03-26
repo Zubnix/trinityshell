@@ -11,41 +11,32 @@
  */
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
-import org.trinity.foundation.api.display.event.FocusLostNotify;
-import org.trinity.foundation.api.display.event.FocusNotify;
-import org.trinity.foundation.render.qt.impl.QJRenderEventConversion;
+import org.trinity.foundation.api.display.input.Momentum;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
-import com.trolltech.qt.core.QObject;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
 
-/**
- * A <code>QFusionDestroyConverter</code> takes a <code>QFocusEvent</code> and
- * it's <code>DisplayEventTarget</code> as input and converts it to a
- * <code>FocusNotify</code>.
- * 
- * @author Erik De Rijcke
- * @since 1.0
- */
 @Bind(multiple = true)
+@To(To.Type.INTERFACES)
 @Singleton
-public class QJFocusLostConversion implements QJRenderEventConversion {
+public class KeyReleasedConversion extends AbstractKeyConversion {
 
-	QJFocusLostConversion() {
+	@Inject
+	KeyReleasedConversion() {
 	}
 
 	@Override
-	public FocusNotify convertEvent(final Object view,
-									final QObject eventProducer,
-									final QEvent qEvent) {
-		return new FocusLostNotify();
+	public Momentum getMomemtum() {
+		return Momentum.STOPPED;
 	}
 
 	@Override
 	public Type getQEventType() {
-		return QEvent.Type.FocusOut;
+		return QEvent.Type.KeyRelease;
 	}
 }

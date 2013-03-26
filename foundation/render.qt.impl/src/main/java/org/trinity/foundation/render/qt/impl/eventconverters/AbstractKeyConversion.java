@@ -5,13 +5,13 @@ import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.Momentum;
-import org.trinity.foundation.render.qt.impl.QJRenderEventConversion;
+import org.trinity.foundation.render.qt.impl.RenderEventConversion;
 
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QKeyEvent;
 
-public abstract class AbstractQJKeyConversion implements QJRenderEventConversion {
+public abstract class AbstractKeyConversion implements RenderEventConversion {
 
 	@Override
 	public KeyNotify convertEvent(	final Object view,

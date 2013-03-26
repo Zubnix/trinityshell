@@ -9,28 +9,30 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.foundation.render.qt.impl.painter.routine;
+package org.trinity.foundation.render.qt.impl.painter;
 
 import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.render.qt.impl.QJRenderEventConverter;
+import org.trinity.foundation.render.qt.impl.RenderEventConverter;
 
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.core.QObject;
 
-public class QJViewEventTracker extends QObject {
+public class ViewEventTracker extends QObject {
 
 	private final AsyncListenable eventTarget;
-	private final QJRenderEventConverter renderEventConverter;
+	private final RenderEventConverter renderEventConverter;
 	private final QObject view;
 
-	QJViewEventTracker(	final QJRenderEventConverter qjRenderEventConverter,
-						final AsyncListenable target,
-						final QObject view) {
+	@AssistedInject
+	ViewEventTracker(	final RenderEventConverter qjRenderEventConverter,
+						@Assisted final AsyncListenable target,
+						@Assisted final QObject view) {
 		this.renderEventConverter = qjRenderEventConverter;
 		this.eventTarget = target;
 		this.view = view;
-		this.view.installEventFilter(this);
 	}
 
 	@Override
@@ -40,11 +42,14 @@ public class QJViewEventTracker extends QObject {
 		boolean eventConsumed = false;
 		if (isViewEvent(eventProducer,
 						qEvent)) {
-
+			if (qEvent.type() == Type.Destroy) {
+				eventProducer.removeEventFilter(this);
+			}
 			eventConsumed = this.renderEventConverter.convertRenderEvent(	this.eventTarget,
 																			this.view,
 																			eventProducer,
 																			qEvent);
+
 		}
 		return eventConsumed;
 	}
@@ -52,6 +57,6 @@ public class QJViewEventTracker extends QObject {
 	private boolean isViewEvent(final QObject eventProducer,
 								final QEvent qEvent) {
 		return (qEvent.type() == Type.Enter) || (qEvent.type() == Type.Leave) || (qEvent.type() == Type.FocusIn)
-				|| (qEvent.type() == Type.FocusOut);
+				|| (qEvent.type() == Type.FocusOut) || (qEvent.type() == Type.Destroy);
 	}
 }

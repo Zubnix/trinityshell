@@ -26,12 +26,12 @@ import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QWidget;
 
 @ThreadSafe
-public class QJDisplaySurfaceHandle implements DisplaySurfaceHandle {
+public class RenderDisplaySurfaceHandle implements DisplaySurfaceHandle {
 
 	private final WeakReference<QWidget> visualReference;
 	private volatile boolean visualDestroyed = false;
 
-	public QJDisplaySurfaceHandle(final QWidget visual) {
+	public RenderDisplaySurfaceHandle(final QWidget visual) {
 		this.visualReference = new WeakReference<QWidget>(visual);
 		installDestroyListener();
 	}
@@ -40,14 +40,14 @@ public class QJDisplaySurfaceHandle implements DisplaySurfaceHandle {
 		final Runnable destroyListener = new Runnable() {
 			@Override
 			public void run() {
-				final QWidget visual = QJDisplaySurfaceHandle.this.visualReference.get();
+				final QWidget visual = RenderDisplaySurfaceHandle.this.visualReference.get();
 				if (visual != null) {
 					visual.installEventFilter(new QObject() {
 						@Override
 						public boolean eventFilter(	final QObject qObject,
 													final QEvent qEvent) {
 							if ((qEvent.type() == QEvent.Type.Destroy) && qObject.equals(visual)) {
-								QJDisplaySurfaceHandle.this.visualDestroyed = true;
+								RenderDisplaySurfaceHandle.this.visualDestroyed = true;
 							}
 							return false;
 						}
@@ -78,9 +78,9 @@ public class QJDisplaySurfaceHandle implements DisplaySurfaceHandle {
 		final FutureTask<Integer> getHandleTask = new FutureTask<Integer>(new Callable<Integer>() {
 			@Override
 			public Integer call() throws Exception {
-				final QWidget visual = QJDisplaySurfaceHandle.this.visualReference.get();
+				final QWidget visual = RenderDisplaySurfaceHandle.this.visualReference.get();
 				int visualId = 0;
-				if ((visual != null) && !QJDisplaySurfaceHandle.this.visualDestroyed) {
+				if ((visual != null) && !RenderDisplaySurfaceHandle.this.visualDestroyed) {
 					visualId = (int) visual.effectiveWinId();
 				}
 				return Integer.valueOf(visualId);

@@ -21,6 +21,12 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 		this.listenableExecutorService = postingExecutorService;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * 
+	 * @see EventBus#register(Object)
+	 */
 	@Override
 	public void register(final Object object) {
 		register(	object,
@@ -44,6 +50,12 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 												null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * 
+	 * @see EventBus#unregister(Object)
+	 */
 	@Override
 	public void unregister(final Object object) {
 		this.listenableExecutorService.submit(	new Runnable() {
@@ -56,6 +68,12 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 												null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * 
+	 * @see EventBus#post(Object)
+	 */
 	@Override
 	public void post(final Object event) {
 		this.listenableExecutorService.submit(	new Runnable() {

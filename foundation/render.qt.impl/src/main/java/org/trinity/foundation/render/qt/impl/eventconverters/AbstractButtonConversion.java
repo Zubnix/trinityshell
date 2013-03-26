@@ -6,13 +6,13 @@ import org.trinity.foundation.api.display.input.Button;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.api.display.input.PointerInput;
-import org.trinity.foundation.render.qt.impl.QJRenderEventConversion;
+import org.trinity.foundation.render.qt.impl.RenderEventConversion;
 
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QMouseEvent;
 
-public abstract class AbstractQJButtonConversion implements QJRenderEventConversion {
+public abstract class AbstractButtonConversion implements RenderEventConversion {
 
 	@Override
 	public DisplayEvent convertEvent(	final Object view,
