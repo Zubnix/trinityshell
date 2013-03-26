@@ -21,22 +21,22 @@ import org.trinity.shell.api.scene.ShellNodeTransformation;
 // TODO documentation
 /**
  * A <code>ShellGeoVExecutor</code> executes the actual geometry changes for a
- * {@link ShellVirtualNode}.
+ * {@link ShellVirtualSurface}.
  * 
  * @author Erik De Rijcke
  * @since 1.0
  */
-public class ShellVirtualNodeExecutor implements ShellNodeGeometryDelegate {
+public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
 
-	private final ShellVirtualNode shellVirtualNode;
+	private final ShellVirtualSurface shellVirtualSurface;
 
-	public ShellVirtualNodeExecutor(final ShellVirtualNode shellVirtualNode) {
-		this.shellVirtualNode = shellVirtualNode;
+	public ShellVirtualSurfaceExecutor(final ShellVirtualSurface shellVirtualSurface) {
+		this.shellVirtualSurface = shellVirtualSurface;
 	}
 
 	@Override
-	public ShellVirtualNode getShellNode() {
-		return this.shellVirtualNode;
+	public ShellVirtualSurface getShellNode() {
+		return this.shellVirtualSurface;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class ShellVirtualNodeExecutor implements ShellNodeGeometryDelegate {
 
 	@Override
 	public void move(final Coordinate position) {
-		final ShellVirtualNode shellNode = getShellNode();
+		final ShellVirtualSurface shellNode = getShellNode();
 		final ShellNodeTransformation shellNodeTransformation = shellNode.toGeoTransformationImpl();
 
 		final Coordinate deltaPosition = shellNodeTransformation.getDeltaRect().getPosition();
@@ -121,7 +121,7 @@ public class ShellVirtualNodeExecutor implements ShellNodeGeometryDelegate {
 
 	@Override
 	public void reparent(final ShellNodeParent parent) {
-		final ShellVirtualNode shellNode = getShellNode();
+		final ShellVirtualSurface shellNode = getShellNode();
 
 		final AbstractShellNode[] children = shellNode.getChildrenImpl();
 

@@ -14,7 +14,6 @@ class RootView extends QFrame {
 
 	@ObservableCollection(value = "topBar", view = BarItemView.class)
 	BarView topBarView = new BarView(this) {
-
 		QHBoxLayout topBarLayout = new QHBoxLayout(RootView.this.topBarView);
 		{
 			setLayout(this.topBarLayout);

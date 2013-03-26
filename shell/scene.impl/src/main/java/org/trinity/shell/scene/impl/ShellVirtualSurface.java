@@ -39,16 +39,16 @@ import de.devsurf.injection.guice.annotations.To.Type;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(value = @Named("ShellVirtualNode"), to = @To(value = Type.CUSTOM, customs = { ShellNode.class,
+@Bind(value = @Named("ShellVirtualSurface"), to = @To(value = Type.CUSTOM, customs = { ShellNode.class,
 		ShellNodeParent.class }))
-public class ShellVirtualNode extends AbstractShellNodeParent {
+public class ShellVirtualSurface extends AbstractShellNodeParent {
 
 	@Inject
-	protected ShellVirtualNode(@Named("ShellExecutor") final ListeningExecutorService shellExecutor) {
+	protected ShellVirtualSurface(@Named("ShellExecutor") final ListeningExecutorService shellExecutor) {
 		super(shellExecutor);
 	}
 
-	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellVirtualNodeExecutor(this);
+	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellVirtualSurfaceExecutor(this);
 
 	@Override
 	public ShellNodeGeometryDelegate getShellNodeExecutor() {

@@ -91,9 +91,9 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 
 	private ListenableFuture<ShellSurfaceParent> createRootShellSurface() {
 		final ListenableFuture<DisplaySurface> rootDisplaySurfaceFuture = this.displayServer.getRootDisplayArea();
-		// get the root display surface, which will be given to us by the
-		// display thread. next schedule a task on the shell thread to wrap it
-		// in a root shell surface.
+		// Get the root display surface, which will be given to us by the
+		// display thread, next we schedule a task on the shell thread to wrap
+		// it in a root shell surface.
 		return transform(	rootDisplaySurfaceFuture,
 							new AsyncFunction<DisplaySurface, ShellSurfaceParent>() {
 								@Override

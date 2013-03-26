@@ -20,7 +20,14 @@ public class ImageDefinition {
 	}
 
 	public byte[] getImageData() {
-		return this.imageData;
+		// immutable!
+		final byte[] imageDataCopy = new byte[this.imageData.length];
+		System.arraycopy(	this.imageData,
+							0,
+							imageDataCopy,
+							0,
+							this.imageData.length);
+		return imageDataCopy;
 	}
 
 	public Size getImageSize() {

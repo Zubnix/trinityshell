@@ -5,6 +5,8 @@ import java.util.Set;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shell.api.widget.BaseShellWidget;
+import org.trinity.shellplugin.wm.api.BottomBarItem;
+import org.trinity.shellplugin.wm.api.TopBarItem;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
@@ -25,10 +27,14 @@ public class ShellRootWidget extends BaseShellWidget {
 	@Inject
 	protected ShellRootWidget(	final ShellSurfaceFactory shellSurfaceFactory,
 								@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
-								final PainterFactory painterFactory) {
+								final PainterFactory painterFactory,
+								final Set<TopBarItem> topBarItems,
+								final Set<BottomBarItem> bottomBarItems) {
 		super(	shellSurfaceFactory,
 				shellExecutor,
 				painterFactory);
+		addTopBarItems(topBarItems);
+		addBottomBarItems(bottomBarItems);
 	}
 
 	@Override
@@ -40,9 +46,7 @@ public class ShellRootWidget extends BaseShellWidget {
 		return this.topBar;
 	}
 
-	@Inject
-	@Named("TopBarItem")
-	public void addTopBarItems(final Set<?> topBarItems) {
+	private void addTopBarItems(final Set<TopBarItem> topBarItems) {
 		try {
 			this.topBar.getReadWriteLock().writeLock().lock();
 			this.topBar.addAll(topBarItems);
@@ -55,9 +59,7 @@ public class ShellRootWidget extends BaseShellWidget {
 		return this.bottomBar;
 	}
 
-	@Inject
-	@Named("BottomBarItem")
-	public void addBottomBarItems(final Set<?> bottomBarItems) {
+	private void addBottomBarItems(final Set<BottomBarItem> bottomBarItems) {
 		try {
 			this.bottomBar.getReadWriteLock().writeLock().lock();
 			this.bottomBar.addAll(bottomBarItems);

@@ -21,7 +21,6 @@ import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -45,7 +44,6 @@ public class XDisplayServer implements DisplayServer {
 	@Inject
 	XDisplayServer(	final XConnection xConnection,
 					final XWindowCache xWindowCache,
-					@Named("DisplayEventBus") final EventBus displayEventBus,
 					final XEventPump xEventPump,
 					@Named("XExecutor") final ListeningExecutorService xExecutor) {
 

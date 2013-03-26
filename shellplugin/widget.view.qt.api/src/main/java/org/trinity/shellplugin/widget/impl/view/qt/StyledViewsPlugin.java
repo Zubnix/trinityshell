@@ -47,7 +47,6 @@ public class StyledViewsPlugin extends AbstractIdleService implements ShellPlugi
 			}
 		});
 		QApplication.invokeLater(futureTask);
-
 	}
 
 	@Override

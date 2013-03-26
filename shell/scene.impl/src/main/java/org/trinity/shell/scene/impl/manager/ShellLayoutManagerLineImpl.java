@@ -45,7 +45,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
 // be negative. childs with size 0, ...)
 // TODO refactor to reuse code and for cleaner reading
-// =>rewrite this...
+// =>rewrite this sh*t...
 @Bind(to = @To(value = Type.CUSTOM, customs = ShellLayoutManagerLine.class))
 public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
 

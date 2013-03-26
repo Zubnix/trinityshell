@@ -16,6 +16,9 @@ import java.util.Set;
 import org.trinity.shell.api.plugin.ShellPlugin;
 import org.trinity.shell.api.plugin.ShellPluginsRunner;
 
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.Service.Listener;
+import com.google.common.util.concurrent.Service.State;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -35,6 +38,44 @@ public class ShellPluginsRunnerImpl implements ShellPluginsRunner {
 	@Override
 	public void startAll() {
 		for (final ShellPlugin shellPlugin : this.shellPlugins) {
+			shellPlugin.addListener(new Listener() {
+
+										@Override
+										public void terminated(final State from) {
+											System.err.println(String.format(	"%s TERMINATED (was %s)",
+																				shellPlugin,
+																				from));
+										}
+
+										@Override
+										public void stopping(final State from) {
+											System.err.println(String.format(	"%s STOPPING (was %s)",
+																				shellPlugin,
+																				from));
+										}
+
+										@Override
+										public void starting() {
+											System.err.println(String.format(	"%s STARTING",
+																				shellPlugin));
+										}
+
+										@Override
+										public void running() {
+											System.err.println(String.format(	"%s RUNNING",
+																				shellPlugin));
+										}
+
+										@Override
+										public void failed(	final State from,
+															final Throwable failure) {
+											System.err.println(String.format(	"%s FAILED (was %s)",
+																				shellPlugin,
+																				from));
+											failure.printStackTrace();
+										}
+									},
+									MoreExecutors.sameThreadExecutor());
 			shellPlugin.start();
 		}
 	}
