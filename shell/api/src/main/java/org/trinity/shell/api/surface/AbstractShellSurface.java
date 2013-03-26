@@ -11,6 +11,10 @@
  */
 package org.trinity.shell.api.surface;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.util.concurrent.Futures.addCallback;
+import static com.google.common.util.concurrent.Futures.transform;
+
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -31,11 +35,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
-import static com.google.common.util.concurrent.Futures.transform;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * An abstract base implementation of {@link ShellSurface}. Implementations that
@@ -374,14 +373,10 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	public void handleGeometryRequestEvent(final GeometryRequest geometryRequest) {
 		final Rectangle currentGeometry = getGeometryImpl();
 		final Rectangle requestedGeometry = geometryRequest.getGeometry();
-		final int newX = geometryRequest.configureX() ? requestedGeometry.getPosition().getX() : currentGeometry
-				.getPosition().getX();
-		final int newY = geometryRequest.configureY() ? requestedGeometry.getPosition().getY() : currentGeometry
-				.getPosition().getY();
-		final int newWidth = geometryRequest.configureWidth() ? requestedGeometry.getSize().getWidth()
-				: currentGeometry.getSize().getWidth();
-		final int newHeight = geometryRequest.configureHeight() ? requestedGeometry.getSize().getHeight()
-				: currentGeometry.getSize().getHeight();
+		final int newX = geometryRequest.configureX() ? requestedGeometry.getPosition().getX() : currentGeometry.getPosition().getX();
+		final int newY = geometryRequest.configureY() ? requestedGeometry.getPosition().getY() : currentGeometry.getPosition().getY();
+		final int newWidth = geometryRequest.configureWidth() ? requestedGeometry.getSize().getWidth() : currentGeometry.getSize().getWidth();
+		final int newHeight = geometryRequest.configureHeight() ? requestedGeometry.getSize().getHeight() : currentGeometry.getSize().getHeight();
 
 		if (geometryRequest.configureX() || geometryRequest.configureY()) {
 			setPositionImpl(newX,

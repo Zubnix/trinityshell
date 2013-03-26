@@ -8,16 +8,15 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
 @ThreadSafe
 public class AsyncListenableEventBus extends EventBus implements AsyncListenable {
 
 	private final Map<Object, AsyncEventBus> asyncEventBusByListener = new WeakHashMap<Object, AsyncEventBus>();
-	private final ListeningExecutorService listenableExecutorService;
+	private final ExecutorService listenableExecutorService;
 
-	public AsyncListenableEventBus(final ListeningExecutorService postingExecutorService) {
+	public AsyncListenableEventBus(final ExecutorService postingExecutorService) {
 		this.listenableExecutorService = postingExecutorService;
 	}
 
@@ -42,9 +41,8 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 													public void run() {
 														final AsyncEventBus asyncEventBus = new AsyncEventBus(executor);
 														asyncEventBus.register(object);
-														AsyncListenableEventBus.this.asyncEventBusByListener
-																.put(	object,
-																		asyncEventBus);
+														AsyncListenableEventBus.this.asyncEventBusByListener.put(	object,
+																													asyncEventBus);
 													}
 												},
 												null);
@@ -61,8 +59,7 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 		this.listenableExecutorService.submit(	new Runnable() {
 													@Override
 													public void run() {
-														AsyncListenableEventBus.this.asyncEventBusByListener
-																.remove(object);
+														AsyncListenableEventBus.this.asyncEventBusByListener.remove(object);
 													}
 												},
 												null);
@@ -79,8 +76,7 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 		this.listenableExecutorService.submit(	new Runnable() {
 													@Override
 													public void run() {
-														for (final AsyncEventBus asyncEventBus : AsyncListenableEventBus.this.asyncEventBusByListener
-																.values()) {
+														for (final AsyncEventBus asyncEventBus : AsyncListenableEventBus.this.asyncEventBusByListener.values()) {
 															asyncEventBus.post(event);
 														}
 													}

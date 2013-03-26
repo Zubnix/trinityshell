@@ -52,10 +52,12 @@ public class XDisplayServer implements DisplayServer {
 		this.xEventPump = xEventPump;
 		this.xExecutor = xExecutor;
 		this.displayEventBus = new AsyncListenableEventBus(this.xExecutor);
+
+		open();
 	}
 
 	@Override
-	public ListenableFuture<Void> close() {
+	public ListenableFuture<Void> quit() {
 
 		return this.xExecutor.submit(	new Runnable() {
 
@@ -79,7 +81,6 @@ public class XDisplayServer implements DisplayServer {
 		});
 	}
 
-	@Override
 	public ListenableFuture<Void> open() {
 		// FIXME from config
 		final String displayName = System.getenv("DISPLAY");
@@ -90,8 +91,7 @@ public class XDisplayServer implements DisplayServer {
 											public void run() {
 												XDisplayServer.this.xConnection.open(	displayName,
 																						0);
-												if (LibXcb.xcb_connection_has_error(XDisplayServer.this.xConnection
-														.getConnectionReference()) != 0) {
+												if (LibXcb.xcb_connection_has_error(XDisplayServer.this.xConnection.getConnectionReference()) != 0) {
 													throw new Error("Cannot open display\n");
 												}
 												XDisplayServer.this.xEventPump.start();

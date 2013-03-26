@@ -44,7 +44,5 @@ public interface DisplayServer extends AsyncListenable {
 	 * This method does not shut down the underlying native display, it merely
 	 * closes the connection to the underlying native display.
 	 */
-	ListenableFuture<Void> close();
-
-	ListenableFuture<Void> open();
+	ListenableFuture<Void> quit();
 }

@@ -42,14 +42,14 @@ public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlug
 
 	@Override
 	protected void startUp() throws Exception {
-		this.display.open().get(2,
-								TimeUnit.SECONDS);
+		// this.display.open().get(2,
+		// TimeUnit.SECONDS);
 	}
 
 	@Override
 	protected void shutDown() throws Exception {
-		this.display.close().get(	2,
-									TimeUnit.SECONDS);
+		this.display.quit().get(2,
+								TimeUnit.SECONDS);
 		this.shellExecutor.shutdown();
 		this.shellExecutor.awaitTermination(2,
 											TimeUnit.SECONDS);

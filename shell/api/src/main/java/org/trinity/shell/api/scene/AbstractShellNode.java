@@ -11,6 +11,8 @@
  */
 package org.trinity.shell.api.scene;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.concurrent.ThreadSafe;
@@ -42,8 +44,6 @@ import org.trinity.shell.api.scene.event.ShellNodeShowedEvent;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 // TODO Let geo events travel downwards to children to notify them that one of
 // their parents has changed?
 
@@ -55,12 +55,14 @@ import static com.google.common.base.Preconditions.checkArgument;
 @ThreadSafe
 public abstract class AbstractShellNode extends AbstractAsyncShellNode implements ShellNode {
 
-	private Coordinate position;
-	private Coordinate desiredPosition;
-
-	private Size size;
-	private Size desiredSize;
-
+	private Coordinate position = new Coordinate(	0,
+													0);
+	private Coordinate desiredPosition = new Coordinate(0,
+														0);
+	private Size size = new Size(	5,
+									5);
+	private Size desiredSize = new Size(5,
+										5);
 	private boolean visible;
 
 	private AbstractShellNodeParent parent;
