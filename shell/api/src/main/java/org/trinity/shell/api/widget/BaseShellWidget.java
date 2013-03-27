@@ -11,14 +11,13 @@
  */
 package org.trinity.shell.api.widget;
 
-import static com.google.common.util.concurrent.Futures.addCallback;
-
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.Painter;
+import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
@@ -30,6 +29,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import static com.google.common.util.concurrent.Futures.addCallback;
 
 /**
  * An {@link AbstractShellSurfaceParent} with a basic
@@ -52,9 +53,9 @@ public abstract class BaseShellWidget extends AbstractShellSurface implements Sh
 	@Inject
 	protected BaseShellWidget(	final ShellSurfaceFactory shellSurfaceFactory,
 								@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
-								final Painter painter) {
+								final PainterFactory painterFactory) {
 		super(shellExecutor);
-		this.painter = painter;
+		this.painter = painterFactory.createPainter(this);
 		final ListenableFuture<ShellSurfaceParent> rootShellSurfaceFuture = shellSurfaceFactory.getRootShellSurface();
 		addCallback(rootShellSurfaceFuture,
 					new FutureCallback<ShellSurfaceParent>() {
