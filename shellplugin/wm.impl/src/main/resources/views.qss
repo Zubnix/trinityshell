@@ -1,11 +1,11 @@
-RootView {
+#RootView {
 	background-color: #fff;
 }
 
-RootView > BarView {
+#RootView > #BarView {
 	border: 1px solid black;
 }
 
-RootView > BarView > BarItemView {
+#RootView > #BarView > #BarItemView {
 	border: 1px solid black;
 }

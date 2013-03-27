@@ -1,11 +1,14 @@
 package org.trinity.shellplugin.wm.impl.view;
 
 import com.trolltech.qt.gui.QFrame;
-import com.trolltech.qt.gui.QWidget;
 
-public class BarView extends QFrame {
+class BarView extends QFrame {
+	BarView(final RootView rootView) {
+		super(rootView);
+	}
 
-	public BarView(QWidget parent) {
-		super(parent);
+	{
+		// workaround for jambi css bug
+		setObjectName(getClass().getSimpleName());
 	}
 }

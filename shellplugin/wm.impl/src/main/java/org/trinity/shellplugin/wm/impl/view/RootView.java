@@ -54,10 +54,14 @@ class RootView extends QFrame {
 	QVBoxLayout rootLayout = new QVBoxLayout(this);
 
 	{
+		// workaround for jambi css bug
+		setObjectName(getClass().getSimpleName());
+
 		setLayout(this.rootLayout);
 		this.rootLayout.addWidget(this.topBarView);
 		this.rootLayout.addStretch();
 		this.rootLayout.addWidget(this.bottomBarView);
+		this.rootLayout.layout();
 
 		this.topBarView.show();
 		this.bottomBarView.show();

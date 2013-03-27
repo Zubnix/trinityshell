@@ -13,7 +13,12 @@ import com.trolltech.qt.gui.QPixmap;
 		@PropertySlot(propertyName = "text", methodName = "setText", argumentTypes = { String.class }),// HasText
 		@PropertySlot(propertyName = "imageDefinition", methodName = "setImageDefinition", argumentTypes = { ImageDefinition.class }) // HasImageDefinition
 })
-public class BarItemView extends QLabel {
+class BarItemView extends QLabel {
+
+	{
+		// workaround for jambi css bug
+		setObjectName(getClass().getSimpleName());
+	}
 
 	public void setImageDefinition(final ImageDefinition imageDefinition) {
 		final Size imageSize = imageDefinition.getImageSize();
