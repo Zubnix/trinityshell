@@ -17,7 +17,12 @@ import java.util.concurrent.ThreadFactory;
 
 import com.trolltech.qt.gui.QApplication;
 
-public class RenderApplication {
+public class RenderApplication extends QApplication {
+
+	public RenderApplication() {
+		super(	"Trinity QtJambi Renderer",
+				new String[] {});
+	}
 
 	private static final ExecutorService qRenderEventPump = Executors.newSingleThreadExecutor(new ThreadFactory() {
 
