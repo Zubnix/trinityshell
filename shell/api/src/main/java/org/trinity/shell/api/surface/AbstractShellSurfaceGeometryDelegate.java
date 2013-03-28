@@ -42,8 +42,8 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	@Override
 	public void move(final Coordinate position) {
 
-		final AbstractShellNodeParent directParent = getShellNode().getParentImpl();
-		final Coordinate newRelativePosition = calculateRelativePosition(	directParent,
+		final AbstractShellNodeParent shellParent = getShellNode().getParentImpl();
+		final Coordinate newRelativePosition = calculateRelativePosition(	shellParent,
 																			position);
 
 		final int newRelativeX = newRelativePosition.getX();
@@ -56,9 +56,9 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	public void moveResize(	final Coordinate position,
 							final Size size) {
 
-		final AbstractShellNodeParent directParent = getShellNode().getParentImpl();
+		final AbstractShellNodeParent shellParent = getShellNode().getParentImpl();
 
-		final Coordinate newRelativePosition = calculateRelativePosition(	directParent,
+		final Coordinate newRelativePosition = calculateRelativePosition(	shellParent,
 																			position);
 
 		final int newRelativeX = newRelativePosition.getX();
@@ -78,7 +78,7 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	 * the current relative coordinates in 'shell space' to 'display space' used
 	 * by managed {@link ShellSurface}.
 	 * 
-	 * @param directParent
+	 * @param shellParent
 	 *            the current direct parent of the managed {@code ShellSurface}.
 	 * @param newRelativeX
 	 *            The current relative X coordinate of the managed
@@ -89,17 +89,17 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	 * @return a {@link Coordinate} in 'display space'.
 	 *************************************** 
 	 */
-	protected Coordinate calculateRelativePosition(	final AbstractShellNodeParent directParent,
+	protected Coordinate calculateRelativePosition(	final AbstractShellNodeParent shellParent,
 													final Coordinate newRelativePosition) {
 
-		final AbstractShellSurface parentTypedSurface = findClosestSameTypeSurface(directParent);
+		final AbstractShellSurface parentTypedSurface = findClosestSameTypeSurface(shellParent);
 
 		if (parentTypedSurface == null) {
 			return newRelativePosition;
 		}
 
-		final Coordinate absolutePositionDirectParent = getAbsolutePosition(directParent);
-		final Coordinate newAbsolutePosition = absolutePositionDirectParent.add(newRelativePosition);
+		final Coordinate absolutePositionShellParent = getAbsolutePosition(shellParent);
+		final Coordinate newAbsolutePosition = absolutePositionShellParent.add(newRelativePosition);
 
 		final Coordinate sameTypeParentPosition = getAbsolutePosition(parentTypedSurface);
 		final Coordinate corRelativeToTypedParent = newAbsolutePosition.subtract(sameTypeParentPosition);
@@ -109,13 +109,13 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 
 	private Coordinate getAbsolutePosition(final AbstractShellNode node) {
 		final Coordinate childPosition = node.getPositionImpl();
-		final AbstractShellNodeParent directParent = node.getParentImpl();
+		final AbstractShellNodeParent shellParent = node.getParentImpl();
 
-		if ((directParent == null) || directParent.equals(this)) {
+		if ((shellParent == null) || shellParent.equals(node)) {
 			return childPosition;
 		}
 
-		final Coordinate absoluteParentPosition = getAbsolutePosition(directParent);
+		final Coordinate absoluteParentPosition = getAbsolutePosition(shellParent);
 		final Coordinate absolutePosition = childPosition.add(absoluteParentPosition);
 
 		return absolutePosition;

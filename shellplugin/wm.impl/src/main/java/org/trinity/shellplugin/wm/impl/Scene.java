@@ -34,5 +34,7 @@ public class Scene {
 											new ShellLayoutPropertyLine(1,
 																		new Margins(5)));
 		this.shellRootWidget.layout();
+		client.doReparent();
+		client.doShow();
 	}
 }

@@ -1,6 +1,7 @@
 package org.trinity.shellplugin.wm.impl;
 
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -15,6 +16,13 @@ public class Module extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(ListeningExecutorService.class).annotatedWith(Names.named("WmExecutor"))
-				.toInstance(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()));
+				.toInstance(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor(new ThreadFactory() {
+
+					@Override
+					public Thread newThread(final Runnable r) {
+						return new Thread(	r,
+											"wm-executor");
+					}
+				})));
 	}
 }

@@ -1,6 +1,7 @@
 package org.trinity.shell.api;
 
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import org.trinity.shell.api.plugin.ShellPlugin;
 
@@ -34,6 +35,13 @@ public class Module extends AbstractModule {
 	protected void configure() {
 		bind(EventBus.class).annotatedWith(Names.named("ShellEventBus")).toInstance(new EventBus());
 		bind(ListeningExecutorService.class).annotatedWith(Names.named("ShellExecutor"))
-				.toInstance(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()));
+				.toInstance(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor(new ThreadFactory() {
+
+					@Override
+					public Thread newThread(final Runnable r) {
+						return new Thread(	r,
+											"shell-executor");
+					}
+				})));
 	}
 }

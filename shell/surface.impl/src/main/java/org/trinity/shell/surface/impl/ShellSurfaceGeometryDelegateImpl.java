@@ -11,8 +11,6 @@
  */
 package org.trinity.shell.surface.impl;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.shell.api.scene.AbstractShellNode;
@@ -22,6 +20,8 @@ import org.trinity.shell.api.surface.AbstractAsyncShellSurface;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.AbstractShellSurfaceGeometryDelegate;
 import org.trinity.shell.api.surface.ShellSurface;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 public class ShellSurfaceGeometryDelegateImpl extends AbstractShellSurfaceGeometryDelegate {
 
@@ -47,7 +47,6 @@ public class ShellSurfaceGeometryDelegateImpl extends AbstractShellSurfaceGeomet
 		}
 
 		if (square instanceof AbstractShellSurface) {
-
 			return (AbstractShellSurface) square;
 		}
 

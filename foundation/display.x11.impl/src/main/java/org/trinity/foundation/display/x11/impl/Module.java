@@ -12,6 +12,7 @@
 package org.trinity.foundation.display.x11.impl;
 
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
@@ -32,7 +33,13 @@ public class Module extends AbstractModule {
 	protected void configure() {
 		bind(EventBus.class).annotatedWith(Names.named("XEventBus")).toInstance(new EventBus());
 		bind(ListeningExecutorService.class).annotatedWith(Names.named("XExecutor"))
-				.toInstance(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()));
+				.toInstance(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor(new ThreadFactory() {
+					@Override
+					public Thread newThread(final Runnable arg0) {
+						return new Thread(	arg0,
+											"x-executor");
+					}
+				})));
 
 		install(new FactoryModuleBuilder().implement(	DisplaySurface.class,
 														XWindow.class).build(DisplaySurfaceFactory.class));
