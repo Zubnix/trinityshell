@@ -102,6 +102,7 @@ public class XWindow implements DisplaySurface {
 											public void run() {
 												LibXcb.xcb_destroy_window(	getConnectionRef(),
 																			winId);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -131,6 +132,7 @@ public class XWindow implements DisplaySurface {
 																			(short) xcb_input_focus_t.XCB_INPUT_FOCUS_NONE,
 																			winId,
 																			time);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -153,6 +155,7 @@ public class XWindow implements DisplaySurface {
 																			winId,
 																			value_mask,
 																			value_list);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -166,9 +169,9 @@ public class XWindow implements DisplaySurface {
 
 											@Override
 											public void run() {
-
 												LibXcb.xcb_map_window(	getConnectionRef(),
 																		winId);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -191,6 +194,7 @@ public class XWindow implements DisplaySurface {
 																			winId,
 																			value_mask,
 																			value_list);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -216,6 +220,7 @@ public class XWindow implements DisplaySurface {
 																			winId,
 																			value_mask,
 																			value_list);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -238,6 +243,7 @@ public class XWindow implements DisplaySurface {
 																			winId,
 																			value_mask,
 																			value_list);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -261,6 +267,7 @@ public class XWindow implements DisplaySurface {
 																			parentId,
 																			(short) x,
 																			(short) y);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -285,6 +292,7 @@ public class XWindow implements DisplaySurface {
 																			winId,
 																			value_mask,
 																			value_list);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -298,6 +306,7 @@ public class XWindow implements DisplaySurface {
 											public void run() {
 												LibXcb.xcb_unmap_window(getConnectionRef(),
 																		winId);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -389,6 +398,7 @@ public class XWindow implements DisplaySurface {
 													winId,
 													xcb_cw_t.XCB_CW_EVENT_MASK,
 													values);
+				LibXcb.xcb_flush(getConnectionRef());
 			}
 		});
 	}
