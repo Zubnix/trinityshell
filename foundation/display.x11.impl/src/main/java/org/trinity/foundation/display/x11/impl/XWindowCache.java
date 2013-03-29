@@ -52,7 +52,7 @@ public class XWindowCache {
 		}
 	}
 
-	private final Cache<Integer, XWindow> xWindows = CacheBuilder.newBuilder().weakValues().build();
+	private final Cache<Integer, XWindow> xWindows = CacheBuilder.newBuilder().concurrencyLevel(1).build();
 	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
 
 	private final DisplaySurfaceFactory displaySurfaceFactory;
@@ -64,14 +64,14 @@ public class XWindowCache {
 
 	public XWindow getWindow(final int windowId) {
 
-		XWindow window = null;
 		final Integer windowID = Integer.valueOf(windowId);
 		final DisplaySurfaceHandle resourceHandle = new XWindowHandle(windowID);
+		XWindow window = null;
 		try {
 			window = this.xWindows.get(	Integer.valueOf(windowId),
 										new Callable<XWindow>() {
 											@Override
-											public XWindow call() throws Exception {
+											public XWindow call() {
 												final XWindow xWindow = (XWindow) XWindowCache.this.displaySurfaceFactory
 														.createDisplaySurface(resourceHandle);
 												xWindow.register(new DestroyListener(xWindow));
