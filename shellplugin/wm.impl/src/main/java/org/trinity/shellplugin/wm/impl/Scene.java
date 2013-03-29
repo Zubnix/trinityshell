@@ -32,7 +32,8 @@ public class Scene {
 		client.setParent(this.shellRootWidget);
 		this.rootLayoutManager.addChildNode(client,
 											new ShellLayoutPropertyLine(1,
-																		new Margins(5)));
+																		new Margins(0,
+																					20)));
 		this.shellRootWidget.layout();
 		client.doReparent();
 		client.doShow();

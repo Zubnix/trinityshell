@@ -2,10 +2,10 @@
 	background-color: #fff;
 }
 
-#RootView > #BarView {
+#BarView {
 	border: 1px solid black;
 }
 
-#RootView > #BarView > #BarItemView {
+#BarItemView {
 	border: 1px solid black;
 }
