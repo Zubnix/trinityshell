@@ -10,6 +10,7 @@ import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
+import com.google.common.base.Function;
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -41,17 +42,12 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 	public ListenableFuture<ShellSurface> createShellClientSurface(final DisplaySurface displaySurface) {
 		final ListenableFuture<ShellSurfaceParent> rootShellSurfaceFuture = getRootShellSurface();
 		return transform(	rootShellSurfaceFuture,
-							new AsyncFunction<ShellSurfaceParent, ShellSurface>() {
+							new Function<ShellSurfaceParent, ShellSurface>() {
 								@Override
-								public ListenableFuture<ShellSurface> apply(final ShellSurfaceParent rootShellSurface) {
-									return MoreExecutors.sameThreadExecutor().submit(new Callable<ShellSurface>() {
-										@Override
-										public ShellSurface call() {
-											return new ShellClientSurface(	ShellSurfaceFactoryImpl.this.shellExecutor,
-																			rootShellSurface,
-																			displaySurface);
-										}
-									});
+								public ShellSurface apply(final ShellSurfaceParent rootShellSurface) {
+									return new ShellClientSurface(	ShellSurfaceFactoryImpl.this.shellExecutor,
+																	rootShellSurface,
+																	displaySurface);
 								}
 							});
 	}
@@ -95,18 +91,11 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 		// display thread, next we schedule a task on the shell thread to wrap
 		// it in a root shell surface.
 		return transform(	rootDisplaySurfaceFuture,
-							new AsyncFunction<DisplaySurface, ShellSurfaceParent>() {
+							new Function<DisplaySurface, ShellSurfaceParent>() {
 								@Override
-								public ListenableFuture<ShellSurfaceParent> apply(final DisplaySurface input) {
-									return ShellSurfaceFactoryImpl.this.shellExecutor
-											.submit(new Callable<ShellSurfaceParent>() {
-												@Override
-												public ShellSurfaceParent call() {
-													ShellSurfaceFactoryImpl.this.rootShellSurface = new ShellRootSurface(	ShellSurfaceFactoryImpl.this.shellExecutor,
-																															input);
-													return ShellSurfaceFactoryImpl.this.rootShellSurface;
-												}
-											});
+								public ShellSurfaceParent apply(final DisplaySurface input) {
+									return new ShellRootSurface(ShellSurfaceFactoryImpl.this.shellExecutor,
+																input);
 								}
 							},
 							this.shellExecutor);
