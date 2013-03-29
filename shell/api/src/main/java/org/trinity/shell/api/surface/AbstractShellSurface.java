@@ -11,9 +11,7 @@
  */
 package org.trinity.shell.api.surface;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.util.concurrent.Futures.addCallback;
-import static com.google.common.util.concurrent.Futures.transform;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -29,12 +27,14 @@ import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.ShellNode;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+
+import static com.google.common.util.concurrent.Futures.addCallback;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * An abstract base implementation of {@link ShellSurface}. Implementations that
@@ -272,43 +272,24 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	 */
 	@Override
 	public Void syncGeoToDisplaySurfaceImpl() {
+		// do everything inline, else a geo request launched after
+		// syncGeoToDisplaySurface() might still return old geo values.
 
-		final ListenableFuture<DisplaySurface> displaySurfaceFuture = getDisplaySurface();
-		final ListenableFuture<Rectangle> displaySurfaceGeoFuture = transform(	displaySurfaceFuture,
-																				new AsyncFunction<DisplaySurface, Rectangle>() {
-																					@Override
-																					public ListenableFuture<Rectangle> apply(final DisplaySurface input)
-																							throws Exception {
-																						final ListenableFuture<Rectangle> displaySurfaceGeo = input
-																								.getGeometry();
-																						return displaySurfaceGeo;
-																					}
-																				});
-		addCallback(displaySurfaceGeoFuture,
-					new FutureCallback<Rectangle>() {
-						@Override
-						public void onSuccess(final Rectangle result) {
-							syncGeoGetGeometryCbImpl(result);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							// TODO how to handle error?
-							t.printStackTrace();
-						}
-					},
-					this.shellExecutor);
+		final DisplaySurface displaySurface = getDisplaySurfaceImpl();
+		try {
+			final Rectangle displaySurfaceGeo = displaySurface.getGeometry().get();
+			setPositionImpl(displaySurfaceGeo.getPosition());
+			setSizeImpl(displaySurfaceGeo.getSize());
+			doMoveResize(false);
+		} catch (final InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return null;
-	}
-
-	protected void syncGeoGetGeometryCbImpl(final Rectangle result) {
-		// TODO in future version we might want to take a geometry delegate into
-		// account to map from and to shell scene geometry and on screen
-		// geometry.
-		setPositionImpl(result.getPosition());
-		setSizeImpl(result.getSize());
-		doMoveResize(false);
 	}
 
 	@Override
@@ -365,10 +346,14 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	public void handleGeometryRequestEvent(final GeometryRequest geometryRequest) {
 		final Rectangle currentGeometry = getGeometryImpl();
 		final Rectangle requestedGeometry = geometryRequest.getGeometry();
-		final int newX = geometryRequest.configureX() ? requestedGeometry.getPosition().getX() : currentGeometry.getPosition().getX();
-		final int newY = geometryRequest.configureY() ? requestedGeometry.getPosition().getY() : currentGeometry.getPosition().getY();
-		final int newWidth = geometryRequest.configureWidth() ? requestedGeometry.getSize().getWidth() : currentGeometry.getSize().getWidth();
-		final int newHeight = geometryRequest.configureHeight() ? requestedGeometry.getSize().getHeight() : currentGeometry.getSize().getHeight();
+		final int newX = geometryRequest.configureX() ? requestedGeometry.getPosition().getX() : currentGeometry
+				.getPosition().getX();
+		final int newY = geometryRequest.configureY() ? requestedGeometry.getPosition().getY() : currentGeometry
+				.getPosition().getY();
+		final int newWidth = geometryRequest.configureWidth() ? requestedGeometry.getSize().getWidth()
+				: currentGeometry.getSize().getWidth();
+		final int newHeight = geometryRequest.configureHeight() ? requestedGeometry.getSize().getHeight()
+				: currentGeometry.getSize().getHeight();
 
 		if (geometryRequest.configureX() || geometryRequest.configureY()) {
 			setPositionImpl(newX,

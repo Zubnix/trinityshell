@@ -42,9 +42,10 @@ public class ShellClientSurface extends AbstractShellSurface {
 		this.displaySurface = clientDisplaySurface;
 		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegateImpl(this);
 
+		syncGeoToDisplaySurface();
+
 		setParent(rootShellSurface);
 		doReparent(false);
-		syncGeoToDisplaySurface();
 
 		subscribeToDisplaySurfaceEvents();
 	}
