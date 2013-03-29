@@ -38,11 +38,15 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import static java.lang.String.format;
+
+import static com.google.common.util.concurrent.Futures.addCallback;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -284,13 +288,26 @@ public class BinderImpl implements Binder {
 
 				for (int i = 0; i < contextCollection.size(); i++) {
 					final Object childViewDataContext = contextCollection.get(i);
-					final Object childView = this.childViewDelegate.newView(view,
-																			childViewClass,
-																			i);
-					checkNotNull(childView);
+					final ListenableFuture<?> childViewFuture = this.childViewDelegate.newView(	view,
+																								childViewClass,
+																								i);
 
-					bind(	childViewDataContext,
-							childView);
+					// TODO seperate executor?
+					addCallback(childViewFuture,
+								new FutureCallback<Object>() {
+									@Override
+									public void onSuccess(final Object result) {
+										checkNotNull(result);
+										bind(	childViewDataContext,
+												result);
+									}
+
+									@Override
+									public void onFailure(final Throwable t) {
+										t.printStackTrace();
+									}
+								});
+
 				}
 
 				contextCollection.addListEventListener(new ListEventListener<Object>() {
@@ -360,13 +377,28 @@ public class BinderImpl implements Binder {
 					shadowChildDataContextList.add(	sourceIndex,
 													childViewDataContext);
 
-					final Object childView = BinderImpl.this.childViewDelegate.newView(	view,
-																						childViewClass,
-																						sourceIndex);
-					checkNotNull(childView);
-					bind(	childViewDataContext,
-							childView);
+					final ListenableFuture<?> childViewFuture = BinderImpl.this.childViewDelegate
+							.newView(	view,
+										childViewClass,
+										sourceIndex);
 
+					// TODO seperate executor?
+					addCallback(childViewFuture,
+								new FutureCallback<Object>() {
+									@Override
+									public void onSuccess(final Object result) {
+										checkNotNull(result);
+										bind(	childViewDataContext,
+												result);
+
+									}
+
+									@Override
+									public void onFailure(final Throwable t) {
+										// TODO Auto-generated method stub
+										t.printStackTrace();
+									}
+								});
 					break;
 				}
 				case ListEvent.UPDATE: {

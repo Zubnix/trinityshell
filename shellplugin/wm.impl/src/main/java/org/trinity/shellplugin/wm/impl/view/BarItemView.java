@@ -18,6 +18,7 @@ class BarItemView extends QLabel {
 	{
 		// workaround for jambi css bug
 		setObjectName(getClass().getSimpleName());
+
 	}
 
 	public void setImageDefinition(final ImageDefinition imageDefinition) {

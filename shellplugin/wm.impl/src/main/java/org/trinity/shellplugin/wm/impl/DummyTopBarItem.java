@@ -9,6 +9,6 @@ public class DummyTopBarItem implements TopBarItem {
 
 	@Override
 	public String getText() {
-		return "dummy item";
+		return "dummy top text";
 	}
 }

@@ -9,8 +9,7 @@ public class DummyBottomBarItem implements BottomBarItem {
 
 	@Override
 	public String getText() {
-		// TODO Auto-generated method stub
-		return null;
+		return "dummy bottom text";
 	}
 
 }
