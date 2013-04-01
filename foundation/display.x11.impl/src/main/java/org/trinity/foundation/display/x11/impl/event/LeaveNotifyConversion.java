@@ -16,6 +16,8 @@ import javax.annotation.concurrent.Immutable;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.PointerLeaveNotify;
 import org.trinity.foundation.api.shared.AsyncListenable;
@@ -35,6 +37,8 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Immutable
 public class LeaveNotifyConversion implements XEventConversion {
 
+	private static final Logger logger = LoggerFactory.getLogger(LeaveNotifyConversion.class);
+
 	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_LEAVE_NOTIFY);
 
 	private final EventBus xEventBus;
@@ -52,9 +56,8 @@ public class LeaveNotifyConversion implements XEventConversion {
 		// enter has same structure as leave
 		final xcb_enter_notify_event_t enter_notify_event_t = cast(event_t);
 
-		// TODO logging
-		System.err.println(String.format(	"Received %s",
-											enter_notify_event_t.getClass().getSimpleName()));
+		logger.debug(	"Received X event={}",
+						enter_notify_event_t.getClass().getSimpleName());
 
 		this.xEventBus.post(enter_notify_event_t);
 		final DisplayEvent displayEvent = new PointerLeaveNotify();

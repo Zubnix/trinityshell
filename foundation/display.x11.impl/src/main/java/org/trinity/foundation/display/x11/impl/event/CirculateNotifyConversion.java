@@ -16,6 +16,8 @@ import javax.annotation.concurrent.Immutable;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_circulate_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.StackingChangedNotify;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
@@ -34,6 +36,8 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Immutable
 public class CirculateNotifyConversion implements XEventConversion {
 
+	private static final Logger logger = LoggerFactory.getLogger(CirculateNotifyConversion.class);
+
 	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_CIRCULATE_NOTIFY);
 
 	private final EventBus xEventBus;
@@ -51,8 +55,8 @@ public class CirculateNotifyConversion implements XEventConversion {
 
 		final xcb_circulate_notify_event_t circulate_notify_event_t = cast(event_t);
 		// TODO logging
-		System.err.println(String.format(	"Received %s",
-											circulate_notify_event_t.getClass().getSimpleName()));
+		logger.debug(	"Received X event={}",
+						circulate_notify_event_t.getClass().getSimpleName());
 
 		this.xEventBus.post(circulate_notify_event_t);
 

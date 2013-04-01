@@ -17,12 +17,14 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_config_window_t;
 import org.freedesktop.xcb.xcb_configure_request_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.event.CreationNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.GeometryRequest;
-import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.impl.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
@@ -40,7 +42,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Immutable
 public class ConfigureRequestConversion implements XEventConversion {
 
-	private final Integer eventInteger = Integer.valueOf(LibXcb.XCB_CONFIGURE_REQUEST);
+	private static final Logger logger = LoggerFactory.getLogger(ConfigureRequestConversion.class);
+
+	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_CONFIGURE_REQUEST);
 
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
@@ -58,9 +62,9 @@ public class ConfigureRequestConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 		final xcb_configure_request_event_t request_event_t = cast(event_t);
-		// TODO logging
-		System.err.println(String.format(	"Received %s",
-											request_event_t.getClass().getSimpleName()));
+
+		logger.debug(	"Received X event={}",
+						request_event_t.getClass().getSimpleName());
 
 		this.xEventBus.post(request_event_t);
 
@@ -114,6 +118,6 @@ public class ConfigureRequestConversion implements XEventConversion {
 	@Override
 	public Integer getEventCode() {
 
-		return this.eventInteger;
+		return this.eventCode;
 	}
 }

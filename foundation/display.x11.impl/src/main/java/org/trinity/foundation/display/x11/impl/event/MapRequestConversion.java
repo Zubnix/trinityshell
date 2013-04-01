@@ -16,6 +16,8 @@ import javax.annotation.concurrent.Immutable;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_map_request_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.event.CreationNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
@@ -37,7 +39,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Immutable
 public class MapRequestConversion implements XEventConversion {
 
-	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_MAP_REQUEST);
+	private static final Logger logger = LoggerFactory.getLogger(MapRequestConversion.class);
+
+	private static final Integer eventCode = Integer.valueOf(LibXcb.XCB_MAP_REQUEST);
 
 	private final EventBus xEventBus;
 	private final XWindowCache xWindowCache;
@@ -57,9 +61,8 @@ public class MapRequestConversion implements XEventConversion {
 
 		final xcb_map_request_event_t map_request_event_t = cast(event_t);
 
-		// TODO logging
-		System.err.println(String.format(	"Received %s",
-											map_request_event_t.getClass().getSimpleName()));
+		logger.debug(	"Received X event={}",
+						map_request_event_t.getClass().getSimpleName());
 
 		this.xEventBus.post(map_request_event_t);
 
@@ -91,6 +94,6 @@ public class MapRequestConversion implements XEventConversion {
 
 	@Override
 	public Integer getEventCode() {
-		return this.eventCode;
+		return eventCode;
 	}
 }

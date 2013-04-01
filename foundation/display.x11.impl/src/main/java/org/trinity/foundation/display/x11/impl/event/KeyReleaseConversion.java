@@ -16,6 +16,8 @@ import javax.annotation.concurrent.Immutable;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.KeyNotify;
 import org.trinity.foundation.api.display.input.InputModifiers;
@@ -39,7 +41,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Immutable
 public class KeyReleaseConversion implements XEventConversion {
 
-	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_KEY_RELEASE);
+	private static final Logger logger = LoggerFactory.getLogger(KeyReleaseConversion.class);
+
+	private static final Integer eventCode = Integer.valueOf(LibXcb.XCB_KEY_RELEASE);
 
 	private final EventBus xEventBus;
 	private final XWindowCache xWindowCache;
@@ -56,9 +60,10 @@ public class KeyReleaseConversion implements XEventConversion {
 
 		// press has same structure as release.
 		final xcb_key_press_event_t key_release_event_t = cast(event_t);
-		// TODO logging
-		System.err.println(String.format(	"Received %s",
-											key_release_event_t.getClass().getSimpleName()));
+
+		logger.debug(	"Received X event={}",
+						key_release_event_t.getClass().getSimpleName());
+
 		this.xEventBus.post(key_release_event_t);
 		final int keyCode = key_release_event_t.getDetail();
 		final Key key = new Key(keyCode);
@@ -90,6 +95,6 @@ public class KeyReleaseConversion implements XEventConversion {
 
 	@Override
 	public Integer getEventCode() {
-		return this.eventCode;
+		return eventCode;
 	}
 }

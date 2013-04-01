@@ -16,6 +16,8 @@ import javax.annotation.concurrent.Immutable;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_unmap_notify_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.api.shared.AsyncListenable;
@@ -35,7 +37,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Immutable
 public class UnmapNotifyConversion implements XEventConversion {
 
-	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_UNMAP_NOTIFY);
+	private static final Logger logger = LoggerFactory.getLogger(UnmapNotifyConversion.class);
+
+	private static final Integer eventCode = Integer.valueOf(LibXcb.XCB_UNMAP_NOTIFY);
 
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
@@ -50,9 +54,10 @@ public class UnmapNotifyConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 		final xcb_unmap_notify_event_t unmap_notify_event_t = cast(event_t);
-		// TODO logging
-		System.err.println(String.format(	"Received %s",
-											unmap_notify_event_t.getClass().getSimpleName()));
+
+		logger.debug(	"Received X event={}",
+						unmap_notify_event_t.getClass().getSimpleName());
+
 		this.xEventBus.post(unmap_notify_event_t);
 		final DisplayEvent displayEvent = new HideNotify();
 		return displayEvent;
@@ -77,6 +82,6 @@ public class UnmapNotifyConversion implements XEventConversion {
 
 	@Override
 	public Integer getEventCode() {
-		return this.eventCode;
+		return eventCode;
 	}
 }

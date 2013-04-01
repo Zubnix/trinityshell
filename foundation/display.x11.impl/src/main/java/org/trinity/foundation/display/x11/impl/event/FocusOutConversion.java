@@ -16,6 +16,8 @@ import javax.annotation.concurrent.Immutable;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_focus_in_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.FocusLostNotify;
 import org.trinity.foundation.api.shared.AsyncListenable;
@@ -35,7 +37,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Immutable
 public class FocusOutConversion implements XEventConversion {
 
-	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_FOCUS_OUT);
+	private static final Logger logger = LoggerFactory.getLogger(FocusOutConversion.class);
+
+	private static final Integer eventCode = Integer.valueOf(LibXcb.XCB_FOCUS_OUT);
 
 	private final EventBus xEventBus;
 	private final XWindowCache xWindowCache;
@@ -51,9 +55,10 @@ public class FocusOutConversion implements XEventConversion {
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 		// focus in structure is the same as focus out.
 		final xcb_focus_in_event_t focus_out_event_t = cast(event_t);
-		// TODO logging
-		System.err.println(String.format(	"Received %s",
-											focus_out_event_t.getClass().getSimpleName()));
+
+		logger.debug(	"Received X event={}",
+						focus_out_event_t.getClass().getSimpleName());
+
 		this.xEventBus.post(focus_out_event_t);
 		final DisplayEvent displayEvent = new FocusLostNotify();
 		return displayEvent;
@@ -75,6 +80,6 @@ public class FocusOutConversion implements XEventConversion {
 
 	@Override
 	public Integer getEventCode() {
-		return this.eventCode;
+		return eventCode;
 	}
 }

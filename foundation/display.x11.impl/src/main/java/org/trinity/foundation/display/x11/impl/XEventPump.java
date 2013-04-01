@@ -20,6 +20,8 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -33,6 +35,8 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Bind(to = @To(value = Type.IMPLEMENTATION))
 @NotThreadSafe
 public class XEventPump implements Runnable {
+
+	private static final Logger logger = LoggerFactory.getLogger(XEventPump.class);
 
 	private final XConnection connection;
 	private final EventBus xEventBus;
@@ -85,10 +89,10 @@ public class XEventPump implements Runnable {
 															TimeUnit.SECONDS)) {
 				return;
 			}
-			// TODO log error
-			System.err.println("X event pump could not terminate gracefully!");
+			logger.error("X event pump could not terminate gracefully!");
 		} catch (final InterruptedException e) {
-			e.printStackTrace();
+			logger.error(	"X event pump terminate was interrupted.",
+							e);
 		}
 	}
 }

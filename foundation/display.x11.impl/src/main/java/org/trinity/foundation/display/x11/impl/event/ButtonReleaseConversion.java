@@ -16,6 +16,8 @@ import javax.annotation.concurrent.Immutable;
 import org.freedesktop.xcb.LibXcbConstants;
 import org.freedesktop.xcb.xcb_button_press_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.ButtonNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.input.Button;
@@ -38,6 +40,10 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Immutable
 public class ButtonReleaseConversion implements XEventConversion {
 
+	private static final Logger logger = LoggerFactory.getLogger(ButtonReleaseConversion.class);
+
+	private static final Integer eventCode = Integer.valueOf(LibXcbConstants.XCB_BUTTON_RELEASE);
+
 	private final XWindowCache windowCache;
 	private final EventBus xEventBus;
 
@@ -53,9 +59,9 @@ public class ButtonReleaseConversion implements XEventConversion {
 
 		// press has same structure as release
 		final xcb_button_press_event_t button_release_event_t = cast(event_t);
-		// TODO logging
-		System.err.println(String.format(	"Received %s",
-											button_release_event_t.getClass().getSimpleName()));
+
+		logger.debug(	"Received X event={}",
+						button_release_event_t.getClass().getSimpleName());
 
 		this.xEventBus.post(button_release_event_t);
 
@@ -87,8 +93,7 @@ public class ButtonReleaseConversion implements XEventConversion {
 
 	@Override
 	public Integer getEventCode() {
-		final int eventCode = LibXcbConstants.XCB_BUTTON_RELEASE;
-		return Integer.valueOf(eventCode);
+		return eventCode;
 	}
 
 	@Override

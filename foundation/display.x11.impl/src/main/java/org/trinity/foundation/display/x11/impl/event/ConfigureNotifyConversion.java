@@ -16,6 +16,8 @@ import javax.annotation.concurrent.Immutable;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_configure_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.GeometryNotify;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
@@ -36,7 +38,9 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Immutable
 public class ConfigureNotifyConversion implements XEventConversion {
 
-	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_CONFIGURE_NOTIFY);
+	private static final Logger logger = LoggerFactory.getLogger(ConfigureNotifyConversion.class);
+
+	private final static Integer eventCode = Integer.valueOf(LibXcb.XCB_CONFIGURE_NOTIFY);
 
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
@@ -52,9 +56,8 @@ public class ConfigureNotifyConversion implements XEventConversion {
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 		final xcb_configure_notify_event_t configure_notify_event_t = cast(event_t);
 
-		// TODO logging
-		System.err.println(String.format(	"Received %s",
-											configure_notify_event_t.getClass().getSimpleName()));
+		logger.debug(	"Received X event={}",
+						configure_notify_event_t.getClass().getSimpleName());
 
 		this.xEventBus.post(configure_notify_event_t);
 
@@ -87,7 +90,7 @@ public class ConfigureNotifyConversion implements XEventConversion {
 
 	@Override
 	public Integer getEventCode() {
-		return this.eventCode;
+		return eventCode;
 	}
 
 }

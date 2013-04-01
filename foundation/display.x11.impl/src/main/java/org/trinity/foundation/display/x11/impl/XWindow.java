@@ -11,6 +11,8 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static com.google.common.util.concurrent.Futures.transform;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.Callable;
@@ -28,6 +30,8 @@ import org.freedesktop.xcb.xcb_get_geometry_cookie_t;
 import org.freedesktop.xcb.xcb_get_geometry_reply_t;
 import org.freedesktop.xcb.xcb_input_focus_t;
 import org.freedesktop.xcb.xcb_stack_mode_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
@@ -42,10 +46,10 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 
-import static com.google.common.util.concurrent.Futures.transform;
-
 @ThreadSafe
 public class XWindow implements DisplaySurface {
+
+	private static final Logger logger = LoggerFactory.getLogger(XWindow.class);
 
 	private final DisplaySurfaceHandle resourceHandle;
 	private final XConnection xConnection;
@@ -100,6 +104,8 @@ public class XWindow implements DisplaySurface {
 
 											@Override
 											public void run() {
+												logger.debug(	"Destroy. [winid={}]",
+																winId);
 												LibXcb.xcb_destroy_window(	getConnectionRef(),
 																			winId);
 												LibXcb.xcb_flush(getConnectionRef());
@@ -128,6 +134,8 @@ public class XWindow implements DisplaySurface {
 
 											@Override
 											public void run() {
+												logger.debug(	"Set input focus. [winid={}]",
+																winId);
 												LibXcb.xcb_set_input_focus(	getConnectionRef(),
 																			(short) xcb_input_focus_t.XCB_INPUT_FOCUS_NONE,
 																			winId,
@@ -151,6 +159,8 @@ public class XWindow implements DisplaySurface {
 
 											@Override
 											public void run() {
+												logger.debug(	"Lower. [winid={}]",
+																winId);
 												LibXcb.xcb_configure_window(getConnectionRef(),
 																			winId,
 																			value_mask,
@@ -169,6 +179,8 @@ public class XWindow implements DisplaySurface {
 
 											@Override
 											public void run() {
+												logger.debug(	"Show. [winid={}]",
+																winId);
 												LibXcb.xcb_map_window(	getConnectionRef(),
 																		winId);
 												LibXcb.xcb_flush(getConnectionRef());
@@ -190,6 +202,10 @@ public class XWindow implements DisplaySurface {
 
 											@Override
 											public void run() {
+												logger.debug(	"Move x={}, y={}. [winid={}]",
+																x,
+																y,
+																winId);
 												LibXcb.xcb_configure_window(getConnectionRef(),
 																			winId,
 																			value_mask,
@@ -206,8 +222,8 @@ public class XWindow implements DisplaySurface {
 												final int width,
 												final int height) {
 
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X | xcb_config_window_t.XCB_CONFIG_WINDOW_Y
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH | xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X | xcb_config_window_t.XCB_CONFIG_WINDOW_Y | xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
+				| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(16).order(ByteOrder.nativeOrder());
 		value_list.putInt(x).putInt(y).putInt(width).putInt(height);
 		final int winId = getWindowId();
@@ -216,6 +232,12 @@ public class XWindow implements DisplaySurface {
 
 											@Override
 											public void run() {
+												logger.debug(	"Move resize x={}, y={}, width={}, height={}. [winid={}]",
+																x,
+																y,
+																width,
+																height,
+																winId);
 												LibXcb.xcb_configure_window(getConnectionRef(),
 																			winId,
 																			value_mask,
@@ -239,6 +261,8 @@ public class XWindow implements DisplaySurface {
 
 											@Override
 											public void run() {
+												logger.debug(	"Raise. [winid={}]",
+																winId);
 												LibXcb.xcb_configure_window(getConnectionRef(),
 																			winId,
 																			value_mask,
@@ -254,14 +278,18 @@ public class XWindow implements DisplaySurface {
 											final int x,
 											final int y) {
 
-		final int parentId = ((Integer) (((DisplaySurface) parent).getDisplaySurfaceHandle()).getNativeHandle())
-				.intValue();
+		final int parentId = ((Integer) (((DisplaySurface) parent).getDisplaySurfaceHandle()).getNativeHandle()).intValue();
 		final int winId = getWindowId();
 
 		return this.xExecutor.submit(	new Runnable() {
 
 											@Override
 											public void run() {
+												logger.debug(	"Set parent parentId={}, x={}, y={}. [winid={}]",
+																parentId,
+																x,
+																y,
+																winId);
 												LibXcb.xcb_reparent_window(	getConnectionRef(),
 																			winId,
 																			parentId,
@@ -277,8 +305,7 @@ public class XWindow implements DisplaySurface {
 	public ListenableFuture<Void> resize(	final int width,
 											final int height) {
 
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH | xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
 
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder());
 		value_list.putInt(width).putInt(height);
@@ -288,6 +315,11 @@ public class XWindow implements DisplaySurface {
 
 											@Override
 											public void run() {
+												logger.debug(	"Resize width={}, height={}. [winid={}]",
+																width,
+																height,
+																winId);
+
 												LibXcb.xcb_configure_window(getConnectionRef(),
 																			winId,
 																			value_mask,
@@ -304,6 +336,9 @@ public class XWindow implements DisplaySurface {
 		return this.xExecutor.submit(	new Runnable() {
 											@Override
 											public void run() {
+												logger.debug(	"Hide. [winid={}]",
+																winId);
+
 												LibXcb.xcb_unmap_window(getConnectionRef(),
 																		winId);
 												LibXcb.xcb_flush(getConnectionRef());
@@ -316,15 +351,17 @@ public class XWindow implements DisplaySurface {
 	public ListenableFuture<Rectangle> getGeometry() {
 		final int winId = getWindowId();
 
-		final ListenableFuture<xcb_get_geometry_cookie_t> geometryRequest = this.xExecutor
-				.submit(new Callable<xcb_get_geometry_cookie_t>() {
-					@Override
-					public xcb_get_geometry_cookie_t call() {
-						final xcb_get_geometry_cookie_t cookie_t = LibXcb.xcb_get_geometry(	getConnectionRef(),
-																							winId);
-						return cookie_t;
-					}
-				});
+		final ListenableFuture<xcb_get_geometry_cookie_t> geometryRequest = this.xExecutor.submit(new Callable<xcb_get_geometry_cookie_t>() {
+			@Override
+			public xcb_get_geometry_cookie_t call() {
+				logger.debug(	"Geometry request. [winid={}]",
+								winId);
+
+				final xcb_get_geometry_cookie_t cookie_t = LibXcb.xcb_get_geometry(	getConnectionRef(),
+																					winId);
+				return cookie_t;
+			}
+		});
 
 		final ListenableFuture<Rectangle> geometryReply = transform(geometryRequest,
 																	new AsyncFunction<xcb_get_geometry_cookie_t, Rectangle>() {
@@ -340,6 +377,8 @@ public class XWindow implements DisplaySurface {
 		return this.xExecutor.submit(new Callable<Rectangle>() {
 			@Override
 			public Rectangle call() {
+				logger.debug("Get geometry reply.");
+
 				final xcb_generic_error_t e = new xcb_generic_error_t();
 				final xcb_get_geometry_reply_t reply = LibXcb.xcb_get_geometry_reply(	getConnectionRef(),
 																						cookie_t,
@@ -361,7 +400,8 @@ public class XWindow implements DisplaySurface {
 	private void checkError(final xcb_generic_error_t e) {
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
 			// TODO logging
-			System.err.println(XcbErrorUtil.toString(e));
+			logger.error(	"X error: {}.",
+							XcbErrorUtil.toString(e));
 			// Thread.dumpStack();
 		}
 	}
@@ -370,8 +410,7 @@ public class XWindow implements DisplaySurface {
 	public boolean equals(final Object obj) {
 		if (obj instanceof XWindow) {
 			final XWindow otherWindow = (XWindow) obj;
-			return otherWindow.getDisplaySurfaceHandle().getNativeHandle()
-					.equals(getDisplaySurfaceHandle().getNativeHandle());
+			return otherWindow.getDisplaySurfaceHandle().getNativeHandle().equals(getDisplaySurfaceHandle().getNativeHandle());
 		}
 		return false;
 	}
@@ -394,6 +433,9 @@ public class XWindow implements DisplaySurface {
 		this.xExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
+				logger.debug(	"Configure client evens. [winid={}]",
+								winId);
+
 				LibXcb.xcb_change_window_attributes(XWindow.this.xConnection.getConnectionReference(),
 													winId,
 													xcb_cw_t.XCB_CW_EVENT_MASK,

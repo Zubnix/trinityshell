@@ -72,8 +72,7 @@ public class XWindowCache {
 										new Callable<XWindow>() {
 											@Override
 											public XWindow call() {
-												final XWindow xWindow = (XWindow) XWindowCache.this.displaySurfaceFactory
-														.createDisplaySurface(resourceHandle);
+												final XWindow xWindow = (XWindow) XWindowCache.this.displaySurfaceFactory.createDisplaySurface(resourceHandle);
 												xWindow.register(new DestroyListener(xWindow));
 												return xWindow;
 											}
