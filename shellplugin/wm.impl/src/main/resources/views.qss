@@ -1,11 +1,16 @@
 #RootView {
-	background-color: #fff;
+	
 }
 
-#BarView {
-	border: 1px solid black;
+#BarView[topBar=true] {
+	/*because of some fucked up bug we have to specifiy border-top for our bottom border to be visible.*/
+    border-top: none;
+    border-bottom: 5px solid #22B5BF;
+}
+
+#BarView[bottomBar=true] {
+	border-top: 5px solid #88C134;
 }
 
 #BarItemView {
-	border: 1px solid black;
 }

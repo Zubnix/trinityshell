@@ -20,6 +20,8 @@ class RootView extends QFrame {
 		{
 			// workaround for jambi css bug
 			setObjectName("BarView");
+			setProperty("topBar",
+						true);
 
 			this.topBarLayout.setContentsMargins(new QMargins(	0,
 																0,
@@ -45,6 +47,8 @@ class RootView extends QFrame {
 		{
 			// workaround for jambi css bug
 			setObjectName("BarView");
+			setProperty("bottomBar",
+						true);
 
 			this.bottomBarLayout.setContentsMargins(new QMargins(	0,
 																	0,
