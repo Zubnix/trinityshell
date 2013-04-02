@@ -11,8 +11,6 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
-import static com.google.common.util.concurrent.Futures.transform;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.Callable;
@@ -45,6 +43,8 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
+
+import static com.google.common.util.concurrent.Futures.transform;
 
 @ThreadSafe
 public class XWindow implements DisplaySurface {
@@ -222,8 +222,8 @@ public class XWindow implements DisplaySurface {
 												final int width,
 												final int height) {
 
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X | xcb_config_window_t.XCB_CONFIG_WINDOW_Y | xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X | xcb_config_window_t.XCB_CONFIG_WINDOW_Y
+				| xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH | xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(16).order(ByteOrder.nativeOrder());
 		value_list.putInt(x).putInt(y).putInt(width).putInt(height);
 		final int winId = getWindowId();
@@ -278,7 +278,8 @@ public class XWindow implements DisplaySurface {
 											final int x,
 											final int y) {
 
-		final int parentId = ((Integer) (((DisplaySurface) parent).getDisplaySurfaceHandle()).getNativeHandle()).intValue();
+		final int parentId = ((Integer) (((DisplaySurface) parent).getDisplaySurfaceHandle()).getNativeHandle())
+				.intValue();
 		final int winId = getWindowId();
 
 		return this.xExecutor.submit(	new Runnable() {
@@ -305,7 +306,8 @@ public class XWindow implements DisplaySurface {
 	public ListenableFuture<Void> resize(	final int width,
 											final int height) {
 
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH | xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
+				| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
 
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder());
 		value_list.putInt(width).putInt(height);
@@ -351,17 +353,18 @@ public class XWindow implements DisplaySurface {
 	public ListenableFuture<Rectangle> getGeometry() {
 		final int winId = getWindowId();
 
-		final ListenableFuture<xcb_get_geometry_cookie_t> geometryRequest = this.xExecutor.submit(new Callable<xcb_get_geometry_cookie_t>() {
-			@Override
-			public xcb_get_geometry_cookie_t call() {
-				logger.debug(	"Geometry request. [winid={}]",
-								winId);
+		final ListenableFuture<xcb_get_geometry_cookie_t> geometryRequest = this.xExecutor
+				.submit(new Callable<xcb_get_geometry_cookie_t>() {
+					@Override
+					public xcb_get_geometry_cookie_t call() {
+						logger.debug(	"Geometry request. [winid={}]",
+										winId);
 
-				final xcb_get_geometry_cookie_t cookie_t = LibXcb.xcb_get_geometry(	getConnectionRef(),
-																					winId);
-				return cookie_t;
-			}
-		});
+						final xcb_get_geometry_cookie_t cookie_t = LibXcb.xcb_get_geometry(	getConnectionRef(),
+																							winId);
+						return cookie_t;
+					}
+				});
 
 		final ListenableFuture<Rectangle> geometryReply = transform(geometryRequest,
 																	new AsyncFunction<xcb_get_geometry_cookie_t, Rectangle>() {
@@ -410,7 +413,8 @@ public class XWindow implements DisplaySurface {
 	public boolean equals(final Object obj) {
 		if (obj instanceof XWindow) {
 			final XWindow otherWindow = (XWindow) obj;
-			return otherWindow.getDisplaySurfaceHandle().getNativeHandle().equals(getDisplaySurfaceHandle().getNativeHandle());
+			return otherWindow.getDisplaySurfaceHandle().getNativeHandle()
+					.equals(getDisplaySurfaceHandle().getNativeHandle());
 		}
 		return false;
 	}

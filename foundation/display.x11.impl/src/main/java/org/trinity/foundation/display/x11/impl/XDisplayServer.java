@@ -91,7 +91,8 @@ public class XDisplayServer implements DisplayServer {
 											public void run() {
 												XDisplayServer.this.xConnection.open(	displayName,
 																						0);
-												if (LibXcb.xcb_connection_has_error(XDisplayServer.this.xConnection.getConnectionReference()) != 0) {
+												if (LibXcb.xcb_connection_has_error(XDisplayServer.this.xConnection
+														.getConnectionReference()) != 0) {
 													throw new Error("Cannot open display\n");
 												}
 												XDisplayServer.this.xEventPump.start();

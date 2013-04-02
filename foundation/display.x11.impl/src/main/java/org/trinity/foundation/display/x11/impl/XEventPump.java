@@ -64,13 +64,17 @@ public class XEventPump implements Runnable {
 		final xcb_generic_event_t event_t = LibXcb.xcb_wait_for_event(this.connection.getConnectionReference());
 
 		if (LibXcb.xcb_connection_has_error(this.connection.getConnectionReference()) != 0) {
-			throw new Error("X11 connection was closed unexpectedly - maybe your X server terminated / crashed?");
+			final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
+			logger.error(errorMsg);
+			throw new Error(errorMsg);
 		}
 
+		// pass x event from x-event-pump thread to x-executor thread.
 		this.xExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
 				XEventPump.this.xEventBus.post(event_t);
+				LibXcb.xcb_flush(XEventPump.this.connection.getConnectionReference());
 			}
 		});
 
