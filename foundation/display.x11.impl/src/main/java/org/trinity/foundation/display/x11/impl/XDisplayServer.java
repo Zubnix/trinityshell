@@ -86,7 +86,6 @@ public class XDisplayServer implements DisplayServer {
 		final String displayName = System.getenv("DISPLAY");
 
 		return this.xExecutor.submit(	new Runnable() {
-
 											@Override
 											public void run() {
 												XDisplayServer.this.xConnection.open(	displayName,
@@ -96,7 +95,6 @@ public class XDisplayServer implements DisplayServer {
 													throw new Error("Cannot open display\n");
 												}
 												XDisplayServer.this.xEventPump.start();
-
 											}
 										},
 										null);

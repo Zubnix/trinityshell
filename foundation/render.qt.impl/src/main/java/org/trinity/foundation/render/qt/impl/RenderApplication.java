@@ -29,7 +29,7 @@ public class RenderApplication extends QApplication {
 		@Override
 		public Thread newThread(final Runnable r) {
 			return new Thread(	r,
-								"QtJambi Render Thread");
+								"qtjambi-application");
 		}
 	});
 

@@ -22,6 +22,8 @@ import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_grab_keyboard_cookie_t;
 import org.freedesktop.xcb.xcb_grab_mode_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.input.InputModifier;
 import org.trinity.foundation.api.display.input.InputModifiers;
@@ -40,6 +42,8 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 @ThreadSafe
 public class XKeyboard implements Keyboard {
+
+	private static final Logger logger = LoggerFactory.getLogger(XKeyboard.class);
 
 	private final XKeySymbolMapping xKeySymbolMapping;
 	private final XKeySymbolCache xKeySymbolCache;
@@ -75,9 +79,7 @@ public class XKeyboard implements Keyboard {
 
 	private void checkError(final xcb_generic_error_t e) {
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			// TODO logging
-			System.err.println(XcbErrorUtil.toString(e));
-			// Thread.dumpStack();
+			logger.error(XcbErrorUtil.toString(e));
 		}
 	}
 
@@ -102,6 +104,7 @@ public class XKeyboard implements Keyboard {
 																	(short) keyCode,
 																	(short) pointer_mode,
 																	(short) keyboard_mode);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -117,14 +120,13 @@ public class XKeyboard implements Keyboard {
 		final int winId = getWindowId(displaySurface);
 
 		return this.xExecutor.submit(	new Runnable() {
-
 											@Override
 											public void run() {
 												LibXcb.xcb_ungrab_key(	getConnectionRef(),
 																		(short) key,
 																		winId,
 																		modifiers);
-
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -136,12 +138,11 @@ public class XKeyboard implements Keyboard {
 		final int time = this.xTime.getTime();
 
 		return this.xExecutor.submit(	new Runnable() {
-
 											@Override
 											public void run() {
 												LibXcb.xcb_ungrab_keyboard(	getConnectionRef(),
 																			time);
-
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -155,7 +156,6 @@ public class XKeyboard implements Keyboard {
 		final int winId = getWindowId(displaySurface);
 
 		return this.xExecutor.submit(	new Runnable() {
-
 											@Override
 											public void run() {
 												final xcb_grab_keyboard_cookie_t grab_keyboard_cookie_t = LibXcb

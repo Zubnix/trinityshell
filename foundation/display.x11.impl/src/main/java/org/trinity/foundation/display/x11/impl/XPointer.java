@@ -13,6 +13,8 @@ import org.freedesktop.xcb.xcb_grab_mode_t;
 import org.freedesktop.xcb.xcb_grab_pointer_cookie_t;
 import org.freedesktop.xcb.xcb_query_pointer_cookie_t;
 import org.freedesktop.xcb.xcb_query_pointer_reply_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.input.Button;
 import org.trinity.foundation.api.display.input.InputModifiers;
@@ -34,6 +36,9 @@ import static com.google.common.util.concurrent.Futures.transform;
 @Singleton
 @ThreadSafe
 public class XPointer implements Pointer {
+
+	private static final Logger logger = LoggerFactory.getLogger(XPointer.class);
+
 	private final XConnection xConnection;
 	private final XTime xTime;
 	private final ListeningExecutorService xExecutor;
@@ -59,9 +64,7 @@ public class XPointer implements Pointer {
 
 	private void checkError(final xcb_generic_error_t e) {
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			// TODO logging
-			System.err.println(XcbErrorUtil.toString(e));
-			// Thread.dumpStack();
+			logger.error(XcbErrorUtil.toString(e));
 		}
 	}
 
@@ -93,6 +96,7 @@ public class XPointer implements Pointer {
 																		cursor,
 																		(short) buttonCode,
 																		modifiers);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -164,6 +168,7 @@ public class XPointer implements Pointer {
 												LibXcb.xcb_ungrab_pointer(	XPointer.this.xConnection
 																					.getConnectionReference(),
 																			time);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);
@@ -185,6 +190,7 @@ public class XPointer implements Pointer {
 																			(short) button,
 																			winId,
 																			modifiers);
+												LibXcb.xcb_flush(getConnectionRef());
 											}
 										},
 										null);

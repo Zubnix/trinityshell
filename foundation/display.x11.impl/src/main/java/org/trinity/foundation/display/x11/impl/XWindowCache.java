@@ -18,6 +18,8 @@ import java.util.concurrent.ExecutionException;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DestroyNotify;
@@ -38,6 +40,8 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @NotThreadSafe
 public class XWindowCache {
 
+	private static final Logger logger = LoggerFactory.getLogger(XWindowCache.class);
+
 	private class DestroyListener {
 		private final XWindow window;
 
@@ -47,8 +51,12 @@ public class XWindowCache {
 
 		@Subscribe
 		public void destroyed(final DestroyNotify destroyNotify) {
-			XWindowCache.this.xWindows.invalidate(this.window.getDisplaySurfaceHandle().getNativeHandle());
+			final Integer windowId = (Integer) this.window.getDisplaySurfaceHandle().getNativeHandle();
+			XWindowCache.this.xWindows.invalidate(windowId);
 			this.window.unregister(this);
+
+			logger.debug(	"Xwindow={} removed from cache.",
+							windowId);
 		}
 	}
 
@@ -72,7 +80,11 @@ public class XWindowCache {
 										new Callable<XWindow>() {
 											@Override
 											public XWindow call() {
-												final XWindow xWindow = (XWindow) XWindowCache.this.displaySurfaceFactory.createDisplaySurface(resourceHandle);
+												logger.debug(	"Xwindow={} added to cache.",
+																windowId);
+
+												final XWindow xWindow = (XWindow) XWindowCache.this.displaySurfaceFactory
+														.createDisplaySurface(resourceHandle);
 												xWindow.register(new DestroyListener(xWindow));
 												return xWindow;
 											}

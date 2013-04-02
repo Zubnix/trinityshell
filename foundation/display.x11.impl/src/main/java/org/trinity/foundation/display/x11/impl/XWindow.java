@@ -402,10 +402,8 @@ public class XWindow implements DisplaySurface {
 
 	private void checkError(final xcb_generic_error_t e) {
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			// TODO logging
 			logger.error(	"X error: {}.",
 							XcbErrorUtil.toString(e));
-			// Thread.dumpStack();
 		}
 	}
 
