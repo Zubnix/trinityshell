@@ -12,6 +12,8 @@ import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.error.BindingError;
 import org.trinity.foundation.api.render.binding.view.DataContext;
@@ -55,6 +57,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Singleton
 public class BinderImpl implements Binder {
 
+	private static final Logger logger = LoggerFactory.getLogger(BinderImpl.class);
+
 	private static final Cache<Class<?>, Cache<String, Optional<Method>>> getterCache = CacheBuilder.newBuilder()
 			.build();
 	private static final Cache<Class<?>, Field[]> childViewCache = CacheBuilder.newBuilder().build();
@@ -93,6 +97,10 @@ public class BinderImpl implements Binder {
 		checkNotNull(model);
 		checkNotNull(view);
 
+		logger.debug(	"Bind model={} to view={}",
+						model,
+						view);
+
 		bindViewElement(model,
 						view,
 						Optional.<DataContext> absent(),
@@ -106,6 +114,10 @@ public class BinderImpl implements Binder {
 								final String propertyName) {
 		checkNotNull(model);
 		checkNotNull(propertyName);
+
+		logger.debug(	"Update binding for model={} of property={}",
+						model,
+						propertyName);
 
 		updateDataContextBinding(	model,
 									propertyName);
