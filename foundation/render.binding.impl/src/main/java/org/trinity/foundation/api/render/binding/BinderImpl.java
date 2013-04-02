@@ -430,7 +430,6 @@ public class BinderImpl implements Binder {
 						checkNotNull(newChildViewDataContext);
 
 						final Object childView = BinderImpl.this.viewsByDataContextValue.get(oldChildViewDataContext);
-						checkNotNull(childView);
 
 						bind(	newChildViewDataContext,
 								childView);
