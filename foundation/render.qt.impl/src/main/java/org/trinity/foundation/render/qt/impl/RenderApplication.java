@@ -15,9 +15,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.trolltech.qt.gui.QApplication;
 
 public class RenderApplication extends QApplication {
+
+	private static final Logger logger = LoggerFactory.getLogger(RenderApplication.class);
 
 	public RenderApplication() {
 		super(	"Trinity QtJambi Renderer",
@@ -41,7 +46,8 @@ public class RenderApplication extends QApplication {
 				QApplication.setQuitOnLastWindowClosed(false);
 				final int r = QApplication.exec();
 				if (r != 0) {
-					throw new RuntimeException("Qt Jambi exited with error: " + r);
+					logger.error(	"QtJambi render application exited with error code={}",
+									r);
 				}
 			}
 		});

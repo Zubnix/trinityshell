@@ -18,6 +18,8 @@ import java.util.concurrent.FutureTask;
 
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 
 import com.trolltech.qt.core.QCoreApplication;
@@ -27,6 +29,8 @@ import com.trolltech.qt.gui.QWidget;
 
 @ThreadSafe
 public class RenderDisplaySurfaceHandle implements DisplaySurfaceHandle {
+
+	private static final Logger logger = LoggerFactory.getLogger(RenderDisplaySurfaceHandle.class);
 
 	private final WeakReference<QWidget> visualReference;
 	private volatile boolean visualDestroyed = false;
@@ -77,7 +81,7 @@ public class RenderDisplaySurfaceHandle implements DisplaySurfaceHandle {
 	public Integer getNativeHandle() {
 		final FutureTask<Integer> getHandleTask = new FutureTask<Integer>(new Callable<Integer>() {
 			@Override
-			public Integer call() throws Exception {
+			public Integer call() {
 				final QWidget visual = RenderDisplaySurfaceHandle.this.visualReference.get();
 				int visualId = 0;
 				if ((visual != null) && !RenderDisplaySurfaceHandle.this.visualDestroyed) {
@@ -91,11 +95,11 @@ public class RenderDisplaySurfaceHandle implements DisplaySurfaceHandle {
 		try {
 			handle = getHandleTask.get();
 		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(	"Interrupted while while waiting for native render handle",
+							e);
 		} catch (final ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(	"Exception while querying native render handle",
+							e);
 		}
 		return handle;
 	}

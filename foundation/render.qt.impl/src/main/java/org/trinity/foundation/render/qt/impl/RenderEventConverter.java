@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.AsyncListenable;
 
@@ -31,6 +33,8 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
 public class RenderEventConverter {
+
+	private static final Logger logger = LoggerFactory.getLogger(RenderEventConverter.class);
 
 	private final Map<QEvent.Type, Optional<RenderEventConversion>> conversionByQEventType = new HashMap<QEvent.Type, Optional<RenderEventConversion>>();
 
@@ -53,6 +57,10 @@ public class RenderEventConverter {
 			displayEvent = eventConverter.get().convertEvent(	view,
 																eventProducer,
 																event);
+
+			logger.debug(	"Converted render event={} to display event={}.",
+							event,
+							displayEvent);
 
 			eventTarget.post(displayEvent);
 			return true;
