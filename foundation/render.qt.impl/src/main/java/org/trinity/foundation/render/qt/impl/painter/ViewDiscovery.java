@@ -5,16 +5,18 @@ import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import org.trinity.foundation.api.render.binding.error.BindingError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.trolltech.qt.gui.QWidget;
 
 public class ViewDiscovery {
+
+	private static final Logger logger = LoggerFactory.getLogger(ViewDiscovery.class);
 
 	private static final Cache<Class<?>, Optional<Method>> views = CacheBuilder.newBuilder().build();
 
@@ -23,7 +25,11 @@ public class ViewDiscovery {
 
 	public QWidget lookupView(final Object model) {
 
+		logger.debug(	"Looking up view for model={}",
+						model);
+
 		final Class<?> modelClass = model.getClass();
+		QWidget view = null;
 
 		try {
 			final Optional<Method> viewGetter = ViewDiscovery.views.get(model.getClass(),
@@ -36,41 +42,38 @@ public class ViewDiscovery {
 			if (viewGetter.isPresent()) {
 				final Method viewGetterMethod = viewGetter.get();
 				try {
-					final Object view = viewGetterMethod.invoke(model);
+					final Object foundView = viewGetterMethod.invoke(model);
 					if (view instanceof QWidget) {
-						return (QWidget) view;
+						view = (QWidget) foundView;
 					} else {
-						throw new BindingError(String.format(	"Expected view %s of model %s to be of type %s",
-																view,
-																model,
-																QWidget.class.getName()));
+						logger.error(	"Expected view={} of model={} to be of type={}",
+										view,
+										model,
+										QWidget.class.getName());
 					}
-
 				} catch (final IllegalAccessException e) {
-					throw new BindingError(	String.format(	"Can not invoke view getter for model %s. Did you declare it public?",
-															model),
-											e);
+					logger.error(	"Can not invoke view getter for model=" + model
+											+ ". Did you declare it as a no arg public method?",
+									e);
 				} catch (final IllegalArgumentException e) {
-					// TODO explanation.
-					throw new BindingError(	"",
-											e);
+					logger.error(	"Can not invoke view getter for model=" + model
+											+ ". Did you declare it as a no arg public method?",
+									e);
 				} catch (final InvocationTargetException e) {
-					// TODO explanation.
-					throw new BindingError(	String.format(	"Invoking the view getter for model %s throws an exception.",
-															model),
-											e);
+					logger.error(	"Invoking the view getter for model=" + model + " throws an exception.",
+									e);
 				}
 			} else {
-				throw new BindingError(String.format(	"Can not find view getter on class %s for model %s. Did you annotate a getter with %s ?",
-														modelClass.getName(),
-														model,
-														ViewReference.class.getName()));
+				logger.error(	"Can not find view getter on class={} for model={}. Did you annotate a getter with {}?",
+								modelClass.getName(),
+								model,
+								ViewReference.class.getName());
 			}
 		} catch (final ExecutionException e1) {
-			Throwables.propagate(e1);
-			return null;
+			logger.error(	"Exception while searching for a view on model=" + model,
+							e1);
 		}
-
+		return view;
 	}
 
 	protected Optional<Method> getView(final Class<?> clazz) {
@@ -79,9 +82,9 @@ public class ViewDiscovery {
 		for (final Method method : methods) {
 			final ViewReference viewReference = method.getAnnotation(ViewReference.class);
 			if ((viewReference != null) && (foundMethod != null)) {
-				throw new BindingError(String.format(	"Found multiple %s on %s",
-														ViewReference.class.getName(),
-														clazz.getName()));
+				logger.error(	"Found multiple {} on {}",
+								ViewReference.class.getName(),
+								clazz.getName());
 			} else if (viewReference != null) {
 				foundMethod = method;
 			}
