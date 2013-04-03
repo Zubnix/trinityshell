@@ -1,5 +1,10 @@
 package org.trinity.foundation.api.render.binding;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.util.concurrent.Futures.addCallback;
+import static java.lang.String.format;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -46,12 +51,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.devsurf.injection.guice.annotations.Bind;
-import static java.lang.String.format;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 @Bind
 @Singleton
@@ -59,8 +58,7 @@ public class BinderImpl implements Binder {
 
 	private static final Logger logger = LoggerFactory.getLogger(BinderImpl.class);
 
-	private static final Cache<Class<?>, Cache<String, Optional<Method>>> getterCache = CacheBuilder.newBuilder()
-			.build();
+	private static final Cache<Class<?>, Cache<String, Optional<Method>>> getterCache = CacheBuilder.newBuilder().build();
 	private static final Cache<Class<?>, Field[]> childViewCache = CacheBuilder.newBuilder().build();
 
 	private static final String GET_BOOLEAN_PREFIX = "is";
@@ -94,12 +92,12 @@ public class BinderImpl implements Binder {
 	@Override
 	public void bind(	final Object model,
 						final Object view) {
-		checkNotNull(model);
-		checkNotNull(view);
-
 		logger.debug(	"Bind model={} to view={}",
 						model,
 						view);
+
+		checkNotNull(model);
+		checkNotNull(view);
 
 		bindViewElement(model,
 						view,
@@ -139,12 +137,9 @@ public class BinderImpl implements Binder {
 			final Object view = dataContextByViewEntry.getKey();
 			final DataContext dataContext = dataContextByViewEntry.getValue();
 			final Optional<DataContext> optionalDataContext = Optional.of(dataContext);
-			final Optional<InputSignals> optionalInputSignals = Optional
-					.fromNullable(this.inputSignalsByView.get(view));
-			final Optional<ObservableCollection> optionalObservableCollection = Optional
-					.fromNullable(this.observableCollectionByView.get(view));
-			final Optional<PropertySlots> optionalPropertySlots = Optional.fromNullable(this.propertySlotsByView
-					.get(view));
+			final Optional<InputSignals> optionalInputSignals = Optional.fromNullable(this.inputSignalsByView.get(view));
+			final Optional<ObservableCollection> optionalObservableCollection = Optional.fromNullable(this.observableCollectionByView.get(view));
+			final Optional<PropertySlots> optionalPropertySlots = Optional.fromNullable(this.propertySlotsByView.get(view));
 
 			if (dataContext.value().startsWith(propertyName)) {
 
@@ -219,14 +214,14 @@ public class BinderImpl implements Binder {
 
 		// check for class level annotations if field level annotations are
 		// absent
-		final Optional<DataContext> optionalDataContext = optionalFieldLevelDataContext.or(Optional
-				.<DataContext> fromNullable(viewClass.getAnnotation(DataContext.class)));
-		final Optional<InputSignals> optionalInputSignals = optionalFieldLEvelInputSignals.or(Optional
-				.<InputSignals> fromNullable(viewClass.getAnnotation(InputSignals.class)));
-		final Optional<ObservableCollection> optionalObservableCollection = optionalFieldLevelObservableCollection
-				.or(Optional.<ObservableCollection> fromNullable(viewClass.getAnnotation(ObservableCollection.class)));
-		final Optional<PropertySlots> optionalPropertySlots = optionalFieldLevelPropertySlots.or(Optional
-				.<PropertySlots> fromNullable(viewClass.getAnnotation(PropertySlots.class)));
+		final Optional<DataContext> optionalDataContext = optionalFieldLevelDataContext.or(Optional.<DataContext> fromNullable(viewClass
+				.getAnnotation(DataContext.class)));
+		final Optional<InputSignals> optionalInputSignals = optionalFieldLEvelInputSignals.or(Optional.<InputSignals> fromNullable(viewClass
+				.getAnnotation(InputSignals.class)));
+		final Optional<ObservableCollection> optionalObservableCollection = optionalFieldLevelObservableCollection.or(Optional
+				.<ObservableCollection> fromNullable(viewClass.getAnnotation(ObservableCollection.class)));
+		final Optional<PropertySlots> optionalPropertySlots = optionalFieldLevelPropertySlots.or(Optional.<PropertySlots> fromNullable(viewClass
+				.getAnnotation(PropertySlots.class)));
 
 		Object dataContext = inheritedDataContext;
 		if (optionalDataContext.isPresent()) {
@@ -389,10 +384,9 @@ public class BinderImpl implements Binder {
 					shadowChildDataContextList.add(	sourceIndex,
 													childViewDataContext);
 
-					final ListenableFuture<?> childViewFuture = BinderImpl.this.childViewDelegate
-							.newView(	view,
-										childViewClass,
-										sourceIndex);
+					final ListenableFuture<?> childViewFuture = BinderImpl.this.childViewDelegate.newView(	view,
+																											childViewClass,
+																											sourceIndex);
 
 					// TODO seperate executor?
 					addCallback(childViewFuture,
@@ -424,8 +418,7 @@ public class BinderImpl implements Binder {
 							shadowChildDataContextList.add(	newPosition,
 															childViewDataContext);
 
-							final Set<Object> changedChildViews = BinderImpl.this.viewsByDataContextValue
-									.get(childViewDataContext);
+							final Set<Object> changedChildViews = BinderImpl.this.viewsByDataContextValue.get(childViewDataContext);
 							for (final Object changedChildView : changedChildViews) {
 								BinderImpl.this.childViewDelegate.updateChildViewPosition(	view,
 																							changedChildView,
@@ -435,9 +428,8 @@ public class BinderImpl implements Binder {
 						}
 					} else {
 						final Object newChildViewDataContext = changeList.get(sourceIndex);
-						final Object oldChildViewDataContext = shadowChildDataContextList
-								.set(	sourceIndex,
-										newChildViewDataContext);
+						final Object oldChildViewDataContext = shadowChildDataContextList.set(	sourceIndex,
+																								newChildViewDataContext);
 						checkNotNull(oldChildViewDataContext);
 						checkNotNull(newChildViewDataContext);
 
@@ -613,8 +605,7 @@ public class BinderImpl implements Binder {
 		checkNotNull(view);
 		checkNotNull(dataContext);
 
-		Map<Object, DataContext> dataContextByView = this.dataContextByViewByParentDataContextValue
-				.get(parentDataContextValue);
+		Map<Object, DataContext> dataContextByView = this.dataContextByViewByParentDataContextValue.get(parentDataContextValue);
 		if (dataContextByView == null) {
 			dataContextByView = new WeakHashMap<Object, DataContext>();
 			this.dataContextByViewByParentDataContextValue.put(	parentDataContextValue,
@@ -639,10 +630,8 @@ public class BinderImpl implements Binder {
 												// filter out types we're
 												// definitely not interested in
 												boolean interestedViewElement = false;
-												for (final Class<?> validViewElementType : BinderImpl.this.viewElementTypes
-														.getViewElementTypes()) {
-													interestedViewElement |= validViewElementType
-															.isAssignableFrom(childViewElement.getDeclaringClass());
+												for (final Class<?> validViewElementType : BinderImpl.this.viewElementTypes.getViewElementTypes()) {
+													interestedViewElement |= validViewElementType.isAssignableFrom(childViewElement.getDeclaringClass());
 
 													if (interestedViewElement) {
 														possibleChildViews.add(childViewElement);
@@ -680,14 +669,13 @@ public class BinderImpl implements Binder {
 					continue;
 				}
 
-				final Optional<DataContext> optionalFieldDataContext = Optional
-						.<DataContext> fromNullable(childViewElement.getAnnotation(DataContext.class));
-				final Optional<InputSignals> optionalFieldInputSignals = Optional
-						.<InputSignals> fromNullable(childViewElement.getAnnotation(InputSignals.class));
-				final Optional<ObservableCollection> optionalFieldObservableCollection = Optional
-						.<ObservableCollection> fromNullable(childViewElement.getAnnotation(ObservableCollection.class));
-				final Optional<PropertySlots> optionalFieldPropertySlots = Optional
-						.<PropertySlots> fromNullable(childViewElement.getAnnotation(PropertySlots.class));
+				final Optional<DataContext> optionalFieldDataContext = Optional.<DataContext> fromNullable(childViewElement.getAnnotation(DataContext.class));
+				final Optional<InputSignals> optionalFieldInputSignals = Optional.<InputSignals> fromNullable(childViewElement
+						.getAnnotation(InputSignals.class));
+				final Optional<ObservableCollection> optionalFieldObservableCollection = Optional.<ObservableCollection> fromNullable(childViewElement
+						.getAnnotation(ObservableCollection.class));
+				final Optional<PropertySlots> optionalFieldPropertySlots = Optional.<PropertySlots> fromNullable(childViewElement
+						.getAnnotation(PropertySlots.class));
 
 				// recursion safety
 				if (this.dataContextValueByView.containsKey(childView)) {
