@@ -47,16 +47,18 @@ public class ViewDiscovery {
 					if (foundView instanceof QWidget) {
 						view = (QWidget) foundView;
 					} else {
-						logger.error(	"Expected view={} of model={} to be of type={}",
+						logger.error(	"Expected found view={} of model={} to be of type={}",
 										foundView,
 										model,
 										QWidget.class.getName());
 					}
 				} catch (final IllegalAccessException e) {
-					logger.error(	"Can not invoke view getter for model=" + model + ". Did you declare it as a no arg public method?",
+					logger.error(	"Can not invoke view getter for model=" + model
+											+ ". Did you declare it as a no arg public method?",
 									e);
 				} catch (final IllegalArgumentException e) {
-					logger.error(	"Can not invoke view getter for model=" + model + ". Did you declare it as a no arg public method?",
+					logger.error(	"Can not invoke view getter for model=" + model
+											+ ". Did you declare it as a no arg public method?",
 									e);
 				} catch (final InvocationTargetException e) {
 					logger.error(	"Invoking the view getter for model=" + model + " throws an exception.",
