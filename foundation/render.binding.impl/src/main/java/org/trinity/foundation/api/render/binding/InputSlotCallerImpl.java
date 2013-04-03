@@ -62,8 +62,13 @@ public class InputSlotCallerImpl implements InputSlotCaller {
 				final boolean validModifiers = slotInputModifiers.equals(inputModifiers);
 
 				if (validMomemtum && validModifiers) {
-					optionalInputSlot.get().invoke(	model,
-													input);
+					final Method inputSlotMethod = optionalInputSlot.get();
+					logger.debug(	"Invoking input slot={} on model={} with arg={}",
+									inputSlotMethod,
+									model,
+									input);
+					inputSlotMethod.invoke(	model,
+											input);
 				}
 			}
 		} catch (final IllegalAccessException e) {
