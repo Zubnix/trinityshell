@@ -13,6 +13,8 @@ package org.trinity.foundation.render.qt.impl.painter;
 
 import java.util.concurrent.Callable;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
@@ -30,6 +32,7 @@ import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
+@ThreadSafe
 public class PainterImpl implements Painter {
 
 	private final AsyncListenable model;
@@ -232,8 +235,9 @@ public class PainterImpl implements Painter {
 		final Runnable eventTrackerInstaller = new Runnable() {
 			@Override
 			public void run() {
-				final QObject eventTracker = PainterImpl.this.eventTrackerFactory.createQJEventTracker(	PainterImpl.this.model,
-																										view);
+				final QObject eventTracker = PainterImpl.this.eventTrackerFactory
+						.createQJEventTracker(	PainterImpl.this.model,
+												view);
 				view.installEventFilter(eventTracker);
 			}
 		};
@@ -250,7 +254,8 @@ public class PainterImpl implements Painter {
 			@Override
 			public DisplaySurface call() {
 				final DisplaySurfaceHandle displaySurfaceHandle = new RenderDisplaySurfaceHandle(view);
-				final DisplaySurface displaySurface = PainterImpl.this.displaySurfaceFactory.createDisplaySurface(displaySurfaceHandle);
+				final DisplaySurface displaySurface = PainterImpl.this.displaySurfaceFactory
+						.createDisplaySurface(displaySurfaceHandle);
 				return displaySurface;
 			}
 		};
