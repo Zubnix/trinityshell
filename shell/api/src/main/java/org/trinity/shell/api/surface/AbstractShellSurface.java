@@ -15,13 +15,13 @@ import java.util.concurrent.ExecutionException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.GeometryNotify;
-import org.trinity.foundation.api.display.event.GeometryRequest;
 import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.api.display.event.ShowNotify;
-import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.ShellNode;
@@ -44,6 +44,8 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 @ThreadSafe
 public abstract class AbstractShellSurface extends AbstractAsyncShellSurface implements ShellSurface {
+
+	private static final Logger logger = LoggerFactory.getLogger(AbstractShellSurface.class);
 
 	public static final boolean DEFAULT_IS_RESIZABLE = true;
 	public static final boolean DEFAULT_IS_MOVABLE = true;
@@ -80,15 +82,15 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 		addCallback(getDisplaySurface(),
 					new FutureCallback<DisplaySurface>() {
 						@Override
-						public void onSuccess(final DisplaySurface result) {
-							result.register(AbstractShellSurface.this,
-											AbstractShellSurface.this.shellExecutor);
+						public void onSuccess(final DisplaySurface clientDisplaySurface) {
+							clientDisplaySurface.register(	AbstractShellSurface.this,
+															AbstractShellSurface.this.shellExecutor);
 						}
 
 						@Override
 						public void onFailure(final Throwable t) {
-							// TODO Auto-generated method stub
-							t.printStackTrace();
+							logger.error(	"Failed to get display surface.",
+											t);
 						}
 					},
 					this.shellExecutor);
@@ -104,8 +106,8 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 
 						@Override
 						public void onFailure(final Throwable t) {
-							// TODO Auto-generated method stub
-							t.printStackTrace();
+							logger.error(	"Failed to get display surface.",
+											t);
 						}
 					},
 					this.shellExecutor);
@@ -282,11 +284,11 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 			setSizeImpl(displaySurfaceGeo.getSize());
 			doMoveResize(false);
 		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(	"Interrupted while waiting for display surface geometry.",
+							e);
 		} catch (final ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(	"Exception while getting display surface geometry.",
+							e);
 		}
 
 		return null;
@@ -334,37 +336,44 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 		doMoveResize(false);
 	}
 
-	/**
-	 * Called when an {@code GeometryRequest} arrives for this surface.
-	 * <p>
-	 * This method is called by the display thread.
-	 * 
-	 * @param geometryRequest
-	 *            a {@link GeometryRequest}
-	 */
-	@Subscribe
-	public void handleGeometryRequestEvent(final GeometryRequest geometryRequest) {
-		final Rectangle currentGeometry = getGeometryImpl();
-		final Rectangle requestedGeometry = geometryRequest.getGeometry();
-		final int newX = geometryRequest.configureX() ? requestedGeometry.getPosition().getX() : currentGeometry
-				.getPosition().getX();
-		final int newY = geometryRequest.configureY() ? requestedGeometry.getPosition().getY() : currentGeometry
-				.getPosition().getY();
-		final int newWidth = geometryRequest.configureWidth() ? requestedGeometry.getSize().getWidth()
-				: currentGeometry.getSize().getWidth();
-		final int newHeight = geometryRequest.configureHeight() ? requestedGeometry.getSize().getHeight()
-				: currentGeometry.getSize().getHeight();
-
-		if (geometryRequest.configureX() || geometryRequest.configureY()) {
-			setPositionImpl(newX,
-							newY);
-		}
-		if (geometryRequest.configureWidth() || geometryRequest.configureHeight()) {
-			setSizeImpl(newWidth,
-						newHeight);
-		}
-		requestMoveResizeImpl();
-	}
+	// Don't automatically handle requests. Let a window manager do that.
+	// /**
+	// * Called when an {@code GeometryRequest} arrives for this surface.
+	// * <p>
+	// * This method is called by the display thread.
+	// *
+	// * @param geometryRequest
+	// * a {@link GeometryRequest}
+	// */
+	// @Subscribe
+	// public void handleGeometryRequestEvent(final GeometryRequest
+	// geometryRequest) {
+	// final Rectangle currentGeometry = getGeometryImpl();
+	// final Rectangle requestedGeometry = geometryRequest.getGeometry();
+	// final int newX = geometryRequest.configureX() ?
+	// requestedGeometry.getPosition().getX() : currentGeometry
+	// .getPosition().getX();
+	// final int newY = geometryRequest.configureY() ?
+	// requestedGeometry.getPosition().getY() : currentGeometry
+	// .getPosition().getY();
+	// final int newWidth = geometryRequest.configureWidth() ?
+	// requestedGeometry.getSize().getWidth()
+	// : currentGeometry.getSize().getWidth();
+	// final int newHeight = geometryRequest.configureHeight() ?
+	// requestedGeometry.getSize().getHeight()
+	// : currentGeometry.getSize().getHeight();
+	//
+	// if (geometryRequest.configureX() || geometryRequest.configureY()) {
+	// setPositionImpl(newX,
+	// newY);
+	// }
+	// if (geometryRequest.configureWidth() ||
+	// geometryRequest.configureHeight()) {
+	// setSizeImpl(newWidth,
+	// newHeight);
+	// }
+	// requestMoveResizeImpl();
+	// }
 
 	/**
 	 * Called when an {@code HideNotify} arrives for this surface.
@@ -392,17 +401,18 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 		doShow(false);
 	}
 
-	/**
-	 * Called when an {@code ShowRequest} arrives for this surface.
-	 * <p>
-	 * This method is called by the display thread.
-	 * 
-	 * @param showRequest
-	 *            a {@link ShowRequest}
-	 */
-	@Subscribe
-	public void handleShowRequestEvent(final ShowRequest showRequest) {
-		requestShowImpl();
-	}
+	// Don't automatically handle requests. Let a window manager do that.
+	// /**
+	// * Called when an {@code ShowRequest} arrives for this surface.
+	// * <p>
+	// * This method is called by the display thread.
+	// *
+	// * @param showRequest
+	// * a {@link ShowRequest}
+	// */
+	// @Subscribe
+	// public void handleShowRequestEvent(final ShowRequest showRequest) {
+	// requestShowImpl();
+	// }
 	/* end display event handling */
 }
