@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.input.Input;
@@ -28,6 +30,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton
+@NotThreadSafe
 public class InputSlotCallerImpl implements InputSlotCaller {
 
 	private static final Logger logger = LoggerFactory.getLogger(InputSlotCallerImpl.class);

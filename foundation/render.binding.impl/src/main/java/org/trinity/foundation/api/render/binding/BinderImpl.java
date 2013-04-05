@@ -12,6 +12,8 @@ import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.input.Input;
@@ -55,6 +57,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @Bind
 @Singleton
+@NotThreadSafe
 public class BinderImpl implements Binder {
 
 	private static final Logger logger = LoggerFactory.getLogger(BinderImpl.class);
