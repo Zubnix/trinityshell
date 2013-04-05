@@ -14,11 +14,10 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Immutable
 public class ViewElementTypesImpl implements ViewElementTypes {
 
-	private final Class<?>[] viewElementTypes = { QWidget.class };
+	private static final Class<?>[] viewElementTypes = { QWidget.class };
 
 	@Override
 	public Class<?>[] getViewElementTypes() {
-		return this.viewElementTypes;
+		return viewElementTypes;
 	}
-
 }
