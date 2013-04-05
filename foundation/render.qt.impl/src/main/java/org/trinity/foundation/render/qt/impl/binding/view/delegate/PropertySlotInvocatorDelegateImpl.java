@@ -5,8 +5,6 @@ import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -19,7 +17,6 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton
-@ThreadSafe
 public class PropertySlotInvocatorDelegateImpl implements PropertySlotInvocatorDelegate {
 
 	@Inject

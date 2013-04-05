@@ -12,6 +12,7 @@ import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.binding.view.delegate.BoundButtonInputEvent;
 import org.trinity.foundation.api.render.binding.view.delegate.BoundKeyInputEvent;
 import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.OwnerThread;
 
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
@@ -20,6 +21,7 @@ import com.trolltech.qt.gui.QKeyEvent;
 import com.trolltech.qt.gui.QMouseEvent;
 
 @NotThreadSafe
+@OwnerThread("Render")
 public class BoundInputListener extends QObject {
 
 	private final Class<? extends Input> inputType;

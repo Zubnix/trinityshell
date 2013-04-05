@@ -3,8 +3,6 @@ package org.trinity.foundation.render.qt.impl.binding.view.delegate;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 import org.trinity.foundation.api.shared.AsyncListenable;
@@ -27,7 +25,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @Bind
 @Singleton
-@ThreadSafe
 public class InputListenerInstallerDelegateImpl implements InputListenerInstallerDelegate {
 
 	private final HashFunction hashFunction = Hashing.goodFastHash(16);

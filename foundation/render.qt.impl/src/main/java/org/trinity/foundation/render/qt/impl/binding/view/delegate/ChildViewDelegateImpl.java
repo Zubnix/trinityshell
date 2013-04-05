@@ -3,8 +3,6 @@ package org.trinity.foundation.render.qt.impl.binding.view.delegate;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -22,7 +20,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @Bind
 @Singleton
-@ThreadSafe
 public class ChildViewDelegateImpl implements ChildViewDelegate {
 
 	private final Injector injector;
