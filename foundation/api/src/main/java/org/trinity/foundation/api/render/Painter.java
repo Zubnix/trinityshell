@@ -13,6 +13,7 @@ package org.trinity.foundation.api.render;
 
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.shared.OwnerThread;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -24,6 +25,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * 
  *************************************** 
  */
+@OwnerThread("Render")
 public interface Painter extends DisplayAreaManipulator {
 
 	/**

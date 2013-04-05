@@ -4,9 +4,11 @@ import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.ButtonNotify;
 import org.trinity.foundation.api.shared.Coordinate;
+import org.trinity.foundation.api.shared.OwnerThread;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+@OwnerThread("Display")
 public interface Pointer extends InputDevice {
 	/***************************************
 	 * The position of the pointer as seen from this <code>DisplaySurface</code>

@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
+import org.trinity.foundation.api.shared.OwnerThread;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -28,6 +29,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * @see PropertyChanged
  *************************************** 
  */
+@OwnerThread("Render")
 public interface PropertySlotInvocatorDelegate {
 
 	/***************************************

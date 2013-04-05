@@ -12,6 +12,7 @@
 package org.trinity.foundation.api.display;
 
 import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.OwnerThread;
 import org.trinity.foundation.api.shared.Rectangle;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -22,6 +23,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * server.
  * 
  */
+@OwnerThread("Display")
 public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator, AsyncListenable {
 
 	/***************************************

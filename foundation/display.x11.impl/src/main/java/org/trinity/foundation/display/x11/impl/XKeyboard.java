@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -40,7 +38,6 @@ import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton
-@ThreadSafe
 public class XKeyboard implements Keyboard {
 
 	private static final Logger logger = LoggerFactory.getLogger(XKeyboard.class);
@@ -58,7 +55,7 @@ public class XKeyboard implements Keyboard {
 				final XInputModifierMaskMapping xInputModifierMaskMapping,
 				final XConnection xConnection,
 				final XTime xTime,
-				@Named("XExecutor") final ListeningExecutorService xExecutor) {
+				@Named("Display") final ListeningExecutorService xExecutor) {
 		this.xKeySymbolMapping = xKeySymbolMapping;
 		this.xKeySymbolCache = xKeySymbolCache;
 		this.xInputModifierMaskMapping = xInputModifierMaskMapping;

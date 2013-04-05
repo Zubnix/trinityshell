@@ -62,7 +62,7 @@ public class XWindow implements DisplaySurface {
 	XWindow(final XTime xTime,
 			final XConnection xConnection,
 			@Assisted final DisplaySurfaceHandle resourceHandle,
-			@Named("XExecutor") final ListeningExecutorService xExecutor) {
+			@Named("Display") final ListeningExecutorService xExecutor) {
 		this.xTime = xTime;
 		this.xConnection = xConnection;
 		this.resourceHandle = resourceHandle;

@@ -16,6 +16,7 @@ import java.util.List;
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.KeyNotify;
+import org.trinity.foundation.api.shared.OwnerThread;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -25,6 +26,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * 
  *************************************** 
  */
+@OwnerThread("Display")
 public interface Keyboard extends InputDevice {
 
 	/**

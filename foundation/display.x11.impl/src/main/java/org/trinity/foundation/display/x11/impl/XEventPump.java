@@ -53,7 +53,7 @@ public class XEventPump implements Runnable {
 	@Inject
 	XEventPump(	final XConnection connection,
 				@Named("XEventBus") final EventBus xEventBus,
-				@Named("XExecutor") final ListeningExecutorService xExecutor) {
+				@Named("Display") final ListeningExecutorService xExecutor) {
 		this.connection = connection;
 		this.xEventBus = xEventBus;
 		this.xExecutor = xExecutor;

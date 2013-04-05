@@ -13,12 +13,13 @@ package org.trinity.foundation.display.x11.impl;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.freedesktop.xcb.xcb_button_press_event_t;
 import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
+import org.trinity.foundation.api.shared.OwnerThread;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -32,13 +33,14 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
-@ThreadSafe
+@NotThreadSafe
+@OwnerThread("Display")
 public class XTime {
 
 	private final AtomicInteger time = new AtomicInteger();
 
 	@Inject
-	XTime(@Named("XEventBus") final EventBus xEventBus) {
+	XTime(@Named("Display") final EventBus xEventBus) {
 		xEventBus.register(this);
 	}
 

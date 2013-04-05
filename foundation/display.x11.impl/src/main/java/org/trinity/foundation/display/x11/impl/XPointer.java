@@ -2,8 +2,6 @@ package org.trinity.foundation.display.x11.impl;
 
 import java.util.concurrent.Callable;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.LibXcbConstants;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
@@ -34,7 +32,6 @@ import static com.google.common.util.concurrent.Futures.transform;
 
 @Bind
 @Singleton
-@ThreadSafe
 public class XPointer implements Pointer {
 
 	private static final Logger logger = LoggerFactory.getLogger(XPointer.class);
@@ -46,7 +43,7 @@ public class XPointer implements Pointer {
 	@Inject
 	XPointer(	final XConnection xConnection,
 				final XTime xTime,
-				@Named("XExecutor") final ListeningExecutorService xExecutor) {
+				@Named("Display") final ListeningExecutorService xExecutor) {
 		this.xConnection = xConnection;
 		this.xTime = xTime;
 		this.xExecutor = xExecutor;

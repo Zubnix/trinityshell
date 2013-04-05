@@ -11,6 +11,8 @@
  */
 package org.trinity.foundation.api.render.binding.view.delegate;
 
+import org.trinity.foundation.api.shared.OwnerThread;
+
 import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
@@ -20,6 +22,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * 
  *************************************** 
  */
+@OwnerThread("Render")
 public interface ChildViewDelegate {
 	/***************************************
 	 * Create a new view instance.
