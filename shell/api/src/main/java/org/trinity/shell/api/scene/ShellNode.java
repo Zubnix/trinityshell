@@ -12,8 +12,9 @@
 package org.trinity.shell.api.scene;
 
 import org.trinity.foundation.api.display.DisplayArea;
-import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.Coordinate;
+import org.trinity.foundation.api.shared.OwnerThread;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
@@ -32,6 +33,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * 
  *************************************** 
  */
+@OwnerThread("Shell")
 public interface ShellNode extends DisplayArea, AsyncListenable {
 
 	ListenableFuture<Rectangle> getGeometry();
