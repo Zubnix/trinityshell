@@ -15,6 +15,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DestroyNotify;
+import org.trinity.foundation.api.shared.OwnerThread;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
@@ -30,7 +31,8 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * of the <code>PlatformRenderArea</code> it wraps.
  */
 @ThreadSafe
-public class ShellClientSurface extends AbstractShellSurface {
+@OwnerThread("Shell")
+public final class ShellClientSurface extends AbstractShellSurface {
 
 	private final ShellSurfaceGeometryDelegateImpl shellSurfaceGeometryDelegateImpl;
 	private final DisplaySurface displaySurface;
@@ -45,9 +47,15 @@ public class ShellClientSurface extends AbstractShellSurface {
 		syncGeoToDisplaySurface();
 
 		setParent(rootShellSurface);
-		doReparent(false);
+		doReparent();
 
 		subscribeToDisplaySurfaceEvents();
+	}
+
+	// never reparent from the underlying native parent.
+	@Override
+	protected void doReparent(final boolean execute) {
+		super.doReparent(false);
 	}
 
 	@Override

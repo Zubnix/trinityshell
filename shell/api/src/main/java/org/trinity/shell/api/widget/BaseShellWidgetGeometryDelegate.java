@@ -62,6 +62,7 @@ public class BaseShellWidgetGeometryDelegate extends AbstractShellSurfaceGeometr
 		if (square == null) {
 			return null;
 		}
+
 		// find the closest ancestor that is of type ShellSurface
 		if (square instanceof BaseShellWidget) {
 
