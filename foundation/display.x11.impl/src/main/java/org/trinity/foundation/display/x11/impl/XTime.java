@@ -40,7 +40,7 @@ public class XTime {
 	private final AtomicInteger time = new AtomicInteger();
 
 	@Inject
-	XTime(@Named("Display") final EventBus xEventBus) {
+	XTime(@Named("XEventBus") final EventBus xEventBus) {
 		xEventBus.register(this);
 	}
 

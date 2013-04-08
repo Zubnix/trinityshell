@@ -32,11 +32,11 @@ public class Module extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(EventBus.class).annotatedWith(Names.named("XEventBus")).toInstance(new EventBus());
-		bind(ListeningExecutorService.class).annotatedWith(Names.named("Display"))
-				.toInstance(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor(new ThreadFactory() {
+		bind(ListeningExecutorService.class).annotatedWith(Names.named("Display")).toInstance(MoreExecutors.listeningDecorator(Executors
+				.newSingleThreadExecutor(new ThreadFactory() {
 					@Override
-					public Thread newThread(final Runnable arg0) {
-						return new Thread(	arg0,
+					public Thread newThread(final Runnable executorRunnable) {
+						return new Thread(	executorRunnable,
 											"display-executor");
 					}
 				})));

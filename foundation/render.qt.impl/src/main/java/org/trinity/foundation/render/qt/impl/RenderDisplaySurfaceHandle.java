@@ -79,6 +79,7 @@ public class RenderDisplaySurfaceHandle implements DisplaySurfaceHandle {
 
 	@Override
 	public Integer getNativeHandle() {
+
 		final FutureTask<Integer> getHandleTask = new FutureTask<Integer>(new Callable<Integer>() {
 			@Override
 			public Integer call() {
@@ -90,6 +91,7 @@ public class RenderDisplaySurfaceHandle implements DisplaySurfaceHandle {
 				return Integer.valueOf(visualId);
 			}
 		});
+
 		QCoreApplication.invokeLater(getHandleTask);
 		Integer handle = null;
 		try {

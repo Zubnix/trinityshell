@@ -7,13 +7,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.TYPE)
 @Inherited
-@ThreadSafe
 public @interface OwnerThread {
 	String value();
 }

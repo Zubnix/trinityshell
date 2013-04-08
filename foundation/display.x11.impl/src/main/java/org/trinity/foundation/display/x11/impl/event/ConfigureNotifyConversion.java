@@ -63,8 +63,8 @@ public class ConfigureNotifyConversion implements XEventConversion {
 
 		final int x = configure_notify_event_t.getX();
 		final int y = configure_notify_event_t.getY();
-		final int width = configure_notify_event_t.getWidth();
-		final int height = configure_notify_event_t.getHeight();
+		final int width = configure_notify_event_t.getWidth() + (2 * configure_notify_event_t.getBorder_width());
+		final int height = configure_notify_event_t.getHeight() + (2 * configure_notify_event_t.getBorder_width());
 		final Rectangle geometry = new ImmutableRectangle(	x,
 															y,
 															width,

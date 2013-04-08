@@ -20,10 +20,8 @@ import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_cw_t;
 import org.freedesktop.xcb.xcb_event_mask_t;
-import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_screen_iterator_t;
 import org.freedesktop.xcb.xcb_screen_t;
-import org.freedesktop.xcb.xcb_void_cookie_t;
 
 import com.google.inject.Singleton;
 
@@ -62,18 +60,12 @@ public class XConnection {
 		final int rootId = this.screen_t.getRoot();
 
 		final ByteBuffer values = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE
-				| xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE | xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
 
-		final xcb_void_cookie_t void_cookie_t = LibXcb.xcb_change_window_attributes_checked(getConnectionReference(),
-																							rootId,
-																							xcb_cw_t.XCB_CW_EVENT_MASK,
-																							values);
-		final xcb_generic_error_t error_t = LibXcb.xcb_request_check(	getConnectionReference(),
-																		void_cookie_t);
-		if (xcb_generic_error_t.getCPtr(error_t) != 0) {
-			throw new RuntimeException(XcbErrorUtil.toString(error_t));
-		}
+		LibXcb.xcb_change_window_attributes(getConnectionReference(),
+											rootId,
+											xcb_cw_t.XCB_CW_EVENT_MASK,
+											values);
 	}
 
 	public void close() {

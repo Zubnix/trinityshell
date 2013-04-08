@@ -70,8 +70,8 @@ public class ConfigureRequestConversion implements XEventConversion {
 
 		final int x = request_event_t.getX();
 		final int y = request_event_t.getY();
-		final int width = request_event_t.getWidth();
-		final int height = request_event_t.getHeight();
+		final int width = request_event_t.getWidth() + (2 * request_event_t.getBorder_width());
+		final int height = request_event_t.getHeight() + (2 * request_event_t.getBorder_width());
 		final Rectangle geometry = new ImmutableRectangle(	x,
 															y,
 															width,
