@@ -1,5 +1,10 @@
 package org.trinity.foundation.api.render.binding;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
@@ -8,18 +13,10 @@ import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 public class PropertyBindingTest {
 
 	@Test
-	public void testBoundProperty() throws ExecutionException, NoSuchMethodException, SecurityException,
-			InterruptedException {
+	public void testBoundProperty() throws ExecutionException, NoSuchMethodException, SecurityException, InterruptedException {
 		final Model model = new Model();
 		final View view = new View();
 
@@ -29,11 +26,9 @@ public class PropertyBindingTest {
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final CollectionElementView collectionElementView = new CollectionElementView();
-		final ListenableFuture<CollectionElementView> listenableFuture = mock(ListenableFuture.class);
-		when(listenableFuture.get()).thenReturn(collectionElementView);
 		when(childViewDelegate.newView(	view,
 										CollectionElementView.class,
-										0)).thenReturn(listenableFuture);
+										0)).thenReturn(collectionElementView);
 		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
 												inputListenerInstallerDelegate,
 												childViewDelegate,
@@ -65,8 +60,7 @@ public class PropertyBindingTest {
 	}
 
 	@Test
-	public void testUpdateAndConvertedProperty() throws ExecutionException, NoSuchMethodException, SecurityException,
-			InterruptedException {
+	public void testUpdateAndConvertedProperty() throws ExecutionException, NoSuchMethodException, SecurityException, InterruptedException {
 		// given
 		final Model model = new Model();
 		final View view = new View();
@@ -77,11 +71,9 @@ public class PropertyBindingTest {
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final CollectionElementView collectionElementView = new CollectionElementView();
-		final ListenableFuture<CollectionElementView> listenableFuture = mock(ListenableFuture.class);
-		when(listenableFuture.get()).thenReturn(collectionElementView);
 		when(childViewDelegate.newView(	view,
 										CollectionElementView.class,
-										0)).thenReturn(listenableFuture);
+										0)).thenReturn(collectionElementView);
 		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
 												inputListenerInstallerDelegate,
 												childViewDelegate,
