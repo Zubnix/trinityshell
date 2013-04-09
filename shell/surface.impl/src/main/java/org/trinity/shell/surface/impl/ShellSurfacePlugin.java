@@ -42,8 +42,6 @@ public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlug
 
 	@Override
 	protected void startUp() throws Exception {
-		// this.display.open().get(2,
-		// TimeUnit.SECONDS);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ package org.trinity.shell.api.plugin;
 
 import org.trinity.shell.api.Module;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.Service;
 
 /*****************************************
@@ -22,9 +23,10 @@ import com.google.common.util.concurrent.Service;
  * {@code start()} and {@code stop} should be non-blocking and should not spawn
  * any additional threads unless absolutely necessary. Instead a shell plugin
  * should hook into the shell thread itself. Should a shell plugin start a new
- * thread then this thread should not call any objects that live outside it's
- * own shell plugin. This keeps for a more thread safe and more predictable
- * behavior of shell plugins.
+ * thread then this thread should not call any object internals that live
+ * outside it's own shell plugin, instead use the {@link ListenableFuture}s
+ * provided throughout the shell api. This keeps for a more thread safe and more
+ * predictable behavior of shell plugins.
  * 
  * @see {@link Module}.
  * 

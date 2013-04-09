@@ -52,7 +52,7 @@ public interface ShellKeysBinding {
 	InputModifiers getInputModifiers();
 
 	/***************************************
-	 * Active and make this key binding eligible for execution.
+	 * Activate and make this key binding eligible for execution.
 	 *************************************** 
 	 */
 	void bind();

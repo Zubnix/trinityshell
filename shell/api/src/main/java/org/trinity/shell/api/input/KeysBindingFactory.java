@@ -24,7 +24,9 @@ import org.trinity.foundation.api.display.input.Key;
  */
 public interface KeysBindingFactory {
 
-	/****************************************
+	// FIXME should return a future, shellkeybinding should be created by the
+	// shell thread.
+	/***************************************
 	 * Create a new inactive key binding.
 	 * 
 	 * @param keys

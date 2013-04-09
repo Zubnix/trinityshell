@@ -13,6 +13,14 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
 // TODO auto generate this boiler plate code
+// TODO documentation
+/***************************************
+ * Asynchronous abstract implementation of a {@link ShellNode}. Method calls are
+ * placed on the shell executor queue. Subclasses must implement any concrete
+ * internal node manipulation.
+ * 
+ *************************************** 
+ */
 public abstract class AbstractAsyncShellNode implements ShellNode {
 
 	private final ListeningExecutorService shellExecutor;
@@ -27,6 +35,14 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 		});
 	}
 
+	/***************************************
+	 * Concrete implementation of {@link #getPosition()}. This method should
+	 * only be invoked by the Shell thread.
+	 * 
+	 * @return a {@link Coordinate}, depicting this node's position.
+	 * @see #getPosition()
+	 *************************************** 
+	 */
 	public abstract Coordinate getPositionImpl();
 
 	@Override
@@ -39,6 +55,14 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 		});
 	}
 
+	/***************************************
+	 * Concrete implementation of {@link #getSize()}. This method should only be
+	 * invoked by the Shell thread.
+	 * 
+	 * @return a {@link Size}, depicting this node's size.
+	 * @see #getSize()
+	 *************************************** 
+	 */
 	public abstract Size getSizeImpl();
 
 	@Override

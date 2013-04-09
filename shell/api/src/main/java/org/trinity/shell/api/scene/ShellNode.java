@@ -28,6 +28,7 @@ import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+// TODO javadoc
 /***************************************
  * The super interface of all nodes that live in the shell scene.
  * 
@@ -36,20 +37,54 @@ import com.google.common.util.concurrent.ListenableFuture;
 @OwnerThread("Shell")
 public interface ShellNode extends DisplayArea, AsyncListenable {
 
+	/***************************************
+	 * @return
+	 *************************************** 
+	 */
 	ListenableFuture<Rectangle> getGeometry();
 
+	/***************************************
+	 * @param width
+	 * @param height
+	 * @return
+	 *************************************** 
+	 */
 	ListenableFuture<Void> setSize(	int width,
 									int height);
 
+	/***************************************
+	 * @param size
+	 * @return
+	 *************************************** 
+	 */
 	ListenableFuture<Void> setSize(Size size);
 
+	/***************************************
+	 * @param x
+	 * @param y
+	 * @return
+	 *************************************** 
+	 */
 	ListenableFuture<Void> setPosition(	int x,
 										int y);
 
+	/***************************************
+	 * @param position
+	 * @return
+	 *************************************** 
+	 */
 	ListenableFuture<Void> setPosition(Coordinate position);
 
+	/***************************************
+	 * @return
+	 *************************************** 
+	 */
 	ListenableFuture<Coordinate> getPosition();
 
+	/***************************************
+	 * @return
+	 *************************************** 
+	 */
 	ListenableFuture<Size> getSize();
 
 	/**
@@ -59,7 +94,7 @@ public interface ShellNode extends DisplayArea, AsyncListenable {
 	 * <code>PaintSurfaceNode</code> will only be physically visible if all it's
 	 * parents are physically visible as well.
 	 * 
-	 * @return true if visible, false if not
+	 * @return future true if visible, future false if not
 	 */
 	ListenableFuture<Boolean> isVisible();
 
