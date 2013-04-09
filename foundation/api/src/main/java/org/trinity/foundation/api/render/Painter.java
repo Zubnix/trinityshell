@@ -32,10 +32,14 @@ public interface Painter extends DisplayAreaManipulator {
 	 * 
 	 * Get the {@link DisplaySurface} that the painter uses to paint the view.
 	 * 
-	 * @return A {@link DisplaySurface}.
+	 * @return A future {@link DisplaySurface}.
 	 */
-	// TODO client event?
 	ListenableFuture<DisplaySurface> getDislaySurface();
 
-	void bindView();
+	// FIXME delegate to Render thread?
+	/***************************************
+	 * 
+	 ***************************************
+	 */
+	ListenableFuture<Void> bindView();
 }

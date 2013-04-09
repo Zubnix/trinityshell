@@ -17,8 +17,6 @@ import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.OwnerThread;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
 /***************************************
  * A delegate to listen for specific user input on a view instance. When input
  * arrives, a corresponding {@link BoundInputEvent} should be created and passed
@@ -48,10 +46,10 @@ public interface InputListenerInstallerDelegate {
 	 *************************************** 
 	 */
 	// TODO some kind of notify event?
-	ListenableFuture<Void> installViewInputListener(Class<? extends Input> inputType,
-													Object view,
-													AsyncListenable inputEventTarget,
-													String inputSlotName);
+	void installViewInputListener(	Class<? extends Input> inputType,
+									Object view,
+									AsyncListenable inputEventTarget,
+									String inputSlotName);
 
 	/***************************************
 	 * Remove a previously installed input listener.
@@ -69,8 +67,8 @@ public interface InputListenerInstallerDelegate {
 	 *************************************** 
 	 */
 	// TODO some kind of notify event?
-	ListenableFuture<Void> removeViewInputListener(	Class<? extends Input> inputType,
-													Object view,
-													AsyncListenable inputEventTarget,
-													String inputSlotName);
+	void removeViewInputListener(	Class<? extends Input> inputType,
+									Object view,
+									AsyncListenable inputEventTarget,
+									String inputSlotName);
 }

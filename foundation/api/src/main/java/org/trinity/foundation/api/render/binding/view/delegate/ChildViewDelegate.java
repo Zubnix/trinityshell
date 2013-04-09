@@ -13,8 +13,6 @@ package org.trinity.foundation.api.render.binding.view.delegate;
 
 import org.trinity.foundation.api.shared.OwnerThread;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
 /***************************************
  * A delegate to handle the life cycle of a child view element. This delegate
  * should be implemented for a specific widget toolkit.
@@ -36,9 +34,9 @@ public interface ChildViewDelegate {
 	 * @return a new view instance.
 	 *************************************** 
 	 */
-	<T> ListenableFuture<T> newView(Object parentView,
-									Class<T> childViewType,
-									int position);
+	<T> T newView(	Object parentView,
+					Class<T> childViewType,
+					int position);
 
 	/***************************************
 	 * Destroy a view instance.
@@ -51,10 +49,9 @@ public interface ChildViewDelegate {
 	 *            The index of the view that should be destroyed.
 	 *************************************** 
 	 */
-	// TODO some kind of notify event?
-	ListenableFuture<Void> destroyView(	Object parentView,
-										Object deletedChildView,
-										int deletedPosition);
+	void destroyView(	Object parentView,
+						Object deletedChildView,
+						int deletedPosition);
 
 	/***************************************
 	 * Update the position (index) of a view instance, relative to it's parent.
@@ -70,8 +67,8 @@ public interface ChildViewDelegate {
 	 *************************************** 
 	 */
 	// TODO some kind of notify event?
-	ListenableFuture<Void> updateChildViewPosition(	Object parentView,
-													Object childView,
-													int oldPosition,
-													int newPosition);
+	void updateChildViewPosition(	Object parentView,
+									Object childView,
+									int oldPosition,
+									int newPosition);
 }

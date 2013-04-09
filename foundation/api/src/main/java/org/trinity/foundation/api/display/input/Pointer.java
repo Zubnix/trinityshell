@@ -17,7 +17,6 @@ public interface Pointer extends InputDevice {
 	 * @return The pointer position {@link Coordinate}.
 	 *************************************** 
 	 */
-	// TODO pointer notify
 	ListenableFuture<Coordinate> getPointerCoordinate(DisplaySurface displaySurface);
 
 	/***************************************
@@ -33,9 +32,10 @@ public interface Pointer extends InputDevice {
 	 * @param withModifiers
 	 *            The {@link InputModifiers} that should be active if a grab is
 	 *            to take place.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
-	// TODO grab button notify
 	ListenableFuture<Void> grabButton(	DisplaySurface displaySurface,
 										Button grabButton,
 										InputModifiers withModifiers);
@@ -44,19 +44,21 @@ public interface Pointer extends InputDevice {
 	 * Grab the entire pointing device of the bound {@link DisplayArea} or any
 	 * of its children. Every {@link ButtonNotify} shall be redirected.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #grabButton(Button, InputModifiers)
 	 *************************************** 
 	 */
-	// TODO grab pointer notify
 	ListenableFuture<Void> grabPointer(DisplaySurface displaySurface);
 
 	/***************************************
 	 * Release the grab on the pointing device.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #grabPointer()
 	 *************************************** 
 	 */
-	// TODO ungrab pointer notify
 	ListenableFuture<Void> ungrabPointer();
 
 	/***************************************
@@ -67,10 +69,11 @@ public interface Pointer extends InputDevice {
 	 *            The {@link Button} that will be ungrabbed.
 	 * @param withModifiers
 	 *            The {@link InputModifiers}.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #grabButton(Button, InputModifiers)
 	 *************************************** 
 	 */
-	// TODO ungrab button notify
 	ListenableFuture<Void> ungrabButton(DisplaySurface displaySurface,
 										Button ungrabButton,
 										InputModifiers withModifiers);

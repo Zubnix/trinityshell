@@ -20,6 +20,8 @@ import org.trinity.foundation.api.shared.AsyncListenable;
  */
 public interface PainterFactory {
 
+	// FIXME this should return a future. painter creation should be done on the
+	// Render thread.
 	/**
 	 * Creates a new {@code Painter} for the given view model. Multiple calls
 	 * with the same model should create a new {@code Painter} instance each

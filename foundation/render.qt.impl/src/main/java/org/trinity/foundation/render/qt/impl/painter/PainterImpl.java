@@ -265,20 +265,24 @@ public class PainterImpl implements Painter {
 	}
 
 	@Override
-	public void bindView() {
+	public ListenableFuture<Void> bindView() {
+
 		final QWidget view = this.viewDiscovery.lookupView(this.model);
-		final Runnable eventTrackerInstaller = new Runnable() {
+		final Runnable viewBindingRoutine = new Runnable() {
 			@Override
 			public void run() {
-				final QObject eventTracker = PainterImpl.this.eventTrackerFactory
-						.createQJEventTracker(	PainterImpl.this.model,
-												view);
+				final QObject eventTracker = PainterImpl.this.eventTrackerFactory.createQJEventTracker(	PainterImpl.this.model,
+																										view);
 				view.installEventFilter(eventTracker);
+				PainterImpl.this.binder.bind(	PainterImpl.this.model,
+												view);
 			}
 		};
-		QApplication.invokeLater(eventTrackerInstaller);
-		this.binder.bind(	this.model,
-							view);
+		final ListenableFutureTask<Void> bindViewFuture = ListenableFutureTask.create(	viewBindingRoutine,
+																						null);
+		QApplication.invokeLater(viewBindingRoutine);
+
+		return bindViewFuture;
 	}
 
 	@Override
@@ -289,8 +293,7 @@ public class PainterImpl implements Painter {
 			@Override
 			public DisplaySurface call() {
 				final DisplaySurfaceHandle displaySurfaceHandle = new RenderDisplaySurfaceHandle(view);
-				final DisplaySurface displaySurface = PainterImpl.this.displaySurfaceFactory
-						.createDisplaySurface(displaySurfaceHandle);
+				final DisplaySurface displaySurface = PainterImpl.this.displaySurfaceFactory.createDisplaySurface(displaySurfaceHandle);
 				return displaySurface;
 			}
 		};
