@@ -11,10 +11,13 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import javax.annotation.concurrent.Immutable;
+
 /***************************************
  * Identifies a text input device's key, ie a keyboard key.
  *************************************** 
  */
+@Immutable
 public class Key {
 
 	private final int keyCode;

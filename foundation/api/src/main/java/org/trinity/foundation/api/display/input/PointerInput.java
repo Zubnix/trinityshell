@@ -11,10 +11,13 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import javax.annotation.concurrent.Immutable;
+
 /****************************************
  * User input that came from a pointing device, like a mouse.
  *************************************** 
  */
+@Immutable
 public class PointerInput extends Input {
 
 	private final Button button;

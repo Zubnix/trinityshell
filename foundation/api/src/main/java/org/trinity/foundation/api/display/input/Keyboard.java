@@ -193,7 +193,7 @@ public interface Keyboard extends InputDevice {
 	 *            a {@link Key}
 	 * @param inputModifiers
 	 *            {@link InputModifiers}
-	 * @return The keysymbol name.
+	 * @return The future keysymbol name.
 	 *************************************** 
 	 */
 	// TODO return listanablefuture?
@@ -208,7 +208,7 @@ public interface Keyboard extends InputDevice {
 	 * 
 	 * @param keySymbolName
 	 *            a keysymbol name.
-	 * @return All possible {@link Key}s.
+	 * @return All future possible {@link Key}s.
 	 *************************************** 
 	 */
 	// TODO return listanablefuture?
@@ -220,7 +220,7 @@ public interface Keyboard extends InputDevice {
 	 * 
 	 * @param modifierName
 	 *            The <code>InputModifier</code> name.
-	 * @return an {@link InputModifier}
+	 * @return a {@link InputModifier}
 	 *************************************** 
 	 */
 	// TODO return listanablefuture?
@@ -252,6 +252,8 @@ public interface Keyboard extends InputDevice {
 	 * @param withModifiers
 	 *            The {@link InputModifiers} that should be active if a grab is
 	 *            to take place.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	// TODO grab key notify
@@ -266,7 +268,10 @@ public interface Keyboard extends InputDevice {
 	 * @param ungrabKey
 	 *            The {@link Key} that will be ungrabbed.
 	 * @param withModifiers
-	 *            the {@link InputModifiers}/
+	 *            the {@link InputModifiers}
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
+	 * 
 	 * @see #grabKey(Key, InputModifiers)
 	 *************************************** 
 	 */
@@ -278,6 +283,9 @@ public interface Keyboard extends InputDevice {
 	/***************************************
 	 * Release the grab of the keyboard of the bound {@link DisplayArea}.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
+	 * 
 	 * @see #grabKeyboard()
 	 *************************************** 
 	 */
@@ -288,6 +296,8 @@ public interface Keyboard extends InputDevice {
 	 * Grab the entire keyboard of the bound {@link DisplayArea} or any of its
 	 * children. All {@link KeyNotify}s will be redirected.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #grabKey(Key, InputModifiers)
 	 *************************************** 
 	 */

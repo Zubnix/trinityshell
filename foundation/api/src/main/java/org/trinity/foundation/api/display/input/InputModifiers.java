@@ -11,10 +11,13 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import javax.annotation.concurrent.Immutable;
+
 /***************************************
  * A group of {@link InputModifier}s.
  *************************************** 
  */
+@Immutable
 public class InputModifiers {
 
 	private final int inputModfiersState;

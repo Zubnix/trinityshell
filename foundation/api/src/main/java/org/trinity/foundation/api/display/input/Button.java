@@ -11,10 +11,13 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import javax.annotation.concurrent.Immutable;
+
 /***************************************
  * Identifies a pointing device's button ie. a mouse button.
  *************************************** 
  */
+@Immutable
 public class Button {
 
 	private final int buttonCode;

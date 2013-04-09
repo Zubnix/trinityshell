@@ -30,8 +30,8 @@ public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator, Asy
 	 * Query geometry information. The values of the returned {@link Rectangle}
 	 * are implementation dependent but are usually in pixels.
 	 * 
-	 * @return a {@link Rectangle} corresponding to this {@link DisplaySurface}
-	 *         's parent relative position, a width and a height.
+	 * @return a future {@link Rectangle} corresponding to this
+	 *         {@link DisplaySurface} position, width and a height.
 	 *************************************** 
 	 */
 	ListenableFuture<Rectangle> getGeometry();

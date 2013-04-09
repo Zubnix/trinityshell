@@ -11,11 +11,14 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import javax.annotation.concurrent.Immutable;
+
 /***************************************
  * User input that came from a text input device.
  * 
  *************************************** 
  */
+@Immutable
 public class KeyboardInput extends Input {
 
 	private final Key key;

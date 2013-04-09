@@ -11,10 +11,13 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import javax.annotation.concurrent.Immutable;
+
 /***************************************
  * Represents any form of user input.
  *************************************** 
  */
+@Immutable
 public class Input {
 
 	private final Momentum momentum;

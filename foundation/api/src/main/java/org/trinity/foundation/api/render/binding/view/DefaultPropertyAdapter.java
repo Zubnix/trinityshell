@@ -11,6 +11,8 @@
  */
 package org.trinity.foundation.api.render.binding.view;
 
+import org.trinity.foundation.api.shared.OwnerThread;
+
 /***************************************
  * A default implementation of a {@link PropertyAdapter}. It simply returns the
  * property value without modification. Used as the default value in
@@ -18,6 +20,7 @@ package org.trinity.foundation.api.render.binding.view;
  * 
  *************************************** 
  */
+@OwnerThread("Render")
 public class DefaultPropertyAdapter implements PropertyAdapter<Object> {
 
 	@Override

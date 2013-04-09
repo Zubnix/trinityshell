@@ -11,6 +11,8 @@
  */
 package org.trinity.foundation.api.render.binding.view.delegate;
 
+import javax.annotation.concurrent.Immutable;
+
 import org.trinity.foundation.api.display.event.ButtonNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.input.PointerInput;
@@ -27,6 +29,7 @@ import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
  * @see InputSlotCaller
  *************************************** 
  */
+@Immutable
 public class BoundButtonInputEvent extends ButtonNotify implements BoundInputEvent {
 
 	private final String inputSlotName;

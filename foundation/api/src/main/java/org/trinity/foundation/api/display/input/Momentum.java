@@ -11,10 +11,13 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import javax.annotation.concurrent.Immutable;
+
 // TODO documentation
 /**
  * A user input momentum.
  */
+@Immutable
 public enum Momentum {
 	/**
 	 * User input has started.

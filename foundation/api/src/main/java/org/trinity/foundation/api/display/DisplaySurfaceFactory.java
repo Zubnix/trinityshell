@@ -21,6 +21,8 @@ package org.trinity.foundation.api.display;
  */
 public interface DisplaySurfaceFactory {
 
+	// FIXME this should also return a future. the display surface creation
+	// should be done in the Display thread.
 	/***************************************
 	 * Create a new {@link DisplaySurface} with the provided
 	 * {@link DisplaySurfaceHandle} as reference to the underlying native

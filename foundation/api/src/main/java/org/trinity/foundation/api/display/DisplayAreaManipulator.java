@@ -26,17 +26,24 @@ public interface DisplayAreaManipulator {
 	 * Destroy the bound {@link DisplayArea}. A destroyed {@link DisplayArea}
 	 * should be disposed and should not accept any calls made by it's
 	 * {@link DisplayAreaManipulator}.
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> destroy();
 
 	/***************************************
 	 * Set the input focus to the bound {@link DisplayArea}. Generated input
-	 * evens will have their source set as coming from this {@link DisplayArea}.
+	 * evens will have their source set as coming from the manipulated
+	 * {@link DisplayArea}.
 	 * <p>
 	 * The effects of giving focus to a hidden or destroyed {@link DisplayArea}
 	 * is implementation dependent.
 	 * </p>
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setInputFocus();
@@ -48,6 +55,9 @@ public interface DisplayAreaManipulator {
 	 * The effects of lowering a hidden or destroyed {@link DisplayArea} is
 	 * implementation dependent.
 	 * </p>
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> lower();
@@ -55,7 +65,10 @@ public interface DisplayAreaManipulator {
 	/***************************************
 	 * Make the bound {@link DisplayArea} visible if it was previously
 	 * invisible. Making an already visible {@link DisplayArea} visible has no
-	 * effect.
+	 * effect. </p>
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> show();
@@ -70,7 +83,9 @@ public interface DisplayAreaManipulator {
 	 *            dependent.
 	 * @param y
 	 *            The Y coordinate. Usually in pixels but can be implementation
-	 *            dependent.
+	 *            dependent. </p>
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> move(int x,
@@ -91,10 +106,12 @@ public interface DisplayAreaManipulator {
 	 *            dependent.
 	 * @param height
 	 *            The height. Usually in pixels but can be implementation
-	 *            dependent.
-	 * 
+	 *            dependent. </p>
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #move(int, int)
 	 * @see #resize(int, int)
+	 * 
 	 *************************************** 
 	 */
 	ListenableFuture<Void> moveResize(	int x,
@@ -109,6 +126,9 @@ public interface DisplayAreaManipulator {
 	 * The effects of raising a hidden or destroyed {@link DisplayArea} is
 	 * implementation dependent.
 	 * </p>
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> raise();
@@ -125,7 +145,9 @@ public interface DisplayAreaManipulator {
 	 *            dependent.
 	 * @param y
 	 *            The Y coordinate. Usually in pixels but can be implementation
-	 *            dependent.
+	 *            dependent. </p>
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #move(int, int)
 	 *************************************** 
 	 */
@@ -141,14 +163,19 @@ public interface DisplayAreaManipulator {
 	 *            dependent.
 	 * @param height
 	 *            The width. Usually in pixels but can be implementation
-	 *            dependent.
+	 *            dependent. </p>
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> resize(	int width,
 									int height);
 
 	/***************************************
-	 * Hide the bound {@link DisplayArea}.
+	 * Hide the bound {@link DisplayArea}. </p>
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> hide();

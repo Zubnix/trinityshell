@@ -33,18 +33,22 @@ public interface DisplayServer extends AsyncListenable {
 	/***************************************
 	 * The root {@link DisplaySurface} of the {@link DisplaySurface} hierarchy.
 	 * 
-	 * @return a {@link DisplaySurface}
+	 * @return a future {@link DisplaySurface}
 	 *************************************** 
 	 */
-	// TODO client notify?
 	ListenableFuture<DisplaySurface> getRootDisplayArea();
 
-	/**
+	/***************************************
 	 * Orderly shut down this <code>DisplayServer</code>. All resources living
 	 * on this <code>DisplayServer</code> will be shut down as well.
 	 * <p>
 	 * This method does not shut down the underlying native display, it merely
 	 * closes the connection to the underlying native display.
+	 * </p>
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
+	 *************************************** 
 	 */
 	ListenableFuture<Void> quit();
 }
