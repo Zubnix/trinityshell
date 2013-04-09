@@ -52,7 +52,7 @@ public abstract class BaseShellWidget extends AbstractShellSurface implements Sh
 
 	@Inject
 	protected BaseShellWidget(	final ShellSurfaceFactory shellSurfaceFactory,
-								@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
+								@Named("Shell") final ListeningExecutorService shellExecutor,
 								final PainterFactory painterFactory) {
 		super(shellExecutor);
 		this.painter = painterFactory.createPainter(this);

@@ -34,9 +34,8 @@ public class Module extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(EventBus.class).annotatedWith(Names.named("ShellEventBus")).toInstance(new EventBus());
-		bind(ListeningExecutorService.class).annotatedWith(Names.named("ShellExecutor"))
-				.toInstance(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor(new ThreadFactory() {
-
+		bind(ListeningExecutorService.class).annotatedWith(Names.named("Shell")).toInstance(MoreExecutors.listeningDecorator(Executors
+				.newSingleThreadExecutor(new ThreadFactory() {
 					@Override
 					public Thread newThread(final Runnable r) {
 						return new Thread(	r,

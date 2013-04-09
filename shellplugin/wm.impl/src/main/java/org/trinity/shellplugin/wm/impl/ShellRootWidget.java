@@ -32,7 +32,7 @@ public class ShellRootWidget extends BaseShellWidget {
 
 	@Inject
 	protected ShellRootWidget(	final ShellSurfaceFactory shellSurfaceFactory,
-								@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
+								@Named("Shell") final ListeningExecutorService shellExecutor,
 								final PainterFactory painterFactory,
 								@Named("RootView") final Object view,
 								final Set<TopBarItem> topBarItems,

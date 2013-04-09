@@ -34,7 +34,7 @@ public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlug
 	private final ListeningExecutorService shellExecutor;
 
 	@Inject
-	ShellSurfacePlugin(	@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
+	ShellSurfacePlugin(	@Named("Shell") final ListeningExecutorService shellExecutor,
 						final DisplayServer display) {
 		this.display = display;
 		this.shellExecutor = shellExecutor;

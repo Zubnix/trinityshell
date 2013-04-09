@@ -66,7 +66,7 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	public abstract Void setSizeImpl(final Size size);
 
 	@Inject
-	protected AbstractAsyncShellNode(@Named("ShellExecutor") final ListeningExecutorService shellExecutor) {
+	protected AbstractAsyncShellNode(@Named("Shell") final ListeningExecutorService shellExecutor) {
 		this.shellExecutor = shellExecutor;
 	}
 

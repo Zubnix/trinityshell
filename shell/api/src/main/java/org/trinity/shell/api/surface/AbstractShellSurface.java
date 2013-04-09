@@ -73,7 +73,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 	 * Create new <code>AbstractShellSurface</code>
 	 */
 	@Inject
-	protected AbstractShellSurface(@Named("ShellExecutor") final ListeningExecutorService shellExecutor) {
+	protected AbstractShellSurface(@Named("Shell") final ListeningExecutorService shellExecutor) {
 		super(shellExecutor);
 		this.shellExecutor = shellExecutor;
 	}

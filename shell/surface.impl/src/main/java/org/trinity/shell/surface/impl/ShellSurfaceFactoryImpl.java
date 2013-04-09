@@ -32,7 +32,7 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 	private ShellSurfaceParent rootShellSurface;
 
 	@Inject
-	ShellSurfaceFactoryImpl(@Named("ShellExecutor") final ListeningExecutorService shellExecutor,
+	ShellSurfaceFactoryImpl(@Named("Shell") final ListeningExecutorService shellExecutor,
 							final DisplayServer displayServer) {
 		this.shellExecutor = shellExecutor;
 		this.displayServer = displayServer;
