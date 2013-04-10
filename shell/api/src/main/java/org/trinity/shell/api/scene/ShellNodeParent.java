@@ -23,7 +23,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * {@link ShellNode#requestReparent()}. <code>doReparent</code> guarantees that
  * the child will have the desired parent as its new parent.
  * <code>requestReparent</code> delegates the reparenting to any subscribed
- * child node listener, which can be the current parent's
+ * child node listener, which can be, for example, the current parent's
  * {@link ShellLayoutManager}.
  * 
  *************************************** 

@@ -241,7 +241,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 *************************************** 
 	 */
 	public void execMove() {
-		getShellNodeExecutor().move(getDesiredPosition());
+		getShellNodeGeometryDelegate().move(getDesiredPosition());
 	}
 
 	/**
@@ -285,7 +285,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 *************************************** 
 	 */
 	public Void execResize() {
-		getShellNodeExecutor().resize(getDesiredSize());
+		getShellNodeGeometryDelegate().resize(getDesiredSize());
 		return null;
 	}
 
@@ -331,7 +331,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 *************************************** 
 	 */
 	public Void execMoveResize() {
-		getShellNodeExecutor().moveResize(	getDesiredPosition(),
+		getShellNodeGeometryDelegate().moveResize(	getDesiredPosition(),
 											getDesiredSize());
 		return null;
 	}
@@ -380,7 +380,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 *************************************** 
 	 */
 	public void execDestroy() {
-		getShellNodeExecutor().destroy();
+		getShellNodeGeometryDelegate().destroy();
 	}
 
 	@Override
@@ -416,7 +416,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 *************************************** 
 	 */
 	public void execRaise() {
-		getShellNodeExecutor().raise();
+		getShellNodeGeometryDelegate().raise();
 	}
 
 	@Override
@@ -452,7 +452,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 *************************************** 
 	 */
 	public void execLower() {
-		getShellNodeExecutor().lower();
+		getShellNodeGeometryDelegate().lower();
 	}
 
 	@Override
@@ -494,7 +494,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 *************************************** 
 	 */
 	public void execReparent() {
-		getShellNodeExecutor().reparent(getDesiredParent());
+		getShellNodeGeometryDelegate().reparent(getDesiredParent());
 	}
 
 	private void flushParentValue() {
@@ -564,7 +564,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 *************************************** 
 	 */
 	public Void execShow() {
-		getShellNodeExecutor().show();
+		getShellNodeGeometryDelegate().show();
 		return null;
 	}
 
@@ -601,7 +601,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
 	 *************************************** 
 	 */
 	public void execHide() {
-		getShellNodeExecutor().hide();
+		getShellNodeGeometryDelegate().hide();
 	}
 
 	@Override

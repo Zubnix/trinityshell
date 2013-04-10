@@ -43,7 +43,7 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
 	public void lower() {
 		final AbstractShellNode[] children = getShellNode().getChildrenImpl();
 		for (final AbstractShellNode child : children) {
-			child.getShellNodeExecutor().lower();
+			child.getShellNodeGeometryDelegate().lower();
 		}
 	}
 
@@ -51,7 +51,7 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
 	public void raise() {
 		final AbstractShellNode[] children = getShellNode().getChildrenImpl();
 		for (final AbstractShellNode child : children) {
-			child.getShellNodeExecutor().raise();
+			child.getShellNodeGeometryDelegate().raise();
 		}
 	}
 
@@ -70,7 +70,7 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
 
 			// directly manipulated underlying platform specific geometry of the
 			// child
-			child.getShellNodeExecutor().move(newRelPosition);
+			child.getShellNodeGeometryDelegate().move(newRelPosition);
 		}
 	}
 
@@ -113,9 +113,9 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
 		// directly update underlying platform specific visibility of
 		// the child
 		if (childVisible & parentVisible) {
-			child.getShellNodeExecutor().show();
+			child.getShellNodeGeometryDelegate().show();
 		} else {
-			child.getShellNodeExecutor().hide();
+			child.getShellNodeGeometryDelegate().hide();
 		}
 	}
 
@@ -131,7 +131,7 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
 			// these children who will search for a compatible
 			// grand-parent for them to be a child of in the underlying
 			// relation.
-			child.getShellNodeExecutor().reparent(shellNode);
+			child.getShellNodeGeometryDelegate().reparent(shellNode);
 
 			updateChildVisibility(	child,
 									nodeVisible);

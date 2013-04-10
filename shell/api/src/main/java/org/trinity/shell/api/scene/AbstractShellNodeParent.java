@@ -56,7 +56,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	protected void updateChildrenPosition() {
 		for (final AbstractShellNode child : getChildrenImpl()) {
 			final Coordinate childPosition = child.getPositionImpl();
-			child.getShellNodeExecutor().move(childPosition);
+			child.getShellNodeGeometryDelegate().move(childPosition);
 		}
 	}
 

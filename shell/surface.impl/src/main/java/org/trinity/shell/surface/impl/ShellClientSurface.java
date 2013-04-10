@@ -65,7 +65,7 @@ public final class ShellClientSurface extends AbstractShellSurface {
 	}
 
 	@Override
-	public ShellSurfaceGeometryDelegateImpl getShellNodeExecutor() {
+	public ShellSurfaceGeometryDelegateImpl getShellNodeGeometryDelegate() {
 		return this.shellSurfaceGeometryDelegateImpl;
 	}
 

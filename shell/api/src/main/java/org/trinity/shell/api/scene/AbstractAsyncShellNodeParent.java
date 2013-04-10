@@ -8,6 +8,12 @@ import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
+/***************************************
+ * Asynchronous abstract implementation of a {@link ShellNodeParent}. Method
+ * calls are placed on the shell executor queue as provide in the constructor.
+ * Subclasses must implement any concrete internal node manipulation.
+ *************************************** 
+ */
 public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode implements ShellNodeParent {
 
 	private final ListeningExecutorService shellExecutor;
@@ -27,6 +33,14 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 		});
 	}
 
+	/***************************************
+	 * Concrete implementation of {@link #getLayoutManager()}. This method
+	 * should only be invoked by the Shell thread.
+	 * 
+	 * @return an {@link Optional} {@link ShellLayoutManager}.
+	 * @see #getLayoutManager()
+	 *************************************** 
+	 */
 	public abstract Optional<ShellLayoutManager> getLayoutManagerImpl();
 
 	@Override
@@ -39,6 +53,14 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 		});
 	}
 
+	/***************************************
+	 * Concrete implementation of {@link #layout()}. This method should only be
+	 * invoked by the Shell thread.
+	 * 
+	 * @return null
+	 * @see #layout()
+	 *************************************** 
+	 */
 	public abstract Void layoutImpl();
 
 	@Override
@@ -51,6 +73,14 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 		});
 	}
 
+	/***************************************
+	 * Concrete implementation of {@link #setLayoutManager(ShellLayoutManager)}.
+	 * This method should only be invoked by the Shell thread.
+	 * 
+	 * @return null
+	 * @see #setLayoutManager(ShellLayoutManager)
+	 *************************************** 
+	 */
 	public abstract Void setLayoutManagerImpl(ShellLayoutManager shellLayoutManager);
 
 	@Override
@@ -63,6 +93,14 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 		});
 	}
 
+	/***************************************
+	 * Concrete implementation of {@link #getChildren()}. This method should
+	 * only be invoked by the Shell thread.
+	 * 
+	 * @return an array of {@link ShellNode}s
+	 * @see #getChildren()
+	 *************************************** 
+	 */
 	public abstract ShellNode[] getChildrenImpl();
 
 	@Override
@@ -75,6 +113,14 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 		});
 	}
 
+	/***************************************
+	 * Concrete implementation of {@link #handleChildReparentEvent(ShellNode)}.
+	 * This method should only be invoked by the Shell thread.
+	 * 
+	 * @return null
+	 * @see #handleChildReparentEvent(ShellNode)
+	 *************************************** 
+	 */
 	public abstract Void handleChildReparentEventImpl(final ShellNode child);
 
 }

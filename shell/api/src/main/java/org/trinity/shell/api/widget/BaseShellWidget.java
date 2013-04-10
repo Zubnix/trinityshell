@@ -87,7 +87,7 @@ public abstract class BaseShellWidget extends AbstractShellSurface implements Sh
 	}
 
 	@Override
-	public BaseShellWidgetGeometryDelegate getShellNodeExecutor() {
+	public BaseShellWidgetGeometryDelegate getShellNodeGeometryDelegate() {
 		return this.shellNodeGeometryDelegate;
 	}
 

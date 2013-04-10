@@ -45,7 +45,7 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 	}
 
 	@Override
-	public ShellNodeGeometryDelegate getShellNodeExecutor() {
+	public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 		return this.shellNodeGeometryDelegate;
 	}
 

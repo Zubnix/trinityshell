@@ -31,8 +31,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * 
  *************************************** 
  */
-// TODO we could make all methods async, that way shellplugins can run in their
-// own thread
 public interface ShellSurface extends ShellNode {
 
 	/***************************************

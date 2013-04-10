@@ -50,7 +50,7 @@ public class ShellVirtualSurface extends AbstractShellNodeParent {
 	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellVirtualSurfaceExecutor(this);
 
 	@Override
-	public ShellNodeGeometryDelegate getShellNodeExecutor() {
+	public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 		return this.shellNodeGeometryDelegate;
 	}
 }

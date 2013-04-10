@@ -16,26 +16,24 @@ import javax.annotation.concurrent.Immutable;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 
-/**
+/***************************************
  * A geometric transformation. Current geometric property names end in 0, new
  * ones in 1. A Delta value is the subtraction of the new value with the current
- * value so that:<br/>
- * <code>geoTransformation.getDeltaX() == geoTransformation.getX1() - geoTransformation.getX0()</code>
- * <br/>
- * returns true.
+ * value.
+ *************************************** 
  */
 @Immutable
 public class ShellNodeTransformation {
 	private final Rectangle rect0;
 	private final Rectangle rect1;
 	private final Rectangle deltaRect;
-	private final ShellNode parent0;
-	private final ShellNode parent1;
+	private final ShellNodeParent parent0;
+	private final ShellNodeParent parent1;
 
 	public ShellNodeTransformation(	final Rectangle rect0,
-									final ShellNode parent0,
+									final ShellNodeParent parent0,
 									final Rectangle rect1,
-									final ShellNode parent1) {
+									final ShellNodeParent parent1) {
 		this.rect0 = rect0;
 		this.rect1 = rect1;
 
@@ -52,29 +50,55 @@ public class ShellNodeTransformation {
 												deltaHeight);
 	}
 
+	/***************************************
+	 * The current geometry of the node.
+	 * 
+	 * @return a {@link Rectangle}
+	 *************************************** 
+	 */
 	public Rectangle getRect0() {
 		return this.rect0;
 	}
 
+	/***************************************
+	 * The difference (delta) of the current ({@link #getRect0()}) and the
+	 * desired ({@link #getRect1()}) geometry, ie desired width, height, x and y
+	 * is subtracted from the current.
+	 * 
+	 * @return a {@link Rectangle}
+	 *************************************** 
+	 */
 	public Rectangle getDeltaRect() {
 		return this.deltaRect;
 	}
 
+	/***************************************
+	 * The desired geometry of the node.
+	 * 
+	 * @return a {@link Rectangle}
+	 *************************************** 
+	 */
 	public Rectangle getRect1() {
 		return this.rect1;
 	}
 
-	/**
-	 * @return
+	/***************************************
+	 * The current parent of the node.
+	 * 
+	 * @return a {@link ShellNodeParent}
+	 *************************************** 
 	 */
-	public ShellNode getParent0() {
+	public ShellNodeParent getParent0() {
 		return this.parent0;
 	}
 
-	/**
-	 * @return
+	/***************************************
+	 * The desired parent of the node.
+	 * 
+	 * @return a {@link ShellNodeParent}
+	 *************************************** 
 	 */
-	public ShellNode getParent1() {
+	public ShellNodeParent getParent1() {
 		return this.parent1;
 	}
 }

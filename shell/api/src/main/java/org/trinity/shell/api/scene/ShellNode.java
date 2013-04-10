@@ -28,79 +28,125 @@ import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-// TODO javadoc
 /***************************************
  * The super interface of all nodes that live in the shell scene.
- * 
  *************************************** 
  */
 @OwnerThread("Shell")
 public interface ShellNode extends DisplayArea, AsyncListenable {
 
 	/***************************************
-	 * @return
+	 * The shell geometry of the node. The relation between the on screen
+	 * geometry and the shell geometry is implementation dependent but is
+	 * usually in pixels.
+	 * 
+	 * @return a future {@link Rectangle}.
+	 * @see #getShellNodeGeometryDelegate()
 	 *************************************** 
 	 */
 	ListenableFuture<Rectangle> getGeometry();
 
 	/***************************************
+	 * Change the node's shell size. The relation between the on screen size and
+	 * the shell size is implementation dependent but is usually in pixels.
+	 * 
 	 * @param width
+	 *            shell width
 	 * @param height
-	 * @return
+	 *            shell height
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
+	 ** @see #getShellNodeGeometryDelegate()
+	 * @see #getGeometry()
+	 * @see #setSize(Size)
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setSize(	int width,
 									int height);
 
 	/***************************************
+	 * Change the node's shell size. The relation between the on screen size and
+	 * the shell size is implementation dependent but is usually in pixels.
+	 * 
 	 * @param size
-	 * @return
+	 *            a shell {@link Size}
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
+	 * @see #getShellNodeGeometryDelegate()
+	 * @see #setSize(int, int)
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setSize(Size size);
 
 	/***************************************
+	 * Change the node's shell position. A node's position is relative to its
+	 * parent. The relation between the on screen position and the shell
+	 * position is implementation dependent but is usually in pixels.
+	 * 
 	 * @param x
+	 *            a shell X position
 	 * @param y
-	 * @return
+	 *            a shell Y position.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
+	 * @see #getShellNodeGeometryDelegate()
+	 * @see #setPosition(Coordinate)
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setPosition(	int x,
 										int y);
 
 	/***************************************
+	 * Change the node's shell position. A node's position is relative to its
+	 * parent. The relation between the on screen position and the shell
+	 * position is implementation dependent but is usually in pixels.
+	 * 
 	 * @param position
-	 * @return
+	 *            a shell {@link Coordinate}
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
+	 * @see #getShellNodeGeometryDelegate()
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setPosition(Coordinate position);
 
 	/***************************************
-	 * @return
+	 * The shell position of the node. A node's position is relative to its
+	 * parent. The relation between the on screen position and the shell
+	 * position is implementation dependent but is usually in pixels.
+	 * 
+	 * @return a future {@link Coordinate}.
 	 *************************************** 
 	 */
 	ListenableFuture<Coordinate> getPosition();
 
 	/***************************************
-	 * @return
+	 * The shell size of the node. The relation between the on screen size and
+	 * the shell size is implementation dependent but is usually in pixels.
+	 * 
+	 * @return a future {@link Size}.
 	 *************************************** 
 	 */
 	ListenableFuture<Size> getSize();
 
-	/**
-	 * Indicates if this ndoe is visible. This is implementation dependent. A
+	/****************************************
+	 * Indicates if this node is visible. This is implementation dependent. A
 	 * <code>PaintSurfaceNode</code> is usually only visible if it's parent is
 	 * visible. So even though this method may return true, the
 	 * <code>PaintSurfaceNode</code> will only be physically visible if all it's
 	 * parents are physically visible as well.
 	 * 
 	 * @return future true if visible, future false if not
+	 *************************************** 
 	 */
 	ListenableFuture<Boolean> isVisible();
 
 	/***************************************
-	 * Reset any value set by {@link #setX(int)} or {@link #setY(int)} to the
-	 * this node's current position.
+	 * Reset any value set by {@link #setX(int)} or {@link #setY(int)} to this
+	 * node's current position.
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> cancelPendingMove();
@@ -108,84 +154,114 @@ public interface ShellNode extends DisplayArea, AsyncListenable {
 	/***************************************
 	 * Reset any value set by {@link #setWidth(int)} and {@link #setHeight(int)}
 	 * to this node's current size.
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> cancelPendingResize();
 
 	/***************************************
-	 * Destroy this node.
+	 * Destroy this node and all its children.
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> doDestroy();
 
 	/***************************************
 	 * Lower this node.
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> doLower();
 
 	/***************************************
-	 * Reparent this node to the parent that was specified in
+	 * Change the parent of this node to the parent that was specified in
 	 * {@link #setParent(ShellNodeParent)}.
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> doReparent();
 
 	/***************************************
-	 * Move this node to the coordinate that was specified in {@link #setX(int)}
-	 * and {@link #setY(int)}.
+	 * Move this node to the coordinate that was specified in
+	 * {@link #setPosition(Coordinate)}.
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> doMove();
 
 	/***************************************
-	 * Raise this node.
+	 * Raise this node to the top of the stack. A node at the top will be drawn
+	 * above all it's siblings.
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> doRaise();
 
 	/***************************************
-	 * Move this node to the coordinate that was specified in {@link #setX(int)}
-	 * and {@link #setY(int)} and resize it to the size that was specified in
-	 * {@link #setWidth(int)} and {@link #setHeight(int)}.
+	 * Move this node to the coordinate that was specified in
+	 * {@link #setPosition(Coordinate)} and resize it to the size that was
+	 * specified in {@link #setSize(Size)}.
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> doMoveResize();
 
 	/***************************************
-	 * Resize this node to the size that was specified in {@link #setWidth(int)}
-	 * and {@link #setHeight(int)}.
+	 * Resize this node to the size that was specified in {@link #setSize(Size)}
+	 * .
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> doResize();
 
 	/***************************************
 	 * Show this node.
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> doShow();
 
 	/***************************************
 	 * Hide this node.
+	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> doHide();
 
 	/***************************************
-	 * The node executor that is responsible for correctly executing all
-	 * geometry operations of this node.
+	 * The geometry executor that is responsible for correctly executing all
+	 * on-screen geometry operations of this node.
 	 * 
 	 * @return a {@link ShellNodeGeometryDelegate}.
 	 *************************************** 
 	 */
-	// TODO should this be part of public api?
-	ShellNodeGeometryDelegate getShellNodeExecutor();
+	ShellNodeGeometryDelegate getShellNodeGeometryDelegate();
 
 	/***************************************
 	 * Signals if this node is destroyed. A destroyed node should not be able to
 	 * process any geometry changes and should be discarded.
 	 * 
-	 * @return true if destroyed, false if not.
+	 * @return a future true if destroyed, a future false if not.
 	 *************************************** 
 	 */
 	ListenableFuture<Boolean> isDestroyed();
@@ -196,6 +272,8 @@ public interface ShellNode extends DisplayArea, AsyncListenable {
 	 * {@link ShellNodeLowerRequestEvent}. Optionally, responding to the request
 	 * can then be done by any of the listeners by calling {@link #doLower()}.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
@@ -207,6 +285,8 @@ public interface ShellNode extends DisplayArea, AsyncListenable {
 	 * {@link ShellNodeMoveRequestEvent}. Optionally, responding to the request
 	 * can then be done by any of the listeners by calling {@link #doMove()}.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
@@ -219,6 +299,8 @@ public interface ShellNode extends DisplayArea, AsyncListenable {
 	 * request can then be done by any of the listeners by calling
 	 * {@link #doMoveResize()}.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
@@ -230,6 +312,8 @@ public interface ShellNode extends DisplayArea, AsyncListenable {
 	 * {@link ShellNodeRaiseRequestEvent}. Optionally, responding to the request
 	 * can then be done by any of the listeners by calling {@link #doRaise()}.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
@@ -242,6 +326,8 @@ public interface ShellNode extends DisplayArea, AsyncListenable {
 	 * request can then be done by any of the listeners by calling
 	 * {@link #doReparent()}.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
@@ -254,6 +340,8 @@ public interface ShellNode extends DisplayArea, AsyncListenable {
 	 * request can then be done by any of the listeners by calling
 	 * {@link #doResize()}.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
@@ -265,6 +353,8 @@ public interface ShellNode extends DisplayArea, AsyncListenable {
 	 * {@link ShellNodeShowRequestEvent}. Optionally, responding to the request
 	 * can then be done by any of the listeners by calling {@link #doShow()}.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
@@ -276,35 +366,40 @@ public interface ShellNode extends DisplayArea, AsyncListenable {
 	 * {@link ShellNodeHiddenEvent}. Optionally, responding to the request can
 	 * then be done by any of the listeners by calling {@link #doHide()}.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #addShellNodeEventHandler(Object).
 	 *************************************** 
 	 */
 	ListenableFuture<Void> requestHide();
 
 	/***************************************
-	 * Set the desired parent of this node. Actually reparenting is done either
-	 * directly through {@link #doReparent()}, or indirectly through
+	 * Set the desired shell parent of this node. Actually reparenting is done
+	 * either directly through {@link #doReparent()}, or indirectly through
 	 * {@link #requestReparent()}.
 	 * 
 	 * @param parent
 	 *            the desired parent.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setParent(final ShellNodeParent parent);
 
-	/**
-	 * The direct parent of this node.
+	/***************************************
+	 * The shell parent of this node.
+	 * 
+	 * @return a future {@link ShellNodeParent}.
+	 *************************************** 
 	 */
 	ListenableFuture<ShellNodeParent> getParent();
 
 	/**
 	 * The desired transformation of this node. The "0" named properties match
 	 * this node's current state, the "1" named properties match this node's
-	 * desired state. A call to {@link #setWidth(int)} with a value of 10 will
-	 * thus be reflected by {@link ShellNodeTransformation#getWidth1()}
-	 * returning 10.
+	 * desired state.
 	 * 
-	 * @return A {@link ShellNodeTransformation}.
+	 * @return A future {@link ShellNodeTransformation}.
 	 */
 	ListenableFuture<ShellNodeTransformation> toGeoTransformation();
 }

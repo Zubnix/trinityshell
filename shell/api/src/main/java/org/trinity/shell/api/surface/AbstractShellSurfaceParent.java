@@ -60,7 +60,7 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 	protected void updateChildrenPosition() {
 		for (final AbstractShellNode child : getChildrenImpl()) {
 			final Coordinate childPosition = child.getPositionImpl();
-			child.getShellNodeExecutor().move(childPosition);
+			child.getShellNodeGeometryDelegate().move(childPosition);
 		}
 	}
 
