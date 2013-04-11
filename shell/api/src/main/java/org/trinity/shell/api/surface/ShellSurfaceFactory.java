@@ -16,22 +16,26 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
- * 
- * 
- ***************************************
+ * Creates shell surfaces from a display surface and provides access to the root
+ * shell surface.
+ *************************************** 
  */
 public interface ShellSurfaceFactory {
 	/***************************************
+	 * Create a new shell surface that is backed by the given display surface.
+	 * The new shell surface will have the root shell surface as its parent.
 	 * 
 	 * @param displaySurface
-	 * @return
+	 *            a {@link DisplaySurface}
+	 * @return a new future {@link ShellSurface}.
 	 *************************************** 
 	 */
 	ListenableFuture<ShellSurface> createShellClientSurface(DisplaySurface displaySurface);
 
 	/***************************************
+	 * The root shell surface of the shell scene.
 	 * 
-	 * @return
+	 * @return a future {@link ShellSurfaceParent}.
 	 *************************************** 
 	 */
 	ListenableFuture<ShellSurfaceParent> getRootShellSurface();
