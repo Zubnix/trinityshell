@@ -15,8 +15,24 @@ import org.trinity.foundation.api.display.DisplaySurface;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+/***************************************
+ * 
+ * 
+ ***************************************
+ */
 public interface ShellSurfaceFactory {
+	/***************************************
+	 * 
+	 * @param displaySurface
+	 * @return
+	 *************************************** 
+	 */
 	ListenableFuture<ShellSurface> createShellClientSurface(DisplaySurface displaySurface);
 
+	/***************************************
+	 * 
+	 * @return
+	 *************************************** 
+	 */
 	ListenableFuture<ShellSurfaceParent> getRootShellSurface();
 }

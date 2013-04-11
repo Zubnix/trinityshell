@@ -11,8 +11,6 @@
  */
 package org.trinity.shell.api.widget;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
@@ -23,10 +21,12 @@ import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurfaceGeometryDelegate;
 import org.trinity.shell.api.surface.ShellSurface;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 // TODO documentation
-/**
+/***************************************
  * A {@link ShellNodeGeometryDelegate} for a {@link BaseShellWidget}.
- * 
+ *************************************** 
  */
 @NotThreadSafe
 public class BaseShellWidgetGeometryDelegate extends AbstractShellSurfaceGeometryDelegate {

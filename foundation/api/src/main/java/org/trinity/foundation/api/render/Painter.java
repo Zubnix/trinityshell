@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.api.render;
 
+import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.OwnerThread;
@@ -30,16 +31,17 @@ public interface Painter extends DisplayAreaManipulator {
 
 	/**
 	 * 
-	 * Get the {@link DisplaySurface} that the painter uses to paint the view.
+	 * Get the {@link DisplaySurface} that the render back-end uses to paint the
+	 * view on.
 	 * 
 	 * @return A future {@link DisplaySurface}.
 	 */
 	ListenableFuture<DisplaySurface> getDislaySurface();
 
-	// FIXME delegate to Render thread?
 	/***************************************
-	 * 
-	 ***************************************
+	 * Bind the render toolkit specific view to the {@link DisplayArea} of the
+	 * {@code Painter}.
+	 *************************************** 
 	 */
 	ListenableFuture<Void> bindView();
 }

@@ -14,9 +14,9 @@ package org.trinity.shell.api.surface;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
-/**
+/***************************************
  * A {@link ShellSurface} that can have child {@link ShellNode}s.
- * 
+ *************************************** 
  */
 public interface ShellSurfaceParent extends ShellSurface, ShellNodeParent {
 

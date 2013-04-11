@@ -13,48 +13,47 @@ package org.trinity.shell.api.widget;
 
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.concurrent.ThreadSafe;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
 import org.trinity.shell.api.surface.AbstractShellSurface;
-import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
 
-/**
- * An {@link AbstractShellSurfaceParent} with a basic
- * {@link PaintableSurfaceNode} implementation.
+/***************************************
+ * An abstract base {@link ShellWidget} implementation.
  * <p>
- * A <code>BaseShellWidget</code> is manipulated through a {@link PainterProxy}
- * that can talk to a paint back-end. This is done by injecting the widget with
- * a {@link View} and exposing it to the {@code PainterProxy} with a
- * {@link ViewReference} annotation. This <code>View</code> object is then bound
- * to the widget through binding annotations. see
+ * A <code>BaseShellWidget</code> is manipulated through a {@link Painter} for
+ * it's basic geometry operations and through the binding framework for more
+ * fine grained visual operations. This is done by injecting the widget with a
+ * view object and manually call {@link Painter#bindView()}.
  * 
  * @see org.trinity.foundation.api.render.binding
+ *************************************** 
  */
-@ThreadSafe
 public abstract class BaseShellWidget extends AbstractShellSurface implements ShellWidget {
 
+	private static final Logger logger = LoggerFactory.getLogger(BaseShellWidget.class);
+
 	private final Painter painter;
+	private final Object view;
 	private final BaseShellWidgetGeometryDelegate shellNodeGeometryDelegate = new BaseShellWidgetGeometryDelegate(this);
 
-	@Inject
 	protected BaseShellWidget(	final ShellSurfaceFactory shellSurfaceFactory,
-								@Named("Shell") final ListeningExecutorService shellExecutor,
-								final PainterFactory painterFactory) {
+								final ListeningExecutorService shellExecutor,
+								final PainterFactory painterFactory,
+								final Object view) {
 		super(shellExecutor);
+		this.view = view;
 		this.painter = painterFactory.createPainter(this);
 		final ListenableFuture<ShellSurfaceParent> rootShellSurfaceFuture = shellSurfaceFactory.getRootShellSurface();
 		addCallback(rootShellSurfaceFuture,
@@ -67,8 +66,8 @@ public abstract class BaseShellWidget extends AbstractShellSurface implements Sh
 
 						@Override
 						public void onFailure(final Throwable t) {
-							// TODO Auto-generated method stub
-							t.printStackTrace();
+							logger.error(	"Error while requesting root shell surface.",
+											t);
 						}
 					},
 					shellExecutor);
@@ -76,10 +75,8 @@ public abstract class BaseShellWidget extends AbstractShellSurface implements Sh
 
 	@ViewReference
 	public final Object getView() {
-		return getViewImpl();
+		return this.view;
 	}
-
-	protected abstract Object getViewImpl();
 
 	@Override
 	public Painter getPainter() {
@@ -99,11 +96,11 @@ public abstract class BaseShellWidget extends AbstractShellSurface implements Sh
 		try {
 			ds = dsFuture.get();
 		} catch (final InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(	"Interrupted while waiting for display surface from painter.",
+							e);
 		} catch (final ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(	"Error while waiting for display surface from painter.",
+							e);
 		}
 		return ds;
 	}

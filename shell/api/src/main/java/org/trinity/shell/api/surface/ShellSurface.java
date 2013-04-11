@@ -45,16 +45,18 @@ public interface ShellSurface extends ShellNode {
 	ListenableFuture<Integer> getHeightIncrement();
 
 	/***************************************
+	 * The maximum height and width.
 	 * 
-	 * @return
+	 * @return a future {@link Size}.
 	 * @see #setMaxSize(Size)
 	 *************************************** 
 	 */
 	ListenableFuture<Size> getMaxSize();
 
 	/***************************************
+	 * The minimum height and width.
 	 * 
-	 * @return
+	 * @return a future {@link Size}
 	 * @see #setMinSize(Size)
 	 *************************************** 
 	 */
@@ -84,7 +86,8 @@ public interface ShellSurface extends ShellNode {
 	/***************************************
 	 * Indicates if this surface can be moved.
 	 * 
-	 * @return True if this surface can be moved, false if not.
+	 * @return a future True if this surface can be moved, a future false if
+	 *         not.
 	 *************************************** 
 	 */
 	ListenableFuture<Boolean> isMovable();
@@ -92,7 +95,8 @@ public interface ShellSurface extends ShellNode {
 	/***************************************
 	 * Indicates if this surface can be resized.
 	 * 
-	 * @return True if this surface can be resized, false if not.
+	 * @return a future True if this surface can be resized, a future false if
+	 *         not.
 	 *************************************** 
 	 */
 	ListenableFuture<Boolean> isResizable();
@@ -103,15 +107,21 @@ public interface ShellSurface extends ShellNode {
 	 * @param heightIncrement
 	 *            A height delta, implementation dependent but usually in
 	 *            pixels.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #getHeightIncrement()
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setHeightIncrement(final int heightIncrement);
 
 	/***************************************
+	 * Change the maximum size. Attempts to change to size of this node beyond
+	 * the maximum size are silently ignored.
 	 * 
 	 * @param size
-	 * @return
+	 *            a {@link Size}
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #getMaxSize()
 	 *************************************** 
 	 */
@@ -120,7 +130,8 @@ public interface ShellSurface extends ShellNode {
 	/***************************************
 	 * 
 	 * @param size
-	 * @return
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #getMinSize()
 	 *************************************** 
 	 */
@@ -131,6 +142,8 @@ public interface ShellSurface extends ShellNode {
 	 * 
 	 * @param movable
 	 *            True if this surface should be movable, false if not.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #isMovable()
 	 *************************************** 
 	 */
@@ -141,6 +154,8 @@ public interface ShellSurface extends ShellNode {
 	 * 
 	 * @param isResizable
 	 *            True if this surface should be resizable, false if not.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #isResizable()
 	 *************************************** 
 	 */
@@ -151,6 +166,8 @@ public interface ShellSurface extends ShellNode {
 	 * 
 	 * @param widthIncrement
 	 *            A width delta, implementation dependent but usually in pixels.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #getWidthIncrement()
 	 *************************************** 
 	 */
@@ -160,6 +177,8 @@ public interface ShellSurface extends ShellNode {
 	 * Make this surface's shell geometry match the on-screen geometry of the
 	 * backing {@link DisplaySurface}.
 	 * 
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 * @see #getDisplaySurface()
 	 *************************************** 
 	 */

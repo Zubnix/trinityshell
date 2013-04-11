@@ -25,8 +25,6 @@ import static com.google.common.util.concurrent.Futures.transform;
 
 public class ShellRootWidget extends BaseShellWidget {
 
-	private final Object view;
-
 	private final EventList<Object> topBar = new BasicEventList<Object>();
 	private final EventList<Object> bottomBar = new BasicEventList<Object>();
 
@@ -39,8 +37,8 @@ public class ShellRootWidget extends BaseShellWidget {
 								final Set<BottomBarItem> bottomBarItems) {
 		super(	shellSurfaceFactory,
 				shellExecutor,
-				painterFactory);
-		this.view = view;
+				painterFactory,
+				view);
 		addTopBarItems(topBarItems);
 		addBottomBarItems(bottomBarItems);
 		getPainter().bindView();
@@ -70,11 +68,6 @@ public class ShellRootWidget extends BaseShellWidget {
 						}
 					},
 					shellExecutor);
-	}
-
-	@Override
-	public Object getViewImpl() {
-		return this.view;
 	}
 
 	public EventList<Object> getTopBar() {
