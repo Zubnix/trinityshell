@@ -11,8 +11,6 @@
  */
 package org.trinity.shell.api.surface;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplayArea;
@@ -27,6 +25,8 @@ import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /***************************************
  * A {@link ShellNodeGeometryDelegate} for use with an
  * {@link AbstractShellSurface}.
@@ -35,7 +35,8 @@ import org.trinity.shell.api.scene.ShellNodeParent;
  */
 @NotThreadSafe
 @OwnerThread("Shell")
-public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShellNodeGeometryDelegate implements ShellNodeGeometryDelegate {
+public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShellNodeGeometryDelegate implements
+		ShellNodeGeometryDelegate {
 
 	@Override
 	public abstract AbstractShellSurface getShellNode();
@@ -74,10 +75,13 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 
 	/***************************************
 	 * Calculate a new position, relative to the closest parent node of the same
-	 * type. This is needed as not all shell nodes are known by the underlying
-	 * display system ie they live in a different space. This method translates
-	 * the current relative coordinates in 'shell space' to 'display space' used
-	 * by managed {@link ShellSurface}.
+	 * type. What is considered a type match is defined by
+	 * {@link #findClosestSameTypeSurface(ShellNode)}.
+	 * <p>
+	 * The rationale of this method is that not all shell nodes are known by the
+	 * underlying native display system, ie they live in a different 'space'.
+	 * This method translates the coordinates in 'shell space' to on-screen
+	 * 'display space'.
 	 * 
 	 * @param shellParent
 	 *            the current direct parent of the managed {@code ShellSurface}.

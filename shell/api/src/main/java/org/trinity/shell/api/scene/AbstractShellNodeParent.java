@@ -14,8 +14,6 @@ package org.trinity.shell.api.scene;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.concurrent.NotThreadSafe;
-
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
@@ -32,7 +30,6 @@ import static com.google.common.base.Preconditions.checkArgument;
  * 
  *************************************** 
  */
-@NotThreadSafe
 public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodeParent implements ShellNodeParent {
 
 	private final Set<AbstractShellNode> children = new HashSet<AbstractShellNode>();
@@ -53,6 +50,9 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 		return this.children.toArray(new AbstractShellNode[this.children.size()]);
 	}
 
+	/**
+	 * Refresh the on-screen position of this node's children.
+	 */
 	protected void updateChildrenPosition() {
 		for (final AbstractShellNode child : getChildrenImpl()) {
 			final Coordinate childPosition = child.getPositionImpl();

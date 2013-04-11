@@ -34,34 +34,49 @@ import com.google.common.util.concurrent.ListenableFuture;
 public interface ShellSurface extends ShellNode {
 
 	/***************************************
-	 * The constant absolute delta of the old and new height when this surface's
-	 * height changes.
+	 * The desired delta of the old and new height when this surface's height
+	 * changes.
 	 * 
-	 * @return A height delta, implementation dependent but usually in pixels.
+	 * @return A future height delta, implementation dependent but usually in
+	 *         pixels.
+	 * @see #setHeightIncrement(int)
 	 *************************************** 
 	 */
 	ListenableFuture<Integer> getHeightIncrement();
 
+	/***************************************
+	 * 
+	 * @return
+	 * @see #setMaxSize(Size)
+	 *************************************** 
+	 */
 	ListenableFuture<Size> getMaxSize();
 
+	/***************************************
+	 * 
+	 * @return
+	 * @see #setMinSize(Size)
+	 *************************************** 
+	 */
 	ListenableFuture<Size> getMinSize();
 
 	/***************************************
 	 * The underlying, {@code DisplaySurface} that this shell surface will use
-	 * to display it's contents. A display surface can be shared, so multiple
-	 * shell surface's can use the same display surface.
+	 * to display it's contents. A display surface can be 'shared', so it is
+	 * possible that multiple shell surface's use the same display surface.
 	 * 
-	 * @return an optional {@link DisplaySurface}. If the {@code DisplaySurface}
-	 *         is absent, then this node is not yet initialized.
+	 * @return a future {@link DisplaySurface}.
 	 *************************************** 
 	 */
 	ListenableFuture<DisplaySurface> getDisplaySurface();
 
 	/***************************************
-	 * The constant absolute delta of the old and new width when this surface's
-	 * width changes.
+	 * The desired delta of the old and new width when this surface's width
+	 * changes.
 	 * 
-	 * @return A height delta, implementation dependent but usually in pixels.
+	 * @return A future height delta, implementation dependent but usually in
+	 *         pixels.
+	 * @see #setWidthIncrement(int)
 	 *************************************** 
 	 */
 	ListenableFuture<Integer> getWidthIncrement();
@@ -88,12 +103,27 @@ public interface ShellSurface extends ShellNode {
 	 * @param heightIncrement
 	 *            A height delta, implementation dependent but usually in
 	 *            pixels.
+	 * @see #getHeightIncrement()
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setHeightIncrement(final int heightIncrement);
 
+	/***************************************
+	 * 
+	 * @param size
+	 * @return
+	 * @see #getMaxSize()
+	 *************************************** 
+	 */
 	ListenableFuture<Void> setMaxSize(final Size size);
 
+	/***************************************
+	 * 
+	 * @param size
+	 * @return
+	 * @see #getMinSize()
+	 *************************************** 
+	 */
 	ListenableFuture<Void> setMinSize(final Size size);
 
 	/***************************************
@@ -101,6 +131,7 @@ public interface ShellSurface extends ShellNode {
 	 * 
 	 * @param movable
 	 *            True if this surface should be movable, false if not.
+	 * @see #isMovable()
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setMovable(final boolean movable);
@@ -110,6 +141,7 @@ public interface ShellSurface extends ShellNode {
 	 * 
 	 * @param isResizable
 	 *            True if this surface should be resizable, false if not.
+	 * @see #isResizable()
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setResizable(final boolean isResizable);
@@ -119,13 +151,16 @@ public interface ShellSurface extends ShellNode {
 	 * 
 	 * @param widthIncrement
 	 *            A width delta, implementation dependent but usually in pixels.
+	 * @see #getWidthIncrement()
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setWidthIncrement(final int widthIncrement);
 
 	/***************************************
-	 * Make this surface's geometry match the geometry of the backing
-	 * {@link DisplaySurface}.
+	 * Make this surface's shell geometry match the on-screen geometry of the
+	 * backing {@link DisplaySurface}.
+	 * 
+	 * @see #getDisplaySurface()
 	 *************************************** 
 	 */
 	ListenableFuture<Void> syncGeoToDisplaySurface();

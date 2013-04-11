@@ -34,7 +34,6 @@ import static com.google.common.base.Preconditions.checkArgument;
  * 
  *************************************** 
  */
-// TODO make threadSafe
 @NotThreadSafe
 public abstract class AbstractShellSurfaceParent extends AbstractShellSurface implements ShellSurfaceParent {
 
@@ -46,11 +45,6 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 		super(shellExecutor);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * The returned array is a copy of the internal array.
-	 */
 	@Override
 	public AbstractShellNode[] getChildrenImpl() {
 		return this.children.toArray(new AbstractShellNode[this.children.size()]);
@@ -115,12 +109,6 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * This call has no effect if no {@link ShellLayoutManager} is set for this
-	 * node.
-	 */
 	@Override
 	public Void layoutImpl() {
 		final Optional<ShellLayoutManager> optionalLayoutManager = getLayoutManagerImpl();

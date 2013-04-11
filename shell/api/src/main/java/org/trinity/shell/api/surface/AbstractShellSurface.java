@@ -19,28 +19,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DestroyNotify;
+import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.GeometryNotify;
 import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
-import org.trinity.shell.api.scene.ShellNode;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-/**
+/***************************************
  * An abstract base implementation of {@link ShellSurface}. Implementations that
  * wish to concretely represent an on-screen area are encouraged to extend from
  * <code>AbstractShellSurface</code>.
- * 
+ *************************************** 
  */
 @ThreadSafe
 public abstract class AbstractShellSurface extends AbstractAsyncShellSurface implements ShellSurface {
@@ -69,15 +67,18 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 
 	private final ListeningExecutorService shellExecutor;
 
-	/**
-	 * Create new <code>AbstractShellSurface</code>
-	 */
-	@Inject
-	protected AbstractShellSurface(@Named("Shell") final ListeningExecutorService shellExecutor) {
+	protected AbstractShellSurface(final ListeningExecutorService shellExecutor) {
 		super(shellExecutor);
 		this.shellExecutor = shellExecutor;
 	}
 
+	/***************************************
+	 * Start listening to {@link DisplayEvent}s emitted by the underlying
+	 * {@link DisplaySurface}. Emitted events are handled by any of the
+	 * handle*Event(..) methods. Additionally, subclasses can add their own
+	 * handle methods by utilizing the {@link Subscribe} mechanism.
+	 *************************************** 
+	 */
 	public void subscribeToDisplaySurfaceEvents() {
 		addCallback(getDisplaySurface(),
 					new FutureCallback<DisplaySurface>() {
@@ -96,6 +97,13 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 					this.shellExecutor);
 	}
 
+	/***************************************
+	 * Stop listening to {@link DisplayEvent}s mitted by the underlying
+	 * {@link DisplaySurface}.
+	 * 
+	 * @see #subscribeToDisplaySurfaceEvents()
+	 *************************************** 
+	 */
 	public void unsubscribeToDisplaySurfaceEvents() {
 		addCallback(getDisplaySurface(),
 					new FutureCallback<DisplaySurface>() {
@@ -159,53 +167,22 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 		return this.heightIncrement;
 	}
 
-	/**
-	 * Indicates if this object can moved. A non movable object can have a new
-	 * position set but requests to execute this new position will have no
-	 * effect.
-	 * 
-	 * @return True if movable, false if not.
-	 * @see ShellNode#requestMove()
-	 * @see ShellNode#requestMoveResize()
-	 * @see AbstractShellSurface#isResizable()
-	 */
 	@Override
 	public Boolean isMovableImpl() {
 		return this.movable;
 	}
 
-	/**
-	 * Indicates if this object can resize. A non resizable object can have a
-	 * new size set but requests to execute this new size will have no effect.
-	 * 
-	 * @return True if resizable, false if not.
-	 * @see ShellNode#requestMoveResize()
-	 * @see ShellNode#requestResize()
-	 * @see AbstractShellSurface#isMovable()
-	 */
 	@Override
 	public Boolean isResizableImpl() {
 		return this.resizable;
 	}
 
-	/**
-	 * @param movable
-	 *            True if this <code>AbstractShellSurface</code> should be
-	 *            movable, false if not.
-	 * @see AbstractShellSurface#isMovable()
-	 */
 	@Override
 	public Void setMovableImpl(final boolean movable) {
 		this.movable = movable;
 		return null;
 	}
 
-	/**
-	 * @param isResizable
-	 *            True if this <code>AbstractShellSurface</code> can be resized,
-	 *            false if not.
-	 * @see AbstractShellSurface#isResizable()
-	 */
 	@Override
 	public Void setResizableImpl(final boolean isResizable) {
 		this.resizable = isResizable;
@@ -261,17 +238,6 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 		return null;
 	}
 
-	/**
-	 * Update the geometric information of this
-	 * <code>AbstractShellSurface</code> so it reflects the
-	 * <code>DisplaySurface</code> returned in {@link #getDisplaySurface()}.
-	 * <p>
-	 * This method is only useful if this <code>AbstractShellSurface</code> is
-	 * the embodiment of it's <code>DisplaySurface</code>. Extending classes
-	 * that do not represent their entire <code>DisplaySurface</code> should
-	 * override this method so it has no effect. Failure to do so can result in
-	 * unexpected behavior.
-	 */
 	@Override
 	public Void syncGeoToDisplaySurfaceImpl() {
 		// do everything inline, else a geo request launched after
@@ -336,45 +302,6 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 		doMoveResize(false);
 	}
 
-	// Don't automatically handle requests. Let a window manager do that.
-	// /**
-	// * Called when an {@code GeometryRequest} arrives for this surface.
-	// * <p>
-	// * This method is called by the display thread.
-	// *
-	// * @param geometryRequest
-	// * a {@link GeometryRequest}
-	// */
-	// @Subscribe
-	// public void handleGeometryRequestEvent(final GeometryRequest
-	// geometryRequest) {
-	// final Rectangle currentGeometry = getGeometryImpl();
-	// final Rectangle requestedGeometry = geometryRequest.getGeometry();
-	// final int newX = geometryRequest.configureX() ?
-	// requestedGeometry.getPosition().getX() : currentGeometry
-	// .getPosition().getX();
-	// final int newY = geometryRequest.configureY() ?
-	// requestedGeometry.getPosition().getY() : currentGeometry
-	// .getPosition().getY();
-	// final int newWidth = geometryRequest.configureWidth() ?
-	// requestedGeometry.getSize().getWidth()
-	// : currentGeometry.getSize().getWidth();
-	// final int newHeight = geometryRequest.configureHeight() ?
-	// requestedGeometry.getSize().getHeight()
-	// : currentGeometry.getSize().getHeight();
-	//
-	// if (geometryRequest.configureX() || geometryRequest.configureY()) {
-	// setPositionImpl(newX,
-	// newY);
-	// }
-	// if (geometryRequest.configureWidth() ||
-	// geometryRequest.configureHeight()) {
-	// setSizeImpl(newWidth,
-	// newHeight);
-	// }
-	// requestMoveResizeImpl();
-	// }
-
 	/**
 	 * Called when an {@code HideNotify} arrives for this surface.
 	 * <p>
@@ -401,18 +328,5 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 		doShow(false);
 	}
 
-	// Don't automatically handle requests. Let a window manager do that.
-	// /**
-	// * Called when an {@code ShowRequest} arrives for this surface.
-	// * <p>
-	// * This method is called by the display thread.
-	// *
-	// * @param showRequest
-	// * a {@link ShowRequest}
-	// */
-	// @Subscribe
-	// public void handleShowRequestEvent(final ShowRequest showRequest) {
-	// requestShowImpl();
-	// }
 	/* end display event handling */
 }

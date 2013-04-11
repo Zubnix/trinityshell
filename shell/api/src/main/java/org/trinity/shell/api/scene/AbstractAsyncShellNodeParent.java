@@ -34,8 +34,8 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #getLayoutManager()}. This method
-	 * should only be invoked by the Shell thread.
+	 * Concrete implementation of {@link #getLayoutManager()}. This method is
+	 * invoked by the Shell thread.
 	 * 
 	 * @return an {@link Optional} {@link ShellLayoutManager}.
 	 * @see #getLayoutManager()
@@ -54,8 +54,8 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #layout()}. This method should only be
-	 * invoked by the Shell thread.
+	 * Concrete implementation of {@link #layout()}. This method is invoked by
+	 * the Shell thread.
 	 * 
 	 * @return null
 	 * @see #layout()
@@ -75,7 +75,7 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 
 	/***************************************
 	 * Concrete implementation of {@link #setLayoutManager(ShellLayoutManager)}.
-	 * This method should only be invoked by the Shell thread.
+	 * This method is invoked by the Shell thread.
 	 * 
 	 * @return null
 	 * @see #setLayoutManager(ShellLayoutManager)
@@ -94,8 +94,8 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #getChildren()}. This method should
-	 * only be invoked by the Shell thread.
+	 * Concrete implementation of {@link #getChildren()}. This method is invoked
+	 * by the Shell thread.
 	 * 
 	 * @return an array of {@link ShellNode}s
 	 * @see #getChildren()
@@ -115,7 +115,7 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 
 	/***************************************
 	 * Concrete implementation of {@link #handleChildReparentEvent(ShellNode)}.
-	 * This method should only be invoked by the Shell thread.
+	 * This method is invoked by the Shell thread.
 	 * 
 	 * @return null
 	 * @see #handleChildReparentEvent(ShellNode)

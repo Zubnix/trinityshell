@@ -14,7 +14,7 @@ package org.trinity.shell.api.scene;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.Size;
 
-/**
+/***************************************
  * Executes the actual geometry changes for a {@link ShellNode}. A
  * <code>ShellNodeGeometryDelegate</code> is a delegate for a
  * <code>ShellNode</code> to execute the requested geometry changes.
@@ -25,7 +25,7 @@ import org.trinity.foundation.api.shared.Size;
  * geometry changes. A <code>ShellNodeGeometryDelegate</code> implementation is
  * needed to accommodate for this and make sure a change in the geometry of its
  * requester (a node) has the correct and desired on-screen effect.
- * 
+ *************************************** 
  */
 public interface ShellNodeGeometryDelegate {
 
@@ -37,13 +37,15 @@ public interface ShellNodeGeometryDelegate {
 	 */
 	ShellNode getShellNode();
 
-	/**
+	/***************************************
 	 * Execute the actual lowering of the handled <code>ShellNode</code>.
+	 *************************************** 
 	 */
 	void lower();
 
-	/**
+	/***************************************
 	 * Execute the actual raising the handled <code>ShellNode</code>.
+	 *************************************** 
 	 */
 	void raise();
 
@@ -66,15 +68,17 @@ public interface ShellNodeGeometryDelegate {
 	 */
 	void hide();
 
-	/**
+	/***************************************
 	 * Execute the actual parent update of the handled <code>ShellNode</code> .
 	 * 
 	 * @param parent
+	 *************************************** 
 	 */
 	void reparent(ShellNodeParent parent);
 
-	/**
+	/***************************************
 	 * Execute the actual destroy process of the handled <code>ShellNode</code>.
+	 *************************************** 
 	 */
 	void destroy();
 }

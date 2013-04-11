@@ -14,8 +14,8 @@ import com.google.inject.Inject;
 // TODO documentation
 /***************************************
  * Asynchronous abstract implementation of a {@link ShellNode}. Method calls are
- * placed on the shell executor queue as provide in the constructor. Subclasses
- * must implement any concrete internal node manipulation.
+ * placed on the injected shell executor queue. Subclasses must implement any
+ * concrete internal node manipulation.
  *************************************** 
  */
 public abstract class AbstractAsyncShellNode implements ShellNode {
@@ -38,8 +38,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #getPosition()}. This method should
-	 * only be invoked by the Shell thread.
+	 * Concrete implementation of {@link #getPosition()}. This method is invoked
+	 * by the Shell thread.
 	 * 
 	 * @return a {@link Coordinate}, depicting this node's shell position.
 	 * @see #getPosition()
@@ -58,8 +58,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #getSize()}. This method should only be
-	 * invoked by the Shell thread.
+	 * Concrete implementation of {@link #getSize()}. This method is invoked by
+	 * the Shell thread.
 	 * 
 	 * @return a {@link Size}, depicting this node's shell size.
 	 * @see #getSize()
@@ -79,7 +79,7 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 
 	/***************************************
 	 * Concrete implementation of {@link #setPosition(Coordinate)}. This method
-	 * should only be invoked by the Shell thread.
+	 * is invoked by the Shell thread.
 	 * 
 	 * @param position
 	 *            a {@link Coordinate}.
@@ -100,8 +100,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #setSize(Size)}. This method should
-	 * only be invoked by the Shell thread.
+	 * Concrete implementation of {@link #setSize(Size)}. This method is invoked
+	 * by the Shell thread.
 	 * 
 	 * @param size
 	 *            a {@link Size}
@@ -122,8 +122,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #getGeometry()}. This method should
-	 * only be invoked by the Shell thread.
+	 * Concrete implementation of {@link #getGeometry()}. This method is invoked
+	 * by the Shell thread.
 	 * 
 	 * @return a {@link Rectangle}
 	 * @see #getGeometryImpl()
@@ -142,8 +142,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #isVisible()}. This method should only
-	 * be invoked by the Shell thread.
+	 * Concrete implementation of {@link #isVisible()}. This method is invoked
+	 * by the Shell thread.
 	 * 
 	 * @return a {@link Boolean}
 	 * @see #isVisible()
@@ -162,8 +162,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #cancelPendingMove()}. This method
-	 * should only be invoked by the Shell thread.
+	 * Concrete implementation of {@link #cancelPendingMove()}. This method is
+	 * invoked by the Shell thread.
 	 * 
 	 * @return null
 	 * @see #cancelPendingMove()
@@ -182,8 +182,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #cancelPendingResize()}. This method
-	 * should only be invoked by the Shell thread.
+	 * Concrete implementation of {@link #cancelPendingResize()}. This method is
+	 * invoked by the Shell thread.
 	 * 
 	 * @return null
 	 * @see #cancelPendingResize()
@@ -222,8 +222,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #doLower()}. This method should only be
-	 * invoked by the Shell thread.
+	 * Concrete implementation of {@link #doLower()}. This method is invoked by
+	 * the Shell thread.
 	 * 
 	 * @return null
 	 * @see #doLower()
@@ -262,8 +262,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #doMove()}. This method should only be
-	 * invoked by the Shell thread.
+	 * Concrete implementation of {@link #doMove()}. This method is invoked by
+	 * the Shell thread.
 	 * 
 	 * @return null
 	 * @see #doMove()
@@ -282,8 +282,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #doRaise()}. This method should only be
-	 * invoked by the Shell thread.
+	 * Concrete implementation of {@link #doRaise()}. This method is invoked by
+	 * the Shell thread.
 	 * 
 	 * @return null
 	 * @see #doRaise()
@@ -342,8 +342,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #doShow()}. This method should only be
-	 * invoked by the Shell thread.
+	 * Concrete implementation of {@link #doShow()}. This method is invoked by
+	 * the Shell thread.
 	 * 
 	 * @return null
 	 * @see #doShow()
@@ -362,8 +362,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #doHide()}. This method should only be
-	 * invoked by the Shell thread.
+	 * Concrete implementation of {@link #doHide()}. This method is invoked by
+	 * the Shell thread.
 	 * 
 	 * @return null
 	 * @see #doHide()
@@ -442,8 +442,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #requestMoveResize()}. This method
-	 * should only be invoked by the Shell thread.
+	 * Concrete implementation of {@link #requestMoveResize()}. This method is
+	 * invoked by the Shell thread.
 	 * 
 	 * @return null
 	 * @see #requestMoveResize()
@@ -587,8 +587,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #setPosition(int, int)}. This method
-	 * should only be invoked by the Shell thread.
+	 * Concrete implementation of {@link #setPosition(int, int)}. This method is
+	 * invoked by the Shell thread.
 	 * 
 	 * @return null
 	 * @see #setPosition(int, int)
@@ -609,7 +609,7 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 
 	/***************************************
 	 * Concrete implementation of {@link #setParent(ShellNodeParent)}. This
-	 * method should only be invoked by the Shell thread.
+	 * method is invoked by the Shell thread.
 	 * 
 	 * @return null
 	 * @see #setParent(ShellNodeParent)
@@ -648,8 +648,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #toGeoTransformation()}. This method
-	 * should only be invoked by the Shell thread.
+	 * Concrete implementation of {@link #toGeoTransformation()}. This method is
+	 * invoked by the Shell thread.
 	 * 
 	 * @return a {@link ShellNodeTransformation}
 	 * @see #toGeoTransformation()

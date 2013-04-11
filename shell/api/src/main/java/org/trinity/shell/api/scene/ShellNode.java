@@ -56,7 +56,7 @@ public interface ShellNode extends DisplayArea, AsyncListenable {
 	 *            shell height
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 ** @see #getShellNodeGeometryDelegate()
+	 * @see #getShellNodeGeometryDelegate()
 	 * @see #getGeometry()
 	 * @see #setSize(Size)
 	 *************************************** 
