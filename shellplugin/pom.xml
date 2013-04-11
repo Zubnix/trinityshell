@@ -12,9 +12,9 @@
 
 	<modules>
 		<module>widget.view.qt.api</module>
+		<module>wm.api</module>
 		<module>wm.impl</module>
 	</modules>
-
 
 	<dependencies>
 		<dependency>
