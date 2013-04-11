@@ -28,8 +28,6 @@ public interface Binder {
 	 *            The view model that changed.
 	 * @param propertyName
 	 *            The name of the property that changed.
-	 * @throws BindingError
-	 *             If an Illegal binding construction is encountered.
 	 *************************************** 
 	 */
 	void updateBinding(	Object changedViewModel,
@@ -43,8 +41,6 @@ public interface Binder {
 	 *            The model to visually represent
 	 * @param view
 	 *            The visual representation of the model
-	 * @throws BindingError
-	 *             If an Illegal binding construction is encountered.
 	 *************************************** 
 	 */
 	void bind(	Object viewModel,
