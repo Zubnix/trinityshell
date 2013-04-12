@@ -9,9 +9,12 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.foundation.api.render.binding.model;
+package org.trinity.foundation.api.render.binding.model.delegate;
 
-import org.trinity.foundation.api.render.binding.view.delegate.BoundInputEvent;
+import org.trinity.foundation.api.display.input.Input;
+import org.trinity.foundation.api.render.binding.model.InputSlot;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
  * A convenience service to call a method marked with {@link InputSlot} based on
@@ -19,18 +22,9 @@ import org.trinity.foundation.api.render.binding.view.delegate.BoundInputEvent;
  * 
  *************************************** 
  */
-public interface InputSlotCaller {
+public interface InputSlotCallerDelegate {
 
-	/***************************************
-	 * Call the method marked with {@link InputSlot} that matches the given
-	 * {@link BoundInputEvent}.
-	 * 
-	 * @param model
-	 *            Any object which has a method marked with {@link InputSlot}.
-	 * @param boundInputEvent
-	 *            A {@link BoundInputEvent}.
-	 *************************************** 
-	 */
-	void callInputSlot(	Object model,
-						BoundInputEvent boundInputEvent);
+	ListenableFuture<Void> callInputSlot(	Object model,
+											String methodName,
+											Input input);
 }

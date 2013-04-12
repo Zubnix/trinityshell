@@ -13,7 +13,7 @@ package org.trinity.foundation.api.render.binding.view.delegate;
 
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
-import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
+import org.trinity.foundation.api.render.binding.model.delegate.InputSlotCallerDelegate;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.OwnerThread;
 
@@ -23,7 +23,7 @@ import org.trinity.foundation.api.shared.OwnerThread;
  * to the target view model. This delegate should be implemented for a specific
  * widget toolkit.
  * 
- * @see InputSlotCaller
+ * @see InputSlotCallerDelegate
  *************************************** 
  */
 @OwnerThread("Render")

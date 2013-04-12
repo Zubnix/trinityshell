@@ -15,7 +15,7 @@ import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Keyboard;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
-import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
+import org.trinity.foundation.api.render.binding.model.delegate.InputSlotCallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.BoundInputEvent;
 
 import com.google.common.base.Optional;

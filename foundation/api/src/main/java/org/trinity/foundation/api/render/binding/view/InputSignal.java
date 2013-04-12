@@ -17,8 +17,7 @@ import java.lang.annotation.Target;
 
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
-import org.trinity.foundation.api.render.binding.model.InputSlotCaller;
-import org.trinity.foundation.api.render.binding.view.delegate.BoundInputEvent;
+import org.trinity.foundation.api.render.binding.model.delegate.InputSlotCallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 
 /***************************************
@@ -29,7 +28,7 @@ import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInst
  * <p>
  * An {@code InputSignal} is used as an argument of {@link InputSignals}.
  * 
- * @see InputSlotCaller
+ * @see InputSlotCallerDelegate
  *************************************** 
  */
 @Retention(RetentionPolicy.RUNTIME)

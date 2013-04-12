@@ -20,6 +20,7 @@
 			<version>${project.version}</version>
 		</dependency>
 
+
 		<!--foundation implementation -->
 		<!-- display X11 -->
 		<dependency>
@@ -40,12 +41,14 @@
 			<version>${project.version}</version>
 		</dependency>
 
+
 		<!-- shell api -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>shell.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
 
 		<!-- shell implementation -->
 		<!-- input -->
@@ -66,12 +69,19 @@
 			<artifactId>shell.surface.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- widget -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>shell.widget.impl</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- plugin -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>shell.plugin.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
 
 		<!-- shellplugins -->
 		<!-- widget views qt api -->
@@ -83,9 +93,15 @@
 		<!-- window management -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>shellplugin.wm.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>shellplugin.wm.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
 
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

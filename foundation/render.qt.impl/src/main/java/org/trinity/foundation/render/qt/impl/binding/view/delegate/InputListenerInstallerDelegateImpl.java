@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.input.Input;
+import org.trinity.foundation.api.render.binding.model.delegate.InputSlotCallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 import org.trinity.foundation.api.shared.AsyncListenable;
 
@@ -30,9 +31,11 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 
 	private final HashFunction hashFunction = Hashing.goodFastHash(16);
 	private final Cache<Integer, QObject> inputListeners = CacheBuilder.newBuilder().softValues().build();
+	private final InputSlotCallerDelegate inputSlotCallerDelegate;
 
 	@Inject
-	InputListenerInstallerDelegateImpl() {
+	InputListenerInstallerDelegateImpl(final InputSlotCallerDelegate inputSlotCallerDelegate) {
+		this.inputSlotCallerDelegate = inputSlotCallerDelegate;
 	}
 
 	@Override
@@ -51,6 +54,7 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 			@Override
 			public QObject call() throws Exception {
 				return new BoundInputListener(	inputType,
+												InputListenerInstallerDelegateImpl.this.inputSlotCallerDelegate,
 												inputEventTarget,
 												inputSlotName);
 			}
@@ -84,6 +88,7 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 			@Override
 			public QObject call() throws Exception {
 				return new BoundInputListener(	inputType,
+												InputListenerInstallerDelegateImpl.this.inputSlotCallerDelegate,
 												inputEventTarget,
 												inputSlotName);
 			}

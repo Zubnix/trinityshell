@@ -1,23 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>trinity</artifactId>
+		<artifactId>shell</artifactId>
 		<groupId>org.trinity</groupId>
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>shell</artifactId>
-	<name>Shell</name>
-	<packaging>pom</packaging>
+	<artifactId>shell.widget.impl</artifactId>
+	<name>Shell Widget Implementation</name>
 
-	<modules>
-		<module>api</module>
-		<module>input.impl</module>
-		<module>scene.impl</module>
-		<module>plugin.impl</module>
-		<module>surface.impl</module>
-		<module>widget.impl</module>
-	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>shell.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 </project>

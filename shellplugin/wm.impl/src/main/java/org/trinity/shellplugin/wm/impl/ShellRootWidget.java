@@ -1,13 +1,18 @@
 package org.trinity.shellplugin.wm.impl;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+import static com.google.common.util.concurrent.Futures.transform;
+
 import java.util.Set;
 
+import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 import org.trinity.shell.api.widget.BaseShellWidget;
 import org.trinity.shellplugin.wm.api.BottomBarItem;
+import org.trinity.shellplugin.wm.api.HasText;
 import org.trinity.shellplugin.wm.api.TopBarItem;
 
 import ca.odell.glazedlists.BasicEventList;
@@ -19,9 +24,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
-import static com.google.common.util.concurrent.Futures.transform;
 
 public class ShellRootWidget extends BaseShellWidget {
 
@@ -68,6 +70,20 @@ public class ShellRootWidget extends BaseShellWidget {
 						}
 					},
 					shellExecutor);
+	}
+
+	public void onTopBarClicked(final PointerInput pointerInput) {
+		this.topBar.add(new HasText() {
+
+			@Override
+			public String getText() {
+				return pointerInput.toString();
+			}
+		});
+	}
+
+	public void onBottomBarClicked(final PointerInput pointerInput) {
+
 	}
 
 	public EventList<Object> getTopBar() {
