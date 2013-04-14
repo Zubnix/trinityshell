@@ -1,13 +1,14 @@
 package org.trinity.foundation.render.qt.impl.binding.view.delegate;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.inject.Singleton;
+import com.trolltech.qt.gui.QApplication;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
@@ -15,31 +16,23 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class PropertySlotInvocatorDelegateImpl implements PropertySlotInvocatorDelegate {
 
-	private static final Logger logger = LoggerFactory.getLogger(PropertySlotInvocatorDelegateImpl.class);
-
 	PropertySlotInvocatorDelegateImpl() {
 	}
 
 	@Override
-	public void invoke(	final Object view,
-						final Method viewMethod,
-						final Object argument) {
+	public ListenableFuture<Void> invoke(	final Object view,
+											final Method viewMethod,
+											final Object argument) {
+		final ListenableFutureTask<Void> invokeTask = ListenableFutureTask.create(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				viewMethod.invoke(	view,
+									argument);
+				return null;
+			}
+		});
 
-		try {
-			viewMethod.invoke(	view,
-								argument);
-		} catch (final IllegalAccessException e) {
-			// TODO explanation
-			logger.error(	"",
-							e);
-		} catch (final IllegalArgumentException e) {
-			// TODO explanation
-			logger.error(	"",
-							e);
-		} catch (final InvocationTargetException e) {
-			// TODO explanation
-			logger.error(	"",
-							e);
-		}
+		QApplication.invokeLater(invokeTask);
+		return invokeTask;
 	}
 }

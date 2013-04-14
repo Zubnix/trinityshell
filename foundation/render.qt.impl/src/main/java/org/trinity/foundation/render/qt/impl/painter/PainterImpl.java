@@ -274,13 +274,14 @@ public class PainterImpl implements Painter {
 				final QObject eventTracker = PainterImpl.this.eventTrackerFactory.createQJEventTracker(	PainterImpl.this.model,
 																										view);
 				view.installEventFilter(eventTracker);
-				PainterImpl.this.binder.bind(	PainterImpl.this.model,
-												view);
+
 			}
 		};
 		final ListenableFutureTask<Void> bindViewFuture = ListenableFutureTask.create(	viewBindingRoutine,
 																						null);
 		QApplication.invokeLater(viewBindingRoutine);
+		PainterImpl.this.binder.bind(	PainterImpl.this.model,
+										view);
 
 		return bindViewFuture;
 	}

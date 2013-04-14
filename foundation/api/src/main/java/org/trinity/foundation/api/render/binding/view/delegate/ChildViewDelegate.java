@@ -13,6 +13,8 @@ package org.trinity.foundation.api.render.binding.view.delegate;
 
 import org.trinity.foundation.api.shared.OwnerThread;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 /***************************************
  * A delegate to handle the life cycle of a child view element. This delegate
  * should be implemented for a specific widget toolkit.
@@ -31,12 +33,12 @@ public interface ChildViewDelegate {
 	 *            The type of the new view instance.
 	 * @param position
 	 *            The position (index) of the new view, relative to it's parent.
-	 * @return a new view instance.
+	 * @return a future new view instance.
 	 *************************************** 
 	 */
-	<T> T newView(	Object parentView,
-					Class<T> childViewType,
-					int position);
+	<T> ListenableFuture<T> newView(Object parentView,
+									Class<T> childViewType,
+									int position);
 
 	/***************************************
 	 * Destroy a view instance.
@@ -47,11 +49,13 @@ public interface ChildViewDelegate {
 	 *            The view that should be destroyed.
 	 * @param deletedPosition
 	 *            The index of the view that should be destroyed.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
-	void destroyView(	Object parentView,
-						Object deletedChildView,
-						int deletedPosition);
+	ListenableFuture<Void> destroyView(	Object parentView,
+										Object deletedChildView,
+										int deletedPosition);
 
 	/***************************************
 	 * Update the position (index) of a view instance, relative to it's parent.
@@ -64,11 +68,12 @@ public interface ChildViewDelegate {
 	 *            The old position.
 	 * @param newPosition
 	 *            The new position.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
-	// TODO some kind of notify event?
-	void updateChildViewPosition(	Object parentView,
-									Object childView,
-									int oldPosition,
-									int newPosition);
+	ListenableFuture<Void> updateChildViewPosition(	Object parentView,
+													Object childView,
+													int oldPosition,
+													int newPosition);
 }

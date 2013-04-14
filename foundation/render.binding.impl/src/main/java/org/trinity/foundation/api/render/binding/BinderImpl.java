@@ -2,6 +2,7 @@ package org.trinity.foundation.api.render.binding;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.util.concurrent.Futures.addCallback;
 import static java.lang.String.format;
 
 import java.lang.reflect.Field;
@@ -45,6 +46,8 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -296,12 +299,24 @@ public class BinderImpl implements Binder {
 
 				for (int i = 0; i < contextCollection.size(); i++) {
 					final Object childViewDataContext = contextCollection.get(i);
-					final Object childView = this.childViewDelegate.newView(view,
-																			childViewClass,
-																			i);
-					bind(	childViewDataContext,
-							childView);
+					final ListenableFuture<?> futureChildView = this.childViewDelegate.newView(	view,
+																								childViewClass,
+																								i);
+					addCallback(futureChildView,
+								new FutureCallback<Object>() {
+									@Override
+									public void onSuccess(final Object childView) {
+										bind(	childViewDataContext,
+												childView);
 
+									}
+
+									@Override
+									public void onFailure(final Throwable t) {
+										logger.error(	"Error while creating new child view.",
+														t);
+									}
+								});
 				}
 
 				contextCollection.addListEventListener(new ListEventListener<Object>() {
@@ -372,11 +387,24 @@ public class BinderImpl implements Binder {
 					shadowChildDataContextList.add(	sourceIndex,
 													childViewDataContext);
 
-					final Object childView = BinderImpl.this.childViewDelegate.newView(	view,
-																						childViewClass,
-																						sourceIndex);
-					bind(	childViewDataContext,
-							childView);
+					final ListenableFuture<?> futureChildView = this.childViewDelegate.newView(	view,
+																								childViewClass,
+																								sourceIndex);
+					addCallback(futureChildView,
+								new FutureCallback<Object>() {
+									@Override
+									public void onSuccess(final Object childView) {
+										bind(	childViewDataContext,
+												childView);
+
+									}
+
+									@Override
+									public void onFailure(final Throwable t) {
+										logger.error(	"Error while creating new child view.",
+														t);
+									}
+								});
 					break;
 				}
 				case ListEvent.UPDATE: {

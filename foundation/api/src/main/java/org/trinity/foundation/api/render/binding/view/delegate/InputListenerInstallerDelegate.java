@@ -17,6 +17,8 @@ import org.trinity.foundation.api.render.binding.model.delegate.InputSlotCallerD
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.OwnerThread;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 /***************************************
  * A delegate to listen for specific user input on a view instance. When input
  * arrives, a corresponding {@link BoundInputEvent} should be created and passed
@@ -43,13 +45,14 @@ public interface InputListenerInstallerDelegate {
 	 * @param inputSlotName
 	 *            The name of the {@link InputSlot} that should be invoked when
 	 *            input arrives.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
-	// TODO some kind of notify event?
-	void installViewInputListener(	Class<? extends Input> inputType,
-									Object view,
-									AsyncListenable inputEventTarget,
-									String inputSlotName);
+	ListenableFuture<Void> installViewInputListener(Class<? extends Input> inputType,
+													Object view,
+													AsyncListenable inputEventTarget,
+													String inputSlotName);
 
 	/***************************************
 	 * Remove a previously installed input listener.
@@ -64,11 +67,12 @@ public interface InputListenerInstallerDelegate {
 	 * @param inputSlotName
 	 *            The name of the {@link InputSlot} that would be invoked when
 	 *            input arrives.
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
 	 *************************************** 
 	 */
-	// TODO some kind of notify event?
-	void removeViewInputListener(	Class<? extends Input> inputType,
-									Object view,
-									AsyncListenable inputEventTarget,
-									String inputSlotName);
+	ListenableFuture<Void> removeViewInputListener(	Class<? extends Input> inputType,
+													Object view,
+													AsyncListenable inputEventTarget,
+													String inputSlotName);
 }

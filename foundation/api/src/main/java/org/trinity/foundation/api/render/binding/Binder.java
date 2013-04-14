@@ -11,14 +11,12 @@
  */
 package org.trinity.foundation.api.render.binding;
 
-import org.trinity.foundation.api.shared.OwnerThread;
 
 /***************************************
  * Binds views to models.
  * 
  *************************************** 
  */
-@OwnerThread("Render")
 public interface Binder {
 
 	/***************************************
