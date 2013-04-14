@@ -524,10 +524,25 @@ public class BinderImpl implements Binder {
 				}
 			}
 			final String propertyName = propertySlot.propertyName();
-			final Optional<Method> getter = findGetter(	propertyDataContext.getClass(),
-														propertyName);
-			if (getter.isPresent()) {
-				final Object propertyInstance = getter.get().invoke(propertyDataContext);
+			final Optional<Method> optionalGetter = findGetter(	propertyDataContext.getClass(),
+																propertyName);
+			if (optionalGetter.isPresent()) {
+				final Method getter = optionalGetter.get();
+
+				// part 1 of workaround for f*cking bug (4071957) submitted in
+				// 1997(!) and still not fixed by sun/oracle.
+				if (propertyDataContext.getClass().isAnonymousClass()) {
+					getter.setAccessible(true);
+				}
+
+				final Object propertyInstance = optionalGetter.get().invoke(propertyDataContext);
+
+				// part 2 of workaround for f*cking bug (4071957) submitted in
+				// 1997(!) and still not fixed by sun/oracle
+				if (propertyDataContext.getClass().isAnonymousClass()) {
+					getter.setAccessible(false);
+				}
+
 				invokePropertySlot(	view,
 									propertySlot,
 									propertyInstance);
