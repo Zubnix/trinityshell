@@ -13,7 +13,7 @@ import com.trolltech.qt.gui.QHBoxLayout;
 import com.trolltech.qt.gui.QVBoxLayout;
 import com.trolltech.qt.gui.QWidget;
 
-@InputSignals({ @InputSignal(name = "onTopBarClicked", inputType = PointerInput.class) })
+@InputSignals({ @InputSignal(name = "onRootClicked", inputType = PointerInput.class) })
 class RootView extends QFrame {
 
 	@ObservableCollection(value = "topBar", view = BarItemView.class)
@@ -43,7 +43,6 @@ class RootView extends QFrame {
 		}
 	};
 
-	@InputSignals({ @InputSignal(name = "onBottomBarClicked", inputType = PointerInput.class) })
 	@ObservableCollection(value = "bottomBar", view = BarItemView.class)
 	QFrame bottomBarView = new QFrame() {
 

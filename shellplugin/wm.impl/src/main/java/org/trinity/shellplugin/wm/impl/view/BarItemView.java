@@ -10,7 +10,7 @@ import com.trolltech.qt.gui.QLabel;
 import com.trolltech.qt.gui.QPixmap;
 
 @PropertySlots({ //
-		@PropertySlot(propertyName = "text", methodName = "setText", argumentTypes = { String.class }),// HasText
+@PropertySlot(propertyName = "text", methodName = "setText", argumentTypes = { String.class }),// HasText
 		@PropertySlot(propertyName = "imageDefinition", methodName = "setImageDefinition", argumentTypes = { ImageDefinition.class }) // HasImageDefinition
 })
 class BarItemView extends QLabel {
@@ -18,7 +18,6 @@ class BarItemView extends QLabel {
 	{
 		// workaround for jambi css bug
 		setObjectName(getClass().getSimpleName());
-
 	}
 
 	public void setImageDefinition(final ImageDefinition imageDefinition) {

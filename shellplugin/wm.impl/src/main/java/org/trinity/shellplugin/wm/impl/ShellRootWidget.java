@@ -5,6 +5,7 @@ import static com.google.common.util.concurrent.Futures.transform;
 
 import java.util.Set;
 
+import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.shared.Rectangle;
@@ -72,18 +73,20 @@ public class ShellRootWidget extends BaseShellWidget {
 					shellExecutor);
 	}
 
-	public void onTopBarClicked(final PointerInput pointerInput) {
-		this.topBar.add(new HasText() {
+	public void onRootClicked(final PointerInput pointerInput) {
 
-			@Override
-			public String getText() {
-				return pointerInput.toString();
+		if (pointerInput.getMomentum() == Momentum.STARTED) {
+			if (pointerInput.getButton().getButtonCode() == 1) {
+				this.topBar.add(new HasText() {
+					@Override
+					public String getText() {
+						return "root clicked";
+					}
+				});
+			} else {
+				this.topBar.remove(this.topBar.size() - 1);
 			}
-		});
-	}
-
-	public void onBottomBarClicked(final PointerInput pointerInput) {
-
+		}
 	}
 
 	public EventList<Object> getTopBar() {
