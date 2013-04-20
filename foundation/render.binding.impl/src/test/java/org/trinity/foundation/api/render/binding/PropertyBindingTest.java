@@ -13,22 +13,28 @@ import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 public class PropertyBindingTest {
 
 	@Test
-	public void testBoundProperty() throws ExecutionException, NoSuchMethodException, SecurityException, InterruptedException {
+	public void testBoundProperty() throws ExecutionException,
+			NoSuchMethodException, SecurityException, InterruptedException {
 		final Model model = new Model();
 		final View view = new View();
 
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
-		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
+		when(viewElementTypes.getViewElementTypes())
+				.thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final CollectionElementView collectionElementView = new CollectionElementView();
+		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
+		when(viewFuture.get()).thenReturn(new CollectionElementView());
 		when(childViewDelegate.newView(	view,
 										CollectionElementView.class,
-										0)).thenReturn(collectionElementView);
+										0)).thenReturn(viewFuture);
 		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
 												inputListenerInstallerDelegate,
 												childViewDelegate,
@@ -42,15 +48,17 @@ public class PropertyBindingTest {
 		// once for binding init
 		verify(	propertySlotInvocatorDelegate,
 				times(1)).invoke(	view.getMouseInputSubView(),
-									SubView.class.getMethod("handleStringProperty",
-															String.class),
+									SubView.class
+											.getMethod(	"handleStringProperty",
+														String.class),
 									"false");
 		// once for binding init, once for datacontext value update
 		verify(	propertySlotInvocatorDelegate,
-				times(2)).invoke(	view.getKeyInputSubView(),
-									SubView.class.getMethod("handleBooleanProperty",
-															boolean.class),
-									false);
+				times(2))
+				.invoke(view.getKeyInputSubView(),
+						SubView.class.getMethod("handleBooleanProperty",
+												boolean.class),
+						false);
 		// once for binding init
 		verify(	propertySlotInvocatorDelegate,
 				times(1)).invoke(	view,
@@ -60,20 +68,24 @@ public class PropertyBindingTest {
 	}
 
 	@Test
-	public void testUpdateAndConvertedProperty() throws ExecutionException, NoSuchMethodException, SecurityException, InterruptedException {
+	public void testUpdateAndConvertedProperty() throws ExecutionException,
+			NoSuchMethodException, SecurityException, InterruptedException {
 		// given
 		final Model model = new Model();
 		final View view = new View();
 
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
-		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
+		when(viewElementTypes.getViewElementTypes())
+				.thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final CollectionElementView collectionElementView = new CollectionElementView();
+		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
+		when(viewFuture.get()).thenReturn(new CollectionElementView());
 		when(childViewDelegate.newView(	view,
 										CollectionElementView.class,
-										0)).thenReturn(collectionElementView);
+										0)).thenReturn(viewFuture);
 		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
 												inputListenerInstallerDelegate,
 												childViewDelegate,
@@ -91,15 +103,17 @@ public class PropertyBindingTest {
 		// once for binding init, once for property udpdate
 		verify(	propertySlotInvocatorDelegate,
 				times(2)).invoke(	view.getMouseInputSubView(),
-									SubView.class.getMethod("handleStringProperty",
-															String.class),
+									SubView.class
+											.getMethod(	"handleStringProperty",
+														String.class),
 									"false");
 		// once for binding init, once for property update
 		verify(	propertySlotInvocatorDelegate,
-				times(2)).invoke(	view.getKeyInputSubView(),
-									SubView.class.getMethod("handleBooleanProperty",
-															boolean.class),
-									false);
+				times(2))
+				.invoke(view.getKeyInputSubView(),
+						SubView.class.getMethod("handleBooleanProperty",
+												boolean.class),
+						false);
 		// once for binding init
 		verify(	propertySlotInvocatorDelegate,
 				times(1)).invoke(	view,
