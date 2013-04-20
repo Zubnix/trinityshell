@@ -61,6 +61,33 @@ public final class XWindow implements DisplaySurface {
 
 	private static final Logger logger = LoggerFactory.getLogger(XWindow.class);
 
+	private static int moveValueMask = xcb_config_window_t.XCB_CONFIG_WINDOW_X
+			| xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+	private static final ByteBuffer moveValueListBuffer = ByteBuffer
+			.allocateDirect(8).order(ByteOrder.nativeOrder());
+
+	private static final int moveResizeValueMask = xcb_config_window_t.XCB_CONFIG_WINDOW_X
+			| xcb_config_window_t.XCB_CONFIG_WINDOW_Y
+			| xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
+			| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+	private static final ByteBuffer moveResizeValueListBuffer = ByteBuffer
+			.allocateDirect(16).order(ByteOrder.nativeOrder());
+
+	private static final int resizeValueMask = xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
+			| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+	private static final ByteBuffer resizeValueList = ByteBuffer
+			.allocateDirect(8).order(ByteOrder.nativeOrder());
+
+	private static final int lowerValueMask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
+	private static final ByteBuffer lowerValueListBuffer = ByteBuffer
+			.allocateDirect(4).order(ByteOrder.nativeOrder())
+			.putInt(xcb_stack_mode_t.XCB_STACK_MODE_BELOW);
+
+	private static final int raiseValueMask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
+	private static final ByteBuffer raiseValueListBuffer = ByteBuffer
+			.allocateDirect(4).order(ByteOrder.nativeOrder())
+			.putInt(xcb_stack_mode_t.XCB_STACK_MODE_ABOVE);
+
 	private final DisplaySurfaceHandle resourceHandle;
 	private final XConnection xConnection;
 	private final XTime xTime;
@@ -163,11 +190,6 @@ public final class XWindow implements DisplaySurface {
 	@Override
 	public ListenableFuture<Void> lower() {
 
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
-		final ByteBuffer value_list = ByteBuffer.allocateDirect(4)
-				.order(ByteOrder.nativeOrder());
-		final int xcb_stack_mode_above = xcb_stack_mode_t.XCB_STACK_MODE_BELOW;
-		value_list.putInt(xcb_stack_mode_above);
 		final int winId = getWindowId();
 
 		return this.xExecutor.submit(	new Runnable() {
@@ -179,8 +201,8 @@ public final class XWindow implements DisplaySurface {
 																winId);
 												xcb_configure_window(	getConnectionRef(),
 																		winId,
-																		value_mask,
-																		value_list);
+																		XWindow.lowerValueMask,
+																		XWindow.lowerValueListBuffer);
 												xcb_flush(getConnectionRef());
 											}
 										},
@@ -210,17 +232,16 @@ public final class XWindow implements DisplaySurface {
 	public ListenableFuture<Void> move(	final int x,
 										final int y) {
 
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
-		final ByteBuffer value_list = ByteBuffer.allocateDirect(8)
-				.order(ByteOrder.nativeOrder());
-		value_list.putInt(x).putInt(y);
-		final int winId = getWindowId();
-
 		return this.xExecutor.submit(	new Runnable() {
 
 											@Override
 											public void run() {
+												XWindow.moveValueListBuffer
+														.clear();
+												XWindow.moveValueListBuffer
+														.putInt(x).putInt(y);
+												final int winId = getWindowId();
+
 												XWindow.logger
 														.debug(	"[winId={}] move x={}, y={}.",
 																x,
@@ -228,8 +249,8 @@ public final class XWindow implements DisplaySurface {
 																winId);
 												xcb_configure_window(	getConnectionRef(),
 																		winId,
-																		value_mask,
-																		value_list);
+																		XWindow.moveValueMask,
+																		XWindow.moveValueListBuffer);
 												xcb_flush(getConnectionRef());
 											}
 										},
@@ -280,13 +301,6 @@ public final class XWindow implements DisplaySurface {
 							new Function<Integer, Void>() {
 								@Override
 								public Void apply(final Integer border) {
-									final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_X
-											| xcb_config_window_t.XCB_CONFIG_WINDOW_Y
-											| xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
-											| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
-									final ByteBuffer value_list = ByteBuffer
-											.allocateDirect(16).order(ByteOrder
-													.nativeOrder());
 
 									final int borderAdjust = 2 * border
 											.intValue();
@@ -295,8 +309,9 @@ public final class XWindow implements DisplaySurface {
 									final int adjustedHeight = height
 											- borderAdjust;
 
-									value_list.putInt(x).putInt(y)
-											.putInt(adjustedWidth)
+									XWindow.moveResizeValueListBuffer.clear();
+									XWindow.moveResizeValueListBuffer.putInt(x)
+											.putInt(y).putInt(adjustedWidth)
 											.putInt(adjustedHeight);
 									final int winId = getWindowId();
 
@@ -309,8 +324,8 @@ public final class XWindow implements DisplaySurface {
 													adjustedHeight);
 									xcb_configure_window(	getConnectionRef(),
 															winId,
-															value_mask,
-															value_list);
+															XWindow.moveResizeValueMask,
+															XWindow.moveResizeValueListBuffer);
 									xcb_flush(getConnectionRef());
 									return null;
 								}
@@ -319,12 +334,6 @@ public final class XWindow implements DisplaySurface {
 
 	@Override
 	public ListenableFuture<Void> raise() {
-
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
-		final ByteBuffer value_list = ByteBuffer.allocateDirect(4)
-				.order(ByteOrder.nativeOrder());
-		final int xcb_stack_mode_above = xcb_stack_mode_t.XCB_STACK_MODE_ABOVE;
-		value_list.putInt(xcb_stack_mode_above);
 		final int winId = getWindowId();
 
 		return this.xExecutor.submit(	new Runnable() {
@@ -336,8 +345,8 @@ public final class XWindow implements DisplaySurface {
 																winId);
 												xcb_configure_window(	getConnectionRef(),
 																		winId,
-																		value_mask,
-																		value_list);
+																		XWindow.raiseValueMask,
+																		XWindow.raiseValueListBuffer);
 												xcb_flush(getConnectionRef());
 											}
 										},
@@ -357,27 +366,6 @@ public final class XWindow implements DisplaySurface {
 
 											@Override
 											public void run() {
-												// Another dirty hack to work
-												// around X11 architecture...
-
-												// We set the substructure
-												// redirect mask on the parent
-												// because we want all client's
-												// geometry to come in as
-												// requests instead of notifies.
-												// We have to do it this way
-												// because there is no way to do
-												// it 'per client window'. Yey
-												// x11...
-												// configureParentSubstructureRedirect(parentId);
-												// The drawback is that every
-												// window that was ever a parent
-												// of a client will now redirect
-												// substructure events of all
-												// it's children. Let's pray
-												// this never gives any weird
-												// behavior or trouble.
-
 												XWindow.logger
 														.debug(	"[winId={}] set parent parentId={}, x={}, y={}.",
 																parentId,
@@ -434,12 +422,6 @@ public final class XWindow implements DisplaySurface {
 																		}
 																	});
 
-		final int value_mask = xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
-				| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
-
-		final ByteBuffer value_list = ByteBuffer.allocateDirect(8)
-				.order(ByteOrder.nativeOrder());
-
 		return transform(	borderFuture,
 							new Function<Integer, Void>() {
 								@Override
@@ -457,12 +439,14 @@ public final class XWindow implements DisplaySurface {
 													adjustedHeight,
 													winId);
 
-									value_list.putInt(adjustedWidth)
+									XWindow.resizeValueList.clear();
+									XWindow.resizeValueList
+											.putInt(adjustedWidth)
 											.putInt(adjustedHeight);
 									xcb_configure_window(	getConnectionRef(),
 															winId,
-															value_mask,
-															value_list);
+															XWindow.resizeValueMask,
+															XWindow.resizeValueList);
 									xcb_flush(getConnectionRef());
 									return null;
 								}
