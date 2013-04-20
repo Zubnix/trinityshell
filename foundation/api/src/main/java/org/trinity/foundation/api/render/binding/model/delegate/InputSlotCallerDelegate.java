@@ -18,7 +18,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
  * A convenience service to call a method marked with {@link InputSlot} based on
- * a {@link BoundInputEvent}.
+ * widget toolkit specific input.
  * 
  *************************************** 
  */

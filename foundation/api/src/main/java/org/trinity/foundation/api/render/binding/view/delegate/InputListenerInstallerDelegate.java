@@ -21,9 +21,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
  * A delegate to listen for specific user input on a view instance. When input
- * arrives, a corresponding {@link BoundInputEvent} should be created and passed
- * to the target view model. This delegate should be implemented for a specific
- * widget toolkit.
+ * arrives, the
+ * {@link InputSlotCallerDelegate#callInputSlot(Object, String, Input)} will be
+ * called with the matching arguments. This delegate is implemented for a
+ * specific widget toolkit.
  * 
  * @see InputSlotCallerDelegate
  *************************************** 
@@ -32,9 +33,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 public interface InputListenerInstallerDelegate {
 
 	/***************************************
-	 * Install a new input listener. When receiving the desired input, a
-	 * corresponding {@link BoundInputEvent} should be generated and delivered
-	 * to the input event target.
+	 * Install a toolkit specific input listener on the given view. When
+	 * receiving the desired toolkit input, the
+	 * {@link InputSlotCallerDelegate#callInputSlot(Object, String, Input)} will
+	 * be called with the matching arguments.
 	 * 
 	 * @param inputType
 	 *            The type of {@link Input} to listen for.
@@ -49,10 +51,11 @@ public interface InputListenerInstallerDelegate {
 	 *         done.
 	 *************************************** 
 	 */
-	ListenableFuture<Void> installViewInputListener(Class<? extends Input> inputType,
-													Object view,
-													AsyncListenable inputEventTarget,
-													String inputSlotName);
+	ListenableFuture<Void>
+			installViewInputListener(	Class<? extends Input> inputType,
+										Object view,
+										AsyncListenable inputEventTarget,
+										String inputSlotName);
 
 	/***************************************
 	 * Remove a previously installed input listener.
@@ -69,10 +72,12 @@ public interface InputListenerInstallerDelegate {
 	 *            input arrives.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
+	 * @see #installViewInputListener(Class, Object, AsyncListenable, String)
 	 *************************************** 
 	 */
-	ListenableFuture<Void> removeViewInputListener(	Class<? extends Input> inputType,
-													Object view,
-													AsyncListenable inputEventTarget,
-													String inputSlotName);
+	ListenableFuture<Void>
+			removeViewInputListener(Class<? extends Input> inputType,
+									Object view,
+									AsyncListenable inputEventTarget,
+									String inputSlotName);
 }
