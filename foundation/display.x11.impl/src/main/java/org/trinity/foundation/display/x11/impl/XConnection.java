@@ -11,12 +11,18 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
+import static org.freedesktop.xcb.LibXcb.xcb_connect;
+import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
+import static org.freedesktop.xcb.LibXcb.xcb_get_setup;
+import static org.freedesktop.xcb.LibXcb.xcb_screen_next;
+import static org.freedesktop.xcb.LibXcb.xcb_setup_roots_iterator;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_cw_t;
 import org.freedesktop.xcb.xcb_event_mask_t;
@@ -39,14 +45,15 @@ public class XConnection {
 
 	public void open(	final String displayName,
 						final int screen) {
-		final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
+		final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4)
+				.order(ByteOrder.nativeOrder());
 		screenBuf.putInt(screen);
-		this.connection_t = LibXcb.xcb_connect(	displayName,
-												screenBuf);
+		this.connection_t = xcb_connect(displayName,
+										screenBuf);
 
 		int targetScreen = screen;
-		final xcb_screen_iterator_t iter = LibXcb.xcb_setup_roots_iterator(LibXcb.xcb_get_setup(this.connection_t));
-		for (; iter.getRem() != 0; --targetScreen, LibXcb.xcb_screen_next(iter)) {
+		final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(this.connection_t));
+		for (; iter.getRem() != 0; --targetScreen, xcb_screen_next(iter)) {
 			if (targetScreen == 0) {
 				this.screen_t = iter.getData();
 				break;
@@ -59,18 +66,20 @@ public class XConnection {
 	private void configureRootEvents() {
 		final int rootId = this.screen_t.getRoot();
 
-		final ByteBuffer values = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE | xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
+		final ByteBuffer values = ByteBuffer.allocateDirect(4)
+				.order(ByteOrder.nativeOrder());
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE
+				| xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
 
-		LibXcb.xcb_change_window_attributes(getConnectionReference(),
-											rootId,
-											xcb_cw_t.XCB_CW_EVENT_MASK,
-											values);
+		xcb_change_window_attributes(	getConnectionReference(),
+										rootId,
+										xcb_cw_t.XCB_CW_EVENT_MASK,
+										values);
 	}
 
 	public void close() {
 
-		LibXcb.xcb_disconnect(this.connection_t);
+		xcb_disconnect(this.connection_t);
 	}
 
 	public SWIGTYPE_p_xcb_connection_t getConnectionReference() {

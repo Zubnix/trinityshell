@@ -1,8 +1,17 @@
 package org.trinity.foundation.display.x11.impl;
 
+import static com.google.common.util.concurrent.Futures.transform;
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
+import static org.freedesktop.xcb.LibXcb.xcb_grab_button;
+import static org.freedesktop.xcb.LibXcb.xcb_grab_pointer;
+import static org.freedesktop.xcb.LibXcb.xcb_grab_pointer_reply;
+import static org.freedesktop.xcb.LibXcb.xcb_query_pointer;
+import static org.freedesktop.xcb.LibXcb.xcb_query_pointer_reply;
+import static org.freedesktop.xcb.LibXcb.xcb_ungrab_button;
+import static org.freedesktop.xcb.LibXcb.xcb_ungrab_pointer;
+
 import java.util.concurrent.Callable;
 
-import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.LibXcbConstants;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_event_mask_t;
@@ -28,13 +37,12 @@ import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
-import static com.google.common.util.concurrent.Futures.transform;
-
 @Bind
 @Singleton
 public class XPointer implements Pointer {
 
-	private static final Logger logger = LoggerFactory.getLogger(XPointer.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(XPointer.class);
 
 	private final XConnection xConnection;
 	private final XTime xTime;
@@ -50,25 +58,28 @@ public class XPointer implements Pointer {
 	}
 
 	private int getWindowId(final DisplaySurface displaySurface) {
-		final int windowId = ((Integer) displaySurface.getDisplaySurfaceHandle().getNativeHandle()).intValue();
+		final int windowId = ((Integer) displaySurface
+				.getDisplaySurfaceHandle().getNativeHandle()).intValue();
 		return windowId;
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection.getConnectionReference();
+		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection
+				.getConnectionReference();
 		return connection_t;
 	}
 
 	private void checkError(final xcb_generic_error_t e) {
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			logger.error(XcbErrorUtil.toString(e));
+			XPointer.logger.error(XcbErrorUtil.toString(e));
 		}
 	}
 
 	@Override
-	public ListenableFuture<Void> grabButton(	final DisplaySurface displaySurface,
-												final Button catchButton,
-												final InputModifiers withModifiers) {
+	public ListenableFuture<Void>
+			grabButton(	final DisplaySurface displaySurface,
+						final Button catchButton,
+						final InputModifiers withModifiers) {
 
 		final int buttonCode = catchButton.getButtonCode();
 		final int modifiers = withModifiers.getInputModifiersState();
@@ -83,24 +94,25 @@ public class XPointer implements Pointer {
 		return this.xExecutor.submit(	new Runnable() {
 											@Override
 											public void run() {
-												LibXcb.xcb_grab_button(	getConnectionRef(),
-																		(short) 0,
-																		winId,
-																		event_mask,
-																		(short) pointer_mode,
-																		(short) keyboard_mode,
-																		confine_to,
-																		cursor,
-																		(short) buttonCode,
-																		modifiers);
-												LibXcb.xcb_flush(getConnectionRef());
+												xcb_grab_button(getConnectionRef(),
+																(short) 0,
+																winId,
+																event_mask,
+																(short) pointer_mode,
+																(short) keyboard_mode,
+																confine_to,
+																cursor,
+																(short) buttonCode,
+																modifiers);
+												xcb_flush(getConnectionRef());
 											}
 										},
 										null);
 	}
 
 	@Override
-	public ListenableFuture<Void> grabPointer(final DisplaySurface displaySurface) {
+	public ListenableFuture<Void>
+			grabPointer(final DisplaySurface displaySurface) {
 
 		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS
 				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE;
@@ -115,16 +127,15 @@ public class XPointer implements Pointer {
 				.submit(new Callable<xcb_grab_pointer_cookie_t>() {
 					@Override
 					public xcb_grab_pointer_cookie_t call() {
-						final xcb_grab_pointer_cookie_t grab_pointer_cookie_t = LibXcb
-								.xcb_grab_pointer(	getConnectionRef(),
-													(short) 0,
-													winId,
-													event_mask,
-													(short) pointer_mode,
-													(short) keyboard_mode,
-													confine_to,
-													cursor,
-													time);
+						final xcb_grab_pointer_cookie_t grab_pointer_cookie_t = xcb_grab_pointer(	getConnectionRef(),
+																									(short) 0,
+																									winId,
+																									event_mask,
+																									(short) pointer_mode,
+																									(short) keyboard_mode,
+																									confine_to,
+																									cursor,
+																									time);
 						return grab_pointer_cookie_t;
 					}
 				});
@@ -132,22 +143,26 @@ public class XPointer implements Pointer {
 		return transform(	grabPointerFuture,
 							new AsyncFunction<xcb_grab_pointer_cookie_t, Void>() {
 								@Override
-								public ListenableFuture<Void> apply(final xcb_grab_pointer_cookie_t grab_pointer_cookie_t) {
+								public
+										ListenableFuture<Void>
+										apply(final xcb_grab_pointer_cookie_t grab_pointer_cookie_t) {
 									return grabPointerReply(grab_pointer_cookie_t);
 								}
 							});
 	}
 
-	protected ListenableFuture<Void> grabPointerReply(final xcb_grab_pointer_cookie_t grab_pointer_cookie_t) {
+	protected
+			ListenableFuture<Void>
+			grabPointerReply(final xcb_grab_pointer_cookie_t grab_pointer_cookie_t) {
 		return this.xExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
 				final xcb_generic_error_t e = new xcb_generic_error_t();
 				// TODO check if grab was
 				// successful and return boolean?
-				LibXcb.xcb_grab_pointer_reply(	getConnectionRef(),
-												grab_pointer_cookie_t,
-												e);
+				xcb_grab_pointer_reply(	getConnectionRef(),
+										grab_pointer_cookie_t,
+										e);
 				checkError(e);
 				return null;
 			}
@@ -162,19 +177,20 @@ public class XPointer implements Pointer {
 		return this.xExecutor.submit(	new Runnable() {
 											@Override
 											public void run() {
-												LibXcb.xcb_ungrab_pointer(	XPointer.this.xConnection
-																					.getConnectionReference(),
-																			time);
-												LibXcb.xcb_flush(getConnectionRef());
+												xcb_ungrab_pointer(	XPointer.this.xConnection
+																			.getConnectionReference(),
+																	time);
+												xcb_flush(getConnectionRef());
 											}
 										},
 										null);
 	}
 
 	@Override
-	public ListenableFuture<Void> ungrabButton(	final DisplaySurface displaySurface,
-												final Button likeButton,
-												final InputModifiers withModifiers) {
+	public ListenableFuture<Void>
+			ungrabButton(	final DisplaySurface displaySurface,
+							final Button likeButton,
+							final InputModifiers withModifiers) {
 
 		final int button = likeButton.getButtonCode();
 		final int modifiers = withModifiers.getInputModifiersState();
@@ -183,29 +199,30 @@ public class XPointer implements Pointer {
 		return this.xExecutor.submit(	new Runnable() {
 											@Override
 											public void run() {
-												LibXcb.xcb_ungrab_button(	getConnectionRef(),
-																			(short) button,
-																			winId,
-																			modifiers);
-												LibXcb.xcb_flush(getConnectionRef());
+												xcb_ungrab_button(	getConnectionRef(),
+																	(short) button,
+																	winId,
+																	modifiers);
+												xcb_flush(getConnectionRef());
 											}
 										},
 										null);
 	}
 
 	@Override
-	public ListenableFuture<Coordinate> getPointerCoordinate(final DisplaySurface displaySurface) {
+	public ListenableFuture<Coordinate>
+			getPointerCoordinate(final DisplaySurface displaySurface) {
 		final int winId = getWindowId(displaySurface);
 
 		return this.xExecutor.submit(new Callable<Coordinate>() {
 			@Override
 			public Coordinate call() {
-				final xcb_query_pointer_cookie_t cookie_t = LibXcb.xcb_query_pointer(	getConnectionRef(),
-																						winId);
+				final xcb_query_pointer_cookie_t cookie_t = xcb_query_pointer(	getConnectionRef(),
+																				winId);
 				final xcb_generic_error_t e = new xcb_generic_error_t();
-				final xcb_query_pointer_reply_t reply_t = LibXcb.xcb_query_pointer_reply(	getConnectionRef(),
-																							cookie_t,
-																							e);
+				final xcb_query_pointer_reply_t reply_t = xcb_query_pointer_reply(	getConnectionRef(),
+																					cookie_t,
+																					e);
 				checkError(e);
 
 				final int x = reply_t.getWin_x();

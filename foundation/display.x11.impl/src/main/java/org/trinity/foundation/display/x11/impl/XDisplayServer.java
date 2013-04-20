@@ -11,10 +11,11 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
-import org.freedesktop.xcb.LibXcb;
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenableEventBus;
@@ -39,9 +40,10 @@ public class XDisplayServer implements DisplayServer {
 	private final AsyncListenableEventBus displayEventBus;
 
 	@Inject
-	XDisplayServer(final XConnection xConnection,
-			final XWindowCache xWindowCache, final XEventPump xEventPump,
-			@Named("Display") final ListeningExecutorService xExecutor) {
+	XDisplayServer(	final XConnection xConnection,
+					final XWindowCache xWindowCache,
+					final XEventPump xEventPump,
+					@Named("Display") final ListeningExecutorService xExecutor) {
 
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
@@ -55,14 +57,17 @@ public class XDisplayServer implements DisplayServer {
 	@Override
 	public ListenableFuture<Void> quit() {
 
-		return this.xExecutor.submit(new Runnable() {
+		return this.xExecutor.submit(	new Runnable() {
 
-			@Override
-			public void run() {
-				XDisplayServer.this.xEventPump.stop();
-				XDisplayServer.this.xConnection.close();
-			}
-		}, null);
+											@Override
+											public void run() {
+												XDisplayServer.this.xEventPump
+														.stop();
+												XDisplayServer.this.xConnection
+														.close();
+											}
+										},
+										null);
 	}
 
 	@Override
@@ -81,18 +86,21 @@ public class XDisplayServer implements DisplayServer {
 		// FIXME from config
 		final String displayName = System.getenv("DISPLAY");
 
-		return this.xExecutor.submit(new Runnable() {
-			@Override
-			public void run() {
-				XDisplayServer.this.xConnection.open(displayName, 0);
-				if (LibXcb
-						.xcb_connection_has_error(XDisplayServer.this.xConnection
-								.getConnectionReference()) != 0) {
-					throw new Error("Cannot open display\n");
-				}
-				XDisplayServer.this.xEventPump.start();
-			}
-		}, null);
+		return this.xExecutor.submit(	new Runnable() {
+											@Override
+											public void run() {
+												XDisplayServer.this.xConnection
+														.open(	displayName,
+																0);
+												if (xcb_connection_has_error(XDisplayServer.this.xConnection
+														.getConnectionReference()) != 0) {
+													throw new Error("Cannot open display\n");
+												}
+												XDisplayServer.this.xEventPump
+														.start();
+											}
+										},
+										null);
 	}
 
 	@Override
@@ -101,8 +109,10 @@ public class XDisplayServer implements DisplayServer {
 	}
 
 	@Override
-	public void register(final Object listener, final ExecutorService executor) {
-		this.displayEventBus.register(listener, executor);
+	public void register(	final Object listener,
+							final ExecutorService executor) {
+		this.displayEventBus.register(	listener,
+										executor);
 
 	}
 
