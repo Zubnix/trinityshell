@@ -47,12 +47,16 @@ public class ShellRootWidget extends BaseShellWidget {
 		getPainter().bindView();
 
 		// find correct size
-		final ListenableFuture<Rectangle> rootGeometryFuture = transform(	shellSurfaceFactory.getRootShellSurface(),
+		final ListenableFuture<Rectangle> rootGeometryFuture = transform(	shellSurfaceFactory
+																					.getRootShellSurface(),
 																			new AsyncFunction<ShellSurfaceParent, Rectangle>() {
 																				@Override
-																				public ListenableFuture<Rectangle> apply(final ShellSurfaceParent input)
-																						throws Exception {
-																					return input.getGeometry();
+																				public
+																						ListenableFuture<Rectangle>
+																						apply(final ShellSurfaceParent input)
+																								throws Exception {
+																					return input
+																							.getGeometry();
 																				}
 																			});
 		// set correct size
