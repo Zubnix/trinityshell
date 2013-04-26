@@ -38,6 +38,17 @@ public interface DisplayServer extends AsyncListenable {
 	 */
 	ListenableFuture<DisplaySurface> getRootDisplayArea();
 
+	/**
+	 * An array "snapshot" of client display surfaces. This array does not
+	 * include the root display area. The returned array only includes the
+	 * client display surfaces at the time of the call. Any future creation or
+	 * deletion of client display surfaces will not be reflected by the returned
+	 * array.
+	 * 
+	 * @return A collection of client {@link DisplaySurface}s.
+	 */
+	ListenableFuture<DisplaySurface[]> getClientDisplaySurfaces();
+
 	/***************************************
 	 * Orderly shut down this <code>DisplayServer</code>. All resources living
 	 * on this <code>DisplayServer</code> will be shut down as well.
