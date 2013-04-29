@@ -49,9 +49,10 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 						public void onSuccess(final DisplaySurface[] clientDisplaySurfaces) {
 							// iterate over existing non-managed client display
 							// surfaces
-							for (final DisplaySurface clientDisplaySurface : clientDisplaySurfaces) {
-								handleClientDisplaySurface(clientDisplaySurface);
-							}
+							// for (final DisplaySurface clientDisplaySurface :
+							// clientDisplaySurfaces) {
+							// handleClientDisplaySurface(clientDisplaySurface);
+							// }
 
 							// We register without specifying an executor. This
 							// means our listener (@Subscribe method) will be

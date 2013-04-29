@@ -1,11 +1,13 @@
 package org.trinity.shellplugin.wm.impl;
 
 import org.trinity.foundation.api.shared.Margins;
+import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
 import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.surface.ShellSurface;
 
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import de.devsurf.injection.guice.annotations.Bind;
@@ -28,7 +30,7 @@ public class Scene {
 		this.shellRootWidget.doShow();
 	}
 
-	public void addClient(final ShellSurface client) {
+	private void layoutClient(final ShellSurface client) {
 		client.setParent(this.shellRootWidget);
 		this.rootLayoutManager.addChildNode(client,
 											new ShellLayoutPropertyLine(1,
@@ -37,5 +39,17 @@ public class Scene {
 		this.shellRootWidget.layout();
 		client.doReparent();
 		client.doShow();
+	}
+
+	public void addClient(final ShellSurface client) {
+		final ClientTopBarItem clientTopBarItem = new ClientTopBarItem(client);
+		client.register(new Object() {
+			@Subscribe
+			public void onClientDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
+				Scene.this.shellRootWidget.getTopBar().remove(clientTopBarItem);
+			}
+		});
+		this.shellRootWidget.getTopBar().add(clientTopBarItem);
+		layoutClient(client);
 	}
 }

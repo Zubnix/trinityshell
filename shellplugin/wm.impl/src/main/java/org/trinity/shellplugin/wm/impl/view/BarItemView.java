@@ -1,5 +1,8 @@
 package org.trinity.shellplugin.wm.impl.view;
 
+import org.trinity.foundation.api.display.input.PointerInput;
+import org.trinity.foundation.api.render.binding.view.InputSignal;
+import org.trinity.foundation.api.render.binding.view.InputSignals;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 import org.trinity.foundation.api.shared.Size;
@@ -13,6 +16,8 @@ import com.trolltech.qt.gui.QPixmap;
 		@PropertySlot(propertyName = "text", methodName = "setText", argumentTypes = { String.class }),// HasText
 		@PropertySlot(propertyName = "imageDefinition", methodName = "setImageDefinition", argumentTypes = { ImageDefinition.class }) // HasImageDefinition
 })
+@InputSignals({ @InputSignal(name = "onPointerInput", inputType = PointerInput.class) })
+// ReceivesPointerInput
 class BarItemView extends QLabel {
 
 	{

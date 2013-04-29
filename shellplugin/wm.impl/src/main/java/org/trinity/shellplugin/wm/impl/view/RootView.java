@@ -1,8 +1,5 @@
 package org.trinity.shellplugin.wm.impl.view;
 
-import org.trinity.foundation.api.display.input.PointerInput;
-import org.trinity.foundation.api.render.binding.view.InputSignal;
-import org.trinity.foundation.api.render.binding.view.InputSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
 
 import com.trolltech.qt.core.QChildEvent;
@@ -13,7 +10,6 @@ import com.trolltech.qt.gui.QHBoxLayout;
 import com.trolltech.qt.gui.QVBoxLayout;
 import com.trolltech.qt.gui.QWidget;
 
-@InputSignals({ @InputSignal(name = "onRootClicked", inputType = PointerInput.class) })
 class RootView extends QFrame {
 
 	@ObservableCollection(value = "topBar", view = BarItemView.class)
