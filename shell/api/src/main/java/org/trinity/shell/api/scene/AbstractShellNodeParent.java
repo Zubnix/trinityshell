@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.trinity.foundation.api.shared.Coordinate;
+import org.trinity.foundation.api.shared.OwnerThread;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
@@ -30,6 +31,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * 
  *************************************** 
  */
+@OwnerThread("Shell")
 public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodeParent implements ShellNodeParent {
 
 	private final Set<AbstractShellNode> children = new HashSet<AbstractShellNode>();

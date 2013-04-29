@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
+import org.trinity.foundation.api.shared.OwnerThread;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
@@ -50,6 +51,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * 
  *************************************** 
  */
+@OwnerThread("Shell")
 public abstract class AbstractShellNode extends AbstractAsyncShellNode implements ShellNode {
 
 	private Coordinate position = new Coordinate(	0,

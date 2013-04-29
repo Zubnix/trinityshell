@@ -12,6 +12,7 @@
 package org.trinity.shell.api.surface;
 
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.shared.OwnerThread;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -20,6 +21,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * shell surface.
  *************************************** 
  */
+@OwnerThread("Shell")
 public interface ShellSurfaceFactory {
 	/***************************************
 	 * Create a new shell surface that is backed by the given display surface.

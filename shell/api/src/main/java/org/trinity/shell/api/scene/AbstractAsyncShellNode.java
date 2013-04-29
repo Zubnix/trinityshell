@@ -3,6 +3,7 @@ package org.trinity.shell.api.scene;
 import java.util.concurrent.Callable;
 
 import org.trinity.foundation.api.shared.Coordinate;
+import org.trinity.foundation.api.shared.OwnerThread;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 
@@ -18,6 +19,7 @@ import com.google.inject.Inject;
  * concrete internal node manipulation.
  *************************************** 
  */
+@OwnerThread("Shell")
 public abstract class AbstractAsyncShellNode implements ShellNode {
 
 	private final ListeningExecutorService shellExecutor;

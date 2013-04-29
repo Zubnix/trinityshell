@@ -2,6 +2,7 @@ package org.trinity.shell.api.scene;
 
 import java.util.concurrent.Callable;
 
+import org.trinity.foundation.api.shared.OwnerThread;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
@@ -14,6 +15,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * Subclasses must implement any concrete internal node manipulation.
  *************************************** 
  */
+@OwnerThread("Shell")
 public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode implements ShellNodeParent {
 
 	private final ListeningExecutorService shellExecutor;

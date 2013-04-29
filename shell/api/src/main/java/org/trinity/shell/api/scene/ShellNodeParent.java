@@ -11,6 +11,7 @@
  */
 package org.trinity.shell.api.scene;
 
+import org.trinity.foundation.api.shared.OwnerThread;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
@@ -28,6 +29,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * 
  *************************************** 
  */
+@OwnerThread("Shell")
 public interface ShellNodeParent extends ShellNode {
 
 	/***************************************
