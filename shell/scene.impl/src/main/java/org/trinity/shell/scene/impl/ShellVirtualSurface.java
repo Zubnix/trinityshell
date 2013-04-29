@@ -39,7 +39,8 @@ import de.devsurf.injection.guice.annotations.To.Type;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(value = @Named("ShellVirtualSurface"), to = @To(value = Type.CUSTOM, customs = { ShellNode.class, ShellNodeParent.class }))
+@Bind(value = @Named("ShellVirtualSurface"), to = @To(value = Type.CUSTOM, customs = { ShellNode.class,
+		ShellNodeParent.class }))
 public class ShellVirtualSurface extends AbstractShellNodeParent {
 
 	@Inject

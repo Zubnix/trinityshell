@@ -45,8 +45,8 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 						format(	"Expected view should be of type %s",
 								QObject.class.getName()));
 
-		final int inputListenerHash = this.hashFunction.newHasher().putInt(inputType.hashCode()).putInt(view.hashCode()).putInt(inputEventTarget.hashCode())
-				.putString(inputSlotName).hashCode();
+		final int inputListenerHash = this.hashFunction.newHasher().putInt(inputType.hashCode())
+				.putInt(view.hashCode()).putInt(inputEventTarget.hashCode()).putString(inputSlotName).hashCode();
 		final Callable<QObject> inputListenerCreator = new Callable<QObject>() {
 			@Override
 			public QObject call() throws Exception {
@@ -57,16 +57,18 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 			}
 		};
 
-		final ListenableFutureTask<Void> installViewInputListenerTask = ListenableFutureTask.create(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				final QObject viewInstance = (QObject) view;
-				final QObject inputListener = InputListenerInstallerDelegateImpl.this.inputListeners.get(	Integer.valueOf(inputListenerHash),
-																											inputListenerCreator);
-				viewInstance.installEventFilter(inputListener);
-				return null;
-			}
-		});
+		final ListenableFutureTask<Void> installViewInputListenerTask = ListenableFutureTask
+				.create(new Callable<Void>() {
+					@Override
+					public Void call() throws Exception {
+						final QObject viewInstance = (QObject) view;
+						final QObject inputListener = InputListenerInstallerDelegateImpl.this.inputListeners
+								.get(	Integer.valueOf(inputListenerHash),
+										inputListenerCreator);
+						viewInstance.installEventFilter(inputListener);
+						return null;
+					}
+				});
 
 		QApplication.invokeLater(installViewInputListenerTask);
 		return installViewInputListenerTask;
@@ -81,8 +83,8 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 						format(	"Expected view should be of type %s",
 								QObject.class.getName()));
 
-		final int inputListenerHash = this.hashFunction.newHasher().putInt(inputType.hashCode()).putInt(view.hashCode()).putInt(inputEventTarget.hashCode())
-				.putString(inputSlotName).hashCode();
+		final int inputListenerHash = this.hashFunction.newHasher().putInt(inputType.hashCode())
+				.putInt(view.hashCode()).putInt(inputEventTarget.hashCode()).putString(inputSlotName).hashCode();
 
 		final Callable<QObject> inputListenerCreator = new Callable<QObject>() {
 			@Override
@@ -94,16 +96,18 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 			}
 		};
 
-		final ListenableFutureTask<Void> removeViewInputListenerTask = ListenableFutureTask.create(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				final QObject viewInstance = (QObject) view;
-				final QObject inputListener = InputListenerInstallerDelegateImpl.this.inputListeners.get(	Integer.valueOf(inputListenerHash),
-																											inputListenerCreator);
-				viewInstance.removeEventFilter(inputListener);
-				return null;
-			}
-		});
+		final ListenableFutureTask<Void> removeViewInputListenerTask = ListenableFutureTask
+				.create(new Callable<Void>() {
+					@Override
+					public Void call() throws Exception {
+						final QObject viewInstance = (QObject) view;
+						final QObject inputListener = InputListenerInstallerDelegateImpl.this.inputListeners
+								.get(	Integer.valueOf(inputListenerHash),
+										inputListenerCreator);
+						viewInstance.removeEventFilter(inputListener);
+						return null;
+					}
+				});
 
 		QApplication.invokeLater(removeViewInputListenerTask);
 		return removeViewInputListenerTask;

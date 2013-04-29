@@ -50,12 +50,12 @@ public final class XEventConverter {
 
 	@Inject
 	XEventConverter(final Set<XEventConversion> eventConversions,
-			@Named("XEventBus") final EventBus xEventBus) {
+					@Named("XEventBus") final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 
 		for (final XEventConversion eventConversion : eventConversions) {
-			this.conversionMap.put(eventConversion.getEventCode(),
-					eventConversion);
+			this.conversionMap.put(	eventConversion.getEventCode(),
+									eventConversion);
 		}
 
 		this.xEventBus.register(this);
@@ -68,8 +68,7 @@ public final class XEventConverter {
 		// TODO handle error cases
 		final int eventCode = responseType & 0x7f;
 
-		final XEventConversion eventConversion = this.conversionMap.get(Integer
-				.valueOf(eventCode));
+		final XEventConversion eventConversion = this.conversionMap.get(Integer.valueOf(eventCode));
 		if (eventConversion == null) {
 			return;
 		}

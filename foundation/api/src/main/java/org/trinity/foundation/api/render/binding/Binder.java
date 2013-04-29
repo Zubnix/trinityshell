@@ -11,7 +11,6 @@
  */
 package org.trinity.foundation.api.render.binding;
 
-
 /***************************************
  * Binds views to models.
  * 

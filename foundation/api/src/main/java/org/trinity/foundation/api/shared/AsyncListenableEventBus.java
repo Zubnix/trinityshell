@@ -41,8 +41,9 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 													public void run() {
 														final AsyncEventBus asyncEventBus = new AsyncEventBus(executor);
 														asyncEventBus.register(object);
-														AsyncListenableEventBus.this.asyncEventBusByListener.put(	object,
-																													asyncEventBus);
+														AsyncListenableEventBus.this.asyncEventBusByListener
+																.put(	object,
+																		asyncEventBus);
 													}
 												},
 												null);
@@ -59,7 +60,8 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 		this.listenableExecutorService.submit(	new Runnable() {
 													@Override
 													public void run() {
-														AsyncListenableEventBus.this.asyncEventBusByListener.remove(object);
+														AsyncListenableEventBus.this.asyncEventBusByListener
+																.remove(object);
 													}
 												},
 												null);
@@ -76,7 +78,8 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 		this.listenableExecutorService.submit(	new Runnable() {
 													@Override
 													public void run() {
-														for (final AsyncEventBus asyncEventBus : AsyncListenableEventBus.this.asyncEventBusByListener.values()) {
+														for (final AsyncEventBus asyncEventBus : AsyncListenableEventBus.this.asyncEventBusByListener
+																.values()) {
 															asyncEventBus.post(event);
 														}
 													}

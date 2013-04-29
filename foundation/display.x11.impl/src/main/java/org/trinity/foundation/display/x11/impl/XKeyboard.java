@@ -46,8 +46,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class XKeyboard implements Keyboard {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(XKeyboard.class);
+	private static final Logger logger = LoggerFactory.getLogger(XKeyboard.class);
 
 	private final XKeySymbolMapping xKeySymbolMapping;
 	private final XKeySymbolCache xKeySymbolCache;
@@ -72,14 +71,12 @@ public class XKeyboard implements Keyboard {
 	}
 
 	private int getWindowId(final DisplaySurface displaySurface) {
-		final int windowId = ((Integer) displaySurface
-				.getDisplaySurfaceHandle().getNativeHandle()).intValue();
+		final int windowId = ((Integer) displaySurface.getDisplaySurfaceHandle().getNativeHandle()).intValue();
 		return windowId;
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection
-				.getConnectionReference();
+		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection.getConnectionReference();
 		return connection_t;
 	}
 
@@ -90,10 +87,9 @@ public class XKeyboard implements Keyboard {
 	}
 
 	@Override
-	public ListenableFuture<Void>
-			grabKey(final DisplaySurface displaySurface,
-					final Key catchKey,
-					final InputModifiers withModifiers) {
+	public ListenableFuture<Void> grabKey(	final DisplaySurface displaySurface,
+											final Key catchKey,
+											final InputModifiers withModifiers) {
 
 		final int keyCode = catchKey.getKeyCode();
 		final int modifiers = withModifiers.getInputModifiersState();
@@ -118,10 +114,9 @@ public class XKeyboard implements Keyboard {
 	}
 
 	@Override
-	public ListenableFuture<Void>
-			ungrabKey(	final DisplaySurface displaySurface,
-						final Key catchKey,
-						final InputModifiers withModifiers) {
+	public ListenableFuture<Void> ungrabKey(final DisplaySurface displaySurface,
+											final Key catchKey,
+											final InputModifiers withModifiers) {
 
 		final int key = catchKey.getKeyCode();
 		final int modifiers = withModifiers.getInputModifiersState();
@@ -157,8 +152,7 @@ public class XKeyboard implements Keyboard {
 	}
 
 	@Override
-	public ListenableFuture<Void>
-			grabKeyboard(final DisplaySurface displaySurface) {
+	public ListenableFuture<Void> grabKeyboard(final DisplaySurface displaySurface) {
 		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 		final int time = this.xTime.getTime();
@@ -188,9 +182,8 @@ public class XKeyboard implements Keyboard {
 	}
 
 	@Override
-	public ListenableFuture<String>
-			asKeySymbolName(final Key key,
-							final InputModifiers inputModifiers) {
+	public ListenableFuture<String> asKeySymbolName(final Key key,
+													final InputModifiers inputModifiers) {
 
 		final int keyCode = key.getKeyCode();
 		final int inputModifiersState = inputModifiers.getInputModifiersState();
@@ -198,12 +191,10 @@ public class XKeyboard implements Keyboard {
 		return this.xExecutor.submit(new Callable<String>() {
 			@Override
 			public String call() throws Exception {
-				final Integer keySymbol = XKeyboard.this.xKeySymbolCache
-						.getKeySymbol(	keyCode,
-										inputModifiersState);
+				final Integer keySymbol = XKeyboard.this.xKeySymbolCache.getKeySymbol(	keyCode,
+																						inputModifiersState);
 
-				final String keySymbolName = XKeyboard.this.xKeySymbolMapping
-						.toString(keySymbol);
+				final String keySymbolName = XKeyboard.this.xKeySymbolMapping.toString(keySymbol);
 				return keySymbolName;
 			}
 		});
@@ -211,10 +202,8 @@ public class XKeyboard implements Keyboard {
 
 	@Override
 	public ListenableFuture<List<Key>> asKeys(final String keySymbolName) {
-		final Integer keySymbol = this.xKeySymbolMapping
-				.toKeySymbol(keySymbolName);
-		final List<Integer> keyCodes = this.xKeySymbolCache
-				.getKeyCodes(keySymbol);
+		final Integer keySymbol = this.xKeySymbolMapping.toKeySymbol(keySymbolName);
+		final List<Integer> keyCodes = this.xKeySymbolCache.getKeyCodes(keySymbol);
 
 		return this.xExecutor.submit(new Callable<List<Key>>() {
 			@Override
@@ -231,8 +220,7 @@ public class XKeyboard implements Keyboard {
 
 	@Override
 	public InputModifier modifier(final String modifierName) {
-		final int mask = this.xInputModifierMaskMapping
-				.getXInputModifierMask(modifierName);
+		final int mask = this.xInputModifierMaskMapping.getXInputModifierMask(modifierName);
 		final XInputModifier xInputModifier = new XInputModifier(	mask,
 																	modifierName);
 		return xInputModifier;
@@ -242,8 +230,7 @@ public class XKeyboard implements Keyboard {
 	public InputModifiers modifiers(final String... modifierNames) {
 		int inputModifiersState = 0;
 		for (final String modifierName : modifierNames) {
-			inputModifiersState |= this.xInputModifierMaskMapping
-					.getXInputModifierMask(modifierName);
+			inputModifiersState |= this.xInputModifierMaskMapping.getXInputModifierMask(modifierName);
 		}
 		return new InputModifiers(inputModifiersState);
 	}

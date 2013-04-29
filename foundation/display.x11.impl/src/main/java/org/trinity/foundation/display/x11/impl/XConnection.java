@@ -45,8 +45,7 @@ public class XConnection {
 
 	public void open(	final String displayName,
 						final int screen) {
-		final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4)
-				.order(ByteOrder.nativeOrder());
+		final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 		screenBuf.putInt(screen);
 		this.connection_t = xcb_connect(displayName,
 										screenBuf);
@@ -66,8 +65,7 @@ public class XConnection {
 	private void configureRootEvents() {
 		final int rootId = this.screen_t.getRoot();
 
-		final ByteBuffer values = ByteBuffer.allocateDirect(4)
-				.order(ByteOrder.nativeOrder());
+		final ByteBuffer values = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE
 				| xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
 

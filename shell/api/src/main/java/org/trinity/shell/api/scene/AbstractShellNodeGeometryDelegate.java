@@ -17,8 +17,8 @@ import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.shared.Size;
 
 /****************************************
- * An abstract base implementation of a {@link ShellNodeGeometryDelegate} for use with
- * an {@link AbstractShellNode}.
+ * An abstract base implementation of a {@link ShellNodeGeometryDelegate} for
+ * use with an {@link AbstractShellNode}.
  * 
  *************************************** 
  */

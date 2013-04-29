@@ -10,9 +10,6 @@ public class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(Object.class).annotatedWith(Names.named("RootView"))
-				.toProvider(RootViewProvider.class);
-		bind(Object.class).annotatedWith(Names.named("ClientDecoView"))
-				.toProvider(ClientDecoViewProvider.class);
+		bind(Object.class).annotatedWith(Names.named("RootView")).toProvider(RootViewProvider.class);
 	}
 }

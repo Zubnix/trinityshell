@@ -41,8 +41,7 @@ import de.devsurf.injection.guice.annotations.Bind;
 @Singleton
 public class XPointer implements Pointer {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(XPointer.class);
+	private static final Logger logger = LoggerFactory.getLogger(XPointer.class);
 
 	private final XConnection xConnection;
 	private final XTime xTime;
@@ -58,14 +57,12 @@ public class XPointer implements Pointer {
 	}
 
 	private int getWindowId(final DisplaySurface displaySurface) {
-		final int windowId = ((Integer) displaySurface
-				.getDisplaySurfaceHandle().getNativeHandle()).intValue();
+		final int windowId = ((Integer) displaySurface.getDisplaySurfaceHandle().getNativeHandle()).intValue();
 		return windowId;
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection
-				.getConnectionReference();
+		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection.getConnectionReference();
 		return connection_t;
 	}
 
@@ -76,10 +73,9 @@ public class XPointer implements Pointer {
 	}
 
 	@Override
-	public ListenableFuture<Void>
-			grabButton(	final DisplaySurface displaySurface,
-						final Button catchButton,
-						final InputModifiers withModifiers) {
+	public ListenableFuture<Void> grabButton(	final DisplaySurface displaySurface,
+												final Button catchButton,
+												final InputModifiers withModifiers) {
 
 		final int buttonCode = catchButton.getButtonCode();
 		final int modifiers = withModifiers.getInputModifiersState();
@@ -111,8 +107,7 @@ public class XPointer implements Pointer {
 	}
 
 	@Override
-	public ListenableFuture<Void>
-			grabPointer(final DisplaySurface displaySurface) {
+	public ListenableFuture<Void> grabPointer(final DisplaySurface displaySurface) {
 
 		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS
 				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE;
@@ -143,17 +138,13 @@ public class XPointer implements Pointer {
 		return transform(	grabPointerFuture,
 							new AsyncFunction<xcb_grab_pointer_cookie_t, Void>() {
 								@Override
-								public
-										ListenableFuture<Void>
-										apply(final xcb_grab_pointer_cookie_t grab_pointer_cookie_t) {
+								public ListenableFuture<Void> apply(final xcb_grab_pointer_cookie_t grab_pointer_cookie_t) {
 									return grabPointerReply(grab_pointer_cookie_t);
 								}
 							});
 	}
 
-	protected
-			ListenableFuture<Void>
-			grabPointerReply(final xcb_grab_pointer_cookie_t grab_pointer_cookie_t) {
+	protected ListenableFuture<Void> grabPointerReply(final xcb_grab_pointer_cookie_t grab_pointer_cookie_t) {
 		return this.xExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
@@ -177,8 +168,7 @@ public class XPointer implements Pointer {
 		return this.xExecutor.submit(	new Runnable() {
 											@Override
 											public void run() {
-												xcb_ungrab_pointer(	XPointer.this.xConnection
-																			.getConnectionReference(),
+												xcb_ungrab_pointer(	XPointer.this.xConnection.getConnectionReference(),
 																	time);
 												xcb_flush(getConnectionRef());
 											}
@@ -187,10 +177,9 @@ public class XPointer implements Pointer {
 	}
 
 	@Override
-	public ListenableFuture<Void>
-			ungrabButton(	final DisplaySurface displaySurface,
-							final Button likeButton,
-							final InputModifiers withModifiers) {
+	public ListenableFuture<Void> ungrabButton(	final DisplaySurface displaySurface,
+												final Button likeButton,
+												final InputModifiers withModifiers) {
 
 		final int button = likeButton.getButtonCode();
 		final int modifiers = withModifiers.getInputModifiersState();
@@ -210,8 +199,7 @@ public class XPointer implements Pointer {
 	}
 
 	@Override
-	public ListenableFuture<Coordinate>
-			getPointerCoordinate(final DisplaySurface displaySurface) {
+	public ListenableFuture<Coordinate> getPointerCoordinate(final DisplaySurface displaySurface) {
 		final int winId = getWindowId(displaySurface);
 
 		return this.xExecutor.submit(new Callable<Coordinate>() {

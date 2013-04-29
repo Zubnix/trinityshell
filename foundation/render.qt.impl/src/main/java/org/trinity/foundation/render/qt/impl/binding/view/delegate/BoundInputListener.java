@@ -61,8 +61,8 @@ public class BoundInputListener extends QObject {
 																	inputModifiers);
 
 			this.inputSlotCallerDelegate.callInputSlot(	this.inputEventTarget,
-												this.inputSlotName,
-												keyboardInput);
+														this.inputSlotName,
+														keyboardInput);
 			return false;
 		}
 
@@ -85,8 +85,8 @@ public class BoundInputListener extends QObject {
 																	inputModifiers);
 
 			this.inputSlotCallerDelegate.callInputSlot(	this.inputEventTarget,
-												this.inputSlotName,
-												keyboardInput);
+														this.inputSlotName,
+														keyboardInput);
 			return false;
 		}
 
@@ -114,8 +114,8 @@ public class BoundInputListener extends QObject {
 																rootY);
 
 			this.inputSlotCallerDelegate.callInputSlot(	this.inputEventTarget,
-												this.inputSlotName,
-												pointerInput);
+														this.inputSlotName,
+														pointerInput);
 			return false;
 		}
 
@@ -142,8 +142,8 @@ public class BoundInputListener extends QObject {
 																rootX,
 																rootY);
 			this.inputSlotCallerDelegate.callInputSlot(	this.inputEventTarget,
-												this.inputSlotName,
-												pointerInput);
+														this.inputSlotName,
+														pointerInput);
 			return false;
 		}
 

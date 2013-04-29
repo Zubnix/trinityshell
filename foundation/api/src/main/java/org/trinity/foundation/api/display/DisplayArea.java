@@ -24,5 +24,4 @@ package org.trinity.foundation.api.display;
  */
 public interface DisplayArea {
 
-
 }

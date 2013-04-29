@@ -11,7 +11,6 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
-
 // TODO move this class to an XshellPlugin
 // @Bind(to = @To(Type.IMPLEMENTATION))
 // @Singleton

@@ -20,15 +20,13 @@ import com.google.common.util.concurrent.ListenableFuture;
 public class InputSlotBindingTest {
 
 	@Test
-	public void testInputSlotBinding() throws ExecutionException,
-			InterruptedException {
+	public void testInputSlotBinding() throws ExecutionException, InterruptedException {
 		final Model model = new Model();
 		final View view = new View();
 
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
-		when(viewElementTypes.getViewElementTypes())
-				.thenReturn(new Class<?>[] { Object.class });
+		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
@@ -51,15 +49,13 @@ public class InputSlotBindingTest {
 	}
 
 	@Test
-	public void testInputSlotBindingRenewal() throws ExecutionException,
-			InterruptedException {
+	public void testInputSlotBindingRenewal() throws ExecutionException, InterruptedException {
 		final Model model = new Model();
 		final View view = new View();
 
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
-		when(viewElementTypes.getViewElementTypes())
-				.thenReturn(new Class<?>[] { Object.class });
+		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
@@ -76,11 +72,9 @@ public class InputSlotBindingTest {
 		binder.updateBinding(	model,
 								"otherSubModel");
 		verify(	inputListenerInstallerDelegate,
-				times(2))
-				.installViewInputListener(	PointerInput.class,
-											view.getMouseInputSubView(),
-											model.getOtherSubModel()
-													.getSubSubModel(),
-											"onClick");
+				times(2)).installViewInputListener(	PointerInput.class,
+													view.getMouseInputSubView(),
+													model.getOtherSubModel().getSubSubModel(),
+													"onClick");
 	}
 }

@@ -51,11 +51,10 @@ public interface InputListenerInstallerDelegate {
 	 *         done.
 	 *************************************** 
 	 */
-	ListenableFuture<Void>
-			installViewInputListener(	Class<? extends Input> inputType,
-										Object view,
-										AsyncListenable inputEventTarget,
-										String inputSlotName);
+	ListenableFuture<Void> installViewInputListener(Class<? extends Input> inputType,
+													Object view,
+													AsyncListenable inputEventTarget,
+													String inputSlotName);
 
 	/***************************************
 	 * Remove a previously installed input listener.
@@ -75,9 +74,8 @@ public interface InputListenerInstallerDelegate {
 	 * @see #installViewInputListener(Class, Object, AsyncListenable, String)
 	 *************************************** 
 	 */
-	ListenableFuture<Void>
-			removeViewInputListener(Class<? extends Input> inputType,
-									Object view,
-									AsyncListenable inputEventTarget,
-									String inputSlotName);
+	ListenableFuture<Void> removeViewInputListener(	Class<? extends Input> inputType,
+													Object view,
+													AsyncListenable inputEventTarget,
+													String inputSlotName);
 }

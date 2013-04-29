@@ -11,9 +11,8 @@ public class ImageDefinition {
 	private final Size imageSize;
 	private final String colorModel;
 
-	public ImageDefinition(	final byte[] imageData,
-							final Size imageSize,
-							final String colorModel) {
+	public ImageDefinition(final byte[] imageData, final Size imageSize,
+			final String colorModel) {
 		this.imageData = imageData;
 		this.imageSize = imageSize;
 		this.colorModel = colorModel;
@@ -22,11 +21,8 @@ public class ImageDefinition {
 	public byte[] getImageData() {
 		// immutable!
 		final byte[] imageDataCopy = new byte[this.imageData.length];
-		System.arraycopy(	this.imageData,
-							0,
-							imageDataCopy,
-							0,
-							this.imageData.length);
+		System.arraycopy(this.imageData, 0, imageDataCopy, 0,
+				this.imageData.length);
 		return imageDataCopy;
 	}
 

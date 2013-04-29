@@ -39,20 +39,18 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @NotThreadSafe
 public class XEventPump implements Runnable {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(XEventPump.class);
+	private static final Logger logger = LoggerFactory.getLogger(XEventPump.class);
 
 	private final XConnection connection;
 	private final EventBus xEventBus;
-	private final ExecutorService xEventPumpExecutor = Executors
-			.newSingleThreadExecutor(new ThreadFactory() {
+	private final ExecutorService xEventPumpExecutor = Executors.newSingleThreadExecutor(new ThreadFactory() {
 
-				@Override
-				public Thread newThread(final Runnable r) {
-					return new Thread(	r,
-										"x-event-pump");
-				}
-			});
+		@Override
+		public Thread newThread(final Runnable r) {
+			return new Thread(	r,
+								"x-event-pump");
+		}
+	});
 	private final ListeningExecutorService xExecutor;
 
 	@Inject
@@ -66,8 +64,7 @@ public class XEventPump implements Runnable {
 
 	@Override
 	public void run() {
-		final xcb_generic_event_t event_t = xcb_wait_for_event(this.connection
-				.getConnectionReference());
+		final xcb_generic_event_t event_t = xcb_wait_for_event(this.connection.getConnectionReference());
 
 		if (xcb_connection_has_error(this.connection.getConnectionReference()) != 0) {
 			final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
@@ -99,8 +96,7 @@ public class XEventPump implements Runnable {
 															TimeUnit.SECONDS)) {
 				return;
 			}
-			XEventPump.logger
-					.error("X event pump could not terminate gracefully!");
+			XEventPump.logger.error("X event pump could not terminate gracefully!");
 		} catch (final InterruptedException e) {
 			XEventPump.logger.error("X event pump terminate was interrupted.",
 									e);

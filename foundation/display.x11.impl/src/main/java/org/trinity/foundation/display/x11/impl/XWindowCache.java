@@ -83,7 +83,8 @@ public class XWindowCache {
 												logger.debug(	"Xwindow={} added to cache.",
 																windowId);
 
-												final XWindow xWindow = (XWindow) XWindowCache.this.displaySurfaceFactory.createDisplaySurface(resourceHandle);
+												final XWindow xWindow = (XWindow) XWindowCache.this.displaySurfaceFactory
+														.createDisplaySurface(resourceHandle);
 												xWindow.register(new DestroyListener(xWindow));
 												return xWindow;
 											}

@@ -18,17 +18,15 @@ import com.google.common.util.concurrent.ListenableFuture;
 public class DataContextTest {
 
 	@Test
-	public void testDataContextNestedValueUpdate() throws ExecutionException,
-			NoSuchMethodException, SecurityException, InterruptedException {
+	public void testDataContextNestedValueUpdate() throws ExecutionException, NoSuchMethodException, SecurityException,
+			InterruptedException {
 		final Model model = new Model();
 		final View view = new View();
 
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = Mockito
 				.mock(PropertySlotInvocatorDelegate.class);
-		final ViewElementTypes viewElementTypes = Mockito
-				.mock(ViewElementTypes.class);
-		Mockito.when(viewElementTypes.getViewElementTypes())
-				.thenReturn(new Class<?>[] { Object.class });
+		final ViewElementTypes viewElementTypes = Mockito.mock(ViewElementTypes.class);
+		Mockito.when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = Mockito
 				.mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
@@ -48,17 +46,14 @@ public class DataContextTest {
 								"otherSubModel");
 
 		Mockito.verify(	propertySlotInvocatorDelegate,
-						Mockito.times(2))
-				.invoke(view.getMouseInputSubView(),
-						SubView.class.getMethod("handleStringProperty",
-												String.class),
-						"false");
+						Mockito.times(2)).invoke(	view.getMouseInputSubView(),
+													SubView.class.getMethod("handleStringProperty",
+																			String.class),
+													"false");
 		Mockito.verify(	inputListenerInstallerDelegate,
-						Mockito.times(2))
-				.installViewInputListener(	PointerInput.class,
-											view.getMouseInputSubView(),
-											model.getOtherSubModel()
-													.getSubSubModel(),
-											"onClick");
+						Mockito.times(2)).installViewInputListener(	PointerInput.class,
+																	view.getMouseInputSubView(),
+																	model.getOtherSubModel().getSubSubModel(),
+																	"onClick");
 	}
 }

@@ -24,8 +24,7 @@ public class ObservableCollectionBindingTest {
 
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
-		when(viewElementTypes.getViewElementTypes())
-				.thenReturn(new Class<?>[] { Object.class });
+		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
@@ -53,20 +52,17 @@ public class ObservableCollectionBindingTest {
 
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
-		when(viewElementTypes.getViewElementTypes())
-				.thenReturn(new Class<?>[] { Object.class });
+		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
 		when(viewFuture.get()).thenReturn(new CollectionElementView());
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
-																0))
-				.thenReturn(viewFuture);
+																0)).thenReturn(viewFuture);
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
-																1))
-				.thenReturn(viewFuture);
+																1)).thenReturn(viewFuture);
 		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
 												inputListenerInstallerDelegate,
 												childViewDelegate,
@@ -79,15 +75,13 @@ public class ObservableCollectionBindingTest {
 		model.getDummySubModels().add(childDummySubModel);
 
 		verify(	childViewDelegate,
-				times(1))
-				.<CollectionElementView> newView(	view,
-													CollectionElementView.class,
-													0);
+				times(1)).<CollectionElementView> newView(	view,
+															CollectionElementView.class,
+															0);
 		verify(	childViewDelegate,
-				times(1))
-				.<CollectionElementView> newView(	view,
-													CollectionElementView.class,
-													1);
+				times(1)).<CollectionElementView> newView(	view,
+															CollectionElementView.class,
+															1);
 
 	}
 
@@ -98,8 +92,7 @@ public class ObservableCollectionBindingTest {
 
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
-		when(viewElementTypes.getViewElementTypes())
-				.thenReturn(new Class<?>[] { Object.class });
+		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
@@ -108,8 +101,7 @@ public class ObservableCollectionBindingTest {
 		final CollectionElementView collectionElementView = new CollectionElementView();
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
-																0))
-				.thenReturn(viewFuture);
+																0)).thenReturn(viewFuture);
 		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
 												inputListenerInstallerDelegate,
 												childViewDelegate,
@@ -131,24 +123,20 @@ public class ObservableCollectionBindingTest {
 
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
-		when(viewElementTypes.getViewElementTypes())
-				.thenReturn(new Class<?>[] { Object.class });
+		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final InputListenerInstallerDelegate inputListenerInstallerDelegate = mock(InputListenerInstallerDelegate.class);
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
 		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
 		when(viewFuture.get()).thenReturn(new CollectionElementView());
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
-																0))
-				.thenReturn(viewFuture);
+																0)).thenReturn(viewFuture);
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
-																1))
-				.thenReturn(viewFuture);
+																1)).thenReturn(viewFuture);
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
-																2))
-				.thenReturn(viewFuture);
+																2)).thenReturn(viewFuture);
 		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
 												inputListenerInstallerDelegate,
 												childViewDelegate,
