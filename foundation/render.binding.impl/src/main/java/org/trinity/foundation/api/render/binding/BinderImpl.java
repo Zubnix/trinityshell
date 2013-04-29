@@ -1,10 +1,5 @@
 package org.trinity.foundation.api.render.binding;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.util.concurrent.Futures.addCallback;
-import static java.lang.String.format;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,7 +28,6 @@ import org.trinity.foundation.api.render.binding.view.ViewElementTypes;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
-import org.trinity.foundation.api.shared.AsyncListenable;
 
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
@@ -52,6 +46,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import static java.lang.String.format;
+
+import static com.google.common.util.concurrent.Futures.addCallback;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Bind
 @Singleton
@@ -457,7 +457,6 @@ public class BinderImpl implements Binder {
 		checkNotNull(dataContext);
 		checkNotNull(view);
 		checkNotNull(inputSignals);
-		checkArgument(dataContext instanceof AsyncListenable);
 
 		for (final InputSignal inputSignal : inputSignals) {
 			final Class<? extends Input> inputType = inputSignal.inputType();
@@ -465,7 +464,7 @@ public class BinderImpl implements Binder {
 
 			this.inputListenerInstallerDelegate.installViewInputListener(	inputType,
 																			view,
-																			(AsyncListenable) dataContext,
+																			dataContext,
 																			inputSlotName);
 		}
 	}

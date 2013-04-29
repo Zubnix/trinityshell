@@ -1,8 +1,5 @@
 package org.trinity.foundation.render.qt.impl.binding.view.delegate;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static java.lang.String.format;
-
 import java.util.concurrent.Callable;
 
 import org.trinity.foundation.api.display.input.Input;
@@ -22,6 +19,9 @@ import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QApplication;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import static java.lang.String.format;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 @Bind
 @Singleton
@@ -39,7 +39,7 @@ public class InputListenerInstallerDelegateImpl implements InputListenerInstalle
 	@Override
 	public ListenableFuture<Void> installViewInputListener(	final Class<? extends Input> inputType,
 															final Object view,
-															final AsyncListenable inputEventTarget,
+															final Object inputEventTarget,
 															final String inputSlotName) {
 		checkArgument(	view instanceof QObject,
 						format(	"Expected view should be of type %s",

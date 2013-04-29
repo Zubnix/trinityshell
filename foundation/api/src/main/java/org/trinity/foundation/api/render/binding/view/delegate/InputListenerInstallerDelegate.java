@@ -53,7 +53,7 @@ public interface InputListenerInstallerDelegate {
 	 */
 	ListenableFuture<Void> installViewInputListener(Class<? extends Input> inputType,
 													Object view,
-													AsyncListenable inputEventTarget,
+													Object inputEventTarget,
 													String inputSlotName);
 
 	/***************************************
