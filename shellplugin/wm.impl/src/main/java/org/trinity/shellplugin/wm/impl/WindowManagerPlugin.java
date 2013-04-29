@@ -39,9 +39,33 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 
 	@Override
 	protected void startUp() throws Exception {
-		// We register without specifying an executor. This means our listener
-		// (@Subscribe) will be called by the display thread itself.
-		this.displayServer.register(this);
+
+		final ListenableFuture<DisplaySurface[]> clientDisplaySurfacesFuture = this.displayServer
+				.getClientDisplaySurfaces();
+		// callback will be called by "Display" thread.
+		addCallback(clientDisplaySurfacesFuture,
+					new FutureCallback<DisplaySurface[]>() {
+						@Override
+						public void onSuccess(final DisplaySurface[] clientDisplaySurfaces) {
+							// iterate over existing non-managed client display
+							// surfaces
+							for (final DisplaySurface clientDisplaySurface : clientDisplaySurfaces) {
+								handleClientDisplaySurface(clientDisplaySurface);
+							}
+
+							// We register without specifying an executor. This
+							// means our listener (@Subscribe method) will be
+							// called by the "Display" thread.
+							WindowManagerPlugin.this.displayServer.register(WindowManagerPlugin.this);
+						}
+
+						@Override
+						public void onFailure(final Throwable t) {
+							logger.error(	"Failed to query non-manged client display surfaces",
+											t);
+						}
+					});
+
 	}
 
 	@Override
@@ -52,14 +76,18 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 	@Subscribe
 	public void handleCreationNotify(final CreationNotify creationNotify) {
 		final DisplaySurface displaySurface = creationNotify.getDisplaySurface();
+		handleClientDisplaySurface(displaySurface);
+	}
+
+	private void handleClientDisplaySurface(final DisplaySurface displaySurface) {
 		final ListenableFuture<ShellSurface> shellSurfaceFuture = this.shellSurfaceFactory
 				.createShellClientSurface(displaySurface);
-		// callback will be called by the shell thread.
+		// callback will be called by "Shell" thread.
 		addCallback(shellSurfaceFuture,
 					new FutureCallback<ShellSurface>() {
 						@Override
 						public void onSuccess(final ShellSurface result) {
-							handleShellSurface(result);
+							handleClientShellSurface(result);
 						}
 
 						@Override
@@ -70,7 +98,7 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 					});
 	}
 
-	public void handleShellSurface(final ShellSurface shellSurface) {
+	private void handleClientShellSurface(final ShellSurface shellSurface) {
 		this.scene.addClient(shellSurface);
 	}
 }
