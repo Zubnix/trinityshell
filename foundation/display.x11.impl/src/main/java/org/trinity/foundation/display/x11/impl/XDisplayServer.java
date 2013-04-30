@@ -11,13 +11,8 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
-import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
-import static org.freedesktop.xcb.LibXcb.xcb_query_tree;
-import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children;
-import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children_length;
-import static org.freedesktop.xcb.LibXcb.xcb_query_tree_reply;
-
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -27,6 +22,9 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
+import org.freedesktop.xcb.xcb_get_window_attributes_cookie_t;
+import org.freedesktop.xcb.xcb_get_window_attributes_reply_t;
+import org.freedesktop.xcb.xcb_map_state_t;
 import org.freedesktop.xcb.xcb_query_tree_cookie_t;
 import org.freedesktop.xcb.xcb_query_tree_reply_t;
 import org.slf4j.Logger;
@@ -46,6 +44,13 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
+import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes;
+import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes_reply;
+import static org.freedesktop.xcb.LibXcb.xcb_query_tree;
+import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children;
+import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children_length;
+import static org.freedesktop.xcb.LibXcb.xcb_query_tree_reply;
 
 @Bind
 @Singleton
@@ -145,20 +150,40 @@ public class XDisplayServer implements DisplayServer {
 																				query_tree_cookie_t,
 																				e);
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			XDisplayServer.logger.error("X error: {}.",
+			XDisplayServer.logger.error("X error while doing query tree: {}.",
 										XcbErrorUtil.toString(e));
 			return;
 		}
 
-		final ByteBuffer tree_children = xcb_query_tree_children(query_tree_reply);
+		final ByteBuffer tree_children = xcb_query_tree_children(query_tree_reply).order(ByteOrder.nativeOrder());
 		int tree_children_length = xcb_query_tree_children_length(query_tree_reply);
 		while (tree_children_length > 0) {
-			final int clientWindowId = tree_children.getInt();
-			// TODO we should check for override redirect flag and ignore the
-			// window if it's set.
 
-			final XWindow clientWindow = this.xWindowCache.getWindow(clientWindowId);
-			trackClient(clientWindow);
+			final int clientWindowId = tree_children.getInt();
+
+			final xcb_get_window_attributes_cookie_t get_window_attributes_cookie = xcb_get_window_attributes(	xConnectionRef,
+																												clientWindowId);
+
+			final xcb_get_window_attributes_reply_t get_window_attributes_reply = xcb_get_window_attributes_reply(	xConnectionRef,
+																													get_window_attributes_cookie,
+																													e);
+
+			if (xcb_generic_error_t.getCPtr(e) != 0) {
+				XDisplayServer.logger.error("X error while doing get window attributes: {}.",
+											XcbErrorUtil.toString(e));
+			} else {
+				final XWindow clientWindow = this.xWindowCache.getWindow(clientWindowId);
+				trackClient(clientWindow);
+
+				final short override_redirect = get_window_attributes_reply.getOverride_redirect();
+				final short map_state = get_window_attributes_reply.getMap_state();
+				// Check for override redirect flag and ignore the window if
+				// it's set. Ignore unmapped windows, we'll see them as soon as
+				// they resize/map themselves
+				if ((map_state == xcb_map_state_t.XCB_MAP_STATE_UNMAPPED) || (override_redirect != 0)) {
+					continue;
+				}
+			}
 
 			tree_children_length--;
 		}
