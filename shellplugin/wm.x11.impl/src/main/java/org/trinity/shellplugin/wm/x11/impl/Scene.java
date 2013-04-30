@@ -64,11 +64,12 @@ public class Scene {
 		final ClientTopBarItem clientTopBarItem = new ClientTopBarItem(client);
 		Scene.this.shellRootWidget.getTopBar().add(clientTopBarItem);
 		client.register(new Object() {
-			@Subscribe
-			public void onClientDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
-				removeClientTopBarItem(clientTopBarItem);
-			}
-		});
+							@Subscribe
+							public void onClientDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
+								removeClientTopBarItem(clientTopBarItem);
+							}
+						},
+						this.wmExecutor);
 
 		// check if we missed any destroy events. Worst case we remove the
 		// object twice but that's not a problem.
