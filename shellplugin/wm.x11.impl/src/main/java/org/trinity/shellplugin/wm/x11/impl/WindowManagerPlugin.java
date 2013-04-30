@@ -79,6 +79,7 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 		handleClientDisplaySurface(displaySurface);
 	}
 
+	// called by display thread.
 	private void handleClientDisplaySurface(final DisplaySurface displaySurface) {
 		final ListenableFuture<ShellSurface> shellSurfaceFuture = this.shellSurfaceFactory
 				.createShellClientSurface(displaySurface);
@@ -99,6 +100,10 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 	}
 
 	private void handleClientShellSurface(final ShellSurface shellSurface) {
+		// we let the shell thread do the work first so we can let it install
+		// event listeners in the scene before it starts sending events to the
+		// client shell surface. (else we miss events if we delegate this to
+		// another thread).
 		this.scene.addClient(shellSurface);
 	}
 }

@@ -15,6 +15,8 @@ public class ClientTopBarItem implements HasText, ReceivesPointerInput {
 
 	@Override
 	public String getText() {
+		// TODO implement icccm+ewmh shell protocol
+
 		return "client=" + this.client;
 	}
 

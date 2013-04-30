@@ -1,5 +1,11 @@
 package org.trinity.shellplugin.wm.x11.impl;
 
+import java.util.concurrent.Callable;
+
+import javax.annotation.concurrent.ThreadSafe;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.shared.Margins;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
@@ -8,26 +14,85 @@ import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.surface.ShellSurface;
 
 import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+
 @Bind(to = @To(value = Type.IMPLEMENTATION))
+@ThreadSafe
 public class Scene {
+
+	private static final Logger logger = LoggerFactory.getLogger(Scene.class);
 
 	private final ShellLayoutManager rootLayoutManager;
 	private final ShellRootWidget shellRootWidget;
+	private final ListeningExecutorService wmExecutor;
 
 	@Inject
-	Scene(	final ShellRootWidget shellRootWidget,
+	Scene(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
+			final ShellRootWidget shellRootWidget,
 			final ShellLayoutManagerLine shellLayoutManagerLine) {
+		this.wmExecutor = wmExecutor;
 		this.shellRootWidget = shellRootWidget;
 		this.rootLayoutManager = shellLayoutManagerLine;
 
 		this.shellRootWidget.setLayoutManager(this.rootLayoutManager);
 		this.shellRootWidget.doShow();
+	}
+
+	public void addClient(final ShellSurface client) {
+		this.wmExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				addClientTopBarItem(client);
+				layoutClient(client);
+
+				return null;
+			}
+		});
+	}
+
+	private void addClientTopBarItem(final ShellSurface client) {
+		final ClientTopBarItem clientTopBarItem = new ClientTopBarItem(client);
+		Scene.this.shellRootWidget.getTopBar().add(clientTopBarItem);
+
+		// check if we missed any destroy events
+		final ListenableFuture<Boolean> destroyedFuture = client.isDestroyed();
+		addCallback(destroyedFuture,
+					new FutureCallback<Boolean>() {
+						@Override
+						public void onSuccess(final Boolean destroyed) {
+							if (destroyed) {
+								removeClientTopBarItem(clientTopBarItem);
+							} else {
+								client.register(new Object() {
+									@Subscribe
+									public void onClientDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
+										removeClientTopBarItem(clientTopBarItem);
+									}
+								});
+							}
+						}
+
+						@Override
+						public void onFailure(final Throwable t) {
+							logger.error(	"Failed to query destroyed state from client.",
+											t);
+						}
+					},
+					this.wmExecutor);
+	}
+
+	private void removeClientTopBarItem(final ClientTopBarItem clientTopBarItem) {
+		this.shellRootWidget.getTopBar().remove(clientTopBarItem);
 	}
 
 	private void layoutClient(final ShellSurface client) {
@@ -39,17 +104,5 @@ public class Scene {
 		this.shellRootWidget.layout();
 		client.doReparent();
 		client.doShow();
-	}
-
-	public void addClient(final ShellSurface client) {
-		final ClientTopBarItem clientTopBarItem = new ClientTopBarItem(client);
-		client.register(new Object() {
-			@Subscribe
-			public void onClientDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
-				Scene.this.shellRootWidget.getTopBar().remove(clientTopBarItem);
-			}
-		});
-		this.shellRootWidget.getTopBar().add(clientTopBarItem);
-		layoutClient(client);
 	}
 }

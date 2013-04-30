@@ -33,5 +33,10 @@
 			<artifactId>glazedlists_java15</artifactId>
 			<version>${glazedlists.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.trinity</groupId>
+			<artifactId>XCB4J</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 	</dependencies>
 </project>
