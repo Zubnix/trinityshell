@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.wm.x11.impl;
+package org.trinity.shellplugin.wm.x11.impl.scene;
 
 import java.util.concurrent.Callable;
 
@@ -28,16 +28,16 @@ import static com.google.common.util.concurrent.Futures.addCallback;
 
 @Bind(to = @To(value = Type.IMPLEMENTATION))
 @ThreadSafe
-public class Scene {
+public class SceneHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(Scene.class);
+	private static final Logger logger = LoggerFactory.getLogger(SceneHandler.class);
 
 	private final ShellLayoutManager rootLayoutManager;
 	private final ShellRootWidget shellRootWidget;
 	private final ListeningExecutorService wmExecutor;
 
 	@Inject
-	Scene(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
+	SceneHandler(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
 			final ShellRootWidget shellRootWidget,
 			final ShellLayoutManagerLine shellLayoutManagerLine) {
 		this.wmExecutor = wmExecutor;
@@ -62,7 +62,7 @@ public class Scene {
 
 	private void addClientTopBarItem(final ShellSurface client) {
 		final ClientTopBarItem clientTopBarItem = new ClientTopBarItem(client);
-		Scene.this.shellRootWidget.getTopBar().add(clientTopBarItem);
+		SceneHandler.this.shellRootWidget.getTopBar().add(clientTopBarItem);
 		client.register(new Object() {
 							@Subscribe
 							public void onClientDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
@@ -71,7 +71,7 @@ public class Scene {
 						},
 						this.wmExecutor);
 
-		// check if we missed any destroy events. Worst case we remove the
+		// check if we missed any destroy events. Corner case we remove the
 		// object twice but that's not a problem.
 		final ListenableFuture<Boolean> destroyedFuture = client.isDestroyed();
 		addCallback(destroyedFuture,

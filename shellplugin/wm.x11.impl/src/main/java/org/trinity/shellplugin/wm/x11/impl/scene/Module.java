@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.wm.x11.impl;
+package org.trinity.shellplugin.wm.x11.impl.scene;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
