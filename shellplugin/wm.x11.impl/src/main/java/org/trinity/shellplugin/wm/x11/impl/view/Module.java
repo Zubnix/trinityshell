@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.wm.impl.view;
+package org.trinity.shellplugin.wm.x11.impl.view;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;

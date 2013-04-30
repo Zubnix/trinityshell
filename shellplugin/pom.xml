@@ -13,8 +13,7 @@
 	<modules>
 		<module>widget.view.qt.api</module>
 		<module>wm.api</module>
-		<module>wm.impl</module>
-		<module>xcompositor.impl</module>
+		<module>wm.x11.impl</module>
 	</modules>
 
 	<dependencies>

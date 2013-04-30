@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.wm.impl;
+package org.trinity.shellplugin.wm.x11.impl;
 
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.shared.Rectangle;

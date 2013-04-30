@@ -98,7 +98,7 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>shellplugin.wm.impl</artifactId>
+			<artifactId>shellplugin.wm.x11.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

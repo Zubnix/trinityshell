@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.wm.impl;
+package org.trinity.shellplugin.wm.x11.impl;
 
 import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.shell.api.surface.ShellSurface;

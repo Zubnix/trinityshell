@@ -9,8 +9,8 @@
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>shellplugin.wm.impl</artifactId>
-	<name>Shell Window Manager implementation</name>
+	<artifactId>shellplugin.wm.x11.impl</artifactId>
+	<name>Shell Window Manager X11 implementation</name>
 
 	<properties>
 		<!-- dep versions -->

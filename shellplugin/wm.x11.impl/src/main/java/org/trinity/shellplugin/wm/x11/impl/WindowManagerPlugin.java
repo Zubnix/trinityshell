@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.wm.impl;
+package org.trinity.shellplugin.wm.x11.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
