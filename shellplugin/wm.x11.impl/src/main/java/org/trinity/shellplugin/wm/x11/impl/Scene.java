@@ -63,8 +63,15 @@ public class Scene {
 	private void addClientTopBarItem(final ShellSurface client) {
 		final ClientTopBarItem clientTopBarItem = new ClientTopBarItem(client);
 		Scene.this.shellRootWidget.getTopBar().add(clientTopBarItem);
+		client.register(new Object() {
+			@Subscribe
+			public void onClientDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
+				removeClientTopBarItem(clientTopBarItem);
+			}
+		});
 
-		// check if we missed any destroy events
+		// check if we missed any destroy events. Worst case we remove the
+		// object twice but that's not a problem.
 		final ListenableFuture<Boolean> destroyedFuture = client.isDestroyed();
 		addCallback(destroyedFuture,
 					new FutureCallback<Boolean>() {
@@ -72,13 +79,6 @@ public class Scene {
 						public void onSuccess(final Boolean destroyed) {
 							if (destroyed) {
 								removeClientTopBarItem(clientTopBarItem);
-							} else {
-								client.register(new Object() {
-									@Subscribe
-									public void onClientDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
-										removeClientTopBarItem(clientTopBarItem);
-									}
-								});
 							}
 						}
 
