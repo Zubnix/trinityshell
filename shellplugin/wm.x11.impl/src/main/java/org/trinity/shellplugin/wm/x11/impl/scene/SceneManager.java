@@ -13,7 +13,7 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
 import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.surface.ShellSurface;
-import org.trinity.shellplugin.wm.x11.impl.protocol.XWindowProcol;
+import org.trinity.shellplugin.wm.x11.impl.protocol.XWindowProtocol;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.FutureCallback;
@@ -37,25 +37,23 @@ public class SceneManager {
 	private final ClientTopBarItemFactory clientTopBarItemFactory;
 	private final ShellLayoutManager rootLayoutManager;
 	private final ShellRootWidget shellRootWidget;
-	private final XWindowProcol xWindowProcol;
+	private final XWindowProtocol xWindowProtocol;
 	private final ListeningExecutorService wmExecutor;
 
 	@Inject
 	SceneManager(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
 					final ClientTopBarItemFactory clientTopBarItemFactory,
-					final XWindowProcol xWindowProcol,
+					final XWindowProtocol xWindowProtocol,
 					final ShellRootWidget shellRootWidget,
 					final ShellLayoutManagerLine shellLayoutManagerLine) {
 		this.wmExecutor = wmExecutor;
 		this.clientTopBarItemFactory = clientTopBarItemFactory;
-		this.xWindowProcol = xWindowProcol;
+		this.xWindowProtocol = xWindowProtocol;
 		this.shellRootWidget = shellRootWidget;
 		this.rootLayoutManager = shellLayoutManagerLine;
 
 		this.shellRootWidget.setLayoutManager(this.rootLayoutManager);
 		this.shellRootWidget.doShow();
-
-		registerXWindow(shellRootWidget);
 	}
 
 	public void manageClient(final ShellSurface client) {
@@ -77,7 +75,7 @@ public class SceneManager {
 					new FutureCallback<DisplaySurface>() {
 						@Override
 						public void onSuccess(final DisplaySurface xWindow) {
-							SceneManager.this.xWindowProcol.register(xWindow);
+							SceneManager.this.xWindowProtocol.register(xWindow);
 						}
 
 						@Override

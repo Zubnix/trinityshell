@@ -41,10 +41,6 @@ public class XEventPump implements Runnable {
 		this.wmExecutor = wmExecutor;
 		this.xEventHandler = xEventHandler;
 
-		pump();
-	}
-
-	private void pump() {
 		this.xEventPumpExecutor.submit(this);
 	}
 
@@ -59,6 +55,6 @@ public class XEventPump implements Runnable {
 				XEventPump.this.xEventHandler.handleXEvent(xEvent);
 			}
 		});
-		pump();
+		this.xEventPumpExecutor.submit(this);
 	}
 }

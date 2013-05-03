@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_property_cookie_t;
 import org.freedesktop.xcb.xcb_icccm_get_text_property_reply_t;
+import org.freedesktop.xcb.xcb_property_notify_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -16,6 +17,7 @@ import org.trinity.shellplugin.wm.api.ReceivesPointerInput;
 import org.trinity.shellplugin.wm.x11.impl.XConnection;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 
+import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.assistedinject.Assisted;
@@ -35,7 +37,6 @@ public class ClientTopBarItem implements HasText, ReceivesPointerInput {
 	private final XAtomCache xAtomCache;
 	private final ListeningExecutorService wmExecutor;
 	private final XConnection xConnection;
-	private DisplaySurface clientXWindow;
 	private String clientName = "";
 
 	@AssistedInject
@@ -51,21 +52,26 @@ public class ClientTopBarItem implements HasText, ReceivesPointerInput {
 					new FutureCallback<DisplaySurface>() {
 						@Override
 						public void onSuccess(final DisplaySurface clientXWindow) {
-							ClientTopBarItem.this.clientXWindow = clientXWindow;
-							updateClientName();
+							clientXWindow.register(new Object() {
+								@Subscribe
+								public void onXPropertyChanged(final xcb_property_notify_event_t notify_event_t) {
+									updateClientName(clientXWindow);
+								}
+							});
+							updateClientName(clientXWindow);
 						}
 
 						@Override
 						public void onFailure(final Throwable t) {
-							// TODO Auto-generated method stub
-
+							logger.error(	"Error getting display surface from client.",
+											t);
 						}
 					},
 					wmExecutor);
 	}
 
-	public void updateClientName() {
-		final int window = (Integer) this.clientXWindow.getDisplaySurfaceHandle().getNativeHandle();
+	public void updateClientName(final DisplaySurface clientXWindow) {
+		final int window = (Integer) clientXWindow.getDisplaySurfaceHandle().getNativeHandle();
 		final xcb_get_property_cookie_t get_property_cookie_t = xcb_icccm_get_wm_name(	this.xConnection.getConnectionRef(),
 																						window);
 		final xcb_generic_error_t e = new xcb_generic_error_t();
@@ -85,21 +91,11 @@ public class ClientTopBarItem implements HasText, ReceivesPointerInput {
 					return null;
 				}
 
-				parseWmNameProperty(prop);
+				setText(prop.getName());
 
 				return null;
 			}
 		});
-	}
-
-	private void parseWmNameProperty(final xcb_icccm_get_text_property_reply_t prop) {
-		final int encodingAtom = prop.getEncoding();
-		final int format = prop.getFormat();
-		final String name = prop.getName();
-		final int name_len = prop.getName_len();
-		// TODO construct name?
-
-		setText(name);
 	}
 
 	@PropertyChanged("text")

@@ -3,8 +3,10 @@ package org.trinity.shellplugin.wm.x11.impl.protocol;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.shellplugin.wm.x11.impl.XEventHandling;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -16,11 +18,11 @@ public class XPropertyChangedEventHandling implements XEventHandling {
 
 	private static final Integer eventCode = Integer.valueOf(LibXcb.XCB_PROPERTY_NOTIFY);
 
-	private final XWindowProcol xWindowProcol;
+	private final XWindowProtocol xWindowProtocol;
 
 	@Inject
-	XPropertyChangedEventHandling(final XWindowProcol xWindowProcol) {
-		this.xWindowProcol = xWindowProcol;
+	XPropertyChangedEventHandling(final XWindowProtocol xWindowProtocol) {
+		this.xWindowProtocol = xWindowProtocol;
 	}
 
 	@Override
@@ -28,7 +30,10 @@ public class XPropertyChangedEventHandling implements XEventHandling {
 		final xcb_property_notify_event_t property_notify_event_t = new xcb_property_notify_event_t(xcb_generic_event_t.getCPtr(xEvent),
 																									true);
 		final int clientId = property_notify_event_t.getWindow();
-		this.xWindowProcol.findXWindow(clientId).get().post(property_notify_event_t);
+		final Optional<DisplaySurface> xWindow = this.xWindowProtocol.findXWindow(clientId);
+		if (xWindow.isPresent()) {
+			xWindow.get().post(property_notify_event_t);
+		}
 	}
 
 	@Override

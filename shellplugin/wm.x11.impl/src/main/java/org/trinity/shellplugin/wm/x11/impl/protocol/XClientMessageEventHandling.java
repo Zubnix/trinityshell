@@ -16,18 +16,18 @@ public class XClientMessageEventHandling implements XEventHandling {
 
 	private static final Integer eventCode = Integer.valueOf(LibXcb.XCB_CLIENT_MESSAGE);
 
-	private final XWindowProcol xWindowProcol;
+	private final XWindowProtocol xWindowProtocol;
 
 	@Inject
-	XClientMessageEventHandling(final XWindowProcol xWindowProcol) {
-		this.xWindowProcol = xWindowProcol;
+	XClientMessageEventHandling(final XWindowProtocol xWindowProtocol) {
+		this.xWindowProtocol = xWindowProtocol;
 	}
 
 	@Override
 	public void handle(final xcb_generic_event_t xEvent) {
 		final xcb_client_message_event_t client_message_event_t = new xcb_client_message_event_t(	xcb_generic_event_t.getCPtr(xEvent),
 																									true);
-		this.xWindowProcol.findXWindow(client_message_event_t.getWindow()).get().post(client_message_event_t);
+		this.xWindowProtocol.findXWindow(client_message_event_t.getWindow()).get().post(client_message_event_t);
 	}
 
 	@Override

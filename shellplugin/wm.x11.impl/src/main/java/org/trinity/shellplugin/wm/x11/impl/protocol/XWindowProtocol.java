@@ -15,6 +15,7 @@ import org.trinity.shellplugin.wm.x11.impl.XConnection;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
@@ -24,20 +25,25 @@ import static org.freedesktop.xcb.LibXcb.xcb_flush;
 
 @NotThreadSafe
 @Bind(to = @To(value = Type.IMPLEMENTATION))
+@Singleton
 @OwnerThread("WindowManager")
-public class XWindowProcol {
+public class XWindowProtocol {
 
 	private final Map<Integer, Optional<DisplaySurface>> clientsById = new HashMap<Integer, Optional<DisplaySurface>>();
 
 	private final XConnection xConnection;
 
 	@Inject
-	XWindowProcol(final XConnection xConnection) {
+	XWindowProtocol(final XConnection xConnection) {
 		this.xConnection = xConnection;
 	}
 
 	public Optional<DisplaySurface> findXWindow(final int clientId) {
-		return this.clientsById.get(Integer.valueOf(clientId));
+		final Optional<DisplaySurface> optionalDisplaySurface = this.clientsById.get(Integer.valueOf(clientId));
+		if (!optionalDisplaySurface.isPresent()) {
+			return Optional.absent();
+		}
+		return optionalDisplaySurface;
 	}
 
 	public void register(final DisplaySurface xWindow) {
