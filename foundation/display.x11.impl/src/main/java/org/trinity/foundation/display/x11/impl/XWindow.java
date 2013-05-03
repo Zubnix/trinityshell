@@ -11,18 +11,6 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
-import static com.google.common.util.concurrent.Futures.transform;
-import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
-import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
-import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
-import static org.freedesktop.xcb.LibXcb.xcb_flush;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
-import static org.freedesktop.xcb.LibXcb.xcb_map_window;
-import static org.freedesktop.xcb.LibXcb.xcb_reparent_window;
-import static org.freedesktop.xcb.LibXcb.xcb_set_input_focus;
-import static org.freedesktop.xcb.LibXcb.xcb_unmap_window;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.Callable;
@@ -55,6 +43,19 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
+
+import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
+import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
+import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
+import static org.freedesktop.xcb.LibXcb.xcb_map_window;
+import static org.freedesktop.xcb.LibXcb.xcb_reparent_window;
+import static org.freedesktop.xcb.LibXcb.xcb_set_input_focus;
+import static org.freedesktop.xcb.LibXcb.xcb_unmap_window;
+
+import static com.google.common.util.concurrent.Futures.transform;
 
 @ThreadSafe
 public final class XWindow implements DisplaySurface {
@@ -475,8 +476,8 @@ public final class XWindow implements DisplaySurface {
 																				e);
 
 				checkError(e);
-				final int width = reply.getWidth() + 2 * reply.getBorder_width();
-				final int height = reply.getHeight() + 2 * reply.getBorder_width();
+				final int width = reply.getWidth() + (2 * reply.getBorder_width());
+				final int height = reply.getHeight() + (2 * reply.getBorder_width());
 				final int x = reply.getX();
 				final int y = reply.getY();
 
@@ -520,8 +521,7 @@ public final class XWindow implements DisplaySurface {
 	public void configureClientEvents() {
 
 		final ByteBuffer values = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE //
-				| xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW //
+		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW //
 				| xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW //
 				| xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY//
 		);
