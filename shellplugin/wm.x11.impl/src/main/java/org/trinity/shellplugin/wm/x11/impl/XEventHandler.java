@@ -17,7 +17,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
 @Bind(to = @To(value = Type.IMPLEMENTATION))
 public class XEventHandler {
 
-	private final Map<Short, XEventHandling> xEventHandlingByCode = new HashMap<Short, XEventHandling>();
+	private final Map<Integer, XEventHandling> xEventHandlingByCode = new HashMap<Integer, XEventHandling>();
 
 	@Inject
 	XEventHandler(final Set<XEventHandling> xEventHandlings) {

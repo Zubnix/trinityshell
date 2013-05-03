@@ -8,7 +8,7 @@ import org.trinity.foundation.api.display.event.CreationNotify;
 import org.trinity.shell.api.plugin.ShellPlugin;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
-import org.trinity.shellplugin.wm.x11.impl.scene.SceneHandler;
+import org.trinity.shellplugin.wm.x11.impl.scene.SceneManager;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.AbstractIdleService;
@@ -26,15 +26,15 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 	private static final Logger logger = LoggerFactory.getLogger(WindowManagerPlugin.class);
 
 	private final DisplayServer displayServer;
-	private final SceneHandler sceneHandler;
+	private final SceneManager sceneManager;
 	private final ShellSurfaceFactory shellSurfaceFactory;
 
 	@Inject
-	WindowManagerPlugin(final SceneHandler sceneHandler,
+	WindowManagerPlugin(final SceneManager sceneManager,
 						final ShellSurfaceFactory shellSurfaceFactory,
 						final DisplayServer displayServer) {
 		this.displayServer = displayServer;
-		this.sceneHandler = sceneHandler;
+		this.sceneManager = sceneManager;
 		this.shellSurfaceFactory = shellSurfaceFactory;
 	}
 
@@ -102,9 +102,9 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 
 	private void handleClientShellSurface(final ShellSurface shellSurface) {
 		// we let the shell thread do the work first so we can let it install
-		// event listeners in the sceneHandler before it starts sending events to the
+		// event listeners in the sceneManager before it starts sending events to the
 		// client shell surface. (else we miss events if we delegate this to
 		// another thread).
-		this.sceneHandler.addClient(shellSurface);
+		this.sceneManager.manageClient(shellSurface);
 	}
 }

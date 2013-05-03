@@ -9,7 +9,7 @@
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.trinity.shellplugin.wm.x11.impl;
+package org.trinity.shellplugin.wm.x11.impl.protocol;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +20,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_intern_atom_cookie_t;
 import org.freedesktop.xcb.xcb_intern_atom_reply_t;
+import org.trinity.shellplugin.wm.x11.impl.XConnection;
 
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -53,6 +54,13 @@ public class XAtomCache {
 				final ListeningExecutorService wmExecutor) {
 		this.xConnection = xConnection;
 		this.wmExecutor = wmExecutor;
+
+		internOftenUsedAtoms();
+	}
+
+	private void internOftenUsedAtoms() {
+		internAtom("UTF8");
+
 	}
 
 	public ListenableFuture<Integer> internAtom(final String atomName) {

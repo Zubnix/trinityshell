@@ -6,5 +6,5 @@ public interface XEventHandling {
 
 	void handle(xcb_generic_event_t xEvent);
 
-	Short getEventCode();
+	Integer getEventCode();
 }

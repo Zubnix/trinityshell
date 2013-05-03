@@ -6,6 +6,7 @@ import java.util.concurrent.ThreadFactory;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 
 import de.devsurf.injection.guice.annotations.GuiceModule;
@@ -24,5 +25,8 @@ public class Module extends AbstractModule {
 											"wm-executor");
 					}
 				})));
+
+		install(new FactoryModuleBuilder().implement(	ClientTopBarItem.class,
+														ClientTopBarItem.class).build(ClientTopBarItemFactory.class));
 	}
 }
