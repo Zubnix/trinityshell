@@ -28,6 +28,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
@@ -51,7 +52,7 @@ public class XAtomCache {
 
 	@Inject
 	XAtomCache(	final XConnection xConnection,
-				final ListeningExecutorService wmExecutor) {
+				@Named("WindowManager") final ListeningExecutorService wmExecutor) {
 		this.xConnection = xConnection;
 		this.wmExecutor = wmExecutor;
 

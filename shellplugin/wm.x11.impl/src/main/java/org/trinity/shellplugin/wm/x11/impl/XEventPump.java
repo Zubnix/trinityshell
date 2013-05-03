@@ -9,6 +9,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
@@ -34,7 +35,7 @@ public class XEventPump implements Runnable {
 
 	@Inject
 	XEventPump(	final XConnection xConnection,
-				final ListeningExecutorService wmExecutor,
+				@Named("WindowManager") final ListeningExecutorService wmExecutor,
 				final XEventHandler xEventHandler) {
 		this.xConnection = xConnection;
 		this.wmExecutor = wmExecutor;
