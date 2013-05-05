@@ -63,7 +63,7 @@ public class BoundInputListener extends QObject {
 			this.inputSlotCallerDelegate.callInputSlot(	this.inputEventTarget,
 														this.inputSlotName,
 														keyboardInput);
-			return false;
+			return true;
 		}
 
 		if ((eventType == Type.KeyRelease) && KeyboardInput.class.isAssignableFrom(this.inputType)) {
@@ -87,7 +87,7 @@ public class BoundInputListener extends QObject {
 			this.inputSlotCallerDelegate.callInputSlot(	this.inputEventTarget,
 														this.inputSlotName,
 														keyboardInput);
-			return false;
+			return true;
 		}
 
 		if ((eventType == Type.MouseButtonPress) && PointerInput.class.isAssignableFrom(this.inputType)) {
@@ -116,7 +116,7 @@ public class BoundInputListener extends QObject {
 			this.inputSlotCallerDelegate.callInputSlot(	this.inputEventTarget,
 														this.inputSlotName,
 														pointerInput);
-			return false;
+			return true;
 		}
 
 		if ((eventType == Type.MouseButtonRelease) && PointerInput.class.isAssignableFrom(this.inputType)) {
@@ -144,7 +144,7 @@ public class BoundInputListener extends QObject {
 			this.inputSlotCallerDelegate.callInputSlot(	this.inputEventTarget,
 														this.inputSlotName,
 														pointerInput);
-			return false;
+			return true;
 		}
 
 		return false;

@@ -24,7 +24,14 @@ import com.google.common.util.concurrent.ListenableFuture;
  */
 public interface InputSlotCallerDelegate {
 
-	ListenableFuture<Void> callInputSlot(	Object model,
+	/***************************************
+	 * @param model
+	 * @param methodName
+	 * @param input
+	 * @return A Boolean indicating if an input slot was called.
+	 *************************************** 
+	 */
+	ListenableFuture<Boolean> callInputSlot(Object model,
 											String methodName,
 											Input input);
 }
