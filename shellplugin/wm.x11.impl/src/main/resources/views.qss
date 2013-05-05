@@ -3,7 +3,7 @@
 }
 
 #BarView[topBar=true] {
-	/*because of some fucked up bug we have to specifiy border-top for our bottom border to be visible.*/
+	/*because of some fucked up bug we have to specifiy border-top for our bottom border to be visible. -_-*/
     border-top: none;
     border-bottom: 5px solid #22B5BF;
 }
@@ -12,6 +12,10 @@
 	border-top: 5px solid #88C134;
 }
 
-#BarItemView {
+#ClientBarItemView {
 	border: 1px solid black;
+}
+
+#CloseButtonView {
+	border: 1px solid red;
 }

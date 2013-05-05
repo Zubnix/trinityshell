@@ -40,38 +40,41 @@ public class InputSlotCallerDelegateImpl implements InputSlotCallerDelegate {
 	}
 
 	@Override
-	public ListenableFuture<Void> callInputSlot(final Object model,
-												final String methodName,
-												final Input input) {
+	public ListenableFuture<Boolean> callInputSlot(	final Object model,
+													final String methodName,
+													final Input input) {
 
-		return this.shellExecutor.submit(	new Runnable() {
+		return this.shellExecutor.submit(new Callable<Boolean>() {
 
-												@Override
-												public void run() {
-													try {
-														callInputSlotImpl(	model,
-																			methodName,
-																			input);
-													} catch (final ExecutionException e) {
-														logger.error(	"Error while trying to find an input slot for model=" + model + " with slotname="
-																				+ methodName + " and argument " + input,
-																		e);
-													}
-												}
-											},
-											null);
+			@Override
+			public Boolean call() {
+				try {
+					return callInputSlotImpl(	model,
+												methodName,
+												input);
+				} catch (final ExecutionException e) {
+					logger.error(	"Error while trying to find an input slot for model=" + model + " with slotname=" + methodName + " and argument " + input,
+									e);
+					return Boolean.FALSE;
+				}
+			}
+		});
 	}
 
-	private void callInputSlotImpl(	final Object model,
-									final String methodName,
-									final Input input) throws ExecutionException {
+	private Boolean callInputSlotImpl(	final Object model,
+										final String methodName,
+										final Input input) throws ExecutionException {
 		final Optional<Method> optionalInputSlot = findSlot(model.getClass(),
 															methodName,
 															input.getClass());
 		if (optionalInputSlot.isPresent()) {
 			try {
-				optionalInputSlot.get().invoke(	model,
-												input);
+				final Method method = optionalInputSlot.get();
+
+				method.setAccessible(true);
+				method.invoke(	model,
+								input);
+				return Boolean.TRUE;
 			} catch (final IllegalArgumentException e) {
 				logger.error(	"Error while trying to invoke input slot for model=" + model + " with slotname=" + methodName + " and argument " + input,
 								e);
@@ -83,6 +86,7 @@ public class InputSlotCallerDelegateImpl implements InputSlotCallerDelegate {
 								e);
 			}
 		}
+		return Boolean.FALSE;
 	}
 
 	private static Optional<Method> findSlot(	final Class<?> modelClass,

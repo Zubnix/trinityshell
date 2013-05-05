@@ -12,7 +12,7 @@ import com.trolltech.qt.gui.QWidget;
 
 class RootView extends QFrame {
 
-	@ObservableCollection(value = "topBar", view = BarItemView.class)
+	@ObservableCollection(value = "topBar", view = ClientBarItemView.class)
 	QFrame topBarView = new QFrame() {
 
 		QHBoxLayout topBarLayout = new QHBoxLayout(RootView.this.topBarView);
@@ -39,7 +39,7 @@ class RootView extends QFrame {
 		}
 	};
 
-	@ObservableCollection(value = "bottomBar", view = BarItemView.class)
+	@ObservableCollection(value = "bottomBar", view = ClientBarItemView.class)
 	QFrame bottomBarView = new QFrame() {
 
 		QHBoxLayout bottomBarLayout = new QHBoxLayout(RootView.this.bottomBarView);

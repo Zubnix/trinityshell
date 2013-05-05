@@ -1,5 +1,9 @@
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name;
+import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
+
 import java.util.concurrent.Callable;
 
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -24,11 +28,6 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.google.inject.name.Named;
 
-import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name;
-import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
-
 public class ClientTopBarItem implements HasText, ReceivesPointerInput {
 
 	private static Logger logger = LoggerFactory.getLogger(ClientTopBarItem.class);
@@ -38,6 +37,13 @@ public class ClientTopBarItem implements HasText, ReceivesPointerInput {
 	private final ListeningExecutorService wmExecutor;
 	private final XConnection xConnection;
 	private String clientName = "";
+
+	private final ReceivesPointerInput closeButton = new ReceivesPointerInput() {
+		@Override
+		public void onPointerInput(final PointerInput pointerInput) {
+			sendClientCloseRequest();
+		}
+	};
 
 	@AssistedInject
 	ClientTopBarItem(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
@@ -98,6 +104,28 @@ public class ClientTopBarItem implements HasText, ReceivesPointerInput {
 		});
 	}
 
+	public ReceivesPointerInput getCloseButton() {
+		return this.closeButton;
+	}
+
+	private void sendClientCloseRequest() {
+		addCallback(this.client.getDisplaySurface(),
+					new FutureCallback<DisplaySurface>() {
+						@Override
+						public void onSuccess(final DisplaySurface clientXWindow) {
+							// TODO Auto-generated method stub
+
+						}
+
+						@Override
+						public void onFailure(final Throwable t) {
+							// TODO Auto-generated method stub
+
+						}
+					},
+					this.wmExecutor);
+	}
+
 	@PropertyChanged("text")
 	public void setText(final String text) {
 		this.clientName = text;
@@ -111,6 +139,6 @@ public class ClientTopBarItem implements HasText, ReceivesPointerInput {
 
 	@Override
 	public void onPointerInput(final PointerInput pointerInput) {
-		// do something with client?
+		// do something with client, eg give focus?
 	}
 }
