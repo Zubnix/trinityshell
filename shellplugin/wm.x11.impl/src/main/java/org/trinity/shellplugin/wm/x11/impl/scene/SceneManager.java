@@ -1,5 +1,7 @@
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+
 import java.util.concurrent.Callable;
 
 import javax.annotation.concurrent.ThreadSafe;
@@ -25,8 +27,6 @@ import com.google.inject.name.Named;
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
 
 @Bind(to = @To(value = Type.IMPLEMENTATION))
 @ThreadSafe
@@ -59,7 +59,7 @@ public class SceneManager {
 	public void manageClient(final ShellSurface client) {
 		this.wmExecutor.submit(new Callable<Void>() {
 			@Override
-			public Void call() throws Exception {
+			public Void call() {
 				registerXWindow(client);
 
 				addClientTopBarItem(client);

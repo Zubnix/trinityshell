@@ -1,5 +1,7 @@
 package org.trinity.shellplugin.wm.x11.impl;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplayServer;
@@ -17,8 +19,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 
 import de.devsurf.injection.guice.annotations.Bind;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
 
 @Bind(multiple = true)
 public class WindowManagerPlugin extends AbstractIdleService implements ShellPlugin {
@@ -41,17 +41,24 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 	@Override
 	protected void startUp() throws Exception {
 
-		final ListenableFuture<DisplaySurface[]> clientDisplaySurfacesFuture = this.displayServer
-				.getClientDisplaySurfaces();
+		final ListenableFuture<DisplaySurface[]> clientDisplaySurfacesFuture = this.displayServer.getClientDisplaySurfaces();
 		// callback will be called by "Display" thread.
 		addCallback(clientDisplaySurfacesFuture,
 					new FutureCallback<DisplaySurface[]>() {
 						@Override
-						public void onSuccess(final DisplaySurface[] clientDisplaySurfaces) {
+						public void onSuccess(final DisplaySurface[] displaySurfaces) {
 							// iterate over existing non-managed client display
 							// surfaces
-							for (final DisplaySurface clientDisplaySurface : clientDisplaySurfaces) {
-								handleClientDisplaySurface(clientDisplaySurface);
+							for (final DisplaySurface clientDisplaySurface : displaySurfaces) {
+								// we have to check if it's an "onscreen" client
+								// display surface as the slighty retarded icccm
+								// & ewmh protocols specifiy a bunch of windows
+								// that are not supposed to be shown (or at
+								// least not as the application's main
+								// window...).
+								if (isClientMainWindow(clientDisplaySurface)) {
+									handleClientDisplaySurface(clientDisplaySurface);
+								}
 							}
 
 							// We register without specifying an executor. This
@@ -69,6 +76,13 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 
 	}
 
+	private boolean isClientMainWindow(final DisplaySurface clientDisplaySurface) {
+		// TODO check for icon window
+		// TODO check for 'parent main window'
+		// TODO check for more nonsens windows?
+		return false;
+	}
+
 	@Override
 	protected void shutDown() throws Exception {
 		this.displayServer.unregister(this);
@@ -80,16 +94,15 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 		handleClientDisplaySurface(displaySurface);
 	}
 
-	// called by display thread.
+	// called by "Display" thread.
 	private void handleClientDisplaySurface(final DisplaySurface displaySurface) {
-		final ListenableFuture<ShellSurface> shellSurfaceFuture = this.shellSurfaceFactory
-				.createShellClientSurface(displaySurface);
+		final ListenableFuture<ShellSurface> shellSurfaceFuture = this.shellSurfaceFactory.createShellClientSurface(displaySurface);
 		// callback will be called by "Shell" thread.
 		addCallback(shellSurfaceFuture,
 					new FutureCallback<ShellSurface>() {
 						@Override
-						public void onSuccess(final ShellSurface result) {
-							handleClientShellSurface(result);
+						public void onSuccess(final ShellSurface shellSurface) {
+							WindowManagerPlugin.this.sceneManager.manageClient(shellSurface);
 						}
 
 						@Override
@@ -98,13 +111,5 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 											t);
 						}
 					});
-	}
-
-	private void handleClientShellSurface(final ShellSurface shellSurface) {
-		// we let the shell thread do the work first so we can let it install
-		// event listeners in the sceneManager before it starts sending events to the
-		// client shell surface. (else we miss events if we delegate this to
-		// another thread).
-		this.sceneManager.manageClient(shellSurface);
 	}
 }
