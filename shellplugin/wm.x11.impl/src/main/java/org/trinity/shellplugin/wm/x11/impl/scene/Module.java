@@ -26,7 +26,7 @@ public class Module extends AbstractModule {
 					}
 				})));
 
-		install(new FactoryModuleBuilder().implement(	ClientTopBarItem.class,
-														ClientTopBarItem.class).build(ClientTopBarItemFactory.class));
+		install(new FactoryModuleBuilder().implement(	ClientBarItem.class,
+														ClientBarItem.class).build(ClientBarItemFactory.class));
 	}
 }

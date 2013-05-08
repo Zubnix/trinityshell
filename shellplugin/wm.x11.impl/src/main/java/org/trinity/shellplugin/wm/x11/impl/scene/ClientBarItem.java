@@ -18,8 +18,8 @@ import org.trinity.shellplugin.wm.api.ReceivesPointerInput;
 import org.trinity.shellplugin.wm.x11.impl.XConnection;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XClientMessageSender;
+import org.trinity.shellplugin.wm.x11.impl.protocol.XPropertyChanged;
 
-import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.assistedinject.Assisted;
@@ -31,9 +31,9 @@ import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
 
-public class ClientTopBarItem implements HasText, ReceivesPointerInput {
+public class ClientBarItem implements HasText, ReceivesPointerInput {
 
-	private static Logger logger = LoggerFactory.getLogger(ClientTopBarItem.class);
+	private static Logger logger = LoggerFactory.getLogger(ClientBarItem.class);
 
 	private final ShellSurface client;
 	private final XAtomCache xAtomCache;
@@ -53,11 +53,11 @@ public class ClientTopBarItem implements HasText, ReceivesPointerInput {
 	};
 
 	@AssistedInject
-	ClientTopBarItem(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
-						final XClientMessageSender xClientMessageSender,
-						final XAtomCache xAtomCache,
-						final XConnection xConnection,
-						@Assisted final ShellSurface client) {
+	ClientBarItem(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
+					final XClientMessageSender xClientMessageSender,
+					final XAtomCache xAtomCache,
+					final XConnection xConnection,
+					@Assisted final ShellSurface client) {
 		this.xClientMessageSender = xClientMessageSender;
 		this.client = client;
 		this.xAtomCache = xAtomCache;
@@ -67,10 +67,10 @@ public class ClientTopBarItem implements HasText, ReceivesPointerInput {
 					new FutureCallback<DisplaySurface>() {
 						@Override
 						public void onSuccess(final DisplaySurface clientXWindow) {
-							clientXWindow.register(new Object() {
+							clientXWindow.register(new XPropertyChanged() {
 								// called by window manager thread
-								@Subscribe
-								public void onXPropertyChanged(final xcb_property_notify_event_t notify_event_t) {
+								@Override
+								public void onXPropertyChanged(final xcb_property_notify_event_t property_notify_event) {
 									updateClientName(clientXWindow);
 								}
 							});
@@ -98,7 +98,7 @@ public class ClientTopBarItem implements HasText, ReceivesPointerInput {
 			@Override
 			public Void call() throws Exception {
 
-				final short stat = xcb_icccm_get_wm_name_reply(	ClientTopBarItem.this.xConnection.getConnectionRef(),
+				final short stat = xcb_icccm_get_wm_name_reply(	ClientBarItem.this.xConnection.getConnectionRef(),
 																get_property_cookie_t,
 																prop,
 																e);
@@ -164,7 +164,7 @@ public class ClientTopBarItem implements HasText, ReceivesPointerInput {
 						@Override
 						public void onSuccess(final DisplaySurface clientXWindow) {
 							clientXWindow.setInputFocus();
-							ClientTopBarItem.this.client.doRaise();
+							ClientBarItem.this.client.doRaise();
 						}
 
 						@Override
