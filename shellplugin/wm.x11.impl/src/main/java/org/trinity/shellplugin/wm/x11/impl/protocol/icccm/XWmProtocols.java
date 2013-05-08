@@ -43,13 +43,14 @@ import static com.google.common.util.concurrent.Futures.transform;
 @Singleton
 @ThreadSafe
 @OwnerThread("WindowManager")
-public class XWmProtocols {
+public class XWmProtocols extends XProtocolListenable {
 
 	private static final Logger logger = LoggerFactory.getLogger(XWmProtocols.class);
 
 	private int wmProtocolsAtomId;
 
 	private final Map<Integer, Set<Integer>> protocolsByXWindowCache = new HashMap<Integer, Set<Integer>>();
+
 	private final XConnection xConnection;
 	private final ListeningExecutorService wmExecutor;
 
@@ -57,6 +58,7 @@ public class XWmProtocols {
 	XWmProtocols(	final XConnection xConnection,
 					final XAtomCache xAtomCache,
 					@Named("WindowManager") final ListeningExecutorService wmExecutor) {
+		super(wmExecutor);
 		this.xConnection = xConnection;
 		this.wmExecutor = wmExecutor;
 
@@ -110,8 +112,13 @@ public class XWmProtocols {
 			@Override
 			public void onXPropertyChanged(final xcb_property_notify_event_t property_notify_event) {
 				final int atom = property_notify_event.getAtom();
+
 				// TODO check if atom was deleted
-				final int atomState = property_notify_event.getState();
+				// final int atomState = property_notify_event.getState();
+				// if(atomState == ...){
+				// return;
+				// }
+
 				if (atom == XWmProtocols.this.wmProtocolsAtomId) {
 					refreshWmProtocolsCache(protocols,
 											xWindow);
@@ -152,6 +159,8 @@ public class XWmProtocols {
 					final int protocolAtomId = protocolsReply.get();
 					protocols.add(Integer.valueOf(protocolAtomId));
 				}
+
+				notifyProtocolListeners(xWindow);
 
 				return null;
 			}
