@@ -1,7 +1,10 @@
-package org.trinity.shellplugin.wm.x11.impl.scene;
+package org.trinity.shellplugin.wm.x11.impl;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+
+import org.trinity.shellplugin.wm.x11.impl.scene.ClientBarItem;
+import org.trinity.shellplugin.wm.x11.impl.scene.ClientBarItemFactory;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -16,8 +19,8 @@ public class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(ListeningExecutorService.class).annotatedWith(Names.named("WindowManager"))
-				.toInstance(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor(new ThreadFactory() {
+		bind(ListeningExecutorService.class).annotatedWith(Names.named("WindowManager")).toInstance(MoreExecutors.listeningDecorator(Executors
+				.newSingleThreadExecutor(new ThreadFactory() {
 
 					@Override
 					public Thread newThread(final Runnable r) {

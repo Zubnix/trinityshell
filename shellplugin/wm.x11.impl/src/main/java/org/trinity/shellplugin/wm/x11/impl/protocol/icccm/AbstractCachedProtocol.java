@@ -3,8 +3,6 @@ package org.trinity.shellplugin.wm.x11.impl.protocol.icccm;
 import static com.google.common.util.concurrent.Futures.addCallback;
 import static com.google.common.util.concurrent.Futures.transform;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
@@ -20,6 +18,7 @@ import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XPropertyChanged;
 
 import com.google.common.base.Optional;
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.FutureCallback;
@@ -29,48 +28,46 @@ import com.google.common.util.concurrent.MoreExecutors;
 
 @NotThreadSafe
 @OwnerThread("WindowManager")
-public abstract class AbstractProtocolCache<P> {
+public abstract class AbstractCachedProtocol<P> {
 
-	private static Logger logger = LoggerFactory.getLogger(AbstractProtocolCache.class);
+	private static Logger logger = LoggerFactory.getLogger(AbstractCachedProtocol.class);
 
 	private final Map<DisplaySurface, Optional<P>> protocolCache = new WeakHashMap<DisplaySurface, Optional<P>>();
-	private final Map<DisplaySurface, List<ProtocolListener>> listenersByWindow = new WeakHashMap<DisplaySurface, List<ProtocolListener>>();
+	private final Map<DisplaySurface, EventBus> listenersByWindow = new WeakHashMap<DisplaySurface, EventBus>();
 
 	private final ListeningExecutorService wmExecutor;
 
 	private int protocolAtomId;
 
-	AbstractProtocolCache(	final ListeningExecutorService wmExecutor,
+	AbstractCachedProtocol(	final ListeningExecutorService wmExecutor,
 							final XAtomCache xAtomCache,
 							final String protocolName) {
 		this.wmExecutor = wmExecutor;
-		addCallback(xAtomCache.internAtom(protocolName),
-					new FutureCallback<Integer>() {
-						@Override
-						public void onSuccess(final Integer result) {
-							AbstractProtocolCache.this.protocolAtomId = result.intValue();
-						}
+		wmExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() {
+				AbstractCachedProtocol.this.protocolAtomId = xAtomCache.getAtom(protocolName);
+				return null;
+			}
+		});
 
-						@Override
-						public void onFailure(final Throwable t) {
-							logger.error(	"Failed to intern atom.",
-											t);
-						}
-					});
 	}
 
-	protected int getProtocolAtomId() {
+	public int getProtocolAtomId() {
 		return this.protocolAtomId;
 	}
 
 	public void addProtocolListener(final DisplaySurface xWindow,
-									final ProtocolListener listener) {
+									final ProtocolListener<P> listener) {
 
-		List<ProtocolListener> listeners = AbstractProtocolCache.this.listenersByWindow.get(xWindow);
+		EventBus listeners = AbstractCachedProtocol.this.listenersByWindow.get(xWindow);
 		if (listeners == null) {
-			listeners = new ArrayList<ProtocolListener>();
+			listeners = new EventBus();
+			this.listenersByWindow.put(	xWindow,
+										listeners);
 		}
-		listeners.add(listener);
+		listeners.register(listener);
+
 	}
 
 	public ListenableFuture<Optional<P>> get(final DisplaySurface xWindow) {
@@ -78,7 +75,7 @@ public abstract class AbstractProtocolCache<P> {
 		final ListenableFuture<Optional<P>> protocolFuture = this.wmExecutor.submit(new Callable<Optional<P>>() {
 			@Override
 			public Optional<P> call() throws Exception {
-				return AbstractProtocolCache.this.protocolCache.get(xWindow);
+				return AbstractCachedProtocol.this.protocolCache.get(xWindow);
 			}
 		});
 
@@ -106,7 +103,7 @@ public abstract class AbstractProtocolCache<P> {
 			@Override
 			@Subscribe
 			public void onXPropertyChanged(final xcb_property_notify_event_t property_notify_event) {
-				if (property_notify_event.getAtom() == AbstractProtocolCache.this.protocolAtomId) {
+				if (property_notify_event.getAtom() == AbstractCachedProtocol.this.protocolAtomId) {
 					updateProtocolCache(xWindow);
 				}
 			}
@@ -119,9 +116,10 @@ public abstract class AbstractProtocolCache<P> {
 					new FutureCallback<Optional<P>>() {
 						@Override
 						public void onSuccess(final Optional<P> protocol) {
-							AbstractProtocolCache.this.protocolCache.put(	xWindow,
+							AbstractCachedProtocol.this.protocolCache.put(	xWindow,
 																			protocol);
-							notifyProtocolListeners(xWindow);
+							notifyProtocolListeners(xWindow,
+													protocol);
 						}
 
 						@Override
@@ -135,16 +133,15 @@ public abstract class AbstractProtocolCache<P> {
 	protected abstract ListenableFuture<Optional<P>> queryProtocol(final DisplaySurface xWindow);
 
 	public void removeProtocolListener(	final DisplaySurface xWindow,
-										final ProtocolListener listener) {
+										final ProtocolListener<P> listener) {
 
-		final List<ProtocolListener> listeners = AbstractProtocolCache.this.listenersByWindow.get(xWindow);
-		listeners.remove(listener);
+		final EventBus listeners = AbstractCachedProtocol.this.listenersByWindow.get(xWindow);
+		listeners.unregister(listener);
 	}
 
-	protected void notifyProtocolListeners(final DisplaySurface xWindow) {
-		final List<ProtocolListener> listeners = AbstractProtocolCache.this.listenersByWindow.get(xWindow);
-		for (final ProtocolListener protocolListener : listeners) {
-			protocolListener.onProtocolChanged();
-		}
+	protected void notifyProtocolListeners(	final DisplaySurface xWindow,
+											final Optional<P> protocol) {
+		final EventBus listeners = AbstractCachedProtocol.this.listenersByWindow.get(xWindow);
+		listeners.post(protocol);
 	}
 }

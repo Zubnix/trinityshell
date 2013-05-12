@@ -1,6 +1,7 @@
 package org.trinity.shellplugin.wm.x11.impl.protocol;
 
-import java.nio.ByteBuffer;
+import static org.freedesktop.xcb.LibXcb.xcb_send_event;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
 
 import org.freedesktop.xcb.xcb_client_message_data_t;
 import org.freedesktop.xcb.xcb_client_message_event_t;
@@ -14,7 +15,6 @@ import com.google.inject.Singleton;
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
-import static org.freedesktop.xcb.LibXcb.xcb_send_event;
 
 @Bind(to = @To(value = Type.IMPLEMENTATION))
 @Singleton
@@ -44,17 +44,17 @@ public class XClientMessageSender {
 	public void sendMessage(final DisplaySurface xWindow,
 							final int type,
 							final Format format,
-							final ByteBuffer message) {
+							final xcb_client_message_data_t message) {
+
 		final Integer winId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
 		final short messageFormat = format.getFormat();
-		final xcb_client_message_data_t message_data = new xcb_client_message_data_t();
-		final int[] messageData = new int[5];
-		message.asIntBuffer().get(messageData);
-		message_data.setData32(messageData);
 
 		final xcb_client_message_event_t client_message_event = new xcb_client_message_event_t();
 		client_message_event.setFormat(messageFormat);
-		client_message_event.setData(message_data);
+		client_message_event.setData(message);
+		client_message_event.setType(type);
+		client_message_event.setWindow(winId.intValue());
+		client_message_event.setType(XCB_CLIENT_MESSAGE);
 
 		final xcb_generic_event_t generic_event = new xcb_generic_event_t(	xcb_client_message_event_t.getCPtr(client_message_event),
 																			true);

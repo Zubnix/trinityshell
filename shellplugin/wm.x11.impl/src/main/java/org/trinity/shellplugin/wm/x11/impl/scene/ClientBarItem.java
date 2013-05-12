@@ -1,11 +1,14 @@
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.concurrent.Callable;
 
-import org.freedesktop.xcb.xcb_generic_error_t;
-import org.freedesktop.xcb.xcb_get_property_cookie_t;
+import org.freedesktop.xcb.xcb_client_message_data_t;
 import org.freedesktop.xcb.xcb_icccm_get_text_property_reply_t;
-import org.freedesktop.xcb.xcb_property_notify_event_t;
+import org.freedesktop.xcb.xcb_icccm_get_wm_protocols_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -15,32 +18,37 @@ import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shellplugin.wm.api.HasText;
 import org.trinity.shellplugin.wm.api.ReceivesPointerInput;
-import org.trinity.shellplugin.wm.x11.impl.XConnection;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XClientMessageSender;
-import org.trinity.shellplugin.wm.x11.impl.protocol.XPropertyChanged;
+import org.trinity.shellplugin.wm.x11.impl.protocol.XClientMessageSender.Format;
+import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.ProtocolListener;
+import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmName;
+import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmProtocols;
 
+import com.google.common.base.Optional;
+import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.google.inject.name.Named;
 
-import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name;
-import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
-
 public class ClientBarItem implements HasText, ReceivesPointerInput {
 
 	private static Logger logger = LoggerFactory.getLogger(ClientBarItem.class);
 
-	private final ShellSurface client;
-	private final XAtomCache xAtomCache;
 	private final ListeningExecutorService wmExecutor;
+
+	private final WmName wmName;
+	private final WmProtocols wmProtocols;
 	private final XClientMessageSender xClientMessageSender;
-	private final XConnection xConnection;
+
+	private DisplaySurface clientXWindow;
 	private String clientName = "";
+	private boolean canSendWmDeleteMsg;
+
+	private int wmDeleteWindowAtomId;
 
 	private final ReceivesPointerInput closeButton = new ReceivesPointerInput() {
 		// called by shell thread.
@@ -55,26 +63,21 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 	@AssistedInject
 	ClientBarItem(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
 					final XClientMessageSender xClientMessageSender,
+					final WmName wmName,
+					final WmProtocols wmProtocols,
 					final XAtomCache xAtomCache,
-					final XConnection xConnection,
 					@Assisted final ShellSurface client) {
 		this.xClientMessageSender = xClientMessageSender;
-		this.client = client;
-		this.xAtomCache = xAtomCache;
-		this.xConnection = xConnection;
+		this.wmName = wmName;
+		this.wmProtocols = wmProtocols;
 		this.wmExecutor = wmExecutor;
+
 		addCallback(client.getDisplaySurface(),
 					new FutureCallback<DisplaySurface>() {
 						@Override
 						public void onSuccess(final DisplaySurface clientXWindow) {
-							clientXWindow.register(new XPropertyChanged() {
-								// called by window manager thread
-								@Override
-								public void onXPropertyChanged(final xcb_property_notify_event_t property_notify_event) {
-									updateClientName(clientXWindow);
-								}
-							});
-							updateClientName(clientXWindow);
+							ClientBarItem.this.wmDeleteWindowAtomId = xAtomCache.getAtom("WM_DELETE_WINDOW");
+							setClientXWindow(clientXWindow);
 						}
 
 						@Override
@@ -86,34 +89,90 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 					wmExecutor);
 	}
 
-	// called by window manager thread
-	public void updateClientName(final DisplaySurface clientXWindow) {
-		final int window = (Integer) clientXWindow.getDisplaySurfaceHandle().getNativeHandle();
-		final xcb_get_property_cookie_t get_property_cookie_t = xcb_icccm_get_wm_name(	this.xConnection.getConnectionRef(),
-																						window);
-		final xcb_generic_error_t e = new xcb_generic_error_t();
-		final xcb_icccm_get_text_property_reply_t prop = new xcb_icccm_get_text_property_reply_t();
+	private void setClientXWindow(final DisplaySurface clientXWindow) {
+		ClientBarItem.this.clientXWindow = clientXWindow;
 
-		this.wmExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
+		// client name handling
+		this.wmName.addProtocolListener(clientXWindow,
+										new ProtocolListener<xcb_icccm_get_text_property_reply_t>() {
+											@Override
+											@Subscribe
+											public void onProtocolChanged(final Optional<xcb_icccm_get_text_property_reply_t> protocol) {
+												updateClientName(protocol);
+											}
+										});
+		queryClientName(clientXWindow);
 
-				final short stat = xcb_icccm_get_wm_name_reply(	ClientBarItem.this.xConnection.getConnectionRef(),
-																get_property_cookie_t,
-																prop,
-																e);
-				if (stat == 0) {
-					logger.error(	"Error retrieving wm_name reply from client={}",
-									window);
-					return null;
+		// client close request handling
+		this.wmProtocols.addProtocolListener(	clientXWindow,
+												new ProtocolListener<xcb_icccm_get_wm_protocols_reply_t>() {
+													@Override
+													@Subscribe
+													public void onProtocolChanged(final Optional<xcb_icccm_get_wm_protocols_reply_t> protocol) {
+														updateCanSendWmDeleteMsg(protocol);
+													}
+												});
+		queryCanSendWmDeleteMsg(clientXWindow);
+	}
+
+	private void queryCanSendWmDeleteMsg(final DisplaySurface clientXWindow) {
+		final ListenableFuture<Optional<xcb_icccm_get_wm_protocols_reply_t>> wmProtocolFuture = this.wmProtocols.get(clientXWindow);
+		addCallback(wmProtocolFuture,
+					new FutureCallback<Optional<xcb_icccm_get_wm_protocols_reply_t>>() {
+						@Override
+						public void onSuccess(final Optional<xcb_icccm_get_wm_protocols_reply_t> result) {
+							updateCanSendWmDeleteMsg(result);
+						}
+
+						@Override
+						public void onFailure(final Throwable t) {
+							logger.error(	"Failed to get wm_protocols protocol",
+											t);
+						}
+					});
+	}
+
+	private void updateCanSendWmDeleteMsg(final Optional<xcb_icccm_get_wm_protocols_reply_t> optionalWmProtocolReply) {
+		if (optionalWmProtocolReply.isPresent()) {
+			final xcb_icccm_get_wm_protocols_reply_t wm_protocols_reply = optionalWmProtocolReply.get();
+			final IntBuffer wmProtocolsBuffer = wm_protocols_reply.getAtoms().order(ByteOrder.nativeOrder()).asIntBuffer();
+			int nroWmProtocols = wm_protocols_reply.getAtoms_len();
+			while (nroWmProtocols > 0) {
+				this.canSendWmDeleteMsg = wmProtocolsBuffer.get() == this.wmDeleteWindowAtomId;
+				if (this.canSendWmDeleteMsg) {
+					break;
 				}
-
-				// TODO better text parsing.
-				setText(prop.getName());
-
-				return null;
+				nroWmProtocols--;
 			}
-		});
+		} else {
+			this.canSendWmDeleteMsg = false;
+		}
+	}
+
+	// called by window manager thread
+	public void queryClientName(final DisplaySurface clientXWindow) {
+		final ListenableFuture<Optional<xcb_icccm_get_text_property_reply_t>> wmNameFuture = this.wmName.get(clientXWindow);
+		addCallback(wmNameFuture,
+					new FutureCallback<Optional<xcb_icccm_get_text_property_reply_t>>() {
+						@Override
+						public void onSuccess(final Optional<xcb_icccm_get_text_property_reply_t> optionalTextProperty) {
+							updateClientName(optionalTextProperty);
+						}
+
+						@Override
+						public void onFailure(final Throwable t) {
+							logger.error(	"Failed to get wm name protocol",
+											t);
+						}
+					});
+	}
+
+	private void updateClientName(final Optional<xcb_icccm_get_text_property_reply_t> optionalTextProperty) {
+		if (optionalTextProperty.isPresent()) {
+			setText(optionalTextProperty.get().getName());
+		} else {
+			setText("");
+		}
 	}
 
 	public ReceivesPointerInput getCloseButton() {
@@ -122,27 +181,27 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 
 	// called by shell thread.
 	private void handleClientCloseRequest() {
-		addCallback(this.client.getDisplaySurface(),
-					new FutureCallback<DisplaySurface>() {
-						@Override
-						public void onSuccess(final DisplaySurface clientXWindow) {
-							sendWmDeleteMessage(clientXWindow);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							logger.error(	"Error getting display surface from client.",
-											t);
-						}
-					},
-					this.wmExecutor);
+		this.wmExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() {
+				if (ClientBarItem.this.canSendWmDeleteMsg) {
+					sendWmDeleteMessage(ClientBarItem.this.clientXWindow);
+				} else {
+					ClientBarItem.this.clientXWindow.destroy();
+				}
+				return null;
+			}
+		});
 	}
 
 	private void sendWmDeleteMessage(final DisplaySurface clientXWindow) {
-		// this.xClientMessageSender.sendMessage( clientXWindow,
-		// type,
-		// Format.Integer,
-		// message);
+
+		final xcb_client_message_data_t client_message_data = new xcb_client_message_data_t();
+		client_message_data.setData32(new int[] { this.wmDeleteWindowAtomId, 0, 0, 0, 0 });
+		this.xClientMessageSender.sendMessage(	clientXWindow,
+												this.wmProtocols.getProtocolAtomId(),
+												Format.Integer,
+												client_message_data);
 	}
 
 	@PropertyChanged("text")
@@ -159,22 +218,13 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 	// called by shell thread.
 	@Override
 	public void onPointerInput(final PointerInput pointerInput) {
-		addCallback(this.client.getDisplaySurface(),
-					new FutureCallback<DisplaySurface>() {
-						@Override
-						public void onSuccess(final DisplaySurface clientXWindow) {
-							clientXWindow.setInputFocus();
-							ClientBarItem.this.client.doRaise();
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							logger.error(	"Error getting display surface from client.",
-											t);
-						}
-					},
-					this.wmExecutor);
-
-		// do something with client, eg raise & give focus?
+		// do something with client, eg raise & give focus
+		this.wmExecutor.submit(new Runnable() {
+			@Override
+			public void run() {
+				ClientBarItem.this.clientXWindow.setInputFocus();
+				ClientBarItem.this.clientXWindow.raise();
+			}
+		});
 	}
 }

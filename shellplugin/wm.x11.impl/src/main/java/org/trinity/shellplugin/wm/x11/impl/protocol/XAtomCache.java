@@ -11,118 +11,79 @@
  */
 package org.trinity.shellplugin.wm.x11.impl.protocol;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Callable;
-
-import javax.annotation.concurrent.ThreadSafe;
-
-import org.freedesktop.xcb.xcb_generic_error_t;
-import org.freedesktop.xcb.xcb_intern_atom_cookie_t;
-import org.freedesktop.xcb.xcb_intern_atom_reply_t;
-import org.trinity.shellplugin.wm.x11.impl.XConnection;
-
-import com.google.common.util.concurrent.AsyncFunction;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
 import static java.lang.String.format;
 import static org.freedesktop.xcb.LibXcb.xcb_intern_atom;
 import static org.freedesktop.xcb.LibXcb.xcb_intern_atom_reply;
 
-import static com.google.common.util.concurrent.Futures.transform;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+
+import javax.annotation.concurrent.NotThreadSafe;
+
+import org.freedesktop.xcb.xcb_generic_error_t;
+import org.freedesktop.xcb.xcb_intern_atom_cookie_t;
+import org.freedesktop.xcb.xcb_intern_atom_reply_t;
+import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.shellplugin.wm.x11.impl.XConnection;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import de.devsurf.injection.guice.annotations.Bind;
+import de.devsurf.injection.guice.annotations.To;
+import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
-@ThreadSafe
+@NotThreadSafe
+@OwnerThread("WindowManager")
 public class XAtomCache {
 
 	private final Map<Integer, String> atomNameCodes = new HashMap<Integer, String>();
-	private final Map<String, Integer> atomCodeNames = new HashMap<String, Integer>();
+	private final Cache<String, Integer> atomCodeNames = CacheBuilder.newBuilder().concurrencyLevel(1).build();
 
-	private final ListeningExecutorService wmExecutor;
 	private final XConnection xConnection;
 
 	@Inject
-	XAtomCache(	final XConnection xConnection,
-				@Named("WindowManager") final ListeningExecutorService wmExecutor) {
+	XAtomCache(final XConnection xConnection) {
 		this.xConnection = xConnection;
-		this.wmExecutor = wmExecutor;
-
 		internOftenUsedAtoms();
 	}
 
 	private void internOftenUsedAtoms() {
-		internAtom("UTF8");
-
+		getAtom("UTF8");
+		getAtom("WM_NAME");
+		getAtom("WM_PROTOCOLS");
+		getAtom("WM_STATE");
 	}
 
-	public ListenableFuture<Integer> internAtom(final String atomName) {
+	public int getAtom(final String atomName) {
 
-		final ListenableFuture<Integer> atomCacheCheckFuture = this.wmExecutor.submit(new Callable<Integer>() {
-			@Override
-			public Integer call() throws Exception {
-				return XAtomCache.this.atomCodeNames.get(atomName);
-			}
-		});
-
-		final ListenableFuture<Integer> atomIdFuture = transform(	atomCacheCheckFuture,
-																	new AsyncFunction<Integer, Integer>() {
-
-																		@Override
-																		public ListenableFuture<Integer> apply(final Integer atomId) {
-
-																			if (atomId != null) {
-																				return MoreExecutors
-																						.sameThreadExecutor()
-																						.submit(new Callable<Integer>() {
-																							@Override
-																							public Integer call()
-																									throws Exception {
-																								return atomId;
-																							}
-																						});
-																			}
-
-																			final xcb_intern_atom_cookie_t cookie_t = xcb_intern_atom(	XAtomCache.this.xConnection
-																																				.getConnectionRef(),
-																																		(short) 0,
-																																		atomName.length(),
-																																		atomName);
-
-																			return XAtomCache.this.wmExecutor
-																					.submit(new Callable<Integer>() {
-																						@Override
-																						public Integer call()
-																								throws Exception {
-																							final Integer internedAtomId = Integer
-																									.valueOf(internAtomCall(cookie_t,
-																															atomName));
-
-																							XAtomCache.this.atomCodeNames
-																									.put(	atomName,
-																											internedAtomId);
-																							XAtomCache.this.atomNameCodes
-																									.put(	internedAtomId,
-																											atomName);
-																							return internedAtomId;
-																						}
-																					});
-																		}
-																	});
-
-		return atomIdFuture;
+		try {
+			return this.atomCodeNames.get(	atomName,
+											new Callable<Integer>() {
+												@Override
+												public Integer call() {
+													final Integer atomId = internAtom(atomName);
+													XAtomCache.this.atomNameCodes.put(	atomId,
+																						atomName);
+													return atomId;
+												}
+											});
+		} catch (final ExecutionException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	private int internAtomCall(	final xcb_intern_atom_cookie_t cookie_t,
-								final String atomName) {
+	private Integer internAtom(final String atomName) {
+		final xcb_intern_atom_cookie_t cookie_t = xcb_intern_atom(	XAtomCache.this.xConnection.getConnectionRef(),
+																	(short) 0,
+																	atomName.length(),
+																	atomName);
 
 		final xcb_generic_error_t e = new xcb_generic_error_t();
 		final xcb_intern_atom_reply_t reply_t = xcb_intern_atom_reply(	this.xConnection.getConnectionRef(),
@@ -132,21 +93,16 @@ public class XAtomCache {
 			throw new RuntimeException("xcb error");
 		}
 		final int atomId = reply_t.getAtom();
-		return atomId;
+		return Integer.valueOf(atomId);
 	}
 
-	public ListenableFuture<String> getAtomName(final int atomId) {
-		return this.wmExecutor.submit(new Callable<String>() {
-			@Override
-			public String call() {
+	public String getAtomName(final int atomId) {
 
-				final String atomName = XAtomCache.this.atomNameCodes.get(Integer.valueOf(atomId));
-				if (atomName == null) {
-					throw new NullPointerException(format(	"Atom with id %d was not interned.",
-															atomId));
-				}
-				return atomName;
-			}
-		});
+		final String atomName = this.atomNameCodes.get(Integer.valueOf(atomId));
+		if (atomName == null) {
+			throw new NullPointerException(format(	"Atom with id %d was not interned.",
+													atomId));
+		}
+		return atomName;
 	}
 }

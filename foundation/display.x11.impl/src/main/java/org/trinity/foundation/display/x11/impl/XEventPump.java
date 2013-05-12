@@ -12,7 +12,6 @@
 package org.trinity.foundation.display.x11.impl;
 
 import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
-import static org.freedesktop.xcb.LibXcb.xcb_flush;
 import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 
 import java.util.concurrent.ExecutorService;
@@ -77,7 +76,6 @@ public class XEventPump implements Runnable {
 			@Override
 			public void run() {
 				XEventPump.this.xEventBus.post(event_t);
-				xcb_flush(XEventPump.this.connection.getConnectionReference());
 			}
 		});
 

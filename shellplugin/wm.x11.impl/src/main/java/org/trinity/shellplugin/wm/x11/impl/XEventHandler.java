@@ -27,10 +27,15 @@ public class XEventHandler {
 		}
 	}
 
-	public void handleXEvent(final xcb_generic_event_t xEvent) {
-		final int eventCode = xEvent.getResponse_type();
+	public void handleXEvent(final xcb_generic_event_t event) {
+		final short responseType = event.getResponse_type();
+
+		final int eventCode = responseType & 0x7f;
 
 		final XEventHandling xEventHandling = this.xEventHandlingByCode.get(Integer.valueOf(eventCode));
-		xEventHandling.handle(xEvent);
+		if (xEventHandling == null) {
+			return;
+		}
+		xEventHandling.handle(event);
 	}
 }

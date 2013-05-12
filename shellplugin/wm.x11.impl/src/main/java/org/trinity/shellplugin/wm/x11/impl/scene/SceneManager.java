@@ -22,6 +22,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
@@ -30,6 +31,7 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(value = Type.IMPLEMENTATION))
 @ThreadSafe
+@Singleton
 public class SceneManager {
 
 	private static final Logger logger = LoggerFactory.getLogger(SceneManager.class);
@@ -56,7 +58,7 @@ public class SceneManager {
 		this.shellRootWidget.doShow();
 	}
 
-	public void manageClient(final ShellSurface client) {
+	public void manageNewClient(final ShellSurface client) {
 		this.wmExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {

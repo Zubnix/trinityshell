@@ -5,7 +5,7 @@ import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_protocols_reply;
 
 import java.util.concurrent.Callable;
 
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_property_cookie_t;
@@ -30,9 +30,9 @@ import de.devsurf.injection.guice.annotations.To.Type;
 
 @Bind(to = @To(value = Type.IMPLEMENTATION))
 @Singleton
-@ThreadSafe
+@NotThreadSafe
 @OwnerThread("WindowManager")
-public class WmProtocols extends AbstractProtocolCache<xcb_icccm_get_wm_protocols_reply_t> {
+public class WmProtocols extends AbstractCachedProtocol<xcb_icccm_get_wm_protocols_reply_t> {
 
 	private static final Logger logger = LoggerFactory.getLogger(WmProtocols.class);
 
@@ -40,9 +40,9 @@ public class WmProtocols extends AbstractProtocolCache<xcb_icccm_get_wm_protocol
 	private final ListeningExecutorService wmExecutor;
 
 	@Inject
-	WmProtocols(	final XConnection xConnection,
-					final XAtomCache xAtomCache,
-					@Named("WindowManager") final ListeningExecutorService wmExecutor) {
+	WmProtocols(final XConnection xConnection,
+				final XAtomCache xAtomCache,
+				@Named("WindowManager") final ListeningExecutorService wmExecutor) {
 		super(	wmExecutor,
 				xAtomCache,
 				"WM_PROTOCOLS");
