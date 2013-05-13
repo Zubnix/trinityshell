@@ -2,6 +2,7 @@ package org.trinity.foundation.api.shared;
 
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.concurrent.ThreadSafe;
@@ -35,18 +36,16 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 	@Override
 	public void register(	final Object object,
 							final ExecutorService executor) {
-		this.listenableExecutorService.submit(	new Runnable() {
-
-													@Override
-													public void run() {
-														final AsyncEventBus asyncEventBus = new AsyncEventBus(executor);
-														asyncEventBus.register(object);
-														AsyncListenableEventBus.this.asyncEventBusByListener
-																.put(	object,
-																		asyncEventBus);
-													}
-												},
-												null);
+		this.listenableExecutorService.submit(new Callable<Void>() {
+			@Override
+			public Void call() {
+				final AsyncEventBus asyncEventBus = new AsyncEventBus(executor);
+				asyncEventBus.register(object);
+				AsyncListenableEventBus.this.asyncEventBusByListener.put(	object,
+																			asyncEventBus);
+				return null;
+			}
+		});
 	}
 
 	/**
@@ -57,14 +56,13 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 	 */
 	@Override
 	public void unregister(final Object object) {
-		this.listenableExecutorService.submit(	new Runnable() {
-													@Override
-													public void run() {
-														AsyncListenableEventBus.this.asyncEventBusByListener
-																.remove(object);
-													}
-												},
-												null);
+		this.listenableExecutorService.submit(new Callable<Void>() {
+			@Override
+			public Void call() {
+				AsyncListenableEventBus.this.asyncEventBusByListener.remove(object);
+				return null;
+			}
+		});
 	}
 
 	/**
@@ -75,16 +73,15 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 	 */
 	@Override
 	public void post(final Object event) {
-		this.listenableExecutorService.submit(	new Runnable() {
-													@Override
-													public void run() {
-														for (final AsyncEventBus asyncEventBus : AsyncListenableEventBus.this.asyncEventBusByListener
-																.values()) {
-															asyncEventBus.post(event);
-														}
-													}
-												},
-												null);
+		this.listenableExecutorService.submit(new Callable<Void>() {
+			@Override
+			public Void call() {
+				for (final AsyncEventBus asyncEventBus : AsyncListenableEventBus.this.asyncEventBusByListener.values()) {
+					asyncEventBus.post(event);
+				}
+				return null;
+			}
+		});
 	}
 
 }
