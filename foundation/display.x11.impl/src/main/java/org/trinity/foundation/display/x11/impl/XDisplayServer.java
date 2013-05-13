@@ -74,21 +74,21 @@ public class XDisplayServer implements DisplayServer {
 					final XWindowCache xWindowCache,
 					final XEventPump xEventPump,
 					@Named("Display") final ListeningExecutorService xExecutor) {
-
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
 		this.xEventPump = xEventPump;
 		this.xExecutor = xExecutor;
 		this.displayEventBus = new AsyncListenableEventBus(this.xExecutor);
-
+		// register to ourself so we can track newly created clients in the
+		// "Display" thread. See onCreationNotify(...).
+		this.displayEventBus.register(	this,
+										this.xExecutor);
 		open();
 	}
 
 	@Override
 	public ListenableFuture<Void> quit() {
-
 		return this.xExecutor.submit(	new Runnable() {
-
 											@Override
 											public void run() {
 												XDisplayServer.this.xEventPump.stop();
@@ -99,7 +99,7 @@ public class XDisplayServer implements DisplayServer {
 	}
 
 	@Override
-	public ListenableFuture<DisplaySurface> getRootDisplayArea() {
+	public ListenableFuture<DisplaySurface> getRootDisplaySurface() {
 		return this.xExecutor.submit(new Callable<DisplaySurface>() {
 			@Override
 			public DisplaySurface call() {
@@ -135,12 +135,10 @@ public class XDisplayServer implements DisplayServer {
 	}
 
 	private void findClientDisplaySurfaces() {
-
 		// find client display surfaces that are already
 		// active on the X server and track them
-
 		final int rootId = this.xConnection.getScreenReference().getRoot();
-		final SWIGTYPE_p_xcb_connection_t xConnectionRef = XDisplayServer.this.xConnection.getConnectionReference();
+		final SWIGTYPE_p_xcb_connection_t xConnectionRef = this.xConnection.getConnectionReference();
 		final xcb_query_tree_cookie_t query_tree_cookie_t = xcb_query_tree(	xConnectionRef,
 																			rootId);
 		final xcb_generic_error_t e = new xcb_generic_error_t();
@@ -200,21 +198,18 @@ public class XDisplayServer implements DisplayServer {
 							final ExecutorService executor) {
 		this.displayEventBus.register(	listener,
 										executor);
-
 	}
 
 	@Override
 	public void post(final Object event) {
 
-		// FIXME this is a potential bug as post() can be called from outside
-		// the "Display" thread.
-		if (event instanceof CreationNotify) {
-			// keep track of all created clients so others can query them later.
-			final CreationNotify clientCreationNotify = (CreationNotify) event;
-			trackClient(clientCreationNotify.getDisplaySurface());
-		}
-
 		this.displayEventBus.post(event);
+	}
+
+	@Subscribe
+	public void onCreationNotify(final CreationNotify creationNotify) {
+		// keep track of all created clients so others can query them later.
+		trackClient(creationNotify.getDisplaySurface());
 	}
 
 	private void trackClient(final DisplaySurface clientDisplaySurface) {
@@ -234,7 +229,6 @@ public class XDisplayServer implements DisplayServer {
 
 	@Override
 	public ListenableFuture<DisplaySurface[]> getClientDisplaySurfaces() {
-
 		return this.xExecutor.submit(new Callable<DisplaySurface[]>() {
 			@Override
 			public DisplaySurface[] call() throws Exception {

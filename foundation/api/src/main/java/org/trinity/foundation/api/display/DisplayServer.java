@@ -36,7 +36,7 @@ public interface DisplayServer extends AsyncListenable {
 	 * @return a future {@link DisplaySurface}
 	 *************************************** 
 	 */
-	ListenableFuture<DisplaySurface> getRootDisplayArea();
+	ListenableFuture<DisplaySurface> getRootDisplaySurface();
 
 	/**
 	 * An array "snapshot" of client display surfaces. This array does not
