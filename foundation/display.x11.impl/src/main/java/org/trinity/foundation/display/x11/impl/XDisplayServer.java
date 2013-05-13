@@ -172,17 +172,18 @@ public class XDisplayServer implements DisplayServer {
 				XDisplayServer.logger.error("X error while doing get window attributes: {}.",
 											XcbErrorUtil.toString(e));
 			} else {
-				final XWindow clientWindow = this.xWindowCache.getWindow(clientWindowId);
-				trackClient(clientWindow);
-
 				final short override_redirect = get_window_attributes_reply.getOverride_redirect();
 				final short map_state = get_window_attributes_reply.getMap_state();
 				// Check for override redirect flag and ignore the window if
 				// it's set. Ignore unmapped windows, we'll see them as soon as
-				// they resize/map themselves
-				if ((map_state == xcb_map_state_t.XCB_MAP_STATE_UNMAPPED) || (override_redirect != 0)) {
+				// they reconfigure/map themselves
+				if ((map_state != xcb_map_state_t.XCB_MAP_STATE_VIEWABLE) || (override_redirect != 0)) {
 					continue;
 				}
+
+				final XWindow clientWindow = this.xWindowCache.getWindow(clientWindowId);
+				clientWindow.configureClientEvents();
+				trackClient(clientWindow);
 			}
 
 			tree_children_length--;
@@ -204,11 +205,15 @@ public class XDisplayServer implements DisplayServer {
 
 	@Override
 	public void post(final Object event) {
+
+		// FIXME this is a potential bug as post() can be called from outside
+		// the "Display" thread.
 		if (event instanceof CreationNotify) {
 			// keep track of all created clients so others can query them later.
 			final CreationNotify clientCreationNotify = (CreationNotify) event;
 			trackClient(clientCreationNotify.getDisplaySurface());
 		}
+
 		this.displayEventBus.post(event);
 	}
 
