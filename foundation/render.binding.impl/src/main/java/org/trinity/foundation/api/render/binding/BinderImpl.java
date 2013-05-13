@@ -687,6 +687,11 @@ public class BinderImpl implements Binder {
 					continue;
 				}
 
+				// recursion safety
+				if (this.dataContextValueByView.containsKey(childView)) {
+					continue;
+				}
+
 				final Optional<DataContext> optionalFieldDataContext = Optional
 						.<DataContext> fromNullable(childViewElement.getAnnotation(DataContext.class));
 				final Optional<InputSignals> optionalFieldInputSignals = Optional
@@ -695,11 +700,6 @@ public class BinderImpl implements Binder {
 						.<ObservableCollection> fromNullable(childViewElement.getAnnotation(ObservableCollection.class));
 				final Optional<PropertySlots> optionalFieldPropertySlots = Optional
 						.<PropertySlots> fromNullable(childViewElement.getAnnotation(PropertySlots.class));
-
-				// recursion safety
-				if (this.dataContextValueByView.containsKey(childView)) {
-					continue;
-				}
 
 				bindViewElement(inheritedModel,
 								childView,

@@ -1,8 +1,5 @@
 package org.trinity.foundation.render.qt.impl.binding.view.delegate;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static java.lang.String.format;
-
 import java.util.concurrent.Callable;
 
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
@@ -16,6 +13,9 @@ import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import static java.lang.String.format;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 @Bind
 @Singleton
@@ -61,15 +61,14 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
 	public ListenableFuture<Void> destroyView(	final Object parentView,
 												final Object deletedChildView,
 												final int deletedPosition) {
-		checkArgument(	deletedChildView instanceof QWidget,
-						format(	"Expected child view should be of type %s",
-								QWidget.class.getName()));
 
 		final ListenableFutureTask<Void> destroyTask = ListenableFutureTask.create(new Callable<Void>() {
 			@Override
-			public Void call() throws Exception {
-				final QWidget deletedChildViewInstance = (QWidget) deletedChildView;
-				deletedChildViewInstance.close();
+			public Void call() {
+				if (deletedChildView instanceof QWidget) {
+					final QWidget deletedChildViewInstance = (QWidget) deletedChildView;
+					deletedChildViewInstance.close();
+				}
 				return null;
 			}
 		});
