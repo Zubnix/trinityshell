@@ -1,7 +1,5 @@
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
-import static com.google.common.util.concurrent.Futures.addCallback;
-
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.concurrent.Callable;
@@ -20,7 +18,6 @@ import org.trinity.shellplugin.wm.api.HasText;
 import org.trinity.shellplugin.wm.api.ReceivesPointerInput;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XClientMessageSender;
-import org.trinity.shellplugin.wm.x11.impl.protocol.XClientMessageSender.Format;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.ProtocolListener;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmName;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmProtocols;
@@ -33,6 +30,10 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.google.inject.name.Named;
+
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CURRENT_TIME;
+
+import static com.google.common.util.concurrent.Futures.addCallback;
 
 public class ClientBarItem implements HasText, ReceivesPointerInput {
 
@@ -49,6 +50,7 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 	private boolean canSendWmDeleteMsg;
 
 	private int wmDeleteWindowAtomId;
+	private int wmProtocolsAtomId;
 
 	private final ReceivesPointerInput closeButton = new ReceivesPointerInput() {
 		// called by shell thread.
@@ -59,6 +61,8 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 			}
 		}
 	};
+
+	private final XAtomCache xAtomCache;
 
 	@AssistedInject
 	ClientBarItem(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
@@ -71,12 +75,14 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 		this.wmName = wmName;
 		this.wmProtocols = wmProtocols;
 		this.wmExecutor = wmExecutor;
+		this.xAtomCache = xAtomCache;
 
 		addCallback(client.getDisplaySurface(),
 					new FutureCallback<DisplaySurface>() {
 						@Override
 						public void onSuccess(final DisplaySurface clientXWindow) {
 							ClientBarItem.this.wmDeleteWindowAtomId = xAtomCache.getAtom("WM_DELETE_WINDOW");
+							ClientBarItem.this.wmProtocolsAtomId = xAtomCache.getAtom("WM_PROTOCOLS");
 							setClientXWindow(clientXWindow);
 						}
 
@@ -116,7 +122,8 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 	}
 
 	private void queryCanSendWmDeleteMsg(final DisplaySurface clientXWindow) {
-		final ListenableFuture<Optional<xcb_icccm_get_wm_protocols_reply_t>> wmProtocolFuture = this.wmProtocols.get(clientXWindow);
+		final ListenableFuture<Optional<xcb_icccm_get_wm_protocols_reply_t>> wmProtocolFuture = this.wmProtocols
+				.get(clientXWindow);
 		addCallback(wmProtocolFuture,
 					new FutureCallback<Optional<xcb_icccm_get_wm_protocols_reply_t>>() {
 						@Override
@@ -135,7 +142,8 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 	private void updateCanSendWmDeleteMsg(final Optional<xcb_icccm_get_wm_protocols_reply_t> optionalWmProtocolReply) {
 		if (optionalWmProtocolReply.isPresent()) {
 			final xcb_icccm_get_wm_protocols_reply_t wm_protocols_reply = optionalWmProtocolReply.get();
-			final IntBuffer wmProtocolsBuffer = wm_protocols_reply.getAtoms().order(ByteOrder.nativeOrder()).asIntBuffer();
+			final IntBuffer wmProtocolsBuffer = wm_protocols_reply.getAtoms().order(ByteOrder.nativeOrder())
+					.asIntBuffer();
 			int nroWmProtocols = wm_protocols_reply.getAtoms_len();
 			while (nroWmProtocols > 0) {
 				this.canSendWmDeleteMsg = wmProtocolsBuffer.get() == this.wmDeleteWindowAtomId;
@@ -151,7 +159,8 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 
 	// called by window manager thread
 	public void queryClientName(final DisplaySurface clientXWindow) {
-		final ListenableFuture<Optional<xcb_icccm_get_text_property_reply_t>> wmNameFuture = this.wmName.get(clientXWindow);
+		final ListenableFuture<Optional<xcb_icccm_get_text_property_reply_t>> wmNameFuture = this.wmName
+				.get(clientXWindow);
 		addCallback(wmNameFuture,
 					new FutureCallback<Optional<xcb_icccm_get_text_property_reply_t>>() {
 						@Override
@@ -197,10 +206,10 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 	private void sendWmDeleteMessage(final DisplaySurface clientXWindow) {
 
 		final xcb_client_message_data_t client_message_data = new xcb_client_message_data_t();
-		client_message_data.setData32(new int[] { this.wmDeleteWindowAtomId, 0, 0, 0, 0 });
+		client_message_data.setData32(new int[] { this.wmDeleteWindowAtomId, XCB_CURRENT_TIME, 0, 0, 0 });
 		this.xClientMessageSender.sendMessage(	clientXWindow,
-												this.wmProtocols.getProtocolAtomId(),
-												Format.Integer,
+												this.wmProtocolsAtomId,
+												32,
 												client_message_data);
 	}
 
