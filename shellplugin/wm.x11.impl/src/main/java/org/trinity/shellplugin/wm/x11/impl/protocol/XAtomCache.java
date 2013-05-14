@@ -11,10 +11,6 @@
  */
 package org.trinity.shellplugin.wm.x11.impl.protocol;
 
-import static java.lang.String.format;
-import static org.freedesktop.xcb.LibXcb.xcb_intern_atom;
-import static org.freedesktop.xcb.LibXcb.xcb_intern_atom_reply;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -36,6 +32,9 @@ import com.google.inject.Singleton;
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
+import static java.lang.String.format;
+import static org.freedesktop.xcb.LibXcb.xcb_intern_atom;
+import static org.freedesktop.xcb.LibXcb.xcb_intern_atom_reply;
 
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
@@ -51,14 +50,6 @@ public class XAtomCache {
 	@Inject
 	XAtomCache(final XConnection xConnection) {
 		this.xConnection = xConnection;
-		internOftenUsedAtoms();
-	}
-
-	private void internOftenUsedAtoms() {
-		getAtom("UTF8");
-		getAtom("WM_NAME");
-		getAtom("WM_PROTOCOLS");
-		getAtom("WM_STATE");
 	}
 
 	public int getAtom(final String atomName) {

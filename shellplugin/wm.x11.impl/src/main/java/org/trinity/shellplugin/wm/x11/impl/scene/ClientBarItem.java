@@ -4,7 +4,10 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.concurrent.Callable;
 
-import org.freedesktop.xcb.xcb_client_message_data_t;
+import org.freedesktop.xcb.IntArray;
+import org.freedesktop.xcb.xcb_client_message_event_t;
+import org.freedesktop.xcb.xcb_event_mask_t;
+import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_icccm_get_text_property_reply_t;
 import org.freedesktop.xcb.xcb_icccm_get_wm_protocols_reply_t;
 import org.slf4j.Logger;
@@ -16,8 +19,8 @@ import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shellplugin.wm.api.HasText;
 import org.trinity.shellplugin.wm.api.ReceivesPointerInput;
+import org.trinity.shellplugin.wm.x11.impl.XConnection;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
-import org.trinity.shellplugin.wm.x11.impl.protocol.XClientMessageSender;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.ProtocolListener;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmName;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmProtocols;
@@ -31,6 +34,9 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.google.inject.name.Named;
 
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
+import static org.freedesktop.xcb.LibXcb.xcb_send_event;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CURRENT_TIME;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
@@ -43,7 +49,6 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 
 	private final WmName wmName;
 	private final WmProtocols wmProtocols;
-	private final XClientMessageSender xClientMessageSender;
 
 	private DisplaySurface clientXWindow;
 	private String clientName = "";
@@ -62,20 +67,19 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 		}
 	};
 
-	private final XAtomCache xAtomCache;
+	private final XConnection xConnection;
 
 	@AssistedInject
 	ClientBarItem(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
-					final XClientMessageSender xClientMessageSender,
+					final XConnection xConnection,
 					final WmName wmName,
 					final WmProtocols wmProtocols,
 					final XAtomCache xAtomCache,
 					@Assisted final ShellSurface client) {
-		this.xClientMessageSender = xClientMessageSender;
+		this.xConnection = xConnection;
 		this.wmName = wmName;
 		this.wmProtocols = wmProtocols;
 		this.wmExecutor = wmExecutor;
-		this.xAtomCache = xAtomCache;
 
 		addCallback(client.getDisplaySurface(),
 					new FutureCallback<DisplaySurface>() {
@@ -204,13 +208,27 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 	}
 
 	private void sendWmDeleteMessage(final DisplaySurface clientXWindow) {
+		final Integer winId = (Integer) clientXWindow.getDisplaySurfaceHandle().getNativeHandle();
 
-		final xcb_client_message_data_t client_message_data = new xcb_client_message_data_t();
-		client_message_data.setData32(new int[] { this.wmDeleteWindowAtomId, XCB_CURRENT_TIME, 0, 0, 0 });
-		this.xClientMessageSender.sendMessage(	clientXWindow,
-												this.wmProtocolsAtomId,
-												32,
-												client_message_data);
+		final xcb_client_message_event_t client_message_event = new xcb_client_message_event_t();
+		client_message_event.setFormat((short) 32);
+		final IntArray data32 = IntArray.frompointer(client_message_event.getData().getData32());
+		data32.setitem(	0,
+						this.wmDeleteWindowAtomId);
+		data32.setitem(	1,
+						XCB_CURRENT_TIME);
+		client_message_event.setType(this.wmProtocolsAtomId);
+		client_message_event.setWindow(winId.intValue());
+		client_message_event.setResponse_type((short) XCB_CLIENT_MESSAGE);
+
+		final xcb_generic_event_t generic_event = new xcb_generic_event_t(	xcb_client_message_event_t.getCPtr(client_message_event),
+																			true);
+		xcb_send_event(	this.xConnection.getConnectionRef(),
+						(short) 0,
+						winId.intValue(),
+						xcb_event_mask_t.XCB_EVENT_MASK_NO_EVENT,
+						generic_event);
+		xcb_flush(this.xConnection.getConnectionRef());
 	}
 
 	@PropertyChanged("text")
