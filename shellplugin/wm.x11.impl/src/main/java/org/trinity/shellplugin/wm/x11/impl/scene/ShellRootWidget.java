@@ -1,10 +1,14 @@
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+import static com.google.common.util.concurrent.Futures.transform;
+
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 import org.trinity.shell.api.widget.BaseShellWidget;
+import org.trinity.shellplugin.wm.api.Desktop;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
@@ -16,12 +20,9 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import static com.google.common.util.concurrent.Futures.addCallback;
-import static com.google.common.util.concurrent.Futures.transform;
+public class ShellRootWidget extends BaseShellWidget implements Desktop {
 
-public class ShellRootWidget extends BaseShellWidget {
-
-	private final EventList<Object> notificationBar = new BasicEventList<Object>();
+	private final EventList<Object> notificationsBar = new BasicEventList<Object>();
 	private final EventList<Object> clientsBar = new BasicEventList<Object>();
 	private final EventList<Object> bottomBar = new BasicEventList<Object>();
 
@@ -63,14 +64,17 @@ public class ShellRootWidget extends BaseShellWidget {
 					shellExecutor);
 	}
 
-	public EventList<Object> getNotificationBar() {
-		return this.notificationBar;
+	@Override
+	public EventList<Object> getNotificationsBar() {
+		return this.notificationsBar;
 	}
 
+	@Override
 	public EventList<Object> getClientsBar() {
 		return this.clientsBar;
 	}
 
+	@Override
 	public EventList<Object> getBottomBar() {
 		return this.bottomBar;
 	}

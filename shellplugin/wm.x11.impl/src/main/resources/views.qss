@@ -6,6 +6,10 @@
 }
 
 #NotificationsBar {
+	
+}
+
+#NotificationsBarElement {
 
 }
 
@@ -19,10 +23,18 @@
 	border-top: 5px solid #88C134;
 }
 
-#ClientBarItemView {
+#ClientBarElement {
 	border: 1px solid black;
 }
 
-#CloseButtonView {
+#ClientCloseButton {
 	border: 1px solid red;
+}
+
+#ClientName {
+
+}
+
+#ClientIcon {
+
 }

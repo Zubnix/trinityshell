@@ -12,83 +12,75 @@ import com.trolltech.qt.gui.QWidget;
 
 class RootView extends QFrame {
 
-	@ObservableCollection(value = "notificationsBar", view = NotificationBarElementView.class)
-	QFrame notificationsBarView = new QFrame() {
-		QHBoxLayout notificationBarLayout = new QHBoxLayout(RootView.this.clientsBarView);
+	QFrame topBarView = new QFrame() {
 
-		{
-			// workaround for jambi css bug
-			setObjectName("NotificationsBar");
+		@ObservableCollection(value = "clientsBar", view = ClientBarElementView.class)
+		QFrame clientsBarView = new QFrame() {
 
-			this.notificationBarLayout.setContentsMargins(new QMargins(	0,
+			QHBoxLayout clientsBarLayout = new QHBoxLayout(this);
+			{
+				// workaround for jambi css bug
+				setObjectName("ClientsBar");
+				this.clientsBarLayout.setContentsMargins(new QMargins(	0,
 																		0,
 																		0,
 																		0));
-			setLayout(this.notificationBarLayout);
-		}
-
-		@Override
-		public void childEvent(final QChildEvent childEvent) {
-			final QObject child = childEvent.child();
-			if (childEvent.added() && child.isWidgetType()) {
-				this.notificationBarLayout.addWidget((QWidget) child);
+				setLayout(this.clientsBarLayout);
 			}
-		}
-	};
 
-	@ObservableCollection(value = "clientsBar", view = ClientBarElementView.class)
-	QFrame clientsBarView = new QFrame() {
-
-		QHBoxLayout clientsBarLayout = new QHBoxLayout(RootView.this.clientsBarView);
-
-		{
-			// workaround for jambi css bug
-			setObjectName("ClientsBar");
-
-			this.clientsBarLayout.setContentsMargins(new QMargins(	0,
-																	0,
-																	0,
-																	0));
-			setLayout(this.clientsBarLayout);
-		}
-
-		@Override
-		public void childEvent(final QChildEvent childEvent) {
-			final QObject child = childEvent.child();
-			if (childEvent.added() && child.isWidgetType()) {
-				this.clientsBarLayout.addWidget((QWidget) child);
+			@Override
+			public void childEvent(final QChildEvent childEvent) {
+				final QObject child = childEvent.child();
+				if (childEvent.added() && child.isWidgetType()) {
+					this.clientsBarLayout.addWidget((QWidget) child);
+				}
 			}
-		}
-	};
+		};
 
-	QFrame topBarView = new QFrame() {
+		@ObservableCollection(value = "notificationsBar", view = NotificationsBarElementView.class)
+		QFrame notificationsBarView = new QFrame() {
 
-		QHBoxLayout topBarLayout = new QHBoxLayout(RootView.this.topBarView);
+			QHBoxLayout notificationsBarLayout = new QHBoxLayout(this);
+			{
+				// workaround for jambi css bug
+				setObjectName("NotificationsBar");
+				this.notificationsBarLayout.setContentsMargins(new QMargins(0,
+																			0,
+																			0,
+																			0));
+				setLayout(this.notificationsBarLayout);
+			}
 
+			@Override
+			public void childEvent(final QChildEvent childEvent) {
+				final QObject child = childEvent.child();
+				if (childEvent.added() && child.isWidgetType()) {
+					this.notificationsBarLayout.addWidget((QWidget) child);
+				}
+			}
+		};
+
+		QHBoxLayout topBarLayout = new QHBoxLayout(this);
 		{
 			// workaround for jambi css bug
 			setObjectName("TopBar");
-
 			this.topBarLayout.setContentsMargins(new QMargins(	0,
 																0,
 																0,
 																0));
 			setLayout(this.topBarLayout);
-			this.topBarLayout.addWidget(RootView.this.clientsBarView);
-			this.topBarLayout.addWidget(RootView.this.notificationsBarView);
+			this.topBarLayout.addWidget(this.clientsBarView);
+			this.topBarLayout.addWidget(this.notificationsBarView);
 		}
-
 	};
 
 	@ObservableCollection(value = "bottomBar", view = ClientBarElementView.class)
 	QFrame bottomBarView = new QFrame() {
 
-		QHBoxLayout bottomBarLayout = new QHBoxLayout(RootView.this.bottomBarView);
-
+		QHBoxLayout bottomBarLayout = new QHBoxLayout(this);
 		{
 			// workaround for jambi css bug
 			setObjectName("BottomBar");
-
 			this.bottomBarLayout.setContentsMargins(new QMargins(	0,
 																	0,
 																	0,
@@ -106,11 +98,9 @@ class RootView extends QFrame {
 	};
 
 	QVBoxLayout rootLayout = new QVBoxLayout(this);
-
 	{
 		// workaround for jambi css bug
 		setObjectName(getClass().getSimpleName());
-
 		this.rootLayout.setContentsMargins(new QMargins(0,
 														0,
 														0,

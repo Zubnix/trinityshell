@@ -16,7 +16,7 @@ import com.trolltech.qt.gui.QHBoxLayout;
 import com.trolltech.qt.gui.QLabel;
 import com.trolltech.qt.gui.QPixmap;
 
-class ClientBarElementView extends QLabel {
+class ClientBarElementView extends QFrame {
 
 	@PropertySlots({ //
 	@PropertySlot(propertyName = "imageDefinition", methodName = "setImageDefinition", argumentTypes = { ImageDefinition.class }) // HasImageDefinition
@@ -27,9 +27,11 @@ class ClientBarElementView extends QLabel {
 	QLabel clientIconView = new QLabel() {
 		{
 			// workaround for jambi css bug
-			setObjectName("clientIconView");
+			setObjectName("ClientIcon");
 		}
 
+		@SuppressWarnings("unused")
+		// used by property annotation.
 		void setImageDefinition(final ImageDefinition imageDefinition) {
 			final Size imageSize = imageDefinition.getImageSize();
 			final int width = imageSize.getWidth();
@@ -57,7 +59,7 @@ class ClientBarElementView extends QLabel {
 	QLabel clientNameView = new QLabel() {
 		{
 			// workaround for jambi css bug
-			setObjectName("clientNameView");
+			setObjectName("ClientName");
 		}
 	};
 
@@ -68,7 +70,7 @@ class ClientBarElementView extends QLabel {
 	QFrame closeButtonView = new QFrame() {
 		// workaround for jambi css bug
 		{
-			setObjectName("CloseButtonView");
+			setObjectName("ClientCloseButton");
 		}
 	};
 
@@ -76,7 +78,7 @@ class ClientBarElementView extends QLabel {
 
 	{
 		// workaround for jambi css bug
-		setObjectName(getClass().getSimpleName());
+		setObjectName("ClientBarElement");
 
 		this.barItemlayout.setContentsMargins(new QMargins(	0,
 															0,
