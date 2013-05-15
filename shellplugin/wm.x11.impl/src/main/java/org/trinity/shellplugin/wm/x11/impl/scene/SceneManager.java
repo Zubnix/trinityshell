@@ -36,7 +36,7 @@ public class SceneManager {
 
 	private static final Logger logger = LoggerFactory.getLogger(SceneManager.class);
 
-	private final ClientBarItemFactory clientBarItemFactory;
+	private final ClientBarElementFactory clientBarElementFactory;
 	private final ShellLayoutManager rootLayoutManager;
 	private final ShellRootWidget shellRootWidget;
 	private final XWindowProtocol xWindowProtocol;
@@ -44,12 +44,12 @@ public class SceneManager {
 
 	@Inject
 	SceneManager(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
-					final ClientBarItemFactory clientBarItemFactory,
+					final ClientBarElementFactory clientBarElementFactory,
 					final XWindowProtocol xWindowProtocol,
 					final ShellRootWidget shellRootWidget,
 					final ShellLayoutManagerLine shellLayoutManagerLine) {
 		this.wmExecutor = wmExecutor;
-		this.clientBarItemFactory = clientBarItemFactory;
+		this.clientBarElementFactory = clientBarElementFactory;
 		this.xWindowProtocol = xWindowProtocol;
 		this.shellRootWidget = shellRootWidget;
 		this.rootLayoutManager = shellLayoutManagerLine;
@@ -90,12 +90,12 @@ public class SceneManager {
 	}
 
 	private void addClientTopBarItem(final ShellSurface client) {
-		final ClientBarItem clientBarItem = this.clientBarItemFactory.createClientTopBarItem(client);
-		SceneManager.this.shellRootWidget.getTopBar().add(clientBarItem);
+		final ClientBarElement clientBarElement = this.clientBarElementFactory.createClientTopBarItem(client);
+		SceneManager.this.shellRootWidget.getClientsBar().add(clientBarElement);
 		client.register(new Object() {
 							@Subscribe
 							public void onClientDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
-								removeClientTopBarItem(clientBarItem);
+								removeClientTopBarItem(clientBarElement);
 							}
 						},
 						this.wmExecutor);
@@ -108,7 +108,7 @@ public class SceneManager {
 						@Override
 						public void onSuccess(final Boolean destroyed) {
 							if (destroyed) {
-								removeClientTopBarItem(clientBarItem);
+								removeClientTopBarItem(clientBarElement);
 							}
 						}
 
@@ -121,8 +121,8 @@ public class SceneManager {
 					this.wmExecutor);
 	}
 
-	private void removeClientTopBarItem(final ClientBarItem clientBarItem) {
-		this.shellRootWidget.getTopBar().remove(clientBarItem);
+	private void removeClientTopBarItem(final ClientBarElement clientBarElement) {
+		this.shellRootWidget.getClientsBar().remove(clientBarElement);
 	}
 
 	private void layoutClient(final ShellSurface client) {

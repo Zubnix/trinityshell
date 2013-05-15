@@ -12,43 +12,82 @@ import com.trolltech.qt.gui.QWidget;
 
 class RootView extends QFrame {
 
-	@ObservableCollection(value = "topBar", view = ClientBarItemView.class)
-	QFrame topBarView = new QFrame() {
-
-		QHBoxLayout topBarLayout = new QHBoxLayout(RootView.this.topBarView);
+	@ObservableCollection(value = "notificationsBar", view = NotificationBarElementView.class)
+	QFrame notificationsBarView = new QFrame() {
+		QHBoxLayout notificationBarLayout = new QHBoxLayout(RootView.this.clientsBarView);
 
 		{
 			// workaround for jambi css bug
-			setObjectName("BarView");
-			setProperty("topBar",
-						true);
+			setObjectName("NotificationsBar");
 
-			this.topBarLayout.setContentsMargins(new QMargins(	0,
-																0,
-																0,
-																0));
-			setLayout(this.topBarLayout);
+			this.notificationBarLayout.setContentsMargins(new QMargins(	0,
+																		0,
+																		0,
+																		0));
+			setLayout(this.notificationBarLayout);
 		}
 
 		@Override
 		public void childEvent(final QChildEvent childEvent) {
 			final QObject child = childEvent.child();
 			if (childEvent.added() && child.isWidgetType()) {
-				this.topBarLayout.addWidget((QWidget) child);
+				this.notificationBarLayout.addWidget((QWidget) child);
 			}
 		}
 	};
 
-	@ObservableCollection(value = "bottomBar", view = ClientBarItemView.class)
+	@ObservableCollection(value = "clientsBar", view = ClientBarElementView.class)
+	QFrame clientsBarView = new QFrame() {
+
+		QHBoxLayout clientsBarLayout = new QHBoxLayout(RootView.this.clientsBarView);
+
+		{
+			// workaround for jambi css bug
+			setObjectName("ClientsBar");
+
+			this.clientsBarLayout.setContentsMargins(new QMargins(	0,
+																	0,
+																	0,
+																	0));
+			setLayout(this.clientsBarLayout);
+		}
+
+		@Override
+		public void childEvent(final QChildEvent childEvent) {
+			final QObject child = childEvent.child();
+			if (childEvent.added() && child.isWidgetType()) {
+				this.clientsBarLayout.addWidget((QWidget) child);
+			}
+		}
+	};
+
+	QFrame topBarView = new QFrame() {
+
+		QHBoxLayout topBarLayout = new QHBoxLayout(RootView.this.topBarView);
+
+		{
+			// workaround for jambi css bug
+			setObjectName("TopBar");
+
+			this.topBarLayout.setContentsMargins(new QMargins(	0,
+																0,
+																0,
+																0));
+			setLayout(this.topBarLayout);
+			this.topBarLayout.addWidget(RootView.this.clientsBarView);
+			this.topBarLayout.addWidget(RootView.this.notificationsBarView);
+		}
+
+	};
+
+	@ObservableCollection(value = "bottomBar", view = ClientBarElementView.class)
 	QFrame bottomBarView = new QFrame() {
 
 		QHBoxLayout bottomBarLayout = new QHBoxLayout(RootView.this.bottomBarView);
 
 		{
 			// workaround for jambi css bug
-			setObjectName("BarView");
-			setProperty("bottomBar",
-						true);
+			setObjectName("BottomBar");
 
 			this.bottomBarLayout.setContentsMargins(new QMargins(	0,
 																	0,

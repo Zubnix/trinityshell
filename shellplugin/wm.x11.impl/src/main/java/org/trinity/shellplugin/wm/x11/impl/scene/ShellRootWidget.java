@@ -21,7 +21,8 @@ import static com.google.common.util.concurrent.Futures.transform;
 
 public class ShellRootWidget extends BaseShellWidget {
 
-	private final EventList<Object> topBar = new BasicEventList<Object>();
+	private final EventList<Object> notificationBar = new BasicEventList<Object>();
+	private final EventList<Object> clientsBar = new BasicEventList<Object>();
 	private final EventList<Object> bottomBar = new BasicEventList<Object>();
 
 	@Inject
@@ -62,8 +63,12 @@ public class ShellRootWidget extends BaseShellWidget {
 					shellExecutor);
 	}
 
-	public EventList<Object> getTopBar() {
-		return this.topBar;
+	public EventList<Object> getNotificationBar() {
+		return this.notificationBar;
+	}
+
+	public EventList<Object> getClientsBar() {
+		return this.clientsBar;
 	}
 
 	public EventList<Object> getBottomBar() {

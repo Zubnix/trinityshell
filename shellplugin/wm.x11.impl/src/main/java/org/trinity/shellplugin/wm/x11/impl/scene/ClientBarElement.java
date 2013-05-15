@@ -41,9 +41,9 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_CURRENT_TIME;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
 
-public class ClientBarItem implements HasText, ReceivesPointerInput {
+public class ClientBarElement implements HasText, ReceivesPointerInput {
 
-	private static Logger logger = LoggerFactory.getLogger(ClientBarItem.class);
+	private static Logger logger = LoggerFactory.getLogger(ClientBarElement.class);
 
 	private final ListeningExecutorService wmExecutor;
 
@@ -70,7 +70,7 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 	private final XConnection xConnection;
 
 	@AssistedInject
-	ClientBarItem(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
+	ClientBarElement(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
 					final XConnection xConnection,
 					final WmName wmName,
 					final WmProtocols wmProtocols,
@@ -85,8 +85,8 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 					new FutureCallback<DisplaySurface>() {
 						@Override
 						public void onSuccess(final DisplaySurface clientXWindow) {
-							ClientBarItem.this.wmDeleteWindowAtomId = xAtomCache.getAtom("WM_DELETE_WINDOW");
-							ClientBarItem.this.wmProtocolsAtomId = xAtomCache.getAtom("WM_PROTOCOLS");
+							ClientBarElement.this.wmDeleteWindowAtomId = xAtomCache.getAtom("WM_DELETE_WINDOW");
+							ClientBarElement.this.wmProtocolsAtomId = xAtomCache.getAtom("WM_PROTOCOLS");
 							setClientXWindow(clientXWindow);
 						}
 
@@ -100,7 +100,7 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 	}
 
 	private void setClientXWindow(final DisplaySurface clientXWindow) {
-		ClientBarItem.this.clientXWindow = clientXWindow;
+		ClientBarElement.this.clientXWindow = clientXWindow;
 
 		// client name handling
 		this.wmName.addProtocolListener(clientXWindow,
@@ -197,10 +197,10 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 		this.wmExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
-				if (ClientBarItem.this.canSendWmDeleteMsg) {
-					sendWmDeleteMessage(ClientBarItem.this.clientXWindow);
+				if (ClientBarElement.this.canSendWmDeleteMsg) {
+					sendWmDeleteMessage(ClientBarElement.this.clientXWindow);
 				} else {
-					ClientBarItem.this.clientXWindow.destroy();
+					ClientBarElement.this.clientXWindow.destroy();
 				}
 				return null;
 			}
@@ -249,8 +249,8 @@ public class ClientBarItem implements HasText, ReceivesPointerInput {
 		this.wmExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				ClientBarItem.this.clientXWindow.setInputFocus();
-				ClientBarItem.this.clientXWindow.raise();
+				ClientBarElement.this.clientXWindow.setInputFocus();
+				ClientBarElement.this.clientXWindow.raise();
 			}
 		});
 	}

@@ -16,7 +16,7 @@ import com.trolltech.qt.gui.QHBoxLayout;
 import com.trolltech.qt.gui.QLabel;
 import com.trolltech.qt.gui.QPixmap;
 
-class ClientBarItemView extends QLabel {
+class ClientBarElementView extends QLabel {
 
 	@PropertySlots({ //
 	@PropertySlot(propertyName = "imageDefinition", methodName = "setImageDefinition", argumentTypes = { ImageDefinition.class }) // HasImageDefinition

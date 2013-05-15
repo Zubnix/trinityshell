@@ -3,8 +3,8 @@ package org.trinity.shellplugin.wm.x11.impl;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-import org.trinity.shellplugin.wm.x11.impl.scene.ClientBarItem;
-import org.trinity.shellplugin.wm.x11.impl.scene.ClientBarItemFactory;
+import org.trinity.shellplugin.wm.x11.impl.scene.ClientBarElement;
+import org.trinity.shellplugin.wm.x11.impl.scene.ClientBarElementFactory;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -29,7 +29,7 @@ public class Module extends AbstractModule {
 					}
 				})));
 
-		install(new FactoryModuleBuilder().implement(	ClientBarItem.class,
-														ClientBarItem.class).build(ClientBarItemFactory.class));
+		install(new FactoryModuleBuilder().implement(	ClientBarElement.class,
+														ClientBarElement.class).build(ClientBarElementFactory.class));
 	}
 }
