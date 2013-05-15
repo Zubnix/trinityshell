@@ -28,7 +28,7 @@ public class XPropertyChangedEventHandling implements XEventHandling {
 	@Override
 	public void handle(final xcb_generic_event_t xEvent) {
 		final xcb_property_notify_event_t property_notify_event_t = new xcb_property_notify_event_t(xcb_generic_event_t.getCPtr(xEvent),
-																									true);
+																									false);
 		final int clientId = property_notify_event_t.getWindow();
 		final Optional<DisplaySurface> xWindow = this.xWindowProtocol.findXWindow(clientId);
 		if (xWindow.isPresent()) {

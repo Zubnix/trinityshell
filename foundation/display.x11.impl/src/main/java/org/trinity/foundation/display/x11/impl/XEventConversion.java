@@ -16,9 +16,9 @@ import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.AsyncListenable;
 
 public interface XEventConversion {
-	DisplayEvent convert(xcb_generic_event_t event_t);
+	DisplayEvent convert(xcb_generic_event_t event);
 
-	AsyncListenable getTarget(xcb_generic_event_t event_t);
+	AsyncListenable getTarget(xcb_generic_event_t event);
 
 	Integer getEventCode();
 }

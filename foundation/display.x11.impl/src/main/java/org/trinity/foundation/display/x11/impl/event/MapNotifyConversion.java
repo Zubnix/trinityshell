@@ -52,22 +52,22 @@ public class MapNotifyConversion implements XEventConversion {
 	}
 
 	@Override
-	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_map_notify_event_t map_notify_event_t = cast(event_t);
+	public DisplayEvent convert(final xcb_generic_event_t event) {
+		final xcb_map_notify_event_t map_notify_event = cast(event);
 
 		logger.debug(	"Received X event={}",
-						map_notify_event_t.getClass().getSimpleName());
+						map_notify_event.getClass().getSimpleName());
 
-		this.xEventBus.post(map_notify_event_t);
+		this.xEventBus.post(map_notify_event);
 
 		final DisplayEvent displayEvent = new ShowNotify();
 
 		return displayEvent;
 	}
 
-	public xcb_map_notify_event_t cast(final xcb_generic_event_t event_t) {
-		return new xcb_map_notify_event_t(	xcb_generic_event_t.getCPtr(event_t),
-											true);
+	public xcb_map_notify_event_t cast(final xcb_generic_event_t event) {
+		return new xcb_map_notify_event_t(	xcb_generic_event_t.getCPtr(event),
+											false);
 	}
 
 	@Override

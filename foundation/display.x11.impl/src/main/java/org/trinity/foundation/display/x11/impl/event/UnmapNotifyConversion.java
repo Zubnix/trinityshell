@@ -52,20 +52,20 @@ public class UnmapNotifyConversion implements XEventConversion {
 	}
 
 	@Override
-	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_unmap_notify_event_t unmap_notify_event_t = cast(event_t);
+	public DisplayEvent convert(final xcb_generic_event_t event) {
+		final xcb_unmap_notify_event_t unmap_notify_event = cast(event);
 
 		logger.debug(	"Received X event={}",
-						unmap_notify_event_t.getClass().getSimpleName());
+						unmap_notify_event.getClass().getSimpleName());
 
-		this.xEventBus.post(unmap_notify_event_t);
+		this.xEventBus.post(unmap_notify_event);
 		final DisplayEvent displayEvent = new HideNotify();
 		return displayEvent;
 	}
 
-	private xcb_unmap_notify_event_t cast(final xcb_generic_event_t event_t) {
-		return new xcb_unmap_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
-											true);
+	private xcb_unmap_notify_event_t cast(final xcb_generic_event_t event) {
+		return new xcb_unmap_notify_event_t(xcb_generic_event_t.getCPtr(event),
+											false);
 	}
 
 	@Override

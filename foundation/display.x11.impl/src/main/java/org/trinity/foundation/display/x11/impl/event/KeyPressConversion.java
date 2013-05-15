@@ -55,18 +55,18 @@ public class KeyPressConversion implements XEventConversion {
 	}
 
 	@Override
-	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_key_press_event_t key_press_event_t = cast(event_t);
+	public DisplayEvent convert(final xcb_generic_event_t event) {
+		final xcb_key_press_event_t key_press_event = cast(event);
 
 		logger.debug(	"Received X event={}",
-						key_press_event_t.getClass().getSimpleName());
+						key_press_event.getClass().getSimpleName());
 
-		this.xEventBus.post(key_press_event_t);
+		this.xEventBus.post(key_press_event);
 
-		final int keyCode = key_press_event_t.getDetail();
+		final int keyCode = key_press_event.getDetail();
 		final Key key = new Key(keyCode);
 
-		final InputModifiers inputModifiers = new InputModifiers(key_press_event_t.getState());
+		final InputModifiers inputModifiers = new InputModifiers(key_press_event.getState());
 
 		final KeyboardInput input = new KeyboardInput(	Momentum.STARTED,
 														key,
@@ -77,14 +77,14 @@ public class KeyPressConversion implements XEventConversion {
 		return displayEvent;
 	}
 
-	private xcb_key_press_event_t cast(final xcb_generic_event_t event_t) {
-		return new xcb_key_press_event_t(	xcb_generic_event_t.getCPtr(event_t),
-											true);
+	private xcb_key_press_event_t cast(final xcb_generic_event_t event) {
+		return new xcb_key_press_event_t(	xcb_generic_event_t.getCPtr(event),
+											false);
 	}
 
 	@Override
-	public AsyncListenable getTarget(final xcb_generic_event_t event_t) {
-		final xcb_key_press_event_t key_press_event_t = cast(event_t);
+	public AsyncListenable getTarget(final xcb_generic_event_t event) {
+		final xcb_key_press_event_t key_press_event_t = cast(event);
 		final int windowId = key_press_event_t.getEvent();
 		final XWindow displayEventTarget = this.xWindowCache.getWindow(windowId);
 		return displayEventTarget;

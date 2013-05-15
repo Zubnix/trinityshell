@@ -53,12 +53,12 @@ public class CirculateNotifyConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
-		final xcb_circulate_notify_event_t circulate_notify_event_t = cast(event_t);
+		final xcb_circulate_notify_event_t circulate_notify_event = cast(event_t);
 		// TODO logging
 		logger.debug(	"Received X event={}",
-						circulate_notify_event_t.getClass().getSimpleName());
+						circulate_notify_event.getClass().getSimpleName());
 
-		this.xEventBus.post(circulate_notify_event_t);
+		this.xEventBus.post(circulate_notify_event);
 
 		final DisplayEvent displayEvent = new StackingChangedNotify();
 
@@ -67,7 +67,7 @@ public class CirculateNotifyConversion implements XEventConversion {
 
 	private xcb_circulate_notify_event_t cast(final xcb_generic_event_t event_t) {
 		return new xcb_circulate_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
-												true);
+												false);
 	}
 
 	@Override

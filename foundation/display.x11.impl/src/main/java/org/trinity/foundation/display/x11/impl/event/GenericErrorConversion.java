@@ -43,11 +43,11 @@ public class GenericErrorConversion implements XEventConversion {
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_generic_error_t request_error_t = new xcb_generic_error_t(xcb_generic_event_t.getCPtr(event_t),
-																			true);
-		this.xEventBus.post(request_error_t);
+		final xcb_generic_error_t request_error = new xcb_generic_error_t(	xcb_generic_event_t.getCPtr(event_t),
+																			false);
+		this.xEventBus.post(request_error);
 
-		throw new RuntimeException(XcbErrorUtil.toString(request_error_t));
+		throw new RuntimeException(XcbErrorUtil.toString(request_error));
 		// TODO error event
 	}
 

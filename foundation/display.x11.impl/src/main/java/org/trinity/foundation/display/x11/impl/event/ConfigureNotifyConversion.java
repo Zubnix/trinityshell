@@ -54,17 +54,18 @@ public class ConfigureNotifyConversion implements XEventConversion {
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_configure_notify_event_t configure_notify_event_t = cast(event_t);
+		final xcb_configure_notify_event_t configure_notify_event = cast(event_t);
 
 		logger.debug(	"Received X event={}",
-						configure_notify_event_t.getClass().getSimpleName());
+						configure_notify_event.getClass().getSimpleName());
 
-		this.xEventBus.post(configure_notify_event_t);
+		this.xEventBus.post(configure_notify_event);
 
-		final int x = configure_notify_event_t.getX();
-		final int y = configure_notify_event_t.getY();
-		final int width = configure_notify_event_t.getWidth() + (2 * configure_notify_event_t.getBorder_width());
-		final int height = configure_notify_event_t.getHeight() + (2 * configure_notify_event_t.getBorder_width());
+		final int x = configure_notify_event.getX();
+		final int y = configure_notify_event.getY();
+		final int width = configure_notify_event.getWidth() + (2 * configure_notify_event.getBorder_width());
+		final int height = configure_notify_event.getHeight() + (2 * configure_notify_event.getBorder_width());
+
 		final Rectangle geometry = new ImmutableRectangle(	x,
 															y,
 															width,
@@ -77,7 +78,7 @@ public class ConfigureNotifyConversion implements XEventConversion {
 
 	private xcb_configure_notify_event_t cast(final xcb_generic_event_t event_t) {
 		return new xcb_configure_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
-												true);
+												false);
 	}
 
 	@Override

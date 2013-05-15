@@ -56,21 +56,21 @@ public class ButtonPressConversion implements XEventConversion {
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_button_press_event_t button_press_event_t = cast(event_t);
+		final xcb_button_press_event_t button_press_event = cast(event_t);
 
 		logger.debug(	"Received X event={}",
-						button_press_event_t.getClass().getSimpleName());
+						button_press_event.getClass().getSimpleName());
 
-		this.xEventBus.post(button_press_event_t);
+		this.xEventBus.post(button_press_event);
 
-		final int buttonCode = button_press_event_t.getDetail();
+		final int buttonCode = button_press_event.getDetail();
 		final Button button = new Button(buttonCode);
-		final int modifiers = button_press_event_t.getState();
+		final int modifiers = button_press_event.getState();
 		final InputModifiers inputModifiers = new InputModifiers(modifiers);
-		final int relativeX = button_press_event_t.getEvent_x();
-		final int relativeY = button_press_event_t.getEvent_y();
-		final int rootX = button_press_event_t.getRoot_x();
-		final int rootY = button_press_event_t.getRoot_y();
+		final int relativeX = button_press_event.getEvent_x();
+		final int relativeY = button_press_event.getEvent_y();
+		final int rootX = button_press_event.getRoot_x();
+		final int rootY = button_press_event.getRoot_y();
 
 		final PointerInput pointerInput = new PointerInput(	Momentum.STARTED,
 															button,
@@ -86,7 +86,7 @@ public class ButtonPressConversion implements XEventConversion {
 
 	public xcb_button_press_event_t cast(final xcb_generic_event_t event_t) {
 		return new xcb_button_press_event_t(xcb_generic_event_t.getCPtr(event_t),
-											true);
+											false);
 	}
 
 	@Override

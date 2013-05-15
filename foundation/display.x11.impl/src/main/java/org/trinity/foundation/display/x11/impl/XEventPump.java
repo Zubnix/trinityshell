@@ -63,7 +63,7 @@ public class XEventPump implements Runnable {
 
 	@Override
 	public void run() {
-		final xcb_generic_event_t event_t = xcb_wait_for_event(this.connection.getConnectionReference());
+		final xcb_generic_event_t event = xcb_wait_for_event(this.connection.getConnectionReference());
 
 		if (xcb_connection_has_error(this.connection.getConnectionReference()) != 0) {
 			final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
@@ -75,7 +75,8 @@ public class XEventPump implements Runnable {
 		this.xExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				XEventPump.this.xEventBus.post(event_t);
+				XEventPump.this.xEventBus.post(event);
+				event.delete();
 			}
 		});
 

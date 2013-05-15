@@ -54,19 +54,20 @@ public class FocusOutConversion implements XEventConversion {
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 		// focus in structure is the same as focus out.
-		final xcb_focus_in_event_t focus_out_event_t = cast(event_t);
+		final xcb_focus_in_event_t focus_out_event = cast(event_t);
 
 		logger.debug(	"Received X event={}",
-						focus_out_event_t.getClass().getSimpleName());
+						focus_out_event.getClass().getSimpleName());
 
-		this.xEventBus.post(focus_out_event_t);
+		this.xEventBus.post(focus_out_event);
+
 		final DisplayEvent displayEvent = new FocusLostNotify();
 		return displayEvent;
 	}
 
 	private xcb_focus_in_event_t cast(final xcb_generic_event_t event_t) {
 		return new xcb_focus_in_event_t(xcb_generic_event_t.getCPtr(event_t),
-										true);
+										false);
 	}
 
 	@Override

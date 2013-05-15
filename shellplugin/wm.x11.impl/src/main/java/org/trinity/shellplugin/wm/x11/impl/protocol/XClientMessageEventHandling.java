@@ -26,7 +26,7 @@ public class XClientMessageEventHandling implements XEventHandling {
 	@Override
 	public void handle(final xcb_generic_event_t xEvent) {
 		final xcb_client_message_event_t client_message_event_t = new xcb_client_message_event_t(	xcb_generic_event_t.getCPtr(xEvent),
-																									true);
+																									false);
 		this.xWindowProtocol.findXWindow(client_message_event_t.getWindow()).get().post(client_message_event_t);
 	}
 

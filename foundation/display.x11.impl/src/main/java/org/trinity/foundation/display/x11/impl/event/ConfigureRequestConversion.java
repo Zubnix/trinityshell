@@ -61,23 +61,24 @@ public class ConfigureRequestConversion implements XEventConversion {
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_configure_request_event_t request_event_t = cast(event_t);
+		final xcb_configure_request_event_t request_event = cast(event_t);
 
 		logger.debug(	"Received X event={}",
-						request_event_t.getClass().getSimpleName());
+						request_event.getClass().getSimpleName());
 
-		this.xEventBus.post(request_event_t);
+		this.xEventBus.post(request_event);
 
-		final int x = request_event_t.getX();
-		final int y = request_event_t.getY();
-		final int width = request_event_t.getWidth() + (2 * request_event_t.getBorder_width());
-		final int height = request_event_t.getHeight() + (2 * request_event_t.getBorder_width());
+		final int x = request_event.getX();
+		final int y = request_event.getY();
+		final int width = request_event.getWidth() + (2 * request_event.getBorder_width());
+		final int height = request_event.getHeight() + (2 * request_event.getBorder_width());
 		final Rectangle geometry = new ImmutableRectangle(	x,
 															y,
 															width,
 															height);
 
-		final int valueMask = request_event_t.getValue_mask();
+		final int valueMask = request_event.getValue_mask();
+
 		final boolean configureX = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_X) != 0;
 		final boolean configureY = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_Y) != 0;
 		final boolean configureWidth = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH) != 0;
@@ -94,7 +95,7 @@ public class ConfigureRequestConversion implements XEventConversion {
 
 	private xcb_configure_request_event_t cast(final xcb_generic_event_t event_t) {
 		return new xcb_configure_request_event_t(	xcb_generic_event_t.getCPtr(event_t),
-													true);
+													false);
 	}
 
 	@Override

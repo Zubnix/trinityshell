@@ -53,19 +53,20 @@ public class EnterNotifyConversion implements XEventConversion {
 
 	@Override
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_enter_notify_event_t enter_notify_event_t = cast(event_t);
+		final xcb_enter_notify_event_t enter_notify_event = cast(event_t);
 
 		logger.debug(	"Received X event={}",
-						enter_notify_event_t.getClass().getSimpleName());
+						enter_notify_event.getClass().getSimpleName());
 
-		this.xEventBus.post(enter_notify_event_t);
+		this.xEventBus.post(enter_notify_event);
+
 		final DisplayEvent displayEvent = new PointerLeaveNotify();
 		return displayEvent;
 	}
 
 	private xcb_enter_notify_event_t cast(final xcb_generic_event_t event_t) {
 		return new xcb_enter_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
-											true);
+											false);
 	}
 
 	@Override

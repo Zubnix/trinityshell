@@ -56,18 +56,19 @@ public class KeyReleaseConversion implements XEventConversion {
 	}
 
 	@Override
-	public DisplayEvent convert(final xcb_generic_event_t event_t) {
+	public DisplayEvent convert(final xcb_generic_event_t event) {
 
 		// press has same structure as release.
-		final xcb_key_press_event_t key_release_event_t = cast(event_t);
+		final xcb_key_press_event_t key_release_event = cast(event);
 
 		logger.debug(	"Received X event={}",
-						key_release_event_t.getClass().getSimpleName());
+						key_release_event.getClass().getSimpleName());
 
-		this.xEventBus.post(key_release_event_t);
-		final int keyCode = key_release_event_t.getDetail();
+		this.xEventBus.post(key_release_event);
+		final int keyCode = key_release_event.getDetail();
 		final Key key = new Key(keyCode);
-		final int inputModifiersMask = key_release_event_t.getState();
+		final int inputModifiersMask = key_release_event.getState();
+
 		final InputModifiers inputModifiers = new InputModifiers(inputModifiersMask);
 
 		final KeyboardInput input = new KeyboardInput(	Momentum.STOPPED,
@@ -78,9 +79,9 @@ public class KeyReleaseConversion implements XEventConversion {
 		return displayEvent;
 	}
 
-	private xcb_key_press_event_t cast(final xcb_generic_event_t event_t) {
-		return new xcb_key_press_event_t(	xcb_generic_event_t.getCPtr(event_t),
-											true);
+	private xcb_key_press_event_t cast(final xcb_generic_event_t event) {
+		return new xcb_key_press_event_t(	xcb_generic_event_t.getCPtr(event),
+											false);
 	}
 
 	@Override
