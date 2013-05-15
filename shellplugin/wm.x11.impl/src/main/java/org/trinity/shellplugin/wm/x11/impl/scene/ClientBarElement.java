@@ -1,5 +1,11 @@
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
+import static org.freedesktop.xcb.LibXcb.xcb_send_event;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CURRENT_TIME;
+
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.concurrent.Callable;
@@ -34,13 +40,6 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.google.inject.name.Named;
 
-import static org.freedesktop.xcb.LibXcb.xcb_flush;
-import static org.freedesktop.xcb.LibXcb.xcb_send_event;
-import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
-import static org.freedesktop.xcb.LibXcbConstants.XCB_CURRENT_TIME;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
-
 public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	private static Logger logger = LoggerFactory.getLogger(ClientBarElement.class);
@@ -71,11 +70,11 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	@AssistedInject
 	ClientBarElement(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
-					final XConnection xConnection,
-					final WmName wmName,
-					final WmProtocols wmProtocols,
-					final XAtomCache xAtomCache,
-					@Assisted final ShellSurface client) {
+						final XConnection xConnection,
+						final WmName wmName,
+						final WmProtocols wmProtocols,
+						final XAtomCache xAtomCache,
+						@Assisted final ShellSurface client) {
 		this.xConnection = xConnection;
 		this.wmName = wmName;
 		this.wmProtocols = wmProtocols;
@@ -126,8 +125,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	}
 
 	private void queryCanSendWmDeleteMsg(final DisplaySurface clientXWindow) {
-		final ListenableFuture<Optional<xcb_icccm_get_wm_protocols_reply_t>> wmProtocolFuture = this.wmProtocols
-				.get(clientXWindow);
+		final ListenableFuture<Optional<xcb_icccm_get_wm_protocols_reply_t>> wmProtocolFuture = this.wmProtocols.get(clientXWindow);
 		addCallback(wmProtocolFuture,
 					new FutureCallback<Optional<xcb_icccm_get_wm_protocols_reply_t>>() {
 						@Override
@@ -146,8 +144,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	private void updateCanSendWmDeleteMsg(final Optional<xcb_icccm_get_wm_protocols_reply_t> optionalWmProtocolReply) {
 		if (optionalWmProtocolReply.isPresent()) {
 			final xcb_icccm_get_wm_protocols_reply_t wm_protocols_reply = optionalWmProtocolReply.get();
-			final IntBuffer wmProtocolsBuffer = wm_protocols_reply.getAtoms().order(ByteOrder.nativeOrder())
-					.asIntBuffer();
+			final IntBuffer wmProtocolsBuffer = wm_protocols_reply.getAtoms().order(ByteOrder.nativeOrder()).asIntBuffer();
 			int nroWmProtocols = wm_protocols_reply.getAtoms_len();
 			while (nroWmProtocols > 0) {
 				this.canSendWmDeleteMsg = wmProtocolsBuffer.get() == this.wmDeleteWindowAtomId;
@@ -163,8 +160,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	// called by window manager thread
 	public void queryClientName(final DisplaySurface clientXWindow) {
-		final ListenableFuture<Optional<xcb_icccm_get_text_property_reply_t>> wmNameFuture = this.wmName
-				.get(clientXWindow);
+		final ListenableFuture<Optional<xcb_icccm_get_text_property_reply_t>> wmNameFuture = this.wmName.get(clientXWindow);
 		addCallback(wmNameFuture,
 					new FutureCallback<Optional<xcb_icccm_get_text_property_reply_t>>() {
 						@Override
@@ -222,7 +218,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 		client_message_event.setResponse_type((short) XCB_CLIENT_MESSAGE);
 
 		final xcb_generic_event_t generic_event = new xcb_generic_event_t(	xcb_client_message_event_t.getCPtr(client_message_event),
-																			true);
+																			false);
 		xcb_send_event(	this.xConnection.getConnectionRef(),
 						(short) 0,
 						winId.intValue(),
