@@ -38,8 +38,8 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-	protected AbstractShellNodeParent(final ListeningExecutorService shellExecutor) {
-		super(shellExecutor);
+	protected AbstractShellNodeParent(final ShellScene shellScene,final ListeningExecutorService shellExecutor) {
+		super(shellScene,shellExecutor);
 	}
 
 	/**

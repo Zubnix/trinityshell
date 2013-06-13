@@ -6,6 +6,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.shell.api.scene.ShellScene;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
@@ -27,14 +28,17 @@ import static com.google.common.util.concurrent.Futures.transform;
 public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 
 	private final DisplayServer displayServer;
-	private final ListeningExecutorService shellExecutor;
+    private final ShellScene shellScene;
+    private final ListeningExecutorService shellExecutor;
 
 	private ShellSurfaceParent rootShellSurface;
 
 	@Inject
-	ShellSurfaceFactoryImpl(@Named("Shell") final ListeningExecutorService shellExecutor,
+	ShellSurfaceFactoryImpl(final ShellScene shellScene,
+            @Named("Shell") final ListeningExecutorService shellExecutor,
 							final DisplayServer displayServer) {
-		this.shellExecutor = shellExecutor;
+        this.shellScene = shellScene;
+        this.shellExecutor = shellExecutor;
 		this.displayServer = displayServer;
 	}
 
@@ -45,7 +49,8 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 							new Function<ShellSurfaceParent, ShellSurface>() {
 								@Override
 								public ShellSurface apply(final ShellSurfaceParent rootShellSurface) {
-									return new ShellClientSurface(	ShellSurfaceFactoryImpl.this.shellExecutor,
+									return new ShellClientSurface(shellScene,
+                                            ShellSurfaceFactoryImpl.this.shellExecutor,
 																	rootShellSurface,
 																	displaySurface);
 								}
@@ -94,7 +99,8 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 							new Function<DisplaySurface, ShellSurfaceParent>() {
 								@Override
 								public ShellSurfaceParent apply(final DisplaySurface input) {
-									return new ShellRootSurface(ShellSurfaceFactoryImpl.this.shellExecutor,
+									return new ShellRootSurface(shellScene,
+                                            ShellSurfaceFactoryImpl.this.shellExecutor,
 																input);
 								}
 							},

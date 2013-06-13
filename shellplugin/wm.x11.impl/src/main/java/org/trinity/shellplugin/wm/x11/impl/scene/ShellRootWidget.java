@@ -5,6 +5,7 @@ import static com.google.common.util.concurrent.Futures.transform;
 
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.shell.api.scene.ShellScene;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 import org.trinity.shell.api.widget.BaseShellWidget;
@@ -27,11 +28,13 @@ public class ShellRootWidget extends BaseShellWidget implements Desktop {
 	private final EventList<Object> bottomBar = new BasicEventList<Object>();
 
 	@Inject
-	protected ShellRootWidget(	final ShellSurfaceFactory shellSurfaceFactory,
+	protected ShellRootWidget(final ShellScene shellScene,
+            final ShellSurfaceFactory shellSurfaceFactory,
 								@Named("Shell") final ListeningExecutorService shellExecutor,
 								final PainterFactory painterFactory,
 								@Named("RootView") final Object view) {
-		super(	shellSurfaceFactory,
+		super(	shellScene,
+                shellSurfaceFactory,
 				shellExecutor,
 				painterFactory,
 				view);

@@ -20,8 +20,8 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 
 	private final ListeningExecutorService shellExecutor;
 
-	protected AbstractAsyncShellNodeParent(final ListeningExecutorService shellExecutor) {
-		super(shellExecutor);
+	protected AbstractAsyncShellNodeParent(final ShellScene shellScene,final ListeningExecutorService shellExecutor) {
+		super(shellScene,shellExecutor);
 		this.shellExecutor = shellExecutor;
 	}
 

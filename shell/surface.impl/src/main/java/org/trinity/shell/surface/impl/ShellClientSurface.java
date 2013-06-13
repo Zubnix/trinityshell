@@ -16,6 +16,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.shell.api.scene.ShellScene;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
@@ -37,10 +38,10 @@ public final class ShellClientSurface extends AbstractShellSurface {
 	private final ShellSurfaceGeometryDelegateImpl shellSurfaceGeometryDelegateImpl;
 	private final DisplaySurface displaySurface;
 
-	ShellClientSurface(	final ListeningExecutorService shellExecutor,
+	ShellClientSurface(	final ShellScene shellScene,final ListeningExecutorService shellExecutor,
 						final ShellSurfaceParent rootShellSurface,
 						final DisplaySurface clientDisplaySurface) {
-		super(shellExecutor);
+		super(shellScene,shellExecutor);
 		this.displaySurface = clientDisplaySurface;
 		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegateImpl(this);
 

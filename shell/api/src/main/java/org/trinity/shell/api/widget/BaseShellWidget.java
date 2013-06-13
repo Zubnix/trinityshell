@@ -19,6 +19,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
+import org.trinity.shell.api.scene.ShellScene;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
@@ -48,11 +49,12 @@ public abstract class BaseShellWidget extends AbstractShellSurface implements Sh
 	private final Object view;
 	private final BaseShellWidgetGeometryDelegate shellNodeGeometryDelegate = new BaseShellWidgetGeometryDelegate(this);
 
-	protected BaseShellWidget(	final ShellSurfaceFactory shellSurfaceFactory,
+	protected BaseShellWidget(	final ShellScene shellScene,
+                                final ShellSurfaceFactory shellSurfaceFactory,
 								final ListeningExecutorService shellExecutor,
 								final PainterFactory painterFactory,
 								final Object view) {
-		super(shellExecutor);
+		super(shellScene,shellExecutor);
 		this.view = view;
 		this.painter = painterFactory.createPainter(this);
 		final ListenableFuture<ShellSurfaceParent> rootShellSurfaceFuture = shellSurfaceFactory.getRootShellSurface();

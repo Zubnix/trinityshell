@@ -29,6 +29,7 @@ import org.trinity.foundation.api.shared.Size;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import org.trinity.shell.api.scene.ShellScene;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
 
@@ -67,8 +68,8 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface imp
 
 	private final ListeningExecutorService shellExecutor;
 
-	protected AbstractShellSurface(final ListeningExecutorService shellExecutor) {
-		super(shellExecutor);
+	protected AbstractShellSurface(final ShellScene shellScene,final ListeningExecutorService shellExecutor) {
+		super(shellScene,shellExecutor);
 		this.shellExecutor = shellExecutor;
 	}
 

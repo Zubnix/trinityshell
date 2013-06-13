@@ -16,6 +16,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
+import org.trinity.shell.api.scene.ShellScene;
 import org.trinity.shell.api.surface.AbstractShellSurfaceParent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -27,9 +28,9 @@ public class ShellRootSurface extends AbstractShellSurfaceParent {
 
 	private final DisplaySurface displaySurface;
 
-	ShellRootSurface(	final ListeningExecutorService shellExecutor,
+	ShellRootSurface(	final ShellScene shellScene,final ListeningExecutorService shellExecutor,
 						final DisplaySurface rootDisplaySurface) {
-		super(shellExecutor);
+		super(shellScene,shellExecutor);
 		this.displaySurface = rootDisplaySurface;
 		syncGeoToDisplaySurface();
 	}

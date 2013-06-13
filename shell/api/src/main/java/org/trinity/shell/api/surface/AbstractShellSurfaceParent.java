@@ -19,6 +19,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNode;
+import org.trinity.shell.api.scene.ShellScene;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
@@ -41,8 +42,8 @@ public abstract class AbstractShellSurfaceParent extends AbstractShellSurface im
 
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-	protected AbstractShellSurfaceParent(final ListeningExecutorService shellExecutor) {
-		super(shellExecutor);
+	protected AbstractShellSurfaceParent(final ShellScene shellScene,final ListeningExecutorService shellExecutor) {
+		super(shellScene,shellExecutor);
 	}
 
 	@Override

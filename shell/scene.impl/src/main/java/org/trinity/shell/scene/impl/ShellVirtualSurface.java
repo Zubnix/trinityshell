@@ -23,6 +23,7 @@ import com.google.inject.name.Named;
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
+import org.trinity.shell.api.scene.ShellScene;
 
 // TODO documentation
 /**
@@ -44,8 +45,8 @@ import de.devsurf.injection.guice.annotations.To.Type;
 public class ShellVirtualSurface extends AbstractShellNodeParent {
 
 	@Inject
-	protected ShellVirtualSurface(@Named("Shell") final ListeningExecutorService shellExecutor) {
-		super(shellExecutor);
+	protected ShellVirtualSurface(final ShellScene shellScene,@Named("Shell") final ListeningExecutorService shellExecutor) {
+		super(shellScene,shellExecutor);
 	}
 
 	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellVirtualSurfaceExecutor(this);

@@ -8,6 +8,7 @@ import org.trinity.shell.api.scene.AbstractShellNodeParent;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import org.trinity.shell.api.scene.ShellScene;
 
 // TODO from boilerplate code generator
 /***************************************
@@ -21,8 +22,8 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 
 	private final ListeningExecutorService shellExecutor;
 
-	protected AbstractAsyncShellSurface(final ListeningExecutorService shellExecutor) {
-		super(shellExecutor);
+	protected AbstractAsyncShellSurface(final ShellScene shellScene,final ListeningExecutorService shellExecutor) {
+		super(shellScene,shellExecutor);
 		this.shellExecutor = shellExecutor;
 	}
 
