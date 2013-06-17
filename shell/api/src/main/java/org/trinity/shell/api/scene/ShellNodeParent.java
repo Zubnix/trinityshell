@@ -63,13 +63,4 @@ public interface ShellNodeParent extends ShellNode {
 	 *************************************** 
 	 */
 	ListenableFuture<ShellNode[]> getChildren();
-
-	/***************************************
-	 * Signal that a child has left or joined this parent.
-	 * 
-	 * @param child
-	 *            a {@link ShellNode}.
-	 *************************************** 
-	 */
-	ListenableFuture<Void> handleChildReparentEvent(ShellNode child);
 }

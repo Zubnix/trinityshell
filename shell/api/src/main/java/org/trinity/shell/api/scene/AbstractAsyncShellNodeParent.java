@@ -104,25 +104,4 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 	 *************************************** 
 	 */
 	public abstract ShellNode[] getChildrenImpl();
-
-	@Override
-	public final ListenableFuture<Void> handleChildReparentEvent(final ShellNode child) {
-		return this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				return handleChildReparentEventImpl(child);
-			}
-		});
-	}
-
-	/***************************************
-	 * Concrete implementation of {@link #handleChildReparentEvent(ShellNode)}.
-	 * This method is invoked by the Shell thread.
-	 * 
-	 * @return null
-	 * @see #handleChildReparentEvent(ShellNode)
-	 *************************************** 
-	 */
-	public abstract Void handleChildReparentEventImpl(final ShellNode child);
-
 }

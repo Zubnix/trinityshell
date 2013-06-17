@@ -12,6 +12,8 @@
 package org.trinity.shell.api.scene;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.trinity.foundation.api.shared.Coordinate;
@@ -34,7 +36,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @OwnerThread("Shell")
 public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodeParent implements ShellNodeParent {
 
-	private final Set<AbstractShellNode> children = new HashSet<AbstractShellNode>();
+	private final LinkedList<AbstractShellNode> children = new LinkedList<AbstractShellNode>();
 
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
@@ -93,24 +95,34 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 		layout();
 	}
 
-	@Override
-	public Void handleChildReparentEventImpl(final ShellNode child) {
+	protected void handleChildReparent(final ShellNode child) {
 		checkArgument(child instanceof AbstractShellNode);
 
 		ShellNodeEvent shellNodeEvent;
 		if (this.children.contains(child)) {
 			this.children.remove(child);
-			// child.removeShellNodeEventHandler(this);
 			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
 															toGeoTransformationImpl());
 		} else {
-			this.children.add((AbstractShellNode) child);
+			this.children.addLast((AbstractShellNode) child);
 			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
 															toGeoTransformationImpl());
 		}
 		post(shellNodeEvent);
-		return null;
 	}
+
+    protected void handleChildStacking(final ShellNode child, boolean raised){
+        checkArgument(child instanceof AbstractShellNode);
+        checkArgument(this.children.remove(child));
+
+
+        if(raised){
+            this.children.addLast((AbstractShellNode) child);
+        }else{
+            this.children.addFirst((AbstractShellNode) child);
+        }
+        //TODO fire a specific event?
+    }
 
 	/**
 	 * {@inheritDoc}

@@ -407,6 +407,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
         if (execute) {
             execRaise();
         }
+        getParentImpl().handleChildStacking(this,true);
         final ShellNodeRaisedEvent geoEvent = new ShellNodeRaisedEvent(this,
                 toGeoTransformationImpl());
         post(geoEvent);
@@ -444,6 +445,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
         if (execute) {
             execLower();
         }
+        getParentImpl().handleChildStacking(this,false);
         final ShellNodeLoweredEvent geoEvent = new ShellNodeLoweredEvent(this,
                 toGeoTransformationImpl());
         post(geoEvent);
@@ -463,7 +465,6 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
     @Override
     public Void doReparentImpl() {
         doReparent(true);
-        getParentImpl().handleChildReparentEvent(this);
         return null;
     }
 
@@ -483,6 +484,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode implement
         if (execute) {
             execReparent();
         }
+        getParentImpl().handleChildReparent(this);
         // Make sure we have the same size
         // and place in our new parent
         // as in our old parent.
