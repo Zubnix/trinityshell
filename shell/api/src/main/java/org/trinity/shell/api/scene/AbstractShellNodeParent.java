@@ -11,10 +11,9 @@
  */
 package org.trinity.shell.api.scene;
 
-import java.util.HashSet;
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.OwnerThread;
@@ -26,12 +25,11 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-/***************************************
- * An abstract base implementation of a {@link ShellNodeParent}.
- * 
- *************************************** 
+/**
+ * ************************************ An abstract base implementation of a
+ * {@link ShellNodeParent}.
+ * <p/>
+ * **************************************
  */
 @OwnerThread("Shell")
 public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodeParent implements ShellNodeParent {
@@ -40,13 +38,15 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-	protected AbstractShellNodeParent(final ShellScene shellScene,final ListeningExecutorService shellExecutor) {
-		super(shellScene,shellExecutor);
+	protected AbstractShellNodeParent(	final ShellScene shellScene,
+										final ListeningExecutorService shellExecutor) {
+		super(	shellScene,
+				shellExecutor);
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * <p>
+	 * <p/>
 	 * The returned array is a copy of the internal array.
 	 */
 	@Override
@@ -98,7 +98,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	protected void handleChildReparent(final ShellNode child) {
 		checkArgument(child instanceof AbstractShellNode);
 
-		ShellNodeEvent shellNodeEvent;
+		final ShellNodeEvent shellNodeEvent;
 		if (this.children.contains(child)) {
 			this.children.remove(child);
 			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
@@ -111,22 +111,22 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 		post(shellNodeEvent);
 	}
 
-    protected void handleChildStacking(final ShellNode child, boolean raised){
-        checkArgument(child instanceof AbstractShellNode);
-        checkArgument(this.children.remove(child));
+	protected void handleChildStacking(	final ShellNode child,
+										final boolean raised) {
+		checkArgument(child instanceof AbstractShellNode);
+		checkArgument(this.children.remove(child));
 
-
-        if(raised){
-            this.children.addLast((AbstractShellNode) child);
-        }else{
-            this.children.addFirst((AbstractShellNode) child);
-        }
-        //TODO fire a specific event?
-    }
+		if (raised) {
+			this.children.addLast((AbstractShellNode) child);
+		} else {
+			this.children.addFirst((AbstractShellNode) child);
+		}
+		// TODO fire a specific event?
+	}
 
 	/**
 	 * {@inheritDoc}
-	 * <p>
+	 * <p/>
 	 * This call has no effect if no {@link ShellLayoutManager} is set for this
 	 * node.
 	 */
