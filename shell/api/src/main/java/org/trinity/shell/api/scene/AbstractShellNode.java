@@ -42,9 +42,6 @@ import org.trinity.shell.api.scene.event.ShellNodeShowedEvent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-// TODO Let geo events travel downwards to children to notify them that one of
-// their parents has changed?
-
 /**
  * ************************************ An abstract base implementation of a
  * {@link ShellNode}.
@@ -52,7 +49,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * **************************************
  */
 @OwnerThread("Shell")
-public abstract class AbstractShellNode extends AbstractAsyncShellNode implements ShellNode {
+public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	private Coordinate position = new Coordinate(	0,
 													0);

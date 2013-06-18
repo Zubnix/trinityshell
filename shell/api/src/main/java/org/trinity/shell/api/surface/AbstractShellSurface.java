@@ -42,7 +42,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  *************************************** 
  */
 @ThreadSafe
-public abstract class AbstractShellSurface extends AbstractAsyncShellSurface implements ShellSurface {
+public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractShellSurface.class);
 

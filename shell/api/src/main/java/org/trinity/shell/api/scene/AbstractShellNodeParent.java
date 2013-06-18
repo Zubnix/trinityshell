@@ -32,7 +32,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * **************************************
  */
 @OwnerThread("Shell")
-public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodeParent implements ShellNodeParent {
+public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodeParent {
 
 	private final LinkedList<AbstractShellNode> children = new LinkedList<AbstractShellNode>();
 
