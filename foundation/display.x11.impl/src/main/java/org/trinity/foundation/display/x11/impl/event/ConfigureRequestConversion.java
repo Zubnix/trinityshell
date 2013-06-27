@@ -26,7 +26,7 @@ import org.trinity.foundation.api.display.event.GeometryRequest;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
-import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 

@@ -25,7 +25,7 @@ import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 

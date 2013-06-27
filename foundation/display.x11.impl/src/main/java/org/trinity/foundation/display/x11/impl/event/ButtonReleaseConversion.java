@@ -24,7 +24,7 @@ import org.trinity.foundation.api.display.input.Button;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.api.display.input.PointerInput;
-import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 

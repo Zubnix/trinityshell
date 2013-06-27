@@ -11,6 +11,14 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
+import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes;
+import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes_reply;
+import static org.freedesktop.xcb.LibXcb.xcb_query_tree;
+import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children;
+import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children_length;
+import static org.freedesktop.xcb.LibXcb.xcb_query_tree_reply;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -29,12 +37,13 @@ import org.freedesktop.xcb.xcb_query_tree_cookie_t;
 import org.freedesktop.xcb.xcb_query_tree_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.DisplayServer;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.CreationNotify;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XDisplayServer;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -42,38 +51,29 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-
 import de.devsurf.injection.guice.annotations.Bind;
-import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
-import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes;
-import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes_reply;
-import static org.freedesktop.xcb.LibXcb.xcb_query_tree;
-import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children;
-import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children_length;
-import static org.freedesktop.xcb.LibXcb.xcb_query_tree_reply;
 
 @Bind
 @Singleton
 @ThreadSafe
 @OwnerThread("Display")
-public class XDisplayServer implements DisplayServer {
+public class XDisplayServerImpl implements XDisplayServer {
 
-	private static final Logger logger = LoggerFactory.getLogger(XDisplayServer.class);
-
+	private static final Logger logger = LoggerFactory.getLogger(XDisplayServerImpl.class);
 	private final List<DisplaySurface> clientDisplaySurfaces = new ArrayList<DisplaySurface>();
-
 	private final XConnection xConnection;
 	private final XWindowCache xWindowCache;
 	private final XEventPump xEventPump;
 	private final ListeningExecutorService xExecutor;
-
 	private final AsyncListenableEventBus displayEventBus;
 
+	private XWindow rootWindow;
+
 	@Inject
-	XDisplayServer(	final XConnection xConnection,
-					final XWindowCache xWindowCache,
-					final XEventPump xEventPump,
-					@Named("Display") final ListeningExecutorService xExecutor) {
+	XDisplayServerImpl(	final XConnection xConnection,
+						final XWindowCache xWindowCache,
+						final XEventPump xEventPump,
+						@Named("Display") final ListeningExecutorService xExecutor) {
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
 		this.xEventPump = xEventPump;
@@ -88,50 +88,42 @@ public class XDisplayServer implements DisplayServer {
 
 	@Override
 	public ListenableFuture<Void> quit() {
-		return this.xExecutor.submit(	new Runnable() {
-											@Override
-											public void run() {
-												XDisplayServer.this.xEventPump.stop();
-												XDisplayServer.this.xConnection.close();
-											}
-										},
-										null);
-	}
-
-	@Override
-	public ListenableFuture<DisplaySurface> getRootDisplaySurface() {
-		return this.xExecutor.submit(new Callable<DisplaySurface>() {
+		return this.xExecutor.submit(new Callable<Void>() {
 			@Override
-			public DisplaySurface call() {
-				return getRootDisplaySurfaceImpl();
+			public Void call() {
+				XDisplayServerImpl.this.xEventPump.stop();
+				XDisplayServerImpl.this.xConnection.close();
+				return null;
 			}
 		});
 	}
 
-	private DisplaySurface getRootDisplaySurfaceImpl() {
-		final int rootWinId = XDisplayServer.this.xConnection.getScreenReference().getRoot();
-		return XDisplayServer.this.xWindowCache.getWindow(rootWinId);
+	@Override
+	public DisplaySurface getRootDisplaySurface() {
+		return rootWindow;
 	}
 
 	public ListenableFuture<Void> open() {
 		// FIXME from config?
 		final String displayName = System.getenv("DISPLAY");
 
-		return this.xExecutor.submit(	new Runnable() {
-											@Override
-											public void run() {
-												XDisplayServer.this.xConnection.open(	displayName,
-																						0);
-												if (xcb_connection_has_error(XDisplayServer.this.xConnection
-														.getConnectionReference()) != 0) {
-													throw new Error("Cannot open display\n");
-												}
+		return this.xExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() {
+				XDisplayServerImpl.this.xConnection.open(	displayName,
+															0);
+				if (xcb_connection_has_error(XDisplayServerImpl.this.xConnection.getConnectionReference()) != 0) {
+					throw new Error("Cannot open display\n");
+				}
 
-												findClientDisplaySurfaces();
-												XDisplayServer.this.xEventPump.start();
-											}
-										},
-										null);
+				final int rootWinId = XDisplayServerImpl.this.xConnection.getScreenReference().getRoot();
+				rootWindow = XDisplayServerImpl.this.xWindowCache.getWindow(rootWinId);
+
+				findClientDisplaySurfaces();
+				XDisplayServerImpl.this.xEventPump.start();
+				return null;
+			}
+		});
 	}
 
 	private void findClientDisplaySurfaces() {
@@ -148,8 +140,8 @@ public class XDisplayServer implements DisplayServer {
 																				query_tree_cookie_t,
 																				e);
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			XDisplayServer.logger.error("X error while doing query tree: {}.",
-										XcbErrorUtil.toString(e));
+			XDisplayServerImpl.logger.error("X error while doing query tree: {}.",
+											XcbErrorUtil.toString(e));
 			return;
 		}
 
@@ -167,8 +159,8 @@ public class XDisplayServer implements DisplayServer {
 																													e);
 
 			if (xcb_generic_error_t.getCPtr(e) != 0) {
-				XDisplayServer.logger.error("X error while doing get window attributes: {}.",
-											XcbErrorUtil.toString(e));
+				XDisplayServerImpl.logger.error("X error while doing get window attributes: {}.",
+												XcbErrorUtil.toString(e));
 			} else {
 				final short override_redirect = get_window_attributes_reply.getOverride_redirect();
 				final short map_state = get_window_attributes_reply.getMap_state();
@@ -216,7 +208,7 @@ public class XDisplayServer implements DisplayServer {
 		clientDisplaySurface.register(new Object() {
 			@Subscribe
 			public void handleClientDestroyed(final DestroyNotify destroyNotify) {
-				XDisplayServer.this.clientDisplaySurfaces.remove(clientDisplaySurface);
+				XDisplayServerImpl.this.clientDisplaySurfaces.remove(clientDisplaySurface);
 			}
 		});
 		this.clientDisplaySurfaces.add(clientDisplaySurface);
@@ -233,7 +225,7 @@ public class XDisplayServer implements DisplayServer {
 			@Override
 			public DisplaySurface[] call() throws Exception {
 				// we return a copy
-				return XDisplayServer.this.clientDisplaySurfaces.toArray(new DisplaySurface[] {});
+				return XDisplayServerImpl.this.clientDisplaySurfaces.toArray(new DisplaySurface[] {});
 			}
 		});
 	}

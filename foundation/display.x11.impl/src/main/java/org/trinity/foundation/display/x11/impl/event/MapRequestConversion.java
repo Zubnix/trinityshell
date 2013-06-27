@@ -23,7 +23,7 @@ import org.trinity.foundation.api.display.event.CreationNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.display.x11.impl.XEventConversion;
+import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 

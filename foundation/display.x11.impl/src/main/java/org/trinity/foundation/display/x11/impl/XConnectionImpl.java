@@ -34,15 +34,17 @@ import com.google.inject.Singleton;
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
+import org.trinity.foundation.display.x11.api.XConnection;
 
 @Bind(to = @To(Type.IMPLEMENTATION))
 @Singleton
 @NotThreadSafe
-public class XConnection {
+public class XConnectionImpl implements XConnection {
 
 	private SWIGTYPE_p_xcb_connection_t connection_t;
 	private xcb_screen_t screen_t;
 
+	@Override
 	public void open(	final String displayName,
 						final int screen) {
 		final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
@@ -75,15 +77,18 @@ public class XConnection {
 										values);
 	}
 
+	@Override
 	public void close() {
 
 		xcb_disconnect(this.connection_t);
 	}
 
+	@Override
 	public SWIGTYPE_p_xcb_connection_t getConnectionReference() {
 		return this.connection_t;
 	}
 
+	@Override
 	public xcb_screen_t getScreenReference() {
 		return this.screen_t;
 	}

@@ -33,6 +33,7 @@ import com.google.inject.name.Named;
 import de.devsurf.injection.guice.annotations.Bind;
 import de.devsurf.injection.guice.annotations.To;
 import de.devsurf.injection.guice.annotations.To.Type;
+import org.trinity.foundation.display.x11.api.XConnection;
 
 @Bind(to = @To(value = Type.IMPLEMENTATION))
 @NotThreadSafe

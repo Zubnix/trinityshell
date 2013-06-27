@@ -36,6 +36,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
+import org.trinity.foundation.display.x11.api.XConnection;
 
 @Bind
 @Singleton

@@ -9,18 +9,13 @@
 	</parent>
 
 	<artifactId>foundation.display.x11.impl</artifactId>
-	<name>Foundation Implementation Display</name>
+	<name>Foundation Implementation X Display Implementation</name>
 
 
 	<dependencies>
 		<dependency>
 			<groupId>org.trinity</groupId>
-			<artifactId>XCB4J</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.trinity</groupId>
-			<artifactId>foundation.api</artifactId>
+			<artifactId>foundation.display.x11.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

@@ -11,6 +11,18 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static com.google.common.util.concurrent.Futures.transform;
+import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
+import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
+import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
+import static org.freedesktop.xcb.LibXcb.xcb_map_window;
+import static org.freedesktop.xcb.LibXcb.xcb_reparent_window;
+import static org.freedesktop.xcb.LibXcb.xcb_set_input_focus;
+import static org.freedesktop.xcb.LibXcb.xcb_unmap_window;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.Callable;
@@ -35,6 +47,7 @@ import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.display.x11.api.XConnection;
 
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.AsyncFunction;
@@ -44,51 +57,31 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 
-import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
-import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
-import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
-import static org.freedesktop.xcb.LibXcb.xcb_flush;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
-import static org.freedesktop.xcb.LibXcb.xcb_map_window;
-import static org.freedesktop.xcb.LibXcb.xcb_reparent_window;
-import static org.freedesktop.xcb.LibXcb.xcb_set_input_focus;
-import static org.freedesktop.xcb.LibXcb.xcb_unmap_window;
-
-import static com.google.common.util.concurrent.Futures.transform;
-
 @ThreadSafe
 public final class XWindow implements DisplaySurface {
 
 	private static final Logger logger = LoggerFactory.getLogger(XWindow.class);
-
-	private static int moveValueMask = xcb_config_window_t.XCB_CONFIG_WINDOW_X
-			| xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 	private static final ByteBuffer moveValueListBuffer = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder());
-
 	private static final int moveResizeValueMask = xcb_config_window_t.XCB_CONFIG_WINDOW_X
 			| xcb_config_window_t.XCB_CONFIG_WINDOW_Y | xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
 			| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
 	private static final ByteBuffer moveResizeValueListBuffer = ByteBuffer.allocateDirect(16)
 			.order(ByteOrder.nativeOrder());
-
 	private static final int resizeValueMask = xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH
 			| xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
 	private static final ByteBuffer resizeValueList = ByteBuffer.allocateDirect(8).order(ByteOrder.nativeOrder());
-
 	private static final int lowerValueMask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
 	private static final ByteBuffer lowerValueListBuffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder())
 			.putInt(xcb_stack_mode_t.XCB_STACK_MODE_BELOW);
-
 	private static final int raiseValueMask = xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
 	private static final ByteBuffer raiseValueListBuffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder())
 			.putInt(xcb_stack_mode_t.XCB_STACK_MODE_ABOVE);
-
+	private static int moveValueMask = xcb_config_window_t.XCB_CONFIG_WINDOW_X
+			| xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 	private final DisplaySurfaceHandle resourceHandle;
 	private final XConnection xConnection;
 	private final XTime xTime;
 	private final ListeningExecutorService xExecutor;
-
 	private final AsyncListenableEventBus xWindowEventBus;
 
 	@Inject
@@ -516,7 +509,7 @@ public final class XWindow implements DisplaySurface {
 	 * a client window.
 	 * <p>
 	 * Should only be called by the Display thread.
-	 *************************************** 
+	 ***************************************
 	 */
 	public void configureClientEvents() {
 
