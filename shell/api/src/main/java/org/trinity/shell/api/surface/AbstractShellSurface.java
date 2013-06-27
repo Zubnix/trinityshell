@@ -11,15 +11,9 @@
  */
 package org.trinity.shell.api.surface;
 
-import java.util.concurrent.ExecutionException;
-
 import javax.annotation.concurrent.ThreadSafe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DestroyNotify;
-import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.GeometryNotify;
 import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.api.display.event.ShowNotify;
@@ -27,11 +21,8 @@ import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import org.trinity.shell.api.scene.ShellScene;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -39,12 +30,10 @@ import static com.google.common.base.Preconditions.checkArgument;
  * An abstract base implementation of {@link ShellSurface}. Implementations that
  * wish to concretely represent an on-screen area are encouraged to extend from
  * <code>AbstractShellSurface</code>.
- *************************************** 
+ ***************************************
  */
 @ThreadSafe
 public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
-
-	private static final Logger logger = LoggerFactory.getLogger(AbstractShellSurface.class);
 
 	public static final boolean DEFAULT_IS_RESIZABLE = true;
 	public static final boolean DEFAULT_IS_MOVABLE = true;
@@ -66,60 +55,9 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	private int widthIncrement = DEFAULT_WIDTH_INC;
 	private int heightIncrement = DEFAULT_HEIGHT_INC;
 
-	private final ListeningExecutorService shellExecutor;
 
 	protected AbstractShellSurface(final ShellScene shellScene,final ListeningExecutorService shellExecutor) {
 		super(shellScene,shellExecutor);
-		this.shellExecutor = shellExecutor;
-	}
-
-	/***************************************
-	 * Start listening to {@link DisplayEvent}s emitted by the underlying
-	 * {@link DisplaySurface}. Emitted events are handled by any of the
-	 * handle*Event(..) methods. Additionally, subclasses can add their own
-	 * handle methods by utilizing the {@link Subscribe} mechanism.
-	 *************************************** 
-	 */
-	public void subscribeToDisplaySurfaceEvents() {
-		addCallback(getDisplaySurface(),
-					new FutureCallback<DisplaySurface>() {
-						@Override
-						public void onSuccess(final DisplaySurface clientDisplaySurface) {
-							clientDisplaySurface.register(	AbstractShellSurface.this,
-															AbstractShellSurface.this.shellExecutor);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							logger.error(	"Failed to get display surface.",
-											t);
-						}
-					},
-					this.shellExecutor);
-	}
-
-	/***************************************
-	 * Stop listening to {@link DisplayEvent}s mitted by the underlying
-	 * {@link DisplaySurface}.
-	 * 
-	 * @see #subscribeToDisplaySurfaceEvents()
-	 *************************************** 
-	 */
-	public void unsubscribeToDisplaySurfaceEvents() {
-		addCallback(getDisplaySurface(),
-					new FutureCallback<DisplaySurface>() {
-						@Override
-						public void onSuccess(final DisplaySurface result) {
-							result.unregister(AbstractShellSurface.this);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							logger.error(	"Failed to get display surface.",
-											t);
-						}
-					},
-					this.shellExecutor);
 	}
 
 	@Override
@@ -239,27 +177,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 		return null;
 	}
 
-	@Override
-	public Void syncGeoToDisplaySurfaceImpl() {
-		// do everything inline, else a geo request launched after
-		// syncGeoToDisplaySurface() might still return old geo values.
 
-		final DisplaySurface displaySurface = getDisplaySurfaceImpl();
-		try {
-			final Rectangle displaySurfaceGeo = displaySurface.getGeometry().get();
-			setPositionImpl(displaySurfaceGeo.getPosition());
-			setSizeImpl(displaySurfaceGeo.getSize());
-			doMoveResize(false);
-		} catch (final InterruptedException e) {
-			logger.error(	"Interrupted while waiting for display surface geometry.",
-							e);
-		} catch (final ExecutionException e) {
-			logger.error(	"Exception while getting display surface geometry.",
-							e);
-		}
-
-		return null;
-	}
 
 	@Override
 	public Size getDesiredSize() {
@@ -278,7 +196,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	 * Called when an {@code DestroyNotify} arrives for this surface.
 	 * <p>
 	 * This method is called by the display thread.
-	 * 
+	 *
 	 * @param destroyNotify
 	 *            a {@link DestroyNotify}
 	 */
@@ -291,7 +209,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	 * Called when an {@code GeometryNotify} arrives for this surface.
 	 * <p>
 	 * This method is called by the display thread.
-	 * 
+	 *
 	 * @param geometryNotify
 	 *            a {@link GeometryNotify}
 	 */
@@ -307,7 +225,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	 * Called when an {@code HideNotify} arrives for this surface.
 	 * <p>
 	 * This method is called by the display thread.
-	 * 
+	 *
 	 * @param hideNotify
 	 *            a {@link HideNotify}
 	 */
@@ -320,7 +238,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	 * Called when an {@code ShowNotifyEventt} arrives for this surface.
 	 * <p>
 	 * This method is called by the display thread.
-	 * 
+	 *
 	 * @param showNotify
 	 *            a {@link ShowNotify}
 	 */

@@ -14,11 +14,9 @@ package org.trinity.shell.surface.impl;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.shared.OwnerThread;
 import org.trinity.shell.api.scene.ShellScene;
 import org.trinity.shell.api.surface.AbstractShellSurface;
-import org.trinity.shell.api.surface.ShellSurfaceParent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 
@@ -38,31 +36,12 @@ public final class ShellClientSurface extends AbstractShellSurface {
 	private final ShellSurfaceGeometryDelegateImpl shellSurfaceGeometryDelegateImpl;
 	private final DisplaySurface displaySurface;
 
-	ShellClientSurface(	final ShellScene shellScene,final ListeningExecutorService shellExecutor,
-						final ShellSurfaceParent rootShellSurface,
+	ShellClientSurface(	final ShellScene shellScene,
+                        final ListeningExecutorService shellExecutor,
 						final DisplaySurface clientDisplaySurface) {
 		super(shellScene,shellExecutor);
 		this.displaySurface = clientDisplaySurface;
 		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegateImpl(this);
-
-		syncGeoToDisplaySurface();
-
-		setParent(rootShellSurface);
-		doReparent();
-
-		subscribeToDisplaySurfaceEvents();
-	}
-
-	// never reparent from the underlying native parent.
-	@Override
-	protected void doReparent(final boolean execute) {
-		super.doReparent(false);
-	}
-
-	@Override
-	public void handleDestroyNotifyEvent(final DestroyNotify destroyNotify) {
-		unsubscribeToDisplaySurfaceEvents();
-		super.handleDestroyNotifyEvent(destroyNotify);
 	}
 
 	@Override
@@ -74,4 +53,10 @@ public final class ShellClientSurface extends AbstractShellSurface {
 	public DisplaySurface getDisplaySurfaceImpl() {
 		return this.displaySurface;
 	}
+
+    //repeated for package level visibility
+    @Override
+    protected void doMoveResize(final boolean execute) {
+        super.doMoveResize(execute);
+    }
 }

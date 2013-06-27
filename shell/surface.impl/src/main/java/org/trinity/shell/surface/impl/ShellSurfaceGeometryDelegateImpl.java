@@ -46,11 +46,6 @@ public class ShellSurfaceGeometryDelegateImpl extends AbstractShellSurfaceGeomet
 			return null;
 		}
 
-		// we go all the way up to the root
-		if (square instanceof ShellRootSurface) {
-			return (AbstractShellSurface) square;
-		}
-
 		final ShellNodeParent parent = ((AbstractShellNode) square).getParentImpl();
 		if ((parent == null) || parent.equals(square)) {
 			return null;

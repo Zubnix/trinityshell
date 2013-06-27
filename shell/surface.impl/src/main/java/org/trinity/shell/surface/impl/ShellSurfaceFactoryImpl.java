@@ -1,110 +1,70 @@
 package org.trinity.shell.surface.impl;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
-import org.trinity.foundation.api.display.DisplayServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.scene.ShellScene;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
-import org.trinity.shell.api.surface.ShellSurfaceParent;
-
-import com.google.common.base.Function;
-import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import de.devsurf.injection.guice.annotations.Bind;
 
-import static com.google.common.util.concurrent.Futures.transform;
-
 @Bind
 @ThreadSafe
 public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 
-	private final DisplayServer displayServer;
+    private static final Logger LOG = LoggerFactory.getLogger(ShellSurfaceFactory.class);
+
     private final ShellScene shellScene;
     private final ListeningExecutorService shellExecutor;
 
-	private ShellSurfaceParent rootShellSurface;
-
-	@Inject
-	ShellSurfaceFactoryImpl(final ShellScene shellScene,
-            @Named("Shell") final ListeningExecutorService shellExecutor,
-							final DisplayServer displayServer) {
+    @Inject
+    ShellSurfaceFactoryImpl(final ShellScene shellScene,
+                            @Named("Shell") final ListeningExecutorService shellExecutor) {
         this.shellScene = shellScene;
         this.shellExecutor = shellExecutor;
-		this.displayServer = displayServer;
-	}
+    }
 
-	@Override
-	public ListenableFuture<ShellSurface> createShellClientSurface(final DisplaySurface displaySurface) {
-		final ListenableFuture<ShellSurfaceParent> rootShellSurfaceFuture = getRootShellSurface();
-		return transform(	rootShellSurfaceFuture,
-							new Function<ShellSurfaceParent, ShellSurface>() {
-								@Override
-								public ShellSurface apply(final ShellSurfaceParent rootShellSurface) {
-									return new ShellClientSurface(shellScene,
-                                            ShellSurfaceFactoryImpl.this.shellExecutor,
-																	rootShellSurface,
-																	displaySurface);
-								}
-							});
-	}
+    @Override
+    public ListenableFuture<ShellSurface> createShellClientSurface(final DisplaySurface displaySurface) {
+        return this.shellExecutor.submit(new Callable<ShellSurface>() {
+            @Override
+            public ShellSurface call() {
+                final ShellClientSurface shellClientSurface = new ShellClientSurface(shellScene,
+                        shellExecutor,
+                        displaySurface);
+                syncGeoToDisplaySurfaceImpl(displaySurface, shellClientSurface);
+                displaySurface.register(shellClientSurface,
+                        shellExecutor);
 
-	@Override
-	public ListenableFuture<ShellSurfaceParent> getRootShellSurface() {
-		final ListenableFuture<Boolean> hasRootShellSurfaceFuture = this.shellExecutor.submit(new Callable<Boolean>() {
-			@Override
-			public Boolean call() throws Exception {
-				return Boolean.valueOf(ShellSurfaceFactoryImpl.this.rootShellSurface != null);
-			}
-		});
+                return null;
+            }
+        });
+    }
 
-		return transform(	hasRootShellSurfaceFuture,
-							new AsyncFunction<Boolean, ShellSurfaceParent>() {
-								@Override
-								public ListenableFuture<ShellSurfaceParent> apply(final Boolean hasRootShellSurface) {
-									final ListenableFuture<ShellSurfaceParent> rootShellSurfaceFuture;
-									if (hasRootShellSurface.booleanValue()) {
-										rootShellSurfaceFuture = getCachedRootShellSurface();
-									} else {
-										rootShellSurfaceFuture = createRootShellSurface();
-									}
-									return rootShellSurfaceFuture;
-								}
-							});
-	}
-
-	private ListenableFuture<ShellSurfaceParent> getCachedRootShellSurface() {
-		return MoreExecutors.sameThreadExecutor().submit(new Callable<ShellSurfaceParent>() {
-			@Override
-			public ShellSurfaceParent call() throws Exception {
-				return ShellSurfaceFactoryImpl.this.rootShellSurface;
-			}
-		});
-	}
-
-	private ListenableFuture<ShellSurfaceParent> createRootShellSurface() {
-		final ListenableFuture<DisplaySurface> rootDisplaySurfaceFuture = this.displayServer.getRootDisplaySurface();
-		// Get the root display surface, which will be given to us by the
-		// display thread, next we schedule a task on the shell thread to wrap
-		// it in a root shell surface.
-		return transform(	rootDisplaySurfaceFuture,
-							new Function<DisplaySurface, ShellSurfaceParent>() {
-								@Override
-								public ShellSurfaceParent apply(final DisplaySurface input) {
-									return new ShellRootSurface(shellScene,
-                                            ShellSurfaceFactoryImpl.this.shellExecutor,
-																input);
-								}
-							},
-							this.shellExecutor);
-	}
-
+    private void syncGeoToDisplaySurfaceImpl(final DisplaySurface displaySurface, final ShellClientSurface shellClientSurface) {
+        try {
+            //we need to block/sync here because we dont want to expose an incomplete shellclientsurface object to other threads.
+            final Rectangle displaySurfaceGeo = displaySurface.getGeometry().get();
+            shellClientSurface.setPositionImpl(displaySurfaceGeo.getPosition());
+            shellClientSurface.setSizeImpl(displaySurfaceGeo.getSize());
+            shellClientSurface.flushSizePlaceValues();
+        } catch (final InterruptedException e) {
+            LOG.error("Interrupted while waiting for display surface geometry.",
+                    e);
+        } catch (final ExecutionException e) {
+            LOG.error("Exception while getting display surface geometry.",
+                    e);
+        }
+    }
 }

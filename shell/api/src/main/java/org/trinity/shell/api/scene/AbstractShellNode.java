@@ -15,30 +15,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.concurrent.ExecutorService;
 
-import org.trinity.foundation.api.shared.AsyncListenableEventBus;
-import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.ImmutableRectangle;
-import org.trinity.foundation.api.shared.OwnerThread;
-import org.trinity.foundation.api.shared.Rectangle;
-import org.trinity.foundation.api.shared.Size;
-import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeEvent;
-import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
-import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeLoweredEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMovedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMovedResizedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeRaisedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeReparentedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeResizedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeShowedEvent;
+import org.trinity.foundation.api.shared.*;
+import org.trinity.shell.api.scene.event.*;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 
@@ -70,9 +48,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	protected AbstractShellNode(final ShellScene shellScene,
 								final ListeningExecutorService shellExecutor) {
-		super(	shellScene,
-				shellExecutor);
+		super(shellExecutor);
+		register(shellScene);
 		this.nodeEventBus = new AsyncListenableEventBus(shellExecutor);
+
+		final ShellNodeParent rootShellNodeParent = shellScene.getRootShellNodeParent();
+		setParentImpl(rootShellNodeParent);
+		doReparent(false);
 	}
 
 	@Override
@@ -216,7 +198,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * ************************************ Move the current node but the actual
 	 * delegated execution by this node's {@link ShellNodeGeometryDelegate} is
 	 * conditional. This call will affect the node's state.
-	 * 
+	 *
 	 * @param execute
 	 *            True to execute the process by the this node's
 	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
@@ -259,7 +241,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * actual delegated execution by this node's
 	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
 	 * the node's state.
-	 * 
+	 *
 	 * @param execute
 	 *            True to execute the process by the this node's
 	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
@@ -304,7 +286,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * the actual delegated execution by this node's
 	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
 	 * the node's state.
-	 * 
+	 *
 	 * @param execute
 	 *            True to execute the process by the this node's
 	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
@@ -352,7 +334,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * actual delegated execution by this node's
 	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
 	 * the node's state.
-	 * 
+	 *
 	 * @param execute
 	 *            True to execute the process by the this node's
 	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
@@ -388,7 +370,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * actual delegated execution by this node's
 	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
 	 * the node's state.
-	 * 
+	 *
 	 * @param execute
 	 *            True to execute the process by the this node's
 	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
@@ -425,7 +407,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * actual delegated execution by this node's
 	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
 	 * the node's state.
-	 * 
+	 *
 	 * @param execute
 	 *            True to execute the process by the this node's
 	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
@@ -462,7 +444,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * actual delegated execution by this node's
 	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
 	 * the node's state.
-	 * 
+	 *
 	 * @param execute
 	 *            True to execute the process by the this node's
 	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
@@ -519,7 +501,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	/**
 	 * ************************************ The desired parent as set by
 	 * {@link #setParent(ShellNodeParent)}.
-	 * 
+	 *
 	 * @return a {@link ShellNodeParent}. **************************************
 	 */
 	public ShellNodeParent getDesiredParent() {
@@ -536,7 +518,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * ************************************ Show the current node but the actual
 	 * delegated execution by this node's {@link ShellNodeGeometryDelegate} is
 	 * conditional. This call will affect the node's state.
-	 * 
+	 *
 	 * @param execute
 	 *            True to execute the process by the this node's
 	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
@@ -572,7 +554,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * ************************************ Hide the current node but the actual
 	 * delegated execution by this node's {@link ShellNodeGeometryDelegate} is
 	 * conditional. This call will affect the node's state.
-	 * 
+	 *
 	 * @param execute
 	 *            True to execute the process by the this node's
 	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low

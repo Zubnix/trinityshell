@@ -33,12 +33,4 @@ public interface ShellSurfaceFactory {
 	 *************************************** 
 	 */
 	ListenableFuture<ShellSurface> createShellClientSurface(DisplaySurface displaySurface);
-
-	/***************************************
-	 * The root shell surface of the shell scene.
-	 * 
-	 * @return a future {@link ShellSurfaceParent}.
-	 *************************************** 
-	 */
-	ListenableFuture<ShellSurfaceParent> getRootShellSurface();
 }

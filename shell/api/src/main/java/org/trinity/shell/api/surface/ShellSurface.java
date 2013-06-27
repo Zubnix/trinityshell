@@ -172,15 +172,4 @@ public interface ShellSurface extends ShellNode {
 	 *************************************** 
 	 */
 	ListenableFuture<Void> setWidthIncrement(final int widthIncrement);
-
-	/***************************************
-	 * Make this surface's shell geometry match the on-screen geometry of the
-	 * backing {@link DisplaySurface}.
-	 * 
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
-	 * @see #getDisplaySurface()
-	 *************************************** 
-	 */
-	ListenableFuture<Void> syncGeoToDisplaySurface();
 }

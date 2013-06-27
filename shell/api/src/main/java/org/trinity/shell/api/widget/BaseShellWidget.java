@@ -21,14 +21,9 @@ import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
 import org.trinity.shell.api.scene.ShellScene;
 import org.trinity.shell.api.surface.AbstractShellSurface;
-import org.trinity.shell.api.surface.ShellSurfaceFactory;
-import org.trinity.shell.api.surface.ShellSurfaceParent;
 
-import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
 
 /***************************************
  * An abstract base {@link ShellWidget} implementation.
@@ -37,9 +32,9 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  * it's basic geometry operations and through the binding framework for more
  * fine grained visual operations. This is done by injecting the widget with a
  * view object and manually call {@link Painter#bindView()}.
- * 
+ *
  * @see org.trinity.foundation.api.render.binding
- *************************************** 
+ ***************************************
  */
 public abstract class BaseShellWidget extends AbstractShellSurface implements ShellWidget {
 
@@ -50,29 +45,12 @@ public abstract class BaseShellWidget extends AbstractShellSurface implements Sh
 	private final BaseShellWidgetGeometryDelegate shellNodeGeometryDelegate = new BaseShellWidgetGeometryDelegate(this);
 
 	protected BaseShellWidget(	final ShellScene shellScene,
-                                final ShellSurfaceFactory shellSurfaceFactory,
 								final ListeningExecutorService shellExecutor,
 								final PainterFactory painterFactory,
 								final Object view) {
 		super(shellScene,shellExecutor);
 		this.view = view;
 		this.painter = painterFactory.createPainter(this);
-		final ListenableFuture<ShellSurfaceParent> rootShellSurfaceFuture = shellSurfaceFactory.getRootShellSurface();
-		addCallback(rootShellSurfaceFuture,
-					new FutureCallback<ShellSurfaceParent>() {
-						@Override
-						public void onSuccess(final ShellSurfaceParent rootShellSurface) {
-							setParentImpl(rootShellSurface);
-							doReparent(false);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							logger.error(	"Error while requesting root shell surface.",
-											t);
-						}
-					},
-					shellExecutor);
 	}
 
 	@ViewReference

@@ -286,25 +286,4 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	 *************************************** 
 	 */
 	public abstract Void setWidthIncrementImpl(int widthIncrement);
-
-	@Override
-	public final ListenableFuture<Void> syncGeoToDisplaySurface() {
-		return this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				return syncGeoToDisplaySurfaceImpl();
-			}
-		});
-	}
-
-	/***************************************
-	 * Concrete implementation of {@link #syncGeoToDisplaySurface()}. This
-	 * method is invoked by the Shell thread.
-	 * 
-	 * @return null
-	 * @see #syncGeoToDisplaySurface()
-	 *************************************** 
-	 */
-	public abstract Void syncGeoToDisplaySurfaceImpl();
-
 }
