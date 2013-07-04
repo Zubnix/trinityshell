@@ -1,3 +1,6 @@
 [submodule "xcb4j"]
-	path = xcb4j
+	path = externals/xcb4j
 	url = https://github.com/Zubnix/xcb4j.git
+[submodule "trinity-concurrency"]
+	path = externals/trinity-concurrency
+	url = https://github.com/Zubnix/trinity-concurrency.git
