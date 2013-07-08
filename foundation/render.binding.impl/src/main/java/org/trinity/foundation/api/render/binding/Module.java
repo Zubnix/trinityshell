@@ -1,11 +1,11 @@
 package org.trinity.foundation.api.render.binding;
 
+import org.apache.onami.autobind.annotations.GuiceModule;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;
 
-import de.devsurf.injection.guice.annotations.GuiceModule;
 
 @GuiceModule
 public final class Module extends AbstractModule {

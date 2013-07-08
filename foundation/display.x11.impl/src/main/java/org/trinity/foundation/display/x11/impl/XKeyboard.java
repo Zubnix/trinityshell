@@ -17,15 +17,16 @@ import static org.freedesktop.xcb.LibXcb.xcb_grab_keyboard;
 import static org.freedesktop.xcb.LibXcb.xcb_grab_keyboard_reply;
 import static org.freedesktop.xcb.LibXcb.xcb_ungrab_key;
 import static org.freedesktop.xcb.LibXcb.xcb_ungrab_keyboard;
+import static org.freedesktop.xcb.xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_grab_keyboard_cookie_t;
-import org.freedesktop.xcb.xcb_grab_mode_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -33,22 +34,19 @@ import org.trinity.foundation.api.display.input.InputModifier;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.Keyboard;
+import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.bindkey.XDisplayExecutor;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
-import org.trinity.foundation.display.x11.api.XConnection;
 
 @Bind
 @Singleton
 public class XKeyboard implements Keyboard {
 
 	private static final Logger logger = LoggerFactory.getLogger(XKeyboard.class);
-
 	private final XKeySymbolMapping xKeySymbolMapping;
 	private final XKeySymbolCache xKeySymbolCache;
 	private final XInputModifierMaskMapping xInputModifierMaskMapping;
@@ -62,7 +60,7 @@ public class XKeyboard implements Keyboard {
 				final XInputModifierMaskMapping xInputModifierMaskMapping,
 				final XConnection xConnection,
 				final XTime xTime,
-				@Named("Display") final ListeningExecutorService xExecutor) {
+				@XDisplayExecutor final ListeningExecutorService xExecutor) {
 		this.xKeySymbolMapping = xKeySymbolMapping;
 		this.xKeySymbolCache = xKeySymbolCache;
 		this.xInputModifierMaskMapping = xInputModifierMaskMapping;
@@ -72,13 +70,11 @@ public class XKeyboard implements Keyboard {
 	}
 
 	private int getWindowId(final DisplaySurface displaySurface) {
-		final int windowId = ((Integer) displaySurface.getDisplaySurfaceHandle().getNativeHandle()).intValue();
-		return windowId;
+		return ((Integer) displaySurface.getDisplaySurfaceHandle().getNativeHandle()).intValue();
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection.getConnectionReference();
-		return connection_t;
+		return this.xConnection.getConnectionReference();
 	}
 
 	private void checkError(final xcb_generic_error_t e) {
@@ -94,24 +90,24 @@ public class XKeyboard implements Keyboard {
 
 		final int keyCode = catchKey.getKeyCode();
 		final int modifiers = withModifiers.getInputModifiersState();
-		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
-		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
+		final int pointer_mode = XCB_GRAB_MODE_ASYNC;
+		final int keyboard_mode = XCB_GRAB_MODE_ASYNC;
 
-		return this.xExecutor.submit(	new Runnable() {
+		return this.xExecutor.submit(new Callable<Void>() {
 
-											@Override
-											public void run() {
-												xcb_grab_key(	getConnectionRef(),
-																(short) 0,
-																getWindowId(displaySurface),
-																modifiers,
-																(short) keyCode,
-																(short) pointer_mode,
-																(short) keyboard_mode);
-												xcb_flush(getConnectionRef());
-											}
-										},
-										null);
+			@Override
+			public Void call() {
+				xcb_grab_key(	getConnectionRef(),
+								(short) 0,
+								getWindowId(displaySurface),
+								modifiers,
+								(short) keyCode,
+								(short) pointer_mode,
+								(short) keyboard_mode);
+				xcb_flush(getConnectionRef());
+				return null;
+			}
+		});
 	}
 
 	@Override
@@ -123,17 +119,16 @@ public class XKeyboard implements Keyboard {
 		final int modifiers = withModifiers.getInputModifiersState();
 		final int winId = getWindowId(displaySurface);
 
-		return this.xExecutor.submit(	new Runnable() {
-											@Override
-											public void run() {
-												xcb_ungrab_key(	getConnectionRef(),
-																(short) key,
-																winId,
-																modifiers);
-												xcb_flush(getConnectionRef());
-											}
-										},
-										null);
+		return this.xExecutor.submit(new Callable<Void>() {
+			public Void call() {
+				xcb_ungrab_key(	getConnectionRef(),
+								(short) key,
+								winId,
+								modifiers);
+				xcb_flush(getConnectionRef());
+				return null;
+			}
+		});
 	}
 
 	@Override
@@ -141,44 +136,44 @@ public class XKeyboard implements Keyboard {
 
 		final int time = this.xTime.getTime();
 
-		return this.xExecutor.submit(	new Runnable() {
-											@Override
-											public void run() {
-												xcb_ungrab_keyboard(getConnectionRef(),
-																	time);
-												xcb_flush(getConnectionRef());
-											}
-										},
-										null);
+		return this.xExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() {
+				xcb_ungrab_keyboard(getConnectionRef(),
+									time);
+				xcb_flush(getConnectionRef());
+				return null;
+			}
+		});
 	}
 
 	@Override
 	public ListenableFuture<Void> grabKeyboard(final DisplaySurface displaySurface) {
-		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
-		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
+		final int pointer_mode = XCB_GRAB_MODE_ASYNC;
+		final int keyboard_mode = XCB_GRAB_MODE_ASYNC;
 		final int time = this.xTime.getTime();
 		final int winId = getWindowId(displaySurface);
 
-		return this.xExecutor.submit(	new Runnable() {
-											@Override
-											public void run() {
-												final xcb_grab_keyboard_cookie_t grab_keyboard_cookie_t = xcb_grab_keyboard(getConnectionRef(),
-																															(short) 0,
-																															winId,
-																															time,
-																															(short) pointer_mode,
-																															(short) keyboard_mode);
-												final xcb_generic_error_t e = new xcb_generic_error_t();
-												// TODO check if grab was
-												// successful and
-												// return boolean
-												xcb_grab_keyboard_reply(getConnectionRef(),
-																		grab_keyboard_cookie_t,
-																		e);
-												checkError(e);
-											}
-										},
-										null);
+		return this.xExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() {
+				final xcb_grab_keyboard_cookie_t grab_keyboard_cookie_t = xcb_grab_keyboard(getConnectionRef(),
+																							(short) 0,
+																							winId,
+																							time,
+																							(short) pointer_mode,
+																							(short) keyboard_mode);
+				final xcb_generic_error_t e = new xcb_generic_error_t();
+				// TODO check if grab was
+				// successful and
+				// return boolean
+				xcb_grab_keyboard_reply(getConnectionRef(),
+										grab_keyboard_cookie_t,
+										e);
+				checkError(e);
+				return null;
+			}
+		});
 
 	}
 
@@ -195,8 +190,7 @@ public class XKeyboard implements Keyboard {
 				final Integer keySymbol = XKeyboard.this.xKeySymbolCache.getKeySymbol(	keyCode,
 																						inputModifiersState);
 
-				final String keySymbolName = XKeyboard.this.xKeySymbolMapping.toString(keySymbol);
-				return keySymbolName;
+				return XKeyboard.this.xKeySymbolMapping.toString(keySymbol);
 			}
 		});
 	}
@@ -222,9 +216,8 @@ public class XKeyboard implements Keyboard {
 	@Override
 	public InputModifier modifier(final String modifierName) {
 		final int mask = this.xInputModifierMaskMapping.getXInputModifierMask(modifierName);
-		final XInputModifier xInputModifier = new XInputModifier(	mask,
-																	modifierName);
-		return xInputModifier;
+		return new XInputModifier(	mask,
+									modifierName);
 	}
 
 	@Override

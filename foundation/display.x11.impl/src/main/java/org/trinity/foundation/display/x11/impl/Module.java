@@ -11,35 +11,18 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-
+import org.apache.onami.autobind.annotations.GuiceModule;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.name.Names;
-
-import de.devsurf.injection.guice.annotations.GuiceModule;
 
 @GuiceModule
 public class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(EventBus.class).annotatedWith(Names.named("XEventBus")).toInstance(new EventBus());
-		bind(ListeningExecutorService.class).annotatedWith(Names.named("Display"))
-				.toInstance(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor(new ThreadFactory() {
-					@Override
-					public Thread newThread(final Runnable executorRunnable) {
-						return new Thread(	executorRunnable,
-											"display-executor");
-					}
-				})));
 
 		install(new FactoryModuleBuilder().implement(	DisplaySurface.class,
 														XWindow.class).build(DisplaySurfaceFactory.class));

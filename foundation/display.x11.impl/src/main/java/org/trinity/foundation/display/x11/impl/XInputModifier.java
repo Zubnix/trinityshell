@@ -21,8 +21,8 @@ public class XInputModifier implements InputModifier {
 	private final String name;
 	private final int mask;
 
-	public XInputModifier(	final int mask,
-							final String name) {
+	XInputModifier(	final int mask,
+					final String name) {
 		this.name = name;
 		this.mask = mask;
 	}

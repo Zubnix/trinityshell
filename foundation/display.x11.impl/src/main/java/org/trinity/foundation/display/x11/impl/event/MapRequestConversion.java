@@ -11,9 +11,11 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import static org.freedesktop.xcb.LibXcbConstants.XCB_MAP_REQUEST;
+
 import javax.annotation.concurrent.Immutable;
 
-import org.freedesktop.xcb.LibXcb;
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_map_request_event_t;
 import org.slf4j.Logger;
@@ -24,15 +26,13 @@ import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.display.x11.api.XEventConversion;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
@@ -40,15 +40,13 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class MapRequestConversion implements XEventConversion {
 
 	private static final Logger logger = LoggerFactory.getLogger(MapRequestConversion.class);
-
-	private static final Integer eventCode = Integer.valueOf(LibXcb.XCB_MAP_REQUEST);
-
+	private static final Integer eventCode = XCB_MAP_REQUEST;
 	private final EventBus xEventBus;
 	private final XWindowCache xWindowCache;
 	private final DisplayServer displayServer;
 
 	@Inject
-	MapRequestConversion(	@Named("XEventBus") final EventBus xEventBus,
+	MapRequestConversion(	@XEventBus final EventBus xEventBus,
 							final XWindowCache xWindowCache,
 							final DisplayServer displayServer) {
 		this.xEventBus = xEventBus;
@@ -66,9 +64,7 @@ public class MapRequestConversion implements XEventConversion {
 
 		this.xEventBus.post(map_request_event);
 
-		final DisplayEvent displayEvent = new ShowRequest();
-
-		return displayEvent;
+		return new ShowRequest();
 	}
 
 	private xcb_map_request_event_t cast(final xcb_generic_event_t event) {

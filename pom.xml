@@ -34,12 +34,12 @@
 		<!-- dep versions -->
 		<guice.version>3.0</guice.version>
 		<guava.version>14.0.1</guava.version>
-		<autobind.version>0.8.7</autobind.version>
+		<onami.autobind.version>0.9.2-SNAPSHOT</onami.autobind.version>
 		<findbugs.version>2.0.1</findbugs.version>
 		<slf4j.version>1.7.4</slf4j.version>
 
 		<!-- test dep versions -->
-		<junit.version>4.5</junit.version>
+		<junit.version>4.7</junit.version>
 		<mockito.version>1.8.5</mockito.version>
 
 		<!-- java version -->
@@ -58,6 +58,13 @@
 		<module>shellplugin</module>
 		<module>bootstrap</module>
 	</modules>
+
+    <repositories>
+        <repository>
+            <id>apache-snapshots</id>
+            <url>https://repository.apache.org/snapshots/</url>
+        </repository>
+    </repositories>
 
 	<dependencies>
 		<!-- google guice+guava -->
@@ -94,19 +101,17 @@
 			<version>${slf4j.version}</version>
 		</dependency>
 
-		<!--guice binding annotations -->
-		<dependency>
-			<groupId>de.devsurf.injection.guice</groupId>
-			<artifactId>de.devsurf.injection.guice.core</artifactId>
-			<version>${autobind.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>de.devsurf.injection.guice.scanner</groupId>
-			<artifactId>
-				de.devsurf.injection.guice.scanner.asm
-			</artifactId>
-			<version>${autobind.version}</version>
-		</dependency>
+		<!--Onami guice autobinding annotations -->
+        <dependency>
+            <groupId>org.apache.onami.autobind</groupId>
+            <artifactId>org.apache.onami.autobind.core</artifactId>
+            <version>${onami.autobind.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.onami.autobind.scanner</groupId>
+            <artifactId>org.apache.onami.autobind.scanner.asm</artifactId>
+            <version>${onami.autobind.version}</version>
+        </dependency>
 
 		<!-- test deps -->
 		<dependency>

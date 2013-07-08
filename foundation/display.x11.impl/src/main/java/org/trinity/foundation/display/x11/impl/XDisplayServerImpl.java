@@ -28,6 +28,7 @@ import java.util.concurrent.ExecutorService;
 
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_window_attributes_cookie_t;
@@ -44,14 +45,13 @@ import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 import org.trinity.foundation.api.shared.OwnerThread;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XDisplayServer;
+import org.trinity.foundation.display.x11.api.bindkey.XDisplayExecutor;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton
@@ -66,14 +66,13 @@ public class XDisplayServerImpl implements XDisplayServer {
 	private final XEventPump xEventPump;
 	private final ListeningExecutorService xExecutor;
 	private final AsyncListenableEventBus displayEventBus;
-
 	private XWindow rootWindow;
 
 	@Inject
 	XDisplayServerImpl(	final XConnection xConnection,
 						final XWindowCache xWindowCache,
 						final XEventPump xEventPump,
-						@Named("Display") final ListeningExecutorService xExecutor) {
+						@XDisplayExecutor final ListeningExecutorService xExecutor) {
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
 		this.xEventPump = xEventPump;

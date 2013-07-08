@@ -11,9 +11,11 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import static org.freedesktop.xcb.LibXcbConstants.XCB_UNMAP_NOTIFY;
+
 import javax.annotation.concurrent.Immutable;
 
-import org.freedesktop.xcb.LibXcb;
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_unmap_notify_event_t;
 import org.slf4j.Logger;
@@ -22,15 +24,13 @@ import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.display.x11.api.XEventConversion;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
@@ -38,14 +38,12 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class UnmapNotifyConversion implements XEventConversion {
 
 	private static final Logger logger = LoggerFactory.getLogger(UnmapNotifyConversion.class);
-
-	private static final Integer eventCode = Integer.valueOf(LibXcb.XCB_UNMAP_NOTIFY);
-
+	private static final Integer eventCode = XCB_UNMAP_NOTIFY;
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
 
 	@Inject
-	UnmapNotifyConversion(	@Named("XEventBus") final EventBus xEventBus,
+	UnmapNotifyConversion(	@XEventBus final EventBus xEventBus,
 							final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
@@ -59,8 +57,7 @@ public class UnmapNotifyConversion implements XEventConversion {
 						unmap_notify_event.getClass().getSimpleName());
 
 		this.xEventBus.post(unmap_notify_event);
-		final DisplayEvent displayEvent = new HideNotify();
-		return displayEvent;
+		return new HideNotify();
 	}
 
 	private xcb_unmap_notify_event_t cast(final xcb_generic_event_t event) {
@@ -76,8 +73,7 @@ public class UnmapNotifyConversion implements XEventConversion {
 		if (windowId != reportWindowId) {
 			return null;
 		}
-		final XWindow displayEventSource = this.xWindowCache.getWindow(windowId);
-		return displayEventSource;
+		return this.xWindowCache.getWindow(windowId);
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.foundation.api.display.event.KeyNotify;
 import org.trinity.foundation.api.display.input.Keyboard;
 import org.trinity.foundation.api.display.input.KeyboardInput;
@@ -25,8 +26,6 @@ import org.trinity.shell.api.input.ShellKeyInputStringBuilder;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 // TODO improve threading model for this class
 @Bind
@@ -40,19 +39,13 @@ public class ShellKeyInputStringBuilderImpl implements ShellKeyInputStringBuilde
 			Keyboard.PG_DOWN, Keyboard.PG_UP, Keyboard.PREV, Keyboard.PRINT, Keyboard.R_ALT, Keyboard.R_CTRL,
 			Keyboard.R_HYPER, Keyboard.R_META, Keyboard.R_SHIFT, Keyboard.R_SUPER, Keyboard.RIGHT, Keyboard.SCRL_LOCK,
 			Keyboard.SHIFT_LOCK, Keyboard.SYS_REQ, Keyboard.TAB, Keyboard.UP };
-
-	public interface StringMutatorOnInput {
-		void mutate(StringBuffer stringBuffer,
-					String keyName);
-	}
-
 	private final Keyboard keyboard;
-	private StringBuffer stringBuffer = new StringBuffer();
 	private final Map<String, StringMutatorOnInput> specialBuildActions = Collections
 			.synchronizedMap(new HashMap<String, ShellKeyInputStringBuilderImpl.StringMutatorOnInput>());
+	private StringBuffer stringBuffer = new StringBuffer();
 
 	/**
-	 * 
+	 *
 	 */
 	@Inject
 	ShellKeyInputStringBuilderImpl(final Keyboard keyboard) {
@@ -61,7 +54,7 @@ public class ShellKeyInputStringBuilderImpl implements ShellKeyInputStringBuilde
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void initSpecialBuildActions() {
 		// first we fill the special build actions with with empty operations
@@ -153,5 +146,10 @@ public class ShellKeyInputStringBuilderImpl implements ShellKeyInputStringBuilde
 	@Override
 	public synchronized String getString() {
 		return this.stringBuffer.toString();
+	}
+
+	public interface StringMutatorOnInput {
+		void mutate(StringBuffer stringBuffer,
+					String keyName);
 	}
 }

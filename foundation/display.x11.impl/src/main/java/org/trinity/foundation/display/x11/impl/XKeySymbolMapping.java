@@ -16,15 +16,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.concurrent.Immutable;
 
+import org.apache.onami.autobind.annotations.Bind;
+import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.display.input.Keyboard;
 
 import com.google.inject.Singleton;
 
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 
-@Bind(to = @To(Type.IMPLEMENTATION))
+
+@Bind
+@To(IMPLEMENTATION)
 @Singleton
 @Immutable
 public class XKeySymbolMapping {

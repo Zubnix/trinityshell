@@ -9,14 +9,16 @@ import static org.freedesktop.xcb.LibXcb.xcb_query_pointer;
 import static org.freedesktop.xcb.LibXcb.xcb_query_pointer_reply;
 import static org.freedesktop.xcb.LibXcb.xcb_ungrab_button;
 import static org.freedesktop.xcb.LibXcb.xcb_ungrab_pointer;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_NONE;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE;
+import static org.freedesktop.xcb.xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 
 import java.util.concurrent.Callable;
 
-import org.freedesktop.xcb.LibXcbConstants;
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
-import org.freedesktop.xcb.xcb_event_mask_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
-import org.freedesktop.xcb.xcb_grab_mode_t;
 import org.freedesktop.xcb.xcb_grab_pointer_cookie_t;
 import org.freedesktop.xcb.xcb_query_pointer_cookie_t;
 import org.freedesktop.xcb.xcb_query_pointer_reply_t;
@@ -27,23 +29,20 @@ import org.trinity.foundation.api.display.input.Button;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Pointer;
 import org.trinity.foundation.api.shared.Coordinate;
+import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.bindkey.XDisplayExecutor;
 
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
-import org.trinity.foundation.display.x11.api.XConnection;
 
 @Bind
 @Singleton
 public class XPointer implements Pointer {
 
 	private static final Logger logger = LoggerFactory.getLogger(XPointer.class);
-
 	private final XConnection xConnection;
 	private final XTime xTime;
 	private final ListeningExecutorService xExecutor;
@@ -51,20 +50,18 @@ public class XPointer implements Pointer {
 	@Inject
 	XPointer(	final XConnection xConnection,
 				final XTime xTime,
-				@Named("Display") final ListeningExecutorService xExecutor) {
+				@XDisplayExecutor final ListeningExecutorService xExecutor) {
 		this.xConnection = xConnection;
 		this.xTime = xTime;
 		this.xExecutor = xExecutor;
 	}
 
 	private int getWindowId(final DisplaySurface displaySurface) {
-		final int windowId = ((Integer) displaySurface.getDisplaySurfaceHandle().getNativeHandle()).intValue();
-		return windowId;
+		return ((Integer) displaySurface.getDisplaySurfaceHandle().getNativeHandle()).intValue();
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-		final SWIGTYPE_p_xcb_connection_t connection_t = this.xConnection.getConnectionReference();
-		return connection_t;
+		return this.xConnection.getConnectionReference();
 	}
 
 	private void checkError(final xcb_generic_error_t e) {
@@ -80,42 +77,40 @@ public class XPointer implements Pointer {
 
 		final int buttonCode = catchButton.getButtonCode();
 		final int modifiers = withModifiers.getInputModifiersState();
-		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS
-				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE;
-		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
-		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
-		final int confine_to = LibXcbConstants.XCB_NONE;
-		final int cursor = LibXcbConstants.XCB_NONE;
+		final int event_mask = XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE;
+		final int pointer_mode = XCB_GRAB_MODE_ASYNC;
+		final int keyboard_mode = XCB_GRAB_MODE_ASYNC;
+		final int confine_to = XCB_NONE;
+		final int cursor = XCB_NONE;
 		final int winId = getWindowId(displaySurface);
 
-		return this.xExecutor.submit(	new Runnable() {
-											@Override
-											public void run() {
-												xcb_grab_button(getConnectionRef(),
-																(short) 0,
-																winId,
-																event_mask,
-																(short) pointer_mode,
-																(short) keyboard_mode,
-																confine_to,
-																cursor,
-																(short) buttonCode,
-																modifiers);
-												xcb_flush(getConnectionRef());
-											}
-										},
-										null);
+		return this.xExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() {
+				xcb_grab_button(getConnectionRef(),
+								(short) 0,
+								winId,
+								event_mask,
+								(short) pointer_mode,
+								(short) keyboard_mode,
+								confine_to,
+								cursor,
+								(short) buttonCode,
+								modifiers);
+				xcb_flush(getConnectionRef());
+				return null;
+			}
+		});
 	}
 
 	@Override
 	public ListenableFuture<Void> grabPointer(final DisplaySurface displaySurface) {
 
-		final int event_mask = xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_PRESS
-				| xcb_event_mask_t.XCB_EVENT_MASK_BUTTON_RELEASE;
-		final int pointer_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
-		final int keyboard_mode = xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
-		final int confine_to = LibXcbConstants.XCB_NONE;
-		final int cursor = LibXcbConstants.XCB_NONE;
+		final int event_mask = XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE;
+		final int pointer_mode = XCB_GRAB_MODE_ASYNC;
+		final int keyboard_mode = XCB_GRAB_MODE_ASYNC;
+		final int confine_to = XCB_NONE;
+		final int cursor = XCB_NONE;
 		final int winId = getWindowId(displaySurface);
 		final int time = this.xTime.getTime();
 
@@ -123,16 +118,15 @@ public class XPointer implements Pointer {
 				.submit(new Callable<xcb_grab_pointer_cookie_t>() {
 					@Override
 					public xcb_grab_pointer_cookie_t call() {
-						final xcb_grab_pointer_cookie_t grab_pointer_cookie_t = xcb_grab_pointer(	getConnectionRef(),
-																									(short) 0,
-																									winId,
-																									event_mask,
-																									(short) pointer_mode,
-																									(short) keyboard_mode,
-																									confine_to,
-																									cursor,
-																									time);
-						return grab_pointer_cookie_t;
+						return xcb_grab_pointer(getConnectionRef(),
+												(short) 0,
+												winId,
+												event_mask,
+												(short) pointer_mode,
+												(short) keyboard_mode,
+												confine_to,
+												cursor,
+												time);
 					}
 				});
 

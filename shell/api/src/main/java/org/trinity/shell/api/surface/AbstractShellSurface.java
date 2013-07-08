@@ -17,12 +17,12 @@ import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.GeometryNotify;
 import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.api.display.event.ShowNotify;
+import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import org.trinity.shell.api.scene.ShellScene;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -56,7 +56,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	private int heightIncrement = DEFAULT_HEIGHT_INC;
 
 
-	protected AbstractShellSurface(final ShellScene shellScene,final ListeningExecutorService shellExecutor) {
+	protected AbstractShellSurface(final AsyncListenable shellScene,final ListeningExecutorService shellExecutor) {
 		super(shellScene,shellExecutor);
 	}
 
@@ -151,10 +151,8 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 		int normalizedHeight = newHeight < minHeight ? minHeight : newHeight > maxHeight ? maxHeight : newHeight;
 		normalizedHeight -= (normalizedHeight - currentHeight) % getHeightIncrementImpl();
 
-		final Size normalizedSize = new Size(	normalizedWidth,
+		return new Size(	normalizedWidth,
 												normalizedHeight);
-
-		return normalizedSize;
 	}
 
 	@Override

@@ -13,6 +13,7 @@ package org.trinity.shell.plugin.impl;
 
 import java.util.Set;
 
+import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.shell.api.plugin.ShellPlugin;
 import org.trinity.shell.api.plugin.ShellPluginsRunner;
 
@@ -21,8 +22,6 @@ import com.google.common.util.concurrent.Service.Listener;
 import com.google.common.util.concurrent.Service.State;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton

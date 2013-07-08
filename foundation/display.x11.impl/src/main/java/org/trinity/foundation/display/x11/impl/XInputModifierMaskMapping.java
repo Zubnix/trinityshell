@@ -11,21 +11,30 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_1;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_2;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_3;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_4;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_5;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_ANY;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_CONTROL;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_LOCK;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_SHIFT;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.concurrent.Immutable;
 
-import org.freedesktop.xcb.xcb_mod_mask_t;
+import org.apache.onami.autobind.annotations.Bind;
+import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.display.input.InputModifier;
 
 import com.google.inject.Singleton;
 
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
-
-@Bind(to = @To(Type.IMPLEMENTATION))
+@Bind
+@To(IMPLEMENTATION)
 @Singleton
 @Immutable
 public class XInputModifierMaskMapping {
@@ -33,23 +42,23 @@ public class XInputModifierMaskMapping {
 
 	XInputModifierMaskMapping() {
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_1,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
+											XCB_MOD_MASK_1);
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_2,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
+											XCB_MOD_MASK_2);
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_3,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
+											XCB_MOD_MASK_3);
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_4,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
+											XCB_MOD_MASK_4);
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_5,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
+											XCB_MOD_MASK_5);
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_ANY,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
+											XCB_MOD_MASK_ANY);
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_CTRL,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
+											XCB_MOD_MASK_CONTROL);
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_LOCK,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
+											XCB_MOD_MASK_LOCK);
 		this.nameToXInputModifierMask.put(	InputModifier.MOD_SHIFT,
-											Integer.valueOf(xcb_mod_mask_t.XCB_MOD_MASK_1));
+											XCB_MOD_MASK_SHIFT);
 	}
 
 	public int getXInputModifierMask(final String inputModifierName) {

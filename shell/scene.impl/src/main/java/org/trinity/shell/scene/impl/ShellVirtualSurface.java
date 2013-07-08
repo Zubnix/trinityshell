@@ -11,6 +11,14 @@
  */
 package org.trinity.shell.scene.impl;
 
+import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
+
+import org.apache.onami.autobind.annotations.Bind;
+import org.apache.onami.autobind.annotations.To;
+import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellScene;
+import org.trinity.shell.api.bindingkey.ShellVirtualNode;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
@@ -18,12 +26,6 @@ import org.trinity.shell.api.scene.ShellNodeParent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
-import org.trinity.shell.api.scene.ShellScene;
 
 // TODO documentation
 /**
@@ -36,20 +38,23 @@ import org.trinity.shell.api.scene.ShellScene;
  * <code>ShellGeoVNode</code> can also have an optional
  * <code>ShellLayoutManager</code> which means it can manage it's children's
  * geometry requests if necessary.
- * 
+ *
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind(value = @Named("ShellVirtualSurface"), to = @To(value = Type.CUSTOM, customs = { ShellNode.class,
-		ShellNodeParent.class }))
+@Bind
+@ShellVirtualNode
+@To(value = CUSTOM, customs = { ShellNode.class, ShellNodeParent.class })
 public class ShellVirtualSurface extends AbstractShellNodeParent {
 
-	@Inject
-	protected ShellVirtualSurface(final ShellScene shellScene,@Named("Shell") final ListeningExecutorService shellExecutor) {
-		super(shellScene,shellExecutor);
-	}
-
 	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellVirtualSurfaceExecutor(this);
+
+	@Inject
+	protected ShellVirtualSurface(	@ShellScene final AsyncListenable shellScene,
+									@ShellExecutor final ListeningExecutorService shellExecutor) {
+		super(	shellScene,
+				shellExecutor);
+	}
 
 	@Override
 	public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {

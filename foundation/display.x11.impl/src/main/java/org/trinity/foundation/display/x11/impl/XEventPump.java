@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
 import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 
@@ -21,26 +22,27 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
+import org.apache.onami.autobind.annotations.Bind;
+import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.bindkey.XDisplayExecutor;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
+import com.google.inject.Singleton;
 
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
-import org.trinity.foundation.display.x11.api.XConnection;
-
-@Bind(to = @To(value = Type.IMPLEMENTATION))
+@Bind
+@To(IMPLEMENTATION)
+@Singleton
 @NotThreadSafe
 public class XEventPump implements Runnable {
 
 	private static final Logger logger = LoggerFactory.getLogger(XEventPump.class);
-
 	private final XConnection connection;
 	private final EventBus xEventBus;
 	private final ExecutorService xEventPumpExecutor = Executors.newSingleThreadExecutor(new ThreadFactory() {
@@ -55,8 +57,8 @@ public class XEventPump implements Runnable {
 
 	@Inject
 	XEventPump(	final XConnection connection,
-				@Named("XEventBus") final EventBus xEventBus,
-				@Named("Display") final ListeningExecutorService xExecutor) {
+				@XEventBus final EventBus xEventBus,
+				@XDisplayExecutor final ListeningExecutorService xExecutor) {
 		this.connection = connection;
 		this.xEventBus = xEventBus;
 		this.xExecutor = xExecutor;

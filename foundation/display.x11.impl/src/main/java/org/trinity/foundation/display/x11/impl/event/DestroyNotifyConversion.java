@@ -11,9 +11,11 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import static org.freedesktop.xcb.LibXcbConstants.XCB_DESTROY_NOTIFY;
+
 import javax.annotation.concurrent.Immutable;
 
-import org.freedesktop.xcb.LibXcb;
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_destroy_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
@@ -22,15 +24,13 @@ import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.display.x11.api.XEventConversion;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
@@ -38,14 +38,12 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class DestroyNotifyConversion implements XEventConversion {
 
 	private static final Logger logger = LoggerFactory.getLogger(DestroyNotifyConversion.class);
-
-	private static final Integer eventCode = Integer.valueOf(LibXcb.XCB_DESTROY_NOTIFY);
-
+	private static final Integer eventCode = XCB_DESTROY_NOTIFY;
 	private final EventBus xEventBus;
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	DestroyNotifyConversion(@Named("XEventBus") final EventBus xEventBus,
+	DestroyNotifyConversion(@XEventBus final EventBus xEventBus,
 							final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
@@ -60,8 +58,7 @@ public class DestroyNotifyConversion implements XEventConversion {
 
 		this.xEventBus.post(destroy_notify_event);
 
-		final DisplayEvent displayEvent = new DestroyNotify();
-		return displayEvent;
+		return new DestroyNotify();
 	}
 
 	public xcb_destroy_notify_event_t cast(final xcb_generic_event_t event_t) {
@@ -73,8 +70,7 @@ public class DestroyNotifyConversion implements XEventConversion {
 	public AsyncListenable getTarget(final xcb_generic_event_t event_t) {
 		final xcb_destroy_notify_event_t destroy_notify_event_t = cast(event_t);
 		final int eventWindow = destroy_notify_event_t.getWindow();
-		final XWindow displayEventTarget = this.xWindowCache.getWindow(eventWindow);
-		return displayEventTarget;
+		return this.xWindowCache.getWindow(eventWindow);
 	}
 
 	@Override

@@ -32,6 +32,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import org.trinity.foundation.display.x11.api.XConnection;
 import xcb4j.LibXcbLoader;
 
 import com.google.common.util.concurrent.MoreExecutors;
@@ -60,7 +61,7 @@ public class XWindowTest {
 												"-ac",
 												XWindowTest.displayName).start();
 
-		XWindowTest.xConnection = new XConnection();
+		XWindowTest.xConnection = new XConnectionImpl();
 		XWindowTest.xConnection.open(	XWindowTest.displayName,
 										XWindowTest.screenNr);
 

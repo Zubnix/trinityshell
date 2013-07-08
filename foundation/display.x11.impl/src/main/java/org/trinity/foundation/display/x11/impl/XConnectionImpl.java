@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
 import static org.freedesktop.xcb.LibXcb.xcb_connect;
 import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
@@ -23,26 +24,28 @@ import java.nio.ByteOrder;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
+import org.apache.onami.autobind.annotations.Bind;
+import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_cw_t;
 import org.freedesktop.xcb.xcb_event_mask_t;
 import org.freedesktop.xcb.xcb_screen_iterator_t;
 import org.freedesktop.xcb.xcb_screen_t;
+import org.trinity.foundation.display.x11.api.XConnection;
 
 import com.google.inject.Singleton;
 
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
-import org.trinity.foundation.display.x11.api.XConnection;
-
-@Bind(to = @To(Type.IMPLEMENTATION))
+@Bind
+@To(IMPLEMENTATION)
 @Singleton
 @NotThreadSafe
 public class XConnectionImpl implements XConnection {
 
 	private SWIGTYPE_p_xcb_connection_t connection_t;
 	private xcb_screen_t screen_t;
+
+	XConnectionImpl() {
+	}
 
 	@Override
 	public void open(	final String displayName,

@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.LinkedList;
 
+import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.OwnerThread;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
@@ -38,7 +39,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-	protected AbstractShellNodeParent(	final ShellScene shellScene,
+	protected AbstractShellNodeParent(	final AsyncListenable shellScene,
 										final ListeningExecutorService shellExecutor) {
 		super(	shellScene,
 				shellExecutor);

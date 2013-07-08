@@ -11,9 +11,11 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CIRCULATE_NOTIFY;
+
 import javax.annotation.concurrent.Immutable;
 
-import org.freedesktop.xcb.LibXcb;
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_circulate_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
@@ -21,15 +23,13 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.StackingChangedNotify;
 import org.trinity.foundation.display.x11.api.XEventConversion;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
@@ -37,14 +37,12 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class CirculateNotifyConversion implements XEventConversion {
 
 	private static final Logger logger = LoggerFactory.getLogger(CirculateNotifyConversion.class);
-
-	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_CIRCULATE_NOTIFY);
-
+	private final Integer eventCode = XCB_CIRCULATE_NOTIFY;
 	private final EventBus xEventBus;
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	CirculateNotifyConversion(	@Named("XEventBus") final EventBus xEventBus,
+	CirculateNotifyConversion(	@XEventBus final EventBus xEventBus,
 								final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
@@ -60,9 +58,7 @@ public class CirculateNotifyConversion implements XEventConversion {
 
 		this.xEventBus.post(circulate_notify_event);
 
-		final DisplayEvent displayEvent = new StackingChangedNotify();
-
-		return displayEvent;
+		return new StackingChangedNotify();
 	}
 
 	private xcb_circulate_notify_event_t cast(final xcb_generic_event_t event_t) {
@@ -74,8 +70,7 @@ public class CirculateNotifyConversion implements XEventConversion {
 	public XWindow getTarget(final xcb_generic_event_t event_t) {
 		final xcb_circulate_notify_event_t circulate_notify_event_t = cast(event_t);
 		final int windowId = circulate_notify_event_t.getWindow();
-		final XWindow displayEvenTarget = this.xWindowCache.getWindow(windowId);
-		return displayEvenTarget;
+		return this.xWindowCache.getWindow(windowId);
 	}
 
 	@Override

@@ -27,7 +27,7 @@ public class ShellSurfaceGeometryDelegateImpl extends AbstractShellSurfaceGeomet
 
 	private final AbstractShellSurface abstractShellSurface;
 
-	public ShellSurfaceGeometryDelegateImpl(final AbstractShellSurface shellSurface) {
+	ShellSurfaceGeometryDelegateImpl(final AbstractShellSurface shellSurface) {
 		this.abstractShellSurface = shellSurface;
 	}
 

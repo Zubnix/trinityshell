@@ -11,6 +11,8 @@
  */
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
+import org.apache.onami.autobind.annotations.Bind;
+import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.display.input.Momentum;
 
 import com.google.inject.Inject;
@@ -18,11 +20,10 @@ import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
+import static org.apache.onami.autobind.annotations.To.Type.INTERFACES;
 
 @Bind(multiple = true)
-@To(To.Type.INTERFACES)
+@To(INTERFACES)
 @Singleton
 public class KeyReleasedConversion extends AbstractKeyConversion {
 

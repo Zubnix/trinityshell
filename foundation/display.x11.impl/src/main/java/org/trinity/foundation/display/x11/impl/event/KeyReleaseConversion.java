@@ -11,9 +11,11 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import static org.freedesktop.xcb.LibXcbConstants.XCB_KEY_RELEASE;
+
 import javax.annotation.concurrent.Immutable;
 
-import org.freedesktop.xcb.LibXcb;
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
 import org.slf4j.Logger;
@@ -26,15 +28,13 @@ import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.display.x11.api.XEventConversion;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
@@ -42,14 +42,12 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class KeyReleaseConversion implements XEventConversion {
 
 	private static final Logger logger = LoggerFactory.getLogger(KeyReleaseConversion.class);
-
-	private static final Integer eventCode = Integer.valueOf(LibXcb.XCB_KEY_RELEASE);
-
+	private static final Integer eventCode = XCB_KEY_RELEASE;
 	private final EventBus xEventBus;
 	private final XWindowCache xWindowCache;
 
 	@Inject
-	KeyReleaseConversion(	@Named("XEventBus") final EventBus xEventBus,
+	KeyReleaseConversion(	@XEventBus final EventBus xEventBus,
 							final XWindowCache xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
@@ -74,9 +72,8 @@ public class KeyReleaseConversion implements XEventConversion {
 		final KeyboardInput input = new KeyboardInput(	Momentum.STOPPED,
 														key,
 														inputModifiers);
-		final DisplayEvent displayEvent = new KeyNotify(input);
 
-		return displayEvent;
+		return new KeyNotify(input);
 	}
 
 	private xcb_key_press_event_t cast(final xcb_generic_event_t event) {
@@ -89,9 +86,8 @@ public class KeyReleaseConversion implements XEventConversion {
 		// press has same structure as release.
 		final xcb_key_press_event_t key_release_event_t = cast(event_t);
 		final int windowId = key_release_event_t.getEvent();
-		final XWindow displayEventTarget = this.xWindowCache.getWindow(windowId);
 
-		return displayEventTarget;
+		return this.xWindowCache.getWindow(windowId);
 	}
 
 	@Override

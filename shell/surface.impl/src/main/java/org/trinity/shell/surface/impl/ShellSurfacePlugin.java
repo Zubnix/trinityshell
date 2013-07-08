@@ -11,22 +11,23 @@
  */
 package org.trinity.shell.surface.impl;
 
+import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
+
 import java.util.concurrent.TimeUnit;
 
+import org.apache.onami.autobind.annotations.Bind;
+import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.display.DisplayServer;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.plugin.ShellPlugin;
 
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
-
-@Bind(multiple = true, to = @To(value = Type.CUSTOM, customs = ShellPlugin.class))
+@Bind(multiple = true)
+@To(value = CUSTOM, customs = ShellPlugin.class)
 @Singleton
 public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlugin {
 
@@ -34,7 +35,7 @@ public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlug
 	private final ListeningExecutorService shellExecutor;
 
 	@Inject
-	ShellSurfacePlugin(	@Named("Shell") final ListeningExecutorService shellExecutor,
+	ShellSurfacePlugin(	@ShellExecutor final ListeningExecutorService shellExecutor,
 						final DisplayServer display) {
 		this.display = display;
 		this.shellExecutor = shellExecutor;

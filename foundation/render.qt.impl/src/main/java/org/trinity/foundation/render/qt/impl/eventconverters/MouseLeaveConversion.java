@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
+import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.foundation.api.display.event.PointerLeaveNotify;
 import org.trinity.foundation.api.display.event.PointerVisitationNotify;
 import org.trinity.foundation.render.qt.impl.RenderEventConversion;
@@ -20,14 +21,12 @@ import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.core.QObject;
 
-import de.devsurf.injection.guice.annotations.Bind;
-
 // TODO documentation
 /**
  * A <code>QFusionMouseLeaveEventConverter</code> takes a <code>QEvent</code>
  * and it's <code>DisplayEventTarget</code> as input and converts it to a
  * <code>MouseEnterLeaveNotifyEvent</code>.
- * 
+ *
  * @author Erik De Rijcke
  * @since 1.0
  */

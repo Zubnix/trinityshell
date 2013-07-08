@@ -1,8 +1,10 @@
 package org.trinity.shellplugin.wm.api;
 
+import org.trinity.shell.api.widget.ShellWidget;
+
 import java.util.List;
 
-public interface Desktop {
+public interface Desktop extends ShellWidget{
 
 	List<Object> getNotificationsBar();
 

@@ -3,14 +3,13 @@ package org.trinity.foundation.render.qt.impl.binding.view.delegate;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
+import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.inject.Singleton;
 import com.trolltech.qt.gui.QApplication;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind
 @Singleton

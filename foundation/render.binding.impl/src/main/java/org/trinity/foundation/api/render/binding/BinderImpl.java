@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
+import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.input.Input;
@@ -45,7 +46,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import de.devsurf.injection.guice.annotations.Bind;
 import static java.lang.String.format;
 
 import static com.google.common.util.concurrent.Futures.addCallback;

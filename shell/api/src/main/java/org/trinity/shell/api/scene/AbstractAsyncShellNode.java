@@ -24,7 +24,6 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 
 	private final ListeningExecutorService shellExecutor;
 
-	@Inject
 	protected AbstractAsyncShellNode(final ListeningExecutorService shellExecutor) {
 		this.shellExecutor = shellExecutor;
 	}

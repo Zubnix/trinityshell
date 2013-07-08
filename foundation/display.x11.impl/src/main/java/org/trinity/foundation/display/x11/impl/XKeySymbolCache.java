@@ -11,11 +11,17 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 import static org.freedesktop.xcb.LibXcb.xcb_is_keypad_key;
 import static org.freedesktop.xcb.LibXcb.xcb_key_symbols_alloc;
 import static org.freedesktop.xcb.LibXcb.xcb_key_symbols_free;
 import static org.freedesktop.xcb.LibXcb.xcb_key_symbols_get_keycode;
 import static org.freedesktop.xcb.LibXcb.xcb_key_symbols_get_keysym;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_NO_SYMBOL;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_2;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_5;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_LOCK;
+import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_SHIFT;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -25,34 +31,30 @@ import java.util.Map;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.freedesktop.xcb.LibXcbConstants;
+import org.apache.onami.autobind.annotations.Bind;
+import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.SWIGTYPE_p__XCBKeySymbols;
 import org.freedesktop.xcb.xcb_mapping_notify_event_t;
-import org.freedesktop.xcb.xcb_mod_mask_t;
+import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
-import org.trinity.foundation.display.x11.api.XConnection;
-
-@Bind(to = @To(Type.IMPLEMENTATION))
+@Bind
+@To(IMPLEMENTATION)
 @Singleton
 @NotThreadSafe
 public class XKeySymbolCache {
 
 	private final Map<Integer, Map<Integer, Integer>> resolvedKeySymbols = new HashMap<Integer, Map<Integer, Integer>>();
-
 	private final SWIGTYPE_p__XCBKeySymbols xcbKeySymbols;
 
 	@Inject
 	XKeySymbolCache(final XConnection xConnection,
-					@Named("XEventBus") final EventBus xEventBus) {
+					@XEventBus final EventBus xEventBus) {
 		this.xcbKeySymbols = xcb_key_symbols_alloc(xConnection.getConnectionReference());
 		xEventBus.register(this);
 	}
@@ -84,7 +86,7 @@ public class XKeySymbolCache {
 															keySymbol.intValue());
 		final List<Integer> keyCodes = new LinkedList<Integer>();
 		final Integer keyCode = null;
-		while (Integer.valueOf(keys.getInt()).intValue() != LibXcbConstants.XCB_NO_SYMBOL) {
+		while (Integer.valueOf(keys.getInt()).intValue() != XCB_NO_SYMBOL) {
 			keyCodes.add(keyCode);
 		}
 		return keyCodes;
@@ -106,7 +108,7 @@ public class XKeySymbolCache {
 		// 'col' (third parameter) is used to get the proper KeySym according to
 		// modifier (XCB doesn't provide an equivalent to XLookupString()). If
 		// Mod5 is ON we look into second group.
-		if ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_5) != 0) {
+		if ((modifiers & XCB_MOD_MASK_5) != 0) {
 			k0 = xcb_key_symbols_get_keysym(this.xcbKeySymbols,
 											(short) key,
 											4);
@@ -126,34 +128,29 @@ public class XKeySymbolCache {
 			k1 = k0;
 		}
 		// The numlock modifier is on and the second KeySym is a keypad KeySym
-		if ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_2) != 0 && xcb_is_keypad_key(k1) != 0) {
+		if ((modifiers & XCB_MOD_MASK_2) != 0 && xcb_is_keypad_key(k1) != 0) {
 			// The Shift modifier is on, or if the Lock modifier is on and is
 			// interpreted as ShiftLock, use the first KeySym
-			if ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT) != 0
-					|| (modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK) != 0) {
+			if ((modifiers & XCB_MOD_MASK_SHIFT) != 0 || (modifiers & XCB_MOD_MASK_LOCK) != 0) {
 				return k0;
 			} else {
 				return k1;
 			}
 		}
 		// The Shift and Lock modifers are both off, use the first KeySym
-		else if ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT) == 0
-				&& (modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK) == 0) {
+		else if ((modifiers & XCB_MOD_MASK_SHIFT) == 0 && (modifiers & XCB_MOD_MASK_LOCK) == 0) {
 			return k0;
-		} else if ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT) == 0
-				&& (modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK) != 0) {
+		} else if ((modifiers & XCB_MOD_MASK_SHIFT) == 0 && (modifiers & XCB_MOD_MASK_LOCK) != 0) {
 			// The first Keysym is used but if that KeySym is lowercase
 			// alphabetic, then the corresponding uppercase KeySym is used
 			// instead
 			return k1;
-		} else if ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT) != 0
-				&& (modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK) != 0) {
+		} else if ((modifiers & XCB_MOD_MASK_SHIFT) != 0 && (modifiers & XCB_MOD_MASK_LOCK) != 0) {
 			// The second Keysym is used but if that KeySym is lowercase
 			// alphabetic, then the corresponding uppercase KeySym is used
 			// instead
 			return k1;
-		} else if ((modifiers & xcb_mod_mask_t.XCB_MOD_MASK_SHIFT) != 0
-				|| (modifiers & xcb_mod_mask_t.XCB_MOD_MASK_LOCK) != 0) {
+		} else if ((modifiers & XCB_MOD_MASK_SHIFT) != 0 || (modifiers & XCB_MOD_MASK_LOCK) != 0) {
 			return k1;
 		}
 		// unknown

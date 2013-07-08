@@ -2,6 +2,7 @@ package org.trinity.shell.api.scene;
 
 import java.util.concurrent.Callable;
 
+import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.OwnerThread;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
@@ -13,14 +14,14 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * Asynchronous abstract implementation of a {@link ShellNodeParent}. Method
  * calls are placed on the shell executor queue as provide in the constructor.
  * Subclasses must implement any concrete internal node manipulation.
- *************************************** 
+ ***************************************
  */
 @OwnerThread("Shell")
 public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode implements ShellNodeParent {
 
 	private final ListeningExecutorService shellExecutor;
 
-	protected AbstractAsyncShellNodeParent(final ShellScene shellScene,final ListeningExecutorService shellExecutor) {
+	protected AbstractAsyncShellNodeParent(final AsyncListenable shellScene,final ListeningExecutorService shellExecutor) {
 		super(shellScene,shellExecutor);
 		this.shellExecutor = shellExecutor;
 	}
@@ -38,10 +39,10 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 	/***************************************
 	 * Concrete implementation of {@link #getLayoutManager()}. This method is
 	 * invoked by the Shell thread.
-	 * 
+	 *
 	 * @return an {@link Optional} {@link ShellLayoutManager}.
 	 * @see #getLayoutManager()
-	 *************************************** 
+	 ***************************************
 	 */
 	public abstract Optional<ShellLayoutManager> getLayoutManagerImpl();
 
@@ -58,10 +59,10 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 	/***************************************
 	 * Concrete implementation of {@link #layout()}. This method is invoked by
 	 * the Shell thread.
-	 * 
+	 *
 	 * @return null
 	 * @see #layout()
-	 *************************************** 
+	 ***************************************
 	 */
 	public abstract Void layoutImpl();
 
@@ -78,10 +79,10 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 	/***************************************
 	 * Concrete implementation of {@link #setLayoutManager(ShellLayoutManager)}.
 	 * This method is invoked by the Shell thread.
-	 * 
+	 *
 	 * @return null
 	 * @see #setLayoutManager(ShellLayoutManager)
-	 *************************************** 
+	 ***************************************
 	 */
 	public abstract Void setLayoutManagerImpl(ShellLayoutManager shellLayoutManager);
 
@@ -98,10 +99,10 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 	/***************************************
 	 * Concrete implementation of {@link #getChildren()}. This method is invoked
 	 * by the Shell thread.
-	 * 
+	 *
 	 * @return an array of {@link ShellNode}s
 	 * @see #getChildren()
-	 *************************************** 
+	 ***************************************
 	 */
 	public abstract ShellNode[] getChildrenImpl();
 }

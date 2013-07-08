@@ -11,28 +11,29 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
+import org.apache.onami.autobind.annotations.Bind;
+import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.display.x11.api.XEventConversion;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
-import org.trinity.foundation.display.x11.api.XEventConversion;
-
-@Bind(to = @To(Type.IMPLEMENTATION))
+@Bind
+@To(IMPLEMENTATION)
 @Singleton
 @NotThreadSafe
 public final class XEventConverter {
@@ -46,12 +47,11 @@ public final class XEventConverter {
 	 */
 
 	private final Map<Integer, XEventConversion> conversionMap = new HashMap<Integer, XEventConversion>();
-
 	private final EventBus xEventBus;
 
 	@Inject
 	XEventConverter(final Set<XEventConversion> eventConversions,
-					@Named("XEventBus") final EventBus xEventBus) {
+					@XEventBus final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 
 		for (final XEventConversion eventConversion : eventConversions) {

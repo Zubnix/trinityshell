@@ -11,10 +11,15 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_REQUEST;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+
 import javax.annotation.concurrent.Immutable;
 
-import org.freedesktop.xcb.LibXcb;
-import org.freedesktop.xcb.xcb_config_window_t;
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_configure_request_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
@@ -27,15 +32,13 @@ import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XEventConversion;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
@@ -43,15 +46,13 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ConfigureRequestConversion implements XEventConversion {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigureRequestConversion.class);
-
-	private final Integer eventCode = Integer.valueOf(LibXcb.XCB_CONFIGURE_REQUEST);
-
+	private final Integer eventCode = XCB_CONFIGURE_REQUEST;
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
 	private final DisplayServer displayServer;
 
 	@Inject
-	ConfigureRequestConversion(	@Named("XEventBus") final EventBus xEventBus,
+	ConfigureRequestConversion(	@XEventBus final EventBus xEventBus,
 								final XWindowCache xWindowCache,
 								final DisplayServer displayServer) {
 		this.xEventBus = xEventBus;
@@ -79,18 +80,16 @@ public class ConfigureRequestConversion implements XEventConversion {
 
 		final int valueMask = request_event.getValue_mask();
 
-		final boolean configureX = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_X) != 0;
-		final boolean configureY = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_Y) != 0;
-		final boolean configureWidth = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH) != 0;
-		final boolean configureHeight = (valueMask | xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT) != 0;
+		final boolean configureX = (valueMask & XCB_CONFIG_WINDOW_X) != 0;
+		final boolean configureY = (valueMask & XCB_CONFIG_WINDOW_Y) != 0;
+		final boolean configureWidth = (valueMask & XCB_CONFIG_WINDOW_WIDTH) != 0;
+		final boolean configureHeight = (valueMask & XCB_CONFIG_WINDOW_HEIGHT) != 0;
 
-		final DisplayEvent displayEvent = new GeometryRequest(	geometry,
-																configureX,
-																configureY,
-																configureWidth,
-																configureHeight);
-
-		return displayEvent;
+		return new GeometryRequest(	geometry,
+									configureX,
+									configureY,
+									configureWidth,
+									configureHeight);
 	}
 
 	private xcb_configure_request_event_t cast(final xcb_generic_event_t event_t) {

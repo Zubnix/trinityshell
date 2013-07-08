@@ -2,6 +2,7 @@ package org.trinity.foundation.render.qt.impl.binding.view.delegate;
 
 import java.util.concurrent.Callable;
 
+import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -12,7 +13,6 @@ import com.google.inject.Singleton;
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
-import de.devsurf.injection.guice.annotations.Bind;
 import static java.lang.String.format;
 
 import static com.google.common.base.Preconditions.checkArgument;

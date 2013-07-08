@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
+import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.render.qt.impl.RenderEventConversion;
 
@@ -18,8 +19,6 @@ import com.google.inject.Singleton;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.core.QObject;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton

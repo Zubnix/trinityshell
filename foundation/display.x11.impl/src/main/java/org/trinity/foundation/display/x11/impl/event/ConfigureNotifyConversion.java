@@ -11,9 +11,11 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_NOTIFY;
+
 import javax.annotation.concurrent.Immutable;
 
-import org.freedesktop.xcb.LibXcb;
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_configure_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
@@ -23,15 +25,13 @@ import org.trinity.foundation.api.display.event.GeometryNotify;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XEventConversion;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
@@ -39,15 +39,13 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ConfigureNotifyConversion implements XEventConversion {
 
 	private static final Logger logger = LoggerFactory.getLogger(ConfigureNotifyConversion.class);
-
-	private final static Integer eventCode = Integer.valueOf(LibXcb.XCB_CONFIGURE_NOTIFY);
-
+	private final static Integer eventCode = XCB_CONFIGURE_NOTIFY;
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
 
 	@Inject
 	ConfigureNotifyConversion(	final XWindowCache xWindowCache,
-								@Named("XEventBus") final EventBus xEventBus) {
+								@XEventBus final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -71,9 +69,7 @@ public class ConfigureNotifyConversion implements XEventConversion {
 															width,
 															height);
 
-		final DisplayEvent displayEvent = new GeometryNotify(geometry);
-
-		return displayEvent;
+		return new GeometryNotify(geometry);
 	}
 
 	private xcb_configure_notify_event_t cast(final xcb_generic_event_t event_t) {
@@ -85,8 +81,7 @@ public class ConfigureNotifyConversion implements XEventConversion {
 	public XWindow getTarget(final xcb_generic_event_t event_t) {
 		final xcb_configure_notify_event_t configure_notify_event_t = cast(event_t);
 		final int windowId = configure_notify_event_t.getWindow();
-		final XWindow displayEventTarget = this.xWindowCache.getWindow(windowId);
-		return displayEventTarget;
+		return this.xWindowCache.getWindow(windowId);
 	}
 
 	@Override

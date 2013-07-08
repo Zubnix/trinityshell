@@ -2,6 +2,7 @@ package org.trinity.foundation.render.qt.impl.binding.view.delegate;
 
 import java.util.concurrent.Callable;
 
+import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.model.delegate.InputSlotCallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
@@ -18,7 +19,6 @@ import com.google.inject.Singleton;
 import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QApplication;
 
-import de.devsurf.injection.guice.annotations.Bind;
 import static java.lang.String.format;
 
 import static com.google.common.base.Preconditions.checkArgument;

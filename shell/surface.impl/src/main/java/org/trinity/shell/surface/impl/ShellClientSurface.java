@@ -14,8 +14,8 @@ package org.trinity.shell.surface.impl;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.OwnerThread;
-import org.trinity.shell.api.scene.ShellScene;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -36,10 +36,12 @@ public final class ShellClientSurface extends AbstractShellSurface {
 	private final ShellSurfaceGeometryDelegateImpl shellSurfaceGeometryDelegateImpl;
 	private final DisplaySurface displaySurface;
 
-	ShellClientSurface(	final ShellScene shellScene,
-                        final ListeningExecutorService shellExecutor,
+	// created by a custom factory so inject annotations are not needed.
+	ShellClientSurface(	final AsyncListenable shellScene,
+						final ListeningExecutorService shellExecutor,
 						final DisplaySurface clientDisplaySurface) {
-		super(shellScene,shellExecutor);
+		super(	shellScene,
+				shellExecutor);
 		this.displaySurface = clientDisplaySurface;
 		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegateImpl(this);
 	}
@@ -54,9 +56,9 @@ public final class ShellClientSurface extends AbstractShellSurface {
 		return this.displaySurface;
 	}
 
-    //repeated for package level visibility
-    @Override
-    protected void doMoveResize(final boolean execute) {
-        super.doMoveResize(execute);
-    }
+	// repeated for package level visibility
+	@Override
+	protected void doMoveResize(final boolean execute) {
+		super.doMoveResize(execute);
+	}
 }

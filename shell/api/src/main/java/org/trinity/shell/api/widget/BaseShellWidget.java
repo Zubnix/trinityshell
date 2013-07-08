@@ -19,7 +19,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
-import org.trinity.shell.api.scene.ShellScene;
+import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -44,7 +44,7 @@ public abstract class BaseShellWidget extends AbstractShellSurface implements Sh
 	private final Object view;
 	private final BaseShellWidgetGeometryDelegate shellNodeGeometryDelegate = new BaseShellWidgetGeometryDelegate(this);
 
-	protected BaseShellWidget(	final ShellScene shellScene,
+	protected BaseShellWidget(	final AsyncListenable shellScene,
 								final ListeningExecutorService shellExecutor,
 								final PainterFactory painterFactory,
 								final Object view) {

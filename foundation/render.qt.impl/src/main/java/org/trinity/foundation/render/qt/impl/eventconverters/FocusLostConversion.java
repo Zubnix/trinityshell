@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.render.qt.impl.eventconverters;
 
+import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.foundation.api.display.event.FocusLostNotify;
 import org.trinity.foundation.api.display.event.FocusNotify;
 import org.trinity.foundation.render.qt.impl.RenderEventConversion;
@@ -20,13 +21,11 @@ import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.core.QObject;
 
-import de.devsurf.injection.guice.annotations.Bind;
-
 /**
  * A <code>QFusionDestroyConverter</code> takes a <code>QFocusEvent</code> and
  * it's <code>DisplayEventTarget</code> as input and converts it to a
  * <code>FocusNotify</code>.
- * 
+ *
  * @author Erik De Rijcke
  * @since 1.0
  */

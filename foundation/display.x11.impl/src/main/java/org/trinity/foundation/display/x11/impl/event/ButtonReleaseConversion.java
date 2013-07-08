@@ -11,9 +11,11 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import static org.freedesktop.xcb.LibXcbConstants.XCB_BUTTON_RELEASE;
+
 import javax.annotation.concurrent.Immutable;
 
-import org.freedesktop.xcb.LibXcbConstants;
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_button_press_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
@@ -25,15 +27,13 @@ import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.display.x11.api.XEventConversion;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowCache;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
@@ -41,15 +41,13 @@ import de.devsurf.injection.guice.annotations.Bind;
 public class ButtonReleaseConversion implements XEventConversion {
 
 	private static final Logger logger = LoggerFactory.getLogger(ButtonReleaseConversion.class);
-
-	private static final Integer eventCode = Integer.valueOf(LibXcbConstants.XCB_BUTTON_RELEASE);
-
+	private static final Integer eventCode = XCB_BUTTON_RELEASE;
 	private final XWindowCache windowCache;
 	private final EventBus xEventBus;
 
 	@Inject
 	ButtonReleaseConversion(final XWindowCache windowCache,
-							@Named("XEventBus") final EventBus xEventBus) {
+							@XEventBus final EventBus xEventBus) {
 		this.windowCache = windowCache;
 		this.xEventBus = xEventBus;
 	}
@@ -82,8 +80,7 @@ public class ButtonReleaseConversion implements XEventConversion {
 															rootX,
 															rootY);
 
-		final ButtonNotify buttonNotify = new ButtonNotify(pointerInput);
-		return buttonNotify;
+		return new ButtonNotify(pointerInput);
 	}
 
 	private xcb_button_press_event_t cast(final xcb_generic_event_t event_t) {
@@ -101,7 +98,6 @@ public class ButtonReleaseConversion implements XEventConversion {
 		// press has same structure as release
 		final xcb_button_press_event_t button_release_event_t = cast(event_t);
 		final int windowId = button_release_event_t.getEvent();
-		final XWindow window = this.windowCache.getWindow(windowId);
-		return window;
+		return this.windowCache.getWindow(windowId);
 	}
 }

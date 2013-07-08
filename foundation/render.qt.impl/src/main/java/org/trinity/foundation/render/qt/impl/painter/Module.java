@@ -11,14 +11,13 @@
  */
 package org.trinity.foundation.render.qt.impl.painter;
 
+import org.apache.onami.autobind.annotations.GuiceModule;
 import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.trolltech.qt.core.QObject;
-
-import de.devsurf.injection.guice.annotations.GuiceModule;
 
 @GuiceModule
 public class Module extends AbstractModule {

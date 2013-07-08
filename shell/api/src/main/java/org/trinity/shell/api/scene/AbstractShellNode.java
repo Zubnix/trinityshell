@@ -46,7 +46,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	private final AsyncListenableEventBus nodeEventBus;
 
-	protected AbstractShellNode(final ShellScene shellScene,
+	protected AbstractShellNode(final AsyncListenable shellScene,
 								final ListeningExecutorService shellExecutor) {
 		super(shellExecutor);
 		register(shellScene);
