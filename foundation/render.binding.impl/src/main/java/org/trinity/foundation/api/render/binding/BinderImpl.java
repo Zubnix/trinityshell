@@ -1,5 +1,10 @@
 package org.trinity.foundation.api.render.binding;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.util.concurrent.Futures.addCallback;
+import static java.lang.String.format;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -46,39 +51,26 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static java.lang.String.format;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 @Bind
 @Singleton
 @NotThreadSafe
 public class BinderImpl implements Binder {
 
-	private static final Logger logger = LoggerFactory.getLogger(BinderImpl.class);
-
-	private static final Cache<Class<?>, Cache<String, Optional<Method>>> getterCache = CacheBuilder.newBuilder()
+	private static final Logger LOG = LoggerFactory.getLogger(BinderImpl.class);
+	private static final Cache<Class<?>, Cache<String, Optional<Method>>> GETTER_CACHE = CacheBuilder.newBuilder()
 			.build();
-	private static final Cache<Class<?>, Field[]> childViewCache = CacheBuilder.newBuilder().build();
-
+	private static final Cache<Class<?>, Field[]> CHILD_VIEW_CACHE = CacheBuilder.newBuilder().build();
 	private static final String GET_BOOLEAN_PREFIX = "is";
 	private static final String GET_PREFIX = "get";
-
 	private final PropertySlotInvocatorDelegate propertySlotDelegate;
 	private final InputListenerInstallerDelegate inputListenerInstallerDelegate;
 	private final ChildViewDelegate childViewDelegate;
 	private final ViewElementTypes viewElementTypes;
-
 	private final Map<Object, Object> dataContextValueByView = new WeakHashMap<Object, Object>();
 	private final Map<Object, Set<Object>> viewsByDataContextValue = new WeakHashMap<Object, Set<Object>>();
-
 	private final Map<Object, PropertySlots> propertySlotsByView = new WeakHashMap<Object, PropertySlots>();
 	private final Map<Object, ObservableCollection> observableCollectionByView = new WeakHashMap<Object, ObservableCollection>();
 	private final Map<Object, InputSignals> inputSignalsByView = new WeakHashMap<Object, InputSignals>();
-
 	private final Map<Object, Map<Object, DataContext>> dataContextByViewByParentDataContextValue = new WeakHashMap<Object, Map<Object, DataContext>>();
 
 	@Inject
@@ -95,9 +87,9 @@ public class BinderImpl implements Binder {
 	@Override
 	public void bind(	final Object model,
 						final Object view) {
-		logger.debug(	"Bind model={} to view={}",
-						model,
-						view);
+		LOG.debug(	"Bind model={} to view={}",
+					model,
+					view);
 
 		checkNotNull(model);
 		checkNotNull(view);
@@ -116,9 +108,9 @@ public class BinderImpl implements Binder {
 		checkNotNull(model);
 		checkNotNull(propertyName);
 
-		logger.debug(	"Update binding for model={} of property={}",
-						model,
-						propertyName);
+		LOG.debug(	"Update binding for model={} of property={}",
+					model,
+					propertyName);
 
 		updateDataContextBinding(	model,
 									propertyName);
@@ -192,20 +184,20 @@ public class BinderImpl implements Binder {
 
 		} catch (final IllegalAccessException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final IllegalArgumentException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final InvocationTargetException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final ExecutionException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		}
 	}
 
@@ -317,8 +309,8 @@ public class BinderImpl implements Binder {
 
 									@Override
 									public void onFailure(final Throwable t) {
-										logger.error(	"Error while creating new child view.",
-														t);
+										LOG.error(	"Error while creating new child view.",
+													t);
 									}
 								});
 				}
@@ -344,20 +336,20 @@ public class BinderImpl implements Binder {
 
 		} catch (final IllegalAccessException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final IllegalArgumentException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final InvocationTargetException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final ExecutionException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		}
 	}
 
@@ -405,8 +397,8 @@ public class BinderImpl implements Binder {
 
 									@Override
 									public void onFailure(final Throwable t) {
-										logger.error(	"Error while creating new child view.",
-														t);
+										LOG.error(	"Error while creating new child view.",
+													t);
 									}
 								});
 					break;
@@ -534,19 +526,13 @@ public class BinderImpl implements Binder {
 			if (optionalGetter.isPresent()) {
 				final Method getter = optionalGetter.get();
 
-				// part 1 of workaround for f*cking bug (4071957) submitted in
+				// workaround for bug (4071957) submitted in
 				// 1997(!) and still not fixed by sun/oracle.
 				if (propertyDataContext.getClass().isAnonymousClass()) {
 					getter.setAccessible(true);
 				}
 
 				final Object propertyInstance = optionalGetter.get().invoke(propertyDataContext);
-
-				// part 2 of workaround for f*cking bug (4071957) submitted in
-				// 1997(!) and still not fixed by sun/oracle
-				if (propertyDataContext.getClass().isAnonymousClass()) {
-					getter.setAccessible(false);
-				}
 
 				invokePropertySlot(	view,
 									propertySlot,
@@ -555,20 +541,20 @@ public class BinderImpl implements Binder {
 			}
 		} catch (final IllegalAccessException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final IllegalArgumentException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final InvocationTargetException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final ExecutionException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		}
 
 	}
@@ -596,20 +582,20 @@ public class BinderImpl implements Binder {
 												argument);
 		} catch (final NoSuchMethodException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final SecurityException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final InstantiationException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final IllegalAccessException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		}
 	}
 
@@ -636,7 +622,7 @@ public class BinderImpl implements Binder {
 	}
 
 	protected Field[] findChildViews(final Class<?> modelClass) throws ExecutionException {
-		return childViewCache.get(	modelClass,
+		return CHILD_VIEW_CACHE.get(modelClass,
 									new Callable<Field[]>() {
 										@Override
 										public Field[] call() throws Exception {
@@ -711,12 +697,12 @@ public class BinderImpl implements Binder {
 			}
 		} catch (final IllegalArgumentException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final IllegalAccessException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		}
 	}
 
@@ -748,17 +734,17 @@ public class BinderImpl implements Binder {
 				}
 			}
 		} catch (final IllegalAccessException e) {
-			logger.error(	String.format(	"Can not access getter on %s. Is it a no argument public method?",
-											currentModel),
-							e);
+			LOG.error(	String.format(	"Can not access getter on %s. Is it a no argument public method?",
+										currentModel),
+						e);
 		} catch (final IllegalArgumentException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final InvocationTargetException e) {
 			// TODO explanation
-			logger.error(	"",
-							e);
+			LOG.error(	"",
+						e);
 		} catch (final ExecutionException e) {
 			Throwables.propagate(e);
 		}
@@ -775,7 +761,7 @@ public class BinderImpl implements Binder {
 
 	protected Optional<Method> getGetterMethod(	final Class<?> modelClass,
 												final String propertyName) throws ExecutionException {
-		return getterCache.get(	modelClass,
+		return GETTER_CACHE.get(modelClass,
 								new Callable<Cache<String, Optional<Method>>>() {
 									@Override
 									public Cache<String, Optional<Method>> call() {
@@ -799,21 +785,21 @@ public class BinderImpl implements Binder {
 														foundMethod = modelClass.getMethod(getterMethodName);
 													} catch (final NoSuchMethodException e1) {
 														// TODO explanation
-														logger.error(	"",
-																		e1);
+														LOG.error(	"",
+																	e1);
 
 													} catch (final SecurityException e1) {
-														logger.error(	format(	"Property %s is not accessible on %s. Did you declare it as public?",
-																				propertyName,
-																				modelClass.getName()),
-																		e);
+														LOG.error(	format(	"Property %s is not accessible on %s. Did you declare it as public?",
+																			propertyName,
+																			modelClass.getName()),
+																	e);
 													}
 												} catch (final SecurityException e1) {
 													// TODO explanation
-													logger.error(	format(	"Property %s is not accessible on %s. Did you declare it as public?",
-																			propertyName,
-																			modelClass.getName()),
-																	e1);
+													LOG.error(	format(	"Property %s is not accessible on %s. Did you declare it as public?",
+																		propertyName,
+																		modelClass.getName()),
+																e1);
 												}
 												return Optional.fromNullable(foundMethod);
 											}

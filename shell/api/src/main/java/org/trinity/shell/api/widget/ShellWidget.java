@@ -12,21 +12,24 @@
 package org.trinity.shell.api.widget;
 
 import org.trinity.foundation.api.render.Painter;
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.surface.ShellSurfaceParent;
 
 /***************************************
  * Provides visual elements for the user to interact with in the shell scene.
- *************************************** 
+ ***************************************
  */
+@ExecutionContext(ShellExecutor.class)
 public interface ShellWidget extends ShellSurfaceParent {
 
 	/***************************************
 	 * The object to interface with the render back-end. A {@code Painter}
 	 * instance is dedicated to a single {@code ShellWidget} instance and should
 	 * not change.
-	 * 
+	 *
 	 * @return a {@link Painter}.
-	 *************************************** 
+	 ***************************************
 	 */
 	Painter getPainter();
 }

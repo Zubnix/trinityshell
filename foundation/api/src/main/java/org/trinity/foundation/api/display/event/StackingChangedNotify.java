@@ -11,13 +11,17 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
  * Notifies that the stacking position of a display resource has changed
- *************************************** 
+ ***************************************
  */
 @Immutable
+@ExecutionContext(DisplayExecutor.class)
 public class StackingChangedNotify extends DisplayEvent {
 
 }

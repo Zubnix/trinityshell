@@ -17,7 +17,8 @@ import java.util.LinkedList;
 
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
@@ -32,16 +33,17 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * <p/>
  * **************************************
  */
-@OwnerThread("Shell")
+@ExecutionContext(ShellExecutor.class)
 public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodeParent {
 
 	private final LinkedList<AbstractShellNode> children = new LinkedList<AbstractShellNode>();
-
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-	protected AbstractShellNodeParent(	final AsyncListenable shellScene,
+	protected AbstractShellNodeParent(	ShellNodeParent rootShellNodeParent,
+										final AsyncListenable shellScene,
 										final ListeningExecutorService shellExecutor) {
-		super(	shellScene,
+		super(	rootShellNodeParent,
+				shellScene,
 				shellExecutor);
 	}
 

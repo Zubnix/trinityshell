@@ -12,25 +12,26 @@
 package org.trinity.shell.api.surface;
 
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 
 /***************************************
  * Creates shell surfaces from a display surface and provides access to the root
  * shell surface.
- *************************************** 
+ ***************************************
  */
-@OwnerThread("Shell")
+@ExecutionContext(ShellExecutor.class)
 public interface ShellSurfaceFactory {
 	/***************************************
 	 * Create a new shell surface that is backed by the given display surface.
 	 * The new shell surface will have the root shell surface as its parent.
-	 * 
+	 *
 	 * @param displaySurface
 	 *            a {@link DisplaySurface}
 	 * @return a new future {@link ShellSurface}.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<ShellSurface> createShellClientSurface(DisplaySurface displaySurface);
 }

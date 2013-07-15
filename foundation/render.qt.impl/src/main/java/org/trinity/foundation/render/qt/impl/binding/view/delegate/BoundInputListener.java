@@ -10,7 +10,8 @@ import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.Momentum;
 import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.binding.model.delegate.InputSlotCallerDelegate;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.render.bindkey.RenderExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
@@ -19,7 +20,7 @@ import com.trolltech.qt.gui.QKeyEvent;
 import com.trolltech.qt.gui.QMouseEvent;
 
 @NotThreadSafe
-@OwnerThread("Render")
+@ExecutionContext(RenderExecutor.class)
 public class BoundInputListener extends QObject {
 
 	private final Class<? extends Input> inputType;

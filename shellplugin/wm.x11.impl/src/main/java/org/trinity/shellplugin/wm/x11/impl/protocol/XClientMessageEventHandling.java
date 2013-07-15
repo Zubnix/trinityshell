@@ -1,21 +1,19 @@
 package org.trinity.shellplugin.wm.x11.impl.protocol;
 
-import org.freedesktop.xcb.LibXcb;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
+
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_client_message_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
-import org.trinity.shellplugin.wm.x11.impl.XEventHandling;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import de.devsurf.injection.guice.annotations.Bind;
 
 @Bind(multiple = true)
 @Singleton
 public class XClientMessageEventHandling implements XEventHandling {
 
-	private static final Integer eventCode = Integer.valueOf(LibXcb.XCB_CLIENT_MESSAGE);
-
+	private static final Integer eventCode = XCB_CLIENT_MESSAGE;
 	private final XWindowProtocol xWindowProtocol;
 
 	@Inject

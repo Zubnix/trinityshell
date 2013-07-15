@@ -12,6 +12,9 @@
  */
 package org.trinity.bootstrap;
 
+import org.apache.onami.autobind.configuration.StartupModule;
+import org.apache.onami.autobind.scanner.PackageFilter;
+import org.apache.onami.autobind.scanner.asm.ASMClasspathScanner;
 import org.trinity.foundation.render.qt.impl.RenderApplication;
 import org.trinity.shell.api.plugin.ShellPluginsRunner;
 
@@ -21,9 +24,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Stage;
 
-import de.devsurf.injection.guice.scanner.PackageFilter;
-import de.devsurf.injection.guice.scanner.StartupModule;
-import de.devsurf.injection.guice.scanner.asm.ASMClasspathScanner;
 
 public class EntryPoint {
 
@@ -33,8 +33,8 @@ public class EntryPoint {
 		RenderApplication.start();
 
 		final Injector injector = Guice.createInjector(	Stage.PRODUCTION,
-														StartupModule.create(	ASMClasspathScanner.class,
-																				PackageFilter.create("org.trinity")));
+														StartupModule.create(ASMClasspathScanner.class,
+																PackageFilter.create("org.trinity")));
 
 		final ShellPluginsRunner shellPluginsRunner = injector.getInstance(ShellPluginsRunner.class);
 		shellPluginsRunner.startAll();

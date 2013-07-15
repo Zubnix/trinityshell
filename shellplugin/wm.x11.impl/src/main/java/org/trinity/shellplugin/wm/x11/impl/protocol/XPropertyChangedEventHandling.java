@@ -1,23 +1,24 @@
 package org.trinity.shellplugin.wm.x11.impl.protocol;
 
-import org.freedesktop.xcb.LibXcb;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_PROPERTY_NOTIFY;
+
+import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.shellplugin.wm.x11.impl.XEventHandling;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import de.devsurf.injection.guice.annotations.Bind;
-
 @Bind(multiple = true)
 @Singleton
+@ExecutionContext(DisplayExecutor.class)
 public class XPropertyChangedEventHandling implements XEventHandling {
 
-	private static final Integer eventCode = Integer.valueOf(LibXcb.XCB_PROPERTY_NOTIFY);
-
+	private static final Integer eventCode = XCB_PROPERTY_NOTIFY;
 	private final XWindowProtocol xWindowProtocol;
 
 	@Inject

@@ -11,6 +11,8 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -24,7 +26,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DestroyNotify;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
@@ -33,37 +37,16 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
-
 @Bind
 @To(IMPLEMENTATION)
 @Singleton
+@ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public class XWindowCache {
 
-	private static final Logger logger = LoggerFactory.getLogger(XWindowCache.class);
-
-	private class DestroyListener {
-		private final XWindow window;
-
-		public DestroyListener(final XWindow window) {
-			this.window = window;
-		}
-
-		@Subscribe
-		public void destroyed(final DestroyNotify destroyNotify) {
-			final Integer windowId = (Integer) this.window.getDisplaySurfaceHandle().getNativeHandle();
-			XWindowCache.this.xWindows.invalidate(windowId);
-			this.window.unregister(this);
-
-			logger.debug(	"Xwindow={} removed from cache.",
-							windowId);
-		}
-	}
-
-	private final Cache<Integer, XWindow> xWindows = CacheBuilder.newBuilder().concurrencyLevel(1).build();
+	private static final Logger LOG = LoggerFactory.getLogger(XWindowCache.class);
 	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
-
+	private final Cache<Integer, XWindow> xWindows = CacheBuilder.newBuilder().concurrencyLevel(1).build();
 	private final DisplaySurfaceFactory displaySurfaceFactory;
 
 	@Inject
@@ -81,8 +64,8 @@ public class XWindowCache {
 										new Callable<XWindow>() {
 											@Override
 											public XWindow call() {
-												logger.debug(	"Xwindow={} added to cache.",
-																windowId);
+												LOG.debug("Xwindow={} added to cache.",
+														windowId);
 
 												final XWindow xWindow = (XWindow) XWindowCache.this.displaySurfaceFactory
 														.createDisplaySurface(resourceHandle);
@@ -98,5 +81,23 @@ public class XWindowCache {
 
 	public boolean isPresent(final int windowId) {
 		return this.xWindows.getIfPresent(Integer.valueOf(windowId)) != null;
+	}
+
+	private class DestroyListener {
+		private final XWindow window;
+
+		public DestroyListener(final XWindow window) {
+			this.window = window;
+		}
+
+		@Subscribe
+		public void destroyed(final DestroyNotify destroyNotify) {
+			final Integer windowId = (Integer) this.window.getDisplaySurfaceHandle().getNativeHandle();
+			XWindowCache.this.xWindows.invalidate(windowId);
+			this.window.unregister(this);
+
+			LOG.debug("Xwindow={} removed from cache.",
+					windowId);
+		}
 	}
 }

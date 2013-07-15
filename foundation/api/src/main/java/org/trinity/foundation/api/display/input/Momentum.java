@@ -11,6 +11,9 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 import javax.annotation.concurrent.Immutable;
 
 // TODO documentation
@@ -18,6 +21,7 @@ import javax.annotation.concurrent.Immutable;
  * A user input momentum.
  */
 @Immutable
+@ExecutionContext(DisplayExecutor.class)
 public enum Momentum {
 	/**
 	 * User input has started.

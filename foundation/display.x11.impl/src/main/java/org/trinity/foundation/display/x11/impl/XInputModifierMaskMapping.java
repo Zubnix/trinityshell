@@ -29,13 +29,16 @@ import javax.annotation.concurrent.Immutable;
 
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.input.InputModifier;
 
 import com.google.inject.Singleton;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 @Bind
 @To(IMPLEMENTATION)
 @Singleton
+@ExecutionContext(DisplayExecutor.class)
 @Immutable
 public class XInputModifierMaskMapping {
 	private final Map<String, Integer> nameToXInputModifierMask = new ConcurrentHashMap<String, Integer>();

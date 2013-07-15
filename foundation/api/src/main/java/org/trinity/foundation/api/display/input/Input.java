@@ -11,13 +11,17 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
  * Represents any form of user input.
- *************************************** 
+ ***************************************
  */
 @Immutable
+@ExecutionContext(DisplayExecutor.class)
 public class Input {
 
 	private final Momentum momentum;
@@ -27,10 +31,10 @@ public class Input {
 	 * Construct new <code>Input</code> with the given {@link Momentum}. The
 	 * <code>Momentum</code> is used to provide an indication of the state of
 	 * the user input.
-	 * 
+	 *
 	 * @param momentum
 	 *            a {@link Momentum}.
-	 *************************************** 
+	 ***************************************
 	 */
 	public Input(	final Momentum momentum,
 					final InputModifiers inputModifiers) {
@@ -40,9 +44,9 @@ public class Input {
 
 	/***************************************
 	 * The state of the user input.
-	 * 
+	 *
 	 * @return a {@link Momentum}.
-	 *************************************** 
+	 ***************************************
 	 */
 	public Momentum getMomentum() {
 		return this.momentum;

@@ -23,7 +23,8 @@ import org.freedesktop.xcb.xcb_button_press_event_t;
 import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
 import com.google.common.eventbus.EventBus;
@@ -35,7 +36,7 @@ import com.google.inject.Singleton;
 @To(IMPLEMENTATION)
 @Singleton
 @NotThreadSafe
-@OwnerThread("Display")
+@ExecutionContext(DisplayExecutor.class)
 public class XTime {
 
 	private final AtomicInteger time = new AtomicInteger();

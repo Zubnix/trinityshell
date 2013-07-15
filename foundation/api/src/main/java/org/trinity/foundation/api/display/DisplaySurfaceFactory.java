@@ -11,14 +11,18 @@
  */
 package org.trinity.foundation.api.display;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 /***************************************
  * Creates {@link DisplaySurface}s based on their {@link DisplaySurfaceHandle}.
  * Ideally multiple calls to {@link #createDisplaySurface(DisplaySurfaceHandle)}
  * with the same {@link DisplaySurfaceHandle} argument should return the same
  * {@link DisplaySurface} instance.
- * 
- *************************************** 
+ *
+ ***************************************
  */
+@ExecutionContext(DisplayExecutor.class)
 public interface DisplaySurfaceFactory {
 
 	// FIXME this should also return a future. the display surface creation
@@ -27,11 +31,11 @@ public interface DisplaySurfaceFactory {
 	 * Create a new {@link DisplaySurface} with the provided
 	 * {@link DisplaySurfaceHandle} as reference to the underlying native
 	 * resource.
-	 * 
+	 *
 	 * @param displaySurfaceHandle
 	 *            a {@link DisplaySurfaceHandle}
 	 * @return a {@link DisplaySurface}.
-	 *************************************** 
+	 ***************************************
 	 */
 	DisplaySurface createDisplaySurface(DisplaySurfaceHandle displaySurfaceHandle);
 }

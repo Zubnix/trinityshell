@@ -1,5 +1,6 @@
 package org.trinity.foundation.api.shared;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -11,6 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.TYPE)
 @Inherited
-public @interface OwnerThread {
-	String value();
+public @interface ExecutionContext {
+
+	Class<? extends Annotation> value();
 }

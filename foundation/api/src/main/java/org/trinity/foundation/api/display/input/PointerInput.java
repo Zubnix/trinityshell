@@ -11,13 +11,17 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 import javax.annotation.concurrent.Immutable;
 
 /****************************************
  * User input that came from a pointing device, like a mouse.
- *************************************** 
+ ***************************************
  */
 @Immutable
+@ExecutionContext(DisplayExecutor.class)
 public class PointerInput extends Input {
 
 	private final Button button;
@@ -29,7 +33,7 @@ public class PointerInput extends Input {
 	/***************************************
 	 * Create a new {@code PointerInput} with the {@link Button} who's
 	 * {@link Momentum} has changed.
-	 * 
+	 *
 	 * @param momentum
 	 *            A {@link Momentum}
 	 * @param button
@@ -49,7 +53,7 @@ public class PointerInput extends Input {
 	 * @param rootY
 	 *            The Y position of the pointer relative to the root native
 	 *            display area.
-	 *************************************** 
+	 ***************************************
 	 */
 	public PointerInput(final Momentum momentum,
 						final Button button,
@@ -69,9 +73,9 @@ public class PointerInput extends Input {
 
 	/***************************************
 	 * The {@link Button} who's {@link Momentum} has changed.
-	 * 
+	 *
 	 * @return a {@link Button}.
-	 *************************************** 
+	 ***************************************
 	 */
 	public Button getButton() {
 		return this.button;
@@ -80,10 +84,10 @@ public class PointerInput extends Input {
 	/***************************************
 	 * The X position of the pointer relative to the currently focused native
 	 * display area.
-	 * 
+	 *
 	 * @return the relative X position, implementation dependent but usually in
 	 *         pixels.
-	 *************************************** 
+	 ***************************************
 	 */
 	public int getRelativeX() {
 		return this.relativeX;
@@ -92,10 +96,10 @@ public class PointerInput extends Input {
 	/***************************************
 	 * The Y position of the pointer relative to the currently focused native
 	 * display area.
-	 * 
+	 *
 	 * @return the relative Y position, implementation dependent but usually in
 	 *         pixels.
-	 *************************************** 
+	 ***************************************
 	 */
 	public int getRelativeY() {
 		return this.relativeY;
@@ -103,10 +107,10 @@ public class PointerInput extends Input {
 
 	/***************************************
 	 * The X position of the pointer relative to the root native display area.
-	 * 
+	 *
 	 * @return the absolute X position, implementation dependent but usually in
 	 *         pixels.
-	 *************************************** 
+	 ***************************************
 	 */
 	public int getRootX() {
 		return this.rootX;
@@ -114,10 +118,10 @@ public class PointerInput extends Input {
 
 	/***************************************
 	 * The Y position of the pointer relative to the root native display area.
-	 * 
+	 *
 	 * @return the absolute Y position, implementation dependent but usually in
 	 *         pixels.
-	 *************************************** 
+	 ***************************************
 	 */
 	public int getRootY() {
 		return this.rootY;

@@ -13,24 +13,27 @@ package org.trinity.foundation.api.display.event;
 
 import javax.annotation.concurrent.Immutable;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.input.KeyboardInput;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 /**
  * Notifies that a keyboard key's state (pressed, released) has changed.
  */
 @Immutable
+@ExecutionContext(DisplayExecutor.class)
 public class KeyNotify extends InputNotify<KeyboardInput> {
 
 	/***************************************
 	 * Create a new <code>KeyNotify</code> with the given display resource as
 	 * the target object.
-	 * 
+	 *
 	 * @param displayEventTarget
 	 *            The receiver of this event. eg the display resource that has
 	 *            the focus at the time of keyboard input.
 	 * @param input
 	 *            {@link KeyboardInput}
-	 *************************************** 
+	 ***************************************
 	 */
 	public KeyNotify(final KeyboardInput input) {
 		super(input);

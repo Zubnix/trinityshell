@@ -11,14 +11,18 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
  * User input that came from a text input device.
- * 
- *************************************** 
+ *
+ ***************************************
  */
 @Immutable
+@ExecutionContext(DisplayExecutor.class)
 public class KeyboardInput extends Input {
 
 	private final Key key;
@@ -26,7 +30,7 @@ public class KeyboardInput extends Input {
 	/***************************************
 	 * Create a new <code>KeyboardInput</code> with the {@link Key} who's
 	 * {@link Momentum} has changed.
-	 * 
+	 *
 	 * @param momentum
 	 *            a {@link Momentum}
 	 * @param key
@@ -34,7 +38,7 @@ public class KeyboardInput extends Input {
 	 * @param inputModifiers
 	 *            The {@link InputModifiers} that were active during the
 	 *            creation of this <code>KeyboardInput</code>.
-	 *************************************** 
+	 ***************************************
 	 */
 	public KeyboardInput(	final Momentum momentum,
 							final Key key,
@@ -46,9 +50,9 @@ public class KeyboardInput extends Input {
 
 	/***************************************
 	 * the {@link Key} who's {@link Momentum} has changed.
-	 * 
+	 *
 	 * @return a {@link Key}
-	 *************************************** 
+	 ***************************************
 	 */
 	public Key getKey() {
 		return this.key;

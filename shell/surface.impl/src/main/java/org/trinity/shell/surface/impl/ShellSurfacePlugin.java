@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
-import org.trinity.foundation.api.display.DisplayServer;
+import org.trinity.foundation.api.display.Display;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.plugin.ShellPlugin;
 
@@ -31,12 +31,12 @@ import com.google.inject.Singleton;
 @Singleton
 public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlugin {
 
-	private final DisplayServer display;
+	private final Display display;
 	private final ListeningExecutorService shellExecutor;
 
 	@Inject
 	ShellSurfacePlugin(	@ShellExecutor final ListeningExecutorService shellExecutor,
-						final DisplayServer display) {
+						final Display display) {
 		this.display = display;
 		this.shellExecutor = shellExecutor;
 	}

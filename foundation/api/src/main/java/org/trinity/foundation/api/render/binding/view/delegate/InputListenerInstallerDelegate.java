@@ -14,8 +14,9 @@ package org.trinity.foundation.api.render.binding.view.delegate;
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
 import org.trinity.foundation.api.render.binding.model.delegate.InputSlotCallerDelegate;
+import org.trinity.foundation.api.render.bindkey.RenderExecutor;
 import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -25,11 +26,11 @@ import com.google.common.util.concurrent.ListenableFuture;
  * {@link InputSlotCallerDelegate#callInputSlot(Object, String, Input)} will be
  * called with the matching arguments. This delegate is implemented for a
  * specific widget toolkit.
- * 
+ *
  * @see InputSlotCallerDelegate
- *************************************** 
+ ***************************************
  */
-@OwnerThread("Render")
+@ExecutionContext(RenderExecutor.class)
 public interface InputListenerInstallerDelegate {
 
 	/***************************************
@@ -37,7 +38,7 @@ public interface InputListenerInstallerDelegate {
 	 * receiving the desired toolkit input, the
 	 * {@link InputSlotCallerDelegate#callInputSlot(Object, String, Input)} will
 	 * be called with the matching arguments.
-	 * 
+	 *
 	 * @param inputType
 	 *            The type of {@link Input} to listen for.
 	 * @param view
@@ -49,7 +50,7 @@ public interface InputListenerInstallerDelegate {
 	 *            input arrives.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> installViewInputListener(Class<? extends Input> inputType,
 													Object view,
@@ -58,7 +59,7 @@ public interface InputListenerInstallerDelegate {
 
 	/***************************************
 	 * Remove a previously installed input listener.
-	 * 
+	 *
 	 * @param inputType
 	 *            The type of {@link Input} that was listened to.
 	 * @param view
@@ -72,7 +73,7 @@ public interface InputListenerInstallerDelegate {
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #installViewInputListener(Class, Object, AsyncListenable, String)
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> removeViewInputListener(	Class<? extends Input> inputType,
 													Object view,

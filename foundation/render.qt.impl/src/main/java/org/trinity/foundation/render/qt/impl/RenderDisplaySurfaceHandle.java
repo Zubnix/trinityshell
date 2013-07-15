@@ -30,7 +30,7 @@ import com.trolltech.qt.gui.QWidget;
 @ThreadSafe
 public class RenderDisplaySurfaceHandle implements DisplaySurfaceHandle {
 
-	private static final Logger logger = LoggerFactory.getLogger(RenderDisplaySurfaceHandle.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RenderDisplaySurfaceHandle.class);
 
 	private final WeakReference<QWidget> visualReference;
 	private volatile boolean visualDestroyed = false;
@@ -97,11 +97,11 @@ public class RenderDisplaySurfaceHandle implements DisplaySurfaceHandle {
 		try {
 			handle = getHandleTask.get();
 		} catch (final InterruptedException e) {
-			logger.error(	"Interrupted while while waiting for native render handle",
-							e);
+			LOG.error("Interrupted while while waiting for native render handle",
+					e);
 		} catch (final ExecutionException e) {
-			logger.error(	"Exception while querying native render handle",
-							e);
+			LOG.error("Exception while querying native render handle",
+					e);
 		}
 		return handle;
 	}

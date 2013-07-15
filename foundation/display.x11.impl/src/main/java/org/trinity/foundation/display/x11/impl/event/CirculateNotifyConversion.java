@@ -20,8 +20,10 @@ import org.freedesktop.xcb.xcb_circulate_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.StackingChangedNotify;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindow;
@@ -33,6 +35,7 @@ import com.google.inject.Singleton;
 
 @Bind(multiple = true)
 @Singleton
+@ExecutionContext(DisplayExecutor.class)
 @Immutable
 public class CirculateNotifyConversion implements XEventConversion {
 

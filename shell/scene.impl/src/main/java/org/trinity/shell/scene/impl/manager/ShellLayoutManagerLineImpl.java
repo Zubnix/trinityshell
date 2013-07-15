@@ -11,8 +11,13 @@
  */
 package org.trinity.shell.scene.impl.manager;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
+
 import java.util.List;
 
+import org.apache.onami.autobind.annotations.Bind;
+import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.shared.Margins;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.AbstractShellNode;
@@ -34,86 +39,19 @@ import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
-
-import static com.google.common.base.Preconditions.checkArgument;
-
 // TODO try to avoid castings
 // TODO refactor/rewrite
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
 // be negative. childs with size 0, ...)
 // TODO refactor to reuse code and for cleaner reading
 // =>rewrite this sh*t...
-@Bind(to = @To(value = Type.CUSTOM, customs = ShellLayoutManagerLine.class))
+@Bind
+@To(value = CUSTOM, customs = ShellLayoutManagerLine.class)
 public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
 
 	private final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(1,
 																								new Margins(0));
-
-	private class ChildGeoListener {
-		// unused methods are used by guava's eventbus.
-
-		@SuppressWarnings("unused")
-		@Subscribe
-		public void handleChildMoveResizeRequest(final ShellNodeMoveResizeRequestEvent shellNodeMoveResizeRequestEvent) {
-			final ShellNode child = shellNodeMoveResizeRequestEvent.getSource();
-			checkArgument(child instanceof AbstractShellNode);
-			if (getLayoutProperty(child).getWeight() == 0) {
-				child.doResize();
-				layout(((AbstractShellNode) child).getParentImpl());
-			} else {
-				cancelMoveResize(child);
-			}
-		}
-
-		@SuppressWarnings("unused")
-		@Subscribe
-		public void handleChildDestroyed(final ShellNodeDestroyedEvent shellNodeDestroyedEvent) {
-			final ShellNode child = shellNodeDestroyedEvent.getSource();
-			checkArgument(child instanceof AbstractShellNode);
-			removeChild(shellNodeDestroyedEvent.getSource());
-			layout(((AbstractShellNode) child).getParentImpl());
-		}
-
-		@SuppressWarnings("unused")
-		@Subscribe
-		public void handleChildReparentRequest(final ShellNodeReparentRequestEvent shellNodeReparentRequestEvent) {
-			final ShellNode child = shellNodeReparentRequestEvent.getSource();
-			checkArgument(child instanceof AbstractShellNode);
-			final ShellNodeParent oldParent = ((AbstractShellNode) child).getParentImpl();
-			shellNodeReparentRequestEvent.getSource().doReparent();
-			layout(oldParent);
-		}
-
-		@SuppressWarnings("unused")
-		@Subscribe
-		public void handleChildShowRequest(final ShellNodeShowRequestEvent shellNodeShowRequestEvent) {
-			shellNodeShowRequestEvent.getSource().doShow();
-		}
-
-		@SuppressWarnings("unused")
-		@Subscribe
-		public void handleChildHideRequest(final ShellNodeHideRequestEvent shellNodeHideRequestEvent) {
-			shellNodeHideRequestEvent.getSource().doHide();
-		}
-
-		@SuppressWarnings("unused")
-		@Subscribe
-		public void handleChildLowerRequest(final ShellNodeLowerRequestEvent shellNodeLowerRequestEvent) {
-			shellNodeLowerRequestEvent.getSource().doLower();
-		}
-
-		@SuppressWarnings("unused")
-		@Subscribe
-		public void handleChildRaiseRequest(final ShellNodeRaiseRequestEvent shellNodeRaiseRequestEvent) {
-			shellNodeRaiseRequestEvent.getSource().doRaise();
-		}
-	}
-
 	private final ChildGeoListener childGeoListener = new ChildGeoListener();
-
 	private boolean horizontalDirection = true;
 	private boolean inverseDirection = false;
 
@@ -333,5 +271,65 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	@Override
 	public ShellLayoutPropertyLine defaultLayoutProperty() {
 		return this.DEFAULT_LAYOUT_PROPERTY;
+	}
+
+	private class ChildGeoListener {
+		// unused methods are used by guava's eventbus.
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public void handleChildMoveResizeRequest(final ShellNodeMoveResizeRequestEvent shellNodeMoveResizeRequestEvent) {
+			final ShellNode child = shellNodeMoveResizeRequestEvent.getSource();
+			checkArgument(child instanceof AbstractShellNode);
+			if (getLayoutProperty(child).getWeight() == 0) {
+				child.doResize();
+				layout(((AbstractShellNode) child).getParentImpl());
+			} else {
+				cancelMoveResize(child);
+			}
+		}
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public void handleChildDestroyed(final ShellNodeDestroyedEvent shellNodeDestroyedEvent) {
+			final ShellNode child = shellNodeDestroyedEvent.getSource();
+			checkArgument(child instanceof AbstractShellNode);
+			removeChild(shellNodeDestroyedEvent.getSource());
+			layout(((AbstractShellNode) child).getParentImpl());
+		}
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public void handleChildReparentRequest(final ShellNodeReparentRequestEvent shellNodeReparentRequestEvent) {
+			final ShellNode child = shellNodeReparentRequestEvent.getSource();
+			checkArgument(child instanceof AbstractShellNode);
+			final ShellNodeParent oldParent = ((AbstractShellNode) child).getParentImpl();
+			shellNodeReparentRequestEvent.getSource().doReparent();
+			layout(oldParent);
+		}
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public void handleChildShowRequest(final ShellNodeShowRequestEvent shellNodeShowRequestEvent) {
+			shellNodeShowRequestEvent.getSource().doShow();
+		}
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public void handleChildHideRequest(final ShellNodeHideRequestEvent shellNodeHideRequestEvent) {
+			shellNodeHideRequestEvent.getSource().doHide();
+		}
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public void handleChildLowerRequest(final ShellNodeLowerRequestEvent shellNodeLowerRequestEvent) {
+			shellNodeLowerRequestEvent.getSource().doLower();
+		}
+
+		@SuppressWarnings("unused")
+		@Subscribe
+		public void handleChildRaiseRequest(final ShellNodeRaiseRequestEvent shellNodeRaiseRequestEvent) {
+			shellNodeRaiseRequestEvent.getSource().doRaise();
+		}
 	}
 }

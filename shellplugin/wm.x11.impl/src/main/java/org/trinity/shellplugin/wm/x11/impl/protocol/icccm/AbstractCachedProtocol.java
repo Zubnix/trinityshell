@@ -13,7 +13,8 @@ import org.freedesktop.xcb.xcb_property_notify_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XPropertyChanged;
 
@@ -27,23 +28,21 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
 @NotThreadSafe
-@OwnerThread("WindowManager")
+@ExecutionContext(DisplayExecutor.class)
 public abstract class AbstractCachedProtocol<P> {
 
-	private static Logger logger = LoggerFactory.getLogger(AbstractCachedProtocol.class);
-
+	private static Logger LOG = LoggerFactory.getLogger(AbstractCachedProtocol.class);
 	private final Map<DisplaySurface, Optional<P>> protocolCache = new WeakHashMap<DisplaySurface, Optional<P>>();
 	private final Map<DisplaySurface, EventBus> listenersByWindow = new WeakHashMap<DisplaySurface, EventBus>();
-
-	private final ListeningExecutorService wmExecutor;
-
+	private final ListeningExecutorService displayExecutor;
 	private int protocolAtomId;
 
-	AbstractCachedProtocol(	final ListeningExecutorService wmExecutor,
+	// TODO use display execution context
+	AbstractCachedProtocol(	final ListeningExecutorService displayExecutor,
 							final XAtomCache xAtomCache,
 							final String protocolName) {
-		this.wmExecutor = wmExecutor;
-		wmExecutor.submit(new Callable<Void>() {
+		this.displayExecutor = displayExecutor;
+		displayExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
 				AbstractCachedProtocol.this.protocolAtomId = xAtomCache.getAtom(protocolName);
@@ -72,7 +71,7 @@ public abstract class AbstractCachedProtocol<P> {
 
 	public ListenableFuture<Optional<P>> get(final DisplaySurface xWindow) {
 
-		final ListenableFuture<Optional<P>> protocolFuture = this.wmExecutor.submit(new Callable<Optional<P>>() {
+		final ListenableFuture<Optional<P>> protocolFuture = this.displayExecutor.submit(new Callable<Optional<P>>() {
 			@Override
 			public Optional<P> call() throws Exception {
 				return AbstractCachedProtocol.this.protocolCache.get(xWindow);
@@ -124,8 +123,8 @@ public abstract class AbstractCachedProtocol<P> {
 
 						@Override
 						public void onFailure(final Throwable t) {
-							logger.error(	"Failed to update protocol.",
-											t);
+							LOG.error("Failed to update protocol.",
+									t);
 						}
 					});
 	}

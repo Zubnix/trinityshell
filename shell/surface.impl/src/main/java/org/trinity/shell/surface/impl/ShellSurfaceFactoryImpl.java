@@ -12,25 +12,32 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellRootNode;
 import org.trinity.shell.api.bindingkey.ShellScene;
+import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 @Bind
+@Singleton
 @ThreadSafe
 public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ShellSurfaceFactory.class);
+	private final ShellNodeParent shellRootNode;
 	private final AsyncListenable shellScene;
 	private final ListeningExecutorService shellExecutor;
 
 	@Inject
-	ShellSurfaceFactoryImpl(@ShellScene final AsyncListenable shellScene,
+	ShellSurfaceFactoryImpl(@ShellRootNode ShellNodeParent shellRootNode,
+							@ShellScene final AsyncListenable shellScene,
 							@ShellExecutor final ListeningExecutorService shellExecutor) {
+		this.shellRootNode = shellRootNode;
 		this.shellScene = shellScene;
 		this.shellExecutor = shellExecutor;
 	}
@@ -40,7 +47,8 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 		return this.shellExecutor.submit(new Callable<ShellSurface>() {
 			@Override
 			public ShellSurface call() {
-				final ShellClientSurface shellClientSurface = new ShellClientSurface(	shellScene,
+				final ShellClientSurface shellClientSurface = new ShellClientSurface(	shellRootNode,
+																						shellScene,
 																						shellExecutor,
 																						displaySurface);
 				syncGeoToDisplaySurfaceImpl(displaySurface,

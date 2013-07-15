@@ -15,8 +15,32 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.concurrent.ExecutorService;
 
-import org.trinity.foundation.api.shared.*;
-import org.trinity.shell.api.scene.event.*;
+import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.AsyncListenableEventBus;
+import org.trinity.foundation.api.shared.Coordinate;
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.foundation.api.shared.ImmutableRectangle;
+import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.api.shared.Size;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeEvent;
+import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
+import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeLoweredEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMovedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMovedResizedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeRaisedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeReparentedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeResizedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeShowedEvent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 
@@ -26,9 +50,10 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * <p/>
  * **************************************
  */
-@OwnerThread("Shell")
+@ExecutionContext(ShellExecutor.class)
 public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
+	private final AsyncListenableEventBus nodeEventBus;
 	private Coordinate position = new Coordinate(	0,
 													0);
 	private Coordinate desiredPosition = new Coordinate(0,
@@ -38,21 +63,17 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	private Size desiredSize = new Size(5,
 										5);
 	private boolean visible;
-
 	private AbstractShellNodeParent parent;
 	private AbstractShellNodeParent desiredParent;
-
 	private boolean destroyed;
 
-	private final AsyncListenableEventBus nodeEventBus;
-
-	protected AbstractShellNode(final AsyncListenable shellScene,
+	protected AbstractShellNode(ShellNodeParent rootShellNodeParent,
+								final AsyncListenable shellScene,
 								final ListeningExecutorService shellExecutor) {
 		super(shellExecutor);
 		register(shellScene);
 		this.nodeEventBus = new AsyncListenableEventBus(shellExecutor);
 
-		final ShellNodeParent rootShellNodeParent = shellScene.getRootShellNodeParent();
 		setParentImpl(rootShellNodeParent);
 		doReparent(false);
 	}

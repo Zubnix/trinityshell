@@ -20,6 +20,9 @@ import org.trinity.foundation.api.render.Painter;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.render.binding.model.ViewReference;
 import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -36,19 +39,22 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * @see org.trinity.foundation.api.render.binding
  ***************************************
  */
+@ExecutionContext(ShellExecutor.class)
 public abstract class BaseShellWidget extends AbstractShellSurface implements ShellWidget {
 
-	private static final Logger logger = LoggerFactory.getLogger(BaseShellWidget.class);
-
+	private static final Logger LOG = LoggerFactory.getLogger(BaseShellWidget.class);
 	private final Painter painter;
 	private final Object view;
 	private final BaseShellWidgetGeometryDelegate shellNodeGeometryDelegate = new BaseShellWidgetGeometryDelegate(this);
 
-	protected BaseShellWidget(	final AsyncListenable shellScene,
+	protected BaseShellWidget(	ShellNodeParent rootShellNodeParent,
+								final AsyncListenable shellScene,
 								final ListeningExecutorService shellExecutor,
 								final PainterFactory painterFactory,
 								final Object view) {
-		super(shellScene,shellExecutor);
+		super(	rootShellNodeParent,
+				shellScene,
+				shellExecutor);
 		this.view = view;
 		this.painter = painterFactory.createPainter(this);
 	}
@@ -76,11 +82,11 @@ public abstract class BaseShellWidget extends AbstractShellSurface implements Sh
 		try {
 			ds = dsFuture.get();
 		} catch (final InterruptedException e) {
-			logger.error(	"Interrupted while waiting for display surface from painter.",
-							e);
+			LOG.error("Interrupted while waiting for display surface from painter.",
+					e);
 		} catch (final ExecutionException e) {
-			logger.error(	"Error while waiting for display surface from painter.",
-							e);
+			LOG.error("Error while waiting for display surface from painter.",
+					e);
 		}
 		return ds;
 	}

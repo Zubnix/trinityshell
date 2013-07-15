@@ -1,15 +1,20 @@
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 
 import java.util.concurrent.Callable;
 
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.apache.onami.autobind.annotations.Bind;
+import org.apache.onami.autobind.annotations.To;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
@@ -23,32 +28,29 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
-import de.devsurf.injection.guice.annotations.Bind;
-import de.devsurf.injection.guice.annotations.To;
-import de.devsurf.injection.guice.annotations.To.Type;
-
-@Bind(to = @To(value = Type.IMPLEMENTATION))
+@Bind
+@To(IMPLEMENTATION)
 @ThreadSafe
 @Singleton
+@ExecutionContext(ShellExecutor.class)
 public class SceneManager {
 
-	private static final Logger logger = LoggerFactory.getLogger(SceneManager.class);
-
+	private static final Logger LOG = LoggerFactory.getLogger(SceneManager.class);
 	private final ClientBarElementFactory clientBarElementFactory;
 	private final ShellLayoutManager rootLayoutManager;
 	private final ShellRootWidget shellRootWidget;
 	private final XWindowProtocol xWindowProtocol;
-	private final ListeningExecutorService wmExecutor;
+	private final ListeningExecutorService shellExecutor;
 
 	@Inject
-	SceneManager(	@Named("WindowManager") final ListeningExecutorService wmExecutor,
+	// FIXME use shell executor
+	SceneManager(	@ShellExecutor final ListeningExecutorService shellExecutor,
 					final ClientBarElementFactory clientBarElementFactory,
 					final XWindowProtocol xWindowProtocol,
 					final ShellRootWidget shellRootWidget,
 					final ShellLayoutManagerLine shellLayoutManagerLine) {
-		this.wmExecutor = wmExecutor;
+		this.shellExecutor = shellExecutor;
 		this.clientBarElementFactory = clientBarElementFactory;
 		this.xWindowProtocol = xWindowProtocol;
 		this.shellRootWidget = shellRootWidget;
@@ -59,7 +61,7 @@ public class SceneManager {
 	}
 
 	public void manageNewClient(final ShellSurface client) {
-		this.wmExecutor.submit(new Callable<Void>() {
+		this.shellExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
 				registerXWindow(client);
@@ -82,11 +84,11 @@ public class SceneManager {
 
 						@Override
 						public void onFailure(final Throwable t) {
-							logger.error(	"Failed to find display surface from client shell surface",
-											t);
+							LOG.error("Failed to find display surface from client shell surface",
+									t);
 						}
 					},
-					this.wmExecutor);
+					this.shellExecutor);
 	}
 
 	private void addClientTopBarItem(final ShellSurface client) {
@@ -98,7 +100,7 @@ public class SceneManager {
 								removeClientTopBarItem(clientBarElement);
 							}
 						},
-						this.wmExecutor);
+						this.shellExecutor);
 
 		// check if we missed any destroy events. Corner case we remove the
 		// object twice but that's not a problem.
@@ -114,11 +116,11 @@ public class SceneManager {
 
 						@Override
 						public void onFailure(final Throwable t) {
-							logger.error(	"Failed to query destroyed state from client.",
-											t);
+							LOG.error("Failed to query destroyed state from client.",
+									t);
 						}
 					},
-					this.wmExecutor);
+					this.shellExecutor);
 	}
 
 	private void removeClientTopBarItem(final ClientBarElement clientBarElement) {

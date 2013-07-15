@@ -14,7 +14,8 @@ package org.trinity.foundation.api.render;
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.render.bindkey.RenderExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -23,17 +24,17 @@ import com.google.common.util.concurrent.ListenableFuture;
  * by feeding it {@link PaintRoutine}s that will be processed by the paint
  * back-end. It thus provides the means to manipulate the visual appearance of
  * the <code>PaintableSurfaceNode</code> it is bound to.
- * 
- *************************************** 
+ *
+ ***************************************
  */
-@OwnerThread("Render")
+@ExecutionContext(RenderExecutor.class)
 public interface Painter extends DisplayAreaManipulator {
 
 	/**
-	 * 
+	 *
 	 * Get the {@link DisplaySurface} that the render back-end uses to paint the
 	 * view on.
-	 * 
+	 *
 	 * @return A future {@link DisplaySurface}.
 	 */
 	ListenableFuture<DisplaySurface> getDislaySurface();
@@ -41,7 +42,7 @@ public interface Painter extends DisplayAreaManipulator {
 	/***************************************
 	 * Bind the render toolkit specific view to the {@link DisplayArea} of the
 	 * {@code Painter}.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> bindView();
 }

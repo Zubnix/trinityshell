@@ -35,6 +35,8 @@ import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.SWIGTYPE_p__XCBKeySymbols;
 import org.freedesktop.xcb.xcb_mapping_notify_event_t;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
@@ -46,6 +48,7 @@ import com.google.inject.Singleton;
 @Bind
 @To(IMPLEMENTATION)
 @Singleton
+@ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public class XKeySymbolCache {
 

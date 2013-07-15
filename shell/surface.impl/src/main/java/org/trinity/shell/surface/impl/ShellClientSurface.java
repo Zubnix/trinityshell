@@ -15,7 +15,9 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -30,17 +32,19 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * of the <code>PlatformRenderArea</code> it wraps.
  */
 @ThreadSafe
-@OwnerThread("Shell")
+@ExecutionContext(ShellExecutor.class)
 public final class ShellClientSurface extends AbstractShellSurface {
 
 	private final ShellSurfaceGeometryDelegateImpl shellSurfaceGeometryDelegateImpl;
 	private final DisplaySurface displaySurface;
 
 	// created by a custom factory so inject annotations are not needed.
-	ShellClientSurface(	final AsyncListenable shellScene,
+	ShellClientSurface(	ShellNodeParent rootShellNodeParent,
+						final AsyncListenable shellScene,
 						final ListeningExecutorService shellExecutor,
 						final DisplaySurface clientDisplaySurface) {
-		super(	shellScene,
+		super(	rootShellNodeParent,
+				shellScene,
 				shellExecutor);
 		this.displaySurface = clientDisplaySurface;
 		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegateImpl(this);

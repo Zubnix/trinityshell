@@ -16,25 +16,26 @@ import java.lang.reflect.Method;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.render.bindkey.RenderExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
  * Delegate to invoke a view method when a bound model property changes. This
  * delegate should be implemented for a specific widget toolkit.
- * 
+ *
  * @see PropertySlots
  * @see PropertySlot
  * @see PropertyChanged
- *************************************** 
+ ***************************************
  */
-@OwnerThread("Render")
+@ExecutionContext(RenderExecutor.class)
 public interface PropertySlotInvocatorDelegate {
 
 	/***************************************
 	 * Invoke a view method with the given argument.
-	 * 
+	 *
 	 * @param view
 	 *            The view who's method should be invoked.
 	 * @param viewMethod
@@ -45,7 +46,7 @@ public interface PropertySlotInvocatorDelegate {
 	 *            {@link Method#invoke(Object, Object...)}.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> invoke(	Object view,
 									Method viewMethod,

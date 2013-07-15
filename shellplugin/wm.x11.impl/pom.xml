@@ -1,42 +1,47 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.trinity</groupId>
-		<artifactId>shellplugin</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>org.trinity</groupId>
+        <artifactId>shellplugin</artifactId>
+        <version>0.0.2-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>shellplugin.wm.x11.impl</artifactId>
-	<name>Shell Window Manager X11 implementation</name>
+    <artifactId>shellplugin.wm.x11.impl</artifactId>
+    <name>Shell Window Manager X11 implementation</name>
 
-	<properties>
-		<!-- dep versions -->
-		<glazedlists.version>1.8.0</glazedlists.version>
-	</properties>
+    <properties>
+        <!-- dep versions -->
+        <glazedlists.version>1.8.0</glazedlists.version>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.trinity</groupId>
-			<artifactId>shellplugin.wm.api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.trinity</groupId>
-			<artifactId>shellplugin.widget.view.qt.api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.java.dev.glazedlists</groupId>
-			<artifactId>glazedlists_java15</artifactId>
-			<version>${glazedlists.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.trinity</groupId>
-			<artifactId>XCB4J</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.trinity</groupId>
+            <artifactId>foundation.display.x11.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.trinity</groupId>
+            <artifactId>shellplugin.wm.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.trinity</groupId>
+            <artifactId>shellplugin.widget.view.qt.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.glazedlists</groupId>
+            <artifactId>glazedlists_java15</artifactId>
+            <version>${glazedlists.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.trinity</groupId>
+            <artifactId>XCB4J</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+    </dependencies>
 </project>

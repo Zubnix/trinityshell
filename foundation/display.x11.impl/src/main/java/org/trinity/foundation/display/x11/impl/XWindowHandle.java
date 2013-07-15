@@ -14,10 +14,13 @@ package org.trinity.foundation.display.x11.impl;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 
+@ExecutionContext(DisplayExecutor.class)
 @Immutable
 public class XWindowHandle implements DisplaySurfaceHandle {
 

@@ -2,8 +2,7 @@ package org.trinity.shellplugin.wm.x11.impl.view;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
-
-import de.devsurf.injection.guice.annotations.GuiceModule;
+import org.apache.onami.autobind.annotations.GuiceModule;
 
 @GuiceModule
 public class Module extends AbstractModule {

@@ -2,20 +2,21 @@ package org.trinity.foundation.api.display.input;
 
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.ButtonNotify;
 import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-@OwnerThread("Display")
+@ExecutionContext(DisplayExecutor.class)
 public interface Pointer extends InputDevice {
 	/***************************************
 	 * The position of the pointer as seen from this <code>DisplaySurface</code>
 	 * 's coordinate system.
-	 * 
+	 *
 	 * @return The pointer position {@link Coordinate}.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Coordinate> getPointerCoordinate(DisplaySurface displaySurface);
 
@@ -26,7 +27,7 @@ public interface Pointer extends InputDevice {
 	 * grabber instead of delivering it anyone that is interested.
 	 * <p>
 	 * This method is usually used to install mousebindings.
-	 * 
+	 *
 	 * @param grabButton
 	 *            The {@link Button} that should be grabbed.
 	 * @param withModifiers
@@ -34,7 +35,7 @@ public interface Pointer extends InputDevice {
 	 *            to take place.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> grabButton(	DisplaySurface displaySurface,
 										Button grabButton,
@@ -43,28 +44,28 @@ public interface Pointer extends InputDevice {
 	/***************************************
 	 * Grab the entire pointing device of the bound {@link DisplayArea} or any
 	 * of its children. Every {@link ButtonNotify} shall be redirected.
-	 * 
+	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #grabButton(Button, InputModifiers)
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> grabPointer(DisplaySurface displaySurface);
 
 	/***************************************
 	 * Release the grab on the pointing device.
-	 * 
+	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #grabPointer()
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> ungrabPointer();
 
 	/***************************************
 	 * Release the grab on the specific {@link Button} with the specific
 	 * {@link InputModifiers}.
-	 * 
+	 *
 	 * @param ungrabButton
 	 *            The {@link Button} that will be ungrabbed.
 	 * @param withModifiers
@@ -72,7 +73,7 @@ public interface Pointer extends InputDevice {
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #grabButton(Button, InputModifiers)
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> ungrabButton(DisplaySurface displaySurface,
 										Button ungrabButton,

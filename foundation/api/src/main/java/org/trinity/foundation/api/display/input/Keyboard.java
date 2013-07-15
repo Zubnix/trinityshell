@@ -15,18 +15,19 @@ import java.util.List;
 
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.KeyNotify;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
  * A text input device. It offers functionality to map to and from {@link Key}
  * input to key symbols, that is, the name or the character the key represents.
- * 
- *************************************** 
+ *
+ ***************************************
  */
-@OwnerThread("Display")
+@ExecutionContext(DisplayExecutor.class)
 public interface Keyboard extends InputDevice {
 
 	/**
@@ -188,13 +189,13 @@ public interface Keyboard extends InputDevice {
 	 * that is present on the physical key. For special cases where no clear
 	 * physical character can be deduced, one of the statically defined key
 	 * names in {@code Keyboard} is used.
-	 * 
+	 *
 	 * @param key
 	 *            a {@link Key}
 	 * @param inputModifiers
 	 *            {@link InputModifiers}
 	 * @return The future keysymbol name.
-	 *************************************** 
+	 ***************************************
 	 */
 	// TODO return listanablefuture?
 	ListenableFuture<String> asKeySymbolName(	Key key,
@@ -205,11 +206,11 @@ public interface Keyboard extends InputDevice {
 	 * keysymbol name is usually one of the characters that is present on the
 	 * physical key. For special cases check any of the statically defined key
 	 * names in {@link Keyboard}.
-	 * 
+	 *
 	 * @param keySymbolName
 	 *            a keysymbol name.
 	 * @return All future possible {@link Key}s.
-	 *************************************** 
+	 ***************************************
 	 */
 	// TODO return listanablefuture?
 	ListenableFuture<List<Key>> asKeys(String keySymbolName);
@@ -217,11 +218,11 @@ public interface Keyboard extends InputDevice {
 	/***************************************
 	 * Create an <code>InputModifier</code> based on it's name. For a valid name
 	 * check any of the statically defined names in {@link InputModifier}.
-	 * 
+	 *
 	 * @param modifierName
 	 *            The <code>InputModifier</code> name.
 	 * @return a {@link InputModifier}
-	 *************************************** 
+	 ***************************************
 	 */
 	// TODO return listanablefuture?
 	InputModifier modifier(String modifierName);
@@ -230,11 +231,11 @@ public interface Keyboard extends InputDevice {
 	 * Create a group of <code>InputModifier</code>s based on the group members
 	 * names. For a valid names check any of the statically defined names in
 	 * {@link InputModifier}.
-	 * 
+	 *
 	 * @param modifierNames
 	 *            The {@link InputModifier} names.
 	 * @return {@link InputModifiers}
-	 *************************************** 
+	 ***************************************
 	 */
 	// TODO return listanablefuture?
 	InputModifiers modifiers(String... modifierNames);
@@ -246,7 +247,7 @@ public interface Keyboard extends InputDevice {
 	 * grabber instead of delivering it anyone that is interested.
 	 * <p>
 	 * This method is usually used to install keybindings.
-	 * 
+	 *
 	 * @param grabKey
 	 *            The {@link Key} that should be grabbed
 	 * @param withModifiers
@@ -254,7 +255,7 @@ public interface Keyboard extends InputDevice {
 	 *            to take place.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	// TODO grab key notify
 	ListenableFuture<Void> grabKey(	DisplaySurface displaySurface,
@@ -264,16 +265,16 @@ public interface Keyboard extends InputDevice {
 	/***************************************
 	 * Release the grab on the specific {@link Key} with the specific
 	 * {@link InputModifiers}.
-	 * 
+	 *
 	 * @param ungrabKey
 	 *            The {@link Key} that will be ungrabbed.
 	 * @param withModifiers
 	 *            the {@link InputModifiers}
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 * 
+	 *
 	 * @see #grabKey(Key, InputModifiers)
-	 *************************************** 
+	 ***************************************
 	 */
 	// TODO ungrab key notify
 	ListenableFuture<Void> ungrabKey(	DisplaySurface displaySurface,
@@ -282,12 +283,12 @@ public interface Keyboard extends InputDevice {
 
 	/***************************************
 	 * Release the grab of the keyboard of the bound {@link DisplayArea}.
-	 * 
+	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 * 
+	 *
 	 * @see #grabKeyboard()
-	 *************************************** 
+	 ***************************************
 	 */
 	// TODO grab notify
 	ListenableFuture<Void> ungrabKeyboard();
@@ -295,11 +296,11 @@ public interface Keyboard extends InputDevice {
 	/***************************************
 	 * Grab the entire keyboard of the bound {@link DisplayArea} or any of its
 	 * children. All {@link KeyNotify}s will be redirected.
-	 * 
+	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #grabKey(Key, InputModifiers)
-	 *************************************** 
+	 ***************************************
 	 */
 	// TODO grab keyboard notify
 	ListenableFuture<Void> grabKeyboard(DisplaySurface displaySurface);

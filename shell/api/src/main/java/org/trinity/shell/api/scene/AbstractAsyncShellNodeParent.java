@@ -3,7 +3,8 @@ package org.trinity.shell.api.scene;
 import java.util.concurrent.Callable;
 
 import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
@@ -16,13 +17,17 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * Subclasses must implement any concrete internal node manipulation.
  ***************************************
  */
-@OwnerThread("Shell")
+@ExecutionContext(ShellExecutor.class)
 public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode implements ShellNodeParent {
 
 	private final ListeningExecutorService shellExecutor;
 
-	protected AbstractAsyncShellNodeParent(final AsyncListenable shellScene,final ListeningExecutorService shellExecutor) {
-		super(shellScene,shellExecutor);
+	protected AbstractAsyncShellNodeParent(	ShellNodeParent rootShellNodeParent,
+											final AsyncListenable shellScene,
+											final ListeningExecutorService shellExecutor) {
+		super(	rootShellNodeParent,
+				shellScene,
+				shellExecutor);
 		this.shellExecutor = shellExecutor;
 	}
 

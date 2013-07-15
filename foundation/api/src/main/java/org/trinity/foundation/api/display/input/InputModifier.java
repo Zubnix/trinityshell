@@ -11,12 +11,16 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 /***************************************
  * Can modify the meaning of user input by accompanying {@link Input}. These are
  * usually buttons like 'ctrl', 'alt' etc.
- * 
- *************************************** 
+ *
+ ***************************************
  */
+@ExecutionContext(DisplayExecutor.class)
 public interface InputModifier {
 	/**
 	 * shift key modifier name.
@@ -40,7 +44,7 @@ public interface InputModifier {
 	String MOD_2 = "MOD_2";
 	// TODO which key is mod3?
 	/**
-	 * 
+	 *
 	 */
 	String MOD_3 = "MOD_3";
 	/**
@@ -49,7 +53,7 @@ public interface InputModifier {
 	String MOD_4 = "MOD_4";
 	// TODO which key is mod5?
 	/**
-	 * 
+	 *
 	 */
 	String MOD_5 = "MOD_5";
 	/**
@@ -61,9 +65,9 @@ public interface InputModifier {
 	 * The native mask of this <code>InputModifier</code>. This mask can be
 	 * logically and'ed (&) with a logically or'ed (|) integer of masks to
 	 * verifiy if this <code>InputModifier</code> is active.
-	 * 
+	 *
 	 * @return
-	 *************************************** 
+	 ***************************************
 	 */
 	int getMask();
 
@@ -71,9 +75,9 @@ public interface InputModifier {
 	 * The name of this <code>InputModifier</code>. For a list of common names
 	 * check any of the statically defined names in the {@link InputModifier}
 	 * class.
-	 * 
+	 *
 	 * @return A unique name.
-	 *************************************** 
+	 ***************************************
 	 */
 	String getName();
 }

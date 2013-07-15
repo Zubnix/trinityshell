@@ -11,6 +11,9 @@
  */
 package org.trinity.foundation.api.display;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 /**
  * Describes a visible part of the screen. It is the base interface of all
  * objects wishing to describe an on-screen surface.
@@ -19,9 +22,10 @@ package org.trinity.foundation.api.display;
  * <p>
  * <code>DisplayArea</code> implementations should have a corresponding
  * {@link DisplayAreaManipulator} to provide interaction.
- * 
- * 
+ *
+ *
  */
+@ExecutionContext(DisplayExecutor.class)
 public interface DisplayArea {
 
 }

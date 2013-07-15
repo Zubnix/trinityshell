@@ -13,13 +13,16 @@ package org.trinity.foundation.api.display.event;
 
 import javax.annotation.concurrent.Immutable;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Rectangle;
 
 /**
  * A request from a display resource for a new geometry.
- * 
+ *
  */
 @Immutable
+@ExecutionContext(DisplayExecutor.class)
 public class GeometryRequest extends DisplayEvent {
 
 	private final Rectangle geometry;
@@ -33,7 +36,7 @@ public class GeometryRequest extends DisplayEvent {
 	 * resource.. The requested geometry is specified by the given
 	 * {@link Rectangle} together with a set of booleans to indicate what values
 	 * of the <code>Rectangle</code> should be interpreted.
-	 * 
+	 *
 	 * @param displayEventTarget
 	 *            The receiver of this event. eg the display resource who's
 	 *            geometry should change.
@@ -47,7 +50,7 @@ public class GeometryRequest extends DisplayEvent {
 	 *            Indicates if the width value should be configured.
 	 * @param configureHeight
 	 *            Indicates if the height value should be configured.
-	 *************************************** 
+	 ***************************************
 	 */
 	public GeometryRequest(	final Rectangle geometry,
 							final boolean configureX,
@@ -64,7 +67,7 @@ public class GeometryRequest extends DisplayEvent {
 	/**
 	 * Indicates if the X value of the new geometry, as specific in
 	 * {@link #getGeometry()}, should be interpreted.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean configureX() {
@@ -74,7 +77,7 @@ public class GeometryRequest extends DisplayEvent {
 	/**
 	 * Indicates if the Y value of the new geometry, as specific in
 	 * {@link #getGeometry()}, should be interpreted.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean configureY() {
@@ -84,7 +87,7 @@ public class GeometryRequest extends DisplayEvent {
 	/**
 	 * Indicates if the width value of the new geometry, as specific in
 	 * {@link #getGeometry()}, should be interpreted.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean configureWidth() {
@@ -94,7 +97,7 @@ public class GeometryRequest extends DisplayEvent {
 	/**
 	 * Indicates if the height value of the new geometry, as specific in
 	 * {@link #getGeometry()}, should be interpreted.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean configureHeight() {
@@ -104,7 +107,7 @@ public class GeometryRequest extends DisplayEvent {
 	/**
 	 * The requested geometry. Check the related 'configure' methods to see
 	 * which values of the new geometry are requested.
-	 * 
+	 *
 	 * @return A {@link Rectangle}.
 	 */
 	public Rectangle getGeometry() {

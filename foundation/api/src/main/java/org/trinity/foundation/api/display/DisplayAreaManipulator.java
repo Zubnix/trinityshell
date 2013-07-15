@@ -12,24 +12,27 @@
 package org.trinity.foundation.api.display;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 /****************************************
  * Provides the operations that are available for manipulating and interacting
  * with a {@link DisplayArea}. A <code>DisplayAreaManipulator</code> instance is
  * bound to exactly one <code>DisplayArea</code> instance.
- * 
- *************************************** 
+ *
+ ***************************************
  */
+@ExecutionContext(DisplayExecutor.class)
 public interface DisplayAreaManipulator {
 
 	/***************************************
 	 * Destroy the bound {@link DisplayArea}. A destroyed {@link DisplayArea}
 	 * should be disposed and should not accept any calls made by it's
 	 * {@link DisplayAreaManipulator}.
-	 * 
+	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> destroy();
 
@@ -41,10 +44,10 @@ public interface DisplayAreaManipulator {
 	 * The effects of giving focus to a hidden or destroyed {@link DisplayArea}
 	 * is implementation dependent.
 	 * </p>
-	 * 
+	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> setInputFocus();
 
@@ -55,10 +58,10 @@ public interface DisplayAreaManipulator {
 	 * The effects of lowering a hidden or destroyed {@link DisplayArea} is
 	 * implementation dependent.
 	 * </p>
-	 * 
+	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> lower();
 
@@ -66,10 +69,10 @@ public interface DisplayAreaManipulator {
 	 * Make the bound {@link DisplayArea} visible if it was previously
 	 * invisible. Making an already visible {@link DisplayArea} visible has no
 	 * effect. </p>
-	 * 
+	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> show();
 
@@ -77,7 +80,7 @@ public interface DisplayAreaManipulator {
 	 * Move the bound {@link DisplayArea} to the given coordinates, relative to
 	 * the parent. The bound {@link DisplayArea}'s top left corner will be
 	 * positioned at the provided coordinates.
-	 * 
+	 *
 	 * @param x
 	 *            The X coordinate. Usually in pixels but can be implementation
 	 *            dependent.
@@ -86,15 +89,15 @@ public interface DisplayAreaManipulator {
 	 *            dependent. </p>
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> move(int x,
 								int y);
 
 	/***************************************
 	 * Perform a move and resize operation on the bound {@link DisplayArea}.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param x
 	 *            The X coordinate. Usually in pixels but can be implementation
 	 *            dependent.
@@ -111,8 +114,8 @@ public interface DisplayAreaManipulator {
 	 *         done.
 	 * @see #move(int, int)
 	 * @see #resize(int, int)
-	 * 
-	 *************************************** 
+	 *
+	 ***************************************
 	 */
 	ListenableFuture<Void> moveResize(	int x,
 										int y,
@@ -126,10 +129,10 @@ public interface DisplayAreaManipulator {
 	 * The effects of raising a hidden or destroyed {@link DisplayArea} is
 	 * implementation dependent.
 	 * </p>
-	 * 
+	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> raise();
 
@@ -137,7 +140,7 @@ public interface DisplayAreaManipulator {
 	 * Set the parent of the bound {@link DisplayArea}. The {@link DisplayArea}
 	 * 's new position will correspond to the given coordinate, relative to the
 	 * new parent.
-	 * 
+	 *
 	 * @param parent
 	 *            The new parent
 	 * @param x
@@ -149,7 +152,7 @@ public interface DisplayAreaManipulator {
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #move(int, int)
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> setParent(	DisplayArea parent,
 										int x,
@@ -157,7 +160,7 @@ public interface DisplayAreaManipulator {
 
 	/***************************************
 	 * Set the size of the bound {@link DisplayArea}.
-	 * 
+	 *
 	 * @param width
 	 *            The width. Usually in pixels but can be implementation
 	 *            dependent.
@@ -166,17 +169,17 @@ public interface DisplayAreaManipulator {
 	 *            dependent. </p>
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> resize(	int width,
 									int height);
 
 	/***************************************
 	 * Hide the bound {@link DisplayArea}. </p>
-	 * 
+	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> hide();
 }

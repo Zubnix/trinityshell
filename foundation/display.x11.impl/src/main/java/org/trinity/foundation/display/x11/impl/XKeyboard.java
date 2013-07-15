@@ -30,12 +30,14 @@ import org.freedesktop.xcb.xcb_grab_keyboard_cookie_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.input.InputModifier;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.Keyboard;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
-import org.trinity.foundation.display.x11.api.bindkey.XDisplayExecutor;
+import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -43,10 +45,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Bind
+@ExecutionContext(DisplayExecutor.class)
 @Singleton
 public class XKeyboard implements Keyboard {
 
-	private static final Logger logger = LoggerFactory.getLogger(XKeyboard.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XKeyboard.class);
 	private final XKeySymbolMapping xKeySymbolMapping;
 	private final XKeySymbolCache xKeySymbolCache;
 	private final XInputModifierMaskMapping xInputModifierMaskMapping;
@@ -60,7 +63,7 @@ public class XKeyboard implements Keyboard {
 				final XInputModifierMaskMapping xInputModifierMaskMapping,
 				final XConnection xConnection,
 				final XTime xTime,
-				@XDisplayExecutor final ListeningExecutorService xExecutor) {
+				@DisplayExecutor final ListeningExecutorService xExecutor) {
 		this.xKeySymbolMapping = xKeySymbolMapping;
 		this.xKeySymbolCache = xKeySymbolCache;
 		this.xInputModifierMaskMapping = xInputModifierMaskMapping;
@@ -79,7 +82,7 @@ public class XKeyboard implements Keyboard {
 
 	private void checkError(final xcb_generic_error_t e) {
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			XKeyboard.logger.error(XcbErrorUtil.toString(e));
+			XKeyboard.LOG.error(XcbErrorUtil.toString(e));
 		}
 	}
 

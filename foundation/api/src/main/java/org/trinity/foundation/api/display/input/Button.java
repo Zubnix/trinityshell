@@ -11,23 +11,27 @@
  */
 package org.trinity.foundation.api.display.input;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
  * Identifies a pointing device's button ie. a mouse button.
- *************************************** 
+ ***************************************
  */
 @Immutable
+@ExecutionContext(DisplayExecutor.class)
 public class Button {
 
 	private final int buttonCode;
 
 	/***************************************
 	 * Construct a new <code>Button</code> with the given native button code.
-	 * 
+	 *
 	 * @param buttonCode
 	 *            The native code of this <code>Button</code>.
-	 *************************************** 
+	 ***************************************
 	 */
 	public Button(final int buttonCode) {
 		this.buttonCode = buttonCode;
@@ -36,9 +40,9 @@ public class Button {
 	/****************************************
 	 * The native code of this <code>Button</code>. This code uniquely
 	 * identifies a <code>Button</code>.
-	 * 
+	 *
 	 * @return The native code of this <code>Button</code>.
-	 *************************************** 
+	 ***************************************
 	 */
 	public int getButtonCode() {
 		return this.buttonCode;

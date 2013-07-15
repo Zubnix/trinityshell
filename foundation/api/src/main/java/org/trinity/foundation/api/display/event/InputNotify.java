@@ -13,7 +13,9 @@ package org.trinity.foundation.api.display.event;
 
 import javax.annotation.concurrent.Immutable;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.input.Input;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 // TODO documentation
 /**
@@ -21,6 +23,7 @@ import org.trinity.foundation.api.display.input.Input;
  * keyboard key that was pressed or a mouse button that was released.
  */
 @Immutable
+@ExecutionContext(DisplayExecutor.class)
 public class InputNotify<I extends Input> extends DisplayEvent {
 
 	private final I input;
@@ -29,13 +32,13 @@ public class InputNotify<I extends Input> extends DisplayEvent {
 	 * Create a new <code>InputNotify</code> that targets the given display
 	 * resource. The input detail is described by the given {@link Input}
 	 * argument.
-	 * 
+	 *
 	 * @param displayEventTarget
 	 *            The receiver of this event. eg the display resource that has
 	 *            the focus at the time of user input.
 	 * @param input
 	 *            an {@link Input}
-	 *************************************** 
+	 ***************************************
 	 */
 	public InputNotify(final I input) {
 		this.input = input;
@@ -43,9 +46,9 @@ public class InputNotify<I extends Input> extends DisplayEvent {
 
 	/***************************************
 	 * The object describing the user input.
-	 * 
+	 *
 	 * @return {@link Input}
-	 *************************************** 
+	 ***************************************
 	 */
 	public I getInput() {
 		return this.input;

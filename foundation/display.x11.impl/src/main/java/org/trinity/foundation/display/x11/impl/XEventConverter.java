@@ -22,8 +22,10 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
@@ -35,6 +37,7 @@ import com.google.inject.Singleton;
 @Bind
 @To(IMPLEMENTATION)
 @Singleton
+@ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public final class XEventConverter {
 

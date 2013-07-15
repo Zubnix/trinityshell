@@ -15,6 +15,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.shell.api.scene.ShellNode;
+import org.trinity.shell.api.scene.ShellNodeParent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 
@@ -26,9 +27,11 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 @NotThreadSafe
 public abstract class AbstractShellSurfaceParent extends AbstractShellSurface implements ShellSurfaceParent {
 
-	protected AbstractShellSurfaceParent(	final AsyncListenable shellScene,
+	protected AbstractShellSurfaceParent(	ShellNodeParent rootShellNodeParent,
+											final AsyncListenable shellScene,
 											final ListeningExecutorService shellExecutor) {
-		super(	shellScene,
+		super(	rootShellNodeParent,
+				shellScene,
 				shellExecutor);
 	}
 }

@@ -3,13 +3,13 @@ package org.trinity.shell.api.scene;
 import java.util.concurrent.Callable;
 
 import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 
 // TODO auto generate this boiler plate code?
 // TODO documentation
@@ -19,7 +19,7 @@ import com.google.inject.Inject;
  * concrete internal node manipulation.
  ***************************************
  */
-@OwnerThread("Shell")
+@ExecutionContext(ShellExecutor.class)
 public abstract class AbstractAsyncShellNode implements ShellNode {
 
 	private final ListeningExecutorService shellExecutor;

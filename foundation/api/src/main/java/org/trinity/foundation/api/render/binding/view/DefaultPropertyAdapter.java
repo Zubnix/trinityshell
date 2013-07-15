@@ -11,16 +11,17 @@
  */
 package org.trinity.foundation.api.render.binding.view;
 
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.render.bindkey.RenderExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 /***************************************
  * A default implementation of a {@link PropertyAdapter}. It simply returns the
  * property value without modification. Used as the default value in
  * {@link PropertySlot#adapter()}.
- * 
- *************************************** 
+ *
+ ***************************************
  */
-@OwnerThread("Render")
+@ExecutionContext(RenderExecutor.class)
 public class DefaultPropertyAdapter implements PropertyAdapter<Object> {
 
 	@Override

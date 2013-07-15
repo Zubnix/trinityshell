@@ -13,8 +13,11 @@ package org.trinity.foundation.display.x11.impl;
 
 import javax.annotation.concurrent.Immutable;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.input.InputModifier;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
+@ExecutionContext(DisplayExecutor.class)
 @Immutable
 public class XInputModifier implements InputModifier {
 

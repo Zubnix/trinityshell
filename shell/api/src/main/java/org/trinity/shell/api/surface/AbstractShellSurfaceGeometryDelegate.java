@@ -16,8 +16,9 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.AbstractShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
@@ -30,11 +31,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 /***************************************
  * A {@link ShellNodeGeometryDelegate} for use with an
  * {@link AbstractShellSurface}.
- * 
- *************************************** 
+ *
+ ***************************************
  */
 @NotThreadSafe
-@OwnerThread("Shell")
+@ExecutionContext(ShellExecutor.class)
 public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShellNodeGeometryDelegate implements
 		ShellNodeGeometryDelegate {
 
@@ -82,7 +83,7 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	 * underlying native display system, ie they live in a different 'space'.
 	 * This method translates the coordinates in 'shell space' to on-screen
 	 * 'display space'.
-	 * 
+	 *
 	 * @param shellParent
 	 *            the current direct parent of the managed {@code ShellSurface}.
 	 * @param newRelativeX
@@ -92,7 +93,7 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	 *            the current relative Y coordinate of the managed
 	 *            {@code ShellSurface}, in 'shell space'.
 	 * @return a {@link Coordinate} in 'display space'.
-	 *************************************** 
+	 ***************************************
 	 */
 	protected Coordinate calculateRelativePosition(	final AbstractShellNodeParent shellParent,
 													final Coordinate newRelativePosition) {
@@ -156,22 +157,22 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	/***************************************
 	 * Find the closest parent node that lives in the same space as the given
 	 * node.
-	 * 
+	 *
 	 * @param node
 	 *            The {@link ShellNode} who's parent to search for.
 	 * @return A found {@link ShellSurface} parent.
-	 *************************************** 
+	 ***************************************
 	 */
 	protected abstract AbstractShellSurface findClosestSameTypeSurface(final ShellNode node);
 
 	/***************************************
 	 * The object functioning as the {@code DisplayArea} for the given
 	 * {@link ShellSurface}.
-	 * 
+	 *
 	 * @param shellSurface
 	 *            The {@link ShellSurface} who's {@code DisplayArea} to return.
 	 * @return a {@link DisplayArea}.
-	 *************************************** 
+	 ***************************************
 	 */
 	protected abstract DisplayArea getSurfacePeer(final ShellSurface shellSurface);
 }

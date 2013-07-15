@@ -6,6 +6,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
+import org.trinity.shell.api.scene.ShellNodeParent;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -22,8 +23,12 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 
 	private final ListeningExecutorService shellExecutor;
 
-	protected AbstractAsyncShellSurface(AsyncListenable shellScene,final ListeningExecutorService shellExecutor) {
-		super(shellScene,shellExecutor);
+	protected AbstractAsyncShellSurface(ShellNodeParent rootShellNodeParent,
+										AsyncListenable shellScene,
+										final ListeningExecutorService shellExecutor) {
+		super(	rootShellNodeParent,
+				shellScene,
+				shellExecutor);
 		this.shellExecutor = shellExecutor;
 	}
 

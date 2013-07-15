@@ -11,15 +11,19 @@
  */
 package org.trinity.foundation.api.display;
 
-import org.trinity.foundation.api.display.event.DisplayEvent;
+import java.util.List;
+
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-//TODO documentation
-@OwnerThread("Display")
-public interface DisplayServer extends AsyncListenable {
+// TODO documentation
+@ExecutionContext(DisplayExecutor.class)
+public interface Display extends AsyncListenable {
+
+	ListenableFuture<Screen> getScreen();
 
 	/**
 	 * An array "snapshot" of client display surfaces. This array does not
@@ -30,11 +34,11 @@ public interface DisplayServer extends AsyncListenable {
 	 *
 	 * @return A collection of client {@link DisplaySurface}s.
 	 */
-	ListenableFuture<DisplaySurface[]> getClientDisplaySurfaces();
+	ListenableFuture<List<DisplaySurface>> getClientDisplaySurfaces();
 
 	/***************************************
-	 * Orderly shut down this <code>DisplayServer</code>. All resources living
-	 * on this <code>DisplayServer</code> will be shut down as well.
+	 * Orderly shut down this <code>Display</code>. All resources living on this
+	 * <code>Display</code> will be shut down as well.
 	 * <p>
 	 * This method does not shut down the underlying native display, it merely
 	 * closes the connection to the underlying native display.

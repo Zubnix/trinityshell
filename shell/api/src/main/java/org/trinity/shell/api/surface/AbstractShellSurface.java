@@ -11,6 +11,8 @@
  */
 package org.trinity.shell.api.surface;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.event.DestroyNotify;
@@ -20,11 +22,10 @@ import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
+import org.trinity.shell.api.scene.ShellNodeParent;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.ListeningExecutorService;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 /***************************************
  * An abstract base implementation of {@link ShellSurface}. Implementations that
@@ -43,21 +44,21 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	public static final int DEFAULT_MAX_HEIGHT = 16384;
 	public static final int DEFAULT_WIDTH_INC = 1;
 	public static final int DEFAULT_HEIGHT_INC = 1;
-
-	private boolean movable = DEFAULT_IS_MOVABLE;
-	private boolean resizable = DEFAULT_IS_RESIZABLE;
-
 	private final Size minSize = new Size(	DEFAULT_MIN_WIDTH,
 											DEFAULT_MIN_HEIGHT);
+	private boolean movable = DEFAULT_IS_MOVABLE;
+	private boolean resizable = DEFAULT_IS_RESIZABLE;
 	private Size maxSize = new Size(DEFAULT_MAX_WIDTH,
 									DEFAULT_MAX_HEIGHT);
-
 	private int widthIncrement = DEFAULT_WIDTH_INC;
 	private int heightIncrement = DEFAULT_HEIGHT_INC;
 
-
-	protected AbstractShellSurface(final AsyncListenable shellScene,final ListeningExecutorService shellExecutor) {
-		super(shellScene,shellExecutor);
+	protected AbstractShellSurface(	ShellNodeParent rootShellNodeParent,
+									final AsyncListenable shellScene,
+									final ListeningExecutorService shellExecutor) {
+		super(	rootShellNodeParent,
+				shellScene,
+				shellExecutor);
 	}
 
 	@Override
@@ -151,8 +152,8 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 		int normalizedHeight = newHeight < minHeight ? minHeight : newHeight > maxHeight ? maxHeight : newHeight;
 		normalizedHeight -= (normalizedHeight - currentHeight) % getHeightIncrementImpl();
 
-		return new Size(	normalizedWidth,
-												normalizedHeight);
+		return new Size(normalizedWidth,
+						normalizedHeight);
 	}
 
 	@Override
@@ -174,8 +175,6 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 		}
 		return null;
 	}
-
-
 
 	@Override
 	public Size getDesiredSize() {

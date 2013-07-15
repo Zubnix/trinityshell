@@ -13,15 +13,18 @@ package org.trinity.shell.api.scene;
 
 import javax.annotation.concurrent.Immutable;
 
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 
 /***************************************
  * A geometric transformation. Current geometric property names end in 0, new
  * ones in 1. A Delta value is the subtraction of the new value with the current
  * value.
- *************************************** 
+ ***************************************
  */
+@ExecutionContext(ShellExecutor.class)
 @Immutable
 public class ShellNodeTransformation {
 	private final Rectangle rect0;
@@ -52,9 +55,9 @@ public class ShellNodeTransformation {
 
 	/***************************************
 	 * The current geometry of the node.
-	 * 
+	 *
 	 * @return a {@link Rectangle}
-	 *************************************** 
+	 ***************************************
 	 */
 	public Rectangle getRect0() {
 		return this.rect0;
@@ -64,9 +67,9 @@ public class ShellNodeTransformation {
 	 * The difference (delta) of the current ({@link #getRect0()}) and the
 	 * desired ({@link #getRect1()}) geometry, ie desired width, height, x and y
 	 * is subtracted from the current.
-	 * 
+	 *
 	 * @return a {@link Rectangle}
-	 *************************************** 
+	 ***************************************
 	 */
 	public Rectangle getDeltaRect() {
 		return this.deltaRect;
@@ -74,9 +77,9 @@ public class ShellNodeTransformation {
 
 	/***************************************
 	 * The desired geometry of the node.
-	 * 
+	 *
 	 * @return a {@link Rectangle}
-	 *************************************** 
+	 ***************************************
 	 */
 	public Rectangle getRect1() {
 		return this.rect1;
@@ -84,9 +87,9 @@ public class ShellNodeTransformation {
 
 	/***************************************
 	 * The current parent of the node.
-	 * 
+	 *
 	 * @return a {@link ShellNodeParent}
-	 *************************************** 
+	 ***************************************
 	 */
 	public ShellNodeParent getParent0() {
 		return this.parent0;
@@ -94,9 +97,9 @@ public class ShellNodeTransformation {
 
 	/***************************************
 	 * The desired parent of the node.
-	 * 
+	 *
 	 * @return a {@link ShellNodeParent}
-	 *************************************** 
+	 ***************************************
 	 */
 	public ShellNodeParent getParent1() {
 		return this.parent1;

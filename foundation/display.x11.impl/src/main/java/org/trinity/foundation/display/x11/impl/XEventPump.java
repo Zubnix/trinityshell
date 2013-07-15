@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
 import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
@@ -18,7 +19,6 @@ import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -27,8 +27,9 @@ import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
-import org.trinity.foundation.display.x11.api.bindkey.XDisplayExecutor;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
 import com.google.common.eventbus.EventBus;
@@ -39,10 +40,11 @@ import com.google.inject.Singleton;
 @Bind
 @To(IMPLEMENTATION)
 @Singleton
+@ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public class XEventPump implements Runnable {
 
-	private static final Logger logger = LoggerFactory.getLogger(XEventPump.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XEventPump.class);
 	private final XConnection connection;
 	private final EventBus xEventBus;
 	private final ExecutorService xEventPumpExecutor = Executors.newSingleThreadExecutor(new ThreadFactory() {
@@ -58,7 +60,7 @@ public class XEventPump implements Runnable {
 	@Inject
 	XEventPump(	final XConnection connection,
 				@XEventBus final EventBus xEventBus,
-				@XDisplayExecutor final ListeningExecutorService xExecutor) {
+				@DisplayExecutor final ListeningExecutorService xExecutor) {
 		this.connection = connection;
 		this.xEventBus = xEventBus;
 		this.xExecutor = xExecutor;
@@ -66,11 +68,11 @@ public class XEventPump implements Runnable {
 
 	@Override
 	public void run() {
-		final xcb_generic_event_t event = xcb_wait_for_event(this.connection.getConnectionReference());
+		final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference());
 
 		if (xcb_connection_has_error(this.connection.getConnectionReference()) != 0) {
 			final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
-			XEventPump.logger.error(errorMsg);
+			XEventPump.LOG.error(errorMsg);
 			throw new Error(errorMsg);
 		}
 
@@ -78,8 +80,8 @@ public class XEventPump implements Runnable {
 		this.xExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
-				XEventPump.this.xEventBus.post(event);
-				event.delete();
+				XEventPump.this.xEventBus.post(xcb_generic_event);
+				xcb_generic_event.delete();
 			}
 		});
 
@@ -95,12 +97,12 @@ public class XEventPump implements Runnable {
 		this.xEventPumpExecutor.shutdown();
 		try {
 			if (this.xEventPumpExecutor.awaitTermination(	10,
-															TimeUnit.SECONDS)) {
+															SECONDS)) {
 				return;
 			}
-			XEventPump.logger.error("X event pump could not terminate gracefully!");
+			XEventPump.LOG.error("X event pump could not terminate gracefully!");
 		} catch (final InterruptedException e) {
-			XEventPump.logger.error("X event pump terminate was interrupted.",
+			XEventPump.LOG.error(	"X event pump terminate was interrupted.",
 									e);
 		}
 	}

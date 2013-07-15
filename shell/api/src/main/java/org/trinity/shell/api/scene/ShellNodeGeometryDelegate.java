@@ -12,7 +12,9 @@
 package org.trinity.shell.api.scene;
 
 import org.trinity.foundation.api.shared.Coordinate;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 
 /***************************************
  * Executes the actual geometry changes for a {@link ShellNode}. A
@@ -25,27 +27,28 @@ import org.trinity.foundation.api.shared.Size;
  * geometry changes. A <code>ShellNodeGeometryDelegate</code> implementation is
  * needed to accommodate for this and make sure a change in the geometry of its
  * requester (a node) has the correct and desired on-screen effect.
- *************************************** 
+ ***************************************
  */
+@ExecutionContext(ShellExecutor.class)
 public interface ShellNodeGeometryDelegate {
 
 	/***************************************
 	 * The <code>ShellNode</code> on who's behalf this executer operates.
-	 * 
+	 *
 	 * @return a {@link ShellNode}
-	 *************************************** 
+	 ***************************************
 	 */
 	ShellNode getShellNode();
 
 	/***************************************
 	 * Execute the actual lowering of the handled <code>ShellNode</code>.
-	 *************************************** 
+	 ***************************************
 	 */
 	void lower();
 
 	/***************************************
 	 * Execute the actual raising the handled <code>ShellNode</code>.
-	 *************************************** 
+	 ***************************************
 	 */
 	void raise();
 
@@ -58,27 +61,27 @@ public interface ShellNodeGeometryDelegate {
 
 	/***************************************
 	 * Execute the actual showing of the handled <code>ShellNode</code>.
-	 *************************************** 
+	 ***************************************
 	 */
 	void show();
 
 	/***************************************
 	 * Execute the actual hiding of the handled <code>ShellNode</code>.
-	 *************************************** 
+	 ***************************************
 	 */
 	void hide();
 
 	/***************************************
 	 * Execute the actual parent update of the handled <code>ShellNode</code> .
-	 * 
+	 *
 	 * @param parent
-	 *************************************** 
+	 ***************************************
 	 */
 	void reparent(ShellNodeParent parent);
 
 	/***************************************
 	 * Execute the actual destroy process of the handled <code>ShellNode</code>.
-	 *************************************** 
+	 ***************************************
 	 */
 	void destroy();
 }

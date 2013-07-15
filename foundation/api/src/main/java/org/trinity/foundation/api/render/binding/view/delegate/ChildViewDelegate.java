@@ -11,22 +11,23 @@
  */
 package org.trinity.foundation.api.render.binding.view.delegate;
 
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.render.bindkey.RenderExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
  * A delegate to handle the life cycle of a child view element. This delegate
  * should be implemented for a specific widget toolkit.
- * 
- * 
- *************************************** 
+ *
+ *
+ ***************************************
  */
-@OwnerThread("Render")
+@ExecutionContext(RenderExecutor.class)
 public interface ChildViewDelegate {
 	/***************************************
 	 * Create a new view instance.
-	 * 
+	 *
 	 * @param parentView
 	 *            The parent view of the new view instance.
 	 * @param childViewType
@@ -34,7 +35,7 @@ public interface ChildViewDelegate {
 	 * @param position
 	 *            The position (index) of the new view, relative to it's parent.
 	 * @return a future new view instance.
-	 *************************************** 
+	 ***************************************
 	 */
 	<T> ListenableFuture<T> newView(Object parentView,
 									Class<T> childViewType,
@@ -42,7 +43,7 @@ public interface ChildViewDelegate {
 
 	/***************************************
 	 * Destroy a view instance.
-	 * 
+	 *
 	 * @param parentView
 	 *            The parent of the view that should be destroyed.
 	 * @param deletedChildView
@@ -51,7 +52,7 @@ public interface ChildViewDelegate {
 	 *            The index of the view that should be destroyed.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> destroyView(	Object parentView,
 										Object deletedChildView,
@@ -59,7 +60,7 @@ public interface ChildViewDelegate {
 
 	/***************************************
 	 * Update the position (index) of a view instance, relative to it's parent.
-	 * 
+	 *
 	 * @param parentView
 	 *            The parent view.
 	 * @param childView
@@ -70,7 +71,7 @@ public interface ChildViewDelegate {
 	 *            The new position.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> updateChildViewPosition(	Object parentView,
 													Object childView,

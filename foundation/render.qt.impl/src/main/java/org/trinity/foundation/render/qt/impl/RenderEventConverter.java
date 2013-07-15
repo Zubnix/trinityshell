@@ -38,7 +38,7 @@ import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 @NotThreadSafe
 public class RenderEventConverter {
 
-	private static final Logger logger = LoggerFactory.getLogger(RenderEventConverter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RenderEventConverter.class);
 
 	private final Map<QEvent.Type, Optional<RenderEventConversion>> conversionByQEventType = new HashMap<QEvent.Type, Optional<RenderEventConversion>>();
 
@@ -62,9 +62,9 @@ public class RenderEventConverter {
 																eventProducer,
 																event);
 
-			logger.debug(	"Converted render event={} to display event={}.",
-							event,
-							displayEvent);
+			LOG.debug("Converted render event={} to display event={}.",
+					event,
+					displayEvent);
 
 			eventTarget.post(displayEvent);
 			return true;

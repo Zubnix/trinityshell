@@ -15,9 +15,6 @@ import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
 import static org.freedesktop.xcb.LibXcb.xcb_connect;
 import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
-import static org.freedesktop.xcb.LibXcb.xcb_get_setup;
-import static org.freedesktop.xcb.LibXcb.xcb_screen_next;
-import static org.freedesktop.xcb.LibXcb.xcb_setup_roots_iterator;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -29,8 +26,9 @@ import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_cw_t;
 import org.freedesktop.xcb.xcb_event_mask_t;
-import org.freedesktop.xcb.xcb_screen_iterator_t;
 import org.freedesktop.xcb.xcb_screen_t;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 
 import com.google.inject.Singleton;
@@ -38,10 +36,11 @@ import com.google.inject.Singleton;
 @Bind
 @To(IMPLEMENTATION)
 @Singleton
+@ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public class XConnectionImpl implements XConnection {
 
-	private SWIGTYPE_p_xcb_connection_t connection_t;
+	private SWIGTYPE_p_xcb_connection_t xcb_connection;
 	private xcb_screen_t screen_t;
 
 	XConnectionImpl() {
@@ -52,18 +51,8 @@ public class XConnectionImpl implements XConnection {
 						final int screen) {
 		final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 		screenBuf.putInt(screen);
-		this.connection_t = xcb_connect(displayName,
+		this.xcb_connection = xcb_connect(displayName,
 										screenBuf);
-
-		int targetScreen = screen;
-		final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(this.connection_t));
-		for (; iter.getRem() != 0; --targetScreen, xcb_screen_next(iter)) {
-			if (targetScreen == 0) {
-				this.screen_t = iter.getData();
-				break;
-			}
-		}
-
 		configureRootEvents();
 	}
 
@@ -82,17 +71,11 @@ public class XConnectionImpl implements XConnection {
 
 	@Override
 	public void close() {
-
-		xcb_disconnect(this.connection_t);
+		xcb_disconnect(this.xcb_connection);
 	}
 
 	@Override
 	public SWIGTYPE_p_xcb_connection_t getConnectionReference() {
-		return this.connection_t;
-	}
-
-	@Override
-	public xcb_screen_t getScreenReference() {
-		return this.screen_t;
+		return this.xcb_connection;
 	}
 }

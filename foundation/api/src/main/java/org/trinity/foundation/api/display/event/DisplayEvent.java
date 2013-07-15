@@ -11,15 +11,17 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 import javax.annotation.concurrent.Immutable;
 
-import org.trinity.foundation.api.display.DisplayServer;
-
 /**
- * Information coming from a {@link DisplayServer}.
- * 
+ * Information coming from a {@link org.trinity.foundation.api.display.Display}.
+ *
  */
 @Immutable
+@ExecutionContext(DisplayExecutor.class)
 public class DisplayEvent {
 
 }

@@ -11,7 +11,8 @@
  */
 package org.trinity.shell.api.scene;
 
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
@@ -26,41 +27,41 @@ import com.google.common.util.concurrent.ListenableFuture;
  * <code>requestReparent</code> delegates the reparenting to any subscribed
  * child node listener, which can be, for example, the current parent's
  * {@link ShellLayoutManager}.
- * 
- *************************************** 
+ *
+ ***************************************
  */
-@OwnerThread("Shell")
+@ExecutionContext(ShellExecutor.class)
 public interface ShellNodeParent extends ShellNode {
 
 	/***************************************
 	 * The layout manager that his parent will use to layout it's children.
 	 * Children are not laid out automatically. See {@link #layout()}.
-	 * 
+	 *
 	 * @return A {@link ShellLayoutManager}.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Optional<ShellLayoutManager>> getLayoutManager();
 
 	/***************************************
 	 * Layout all child <code>ShellNode</code>s.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> layout();
 
 	/***************************************
 	 * Change the layout manager of this parent to the desired layout manager.
-	 * 
+	 *
 	 * @param shellLayoutManager
 	 *            A {@link ShellLayoutManager}.f
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> setLayoutManager(ShellLayoutManager shellLayoutManager);
 
 	/***************************************
 	 * The direct child nodes of this parent.
-	 * 
+	 *
 	 * @return an array of {@link ShellNode}s
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<ShellNode[]> getChildren();
 }

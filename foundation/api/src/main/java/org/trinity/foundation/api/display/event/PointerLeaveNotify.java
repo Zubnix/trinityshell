@@ -11,14 +11,18 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
  * Indicates when a pointer device has left a display resource.
- * 
- *************************************** 
+ *
+ ***************************************
  */
 @Immutable
+@ExecutionContext(DisplayExecutor.class)
 public class PointerLeaveNotify extends PointerVisitationNotify {
 
 }

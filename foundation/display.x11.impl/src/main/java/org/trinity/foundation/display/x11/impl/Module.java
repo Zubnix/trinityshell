@@ -23,7 +23,6 @@ public class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-
 		install(new FactoryModuleBuilder().implement(	DisplaySurface.class,
 														XWindow.class).build(DisplaySurfaceFactory.class));
 	}

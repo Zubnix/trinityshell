@@ -16,6 +16,8 @@ import static org.freedesktop.xcb.xcb_grab_mode_t.XCB_GRAB_MODE_ASYNC;
 
 import java.util.concurrent.Callable;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -25,12 +27,14 @@ import org.freedesktop.xcb.xcb_query_pointer_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.input.Button;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Pointer;
 import org.trinity.foundation.api.shared.Coordinate;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
-import org.trinity.foundation.display.x11.api.bindkey.XDisplayExecutor;
+import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -40,9 +44,11 @@ import com.google.inject.Singleton;
 
 @Bind
 @Singleton
+@ExecutionContext(DisplayExecutor.class)
+@ThreadSafe
 public class XPointer implements Pointer {
 
-	private static final Logger logger = LoggerFactory.getLogger(XPointer.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XPointer.class);
 	private final XConnection xConnection;
 	private final XTime xTime;
 	private final ListeningExecutorService xExecutor;
@@ -50,7 +56,7 @@ public class XPointer implements Pointer {
 	@Inject
 	XPointer(	final XConnection xConnection,
 				final XTime xTime,
-				@XDisplayExecutor final ListeningExecutorService xExecutor) {
+				@DisplayExecutor final ListeningExecutorService xExecutor) {
 		this.xConnection = xConnection;
 		this.xTime = xTime;
 		this.xExecutor = xExecutor;
@@ -66,7 +72,7 @@ public class XPointer implements Pointer {
 
 	private void checkError(final xcb_generic_error_t e) {
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			XPointer.logger.error(XcbErrorUtil.toString(e));
+			XPointer.LOG.error(XcbErrorUtil.toString(e));
 		}
 	}
 

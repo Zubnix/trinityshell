@@ -12,12 +12,15 @@
 package org.trinity.foundation.display.x11.impl;
 
 import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
+import static org.freedesktop.xcb.LibXcb.xcb_get_setup;
 import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes;
 import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes_reply;
 import static org.freedesktop.xcb.LibXcb.xcb_query_tree;
 import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children;
 import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children_length;
 import static org.freedesktop.xcb.LibXcb.xcb_query_tree_reply;
+import static org.freedesktop.xcb.LibXcb.xcb_screen_next;
+import static org.freedesktop.xcb.LibXcb.xcb_setup_roots_iterator;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -36,16 +39,21 @@ import org.freedesktop.xcb.xcb_get_window_attributes_reply_t;
 import org.freedesktop.xcb.xcb_map_state_t;
 import org.freedesktop.xcb.xcb_query_tree_cookie_t;
 import org.freedesktop.xcb.xcb_query_tree_reply_t;
+import org.freedesktop.xcb.xcb_screen_iterator_t;
+import org.freedesktop.xcb.xcb_screen_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.Screen;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.CreationNotify;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.shared.AsyncListenableEventBus;
-import org.trinity.foundation.api.shared.OwnerThread;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
-import org.trinity.foundation.display.x11.api.XDisplayServer;
-import org.trinity.foundation.display.x11.api.bindkey.XDisplayExecutor;
+import org.trinity.foundation.display.x11.api.XScreen;
+import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -56,23 +64,23 @@ import com.google.inject.Singleton;
 @Bind
 @Singleton
 @ThreadSafe
-@OwnerThread("Display")
-public class XDisplayServerImpl implements XDisplayServer {
+@ExecutionContext(DisplayExecutor.class)
+public class XDisplayImpl implements Display {
 
-	private static final Logger logger = LoggerFactory.getLogger(XDisplayServerImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XDisplayImpl.class);
 	private final List<DisplaySurface> clientDisplaySurfaces = new ArrayList<DisplaySurface>();
 	private final XConnection xConnection;
 	private final XWindowCache xWindowCache;
 	private final XEventPump xEventPump;
 	private final ListeningExecutorService xExecutor;
 	private final AsyncListenableEventBus displayEventBus;
-	private XWindow rootWindow;
+	private XScreen screen;
 
 	@Inject
-	XDisplayServerImpl(	final XConnection xConnection,
-						final XWindowCache xWindowCache,
-						final XEventPump xEventPump,
-						@XDisplayExecutor final ListeningExecutorService xExecutor) {
+	XDisplayImpl(	final XConnection xConnection,
+					final XWindowCache xWindowCache,
+					final XEventPump xEventPump,
+					@DisplayExecutor final ListeningExecutorService xExecutor) {
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
 		this.xEventPump = xEventPump;
@@ -90,36 +98,41 @@ public class XDisplayServerImpl implements XDisplayServer {
 		return this.xExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
-				XDisplayServerImpl.this.xEventPump.stop();
-				XDisplayServerImpl.this.xConnection.close();
+				XDisplayImpl.this.xEventPump.stop();
+				XDisplayImpl.this.xConnection.close();
 				return null;
 			}
 		});
 	}
 
-	@Override
-	public DisplaySurface getRootDisplaySurface() {
-		return rootWindow;
-	}
-
 	public ListenableFuture<Void> open() {
 		// FIXME from config?
 		final String displayName = System.getenv("DISPLAY");
+		final int targetScreen = 0;
 
 		return this.xExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
-				XDisplayServerImpl.this.xConnection.open(	displayName,
-															0);
-				if (xcb_connection_has_error(XDisplayServerImpl.this.xConnection.getConnectionReference()) != 0) {
+
+				XDisplayImpl.this.xConnection.open(	displayName,
+													targetScreen);
+				if (xcb_connection_has_error(XDisplayImpl.this.xConnection.getConnectionReference()) != 0) {
 					throw new Error("Cannot open display\n");
 				}
 
-				final int rootWinId = XDisplayServerImpl.this.xConnection.getScreenReference().getRoot();
-				rootWindow = XDisplayServerImpl.this.xWindowCache.getWindow(rootWinId);
+				final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(XDisplayImpl.this.xConnection
+						.getConnectionReference()));
+				int screenNr = targetScreen;
+				for (; iter.getRem() != 0; --screenNr, xcb_screen_next(iter)) {
+					if (targetScreen == 0) {
+						screen = new XScreenImpl(iter.getData());
+						break;
+					}
+				}
+
 
 				findClientDisplaySurfaces();
-				XDisplayServerImpl.this.xEventPump.start();
+				XDisplayImpl.this.xEventPump.start();
 				return null;
 			}
 		});
@@ -128,7 +141,8 @@ public class XDisplayServerImpl implements XDisplayServer {
 	private void findClientDisplaySurfaces() {
 		// find client display surfaces that are already
 		// active on the X server and track them
-		final int rootId = this.xConnection.getScreenReference().getRoot();
+
+		final int rootId = screen.getScreenReference().getRoot();
 		final SWIGTYPE_p_xcb_connection_t xConnectionRef = this.xConnection.getConnectionReference();
 		final xcb_query_tree_cookie_t query_tree_cookie_t = xcb_query_tree(	xConnectionRef,
 																			rootId);
@@ -139,8 +153,8 @@ public class XDisplayServerImpl implements XDisplayServer {
 																				query_tree_cookie_t,
 																				e);
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			XDisplayServerImpl.logger.error("X error while doing query tree: {}.",
-											XcbErrorUtil.toString(e));
+			XDisplayImpl.LOG.error(	"X error while doing query tree: {}.",
+									XcbErrorUtil.toString(e));
 			return;
 		}
 
@@ -158,8 +172,8 @@ public class XDisplayServerImpl implements XDisplayServer {
 																													e);
 
 			if (xcb_generic_error_t.getCPtr(e) != 0) {
-				XDisplayServerImpl.logger.error("X error while doing get window attributes: {}.",
-												XcbErrorUtil.toString(e));
+				XDisplayImpl.LOG.error(	"X error while doing get window attributes: {}.",
+										XcbErrorUtil.toString(e));
 			} else {
 				final short override_redirect = get_window_attributes_reply.getOverride_redirect();
 				final short map_state = get_window_attributes_reply.getMap_state();
@@ -207,7 +221,7 @@ public class XDisplayServerImpl implements XDisplayServer {
 		clientDisplaySurface.register(new Object() {
 			@Subscribe
 			public void handleClientDestroyed(final DestroyNotify destroyNotify) {
-				XDisplayServerImpl.this.clientDisplaySurfaces.remove(clientDisplaySurface);
+				XDisplayImpl.this.clientDisplaySurfaces.remove(clientDisplaySurface);
 			}
 		});
 		this.clientDisplaySurfaces.add(clientDisplaySurface);
@@ -219,12 +233,22 @@ public class XDisplayServerImpl implements XDisplayServer {
 	}
 
 	@Override
-	public ListenableFuture<DisplaySurface[]> getClientDisplaySurfaces() {
-		return this.xExecutor.submit(new Callable<DisplaySurface[]>() {
+	public ListenableFuture<List<DisplaySurface>> getClientDisplaySurfaces() {
+		return this.xExecutor.submit(new Callable<List<DisplaySurface>>() {
 			@Override
-			public DisplaySurface[] call() throws Exception {
+			public List<DisplaySurface> call() throws Exception {
 				// we return a copy
-				return XDisplayServerImpl.this.clientDisplaySurfaces.toArray(new DisplaySurface[] {});
+				return new ArrayList<DisplaySurface>(XDisplayImpl.this.clientDisplaySurfaces);
+			}
+		});
+	}
+
+	@Override
+	public ListenableFuture<Screen> getScreen() {
+		return this.xExecutor.submit(new Callable<Screen>() {
+			@Override
+			public Screen call() throws Exception {
+				return screen;
 			}
 		});
 	}

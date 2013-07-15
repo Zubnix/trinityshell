@@ -24,11 +24,13 @@ import org.freedesktop.xcb.xcb_configure_request_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.DisplayServer;
+import org.trinity.foundation.api.display.Display;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.CreationNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.GeometryRequest;
 import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XEventConversion;
@@ -42,6 +44,7 @@ import com.google.inject.Singleton;
 
 @Bind(multiple = true)
 @Singleton
+@ExecutionContext(DisplayExecutor.class)
 @Immutable
 public class ConfigureRequestConversion implements XEventConversion {
 
@@ -49,15 +52,15 @@ public class ConfigureRequestConversion implements XEventConversion {
 	private final Integer eventCode = XCB_CONFIGURE_REQUEST;
 	private final XWindowCache xWindowCache;
 	private final EventBus xEventBus;
-	private final DisplayServer displayServer;
+	private final Display display;
 
 	@Inject
 	ConfigureRequestConversion(	@XEventBus final EventBus xEventBus,
 								final XWindowCache xWindowCache,
-								final DisplayServer displayServer) {
+								final Display display) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
-		this.displayServer = displayServer;
+		this.display = display;
 	}
 
 	@Override
@@ -109,7 +112,7 @@ public class ConfigureRequestConversion implements XEventConversion {
 			// this is a bit of a dirty hack to work around X's model of client
 			// discovery.
 			final CreationNotify creationNotify = new CreationNotify(displayEventTarget);
-			this.displayServer.post(creationNotify);
+			this.display.post(creationNotify);
 		}
 
 		return displayEventTarget;
