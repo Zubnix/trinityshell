@@ -3,9 +3,7 @@ package org.trinity.shellplugin.wm.x11.impl.scene;
 import static com.google.common.util.concurrent.Futures.addCallback;
 import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 
-import java.util.concurrent.Callable;
-
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
@@ -25,13 +23,12 @@ import org.trinity.shellplugin.wm.x11.impl.protocol.XWindowProtocol;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Bind
 @To(IMPLEMENTATION)
-@ThreadSafe
+@NotThreadSafe
 @Singleton
 @ExecutionContext(ShellExecutor.class)
 public class SceneManager {
@@ -41,16 +38,12 @@ public class SceneManager {
 	private final ShellLayoutManager rootLayoutManager;
 	private final ShellRootWidget shellRootWidget;
 	private final XWindowProtocol xWindowProtocol;
-	private final ListeningExecutorService shellExecutor;
 
 	@Inject
-	// FIXME use shell executor
-	SceneManager(	@ShellExecutor final ListeningExecutorService shellExecutor,
-					final ClientBarElementFactory clientBarElementFactory,
+	SceneManager(	final ClientBarElementFactory clientBarElementFactory,
 					final XWindowProtocol xWindowProtocol,
 					final ShellRootWidget shellRootWidget,
 					final ShellLayoutManagerLine shellLayoutManagerLine) {
-		this.shellExecutor = shellExecutor;
 		this.clientBarElementFactory = clientBarElementFactory;
 		this.xWindowProtocol = xWindowProtocol;
 		this.shellRootWidget = shellRootWidget;
@@ -60,48 +53,26 @@ public class SceneManager {
 		this.shellRootWidget.doShow();
 	}
 
-	public void manageNewClient(final ShellSurface client) {
-		this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				registerXWindow(client);
+	// called by shell executor
+	public void manageNewClient(final DisplaySurface displaySurface,
+								final ShellSurface client) {
+		this.xWindowProtocol.register(displaySurface);
+		addClientTopBarItem(displaySurface,
+							client);
+		layoutClient(client);
+	}
 
-				addClientTopBarItem(client);
-				layoutClient(client);
-
-				return null;
+	// called by shell executor
+	private void addClientTopBarItem(	final DisplaySurface displaySurface,
+										final ShellSurface client) {
+		final ClientBarElement clientBarElement = this.clientBarElementFactory.createClientTopBarItem(displaySurface);
+		this.shellRootWidget.getClientsBar().add(clientBarElement);
+		client.register(new Object() {
+			@Subscribe
+			public void onClientDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
+				removeClientTopBarItem(clientBarElement);
 			}
 		});
-	}
-
-	private void registerXWindow(final ShellSurface xShellSurface) {
-		addCallback(xShellSurface.getDisplaySurface(),
-					new FutureCallback<DisplaySurface>() {
-						@Override
-						public void onSuccess(final DisplaySurface xWindow) {
-							SceneManager.this.xWindowProtocol.register(xWindow);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							LOG.error("Failed to find display surface from client shell surface",
-									t);
-						}
-					},
-					this.shellExecutor);
-	}
-
-	private void addClientTopBarItem(final ShellSurface client) {
-		final ClientBarElement clientBarElement = this.clientBarElementFactory.createClientTopBarItem(client);
-		SceneManager.this.shellRootWidget.getClientsBar().add(clientBarElement);
-		client.register(new Object() {
-							@Subscribe
-							public void onClientDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
-								removeClientTopBarItem(clientBarElement);
-							}
-						},
-						this.shellExecutor);
-
 		// check if we missed any destroy events. Corner case we remove the
 		// object twice but that's not a problem.
 		final ListenableFuture<Boolean> destroyedFuture = client.isDestroyed();
@@ -116,11 +87,10 @@ public class SceneManager {
 
 						@Override
 						public void onFailure(final Throwable t) {
-							LOG.error("Failed to query destroyed state from client.",
-									t);
+							LOG.error(	"Failed to query destroyed state from client.",
+										t);
 						}
-					},
-					this.shellExecutor);
+					});
 	}
 
 	private void removeClientTopBarItem(final ClientBarElement clientBarElement) {

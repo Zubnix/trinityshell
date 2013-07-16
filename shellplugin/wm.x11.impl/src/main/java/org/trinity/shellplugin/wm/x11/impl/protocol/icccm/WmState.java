@@ -27,7 +27,6 @@ import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.name.Named;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -38,17 +37,17 @@ import javax.annotation.concurrent.NotThreadSafe;
 @ExecutionContext(DisplayExecutor.class)
 public class WmState extends AbstractCachedProtocol<int[]> {
 
-	private static final Logger logger = LoggerFactory.getLogger(WmState.class);
+	private static final Logger LOG = LoggerFactory.getLogger(WmState.class);
 	private final ListeningExecutorService wmExecutor;
 	private final XConnection xConnection;
 
-	WmState(@DisplayExecutor final ListeningExecutorService wmExecutor,
+	WmState(@DisplayExecutor final ListeningExecutorService displayExecutor,
 			final XConnection xConnection,
 			final XAtomCache xAtomCache) {
-		super(	wmExecutor,
+		super(	displayExecutor,
 				xAtomCache,
 				"WM_STATE");
-		this.wmExecutor = wmExecutor;
+		this.wmExecutor = displayExecutor;
 		this.xConnection = xConnection;
 	}
 
@@ -76,7 +75,7 @@ public class WmState extends AbstractCachedProtocol<int[]> {
 																							e);
 				if (xcb_generic_error_t.getCPtr(e) != 0) {
 					final String errorString = XcbErrorUtil.toString(e);
-					logger.error(errorString);
+					LOG.error(errorString);
 					return Optional.absent();
 				}
 				if (get_wm_state_reply.getLength() == 0) {

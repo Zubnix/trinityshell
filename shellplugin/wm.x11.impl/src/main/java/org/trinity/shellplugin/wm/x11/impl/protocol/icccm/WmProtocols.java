@@ -26,7 +26,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 @Bind
 @To(IMPLEMENTATION)
@@ -35,20 +34,20 @@ import com.google.inject.name.Named;
 @ExecutionContext(DisplayExecutor.class)
 public class WmProtocols extends AbstractCachedProtocol<xcb_icccm_get_wm_protocols_reply_t> {
 
-	private static final Logger logger = LoggerFactory.getLogger(WmProtocols.class);
+	private static final Logger LOG = LoggerFactory.getLogger(WmProtocols.class);
 	private final XConnection xConnection;
-	private final ListeningExecutorService wmExecutor;
+	private final ListeningExecutorService displayExecutor;
 
 	@Inject
 	WmProtocols(final XConnection xConnection,
 				final XAtomCache xAtomCache,
-				@DisplayExecutor final ListeningExecutorService wmExecutor) {
-		super(	wmExecutor,
+				@DisplayExecutor final ListeningExecutorService displayExecutor) {
+		super(	displayExecutor,
 				xAtomCache,
 				"WM_PROTOCOLS");
 
 		this.xConnection = xConnection;
-		this.wmExecutor = wmExecutor;
+		this.displayExecutor = displayExecutor;
 	}
 
 	@Override
@@ -57,7 +56,7 @@ public class WmProtocols extends AbstractCachedProtocol<xcb_icccm_get_wm_protoco
 		final xcb_get_property_cookie_t get_property_cookie = xcb_icccm_get_wm_protocols(	this.xConnection.getConnectionReference(),
 																							window,
 																							getProtocolAtomId());
-		return this.wmExecutor.submit(new Callable<Optional<xcb_icccm_get_wm_protocols_reply_t>>() {
+		return this.displayExecutor.submit(new Callable<Optional<xcb_icccm_get_wm_protocols_reply_t>>() {
 			@Override
 			public Optional<xcb_icccm_get_wm_protocols_reply_t> call() {
 
@@ -69,8 +68,8 @@ public class WmProtocols extends AbstractCachedProtocol<xcb_icccm_get_wm_protoco
 																	wm_protocols,
 																	e);
 				if ((stat == 0) || (xcb_generic_error_t.getCPtr(e) != 0)) {
-					logger.error(	"Failed to get wm_protocols property from window={}",
-									window);
+					LOG.error("Failed to get wm_protocols property from window={}",
+							window);
 					return Optional.absent();
 				}
 

@@ -36,18 +36,18 @@ public class WmName extends AbstractCachedProtocol<xcb_icccm_get_text_property_r
 
 	private static final Logger LOG = LoggerFactory.getLogger(WmName.class);
 	private final XConnection xConnection;
-	private final ListeningExecutorService wmExecutor;
+	private final ListeningExecutorService displayExecutor;
 
 	@Inject
 	WmName(	final XConnection xConnection,
 			final XAtomCache xAtomCache,
-			@DisplayExecutor final ListeningExecutorService wmExecutor) {
-		super(	wmExecutor,
+			@DisplayExecutor final ListeningExecutorService displayExecutor) {
+		super(	displayExecutor,
 				xAtomCache,
 				"WM_NAME");
 
 		this.xConnection = xConnection;
-		this.wmExecutor = wmExecutor;
+		this.displayExecutor = displayExecutor;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class WmName extends AbstractCachedProtocol<xcb_icccm_get_text_property_r
 		final xcb_generic_error_t e = new xcb_generic_error_t();
 		final xcb_icccm_get_text_property_reply_t prop = new xcb_icccm_get_text_property_reply_t();
 
-		return this.wmExecutor.submit(new Callable<Optional<xcb_icccm_get_text_property_reply_t>>() {
+		return this.displayExecutor.submit(new Callable<Optional<xcb_icccm_get_text_property_reply_t>>() {
 			@Override
 			public Optional<xcb_icccm_get_text_property_reply_t> call() throws Exception {
 

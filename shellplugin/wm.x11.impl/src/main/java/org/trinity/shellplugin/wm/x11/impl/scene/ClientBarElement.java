@@ -25,7 +25,6 @@ import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shellplugin.wm.api.HasText;
 import org.trinity.shellplugin.wm.api.ReceivesPointerInput;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
@@ -45,7 +44,7 @@ import com.google.inject.assistedinject.AssistedInject;
 public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	private static Logger LOG = LoggerFactory.getLogger(ClientBarElement.class);
-	private final ListeningExecutorService wmExecutor;
+	private final ListeningExecutorService shellExecutor;
 	private final WmName wmName;
 	private final WmProtocols wmProtocols;
 	private final ReceivesPointerInput closeButton = new ReceivesPointerInput() {
@@ -70,32 +69,22 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 						final WmName wmName,
 						final WmProtocols wmProtocols,
 						final XAtomCache xAtomCache,
-						@Assisted final ShellSurface client) {
+						@Assisted final DisplaySurface clientXWindow) {
 		this.xConnection = xConnection;
 		this.wmName = wmName;
 		this.wmProtocols = wmProtocols;
-		this.wmExecutor = shellExecutor;
+		this.shellExecutor = shellExecutor;
 
-		addCallback(client.getDisplaySurface(),
-					new FutureCallback<DisplaySurface>() {
-						@Override
-						public void onSuccess(final DisplaySurface clientXWindow) {
-							ClientBarElement.this.wmDeleteWindowAtomId = xAtomCache.getAtom("WM_DELETE_WINDOW");
-							ClientBarElement.this.wmProtocolsAtomId = xAtomCache.getAtom("WM_PROTOCOLS");
-							setClientXWindow(clientXWindow);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							LOG.error("Error getting display surface from client.",
-									t);
-						}
-					},
-					shellExecutor);
+		this.wmDeleteWindowAtomId = xAtomCache.getAtom("WM_DELETE_WINDOW");
+		this.wmProtocolsAtomId = xAtomCache.getAtom("WM_PROTOCOLS");
+		setClientXWindow(clientXWindow);
 	}
 
+	//called by shell executor
 	private void setClientXWindow(final DisplaySurface clientXWindow) {
 		ClientBarElement.this.clientXWindow = clientXWindow;
+
+		//FIXME execution context for protocol notifications is wrong
 
 		// client name handling
 		this.wmName.addProtocolListener(clientXWindow,
@@ -132,8 +121,8 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 						@Override
 						public void onFailure(final Throwable t) {
-							LOG.error("Failed to get wm_protocols protocol",
-									t);
+							LOG.error(	"Failed to get wm_protocols protocol",
+										t);
 						}
 					});
 	}
@@ -156,7 +145,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 		}
 	}
 
-	// called by window manager thread
+	// called by shell executor
 	public void queryClientName(final DisplaySurface clientXWindow) {
 		final ListenableFuture<Optional<xcb_icccm_get_text_property_reply_t>> wmNameFuture = this.wmName
 				.get(clientXWindow);
@@ -169,8 +158,8 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 						@Override
 						public void onFailure(final Throwable t) {
-							LOG.error("Failed to get wm name protocol",
-									t);
+							LOG.error(	"Failed to get wm name protocol",
+										t);
 						}
 					});
 	}
@@ -190,7 +179,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	// called by shell thread.
 	private void handleClientCloseRequest() {
 		// FIXME use xdisplayexecutor
-		this.wmExecutor.submit(new Callable<Void>() {
+		this.shellExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
 				if (ClientBarElement.this.canSendWmDeleteMsg) {
@@ -243,7 +232,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	public void onPointerInput(final PointerInput pointerInput) {
 		// do something with client, eg raise & give focus
 		// FIXME dont use executor, already invoked by shell thread.
-		this.wmExecutor.submit(new Runnable() {
+		this.shellExecutor.submit(new Runnable() {
 			@Override
 			public void run() {
 				ClientBarElement.this.clientXWindow.setInputFocus();

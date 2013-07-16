@@ -66,7 +66,6 @@ public abstract class AbstractCachedProtocol<P> {
 										listeners);
 		}
 		listeners.register(listener);
-
 	}
 
 	public ListenableFuture<Optional<P>> get(final DisplaySurface xWindow) {

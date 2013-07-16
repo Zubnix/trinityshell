@@ -9,7 +9,6 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -31,10 +30,8 @@ public class XPropertyChangedEventHandling implements XEventHandling {
 		final xcb_property_notify_event_t property_notify_event_t = new xcb_property_notify_event_t(xcb_generic_event_t.getCPtr(xEvent),
 																									false);
 		final int clientId = property_notify_event_t.getWindow();
-		final Optional<DisplaySurface> xWindow = this.xWindowProtocol.findXWindow(clientId);
-		if (xWindow.isPresent()) {
-			xWindow.get().post(property_notify_event_t);
-		}
+		final DisplaySurface xWindow = this.xWindowProtocol.findXWindow(clientId);
+		xWindow.post(property_notify_event_t);
 	}
 
 	@Override

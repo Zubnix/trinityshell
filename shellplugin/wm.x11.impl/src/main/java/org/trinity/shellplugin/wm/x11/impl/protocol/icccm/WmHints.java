@@ -37,7 +37,7 @@ public class WmHints extends AbstractCachedProtocol<xcb_icccm_wm_hints_t> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WmHints.class);
 	private final XConnection xConnection;
-	private final ListeningExecutorService wmExecutor;
+	private final ListeningExecutorService displayExecutor;
 
 	@Inject
 	WmHints(@DisplayExecutor final ListeningExecutorService displayExecutor,
@@ -46,7 +46,7 @@ public class WmHints extends AbstractCachedProtocol<xcb_icccm_wm_hints_t> {
 		super(	displayExecutor,
 				xAtomCache,
 				"WM_HINTS");
-		this.wmExecutor = displayExecutor;
+		this.displayExecutor = displayExecutor;
 		this.xConnection = xConnection;
 	}
 
@@ -57,7 +57,7 @@ public class WmHints extends AbstractCachedProtocol<xcb_icccm_wm_hints_t> {
 		final xcb_get_property_cookie_t get_wm_hints_cookie = xcb_icccm_get_wm_hints(	this.xConnection.getConnectionReference(),
 																						winId.intValue());
 
-		return this.wmExecutor.submit(new Callable<Optional<xcb_icccm_wm_hints_t>>() {
+		return this.displayExecutor.submit(new Callable<Optional<xcb_icccm_wm_hints_t>>() {
 			@Override
 			public Optional<xcb_icccm_wm_hints_t> call() throws Exception {
 				final xcb_icccm_wm_hints_t hints = new xcb_icccm_wm_hints_t();
