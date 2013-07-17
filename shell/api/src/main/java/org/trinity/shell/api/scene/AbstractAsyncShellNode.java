@@ -11,6 +11,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+
 // TODO auto generate this boiler plate code?
 // TODO documentation
 /***************************************
@@ -19,12 +22,13 @@ import org.trinity.shell.api.bindingkey.ShellExecutor;
  * concrete internal node manipulation.
  ***************************************
  */
+@ThreadSafe
 @ExecutionContext(ShellExecutor.class)
 public abstract class AbstractAsyncShellNode implements ShellNode {
 
 	private final ListeningExecutorService shellExecutor;
 
-	protected AbstractAsyncShellNode(final ListeningExecutorService shellExecutor) {
+	protected AbstractAsyncShellNode(@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
 		this.shellExecutor = shellExecutor;
 	}
 

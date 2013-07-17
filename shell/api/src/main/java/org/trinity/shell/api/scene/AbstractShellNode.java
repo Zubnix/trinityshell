@@ -23,6 +23,8 @@ import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellRootNode;
+import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
@@ -44,12 +46,17 @@ import org.trinity.shell.api.scene.event.ShellNodeShowedEvent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+
 /**
  * ************************************ An abstract base implementation of a
  * {@link ShellNode}.
  * <p/>
  * **************************************
  */
+@NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
 public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
@@ -67,14 +74,14 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	private AbstractShellNodeParent desiredParent;
 	private boolean destroyed;
 
-	protected AbstractShellNode(ShellNodeParent rootShellNodeParent,
-								final AsyncListenable shellScene,
-								final ListeningExecutorService shellExecutor) {
+	protected AbstractShellNode(@Nullable @ShellRootNode final ShellNodeParent shellRootNode,
+								@Nonnull @ShellScene final AsyncListenable shellScene,
+								@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
 		super(shellExecutor);
 		register(shellScene);
 		this.nodeEventBus = new AsyncListenableEventBus(shellExecutor);
 
-		setParentImpl(rootShellNodeParent);
+        setParentImpl(shellRootNode);
 		doReparent(false);
 	}
 

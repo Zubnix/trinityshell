@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
@@ -20,9 +22,6 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @NotThreadSafe
 @Bind

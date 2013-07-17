@@ -6,8 +6,8 @@ import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_client_message_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Bind(multiple = true)
 @Singleton

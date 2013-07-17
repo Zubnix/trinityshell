@@ -2,6 +2,7 @@ package org.trinity.shellplugin.wm.x11.impl;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.apache.onami.autobind.annotations.Bind;
@@ -21,7 +22,6 @@ import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.inject.Inject;
 
 import java.util.List;
 
@@ -59,8 +59,7 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 	// called by display executor
 	@Subscribe
 	public void handleCreationNotify(final CreationNotify creationNotify) {
-		final DisplaySurface displaySurface = creationNotify.getDisplaySurface();
-		handleClientDisplaySurface(displaySurface);
+		handleClientDisplaySurface(creationNotify.getDisplaySurface());
 	}
 
 	// called by shell executor.

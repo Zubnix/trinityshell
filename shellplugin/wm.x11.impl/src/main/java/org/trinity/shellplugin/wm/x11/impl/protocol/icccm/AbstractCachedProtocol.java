@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.freedesktop.xcb.xcb_property_notify_event_t;
@@ -31,16 +32,16 @@ import com.google.common.util.concurrent.MoreExecutors;
 @ExecutionContext(DisplayExecutor.class)
 public abstract class AbstractCachedProtocol<P> {
 
-	private static Logger LOG = LoggerFactory.getLogger(AbstractCachedProtocol.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractCachedProtocol.class);
 	private final Map<DisplaySurface, Optional<P>> protocolCache = new WeakHashMap<DisplaySurface, Optional<P>>();
 	private final Map<DisplaySurface, EventBus> listenersByWindow = new WeakHashMap<DisplaySurface, EventBus>();
 	private final ListeningExecutorService displayExecutor;
 	private int protocolAtomId;
 
 	// TODO use display execution context
-	AbstractCachedProtocol(	final ListeningExecutorService displayExecutor,
-							final XAtomCache xAtomCache,
-							final String protocolName) {
+	AbstractCachedProtocol(@Nonnull @DisplayExecutor final ListeningExecutorService displayExecutor,
+                           @Nonnull final XAtomCache xAtomCache,
+                           @Nonnull final String protocolName) {
 		this.displayExecutor = displayExecutor;
 		displayExecutor.submit(new Callable<Void>() {
 			@Override

@@ -4,3 +4,6 @@
 [submodule "externals/xcb4j"]
 	path = externals/xcb4j
 	url = https://github.com/Zubnix/xcb4j.git
+[submodule "externals/autobind"]
+	path = externals/autobind
+	url = https://github.com/Zubnix/apache-onami-autobind.git

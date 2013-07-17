@@ -9,8 +9,9 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 
 @Bind(multiple = true)
 @Singleton

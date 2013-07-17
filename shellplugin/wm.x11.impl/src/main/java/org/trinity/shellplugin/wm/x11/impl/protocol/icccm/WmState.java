@@ -9,7 +9,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.Callable;
 
-import com.google.inject.Singleton;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -29,6 +28,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Bind
 @To(IMPLEMENTATION)
@@ -41,6 +42,7 @@ public class WmState extends AbstractCachedProtocol<int[]> {
 	private final ListeningExecutorService wmExecutor;
 	private final XConnection xConnection;
 
+    @Inject
 	WmState(@DisplayExecutor final ListeningExecutorService displayExecutor,
 			final XConnection xConnection,
 			final XAtomCache xAtomCache) {

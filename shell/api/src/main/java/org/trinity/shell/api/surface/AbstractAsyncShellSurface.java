@@ -5,11 +5,17 @@ import java.util.concurrent.Callable;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Size;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellRootNode;
+import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 // TODO from boilerplate code generator
 /***************************************
@@ -23,10 +29,10 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 
 	private final ListeningExecutorService shellExecutor;
 
-	protected AbstractAsyncShellSurface(ShellNodeParent rootShellNodeParent,
-										AsyncListenable shellScene,
-										final ListeningExecutorService shellExecutor) {
-		super(	rootShellNodeParent,
+	protected AbstractAsyncShellSurface(@Nullable @ShellRootNode final ShellNodeParent shellRootNode,
+                                        @Nonnull @ShellScene final AsyncListenable shellScene,
+                                        @Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
+		super(	shellRootNode,
 				shellScene,
 				shellExecutor);
 		this.shellExecutor = shellExecutor;

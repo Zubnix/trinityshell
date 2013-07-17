@@ -60,8 +60,8 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	private DisplaySurface clientXWindow;
 	private String clientName = "";
 	private boolean canSendWmDeleteMsg;
-	private int wmDeleteWindowAtomId;
-	private int wmProtocolsAtomId;
+	private final int wmDeleteWindowAtomId;
+	private final int wmProtocolsAtomId;
 
 	@AssistedInject
 	ClientBarElement(	@ShellExecutor final ListeningExecutorService shellExecutor,

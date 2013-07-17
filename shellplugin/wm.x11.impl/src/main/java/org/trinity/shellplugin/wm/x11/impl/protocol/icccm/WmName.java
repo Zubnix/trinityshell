@@ -7,6 +7,8 @@ import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
 import java.util.concurrent.Callable;
 
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
@@ -24,8 +26,6 @@ import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Bind
 @To(IMPLEMENTATION)

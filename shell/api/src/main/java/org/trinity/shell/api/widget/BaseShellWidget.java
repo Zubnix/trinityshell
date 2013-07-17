@@ -22,72 +22,78 @@ import org.trinity.foundation.api.render.binding.model.ViewReference;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellRootNode;
+import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-/***************************************
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * ************************************
  * An abstract base {@link ShellWidget} implementation.
- * <p>
+ * <p/>
  * A <code>BaseShellWidget</code> is manipulated through a {@link Painter} for
  * it's basic geometry operations and through the binding framework for more
  * fine grained visual operations. This is done by injecting the widget with a
  * view object and manually call {@link Painter#bindView()}.
  *
  * @see org.trinity.foundation.api.render.binding
- ***************************************
+ *      **************************************
  */
 @ExecutionContext(ShellExecutor.class)
 public abstract class BaseShellWidget extends AbstractShellSurface implements ShellWidget {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BaseShellWidget.class);
-	private final Painter painter;
-	private final Object view;
-	private final BaseShellWidgetGeometryDelegate shellNodeGeometryDelegate = new BaseShellWidgetGeometryDelegate(this);
+    private static final Logger LOG = LoggerFactory.getLogger(BaseShellWidget.class);
+    private final Painter painter;
+    private final Object view;
+    private final BaseShellWidgetGeometryDelegate shellNodeGeometryDelegate = new BaseShellWidgetGeometryDelegate(this);
 
-	protected BaseShellWidget(	ShellNodeParent rootShellNodeParent,
-								final AsyncListenable shellScene,
-								final ListeningExecutorService shellExecutor,
-								final PainterFactory painterFactory,
-								final Object view) {
-		super(	rootShellNodeParent,
-				shellScene,
-				shellExecutor);
-		this.view = view;
-		this.painter = painterFactory.createPainter(this);
-	}
+    protected BaseShellWidget(@Nullable @ShellRootNode final ShellNodeParent shellRootNode,
+                              @Nonnull @ShellScene final AsyncListenable shellScene,
+                              @Nonnull @ShellExecutor final ListeningExecutorService shellExecutor,
+                              @Nonnull final PainterFactory painterFactory,
+                              @Nonnull final Object view) {
+        super(  shellRootNode,
+                shellScene,
+                shellExecutor);
+        this.view = view;
+        this.painter = painterFactory.createPainter(this);
+    }
 
-	@ViewReference
-	public final Object getView() {
-		return this.view;
-	}
+    @ViewReference
+    public final Object getView() {
+        return this.view;
+    }
 
-	@Override
-	public Painter getPainter() {
-		return this.painter;
-	}
+    @Override
+    public Painter getPainter() {
+        return this.painter;
+    }
 
-	@Override
-	public BaseShellWidgetGeometryDelegate getShellNodeGeometryDelegate() {
-		return this.shellNodeGeometryDelegate;
-	}
+    @Override
+    public BaseShellWidgetGeometryDelegate getShellNodeGeometryDelegate() {
+        return this.shellNodeGeometryDelegate;
+    }
 
-	@Override
-	public DisplaySurface getDisplaySurfaceImpl() {
-		final ListenableFuture<DisplaySurface> dsFuture = this.painter.getDislaySurface();
+    @Override
+    public DisplaySurface getDisplaySurfaceImpl() {
+        final ListenableFuture<DisplaySurface> dsFuture = this.painter.getDislaySurface();
 
-		DisplaySurface ds = null;
-		try {
-			ds = dsFuture.get();
-		} catch (final InterruptedException e) {
-			LOG.error("Interrupted while waiting for display surface from painter.",
-					e);
-		} catch (final ExecutionException e) {
-			LOG.error("Error while waiting for display surface from painter.",
-					e);
-		}
-		return ds;
-	}
+        DisplaySurface ds = null;
+        try {
+            ds = dsFuture.get();
+        } catch (final InterruptedException e) {
+            LOG.error("Interrupted while waiting for display surface from painter.",
+                    e);
+        } catch (final ExecutionException e) {
+            LOG.error("Error while waiting for display surface from painter.",
+                    e);
+        }
+        return ds;
+    }
 }

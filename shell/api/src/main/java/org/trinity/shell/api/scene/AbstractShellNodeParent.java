@@ -19,6 +19,8 @@ import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellRootNode;
+import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
@@ -26,6 +28,9 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListeningExecutorService;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * ************************************ An abstract base implementation of a
@@ -39,10 +44,10 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	private final LinkedList<AbstractShellNode> children = new LinkedList<AbstractShellNode>();
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-	protected AbstractShellNodeParent(	ShellNodeParent rootShellNodeParent,
-										final AsyncListenable shellScene,
-										final ListeningExecutorService shellExecutor) {
-		super(	rootShellNodeParent,
+	protected AbstractShellNodeParent(@Nullable @ShellRootNode final ShellNodeParent shellRootNode,
+									    @Nonnull @ShellScene final AsyncListenable shellScene,
+										@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
+		super(	shellRootNode,
 				shellScene,
 				shellExecutor);
 	}

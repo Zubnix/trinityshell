@@ -13,6 +13,8 @@ package org.trinity.shell.api.surface;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.event.DestroyNotify;
@@ -22,6 +24,9 @@ import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellRootNode;
+import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
 import com.google.common.eventbus.Subscribe;
@@ -53,10 +58,10 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	private int widthIncrement = DEFAULT_WIDTH_INC;
 	private int heightIncrement = DEFAULT_HEIGHT_INC;
 
-	protected AbstractShellSurface(	ShellNodeParent rootShellNodeParent,
-									final AsyncListenable shellScene,
-									final ListeningExecutorService shellExecutor) {
-		super(	rootShellNodeParent,
+	protected AbstractShellSurface(@Nullable @ShellRootNode final ShellNodeParent shellRootNode,
+                                   @Nonnull @ShellScene final AsyncListenable shellScene,
+                                   @Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
+		super(shellRootNode,
 				shellScene,
 				shellExecutor);
 	}

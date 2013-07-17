@@ -22,6 +22,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
@@ -34,8 +36,6 @@ import org.trinity.foundation.display.x11.api.XConnection;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Bind
 @To(IMPLEMENTATION)
