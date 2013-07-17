@@ -14,6 +14,8 @@ package org.trinity.foundation.api.display;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /***************************************
  * Wraps a native handle to an underlying native display resource. Access to the
  * native handle is done by calling {@link #getNativeHandle()}.
@@ -21,6 +23,7 @@ import org.trinity.foundation.api.shared.ExecutionContext;
  ***************************************
  */
 @ExecutionContext(DisplayExecutor.class)
+@ThreadSafe
 public interface DisplaySurfaceHandle {
 
 	/***************************************

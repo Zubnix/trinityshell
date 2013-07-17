@@ -14,6 +14,8 @@ package org.trinity.foundation.api.display;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 /***************************************
  * Creates {@link DisplaySurface}s based on their {@link DisplaySurfaceHandle}.
  * Ideally multiple calls to {@link #createDisplaySurface(DisplaySurfaceHandle)}
@@ -23,6 +25,7 @@ import org.trinity.foundation.api.shared.ExecutionContext;
  ***************************************
  */
 @ExecutionContext(DisplayExecutor.class)
+@NotThreadSafe
 public interface DisplaySurfaceFactory {
 
 	// FIXME this should also return a future. the display surface creation

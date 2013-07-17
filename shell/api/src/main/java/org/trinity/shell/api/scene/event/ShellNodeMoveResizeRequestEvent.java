@@ -11,17 +11,21 @@
  */
 package org.trinity.shell.api.scene.event;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 /***************************************
  * Request to move and resize the {@link ShellNode} that emits this event.
- * 
- *************************************** 
+ *
+ ***************************************
  */
 @Immutable
+@ExecutionContext(ShellExecutor.class)
 public class ShellNodeMoveResizeRequestEvent extends ShellNodeEvent {
 
 	/**
@@ -29,14 +33,14 @@ public class ShellNodeMoveResizeRequestEvent extends ShellNodeEvent {
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link ShellNode#toGeoTransformation()}
-	 * 
+	 *
 	 * @param shellNode
 	 *            the emitting {@link ShellNode}
 	 * @param shellNodeTransformation
 	 *            a {@link ShellNodeTransformation}
 	 */
-	public ShellNodeMoveResizeRequestEvent(	final ShellNode shellNode,
-											final ShellNodeTransformation shellNodeTransformation) {
+	public ShellNodeMoveResizeRequestEvent(@Nonnull final ShellNode shellNode,
+                                           @Nonnull final ShellNodeTransformation shellNodeTransformation) {
 		super(	shellNode,
 				shellNodeTransformation);
 	}

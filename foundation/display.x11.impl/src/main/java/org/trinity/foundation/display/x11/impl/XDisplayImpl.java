@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.apache.onami.autobind.annotations.Bind;
@@ -194,19 +195,19 @@ public class XDisplayImpl implements Display {
 	}
 
 	@Override
-	public void register(final Object listener) {
+	public void register(@Nonnull final Object listener) {
 		this.displayEventBus.register(listener);
 	}
 
 	@Override
-	public void register(	final Object listener,
-							final ExecutorService executor) {
+	public void register(@Nonnull	final Object listener,
+                         @Nonnull	final ExecutorService executor) {
 		this.displayEventBus.register(	listener,
 										executor);
 	}
 
 	@Override
-	public void post(final Object event) {
+	public void post(@Nonnull final Object event) {
 
 		this.displayEventBus.post(event);
 	}
@@ -228,7 +229,7 @@ public class XDisplayImpl implements Display {
 	}
 
 	@Override
-	public void unregister(final Object listener) {
+	public void unregister(@Nonnull final Object listener) {
 		this.displayEventBus.unregister(listener);
 	}
 

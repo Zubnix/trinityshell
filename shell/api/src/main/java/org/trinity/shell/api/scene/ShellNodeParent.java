@@ -18,6 +18,8 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.util.List;
+
 /***************************************
  * A {@link ShellNode} that can have child <code>ShellNode</code>s. A node's
  * parent can be changed by calling {@link ShellNode#setParent(ShellNodeParent)}
@@ -63,5 +65,5 @@ public interface ShellNodeParent extends ShellNode {
 	 * @return an array of {@link ShellNode}s
 	 ***************************************
 	 */
-	ListenableFuture<ShellNode[]> getChildren();
+	ListenableFuture<List<ShellNode>> getChildren();
 }

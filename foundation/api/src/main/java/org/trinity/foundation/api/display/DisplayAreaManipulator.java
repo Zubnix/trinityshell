@@ -15,6 +15,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /****************************************
  * Provides the operations that are available for manipulating and interacting
  * with a {@link DisplayArea}. A <code>DisplayAreaManipulator</code> instance is
@@ -23,6 +25,7 @@ import org.trinity.foundation.api.shared.ExecutionContext;
  ***************************************
  */
 @ExecutionContext(DisplayExecutor.class)
+@ThreadSafe
 public interface DisplayAreaManipulator {
 
 	/***************************************

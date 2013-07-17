@@ -14,6 +14,8 @@ package org.trinity.foundation.api.render.binding.view;
 import org.trinity.foundation.api.render.bindkey.RenderExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
+import javax.annotation.Nullable;
+
 /***************************************
  * A default implementation of a {@link PropertyAdapter}. It simply returns the
  * property value without modification. Used as the default value in
@@ -25,7 +27,7 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 public class DefaultPropertyAdapter implements PropertyAdapter<Object> {
 
 	@Override
-	public Object adapt(final Object property) {
+	public Object adapt(@Nullable final Object property) {
 		return property;
 	}
 }

@@ -11,9 +11,13 @@
  */
 package org.trinity.shell.api.surface;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
@@ -24,13 +28,14 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  *
  ***************************************
  */
+@ExecutionContext(ShellExecutor.class)
 @NotThreadSafe
 public abstract class AbstractShellSurfaceParent extends AbstractShellSurface implements ShellSurfaceParent {
 
-	protected AbstractShellSurfaceParent(	ShellNodeParent rootShellNodeParent,
-											final AsyncListenable shellScene,
-											final ListeningExecutorService shellExecutor) {
-		super(	rootShellNodeParent,
+	protected AbstractShellSurfaceParent(	@Nonnull final ShellNodeParent shellRootNode,
+											@Nonnull @ShellScene final AsyncListenable shellScene,
+											@Nonnull@ShellExecutor final ListeningExecutorService shellExecutor) {
+		super(	shellRootNode,
 				shellScene,
 				shellExecutor);
 	}

@@ -11,11 +11,12 @@
  */
 package org.trinity.foundation.api.shared;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
  * A coordinate in 2D space, in natural numbers.
- *************************************** 
+ ***************************************
  */
 @Immutable
 public class Coordinate {
@@ -24,7 +25,7 @@ public class Coordinate {
 
 	/**
 	 * Create a new {@code Coordinate} with the given X and Y value.
-	 * 
+	 *
 	 * @param x
 	 *            an int, depicting the horizontal position on the screen.
 	 * @param y
@@ -39,11 +40,11 @@ public class Coordinate {
 	/**
 	 * Create a new {@code Coordinate} with the same values as the given
 	 * {@code Coordinate}.
-	 * 
+	 *
 	 * @param coordinates
 	 *            The {@link Coordinate} who's values to copy.
 	 */
-	public Coordinate(final Coordinate coordinates) {
+	public Coordinate(@Nonnull final Coordinate coordinates) {
 		this(	coordinates.getX(),
 				coordinates.getY());
 	}

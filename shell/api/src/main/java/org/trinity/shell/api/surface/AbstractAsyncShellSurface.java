@@ -4,6 +4,7 @@ import java.util.concurrent.Callable;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellRootNode;
@@ -14,8 +15,11 @@ import org.trinity.shell.api.scene.ShellNodeParent;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
 // TODO from boilerplate code generator
 /***************************************
@@ -25,6 +29,8 @@ import javax.annotation.Nullable;
  *
  ***************************************
  */
+@NotThreadSafe
+@ExecutionContext(ShellExecutor.class)
 public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent implements ShellSurface {
 
 	private final ListeningExecutorService shellExecutor;
@@ -179,7 +185,7 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	public abstract Boolean isResizableImpl();
 
 	@Override
-	public final ListenableFuture<Void> setHeightIncrement(final int heightIncrement) {
+	public final ListenableFuture<Void> setHeightIncrement(@Nonnegative final int heightIncrement) {
 		return this.shellExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
@@ -196,10 +202,10 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	 * @see #setHeightIncrement(int)
 	 ***************************************
 	 */
-	public abstract Void setHeightIncrementImpl(int heightIncrement);
+	public abstract Void setHeightIncrementImpl(@Nonnegative int heightIncrement);
 
 	@Override
-	public final ListenableFuture<Void> setMaxSize(final Size maxSize) {
+	public final ListenableFuture<Void> setMaxSize(@Nonnull final Size maxSize) {
 		return this.shellExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
@@ -219,7 +225,7 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	public abstract Void setMaxSizeImpl(Size maxSize);
 
 	@Override
-	public final ListenableFuture<Void> setMinSize(final Size minSize) {
+	public final ListenableFuture<Void> setMinSize(@Nonnull final Size minSize) {
 		return this.shellExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
@@ -279,7 +285,7 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	public abstract Void setResizableImpl(boolean resizable);
 
 	@Override
-	public final ListenableFuture<Void> setWidthIncrement(final int widthIncrement) {
+	public final ListenableFuture<Void> setWidthIncrement(@Nonnegative final int widthIncrement) {
 		return this.shellExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
@@ -296,5 +302,5 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	 * @see #setWidthIncrement(int)
 	 ***************************************
 	 */
-	public abstract Void setWidthIncrementImpl(int widthIncrement);
+	public abstract Void setWidthIncrementImpl(@Nonnegative int widthIncrement);
 }

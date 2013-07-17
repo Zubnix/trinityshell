@@ -5,6 +5,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 import com.google.common.eventbus.AsyncEventBus;
@@ -17,25 +18,25 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 	private final Map<Object, AsyncEventBus> asyncEventBusByListener = new WeakHashMap<Object, AsyncEventBus>();
 	private final ExecutorService listenableExecutorService;
 
-	public AsyncListenableEventBus(final ExecutorService postingExecutorService) {
+	public AsyncListenableEventBus(@Nonnull final ExecutorService postingExecutorService) {
 		this.listenableExecutorService = postingExecutorService;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * 
+	 *
 	 * @see EventBus#register(Object)
 	 */
 	@Override
-	public void register(final Object object) {
+	public void register(@Nonnull final Object object) {
 		register(	object,
 					MoreExecutors.sameThreadExecutor());
 	}
 
 	@Override
-	public void register(	final Object object,
-							final ExecutorService executor) {
+	public void register(@Nonnull final Object object,
+                         @Nonnull final ExecutorService executor) {
 		this.listenableExecutorService.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
@@ -51,11 +52,11 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * 
+	 *
 	 * @see EventBus#unregister(Object)
 	 */
 	@Override
-	public void unregister(final Object object) {
+	public void unregister(@Nonnull final Object object) {
 		this.listenableExecutorService.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
@@ -68,11 +69,11 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * 
+	 *
 	 * @see EventBus#post(Object)
 	 */
 	@Override
-	public void post(final Object event) {
+	public void post(@Nonnull final Object event) {
 		this.listenableExecutorService.submit(new Callable<Void>() {
 			@Override
 			public Void call() {

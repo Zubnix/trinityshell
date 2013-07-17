@@ -14,6 +14,7 @@ package org.trinity.foundation.api.display.input;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
@@ -40,9 +41,9 @@ public class KeyboardInput extends Input {
 	 *            creation of this <code>KeyboardInput</code>.
 	 ***************************************
 	 */
-	public KeyboardInput(	final Momentum momentum,
-							final Key key,
-							final InputModifiers inputModifiers) {
+	public KeyboardInput(@Nonnull final Momentum momentum,
+                         @Nonnull final Key key,
+                         @Nonnull final InputModifiers inputModifiers) {
 		super(	momentum,
 				inputModifiers);
 		this.key = key;

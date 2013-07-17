@@ -9,7 +9,11 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+
 @ExecutionContext(DisplayExecutor.class)
+@ThreadSafe
 public interface Pointer extends InputDevice {
 	/***************************************
 	 * The position of the pointer as seen from this <code>DisplaySurface</code>
@@ -18,7 +22,7 @@ public interface Pointer extends InputDevice {
 	 * @return The pointer position {@link Coordinate}.
 	 ***************************************
 	 */
-	ListenableFuture<Coordinate> getPointerCoordinate(DisplaySurface displaySurface);
+	ListenableFuture<Coordinate> getPointerCoordinate(@Nonnull DisplaySurface displaySurface);
 
 	/***************************************
 	 * Grab a {@link Button} of the bound {@link DisplayArea} or any of its
@@ -37,9 +41,9 @@ public interface Pointer extends InputDevice {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> grabButton(	DisplaySurface displaySurface,
-										Button grabButton,
-										InputModifiers withModifiers);
+	ListenableFuture<Void> grabButton(@Nonnull	DisplaySurface displaySurface,
+                                      @Nonnull Button grabButton,
+                                      @Nonnull InputModifiers withModifiers);
 
 	/***************************************
 	 * Grab the entire pointing device of the bound {@link DisplayArea} or any
@@ -50,7 +54,7 @@ public interface Pointer extends InputDevice {
 	 * @see #grabButton(Button, InputModifiers)
 	 ***************************************
 	 */
-	ListenableFuture<Void> grabPointer(DisplaySurface displaySurface);
+	ListenableFuture<Void> grabPointer(@Nonnull DisplaySurface displaySurface);
 
 	/***************************************
 	 * Release the grab on the pointing device.
@@ -75,7 +79,7 @@ public interface Pointer extends InputDevice {
 	 * @see #grabButton(Button, InputModifiers)
 	 ***************************************
 	 */
-	ListenableFuture<Void> ungrabButton(DisplaySurface displaySurface,
-										Button ungrabButton,
-										InputModifiers withModifiers);
+	ListenableFuture<Void> ungrabButton(@Nonnull DisplaySurface displaySurface,
+                                        @Nonnull Button ungrabButton,
+                                        @Nonnull InputModifiers withModifiers);
 }

@@ -11,37 +11,39 @@
  */
 package org.trinity.foundation.api.render.binding;
 
+import javax.annotation.Nonnull;
+
 /***************************************
  * Binds views to models.
- * 
- *************************************** 
+ *
+ ***************************************
  */
 public interface Binder {
 
 	/***************************************
 	 * Update the bound views so they reflect the state of the changed model.
-	 * 
+	 *
 	 * @param changedViewModel
 	 *            The view model that changed.
 	 * @param propertyName
 	 *            The name of the property that changed.
-	 *************************************** 
+	 ***************************************
 	 */
-	void updateBinding(	Object changedViewModel,
-						String propertyName);
+	void updateBinding(@Nonnull Object changedViewModel,
+                       @Nonnull String propertyName);
 
 	/***************************************
 	 * Bind a view to a model so it reflects the model's state. The given view
 	 * model will be the data context of the given view.
-	 * 
+	 *
 	 * @param viewModel
 	 *            The model to visually represent
 	 * @param view
 	 *            The visual representation of the model
-	 *************************************** 
+	 ***************************************
 	 */
-	void bind(	Object viewModel,
-				Object view);
+	void bind(@Nonnull Object viewModel,
+              @Nonnull Object view);
 
 	// TODO
 	// void unbind(Object view);

@@ -11,16 +11,20 @@
  */
 package org.trinity.shell.api.scene.manager;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.ShellNode;
 
 /***************************************
  * Layout property to be used with a {@link ShellLayoutManagerLine}.
- * 
- *************************************** 
+ *
+ ***************************************
  */
+@ExecutionContext(ShellExecutor.class)
 @Immutable
 public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 
@@ -33,15 +37,15 @@ public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 	 * {@link ShellNode} dimensions, relative to the weight of the other child
 	 * {@code ShellNode}s. The {@code Margins} will be subtracted from the
 	 * calculated dimensions of the child.
-	 * 
+	 *
 	 * @param weight
 	 *            a weight, 0 for a statically sized child.
 	 * @param margins
 	 *            {@link Margins}
-	 *************************************** 
+	 ***************************************
 	 */
 	public ShellLayoutPropertyLine(	final int weight,
-									final Margins margins) {
+									@Nonnull final Margins margins) {
 		this.weight = weight;
 		this.margins = margins;
 	}
@@ -50,11 +54,11 @@ public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 	 * Create a new {@code ShellLayoutPropertyLine} with the given weight and no
 	 * {@code Margins}. Short for
 	 * {@code new ShellLayoutPropertyLine(weight, Margins.NO_MARGINS)}.
-	 * 
+	 *
 	 * @param weight
 	 *            a weight, 0 for a statically sized child.
 	 * @see #ShellLayoutPropertyLine(int, Margins)
-	 *************************************** 
+	 ***************************************
 	 */
 	public ShellLayoutPropertyLine(final int weight) {
 		this(	weight,
@@ -63,9 +67,9 @@ public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 
 	/***************************************
 	 * The layout weight given to a child {@code ShellNode}.
-	 * 
+	 *
 	 * @return a weight, 0 for a statically sized child.
-	 *************************************** 
+	 ***************************************
 	 */
 	public int getWeight() {
 		return this.weight;
@@ -74,9 +78,9 @@ public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 	/***************************************
 	 * The {@code Margins} that will be subtracted from the calculated
 	 * dimensions of the child {@code ShellNode}.
-	 * 
+	 *
 	 * @return {@link Margins}
-	 *************************************** 
+	 ***************************************
 	 */
 	public Margins getMargins() {
 		return this.margins;

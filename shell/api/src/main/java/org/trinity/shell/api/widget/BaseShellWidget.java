@@ -32,6 +32,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * ************************************
@@ -45,6 +46,7 @@ import javax.annotation.Nullable;
  * @see org.trinity.foundation.api.render.binding
  *      **************************************
  */
+@NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
 public abstract class BaseShellWidget extends AbstractShellSurface implements ShellWidget {
 

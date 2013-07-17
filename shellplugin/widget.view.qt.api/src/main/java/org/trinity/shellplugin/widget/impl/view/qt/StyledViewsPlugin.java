@@ -13,8 +13,9 @@ import com.google.common.base.Throwables;
 import com.google.common.io.CharStreams;
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.common.util.concurrent.ListenableFutureTask;
-import com.google.inject.Singleton;
 import com.trolltech.qt.gui.QApplication;
+
+import javax.inject.Singleton;
 
 @Bind(multiple = true)
 @Singleton

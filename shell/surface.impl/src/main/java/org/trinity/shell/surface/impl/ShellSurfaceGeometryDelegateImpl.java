@@ -15,6 +15,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
@@ -23,23 +25,28 @@ import org.trinity.shell.api.surface.AbstractShellSurface;
 import org.trinity.shell.api.surface.AbstractShellSurfaceGeometryDelegate;
 import org.trinity.shell.api.surface.ShellSurface;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+
+@ExecutionContext(ShellExecutor.class)
+@NotThreadSafe
 public class ShellSurfaceGeometryDelegateImpl extends AbstractShellSurfaceGeometryDelegate {
 
 	private final AbstractShellSurface abstractShellSurface;
 
-	ShellSurfaceGeometryDelegateImpl(final AbstractShellSurface shellSurface) {
+	ShellSurfaceGeometryDelegateImpl(@Nonnull final AbstractShellSurface shellSurface) {
 		this.abstractShellSurface = shellSurface;
 	}
 
 	@Override
-	protected DisplaySurface getSurfacePeer(final ShellSurface shellSurface) {
+	protected DisplaySurface getSurfacePeer(@Nonnull final ShellSurface shellSurface) {
 		checkArgument(shellSurface instanceof AbstractShellSurface);
 
 		return ((AbstractAsyncShellSurface) shellSurface).getDisplaySurfaceImpl();
 	}
 
 	@Override
-	protected AbstractShellSurface findClosestSameTypeSurface(final ShellNode square) {
+	protected AbstractShellSurface findClosestSameTypeSurface(@Nonnull final ShellNode square) {
 		checkArgument(square instanceof AbstractShellNode);
 
 		if (square == null) {

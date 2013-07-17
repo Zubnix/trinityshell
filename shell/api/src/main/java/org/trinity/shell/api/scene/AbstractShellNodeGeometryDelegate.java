@@ -11,6 +11,7 @@
  */
 package org.trinity.shell.api.scene;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
@@ -19,15 +20,15 @@ import org.trinity.foundation.api.shared.Size;
 /****************************************
  * An abstract base implementation of a {@link ShellNodeGeometryDelegate} for
  * use with an {@link AbstractShellNode}.
- * 
- *************************************** 
+ *
+ ***************************************
  */
 @NotThreadSafe
 public abstract class AbstractShellNodeGeometryDelegate implements ShellNodeGeometryDelegate {
 
 	/**
 	 * The geometry manipulator of node returned by {@link #getShellNode()}.
-	 * 
+	 *
 	 * @return a {@link DisplayAreaManipulator}
 	 */
 	public abstract DisplayAreaManipulator getShellNodeManipulator();
@@ -43,7 +44,7 @@ public abstract class AbstractShellNodeGeometryDelegate implements ShellNodeGeom
 	}
 
 	@Override
-	public void resize(final Size size) {
+	public void resize(@Nonnull final Size size) {
 		getShellNodeManipulator().resize(	size.getWidth(),
 											size.getHeight());
 	}

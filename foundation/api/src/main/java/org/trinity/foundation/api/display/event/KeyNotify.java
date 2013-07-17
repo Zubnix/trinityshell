@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
@@ -35,7 +36,7 @@ public class KeyNotify extends InputNotify<KeyboardInput> {
 	 *            {@link KeyboardInput}
 	 ***************************************
 	 */
-	public KeyNotify(final KeyboardInput input) {
+	public KeyNotify(@Nonnull final KeyboardInput input) {
 		super(input);
 	}
 }

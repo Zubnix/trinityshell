@@ -40,12 +40,12 @@ public class ShellRootWidget extends BaseShellWidget implements Desktop {
     private final EventList<Object> bottomBar = new BasicEventList<Object>();
 
     @Inject
-    protected ShellRootWidget(final Display display,
-                              @ShellScene final AsyncListenable shellScene,
-                              @ShellExecutor final ListeningExecutorService shellExecutor,
-                              final PainterFactory painterFactory,
-                              @Named("RootView") final Object view) {
-        super(  null,
+    ShellRootWidget(final Display display,
+                    @ShellScene final AsyncListenable shellScene,
+                    @ShellExecutor final ListeningExecutorService shellExecutor,
+                    final PainterFactory painterFactory,
+                    @Named("RootView") final Object view) {
+        super(null,
                 shellScene,
                 shellExecutor,
                 painterFactory,

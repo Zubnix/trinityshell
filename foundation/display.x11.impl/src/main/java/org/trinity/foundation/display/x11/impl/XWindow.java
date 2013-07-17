@@ -83,7 +83,7 @@ public final class XWindow implements DisplaySurface {
 	private static final int RAISE_VALUE_MASK = XCB_CONFIG_WINDOW_STACK_MODE;
 	private static final ByteBuffer RAISE_VALUE_LIST_BUFFER = allocateDirect(4).order(nativeOrder())
 			.putInt(XCB_STACK_MODE_ABOVE);
-	private static int MOVE_VALUE_MASK = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
+	private static final int MOVE_VALUE_MASK = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
 	private final DisplaySurfaceHandle resourceHandle;
 	private final XConnection xConnection;
 	private final XTime xTime;

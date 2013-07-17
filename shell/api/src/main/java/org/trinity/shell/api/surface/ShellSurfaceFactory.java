@@ -17,6 +17,8 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 
+import javax.annotation.Nonnull;
+
 /***************************************
  * Creates shell surfaces from a display surface and provides access to the root
  * shell surface.
@@ -33,5 +35,5 @@ public interface ShellSurfaceFactory {
 	 * @return a new future {@link ShellSurface}.
 	 ***************************************
 	 */
-	ListenableFuture<ShellSurface> createShellClientSurface(DisplaySurface displaySurface);
+	ListenableFuture<ShellSurface> createShellClientSurface(@Nonnull DisplaySurface displaySurface);
 }

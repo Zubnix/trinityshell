@@ -25,6 +25,7 @@ import static org.freedesktop.xcb.xcb_mod_mask_t.XCB_MOD_MASK_SHIFT;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.apache.onami.autobind.annotations.Bind;
@@ -64,7 +65,7 @@ public class XInputModifierMaskMapping {
 											XCB_MOD_MASK_SHIFT);
 	}
 
-	public int getXInputModifierMask(final String inputModifierName) {
+	public int getXInputModifierMask(@Nonnull final String inputModifierName) {
 		final Integer mask = this.nameToXInputModifierMask.get(inputModifierName);
 		if (mask == null) {
 			throw new IllegalArgumentException(String.format(	"InputModifier name %s not known. Known modifier names are: %s",

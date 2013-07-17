@@ -19,6 +19,9 @@ import org.trinity.shell.api.scene.event.ShellNodeEvent;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+
 /***************************************
  * Wraps a {@link DisplaySurface} and provides additional basic functionality
  * like state information, minimum, maximum, current and requested dimensions.
@@ -28,37 +31,37 @@ import com.google.common.util.concurrent.ListenableFuture;
  * Any {@link DisplayEvent} that relates to the underlying
  * {@link DisplaySurface}, is translated to the related {@link ShellNodeEvent}
  * and emitted by this shell surface.
- * 
- *************************************** 
+ *
+ ***************************************
  */
 public interface ShellSurface extends ShellNode {
 
 	/***************************************
 	 * The desired delta of the old and new height when this surface's height
 	 * changes.
-	 * 
+	 *
 	 * @return A future height delta, implementation dependent but usually in
 	 *         pixels.
 	 * @see #setHeightIncrement(int)
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Integer> getHeightIncrement();
 
 	/***************************************
 	 * The maximum height and width.
-	 * 
+	 *
 	 * @return a future {@link Size}.
 	 * @see #setMaxSize(Size)
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Size> getMaxSize();
 
 	/***************************************
 	 * The minimum height and width.
-	 * 
+	 *
 	 * @return a future {@link Size}
 	 * @see #setMinSize(Size)
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Size> getMinSize();
 
@@ -66,110 +69,110 @@ public interface ShellSurface extends ShellNode {
 	 * The underlying, {@code DisplaySurface} that this shell surface will use
 	 * to display it's contents. A display surface can be 'shared', so it is
 	 * possible that multiple shell surface's use the same display surface.
-	 * 
+	 *
 	 * @return a future {@link DisplaySurface}.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<DisplaySurface> getDisplaySurface();
 
 	/***************************************
 	 * The desired delta of the old and new width when this surface's width
 	 * changes.
-	 * 
+	 *
 	 * @return A future height delta, implementation dependent but usually in
 	 *         pixels.
 	 * @see #setWidthIncrement(int)
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Integer> getWidthIncrement();
 
 	/***************************************
 	 * Indicates if this surface can be moved.
-	 * 
+	 *
 	 * @return a future True if this surface can be moved, a future false if
 	 *         not.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Boolean> isMovable();
 
 	/***************************************
 	 * Indicates if this surface can be resized.
-	 * 
+	 *
 	 * @return a future True if this surface can be resized, a future false if
 	 *         not.
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Boolean> isResizable();
 
 	/***************************************
 	 * Set the height delta when the height is changed.
-	 * 
+	 *
 	 * @param heightIncrement
 	 *            A height delta, implementation dependent but usually in
 	 *            pixels.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #getHeightIncrement()
-	 *************************************** 
+	 ***************************************
 	 */
-	ListenableFuture<Void> setHeightIncrement(final int heightIncrement);
+	ListenableFuture<Void> setHeightIncrement(@Nonnegative final int heightIncrement);
 
 	/***************************************
 	 * Change the maximum size. Attempts to change to size of this node beyond
 	 * the maximum size are silently ignored.
-	 * 
+	 *
 	 * @param size
 	 *            a {@link Size}
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #getMaxSize()
-	 *************************************** 
+	 ***************************************
 	 */
-	ListenableFuture<Void> setMaxSize(final Size size);
+	ListenableFuture<Void> setMaxSize(@Nonnull final Size size);
 
 	/***************************************
-	 * 
+	 *
 	 * @param size
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #getMinSize()
-	 *************************************** 
+	 ***************************************
 	 */
-	ListenableFuture<Void> setMinSize(final Size size);
+	ListenableFuture<Void> setMinSize(@Nonnull final Size size);
 
 	/***************************************
 	 * Indicate if this surface is movable.
-	 * 
+	 *
 	 * @param movable
 	 *            True if this surface should be movable, false if not.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #isMovable()
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> setMovable(final boolean movable);
 
 	/***************************************
 	 * Indicate if this surface is resizable.
-	 * 
+	 *
 	 * @param isResizable
 	 *            True if this surface should be resizable, false if not.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #isResizable()
-	 *************************************** 
+	 ***************************************
 	 */
 	ListenableFuture<Void> setResizable(final boolean isResizable);
 
 	/***************************************
 	 * Set the width delta when the width is changed.
-	 * 
+	 *
 	 * @param widthIncrement
 	 *            A width delta, implementation dependent but usually in pixels.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #getWidthIncrement()
-	 *************************************** 
+	 ***************************************
 	 */
-	ListenableFuture<Void> setWidthIncrement(final int widthIncrement);
+	ListenableFuture<Void> setWidthIncrement(@Nonnegative final int widthIncrement);
 }

@@ -13,7 +13,9 @@ package org.trinity.shell.api.scene;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Coordinate;
@@ -58,8 +60,8 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	 * The returned array is a copy of the internal array.
 	 */
 	@Override
-	public AbstractShellNode[] getChildrenImpl() {
-		return this.children.toArray(new AbstractShellNode[this.children.size()]);
+	public List<AbstractShellNode> getChildrenImpl() {
+		return new ArrayList<AbstractShellNode>(this.children);
 	}
 
 	/**
@@ -78,7 +80,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	}
 
 	@Override
-	public Void setLayoutManagerImpl(final ShellLayoutManager shellLayoutManager) {
+	public Void setLayoutManagerImpl(@Nullable final ShellLayoutManager shellLayoutManager) {
 		this.optionalLayoutManager = Optional.of(shellLayoutManager);
 		register(shellLayoutManager);
 		return null;
@@ -103,7 +105,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 		layout();
 	}
 
-	protected void handleChildReparent(final ShellNode child) {
+	protected void handleChildReparent(@Nonnull final ShellNode child) {
 		checkArgument(child instanceof AbstractShellNode);
 
 		final ShellNodeEvent shellNodeEvent;
@@ -119,7 +121,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 		post(shellNodeEvent);
 	}
 
-	protected void handleChildStacking(	final ShellNode child,
+	protected void handleChildStacking(@Nonnull final ShellNode child,
 										final boolean raised) {
 		checkArgument(child instanceof AbstractShellNode);
 		checkArgument(this.children.remove(child));

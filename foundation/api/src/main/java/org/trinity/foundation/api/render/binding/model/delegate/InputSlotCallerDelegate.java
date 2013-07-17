@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.api.render.binding.model.delegate;
 
+import com.sun.istack.internal.NotNull;
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
 
@@ -19,8 +20,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 /***************************************
  * A convenience service to call a method marked with {@link InputSlot} based on
  * widget toolkit specific input.
- * 
- *************************************** 
+ *
+ ***************************************
  */
 public interface InputSlotCallerDelegate {
 
@@ -29,9 +30,9 @@ public interface InputSlotCallerDelegate {
 	 * @param methodName
 	 * @param input
 	 * @return A Boolean indicating if an input slot was called.
-	 *************************************** 
+	 ***************************************
 	 */
-	ListenableFuture<Boolean> callInputSlot(Object model,
-											String methodName,
-											Input input);
+	ListenableFuture<Boolean> callInputSlot(@NotNull Object model,
+                                            @NotNull String methodName,
+                                            @NotNull Input input);
 }

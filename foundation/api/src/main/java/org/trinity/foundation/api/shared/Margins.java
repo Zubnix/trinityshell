@@ -11,12 +11,13 @@
  */
 package org.trinity.foundation.api.shared;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * 
+ *
  * The extra space between an object and it's neighbors.
- * 
+ *
  */
 @Immutable
 public class Margins {
@@ -30,25 +31,25 @@ public class Margins {
 
 	/**
 	 * Short for {@code new Margins(m,m,m,m)}
-	 * 
+	 *
 	 * @param m
 	 *            margin size to use for all borders (left, right,bottom,top).
 	 */
-	public Margins(final int m) {
+	public Margins(@Nonnegative final int m) {
 		this(	m,
 				m);
 	}
 
 	/**
 	 * Short for {@code new Margins(h,h,v,v)}
-	 * 
+	 *
 	 * @param h
 	 *            horizontal size to use for horizontal borders (left,right)
 	 * @param v
 	 *            vertical size to use for vertical borders (bottom,top)
 	 */
-	public Margins(	final int h,
-					final int v) {
+	public Margins(@Nonnegative	final int h,
+                   @Nonnegative final int v) {
 		this(	h,
 				h,
 				v,
@@ -58,7 +59,7 @@ public class Margins {
 	/**
 	 * Create new {@code Margins} with a given left, right, bottom and top
 	 * distance.
-	 * 
+	 *
 	 * @param left
 	 *            The distance on the left between the object and it's neighbor.
 	 * @param right
@@ -70,10 +71,10 @@ public class Margins {
 	 * @param top
 	 *            The distance at the top between the object and it's neighbor.
 	 */
-	public Margins(	final int left,
-					final int right,
-					final int bottom,
-					final int top) {
+	public Margins(@Nonnegative	final int left,
+                   @Nonnegative	final int right,
+                   @Nonnegative	final int bottom,
+                   @Nonnegative	final int top) {
 		this.bottom = bottom;
 		this.right = right;
 		this.left = left;
@@ -82,7 +83,7 @@ public class Margins {
 
 	/**
 	 * The distance at the bottom between the object and it's neighbor.
-	 * 
+	 *
 	 * @return a distance
 	 */
 	public int getBottom() {
@@ -91,7 +92,7 @@ public class Margins {
 
 	/**
 	 * The distance on the left between the object and it's neighbor.
-	 * 
+	 *
 	 * @return a distance
 	 */
 	public int getLeft() {
@@ -100,7 +101,7 @@ public class Margins {
 
 	/**
 	 * The distance to the right between the object and it's neighbor.
-	 * 
+	 *
 	 * @return a distance
 	 */
 	public int getRight() {
@@ -109,7 +110,7 @@ public class Margins {
 
 	/**
 	 * The distance at the top between the object and it's neighbor.
-	 * 
+	 *
 	 * @return a distance
 	 */
 	public int getTop() {

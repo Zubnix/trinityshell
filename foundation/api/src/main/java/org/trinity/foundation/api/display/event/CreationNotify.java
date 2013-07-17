@@ -1,5 +1,6 @@
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -11,7 +12,7 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 public class CreationNotify extends DisplayEvent {
 	private final DisplaySurface displaySurface;
 
-	public CreationNotify(final DisplaySurface displaySurface) {
+	public CreationNotify(@Nonnull final DisplaySurface displaySurface) {
 		this.displaySurface = displaySurface;
 	}
 

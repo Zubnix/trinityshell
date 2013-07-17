@@ -1,5 +1,7 @@
 package org.trinity.foundation.display.x11.api;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
@@ -12,8 +14,8 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 public interface XConnection {
 	SWIGTYPE_p_xcb_connection_t getConnectionReference();
 
-	void open(	String displayName,
-				int screen);
+	void open(	@Nonnull String displayName,
+				@Nonnegative int screen);
 
 	void close();
 }

@@ -20,8 +20,10 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Bind
 @Singleton
@@ -76,9 +78,9 @@ public class InputSlotCallerDelegateImpl implements InputSlotCallerDelegate {
 	}
 
 	@Override
-	public ListenableFuture<Boolean> callInputSlot(	final Object model,
-													final String methodName,
-													final Input input) {
+	public ListenableFuture<Boolean> callInputSlot(@Nonnull final Object model,
+                                                   @Nonnull final String methodName,
+                                                   @Nonnull final Input input) {
 
 		return this.shellExecutor.submit(new Callable<Boolean>() {
 

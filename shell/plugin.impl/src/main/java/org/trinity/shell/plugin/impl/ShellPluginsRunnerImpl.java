@@ -20,8 +20,9 @@ import org.trinity.shell.api.plugin.ShellPluginsRunner;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.Service.Listener;
 import com.google.common.util.concurrent.Service.State;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Bind
 @Singleton

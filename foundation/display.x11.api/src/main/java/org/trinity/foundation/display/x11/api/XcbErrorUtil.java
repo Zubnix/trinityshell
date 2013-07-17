@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.display.x11.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -41,7 +42,7 @@ public class XcbErrorUtil {
 	public static final int BAD_FIRST_EXTENSION_ERROR = 18;
 	public static final int BAD_LAST_EXTENSION_ERROR = 19;
 
-	public static String toString(final xcb_generic_error_t generic_error_t) {
+	public static String toString(@Nonnull final xcb_generic_error_t generic_error_t) {
 		return String.format(	"Native XCB: %s - error: %d - resource id: %d",
 								XcbErrorUtil.getErrorString(generic_error_t.getError_code()),
 								generic_error_t.getError_code(),

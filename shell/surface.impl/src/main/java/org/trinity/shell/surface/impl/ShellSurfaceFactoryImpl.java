@@ -3,8 +3,12 @@ package org.trinity.shell.surface.impl;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+import com.sun.istack.internal.NotNull;
 import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +24,6 @@ import org.trinity.shell.api.surface.ShellSurfaceFactory;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Bind
 @Singleton
@@ -34,7 +36,7 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 	private final ListeningExecutorService shellExecutor;
 
 	@Inject
-	ShellSurfaceFactoryImpl(@ShellRootNode ShellNodeParent shellRootNode,
+	ShellSurfaceFactoryImpl(@NotNull @ShellRootNode final ShellNodeParent shellRootNode,
 							@ShellScene final AsyncListenable shellScene,
 							@ShellExecutor final ListeningExecutorService shellExecutor) {
 		this.shellRootNode = shellRootNode;
@@ -43,7 +45,7 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 	}
 
 	@Override
-	public ListenableFuture<ShellSurface> createShellClientSurface(final DisplaySurface displaySurface) {
+	public ListenableFuture<ShellSurface> createShellClientSurface(@Nonnull final DisplaySurface displaySurface) {
 		return this.shellExecutor.submit(new Callable<ShellSurface>() {
 			@Override
 			public ShellSurface call() {

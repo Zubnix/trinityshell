@@ -19,8 +19,11 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 // TODO documentation
 @ExecutionContext(DisplayExecutor.class)
+@ThreadSafe
 public interface Display extends AsyncListenable {
 
 	ListenableFuture<Screen> getScreen();

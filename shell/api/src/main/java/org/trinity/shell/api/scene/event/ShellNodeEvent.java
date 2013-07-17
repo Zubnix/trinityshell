@@ -11,17 +11,21 @@
  */
 package org.trinity.shell.api.scene.event;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 /***************************************
  * General event for all {@link ShellNode} operations.
- * 
- *************************************** 
+ *
+ ***************************************
  */
 @Immutable
+@ExecutionContext(ShellExecutor.class)
 public class ShellNodeEvent {
 
 	private final ShellNode shellNode;
@@ -32,23 +36,23 @@ public class ShellNodeEvent {
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link ShellNode#toGeoTransformation()}
-	 * 
+	 *
 	 * @param shellNode
 	 *            the emitting {@link ShellNode}
 	 * @param shellNodeTransformation
 	 *            a {@link ShellNodeTransformation}
 	 */
-	public ShellNodeEvent(	final ShellNode shellNode,
-							final ShellNodeTransformation shellNodeTransformation) {
+	public ShellNodeEvent(@Nonnull final ShellNode shellNode,
+                          @Nonnull final ShellNodeTransformation shellNodeTransformation) {
 		this.shellNode = shellNode;
 		this.shellNodeTransformation = shellNodeTransformation;
 	}
 
 	/***************************************
 	 * The source that emitted this event.
-	 * 
+	 *
 	 * @return a {@link ShellNode}.
-	 *************************************** 
+	 ***************************************
 	 */
 	public ShellNode getSource() {
 		return this.shellNode;
@@ -57,9 +61,9 @@ public class ShellNodeEvent {
 	/***************************************
 	 * The transformation of the source {@link ShellNode} at the time of
 	 * creation of this event.
-	 * 
+	 *
 	 * @return a {@link ShellNodeTransformation}.
-	 *************************************** 
+	 ***************************************
 	 */
 	public ShellNodeTransformation getSourceTransformation() {
 		return this.shellNodeTransformation;

@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
@@ -39,7 +40,7 @@ public class GeometryNotify extends DisplayEvent {
 	 *            The new geometry as a {@link Rectangle}.
 	 ***************************************
 	 */
-	public GeometryNotify(final Rectangle geometry) {
+	public GeometryNotify(@Nonnull final Rectangle geometry) {
 		this.geometry = geometry;
 	}
 

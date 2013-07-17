@@ -11,11 +11,13 @@
  */
 package org.trinity.foundation.api.shared;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
  * A fixed size, fixed width {@link Rectangle}.
- *************************************** 
+ ***************************************
  */
 @Immutable
 public class ImmutableRectangle implements Rectangle {
@@ -26,11 +28,11 @@ public class ImmutableRectangle implements Rectangle {
 	/**
 	 * Create a new {@code ImmutableRectangle} with the same geometry as the
 	 * given {@code Rectangle}.
-	 * 
+	 *
 	 * @param rectangle
 	 *            a {@link Rectangle}
 	 */
-	public ImmutableRectangle(final Rectangle rectangle) {
+	public ImmutableRectangle(@Nonnull final Rectangle rectangle) {
 		this(	rectangle.getPosition(),
 				rectangle.getSize());
 	}
@@ -38,7 +40,7 @@ public class ImmutableRectangle implements Rectangle {
 	/**
 	 * Create a new {@code ImmutableRectangle} with the given {@code Coordinate}
 	 * as the position, and the given width & height as its dimension.
-	 * 
+	 *
 	 * @param position
 	 *            A {@link Coordinate}
 	 * @param width
@@ -46,9 +48,9 @@ public class ImmutableRectangle implements Rectangle {
 	 * @param height
 	 *            an int, depicting the vertical size.
 	 */
-	public ImmutableRectangle(	final Coordinate position,
-								final int width,
-								final int height) {
+	public ImmutableRectangle(@Nonnull final Coordinate position,
+								@Nonnegative final int width,
+                                @Nonnegative final int height) {
 		this(	position.getX(),
 				position.getY(),
 				width,
@@ -57,15 +59,15 @@ public class ImmutableRectangle implements Rectangle {
 
 	public ImmutableRectangle(	final int x,
 								final int y,
-								final Size size) {
+                                @Nonnull final Size size) {
 		this(	x,
 				y,
 				size.getWidth(),
 				size.getHeight());
 	}
 
-	public ImmutableRectangle(	final Coordinate position,
-								final Size size) {
+	public ImmutableRectangle(@Nonnull	final Coordinate position,
+                              @Nonnull	final Size size) {
 		this(	position,
 				size.getWidth(),
 				size.getHeight());
@@ -74,7 +76,7 @@ public class ImmutableRectangle implements Rectangle {
 	/**
 	 * Create a new {@code ImmutableRectangle} with the given x and y value as
 	 * the position, and the given width & height as its dimension.
-	 * 
+	 *
 	 * @param x
 	 *            an int, depicting the horizontal position.
 	 * @param y
@@ -86,8 +88,8 @@ public class ImmutableRectangle implements Rectangle {
 	 */
 	public ImmutableRectangle(	final int x,
 								final int y,
-								final int width,
-								final int height) {
+							@Nonnegative	final int width,
+							@Nonnegative	final int height) {
 		this.position = new Coordinate(	x,
 										y);
 		this.size = new Size(	width,

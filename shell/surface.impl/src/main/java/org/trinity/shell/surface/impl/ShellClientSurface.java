@@ -11,12 +11,15 @@
  */
 package org.trinity.shell.surface.impl;
 
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.concurrent.NotThreadSafe;
 
+import com.google.inject.assistedinject.Assisted;
+import com.sun.istack.internal.NotNull;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 
@@ -31,7 +34,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * provides functionality to manage and manipulate the geometry and visibility
  * of the <code>PlatformRenderArea</code> it wraps.
  */
-@ThreadSafe
+@NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
 public final class ShellClientSurface extends AbstractShellSurface {
 
@@ -39,11 +42,11 @@ public final class ShellClientSurface extends AbstractShellSurface {
 	private final DisplaySurface displaySurface;
 
 	// created by a custom factory so inject annotations are not needed.
-	ShellClientSurface(	ShellNodeParent rootShellNodeParent,
-						final AsyncListenable shellScene,
-						final ListeningExecutorService shellExecutor,
-						final DisplaySurface clientDisplaySurface) {
-		super(	rootShellNodeParent,
+	ShellClientSurface(@NotNull final ShellNodeParent shellRootNode,
+						@NotNull @ShellScene final AsyncListenable shellScene,
+						@NotNull @ShellExecutor final ListeningExecutorService shellExecutor,
+						@NotNull @Assisted final DisplaySurface clientDisplaySurface) {
+		super(	shellRootNode,
 				shellScene,
 				shellExecutor);
 		this.displaySurface = clientDisplaySurface;

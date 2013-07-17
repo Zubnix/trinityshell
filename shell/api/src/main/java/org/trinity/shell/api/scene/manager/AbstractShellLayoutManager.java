@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.event.ShowRequest;
@@ -45,28 +46,28 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	private final Map<ShellNode, ShellLayoutProperty> childrenWithLayoutProperty = new LinkedHashMap<ShellNode, ShellLayoutProperty>();
 
 	@Override
-	public void addChildNode(	final ShellNode child,
-								final ShellLayoutProperty layoutProperty) {
+	public void addChildNode(@Nonnull final ShellNode child,
+                             @Nonnull final ShellLayoutProperty layoutProperty) {
 		this.childrenWithLayoutProperty.put(child,
 											layoutProperty);
 	}
 
 	@Override
-	public void addChildNode(final ShellNode child) {
+	public void addChildNode(@Nonnull final ShellNode child) {
 		addChildNode(	child,
 						defaultLayoutProperty());
 	}
 
 	/***************************************
 	 * Return a new default layout property for this layout manager.
-	 * 
+	 *
 	 * @return a {@link ShellLayoutProperty}.
-	 *************************************** 
+	 ***************************************
 	 */
 	protected abstract ShellLayoutProperty defaultLayoutProperty();
 
 	@Override
-	public void removeChild(final ShellNode child) {
+	public void removeChild(@Nonnull final ShellNode child) {
 		this.childrenWithLayoutProperty.remove(child);
 	}
 
@@ -108,17 +109,17 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	}
 
 	@Override
-	public ShellLayoutProperty getLayoutProperty(final ShellNode child) {
+	public ShellLayoutProperty getLayoutProperty(@Nonnull final ShellNode child) {
 
 		return this.childrenWithLayoutProperty.get(child);
 	}
 
 	/***************************************
 	 * Called when a child {@link ShellNode} requests to be resized.
-	 * 
+	 *
 	 * @param geoEvent
 	 *            The child {@link ShellNodeResizeRequestEvent}.
-	 *************************************** 
+	 ***************************************
 	 */
 	@Subscribe
 	public void onResizeRequest(final ShellNodeResizeRequestEvent geoEvent) {
@@ -127,10 +128,10 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	/***************************************
 	 * Called when a child {@link ShellNode} requests to be moved.
-	 * 
+	 *
 	 * @param geoEvent
 	 *            The child {@link ShellNodeMoveRequestEvent}.
-	 *************************************** 
+	 ***************************************
 	 */
 	@Subscribe
 	public void onMoveRequest(final ShellNodeMoveRequestEvent geoEvent) {
@@ -139,10 +140,10 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	/***************************************
 	 * Called when a child {@link ShellNode} requests to be moved and resized.
-	 * 
+	 *
 	 * @param geoEvent
 	 *            The child {@link ShellNodeMoveResizeRequestEvent}.
-	 *************************************** 
+	 ***************************************
 	 */
 	@Subscribe
 	public void onMoveResizeRequest(final ShellNodeMoveResizeRequestEvent geoEvent) {
@@ -151,10 +152,10 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	/***************************************
 	 * Called when a child {@link ShellNode} requests to be lowered.
-	 * 
+	 *
 	 * @param geoEvent
 	 *            The child {@link ShellNodeLowerRequestEvent}.
-	 *************************************** 
+	 ***************************************
 	 */
 	@Subscribe
 	public void onLowerRequest(final ShellNodeLowerRequestEvent geoEvent) {
@@ -163,10 +164,10 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	/***************************************
 	 * Called when a child {@link ShellNode} requests a be raised.
-	 * 
+	 *
 	 * @param geoEvent
 	 *            The child {@link ShellNodeRaiseRequestEvent}.
-	 *************************************** 
+	 ***************************************
 	 */
 	@Subscribe
 	public void onRaiseRequest(final ShellNodeRaiseRequestEvent geoEvent) {
@@ -175,10 +176,10 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	/***************************************
 	 * Called when a child {@link ShellNode} requests to be shown.
-	 * 
+	 *
 	 * @param geoEvent
 	 *            The child {@link ShowRequest}.
-	 *************************************** 
+	 ***************************************
 	 */
 	@Subscribe
 	public void onShowRequest(final ShellNodeShowRequestEvent geoEvent) {
@@ -187,10 +188,10 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	/***************************************
 	 * Called when a child {@link ShellNode} requests to be hidden.
-	 * 
+	 *
 	 * @param geoEvent
 	 *            The child {@link ShellNodeHideRequestEvent}.
-	 *************************************** 
+	 ***************************************
 	 */
 	@Subscribe
 	public void onHideRequest(final ShellNodeHideRequestEvent geoEvent) {
@@ -199,10 +200,10 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	/***************************************
 	 * Called when a child {@link ShellNode} requests to be reparented.
-	 * 
+	 *
 	 * @param geoEvent
 	 *            The child {@link ShellNodeReparentRequestEvent}.
-	 *************************************** 
+	 ***************************************
 	 */
 	@Subscribe
 	public void onChangeParentRequest(final ShellNodeReparentRequestEvent geoEvent) {

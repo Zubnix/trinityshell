@@ -11,6 +11,7 @@
  */
 package org.trinity.shell.api.widget;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplayAreaManipulator;
@@ -44,7 +45,7 @@ public class BaseShellWidgetGeometryDelegate extends AbstractShellSurfaceGeometr
 	 *            the {@link BaseShellWidget} to manage.
 	 ***************************************
 	 */
-	public BaseShellWidgetGeometryDelegate(final BaseShellWidget shellWidget) {
+	public BaseShellWidgetGeometryDelegate(@Nonnull final BaseShellWidget shellWidget) {
 		this.shellWidget = shellWidget;
 	}
 
@@ -59,7 +60,7 @@ public class BaseShellWidgetGeometryDelegate extends AbstractShellSurfaceGeometr
 	}
 
 	@Override
-	protected BaseShellWidget findClosestSameTypeSurface(final ShellNode square) {
+	protected BaseShellWidget findClosestSameTypeSurface(@Nonnull final ShellNode square) {
 		checkArgument(square instanceof AbstractAsyncShellNode);
 
 		if (square == null) {
@@ -81,7 +82,7 @@ public class BaseShellWidgetGeometryDelegate extends AbstractShellSurfaceGeometr
 	}
 
 	@Override
-	protected BaseShellWidget getSurfacePeer(final ShellSurface shellSurface) {
+	protected BaseShellWidget getSurfacePeer(@Nonnull final ShellSurface shellSurface) {
 		// if the cast fails then somebody is trying to combine a non
 		// BaseShellWidget with one that is, which shouldn'be a allowed.
 		return (BaseShellWidget) shellSurface;

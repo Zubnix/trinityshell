@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
@@ -52,7 +53,7 @@ public class GeometryRequest extends DisplayEvent {
 	 *            Indicates if the height value should be configured.
 	 ***************************************
 	 */
-	public GeometryRequest(	final Rectangle geometry,
+	public GeometryRequest(@Nonnull final Rectangle geometry,
 							final boolean configureX,
 							final boolean configureY,
 							final boolean configureWidth,

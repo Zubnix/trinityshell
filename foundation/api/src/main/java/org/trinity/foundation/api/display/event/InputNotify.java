@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
@@ -40,7 +41,7 @@ public class InputNotify<I extends Input> extends DisplayEvent {
 	 *            an {@link Input}
 	 ***************************************
 	 */
-	public InputNotify(final I input) {
+	public InputNotify(@Nonnull final I input) {
 		this.input = input;
 	}
 

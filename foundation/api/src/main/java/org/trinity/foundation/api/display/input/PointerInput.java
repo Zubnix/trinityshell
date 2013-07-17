@@ -14,6 +14,7 @@ package org.trinity.foundation.api.display.input;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /****************************************
@@ -55,9 +56,9 @@ public class PointerInput extends Input {
 	 *            display area.
 	 ***************************************
 	 */
-	public PointerInput(final Momentum momentum,
-						final Button button,
-						final InputModifiers inputModifiers,
+	public PointerInput(@Nonnull final Momentum momentum,
+                        @Nonnull final Button button,
+                        @Nonnull final InputModifiers inputModifiers,
 						final int relativeX,
 						final int relativeY,
 						final int rootX,

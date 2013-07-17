@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.display.x11.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.freedesktop.xcb.xcb_generic_event_t;
@@ -22,9 +23,9 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 @ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public interface XEventConversion {
-	DisplayEvent convert(xcb_generic_event_t event);
+	DisplayEvent convert(@Nonnull xcb_generic_event_t event);
 
-	AsyncListenable getTarget(xcb_generic_event_t event);
+	AsyncListenable getTarget(@Nonnull xcb_generic_event_t event);
 
 	Integer getEventCode();
 }

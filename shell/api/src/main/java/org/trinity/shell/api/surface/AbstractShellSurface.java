@@ -15,6 +15,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.trinity.foundation.api.display.event.DestroyNotify;
@@ -22,6 +23,7 @@ import org.trinity.foundation.api.display.event.GeometryNotify;
 import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
@@ -38,7 +40,8 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * <code>AbstractShellSurface</code>.
  ***************************************
  */
-@ThreadSafe
+@ExecutionContext(ShellExecutor.class)
+@NotThreadSafe
 public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 
 	public static final boolean DEFAULT_IS_RESIZABLE = true;
@@ -72,7 +75,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	}
 
 	@Override
-	public Void setMaxSizeImpl(final Size maxSize) {
+	public Void setMaxSizeImpl(@Nonnull final Size maxSize) {
 		this.maxSize = maxSize;
 		return null;
 	}
@@ -83,7 +86,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	}
 
 	@Override
-	public Void setMinSizeImpl(final Size maxSize) {
+	public Void setMinSizeImpl(@Nonnull final Size maxSize) {
 		this.maxSize = maxSize;
 		return null;
 	}
@@ -134,7 +137,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 		return null;
 	}
 
-	protected Size normalizedSize(final Size newSize) {
+	protected Size normalizedSize(@Nonnull final Size newSize) {
 
 		final int newWidth = newSize.getWidth();
 		final int newHeight = newSize.getHeight();

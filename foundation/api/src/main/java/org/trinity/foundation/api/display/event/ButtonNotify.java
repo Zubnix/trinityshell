@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.api.display.event;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
@@ -35,7 +36,7 @@ public class ButtonNotify extends InputNotify<PointerInput> {
 	 *            The {@link PointerInput} details.
 	 ***************************************
 	 */
-	public ButtonNotify(final PointerInput pointerInput) {
+	public ButtonNotify(@Nonnull final PointerInput pointerInput) {
 		super(pointerInput);
 	}
 }

@@ -18,25 +18,31 @@ import java.util.concurrent.TimeUnit;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.display.Display;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.plugin.ShellPlugin;
 
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Bind(multiple = true)
 @To(value = CUSTOM, customs = ShellPlugin.class)
 @Singleton
+@NotThreadSafe
+@ExecutionContext(ShellExecutor.class)
 public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlugin {
 
 	private final Display display;
 	private final ListeningExecutorService shellExecutor;
 
 	@Inject
-	ShellSurfacePlugin(	@ShellExecutor final ListeningExecutorService shellExecutor,
-						final Display display) {
+	ShellSurfacePlugin(@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor,
+					    @Nonnull final Display display) {
 		this.display = display;
 		this.shellExecutor = shellExecutor;
 	}

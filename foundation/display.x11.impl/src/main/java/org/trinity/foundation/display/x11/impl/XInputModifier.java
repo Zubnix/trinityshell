@@ -11,6 +11,7 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
@@ -25,7 +26,7 @@ public class XInputModifier implements InputModifier {
 	private final int mask;
 
 	XInputModifier(	final int mask,
-					final String name) {
+                       @Nonnull final String name) {
 		this.name = name;
 		this.mask = mask;
 	}

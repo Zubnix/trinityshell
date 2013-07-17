@@ -11,6 +11,7 @@
  */
 package org.trinity.shell.api.surface;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplayArea;
@@ -43,7 +44,7 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	public abstract AbstractShellSurface getShellNode();
 
 	@Override
-	public void move(final Coordinate position) {
+	public void move(@Nonnull final Coordinate position) {
 
 		final AbstractShellNodeParent shellParent = getShellNode().getParentImpl();
 		final Coordinate newRelativePosition = calculateRelativePosition(	shellParent,
@@ -56,8 +57,8 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	}
 
 	@Override
-	public void moveResize(	final Coordinate position,
-							final Size size) {
+	public void moveResize(@Nonnull final Coordinate position,
+                           @Nonnull final Size size) {
 
 		final AbstractShellNodeParent shellParent = getShellNode().getParentImpl();
 
@@ -95,8 +96,8 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	 * @return a {@link Coordinate} in 'display space'.
 	 ***************************************
 	 */
-	protected Coordinate calculateRelativePosition(	final AbstractShellNodeParent shellParent,
-													final Coordinate newRelativePosition) {
+	protected Coordinate calculateRelativePosition(@Nonnull final AbstractShellNodeParent shellParent,
+                                                   @Nonnull final Coordinate newRelativePosition) {
 
 		final AbstractShellSurface parentTypedSurface = findClosestSameTypeSurface(shellParent);
 
@@ -113,7 +114,7 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 		return corRelativeToTypedParent;
 	}
 
-	private Coordinate getAbsolutePosition(final AbstractShellNode node) {
+	private Coordinate getAbsolutePosition(@Nonnull final AbstractShellNode node) {
 		final Coordinate childPosition = node.getPositionImpl();
 		final AbstractShellNodeParent shellParent = node.getParentImpl();
 
@@ -128,7 +129,7 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	}
 
 	@Override
-	public void reparent(final ShellNodeParent parent) {
+	public void reparent(@Nonnull final ShellNodeParent parent) {
 		checkArgument(parent instanceof AbstractShellNodeParent);
 
 		final AbstractShellSurface currentSurface = getShellNode();
@@ -163,7 +164,7 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	 * @return A found {@link ShellSurface} parent.
 	 ***************************************
 	 */
-	protected abstract AbstractShellSurface findClosestSameTypeSurface(final ShellNode node);
+	protected abstract AbstractShellSurface findClosestSameTypeSurface(@Nonnull final ShellNode node);
 
 	/***************************************
 	 * The object functioning as the {@code DisplayArea} for the given
@@ -174,5 +175,5 @@ public abstract class AbstractShellSurfaceGeometryDelegate extends AbstractShell
 	 * @return a {@link DisplayArea}.
 	 ***************************************
 	 */
-	protected abstract DisplayArea getSurfacePeer(final ShellSurface shellSurface);
+	protected abstract DisplayArea getSurfacePeer(@Nonnull final ShellSurface shellSurface);
 }

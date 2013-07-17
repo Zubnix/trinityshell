@@ -11,17 +11,21 @@
  */
 package org.trinity.shell.api.scene.event;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 /***************************************
  * Informs that the {@link ShellNode} that emitted this event, is resized.
- * 
- *************************************** 
+ *
+ ***************************************
  */
 @Immutable
+@ExecutionContext(ShellExecutor.class)
 public class ShellNodeResizedEvent extends ShellNodeEvent {
 
 	/**
@@ -29,14 +33,14 @@ public class ShellNodeResizedEvent extends ShellNodeEvent {
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link ShellNode#toGeoTransformation()}
-	 * 
+	 *
 	 * @param shellNode
 	 *            the emitting {@link ShellNode}
 	 * @param shellNodeTransformation
 	 *            a {@link ShellNodeTransformation}
 	 */
-	public ShellNodeResizedEvent(	final ShellNode shellNode,
-									final ShellNodeTransformation shellNodeTransformation) {
+	public ShellNodeResizedEvent(@Nonnull final ShellNode shellNode,
+                                 @Nonnull final ShellNodeTransformation shellNodeTransformation) {
 		super(	shellNode,
 				shellNodeTransformation);
 	}

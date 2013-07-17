@@ -1,5 +1,6 @@
 package org.trinity.shell.api.scene;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.trinity.foundation.api.shared.AsyncListenable;
@@ -97,11 +98,11 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 	public abstract Void setLayoutManagerImpl(ShellLayoutManager shellLayoutManager);
 
 	@Override
-	public final ListenableFuture<ShellNode[]> getChildren() {
-		return this.shellExecutor.submit(new Callable<ShellNode[]>() {
+	public final ListenableFuture<List<ShellNode>> getChildren() {
+		return this.shellExecutor.submit(new Callable<List<ShellNode>>() {
 			@Override
-			public ShellNode[] call() throws Exception {
-				return getChildrenImpl();
+			public List<ShellNode> call() throws Exception {
+				return (List<ShellNode>) getChildrenImpl();
 			}
 		});
 	}
@@ -114,5 +115,5 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 	 * @see #getChildren()
 	 ***************************************
 	 */
-	public abstract ShellNode[] getChildrenImpl();
+	public abstract List<? extends ShellNode> getChildrenImpl();
 }

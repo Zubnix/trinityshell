@@ -18,8 +18,10 @@ import java.util.List;
 
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
+import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
 import org.trinity.foundation.api.shared.Size;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
@@ -39,6 +41,9 @@ import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+
 // TODO try to avoid castings
 // TODO refactor/rewrite
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
@@ -47,15 +52,20 @@ import com.google.common.eventbus.Subscribe;
 // =>rewrite this sh*t...
 @Bind
 @To(value = CUSTOM, customs = ShellLayoutManagerLine.class)
+@NotThreadSafe
+@ExecutionContext(ShellExecutor.class)
 public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
 
-	private final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(1,
+	private static final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(1,
 																								new Margins(0));
 	private final ChildGeoListener childGeoListener = new ChildGeoListener();
 	private boolean horizontalDirection = true;
 	private boolean inverseDirection = false;
 
-	@Override
+    ShellLayoutManagerLineImpl() {
+    }
+
+    @Override
 	public void setHorizontalDirection(final boolean horizontalDirection) {
 		this.horizontalDirection = horizontalDirection;
 	}
@@ -65,13 +75,13 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		this.inverseDirection = inverseDirection;
 	}
 
-	protected void cancelMoveResize(final ShellNode square) {
+	protected void cancelMoveResize(@Nonnull final ShellNode square) {
 		// make sure the square doesn't move or resizes
 		square.cancelPendingMove();
 		square.cancelPendingResize();
 	}
 
-	protected void layoutHorizontal(final ShellNode containerNode) {
+	protected void layoutHorizontal(@Nonnull final ShellNode containerNode) {
 		// total available size of the container
 		checkArgument(containerNode instanceof AbstractShellNode);
 
@@ -153,7 +163,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		}
 	}
 
-	protected void layoutVertical(final ShellNode containerNode) {
+	protected void layoutVertical(@Nonnull final ShellNode containerNode) {
 		int newHeightSize = 0;
 		int fixedWidthSize = 0;
 
@@ -231,8 +241,8 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	}
 
 	@Override
-	public void addChildNode(	final ShellNode child,
-								final ShellLayoutProperty layoutProperty) {
+	public void addChildNode(@Nonnull 	final ShellNode child,
+                             @Nonnull 	final ShellLayoutProperty layoutProperty) {
 		Preconditions.checkArgument(layoutProperty instanceof ShellLayoutPropertyLine);
 
 		child.register(this.childGeoListener);
@@ -241,13 +251,13 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	}
 
 	@Override
-	public void removeChild(final ShellNode child) {
+	public void removeChild(@Nonnull final ShellNode child) {
 		child.register(this.childGeoListener);
 		super.removeChild(child);
 	}
 
 	@Override
-	public void layout(final ShellNodeParent containerNode) {
+	public void layout(@Nonnull final ShellNodeParent containerNode) {
 		if (containerNode == null) {
 			return;
 		}
@@ -259,7 +269,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	}
 
 	@Override
-	public ShellLayoutPropertyLine getLayoutProperty(final ShellNode child) {
+	public ShellLayoutPropertyLine getLayoutProperty(@Nonnull final ShellNode child) {
 		return (ShellLayoutPropertyLine) super.getLayoutProperty(child);
 	}
 

@@ -14,6 +14,7 @@ package org.trinity.foundation.api.display.input;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
@@ -47,7 +48,7 @@ public class InputModifiers {
 	 * @return True if in this group, false if not.
 	 ***************************************
 	 */
-	public boolean isModifierSet(final InputModifier modifier) {
+	public boolean isModifierSet(@Nonnull final InputModifier modifier) {
 		return (getInputModifiersState() & modifier.getMask()) != 0;
 	}
 

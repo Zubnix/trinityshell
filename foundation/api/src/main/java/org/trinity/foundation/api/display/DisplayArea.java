@@ -14,6 +14,8 @@ package org.trinity.foundation.api.display;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * Describes a visible part of the screen. It is the base interface of all
  * objects wishing to describe an on-screen surface.
@@ -26,6 +28,7 @@ import org.trinity.foundation.api.shared.ExecutionContext;
  *
  */
 @ExecutionContext(DisplayExecutor.class)
+@ThreadSafe
 public interface DisplayArea {
 
 }

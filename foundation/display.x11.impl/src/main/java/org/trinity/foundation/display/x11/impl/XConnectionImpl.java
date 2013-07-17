@@ -19,6 +19,8 @@ import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.onami.autobind.annotations.Bind;
@@ -47,8 +49,8 @@ public class XConnectionImpl implements XConnection {
 	}
 
 	@Override
-	public void open(	final String displayName,
-						final int screen) {
+	public void open(@Nonnull final String displayName,
+					@Nonnegative final int screen) {
 		final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 		screenBuf.putInt(screen);
 		this.xcb_connection = xcb_connect(displayName,

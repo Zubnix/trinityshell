@@ -18,6 +18,8 @@ import org.trinity.foundation.api.shared.Rectangle;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * Represents a native isolated graphical area. Usually a
  * <code>DisplaySurface</code> maps to a native window from a native display
@@ -25,6 +27,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  *
  */
 @ExecutionContext(DisplayExecutor.class)
+@ThreadSafe
 public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator, AsyncListenable {
 
 	/***************************************
