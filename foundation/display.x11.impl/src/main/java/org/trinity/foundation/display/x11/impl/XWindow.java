@@ -42,6 +42,8 @@ import java.util.concurrent.ExecutorService;
 
 import javax.annotation.concurrent.ThreadSafe;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.AssistedInject;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_geometry_cookie_t;
@@ -90,6 +92,8 @@ public final class XWindow implements DisplaySurface {
 	private final ListeningExecutorService xExecutor;
 	private final AsyncListenableEventBus xWindowEventBus;
 
+
+	@AssistedInject
 	XWindow(final XTime xTime,
 			final XConnection xConnection,
 			@Assisted final DisplaySurfaceHandle resourceHandle,

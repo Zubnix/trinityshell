@@ -37,7 +37,6 @@ import org.trinity.foundation.display.x11.api.XConnection;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-@Bind
 @To(IMPLEMENTATION)
 @Singleton
 @NotThreadSafe

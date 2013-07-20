@@ -11,11 +11,12 @@
  */
 package org.trinity.foundation.api.render.binding.model.delegate;
 
-import com.sun.istack.internal.NotNull;
 import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.model.InputSlot;
 
 import com.google.common.util.concurrent.ListenableFuture;
+
+import javax.annotation.Nonnull;
 
 /***************************************
  * A convenience service to call a method marked with {@link InputSlot} based on
@@ -32,7 +33,7 @@ public interface InputSlotCallerDelegate {
 	 * @return A Boolean indicating if an input slot was called.
 	 ***************************************
 	 */
-	ListenableFuture<Boolean> callInputSlot(@NotNull Object model,
-                                            @NotNull String methodName,
-                                            @NotNull Input input);
+	ListenableFuture<Boolean> callInputSlot(@Nonnull Object model,
+	                                        @Nonnull String methodName,
+	                                        @Nonnull Input input);
 }

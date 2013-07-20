@@ -37,7 +37,6 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-@Bind
 @To(IMPLEMENTATION)
 @Singleton
 @ExecutionContext(DisplayExecutor.class)

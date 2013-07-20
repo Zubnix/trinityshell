@@ -24,7 +24,6 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 
 @NotThreadSafe
-@Bind
 @To(IMPLEMENTATION)
 @Singleton
 @ExecutionContext(DisplayExecutor.class)

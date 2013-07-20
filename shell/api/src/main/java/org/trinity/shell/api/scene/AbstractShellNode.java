@@ -78,12 +78,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
                                 @Nonnull @ShellScene final AsyncListenable shellScene,
                                 @Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
         super(shellExecutor);
+	    this.nodeEventBus = new AsyncListenableEventBus(shellExecutor);
+
         register(shellScene);
-        this.nodeEventBus = new AsyncListenableEventBus(shellExecutor);
         if (shellRootNode != null) {
             setParentImpl(shellRootNode);
+	        doReparent(false);
         }
-        doReparent(false);
     }
 
     @Override

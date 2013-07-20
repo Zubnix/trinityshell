@@ -11,10 +11,10 @@
  */
 package org.trinity.shell.surface.impl;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.google.inject.assistedinject.Assisted;
-import com.sun.istack.internal.NotNull;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
@@ -42,10 +42,10 @@ public final class ShellClientSurface extends AbstractShellSurface {
 	private final DisplaySurface displaySurface;
 
 	// created by a custom factory so inject annotations are not needed.
-	ShellClientSurface(@NotNull final ShellNodeParent shellRootNode,
-						@NotNull @ShellScene final AsyncListenable shellScene,
-						@NotNull @ShellExecutor final ListeningExecutorService shellExecutor,
-						@NotNull @Assisted final DisplaySurface clientDisplaySurface) {
+	ShellClientSurface(@Nonnull final ShellNodeParent shellRootNode,
+	                   @Nonnull @ShellScene final AsyncListenable shellScene,
+	                   @Nonnull @ShellExecutor final ListeningExecutorService shellExecutor,
+	                   @Nonnull @Assisted final DisplaySurface clientDisplaySurface) {
 		super(	shellRootNode,
 				shellScene,
 				shellExecutor);

@@ -13,6 +13,7 @@ import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shellplugin.wm.api.Desktop;
 import org.trinity.shellplugin.wm.api.HasText;
 
 import com.google.inject.Inject;
@@ -29,7 +30,7 @@ public class Clock implements HasText, Runnable {
 	private String text;
 
 	@Inject
-	Clock(final ShellRootWidget shellRootWidget) {
+	Clock(final Desktop shellRootWidget) {
 		shellRootWidget.getNotificationsBar().add(this);
 		this.clockExecutor.scheduleAtFixedRate(	this,
 												0,

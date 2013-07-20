@@ -37,7 +37,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-@Bind
+//@Bind
 @To(IMPLEMENTATION)
 @Singleton
 @ExecutionContext(DisplayExecutor.class)

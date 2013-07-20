@@ -32,7 +32,6 @@ import com.trolltech.qt.core.QObject;
 
 import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 
-@Bind
 @To(IMPLEMENTATION)
 @Singleton
 @NotThreadSafe

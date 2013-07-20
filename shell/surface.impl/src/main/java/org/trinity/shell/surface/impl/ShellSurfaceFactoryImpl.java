@@ -8,7 +8,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.sun.istack.internal.NotNull;
 import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,7 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 	private final ListeningExecutorService shellExecutor;
 
 	@Inject
-	ShellSurfaceFactoryImpl(@NotNull @ShellRootNode final ShellNodeParent shellRootNode,
+	ShellSurfaceFactoryImpl(@Nonnull @ShellRootNode final ShellNodeParent shellRootNode,
 							@ShellScene final AsyncListenable shellScene,
 							@ShellExecutor final ListeningExecutorService shellExecutor) {
 		this.shellRootNode = shellRootNode;

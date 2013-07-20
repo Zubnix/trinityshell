@@ -27,7 +27,6 @@ import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-@Bind
 @To(IMPLEMENTATION)
 @Singleton
 @NotThreadSafe
