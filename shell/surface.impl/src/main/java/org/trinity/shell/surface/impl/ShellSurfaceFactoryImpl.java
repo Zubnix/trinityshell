@@ -57,7 +57,7 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 				displaySurface.register(shellClientSurface,
 										shellExecutor);
 
-				return null;
+				return shellClientSurface;
 			}
 		});
 	}
