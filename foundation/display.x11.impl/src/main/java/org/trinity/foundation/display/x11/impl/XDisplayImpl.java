@@ -11,6 +11,9 @@
  */
 package org.trinity.foundation.display.x11.impl;
 
+import static java.nio.ByteBuffer.allocateDirect;
+import static java.nio.ByteOrder.nativeOrder;
+import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
 import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
 import static org.freedesktop.xcb.LibXcb.xcb_get_setup;
 import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes;
@@ -21,9 +24,11 @@ import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children_length;
 import static org.freedesktop.xcb.LibXcb.xcb_query_tree_reply;
 import static org.freedesktop.xcb.LibXcb.xcb_screen_next;
 import static org.freedesktop.xcb.LibXcb.xcb_setup_roots_iterator;
+import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -75,6 +80,7 @@ public class XDisplayImpl implements Display {
 	private final XEventPump xEventPump;
 	private final ListeningExecutorService xExecutor;
 	private final AsyncListenableEventBus displayEventBus;
+	private final ByteBuffer rootWindowAttributres = allocateDirect(4).order(nativeOrder());
 	private XScreen screen;
 
 	@Inject
@@ -126,17 +132,29 @@ public class XDisplayImpl implements Display {
 				int screenNr = targetScreen;
 				for (; iter.getRem() != 0; --screenNr, xcb_screen_next(iter)) {
 					if (targetScreen == 0) {
-						screen = new XScreenImpl(iter.getData());
+						final xcb_screen_t xcb_screen = iter.getData();
+						configureRootEvents(xcb_screen);
+						screen = new XScreenImpl(xcb_screen);
 						break;
 					}
 				}
-
 
 				findClientDisplaySurfaces();
 				XDisplayImpl.this.xEventPump.start();
 				return null;
 			}
 		});
+	}
+
+	private void configureRootEvents(xcb_screen_t xcb_screen) {
+		final int rootId = xcb_screen.getRoot();
+
+		rootWindowAttributres.putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
+
+		xcb_change_window_attributes(	this.xConnection.getConnectionReference(),
+										rootId,
+										XCB_CW_EVENT_MASK,
+										rootWindowAttributres);
 	}
 
 	private void findClientDisplaySurfaces() {
@@ -159,7 +177,7 @@ public class XDisplayImpl implements Display {
 			return;
 		}
 
-		final ByteBuffer tree_children = xcb_query_tree_children(query_tree_reply).order(ByteOrder.nativeOrder());
+		final ByteBuffer tree_children = xcb_query_tree_children(query_tree_reply).order(nativeOrder());
 		int tree_children_length = xcb_query_tree_children_length(query_tree_reply);
 		while (tree_children_length > 0) {
 
@@ -200,8 +218,8 @@ public class XDisplayImpl implements Display {
 	}
 
 	@Override
-	public void register(@Nonnull	final Object listener,
-                         @Nonnull	final ExecutorService executor) {
+	public void register(	@Nonnull final Object listener,
+							@Nonnull final ExecutorService executor) {
 		this.displayEventBus.register(	listener,
 										executor);
 	}

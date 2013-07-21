@@ -43,7 +43,6 @@ import com.google.inject.Singleton;
 public class XConnectionImpl implements XConnection {
 
 	private SWIGTYPE_p_xcb_connection_t xcb_connection;
-	private xcb_screen_t screen_t;
 
 	XConnectionImpl() {
 	}
@@ -55,20 +54,6 @@ public class XConnectionImpl implements XConnection {
 		screenBuf.putInt(screen);
 		this.xcb_connection = xcb_connect(displayName,
 										screenBuf);
-		configureRootEvents();
-	}
-
-	private void configureRootEvents() {
-		final int rootId = this.screen_t.getRoot();
-
-		final ByteBuffer values = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
-		values.putInt(xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE
-				| xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
-
-		xcb_change_window_attributes(	getConnectionReference(),
-										rootId,
-										xcb_cw_t.XCB_CW_EVENT_MASK,
-										values);
 	}
 
 	@Override
