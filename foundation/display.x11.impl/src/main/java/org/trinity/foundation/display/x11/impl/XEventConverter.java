@@ -34,7 +34,7 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-@To(IMPLEMENTATION)
+@Bind(to = @To(IMPLEMENTATION))
 @Singleton
 @ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
@@ -49,19 +49,16 @@ public final class XEventConverter {
 	 */
 
 	private final Map<Integer, XEventConversion> conversionMap = new HashMap<Integer, XEventConversion>();
-	private final EventBus xEventBus;
 
 	@Inject
 	XEventConverter(final Set<XEventConversion> eventConversions,
 					@XEventBus final EventBus xEventBus) {
-		this.xEventBus = xEventBus;
 
 		for (final XEventConversion eventConversion : eventConversions) {
 			this.conversionMap.put(	eventConversion.getEventCode(),
 									eventConversion);
 		}
-
-		this.xEventBus.register(this);
+		xEventBus.register(this);
 	}
 
 	@Subscribe

@@ -27,7 +27,7 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 
 
-@To(IMPLEMENTATION)
+@Bind(to = @To(IMPLEMENTATION))
 @Singleton
 @ExecutionContext(DisplayExecutor.class)
 @Immutable

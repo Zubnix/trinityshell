@@ -15,6 +15,7 @@ import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
 import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
 import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
 import static org.freedesktop.xcb.LibXcb.xcb_get_setup;
 import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes;
 import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes_reply;
@@ -80,7 +81,8 @@ public class XDisplayImpl implements Display {
 	private final XEventPump xEventPump;
 	private final ListeningExecutorService xExecutor;
 	private final AsyncListenableEventBus displayEventBus;
-	private final ByteBuffer rootWindowAttributres = allocateDirect(4).order(nativeOrder());
+	private final ByteBuffer rootWindowAttributres = allocateDirect(4).order(nativeOrder())
+			.putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
 	private XScreen screen;
 
 	@Inject
@@ -149,12 +151,11 @@ public class XDisplayImpl implements Display {
 	private void configureRootEvents(xcb_screen_t xcb_screen) {
 		final int rootId = xcb_screen.getRoot();
 
-		rootWindowAttributres.putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
-
 		xcb_change_window_attributes(	this.xConnection.getConnectionReference(),
 										rootId,
 										XCB_CW_EVENT_MASK,
 										rootWindowAttributres);
+		xcb_flush(this.xConnection.getConnectionReference());
 	}
 
 	private void findClientDisplaySurfaces() {

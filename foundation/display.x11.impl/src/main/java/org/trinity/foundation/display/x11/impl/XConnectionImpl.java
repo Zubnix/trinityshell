@@ -36,7 +36,6 @@ import org.trinity.foundation.display.x11.api.XConnection;
 import com.google.inject.Singleton;
 
 @Bind
-@To(IMPLEMENTATION)
 @Singleton
 @ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe

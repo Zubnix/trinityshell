@@ -22,8 +22,7 @@ import com.trolltech.qt.core.QEvent.Type;
 
 import static org.apache.onami.autobind.annotations.To.Type.INTERFACES;
 
-@Bind(multiple = true)
-@To(INTERFACES)
+@Bind(to=@To(INTERFACES),multiple = true)
 @Singleton
 public class KeyReleasedConversion extends AbstractKeyConversion {
 

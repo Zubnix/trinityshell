@@ -31,7 +31,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-@To(IMPLEMENTATION)
+@Bind(to=@To(IMPLEMENTATION))
 @Singleton
 @NotThreadSafe
 @ExecutionContext(DisplayExecutor.class)

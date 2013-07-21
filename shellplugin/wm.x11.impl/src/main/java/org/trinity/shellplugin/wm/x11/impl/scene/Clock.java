@@ -19,9 +19,9 @@ import org.trinity.shellplugin.wm.api.HasText;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-@Bind
+
 @Singleton
-@To(IMPLEMENTATION)
+@Bind(to=@To(IMPLEMENTATION))
 @ExecutionContext(ShellExecutor.class)
 public class Clock implements HasText, Runnable {
 

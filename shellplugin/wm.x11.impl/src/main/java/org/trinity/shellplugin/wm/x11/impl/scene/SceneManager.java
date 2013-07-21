@@ -21,8 +21,7 @@ import org.trinity.shellplugin.wm.x11.impl.protocol.XWindowProtocol;
 
 import com.google.common.eventbus.Subscribe;
 
-//@Bind
-@To(IMPLEMENTATION)
+@Bind(to=@To(IMPLEMENTATION))
 @NotThreadSafe
 @Singleton
 @ExecutionContext(ShellExecutor.class)

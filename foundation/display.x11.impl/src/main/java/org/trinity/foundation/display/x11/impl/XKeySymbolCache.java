@@ -45,7 +45,7 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-@To(IMPLEMENTATION)
+@Bind(to = @To(IMPLEMENTATION))
 @Singleton
 @ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe

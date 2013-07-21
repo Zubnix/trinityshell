@@ -13,6 +13,9 @@ package org.trinity.shell.scene.impl;
 
 import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.shared.AsyncListenable;
@@ -27,9 +30,6 @@ import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 // TODO documentation
 /**
@@ -46,18 +46,17 @@ import javax.inject.Inject;
  * @author Erik De Rijcke
  * @since 1.0
  */
-@Bind
+@Bind(to = @To(value = CUSTOM, customs = { ShellNode.class, ShellNodeParent.class }))
 @ShellVirtualNode
-@To(value = CUSTOM, customs = { ShellNode.class, ShellNodeParent.class })
 @ExecutionContext(ShellExecutor.class)
 public class ShellVirtualSurface extends AbstractShellNodeParent {
 
 	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellVirtualSurfaceExecutor(this);
 
 	@Inject
-	protected ShellVirtualSurface(@Nonnull @ShellRootNode final ShellNodeParent rootShellNode,
-                                  @Nonnull @ShellScene final AsyncListenable shellScene,
-                                  @Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
+	protected ShellVirtualSurface(	@Nonnull @ShellRootNode final ShellNodeParent rootShellNode,
+									@Nonnull @ShellScene final AsyncListenable shellScene,
+									@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
 		super(	rootShellNode,
 				shellScene,
 				shellExecutor);

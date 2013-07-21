@@ -6,6 +6,7 @@ import java.util.concurrent.ThreadFactory;
 import org.apache.onami.autobind.annotations.GuiceModule;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 
+import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.AbstractModule;

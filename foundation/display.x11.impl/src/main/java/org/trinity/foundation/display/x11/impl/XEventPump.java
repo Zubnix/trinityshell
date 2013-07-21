@@ -16,6 +16,7 @@ import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
 import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -37,8 +38,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-//@Bind
-@To(IMPLEMENTATION)
+@Bind(to = @To(IMPLEMENTATION))
 @Singleton
 @ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
@@ -77,11 +77,12 @@ public class XEventPump implements Runnable {
 		}
 
 		// pass x event from x-event-pump thread to x-executor thread.
-		this.xExecutor.submit(new Runnable() {
+		this.xExecutor.submit(new Callable<Void>() {
 			@Override
-			public void run() {
+			public Void call() {
 				XEventPump.this.xEventBus.post(xcb_generic_event);
 				xcb_generic_event.delete();
+				return null;
 			}
 		});
 

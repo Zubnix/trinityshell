@@ -36,7 +36,7 @@ import org.trinity.foundation.api.display.input.InputModifier;
 import com.google.inject.Singleton;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
-@To(IMPLEMENTATION)
+@Bind(to = @To(IMPLEMENTATION))
 @Singleton
 @ExecutionContext(DisplayExecutor.class)
 @Immutable

@@ -29,7 +29,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 @Singleton
-@To(IMPLEMENTATION)
+@Bind(to=@To(IMPLEMENTATION))
 @ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public class WmHints extends AbstractCachedProtocol<xcb_icccm_wm_hints_t> {

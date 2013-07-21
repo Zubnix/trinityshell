@@ -14,7 +14,9 @@ package org.trinity.foundation.display.x11.impl;
 import org.apache.onami.autobind.annotations.GuiceModule;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
