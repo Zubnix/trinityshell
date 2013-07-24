@@ -33,6 +33,7 @@ import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+import static org.freedesktop.xcb.xcb_input_focus_t.XCB_INPUT_FOCUS_NONE;
 import static org.freedesktop.xcb.xcb_stack_mode_t.XCB_STACK_MODE_ABOVE;
 import static org.freedesktop.xcb.xcb_stack_mode_t.XCB_STACK_MODE_BELOW;
 
@@ -42,13 +43,10 @@ import java.util.concurrent.ExecutorService;
 
 import javax.annotation.concurrent.ThreadSafe;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.AssistedInject;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_geometry_cookie_t;
 import org.freedesktop.xcb.xcb_get_geometry_reply_t;
-import org.freedesktop.xcb.xcb_input_focus_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplayArea;
@@ -67,6 +65,7 @@ import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 @ExecutionContext(DisplayExecutor.class)
 @ThreadSafe
@@ -86,12 +85,15 @@ public final class XWindow implements DisplaySurface {
 	private static final ByteBuffer RAISE_VALUE_LIST_BUFFER = allocateDirect(4).order(nativeOrder())
 			.putInt(XCB_STACK_MODE_ABOVE);
 	private static final int MOVE_VALUE_MASK = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
+	private static final int CLIENT_EVENT_MASK = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
+			| XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+	private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
+			.putInt(CLIENT_EVENT_MASK);
 	private final DisplaySurfaceHandle resourceHandle;
 	private final XConnection xConnection;
 	private final XTime xTime;
 	private final ListeningExecutorService xExecutor;
 	private final AsyncListenableEventBus xWindowEventBus;
-
 
 	@AssistedInject
 	XWindow(final XTime xTime,
@@ -170,7 +172,7 @@ public final class XWindow implements DisplaySurface {
 												XWindow.LOG.debug(	"[winId={}] set input focus.",
 																	winId);
 												xcb_set_input_focus(getConnectionRef(),
-																	(short) xcb_input_focus_t.XCB_INPUT_FOCUS_NONE,
+																	(short) XCB_INPUT_FOCUS_NONE,
 																	winId,
 																	time);
 												xcb_flush(getConnectionRef());
@@ -514,9 +516,6 @@ public final class XWindow implements DisplaySurface {
 	 ***************************************
 	 */
 	public void configureClientEvents() {
-
-		final ByteBuffer values = allocateDirect(4).order(nativeOrder());
-		values.putInt(XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_STRUCTURE_NOTIFY);
 		final int winId = getWindowId();
 
 		XWindow.LOG.debug(	"[winId={}] configure client evens.",
@@ -525,7 +524,7 @@ public final class XWindow implements DisplaySurface {
 		xcb_change_window_attributes(	XWindow.this.xConnection.getConnectionReference(),
 										winId,
 										XCB_CW_EVENT_MASK,
-										values);
+										CLIENT_EVENTS_CONFIG_BUFFER);
 		xcb_flush(getConnectionRef());
 	}
 

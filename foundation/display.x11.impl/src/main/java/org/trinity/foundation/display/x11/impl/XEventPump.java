@@ -42,7 +42,7 @@ import com.google.inject.Singleton;
 @Singleton
 @ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
-public class XEventPump implements Runnable {
+public class XEventPump implements Callable<Void> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XEventPump.class);
 	private final XConnection connection;
@@ -67,7 +67,7 @@ public class XEventPump implements Runnable {
 	}
 
 	@Override
-	public void run() {
+	public Void call() {
 		final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference());
 
 		if (xcb_connection_has_error(this.connection.getConnectionReference()) != 0) {
@@ -88,6 +88,7 @@ public class XEventPump implements Runnable {
 
 		// schedule next event retrieval
 		this.xEventPumpExecutor.submit(this);
+		return null;
 	}
 
 	public void start() {
