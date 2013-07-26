@@ -11,11 +11,19 @@
  */
 package org.trinity.foundation.display.x11.impl.event;
 
+import static java.nio.ByteBuffer.allocateDirect;
+import static java.nio.ByteOrder.nativeOrder;
+import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_REQUEST;
 import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
 import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
 import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
 import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -25,6 +33,7 @@ import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Display;
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.CreationNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
@@ -33,14 +42,16 @@ import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindow;
-import org.trinity.foundation.display.x11.impl.XWindowCache;
+import org.trinity.foundation.display.x11.impl.XWindowCacheImpl;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import java.nio.ByteBuffer;
 
 @Bind(multiple = true)
 @Singleton
@@ -48,79 +59,100 @@ import com.google.inject.Singleton;
 @Immutable
 public class ConfigureRequestConversion implements XEventConversion {
 
-	private static final Logger logger = LoggerFactory.getLogger(ConfigureRequestConversion.class);
-	private final Integer eventCode = XCB_CONFIGURE_REQUEST;
-	private final XWindowCache xWindowCache;
-	private final EventBus xEventBus;
-	private final Display display;
+    private static final int CLIENT_EVENT_MASK = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
+            | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+    private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
+            .putInt(CLIENT_EVENT_MASK);
 
-	@Inject
-	ConfigureRequestConversion(	@XEventBus final EventBus xEventBus,
-								final XWindowCache xWindowCache,
-								final Display display) {
-		this.xEventBus = xEventBus;
-		this.xWindowCache = xWindowCache;
-		this.display = display;
-	}
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigureRequestConversion.class);
+    private static final Integer EVENT_CODE = XCB_CONFIGURE_REQUEST;
+    private final XConnection xConnection;
+    private final XWindowCacheImpl xWindowCache;
+    private final EventBus xEventBus;
+    private final Display display;
 
-	@Override
-	public DisplayEvent convert(final xcb_generic_event_t event_t) {
-		final xcb_configure_request_event_t request_event = cast(event_t);
+    @Inject
+    ConfigureRequestConversion(@XEventBus final EventBus xEventBus,
+                               final XConnection xConnection,
+                               final XWindowCacheImpl xWindowCache,
+                               final Display display) {
+        this.xEventBus = xEventBus;
+        this.xConnection = xConnection;
+        this.xWindowCache = xWindowCache;
+        this.display = display;
+    }
 
-		logger.debug(	"Received X event={}",
-						request_event.getClass().getSimpleName());
+    @Override
+    public DisplayEvent convert(final xcb_generic_event_t event_t) {
+        final xcb_configure_request_event_t request_event = cast(event_t);
 
-		this.xEventBus.post(request_event);
+        LOG.debug("Received X event={}",
+                request_event.getClass().getSimpleName());
 
-		final int x = request_event.getX();
-		final int y = request_event.getY();
-		final int width = request_event.getWidth() + (2 * request_event.getBorder_width());
-		final int height = request_event.getHeight() + (2 * request_event.getBorder_width());
-		final Rectangle geometry = new ImmutableRectangle(	x,
-															y,
-															width,
-															height);
+        this.xEventBus.post(request_event);
 
-		final int valueMask = request_event.getValue_mask();
+        final int x = request_event.getX();
+        final int y = request_event.getY();
+        final int width = request_event.getWidth() + (2 * request_event.getBorder_width());
+        final int height = request_event.getHeight() + (2 * request_event.getBorder_width());
+        final Rectangle geometry = new ImmutableRectangle(x,
+                y,
+                width,
+                height);
 
-		final boolean configureX = (valueMask & XCB_CONFIG_WINDOW_X) != 0;
-		final boolean configureY = (valueMask & XCB_CONFIG_WINDOW_Y) != 0;
-		final boolean configureWidth = (valueMask & XCB_CONFIG_WINDOW_WIDTH) != 0;
-		final boolean configureHeight = (valueMask & XCB_CONFIG_WINDOW_HEIGHT) != 0;
+        final int valueMask = request_event.getValue_mask();
 
-		return new GeometryRequest(	geometry,
-									configureX,
-									configureY,
-									configureWidth,
-									configureHeight);
-	}
+        final boolean configureX = (valueMask & XCB_CONFIG_WINDOW_X) != 0;
+        final boolean configureY = (valueMask & XCB_CONFIG_WINDOW_Y) != 0;
+        final boolean configureWidth = (valueMask & XCB_CONFIG_WINDOW_WIDTH) != 0;
+        final boolean configureHeight = (valueMask & XCB_CONFIG_WINDOW_HEIGHT) != 0;
 
-	private xcb_configure_request_event_t cast(final xcb_generic_event_t event_t) {
-		return new xcb_configure_request_event_t(	xcb_generic_event_t.getCPtr(event_t),
-													false);
-	}
+        return new GeometryRequest(geometry,
+                configureX,
+                configureY,
+                configureWidth,
+                configureHeight);
+    }
 
-	@Override
-	public AsyncListenable getTarget(final xcb_generic_event_t event_t) {
-		final xcb_configure_request_event_t request_event_t = cast(event_t);
-		final int windowId = request_event_t.getWindow();
+    private xcb_configure_request_event_t cast(final xcb_generic_event_t event_t) {
+        return new xcb_configure_request_event_t(xcb_generic_event_t.getCPtr(event_t),
+                false);
+    }
 
-		final boolean present = this.xWindowCache.isPresent(windowId);
-		final XWindow displayEventTarget = this.xWindowCache.getWindow(windowId);
-		if (!present) {
-			displayEventTarget.configureClientEvents();
-			// this is a bit of a dirty hack to work around X's model of client
-			// discovery.
-			final CreationNotify creationNotify = new CreationNotify(displayEventTarget);
-			this.display.post(creationNotify);
-		}
+    @Override
+    public AsyncListenable getTarget(final xcb_generic_event_t event_t) {
+        final xcb_configure_request_event_t request_event_t = cast(event_t);
+        final int windowId = request_event_t.getWindow();
 
-		return displayEventTarget;
-	}
+        final boolean present = this.xWindowCache.isPresent(windowId);
+        final DisplaySurface displayEventTarget = this.xWindowCache.getWindow(windowId);
+        if (!present) {
+            configureClientEvents(displayEventTarget);
+            // this is a bit of a dirty hack to work around X's model of client
+            // discovery.
+            final CreationNotify creationNotify = new CreationNotify(displayEventTarget);
+            this.display.post(creationNotify);
+        }
 
-	@Override
-	public Integer getEventCode() {
+        return displayEventTarget;
+    }
 
-		return this.eventCode;
-	}
+    private void configureClientEvents(final DisplaySurface window) {
+        final int winId = (Integer) window.getDisplaySurfaceHandle().getNativeHandle();
+
+        LOG.debug("[winId={}] configure client evens.",
+                winId);
+
+        xcb_change_window_attributes(this.xConnection.getConnectionReference(),
+                winId,
+                XCB_CW_EVENT_MASK,
+                CLIENT_EVENTS_CONFIG_BUFFER);
+        xcb_flush(this.xConnection.getConnectionReference());
+    }
+
+    @Override
+    public Integer getEventCode() {
+
+        return this.EVENT_CODE;
+    }
 }

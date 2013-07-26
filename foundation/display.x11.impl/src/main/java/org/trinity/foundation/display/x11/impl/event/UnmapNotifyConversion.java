@@ -27,8 +27,7 @@ import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindow;
-import org.trinity.foundation.display.x11.impl.XWindowCache;
+import org.trinity.foundation.display.x11.impl.XWindowCacheImpl;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -40,14 +39,14 @@ import com.google.inject.Singleton;
 @Immutable
 public class UnmapNotifyConversion implements XEventConversion {
 
-	private static final Logger logger = LoggerFactory.getLogger(UnmapNotifyConversion.class);
-	private static final Integer eventCode = XCB_UNMAP_NOTIFY;
-	private final XWindowCache xWindowCache;
+	private static final Logger LOG = LoggerFactory.getLogger(UnmapNotifyConversion.class);
+	private static final Integer EVENT_CODE = XCB_UNMAP_NOTIFY;
+	private final XWindowCacheImpl xWindowCache;
 	private final EventBus xEventBus;
 
 	@Inject
 	UnmapNotifyConversion(	@XEventBus final EventBus xEventBus,
-							final XWindowCache xWindowCache) {
+							final XWindowCacheImpl xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -56,8 +55,8 @@ public class UnmapNotifyConversion implements XEventConversion {
 	public DisplayEvent convert(final xcb_generic_event_t event) {
 		final xcb_unmap_notify_event_t unmap_notify_event = cast(event);
 
-		logger.debug(	"Received X event={}",
-						unmap_notify_event.getClass().getSimpleName());
+		LOG.debug("Received X event={}",
+                unmap_notify_event.getClass().getSimpleName());
 
 		this.xEventBus.post(unmap_notify_event);
 		return new HideNotify();
@@ -81,6 +80,6 @@ public class UnmapNotifyConversion implements XEventConversion {
 
 	@Override
 	public Integer getEventCode() {
-		return eventCode;
+		return EVENT_CODE;
 	}
 }

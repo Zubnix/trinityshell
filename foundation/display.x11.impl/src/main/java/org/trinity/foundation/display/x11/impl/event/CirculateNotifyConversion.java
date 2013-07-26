@@ -20,14 +20,14 @@ import org.freedesktop.xcb.xcb_circulate_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.StackingChangedNotify;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindow;
-import org.trinity.foundation.display.x11.impl.XWindowCache;
+import org.trinity.foundation.display.x11.impl.XWindowCacheImpl;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -39,45 +39,45 @@ import com.google.inject.Singleton;
 @Immutable
 public class CirculateNotifyConversion implements XEventConversion {
 
-	private static final Logger logger = LoggerFactory.getLogger(CirculateNotifyConversion.class);
-	private final Integer eventCode = XCB_CIRCULATE_NOTIFY;
-	private final EventBus xEventBus;
-	private final XWindowCache xWindowCache;
+    private static final Logger LOG = LoggerFactory.getLogger(CirculateNotifyConversion.class);
+    private static final Integer EVENT_CODE = XCB_CIRCULATE_NOTIFY;
+    private final EventBus xEventBus;
+    private final XWindowCacheImpl xWindowCache;
 
-	@Inject
-	CirculateNotifyConversion(	@XEventBus final EventBus xEventBus,
-								final XWindowCache xWindowCache) {
-		this.xEventBus = xEventBus;
-		this.xWindowCache = xWindowCache;
-	}
+    @Inject
+    CirculateNotifyConversion(@XEventBus final EventBus xEventBus,
+                              final XWindowCacheImpl xWindowCache) {
+        this.xEventBus = xEventBus;
+        this.xWindowCache = xWindowCache;
+    }
 
-	@Override
-	public DisplayEvent convert(final xcb_generic_event_t event_t) {
+    @Override
+    public DisplayEvent convert(final xcb_generic_event_t event_t) {
 
-		final xcb_circulate_notify_event_t circulate_notify_event = cast(event_t);
-		// TODO logging
-		logger.debug(	"Received X event={}",
-						circulate_notify_event.getClass().getSimpleName());
+        final xcb_circulate_notify_event_t circulate_notify_event = cast(event_t);
+        // TODO logging
+        LOG.debug("Received X event={}",
+                circulate_notify_event.getClass().getSimpleName());
 
-		this.xEventBus.post(circulate_notify_event);
+        this.xEventBus.post(circulate_notify_event);
 
-		return new StackingChangedNotify();
-	}
+        return new StackingChangedNotify();
+    }
 
-	private xcb_circulate_notify_event_t cast(final xcb_generic_event_t event_t) {
-		return new xcb_circulate_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
-												false);
-	}
+    private xcb_circulate_notify_event_t cast(final xcb_generic_event_t event_t) {
+        return new xcb_circulate_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
+                false);
+    }
 
-	@Override
-	public XWindow getTarget(final xcb_generic_event_t event_t) {
-		final xcb_circulate_notify_event_t circulate_notify_event_t = cast(event_t);
-		final int windowId = circulate_notify_event_t.getWindow();
-		return this.xWindowCache.getWindow(windowId);
-	}
+    @Override
+    public DisplaySurface getTarget(final xcb_generic_event_t event_t) {
+        final xcb_circulate_notify_event_t circulate_notify_event_t = cast(event_t);
+        final int windowId = circulate_notify_event_t.getWindow();
+        return this.xWindowCache.getWindow(windowId);
+    }
 
-	@Override
-	public Integer getEventCode() {
-		return this.eventCode;
-	}
+    @Override
+    public Integer getEventCode() {
+        return this.EVENT_CODE;
+    }
 }

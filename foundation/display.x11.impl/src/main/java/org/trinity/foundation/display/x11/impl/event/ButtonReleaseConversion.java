@@ -20,6 +20,7 @@ import org.freedesktop.xcb.xcb_button_press_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.ButtonNotify;
 import org.trinity.foundation.api.display.event.DisplayEvent;
@@ -30,8 +31,7 @@ import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindow;
-import org.trinity.foundation.display.x11.impl.XWindowCache;
+import org.trinity.foundation.display.x11.impl.XWindowCacheImpl;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -43,13 +43,13 @@ import com.google.inject.Singleton;
 @Immutable
 public class ButtonReleaseConversion implements XEventConversion {
 
-	private static final Logger logger = LoggerFactory.getLogger(ButtonReleaseConversion.class);
-	private static final Integer eventCode = XCB_BUTTON_RELEASE;
-	private final XWindowCache windowCache;
+	private static final Logger LOG = LoggerFactory.getLogger(ButtonReleaseConversion.class);
+	private static final Integer EVENT_CODE = XCB_BUTTON_RELEASE;
+	private final XWindowCacheImpl windowCache;
 	private final EventBus xEventBus;
 
 	@Inject
-	ButtonReleaseConversion(final XWindowCache windowCache,
+	ButtonReleaseConversion(final XWindowCacheImpl windowCache,
 							@XEventBus final EventBus xEventBus) {
 		this.windowCache = windowCache;
 		this.xEventBus = xEventBus;
@@ -61,8 +61,8 @@ public class ButtonReleaseConversion implements XEventConversion {
 		// press has same structure as release
 		final xcb_button_press_event_t button_release_event = cast(event_t);
 
-		logger.debug(	"Received X event={}",
-						button_release_event.getClass().getSimpleName());
+		LOG.debug("Received X event={}",
+                button_release_event.getClass().getSimpleName());
 
 		this.xEventBus.post(button_release_event);
 
@@ -93,11 +93,11 @@ public class ButtonReleaseConversion implements XEventConversion {
 
 	@Override
 	public Integer getEventCode() {
-		return eventCode;
+		return EVENT_CODE;
 	}
 
 	@Override
-	public XWindow getTarget(final xcb_generic_event_t event_t) {
+	public DisplaySurface getTarget(final xcb_generic_event_t event_t) {
 		// press has same structure as release
 		final xcb_button_press_event_t button_release_event_t = cast(event_t);
 		final int windowId = button_release_event_t.getEvent();

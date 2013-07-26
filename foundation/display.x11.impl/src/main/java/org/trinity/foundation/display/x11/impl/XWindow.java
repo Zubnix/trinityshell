@@ -85,10 +85,7 @@ public final class XWindow implements DisplaySurface {
 	private static final ByteBuffer RAISE_VALUE_LIST_BUFFER = allocateDirect(4).order(nativeOrder())
 			.putInt(XCB_STACK_MODE_ABOVE);
 	private static final int MOVE_VALUE_MASK = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
-	private static final int CLIENT_EVENT_MASK = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
-			| XCB_EVENT_MASK_STRUCTURE_NOTIFY;
-	private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
-			.putInt(CLIENT_EVENT_MASK);
+
 	private final DisplaySurfaceHandle resourceHandle;
 	private final XConnection xConnection;
 	private final XTime xTime;
@@ -506,26 +503,6 @@ public final class XWindow implements DisplaySurface {
 	@Override
 	public int hashCode() {
 		return getDisplaySurfaceHandle().getNativeHandle().hashCode();
-	}
-
-	/***************************************
-	 * Enable events coming from a client. Calling this method marks a window as
-	 * a client window.
-	 * <p>
-	 * Should only be called by the Display thread.
-	 ***************************************
-	 */
-	public void configureClientEvents() {
-		final int winId = getWindowId();
-
-		XWindow.LOG.debug(	"[winId={}] configure client evens.",
-							winId);
-
-		xcb_change_window_attributes(	XWindow.this.xConnection.getConnectionReference(),
-										winId,
-										XCB_CW_EVENT_MASK,
-										CLIENT_EVENTS_CONFIG_BUFFER);
-		xcb_flush(getConnectionRef());
 	}
 
 	@Override

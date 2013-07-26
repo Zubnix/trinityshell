@@ -20,6 +20,7 @@ import org.freedesktop.xcb.xcb_configure_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.GeometryNotify;
@@ -28,8 +29,7 @@ import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindow;
-import org.trinity.foundation.display.x11.impl.XWindowCache;
+import org.trinity.foundation.display.x11.impl.XWindowCacheImpl;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -41,13 +41,13 @@ import com.google.inject.Singleton;
 @Immutable
 public class ConfigureNotifyConversion implements XEventConversion {
 
-	private static final Logger logger = LoggerFactory.getLogger(ConfigureNotifyConversion.class);
-	private final static Integer eventCode = XCB_CONFIGURE_NOTIFY;
-	private final XWindowCache xWindowCache;
+	private static final Logger LOG = LoggerFactory.getLogger(ConfigureNotifyConversion.class);
+	private static final Integer EVENT_CODE = XCB_CONFIGURE_NOTIFY;
+	private final XWindowCacheImpl xWindowCache;
 	private final EventBus xEventBus;
 
 	@Inject
-	ConfigureNotifyConversion(	final XWindowCache xWindowCache,
+	ConfigureNotifyConversion(	final XWindowCacheImpl xWindowCache,
 								@XEventBus final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
@@ -57,8 +57,8 @@ public class ConfigureNotifyConversion implements XEventConversion {
 	public DisplayEvent convert(final xcb_generic_event_t event_t) {
 		final xcb_configure_notify_event_t configure_notify_event = cast(event_t);
 
-		logger.debug(	"Received X event={}",
-						configure_notify_event.getClass().getSimpleName());
+		LOG.debug("Received X event={}",
+                configure_notify_event.getClass().getSimpleName());
 
 		this.xEventBus.post(configure_notify_event);
 
@@ -81,7 +81,7 @@ public class ConfigureNotifyConversion implements XEventConversion {
 	}
 
 	@Override
-	public XWindow getTarget(final xcb_generic_event_t event_t) {
+	public DisplaySurface getTarget(final xcb_generic_event_t event_t) {
 		final xcb_configure_notify_event_t configure_notify_event_t = cast(event_t);
 		final int windowId = configure_notify_event_t.getWindow();
 		return this.xWindowCache.getWindow(windowId);
@@ -89,7 +89,7 @@ public class ConfigureNotifyConversion implements XEventConversion {
 
 	@Override
 	public Integer getEventCode() {
-		return eventCode;
+		return EVENT_CODE;
 	}
 
 }

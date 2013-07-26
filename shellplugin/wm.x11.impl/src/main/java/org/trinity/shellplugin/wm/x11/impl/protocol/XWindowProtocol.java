@@ -37,51 +37,44 @@ import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 @ExecutionContext(DisplayExecutor.class)
 public class XWindowProtocol {
 
-	private static final Logger LOG = LoggerFactory.getLogger(XWindowProtocol.class);
-	private static final ByteBuffer PROPERTY_MASK = allocateDirect(4).order(nativeOrder());
-	private final Map<Integer, DisplaySurface> clientsById = new HashMap<Integer, DisplaySurface>();
-	private final XConnection xConnection;
+    private static final Logger LOG = LoggerFactory.getLogger(XWindowProtocol.class);
+    private static final ByteBuffer PROPERTY_MASK = allocateDirect(4).order(nativeOrder());
+    private final XConnection xConnection;
 
-	@Inject
-	XWindowProtocol(final XConnection xConnection) {
-		this.xConnection = xConnection;
-	}
+    @Inject
+    XWindowProtocol(final XConnection xConnection) {
+        this.xConnection = xConnection;
+    }
 
-	public DisplaySurface findXWindow(final int clientId) {
-		return this.clientsById.get(Integer.valueOf(clientId));
-	}
+    public void register(final DisplaySurface xWindow) {
+        final Integer xWindowId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
+        listenForXProtocol(xWindowId);
+    }
 
-	public void register(final DisplaySurface xWindow) {
-		final Integer xWindowId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
-		this.clientsById.put(	xWindowId,
-								xWindow);
-		listenForXProtocol(xWindowId);
-	}
+    private void listenForXProtocol(final Integer xWindowId) {
+        final xcb_get_window_attributes_cookie_t get_window_attributes_cookie = xcb_get_window_attributes(this.xConnection
+                .getConnectionReference(),
+                xWindowId
+                        .intValue());
+        final xcb_generic_error_t e = new xcb_generic_error_t();
+        final xcb_get_window_attributes_reply_t get_window_attributes_reply = xcb_get_window_attributes_reply(this.xConnection
+                .getConnectionReference(),
+                get_window_attributes_cookie,
+                e);
+        if (xcb_generic_error_t.getCPtr(e) != 0) {
+            LOG.error("Got X error while querying window attributes. Window property changes will not be propagated!\n {}",
+                    XcbErrorUtil.toString(e));
+            return;
+        }
 
-	private void listenForXProtocol(final Integer xWindowId) {
-		final xcb_get_window_attributes_cookie_t get_window_attributes_cookie = xcb_get_window_attributes(	this.xConnection
-																													.getConnectionReference(),
-																											xWindowId
-																													.intValue());
-		xcb_generic_error_t e = new xcb_generic_error_t();
-		final xcb_get_window_attributes_reply_t get_window_attributes_reply = xcb_get_window_attributes_reply(	this.xConnection
-																														.getConnectionReference(),
-																												get_window_attributes_cookie,
-																												e);
-		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			LOG.error(	"Got X error while querying window attributes. Window property changes will not be propagated!\n {}",
-						XcbErrorUtil.toString(e));
-			return;
-		}
+        final int updatedEventMask = get_window_attributes_reply.getAll_event_masks() | XCB_EVENT_MASK_PROPERTY_CHANGE;
+        PROPERTY_MASK.putInt(0,
+                updatedEventMask);
 
-		int updatedEventMask = get_window_attributes_reply.getAll_event_masks() | XCB_EVENT_MASK_PROPERTY_CHANGE;
-		PROPERTY_MASK.putInt(	0,
-								updatedEventMask);
-
-		xcb_change_window_attributes(	this.xConnection.getConnectionReference(),
-										xWindowId.intValue(),
-										XCB_CW_EVENT_MASK,
-										PROPERTY_MASK);
-		xcb_flush(this.xConnection.getConnectionReference());
-	}
+        xcb_change_window_attributes(this.xConnection.getConnectionReference(),
+                xWindowId.intValue(),
+                XCB_CW_EVENT_MASK,
+                PROPERTY_MASK);
+        xcb_flush(this.xConnection.getConnectionReference());
+    }
 }

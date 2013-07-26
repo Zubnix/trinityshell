@@ -27,8 +27,7 @@ import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindow;
-import org.trinity.foundation.display.x11.impl.XWindowCache;
+import org.trinity.foundation.display.x11.impl.XWindowCacheImpl;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -40,14 +39,14 @@ import com.google.inject.Singleton;
 @Immutable
 public class FocusInConversion implements XEventConversion {
 
-	private static final Logger logger = LoggerFactory.getLogger(FocusInConversion.class);
-	private static final Integer eventCode = XCB_FOCUS_IN;
+	private static final Logger LOG = LoggerFactory.getLogger(FocusInConversion.class);
+	private static final Integer EVENT_CODE = XCB_FOCUS_IN;
 	private final EventBus xEventBus;
-	private final XWindowCache xWindowCache;
+	private final XWindowCacheImpl xWindowCache;
 
 	@Inject
 	FocusInConversion(	@XEventBus final EventBus xEventBus,
-						final XWindowCache xWindowCache) {
+						final XWindowCacheImpl xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -57,8 +56,8 @@ public class FocusInConversion implements XEventConversion {
 
 		final xcb_focus_in_event_t focus_in_event = cast(event_t);
 
-		logger.debug(	"Received X event={}",
-						focus_in_event.getClass().getSimpleName());
+		LOG.debug("Received X event={}",
+                focus_in_event.getClass().getSimpleName());
 
 		this.xEventBus.post(focus_in_event);
 
@@ -72,7 +71,7 @@ public class FocusInConversion implements XEventConversion {
 
 	@Override
 	public Integer getEventCode() {
-		return eventCode;
+		return EVENT_CODE;
 	}
 
 	@Override

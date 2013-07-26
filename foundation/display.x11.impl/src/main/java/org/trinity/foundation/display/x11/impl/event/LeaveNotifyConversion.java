@@ -27,8 +27,7 @@ import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventConversion;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindow;
-import org.trinity.foundation.display.x11.impl.XWindowCache;
+import org.trinity.foundation.display.x11.impl.XWindowCacheImpl;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -40,14 +39,14 @@ import com.google.inject.Singleton;
 @Immutable
 public class LeaveNotifyConversion implements XEventConversion {
 
-	private static final Logger logger = LoggerFactory.getLogger(LeaveNotifyConversion.class);
-	private final Integer eventCode = XCB_LEAVE_NOTIFY;
+	private static final Logger LOG = LoggerFactory.getLogger(LeaveNotifyConversion.class);
+	private static final Integer EVENT_CODE = XCB_LEAVE_NOTIFY;
 	private final EventBus xEventBus;
-	private final XWindowCache xWindowCache;
+	private final XWindowCacheImpl xWindowCache;
 
 	@Inject
 	LeaveNotifyConversion(	@XEventBus final EventBus xEventBus,
-							final XWindowCache xWindowCache) {
+							final XWindowCacheImpl xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -57,8 +56,8 @@ public class LeaveNotifyConversion implements XEventConversion {
 		// enter has same structure as leave
 		final xcb_enter_notify_event_t enter_notify_event = cast(event);
 
-		logger.debug(	"Received X event={}",
-						enter_notify_event.getClass().getSimpleName());
+		LOG.debug("Received X event={}",
+                enter_notify_event.getClass().getSimpleName());
 
 		this.xEventBus.post(enter_notify_event);
 
@@ -79,6 +78,6 @@ public class LeaveNotifyConversion implements XEventConversion {
 
 	@Override
 	public Integer getEventCode() {
-		return this.eventCode;
+		return this.EVENT_CODE;
 	}
 }
