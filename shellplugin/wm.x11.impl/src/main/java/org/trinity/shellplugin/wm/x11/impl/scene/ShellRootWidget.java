@@ -1,24 +1,37 @@
+/*******************************************************************************
+ * Trinity Shell Copyright (C) 2011 Erik De Rijcke
+ *
+ * This file is part of Trinity Shell.
+ *
+ * Trinity Shell is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * Trinity Shell is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ ******************************************************************************/
+
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
-import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
 
 import javax.annotation.concurrent.NotThreadSafe;
-import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
-import org.apache.onami.autobind.annotations.AnnotatedWith;
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.Screen;
 import org.trinity.foundation.api.render.PainterFactory;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.bindingkey.ShellRootNode;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.widget.BaseShellWidget;
@@ -31,12 +44,12 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-//bound in the module as autobind currently doesnt pick up the annotation key
-//@Bind
-//@Singleton
-//@AnnotatedWith
-//@ShellRootNode
-//@To(value = CUSTOM, customs = { ShellNodeParent.class, Desktop.class })
+// bound in the module as autobind currently doesnt pick up the annotation key
+// @Bind
+// @Singleton
+// @AnnotatedWith
+// @ShellRootNode
+// @To(value = CUSTOM, customs = { ShellNodeParent.class, Desktop.class })
 @ExecutionContext(ShellExecutor.class)
 @NotThreadSafe
 public class ShellRootWidget extends BaseShellWidget implements Desktop {

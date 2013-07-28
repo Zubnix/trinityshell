@@ -1,20 +1,31 @@
-/*
- * This file is part of HyperDrive. HyperDrive is free software: you can
- * redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version. HyperDrive is distributed in
- * the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
- * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
- * the GNU General Public License for more details. You should have received a
- * copy of the GNU General Public License along with HyperDrive. If not, see
- * <http://www.gnu.org/licenses/>.
- */
+/*******************************************************************************
+ * Trinity Shell Copyright (C) 2011 Erik De Rijcke
+ *
+ * This file is part of Trinity Shell.
+ *
+ * Trinity Shell is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * Trinity Shell is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ ******************************************************************************/
 package org.trinity.shell.scene.impl.manager;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
 
 import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
@@ -41,30 +52,27 @@ import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
 // TODO try to avoid castings
 // TODO refactor/rewrite
 // TODO evaluate layout algoritm corner cases (negative values that shouldn't
 // be negative. childs with size 0, ...)
 // TODO refactor to reuse code and for cleaner reading
 // =>rewrite this sh*t...
-@Bind(to=@To(value = CUSTOM, customs = ShellLayoutManagerLine.class))
+@Bind(to = @To(value = CUSTOM, customs = ShellLayoutManagerLine.class))
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
 public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
 
-	private static final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(1,
-																								new Margins(0));
+	private static final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(	1,
+																										new Margins(0));
 	private final ChildGeoListener childGeoListener = new ChildGeoListener();
 	private boolean horizontalDirection = true;
 	private boolean inverseDirection = false;
 
-    ShellLayoutManagerLineImpl() {
-    }
+	ShellLayoutManagerLineImpl() {
+	}
 
-    @Override
+	@Override
 	public void setHorizontalDirection(final boolean horizontalDirection) {
 		this.horizontalDirection = horizontalDirection;
 	}
@@ -240,8 +248,8 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	}
 
 	@Override
-	public void addChildNode(@Nonnull 	final ShellNode child,
-                             @Nonnull 	final ShellLayoutProperty layoutProperty) {
+	public void addChildNode(	@Nonnull final ShellNode child,
+								@Nonnull final ShellLayoutProperty layoutProperty) {
 		Preconditions.checkArgument(layoutProperty instanceof ShellLayoutPropertyLine);
 
 		child.register(this.childGeoListener);

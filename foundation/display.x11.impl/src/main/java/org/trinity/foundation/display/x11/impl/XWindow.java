@@ -1,20 +1,27 @@
-/*
- * Trinity Window Manager and Desktop Shell Copyright (C) 2012 Erik De Rijcke
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version. This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details. You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+/*******************************************************************************
+ * Trinity Shell Copyright (C) 2011 Erik De Rijcke
+ *
+ * This file is part of Trinity Shell.
+ *
+ * Trinity Shell is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * Trinity Shell is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
 import static com.google.common.util.concurrent.Futures.transform;
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
-import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
 import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
 import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
 import static org.freedesktop.xcb.LibXcb.xcb_flush;
@@ -29,10 +36,6 @@ import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MO
 import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
 import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
 import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
-import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
-import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW;
-import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW;
-import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY;
 import static org.freedesktop.xcb.xcb_input_focus_t.XCB_INPUT_FOCUS_NONE;
 import static org.freedesktop.xcb.xcb_stack_mode_t.XCB_STACK_MODE_ABOVE;
 import static org.freedesktop.xcb.xcb_stack_mode_t.XCB_STACK_MODE_BELOW;
@@ -85,7 +88,6 @@ public final class XWindow implements DisplaySurface {
 	private static final ByteBuffer RAISE_VALUE_LIST_BUFFER = allocateDirect(4).order(nativeOrder())
 			.putInt(XCB_STACK_MODE_ABOVE);
 	private static final int MOVE_VALUE_MASK = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
-
 	private final DisplaySurfaceHandle resourceHandle;
 	private final XConnection xConnection;
 	private final XTime xTime;
@@ -153,7 +155,7 @@ public final class XWindow implements DisplaySurface {
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-		return this.xConnection.getConnectionReference();
+		return this.xConnection.getConnectionReference().get();
 	}
 
 	@Override

@@ -1,14 +1,22 @@
-/*
- * Trinity Window Manager and Desktop Shell Copyright (C) 2012 Erik De Rijcke
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version. This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details. You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+/*******************************************************************************
+ * Trinity Shell Copyright (C) 2011 Erik De Rijcke
+ *
+ * This file is part of Trinity Shell.
+ *
+ * Trinity Shell is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * Trinity Shell is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ ******************************************************************************/
 package org.trinity.foundation.render.qt.impl.painter;
 
 import java.util.concurrent.Callable;
@@ -38,7 +46,6 @@ import com.trolltech.qt.gui.QWidget;
 public class PainterImpl implements Painter {
 
 	private static final Logger logger = LoggerFactory.getLogger(PainterImpl.class);
-
 	private final AsyncListenable model;
 	private final Binder binder;
 	private final ViewDiscovery viewDiscovery = new ViewDiscovery();
@@ -295,9 +302,7 @@ public class PainterImpl implements Painter {
 			@Override
 			public DisplaySurface call() {
 				final DisplaySurfaceHandle displaySurfaceHandle = new RenderDisplaySurfaceHandle(view);
-				final DisplaySurface displaySurface = PainterImpl.this.displaySurfaceFactory
-						.createDisplaySurface(displaySurfaceHandle);
-				return displaySurface;
+				return PainterImpl.this.displaySurfaceFactory.createDisplaySurface(displaySurfaceHandle);
 			}
 		};
 

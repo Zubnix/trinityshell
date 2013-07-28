@@ -1,17 +1,23 @@
-/*
- * Trinity Window Manager and Desktop Shell Copyright (C) 2012 Erik De Rijcke
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version. This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details. You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+/*******************************************************************************
+ * Trinity Shell Copyright (C) 2011 Erik De Rijcke
+ *
+ * This file is part of Trinity Shell.
+ *
+ * Trinity Shell is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * Trinity Shell is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ ******************************************************************************/
 package org.trinity.shell.api.plugin;
-
-import org.trinity.shell.api.Module;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.Service;
@@ -27,9 +33,8 @@ import com.google.common.util.concurrent.Service;
  * outside it's own shell plugin, instead use the {@link ListenableFuture}s
  * provided throughout the shell api. This keeps for a more thread safe and more
  * predictable behavior of shell plugins.
- * 
- * @see {@link Module}.
- * 
+ *
+ *
  ****************************************/
 public interface ShellPlugin extends Service {
 

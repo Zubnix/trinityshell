@@ -1,3 +1,23 @@
+/*******************************************************************************
+ * Trinity Shell Copyright (C) 2011 Erik De Rijcke
+ *
+ * This file is part of Trinity Shell.
+ *
+ * Trinity Shell is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * Trinity Shell is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ ******************************************************************************/
+
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
@@ -57,11 +77,11 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 		}
 	};
 	private final XConnection xConnection;
+	private final int wmDeleteWindowAtomId;
+	private final int wmProtocolsAtomId;
 	private DisplaySurface clientXWindow;
 	private String clientName = "";
 	private boolean canSendWmDeleteMsg;
-	private final int wmDeleteWindowAtomId;
-	private final int wmProtocolsAtomId;
 
 	@AssistedInject
 	ClientBarElement(	@ShellExecutor final ListeningExecutorService shellExecutor,
@@ -80,11 +100,11 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 		setClientXWindow(clientXWindow);
 	}
 
-	//called by shell executor
+	// called by shell executor
 	private void setClientXWindow(final DisplaySurface clientXWindow) {
 		ClientBarElement.this.clientXWindow = clientXWindow;
 
-		//FIXME execution context for protocol notifications is wrong
+		// FIXME execution context for protocol notifications is wrong
 
 		// client name handling
 		this.wmName.addProtocolListener(clientXWindow,
@@ -208,12 +228,12 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 		final xcb_generic_event_t generic_event = new xcb_generic_event_t(	xcb_client_message_event_t.getCPtr(client_message_event),
 																			false);
-		xcb_send_event(	this.xConnection.getConnectionReference(),
+		xcb_send_event(	this.xConnection.getConnectionReference().get(),
 						(short) 0,
 						winId.intValue(),
 						xcb_event_mask_t.XCB_EVENT_MASK_NO_EVENT,
 						generic_event);
-		xcb_flush(this.xConnection.getConnectionReference());
+		xcb_flush(this.xConnection.getConnectionReference().get());
 	}
 
 	@Override

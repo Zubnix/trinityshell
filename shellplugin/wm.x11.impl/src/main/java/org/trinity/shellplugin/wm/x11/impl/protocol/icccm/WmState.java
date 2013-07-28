@@ -1,3 +1,23 @@
+/*******************************************************************************
+ * Trinity Shell Copyright (C) 2011 Erik De Rijcke
+ *
+ * This file is part of Trinity Shell.
+ *
+ * Trinity Shell is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * Trinity Shell is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ ******************************************************************************/
+
 package org.trinity.shellplugin.wm.x11.impl.protocol.icccm;
 
 import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
@@ -8,6 +28,10 @@ import static org.freedesktop.xcb.LibXcb.xcb_get_property_value;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.Callable;
+
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
@@ -27,11 +51,7 @@ import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-@Bind(to=@To(IMPLEMENTATION))
+@Bind(to = @To(IMPLEMENTATION))
 @Singleton
 @NotThreadSafe
 @ExecutionContext(DisplayExecutor.class)
@@ -41,7 +61,7 @@ public class WmState extends AbstractCachedProtocol<int[]> {
 	private final ListeningExecutorService wmExecutor;
 	private final XConnection xConnection;
 
-    @Inject
+	@Inject
 	WmState(@DisplayExecutor final ListeningExecutorService displayExecutor,
 			final XConnection xConnection,
 			final XAtomCache xAtomCache) {
@@ -56,7 +76,8 @@ public class WmState extends AbstractCachedProtocol<int[]> {
 	protected ListenableFuture<Optional<int[]>> queryProtocol(final DisplaySurface xWindow) {
 
 		final Integer winId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
-		final xcb_get_property_cookie_t get_wm_state_cookie = xcb_get_property(	this.xConnection.getConnectionReference(),
+		final xcb_get_property_cookie_t get_wm_state_cookie = xcb_get_property(	this.xConnection
+																						.getConnectionReference().get(),
 																				(short) 0,
 																				winId.intValue(),
 																				getProtocolAtomId(),
@@ -71,7 +92,8 @@ public class WmState extends AbstractCachedProtocol<int[]> {
 				final int[] reply = new int[2];
 
 				final xcb_get_property_reply_t get_wm_state_reply = xcb_get_property_reply(	WmState.this.xConnection
-																									.getConnectionReference(),
+																									.getConnectionReference()
+																									.get(),
 																							get_wm_state_cookie,
 																							e);
 				if (xcb_generic_error_t.getCPtr(e) != 0) {

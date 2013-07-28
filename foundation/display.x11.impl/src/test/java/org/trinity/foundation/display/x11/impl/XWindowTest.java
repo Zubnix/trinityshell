@@ -31,8 +31,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import org.trinity.foundation.display.x11.api.XConnection;
+
 import xcb4j.LibXcbLoader;
 
 import com.google.common.util.concurrent.MoreExecutors;
@@ -41,17 +41,16 @@ import com.google.common.util.concurrent.MoreExecutors;
 @RunWith(MockitoJUnitRunner.class)
 public class XWindowTest {
 
-	private XWindow xWindow;
-	private int windowId;
-
 	private static final String displayName = ":99";
 	private static final int screenNr = 0;
-
-	private static Process xvfb;
-
 	public static XConnection xConnection;
-
 	public static xcb_screen_t screen;
+	private static Process xvfb;
+	private XWindow xWindow;
+	private int windowId;
+	// mocks
+	@Mock
+	private XTime xTime;
 
 	@BeforeClass
 	public static void startup() throws IOException, SecurityException, NoSuchFieldException {
@@ -65,7 +64,7 @@ public class XWindowTest {
 		XWindowTest.xConnection.open(	XWindowTest.displayName,
 										XWindowTest.screenNr);
 
-		final xcb_setup_t setup = LibXcb.xcb_get_setup(XWindowTest.xConnection.getConnectionReference());
+		final xcb_setup_t setup = LibXcb.xcb_get_setup(XWindowTest.xConnection.getConnectionReference().get());
 		final xcb_screen_iterator_t iter = LibXcb.xcb_setup_roots_iterator(setup);
 		XWindowTest.screen = iter.getData();
 	}
@@ -77,17 +76,13 @@ public class XWindowTest {
 		XWindowTest.xvfb.destroy();
 	}
 
-	// mocks
-	@Mock
-	private XTime xTime;
-
 	@Before
 	public void setup() throws SecurityException, NoSuchFieldException, IllegalArgumentException,
 			IllegalAccessException {
 
-		this.windowId = LibXcb.xcb_generate_id(XWindowTest.xConnection.getConnectionReference());
+		this.windowId = LibXcb.xcb_generate_id(XWindowTest.xConnection.getConnectionReference().get());
 		final ByteBuffer value_list = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
-		LibXcb.xcb_create_window(	XWindowTest.xConnection.getConnectionReference(),
+		LibXcb.xcb_create_window(	XWindowTest.xConnection.getConnectionReference().get(),
 									(short) LibXcbConstants.XCB_COPY_FROM_PARENT,
 									this.windowId,
 									XWindowTest.screen.getRoot(),
@@ -112,7 +107,7 @@ public class XWindowTest {
 	@After
 	public void teardown() {
 		// destroy xwindow instance
-		LibXcb.xcb_destroy_window(	XWindowTest.xConnection.getConnectionReference(),
+		LibXcb.xcb_destroy_window(	XWindowTest.xConnection.getConnectionReference().get(),
 									this.windowId);
 	}
 

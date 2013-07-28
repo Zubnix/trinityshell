@@ -1,14 +1,22 @@
-/*
- * Trinity Window Manager and Desktop Shell Copyright (C) 2012 Erik De Rijcke
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version. This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details. You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+/*******************************************************************************
+ * Trinity Shell Copyright (C) 2011 Erik De Rijcke
+ *
+ * This file is part of Trinity Shell.
+ *
+ * Trinity Shell is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * Trinity Shell is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ ******************************************************************************/
 package org.trinity.foundation.display.x11.impl.event;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_KEY_RELEASE;
@@ -20,19 +28,19 @@ import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.display.event.KeyNotify;
 import org.trinity.foundation.api.display.input.InputModifiers;
 import org.trinity.foundation.api.display.input.Key;
 import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.display.input.Momentum;
-import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.foundation.display.x11.api.XEventConversion;
+import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindowCacheImpl;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -41,28 +49,28 @@ import com.google.inject.Singleton;
 @Singleton
 @ExecutionContext(DisplayExecutor.class)
 @Immutable
-public class KeyReleaseConversion implements XEventConversion {
+public class KeyReleaseHandler implements XEventHandler {
 
-	private static final Logger LOG = LoggerFactory.getLogger(KeyReleaseConversion.class);
+	private static final Logger LOG = LoggerFactory.getLogger(KeyReleaseHandler.class);
 	private static final Integer EVENT_CODE = XCB_KEY_RELEASE;
 	private final EventBus xEventBus;
 	private final XWindowCacheImpl xWindowCache;
 
 	@Inject
-	KeyReleaseConversion(	@XEventBus final EventBus xEventBus,
-							final XWindowCacheImpl xWindowCache) {
+	KeyReleaseHandler(	@XEventBus final EventBus xEventBus,
+						final XWindowCacheImpl xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
 
 	@Override
-	public DisplayEvent convert(final xcb_generic_event_t event) {
+	public Optional<KeyNotify> handle(final xcb_generic_event_t event) {
 
 		// press has same structure as release.
 		final xcb_key_press_event_t key_release_event = cast(event);
 
-		LOG.debug("Received X event={}",
-                key_release_event.getClass().getSimpleName());
+		LOG.debug(	"Received X event={}",
+					key_release_event.getClass().getSimpleName());
 
 		this.xEventBus.post(key_release_event);
 		final int keyCode = key_release_event.getDetail();
@@ -75,7 +83,7 @@ public class KeyReleaseConversion implements XEventConversion {
 														key,
 														inputModifiers);
 
-		return new KeyNotify(input);
+		return Optional.of(new KeyNotify(input));
 	}
 
 	private xcb_key_press_event_t cast(final xcb_generic_event_t event) {
@@ -84,12 +92,12 @@ public class KeyReleaseConversion implements XEventConversion {
 	}
 
 	@Override
-	public AsyncListenable getTarget(final xcb_generic_event_t event_t) {
+	public Optional<DisplaySurface> getTarget(final xcb_generic_event_t event_t) {
 		// press has same structure as release.
 		final xcb_key_press_event_t key_release_event_t = cast(event_t);
 		final int windowId = key_release_event_t.getEvent();
 
-		return this.xWindowCache.getWindow(windowId);
+		return Optional.of(this.xWindowCache.getWindow(windowId));
 	}
 
 	@Override
