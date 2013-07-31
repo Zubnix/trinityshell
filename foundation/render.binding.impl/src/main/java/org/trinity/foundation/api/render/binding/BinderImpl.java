@@ -42,9 +42,9 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.input.Input;
 import org.trinity.foundation.api.render.binding.view.DataContext;
-import org.trinity.foundation.api.render.binding.view.InputSignal;
+import org.trinity.foundation.api.render.binding.view.EventSignal;
+import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
 import org.trinity.foundation.api.render.binding.view.InputSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.view.PropertyAdapter;
@@ -52,7 +52,6 @@ import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 import org.trinity.foundation.api.render.binding.view.ViewElementTypes;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
-import org.trinity.foundation.api.render.binding.view.delegate.InputListenerInstallerDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
 import ca.odell.glazedlists.EventList;
@@ -69,6 +68,7 @@ import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 @Bind
@@ -83,7 +83,7 @@ public class BinderImpl implements Binder {
 	private static final String GET_BOOLEAN_PREFIX = "is";
 	private static final String GET_PREFIX = "get";
 	private final PropertySlotInvocatorDelegate propertySlotDelegate;
-	private final InputListenerInstallerDelegate inputListenerInstallerDelegate;
+	private final Injector injector;
 	private final ChildViewDelegate childViewDelegate;
 	private final ViewElementTypes viewElementTypes;
 	private final Map<Object, Object> dataContextValueByView = new WeakHashMap<Object, Object>();
@@ -94,12 +94,12 @@ public class BinderImpl implements Binder {
 	private final Map<Object, Map<Object, DataContext>> dataContextByViewByParentDataContextValue = new WeakHashMap<Object, Map<Object, DataContext>>();
 
 	@Inject
-	BinderImpl(	final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate,
-				final InputListenerInstallerDelegate inputListenerInstallerDelegate,
+	BinderImpl(	final Injector injector,
+				final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate,
 				final ChildViewDelegate childViewDelegate,
 				final ViewElementTypes viewElementTypes) {
+		this.injector = injector;
 		this.childViewDelegate = childViewDelegate;
-		this.inputListenerInstallerDelegate = inputListenerInstallerDelegate;
 		this.propertySlotDelegate = propertySlotInvocatorDelegate;
 		this.viewElementTypes = viewElementTypes;
 	}
@@ -258,10 +258,10 @@ public class BinderImpl implements Binder {
 						view);
 
 		if (optionalInputSignals.isPresent()) {
-			final InputSignal[] inputSignals = optionalInputSignals.get().value();
-			bindInputSignals(	dataContext,
-								view,
-								inputSignals);
+			final EventSignal[] eventSignals = optionalInputSignals.get().value();
+			bindEventSignals(dataContext,
+					view,
+					eventSignals);
 		}
 
 		if (optionalObservableCollection.isPresent()) {
@@ -463,21 +463,22 @@ public class BinderImpl implements Binder {
 		}
 	}
 
-	protected void bindInputSignals(final Object dataContext,
-									final Object view,
-									final InputSignal[] inputSignals) {
+	protected void bindEventSignals(final Object dataContext,
+	                                final Object view,
+	                                final EventSignal[] eventSignals) {
 		checkNotNull(dataContext);
 		checkNotNull(view);
-		checkNotNull(inputSignals);
+		checkNotNull(eventSignals);
 
-		for (final InputSignal inputSignal : inputSignals) {
-			final Class<? extends Input> inputType = inputSignal.inputType();
-			final String inputSlotName = inputSignal.name();
+		for (final EventSignal eventSignal : eventSignals) {
+			final Class<? extends EventSignalFilter> eventSignalFilterType = eventSignal.filter();
+			final String inputSlotName = eventSignal.name();
 
-			this.inputListenerInstallerDelegate.installViewInputListener(	inputType,
-																			view,
-																			dataContext,
-																			inputSlotName);
+			final EventSignalFilter eventSignalFilter = this.injector.getInstance(eventSignalFilterType);
+			eventSignalFilter.installFilter(view,
+											new SignalImpl(	dataContext,
+															inputSlotName));
+
 		}
 	}
 

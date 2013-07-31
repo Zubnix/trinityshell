@@ -14,10 +14,8 @@
 
 	<modules>
 		<module>api</module>
-		<module>input.impl</module>
 		<module>scene.impl</module>
 		<module>plugin.impl</module>
 		<module>surface.impl</module>
-		<module>widget.impl</module>
 	</modules>
 </project>

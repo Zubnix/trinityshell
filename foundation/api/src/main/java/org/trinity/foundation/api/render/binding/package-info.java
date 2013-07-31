@@ -16,7 +16,7 @@
  * <p>
  * Model bindings:
  * <ul>
- * <li>{@link org.trinity.foundation.api.render.binding.model.InputSlot}:</li>
+ * <li>{@link org.trinity.foundation.api.render.binding.model.EventSlot}:</li>
  * <li>{@link org.trinity.foundation.api.render.binding.model.PropertyChanged}:</li>
  * <li>{@link org.trinity.foundation.api.render.binding.model.ViewReference}:</li>
  * </ul>

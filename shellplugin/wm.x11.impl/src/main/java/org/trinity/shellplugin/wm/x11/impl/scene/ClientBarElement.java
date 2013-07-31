@@ -39,8 +39,6 @@ import org.freedesktop.xcb.xcb_icccm_get_wm_protocols_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.input.Momentum;
-import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
@@ -70,10 +68,9 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	private final ReceivesPointerInput closeButton = new ReceivesPointerInput() {
 		// called by shell thread.
 		@Override
-		public void onPointerInput(final PointerInput pointerInput) {
-			if (pointerInput.getMomentum() == Momentum.STOPPED) {
-				handleClientCloseRequest();
-			}
+		public void onPointerInput() {
+
+			handleClientCloseRequest();
 		}
 	};
 	private final XConnection xConnection;
@@ -249,14 +246,15 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	// called by shell thread.
 	@Override
-	public void onPointerInput(final PointerInput pointerInput) {
+	public void onPointerInput() {
 		// do something with client, eg raise & give focus
 		// FIXME dont use executor, already invoked by shell thread.
-		this.shellExecutor.submit(new Runnable() {
+		this.shellExecutor.submit(new Callable<Void>() {
 			@Override
-			public void run() {
+			public Void call() {
 				ClientBarElement.this.clientXWindow.setInputFocus();
 				ClientBarElement.this.clientXWindow.raise();
+				return null;
 			}
 		});
 	}

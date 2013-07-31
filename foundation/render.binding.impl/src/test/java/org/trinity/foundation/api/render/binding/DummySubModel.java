@@ -2,9 +2,6 @@ package org.trinity.foundation.api.render.binding;
 
 import java.util.concurrent.ExecutorService;
 
-import org.trinity.foundation.api.display.input.KeyboardInput;
-import org.trinity.foundation.api.display.input.PointerInput;
-import org.trinity.foundation.api.render.binding.model.InputSlot;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.api.shared.AsyncListenable;
 
@@ -23,13 +20,11 @@ public class DummySubModel implements AsyncListenable {
 		return this.booleanProperty;
 	}
 
-	@InputSlot
-	public void onClick(final PointerInput input) {
+	public void onClick() {
 
 	}
 
-	@InputSlot
-	public void onKey(final KeyboardInput keyboardInput) {
+	public void onKey() {
 
 	}
 

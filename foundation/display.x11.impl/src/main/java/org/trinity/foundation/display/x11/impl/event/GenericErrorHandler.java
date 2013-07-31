@@ -21,7 +21,6 @@ package org.trinity.foundation.display.x11.impl.event;
 
 import javax.annotation.concurrent.Immutable;
 
-import com.google.common.base.Optional;
 import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
@@ -30,9 +29,10 @@ import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventHandler;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -58,13 +58,13 @@ public class GenericErrorHandler implements XEventHandler {
 		this.xEventBus.post(request_error);
 
 		throw new RuntimeException(XcbErrorUtil.toString(request_error));
-		// TODO error event
+		// TODO error event?
 	}
 
 	@Override
 	public Optional<AsyncListenable> getTarget(final xcb_generic_event_t event_t) {
-		// TODO return display server
-		return null;
+		// TODO return display server?
+		return Optional.absent();
 	}
 
 	@Override

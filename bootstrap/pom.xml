@@ -51,12 +51,6 @@
 
 
 		<!-- shell implementation -->
-		<!-- input -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>shell.input.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 		<!-- scene -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -67,12 +61,6 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>shell.surface.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<!-- widget -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>shell.widget.impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- plugin -->
@@ -102,7 +90,7 @@
 			<version>${project.version}</version>
 		</dependency>
 
-
+        <!-- logging implementation -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>

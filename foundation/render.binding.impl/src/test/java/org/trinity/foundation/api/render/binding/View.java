@@ -1,8 +1,7 @@
 package org.trinity.foundation.api.render.binding;
 
-import org.trinity.foundation.api.display.input.KeyboardInput;
 import org.trinity.foundation.api.render.binding.view.DataContext;
-import org.trinity.foundation.api.render.binding.view.InputSignal;
+import org.trinity.foundation.api.render.binding.view.EventSignal;
 import org.trinity.foundation.api.render.binding.view.InputSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
@@ -15,10 +14,8 @@ public class View {
 	@DataContext("otherSubModel.subSubModel")
 	@PropertySlots(@PropertySlot(propertyName = "booleanProperty", methodName = "handleStringProperty", argumentTypes = String.class, adapter = BooleanToStringAdapter.class))
 	private SubView mouseInputSubView = new SubView();
-
-	@InputSignals(@InputSignal(name = "onKey", inputType = KeyboardInput.class))
+	@InputSignals(@EventSignal(name = "onKey", filter = DummyEventSignalFilter.class))
 	private SubView keyInputSubView = new SubView();
-
 	private String className;
 
 	public SubView getMouseInputSubView() {
@@ -37,11 +34,11 @@ public class View {
 		this.keyInputSubView = keyInputSubView;
 	}
 
-	public void setClassName(String className) {
-		this.className = className;
-	}
-
 	public String getClassName() {
 		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
 	}
 }

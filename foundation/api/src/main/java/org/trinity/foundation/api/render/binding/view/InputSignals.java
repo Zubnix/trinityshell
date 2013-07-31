@@ -25,17 +25,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /***************************************
- * Groups all installed {@link InputSignal}s of a view.
+ * Groups all installed {@link EventSignal}s of a view.
  ***************************************
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.FIELD })
 public @interface InputSignals {
 	/***************************************
-	 * All {@code InputSignal}s present on a view element.
+	 * All {@code EventSignal}s present on a view element.
 	 *
-	 * @return {@link InputSignal}s
+	 * @return {@link EventSignal}s
 	 ***************************************
 	 */
-	InputSignal[] value();
+	EventSignal[] value();
 }

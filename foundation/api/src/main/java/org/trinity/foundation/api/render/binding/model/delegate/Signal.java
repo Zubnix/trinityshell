@@ -17,34 +17,19 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.render.qt.impl.eventconverters;
+package org.trinity.foundation.api.render.binding.model.delegate;
 
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
-import org.trinity.foundation.api.display.input.Momentum;
+import javax.annotation.Nonnull;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.trolltech.qt.core.QEvent;
-import com.trolltech.qt.core.QEvent.Type;
+import com.google.common.util.concurrent.ListenableFuture;
 
-import static org.apache.onami.autobind.annotations.To.Type.INTERFACES;
+/***************************************
+ * A convenience service to call a method used as an event slot based on widget
+ * toolkit specific input.
+ *
+ ***************************************
+ */
+public interface Signal {
 
-@Bind(to=@To(INTERFACES),multiple = true)
-@Singleton
-public class KeyPressedConversion extends AbstractKeyConversion {
-
-	@Inject
-	KeyPressedConversion() {
-	}
-
-	@Override
-	public Type getQEventType() {
-		return QEvent.Type.KeyPress;
-	}
-
-	@Override
-	public Momentum getMomemtum() {
-		return Momentum.STARTED;
-	}
+	void emit();
 }

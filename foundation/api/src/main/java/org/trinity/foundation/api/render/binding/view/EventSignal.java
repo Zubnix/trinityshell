@@ -17,38 +17,36 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.shell.api.input;
+package org.trinity.foundation.api.render.binding.view;
 
-import java.util.List;
-
-import org.trinity.foundation.api.display.input.InputModifiers;
-import org.trinity.foundation.api.display.input.Key;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /***************************************
- * Creates key bindings with a specific action. A created key binding is not
- * immediately active, but has to made active explicitly.
+ * Mark a view as a producer of listenable events. It's up to the
+ * {@link org.trinity.foundation.api.render.binding.view.delegate.EventListenerInstallerDelegate}
+ * to make sure the correct event listeners are installed and the correct event
+ * slot is called by the correct execution context.
+ * <p>
+ * An {@link EventSignal} is used as an argument of {@link InputSignals}.
  *
+ * @see org.trinity.foundation.api.render.binding.model.delegate.Signal
  ***************************************
  */
-public interface KeysBindingFactory {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({})
+public @interface EventSignal {
 
-	// FIXME should return a future, shellkeybinding should be created by the
-	// shell thread.
 	/***************************************
-	 * Create a new inactive key binding.
+	 * The name of the eventslot that should be invoked. The name of the
+	 * {@code EventSlot} is the name of the method that it annotates.
 	 *
-	 * @param keys
-	 *            A {@link List} of {@link Key}s of which at least one should be
-	 *            pressed.
-	 * @param inputModifiers
-	 *            {@link InputModifiers} that should be active.
-	 * @param action
-	 *            The {@link Runnable} that should be executed when the correct
-	 *            keys are pressed.
-	 * @return a new {@link ShellKeysBinding}.
+	 * @return a method name.
 	 ***************************************
 	 */
-	ShellKeysBinding createKeysBinding(	List<Key> keys,
-										InputModifiers inputModifiers,
-										KeyBindAction action);
+	String name();
+
+	Class<? extends EventSignalFilter> filter();
+
 }

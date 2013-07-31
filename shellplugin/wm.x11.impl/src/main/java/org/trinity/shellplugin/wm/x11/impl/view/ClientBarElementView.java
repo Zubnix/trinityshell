@@ -20,13 +20,13 @@
 
 package org.trinity.shellplugin.wm.x11.impl.view;
 
-import org.trinity.foundation.api.display.input.PointerInput;
 import org.trinity.foundation.api.render.binding.view.DataContext;
-import org.trinity.foundation.api.render.binding.view.InputSignal;
+import org.trinity.foundation.api.render.binding.view.EventSignal;
 import org.trinity.foundation.api.render.binding.view.InputSignals;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 import org.trinity.foundation.api.shared.Size;
+import org.trinity.shellplugin.widget.impl.view.qt.LeftMouseButtonFilter;
 import org.trinity.shellplugin.wm.api.ImageDefinition;
 
 import com.google.common.base.Preconditions;
@@ -42,7 +42,7 @@ class ClientBarElementView extends QFrame {
 	@PropertySlot(propertyName = "imageDefinition", methodName = "setImageDefinition", argumentTypes = { ImageDefinition.class }) // HasImageDefinition
 	})
 	@InputSignals({ //
-	@InputSignal(name = "onPointerInput", inputType = PointerInput.class) // ReceivesPointerInput
+	@EventSignal(name = "onPointerInput", filter = LeftMouseButtonFilter.class) // ReceivesPointerInput
 	})
 	QLabel clientIconView = new QLabel() {
 		{
@@ -73,7 +73,7 @@ class ClientBarElementView extends QFrame {
 	@PropertySlot(propertyName = "text", methodName = "setText", argumentTypes = { String.class }) // HasText
 	})
 	@InputSignals({ //
-	@InputSignal(name = "onPointerInput", inputType = PointerInput.class) // ReceivesPointerInput
+	@EventSignal(name = "onPointerInput", filter = LeftMouseButtonFilter.class) // ReceivesPointerInput
 	})
 	QLabel clientNameView = new QLabel() {
 		{
@@ -83,7 +83,7 @@ class ClientBarElementView extends QFrame {
 	};
 	@DataContext("closeButton")
 	@InputSignals({ //
-	@InputSignal(name = "onPointerInput", inputType = PointerInput.class) // ReceivesPointerInput
+	@EventSignal(name = "onPointerInput", filter = LeftMouseButtonFilter.class) // ReceivesPointerInput
 	})
 	QFrame closeButtonView = new QFrame() {
 		// workaround for jambi css bug
