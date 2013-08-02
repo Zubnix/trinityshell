@@ -1,7 +1,8 @@
-/pom.xml.releaseBackup
-/release.properties
-/.settings
-/.project
+*pom.xml.releaseBackup*
+*release.properties*
+*.settings*
+*.project*
 *.iml
 *.idea
 target
+trinity.log
