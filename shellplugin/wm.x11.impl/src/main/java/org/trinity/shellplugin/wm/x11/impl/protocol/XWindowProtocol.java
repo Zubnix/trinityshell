@@ -31,8 +31,10 @@ import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE;
 
 import java.nio.ByteBuffer;
+import java.util.concurrent.Callable;
 
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -49,7 +51,10 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
-@NotThreadSafe
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+
+@ThreadSafe
 @Bind(to = @To(IMPLEMENTATION))
 @Singleton
 @ExecutionContext(DisplayExecutor.class)
@@ -57,16 +62,25 @@ public class XWindowProtocol {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XWindowProtocol.class);
 	private static final ByteBuffer PROPERTY_MASK = allocateDirect(4).order(nativeOrder());
+	private final ListeningExecutorService displayExecutor;
 	private final XConnection xConnection;
 
 	@Inject
-	XWindowProtocol(final XConnection xConnection) {
+	XWindowProtocol(@DisplayExecutor ListeningExecutorService displayExecutor,
+					final XConnection xConnection) {
+		this.displayExecutor = displayExecutor;
 		this.xConnection = xConnection;
 	}
 
-	public void register(final DisplaySurface xWindow) {
-		final Integer xWindowId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
-		listenForXProtocol(xWindowId);
+	public ListenableFuture<Void> register(final DisplaySurface xWindow) {
+		return displayExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() {
+				final Integer xWindowId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
+				listenForXProtocol(xWindowId);
+				return null;
+			}
+		});
 	}
 
 	private void listenForXProtocol(final Integer xWindowId) {

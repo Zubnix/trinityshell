@@ -27,6 +27,7 @@ import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
 import java.util.concurrent.Callable;
 
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -49,7 +50,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 @Bind(to = @To(IMPLEMENTATION))
 @Singleton
-@NotThreadSafe
+@ThreadSafe
 @ExecutionContext(DisplayExecutor.class)
 public class WmName extends AbstractCachedProtocol<xcb_icccm_get_text_property_reply_t> {
 

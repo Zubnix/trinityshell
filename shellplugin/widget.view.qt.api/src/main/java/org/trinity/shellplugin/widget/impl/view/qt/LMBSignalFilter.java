@@ -30,7 +30,6 @@ import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.core.Qt;
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QMouseEvent;
-import com.trolltech.qt.gui.QWidget;
 
 @Bind
 public class LMBSignalFilter implements EventSignalFilter {
@@ -41,13 +40,13 @@ public class LMBSignalFilter implements EventSignalFilter {
 	@Override
 	public void installFilter(	final Object view,
 								final Signal signal) {
-		Preconditions.checkArgument(view instanceof QWidget,
-									"Can only install filter on views of type " + QWidget.class.getName());
+		Preconditions.checkArgument(view instanceof QObject,
+									"Can only install filter on views of type " + QObject.class.getName());
 
 		QApplication.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				QWidget qView = (QWidget) view;
+				QObject qView = (QObject) view;
 				qView.installEventFilter(new QObject() {
 					@Override
 					public boolean eventFilter(	QObject watched,
