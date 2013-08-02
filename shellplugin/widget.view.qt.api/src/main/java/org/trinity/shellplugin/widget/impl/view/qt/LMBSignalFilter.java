@@ -33,9 +33,9 @@ import com.trolltech.qt.gui.QMouseEvent;
 import com.trolltech.qt.gui.QWidget;
 
 @Bind
-public class LeftMouseButtonFilter implements EventSignalFilter {
+public class LMBSignalFilter implements EventSignalFilter {
 
-	LeftMouseButtonFilter() {
+	LMBSignalFilter() {
 	}
 
 	@Override
@@ -55,7 +55,8 @@ public class LeftMouseButtonFilter implements EventSignalFilter {
 						if (event.type().equals(QEvent.Type.MouseButtonPress)) {
 							QMouseEvent mouseEvent = (QMouseEvent) event;
 							if (mouseEvent.button().equals(Qt.MouseButton.LeftButton)) {
-								signal.emit();
+								signal.fire();
+								return true;
 							}
 						}
 						return false;

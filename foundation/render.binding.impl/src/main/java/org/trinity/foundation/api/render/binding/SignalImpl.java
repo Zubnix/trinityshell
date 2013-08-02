@@ -83,7 +83,7 @@ public class SignalImpl implements Signal {
 	}
 
 	@Override
-	public void emit() {
+	public void fire() {
 		try {
 			final Optional<Method> optionalInputSlot = findSlot(viewModel.getClass(),
 																methodName);

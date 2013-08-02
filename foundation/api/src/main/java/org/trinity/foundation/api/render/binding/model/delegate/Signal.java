@@ -24,12 +24,12 @@ import javax.annotation.Nonnull;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
- * A convenience service to call a method used as an event slot based on widget
- * toolkit specific input.
+ * A convenience service to call a method used as an event signal slot based on widget
+ * toolkit specific events.
  *
  ***************************************
  */
 public interface Signal {
 
-	void emit();
+	void fire();
 }
