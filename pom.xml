@@ -103,13 +103,13 @@
 
         <!--Onami guice autobinding annotations -->
         <dependency>
-            <groupId>org.apache.onami.autobind</groupId>
-            <artifactId>org.apache.onami.autobind.core</artifactId>
+            <groupId>org.apache.onami.autobind.scanner</groupId>
+            <artifactId>org.apache.onami.autobind.scanner.asm</artifactId>
             <version>${onami.autobind.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.onami.autobind.scanner</groupId>
-            <artifactId>org.apache.onami.autobind.scanner.asm</artifactId>
+            <groupId>org.apache.onami.autobind</groupId>
+            <artifactId>org.apache.onami.autobind.configuration</artifactId>
             <version>${onami.autobind.version}</version>
         </dependency>
 
