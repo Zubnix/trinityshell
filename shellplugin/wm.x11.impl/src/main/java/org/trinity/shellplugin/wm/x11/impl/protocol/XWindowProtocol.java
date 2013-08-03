@@ -33,7 +33,6 @@ import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANG
 import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
 
-import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -101,9 +100,9 @@ public class XWindowProtocol {
 			return;
 		}
 
-		final int updatedEventMask = get_window_attributes_reply.getAll_event_masks() | XCB_EVENT_MASK_PROPERTY_CHANGE;
-		PROPERTY_MASK.putInt(	0,
-								updatedEventMask);
+		final int updatedEventMask = get_window_attributes_reply.getYour_event_mask() | XCB_EVENT_MASK_PROPERTY_CHANGE;
+		PROPERTY_MASK.clear();
+		PROPERTY_MASK.putInt(updatedEventMask);
 
 		xcb_change_window_attributes(	this.xConnection.getConnectionReference().get(),
 										xWindowId.intValue(),
