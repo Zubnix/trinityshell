@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.concurrent.ExecutionException;
 
-import com.google.inject.Injector;
 import org.junit.Test;
 import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
 import org.trinity.foundation.api.render.binding.view.ViewElementTypes;
@@ -15,6 +14,8 @@ import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.inject.Injector;
 
 public class ObservableCollectionBindingTest {
 
@@ -38,10 +39,11 @@ public class ObservableCollectionBindingTest {
 		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
 
 		final Binder binder = new BinderImpl(	injector,
-				propertySlotInvocatorDelegate,
-				childViewDelegate,
-				viewElementTypes);
-		binder.bind(model,
+												propertySlotInvocatorDelegate,
+												childViewDelegate,
+												viewElementTypes);
+		binder.bind(MoreExecutors.sameThreadExecutor(),
+					model,
 					view);
 
 		verify(	childViewDelegate,
@@ -73,10 +75,11 @@ public class ObservableCollectionBindingTest {
 		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
 
 		final Binder binder = new BinderImpl(	injector,
-				propertySlotInvocatorDelegate,
-				childViewDelegate,
-				viewElementTypes);
-		binder.bind(model,
+												propertySlotInvocatorDelegate,
+												childViewDelegate,
+												viewElementTypes);
+		binder.bind(MoreExecutors.sameThreadExecutor(),
+					model,
 					view);
 
 		final DummySubModel childDummySubModel = new DummySubModel();
@@ -116,10 +119,11 @@ public class ObservableCollectionBindingTest {
 		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
 
 		final Binder binder = new BinderImpl(	injector,
-				propertySlotInvocatorDelegate,
-				childViewDelegate,
-				viewElementTypes);
-		binder.bind(model,
+												propertySlotInvocatorDelegate,
+												childViewDelegate,
+												viewElementTypes);
+		binder.bind(MoreExecutors.sameThreadExecutor(),
+					model,
 					view);
 
 		model.getDummySubModels().remove(0);
@@ -155,10 +159,11 @@ public class ObservableCollectionBindingTest {
 		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
 
 		final Binder binder = new BinderImpl(	injector,
-				propertySlotInvocatorDelegate,
-				childViewDelegate,
-				viewElementTypes);
-		binder.bind(model,
+												propertySlotInvocatorDelegate,
+												childViewDelegate,
+												viewElementTypes);
+		binder.bind(MoreExecutors.sameThreadExecutor(),
+					model,
 					view);
 
 		final DummySubModel childDummySubModel0 = new DummySubModel();

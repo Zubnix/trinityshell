@@ -246,7 +246,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 		return this.clientName;
 	}
 
-	@PropertyChanged("text")
+	@PropertyChanged(value = "text", executor = ShellExecutor.class)
 	public void setText(final String text) {
 		this.clientName = text;
 	}

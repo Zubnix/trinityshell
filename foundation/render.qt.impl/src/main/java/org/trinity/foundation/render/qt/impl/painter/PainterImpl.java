@@ -36,6 +36,7 @@ import org.trinity.foundation.render.qt.impl.RenderDisplaySurfaceHandle;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.trolltech.qt.core.QObject;
@@ -45,7 +46,8 @@ import com.trolltech.qt.gui.QWidget;
 @ThreadSafe
 public class PainterImpl implements Painter {
 
-	private static final Logger logger = LoggerFactory.getLogger(PainterImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PainterImpl.class);
+	private final ListeningExecutorService modelExecutor;
 	private final AsyncListenable model;
 	private final Binder binder;
 	private final ViewDiscovery viewDiscovery = new ViewDiscovery();
@@ -56,8 +58,10 @@ public class PainterImpl implements Painter {
 	PainterImpl(final DisplaySurfaceFactory displaySurfaceFactory,
 				final ViewEventTrackerFactory eventTrackerFactory,
 				final Binder binder,
+				@Assisted final ListeningExecutorService modelExecutor,
 				@Assisted final AsyncListenable model) {
 		this.binder = binder;
+		this.modelExecutor = modelExecutor;
 		this.model = model;
 		this.displaySurfaceFactory = displaySurfaceFactory;
 		this.eventTrackerFactory = eventTrackerFactory;
@@ -70,8 +74,8 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				logger.debug(	"[view={}] close.",
-								view);
+				LOG.debug("[view={}] close.",
+						view);
 				view.close();
 				return null;
 			}
@@ -89,8 +93,8 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				logger.debug(	"[view={}] set input focus.",
-								view);
+				LOG.debug("[view={}] set input focus.",
+						view);
 				view.setFocus();
 				return null;
 			}
@@ -107,8 +111,8 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				logger.debug(	"[view={}] lower.",
-								view);
+				LOG.debug("[view={}] lower.",
+						view);
 				view.lower();
 				return null;
 			}
@@ -125,8 +129,8 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				logger.debug(	"[view={}] show.",
-								view);
+				LOG.debug("[view={}] show.",
+						view);
 				view.show();
 				return null;
 			}
@@ -144,10 +148,10 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				logger.debug(	"[view={}] move x={}, y={}.",
-								view,
-								x,
-								y);
+				LOG.debug("[view={}] move x={}, y={}.",
+						view,
+						x,
+						y);
 				view.move(	x,
 							y);
 				return null;
@@ -168,12 +172,12 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				logger.debug(	"[view={}] move resize x={}, y={}, width={}, height={}.",
-								view,
-								x,
-								y,
-								width,
-								height);
+				LOG.debug("[view={}] move resize x={}, y={}, width={}, height={}.",
+						view,
+						x,
+						y,
+						width,
+						height);
 				view.setGeometry(	x,
 									y,
 									width,
@@ -193,8 +197,8 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				logger.debug(	"[view={}] raise.",
-								view);
+				LOG.debug("[view={}] raise.",
+						view);
 				view.raise();
 				return null;
 			}
@@ -214,11 +218,11 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				logger.debug(	"[view={}] set parent parentView={}, x={}, y={}.",
-								view,
-								parentView,
-								x,
-								y);
+				LOG.debug("[view={}] set parent parentView={}, x={}, y={}.",
+						view,
+						parentView,
+						x,
+						y);
 				view.setParent(parentView);
 				view.move(	x,
 							y);
@@ -238,10 +242,10 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				logger.debug(	"[view={}] resize width={}, height={}.",
-								view,
-								width,
-								height);
+				LOG.debug("[view={}] resize width={}, height={}.",
+						view,
+						width,
+						height);
 				view.resize(width,
 							height);
 				return null;
@@ -259,8 +263,8 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				logger.debug(	"[view={}] hide.",
-								view);
+				LOG.debug("[view={}] hide.",
+						view);
 				view.hide();
 				return null;
 			}
@@ -288,7 +292,8 @@ public class PainterImpl implements Painter {
 		final ListenableFutureTask<Void> bindViewFuture = ListenableFutureTask.create(	viewBindingRoutine,
 																						null);
 		QApplication.invokeLater(viewBindingRoutine);
-		PainterImpl.this.binder.bind(	PainterImpl.this.model,
+		PainterImpl.this.binder.bind(	this.modelExecutor,
+										this.model,
 										view);
 
 		return bindViewFuture;

@@ -67,6 +67,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -105,16 +106,19 @@ public class BinderImpl implements Binder {
 	}
 
 	@Override
-	public void bind(	final Object model,
+	public void bind(	ListeningExecutorService modelExecutor,
+						final Object model,
 						final Object view) {
 		LOG.debug(	"Bind model={} to view={}",
 					model,
 					view);
 
+		checkNotNull(modelExecutor);
 		checkNotNull(model);
 		checkNotNull(view);
 
-		bindViewElement(model,
+		bindViewElement(modelExecutor,
+						model,
 						view,
 						Optional.<DataContext> absent(),
 						Optional.<InputSignals> absent(),
@@ -123,22 +127,26 @@ public class BinderImpl implements Binder {
 	}
 
 	@Override
-	public void updateBinding(	final Object model,
+	public void updateBinding(	ListeningExecutorService modelExecutor,
+								final Object model,
 								final String propertyName) {
-		checkNotNull(model);
-		checkNotNull(propertyName);
-
 		LOG.debug(	"Update binding for model={} of property={}",
 					model,
 					propertyName);
 
-		updateDataContextBinding(	model,
+		checkNotNull(modelExecutor);
+		checkNotNull(model);
+		checkNotNull(propertyName);
+
+		updateDataContextBinding(	modelExecutor,
+									model,
 									propertyName);
 		updateProperties(	model,
 							propertyName);
 	}
 
-	protected void updateDataContextBinding(final Object model,
+	protected void updateDataContextBinding(ListeningExecutorService modelExecutor,
+											final Object model,
 											final String propertyName) {
 		checkNotNull(model);
 		checkNotNull(propertyName);
@@ -161,7 +169,8 @@ public class BinderImpl implements Binder {
 
 			if (dataContext.value().startsWith(propertyName)) {
 
-				bindViewElement(model,
+				bindViewElement(modelExecutor,
+								model,
 								view,
 								optionalDataContext,
 								optionalInputSignals,
@@ -221,10 +230,11 @@ public class BinderImpl implements Binder {
 		}
 	}
 
-	protected void bindViewElement(	final Object inheritedDataContext,
+	protected void bindViewElement(	final ListeningExecutorService modelExecutor,
+									final Object inheritedDataContext,
 									final Object view,
 									final Optional<DataContext> optionalFieldLevelDataContext,
-									final Optional<InputSignals> optionalFieldLEvelInputSignals,
+									final Optional<InputSignals> optionalFieldLevelInputSignals,
 									final Optional<ObservableCollection> optionalFieldLevelObservableCollection,
 									final Optional<PropertySlots> optionalFieldLevelPropertySlots) {
 		checkNotNull(inheritedDataContext);
@@ -236,7 +246,7 @@ public class BinderImpl implements Binder {
 		// absent
 		final Optional<DataContext> optionalDataContext = optionalFieldLevelDataContext.or(Optional
 				.<DataContext> fromNullable(viewClass.getAnnotation(DataContext.class)));
-		final Optional<InputSignals> optionalInputSignals = optionalFieldLEvelInputSignals.or(Optional
+		final Optional<InputSignals> optionalInputSignals = optionalFieldLevelInputSignals.or(Optional
 				.<InputSignals> fromNullable(viewClass.getAnnotation(InputSignals.class)));
 		final Optional<ObservableCollection> optionalObservableCollection = optionalFieldLevelObservableCollection
 				.or(Optional.<ObservableCollection> fromNullable(viewClass.getAnnotation(ObservableCollection.class)));
@@ -245,6 +255,7 @@ public class BinderImpl implements Binder {
 
 		Object dataContext = inheritedDataContext;
 		if (optionalDataContext.isPresent()) {
+			// FIXME use modelExecutor to retrieve datacontext value
 			final Optional<Object> optionalDataContextValue = getDataContextValueForView(	dataContext,
 																							view,
 																							optionalDataContext.get());
@@ -259,14 +270,15 @@ public class BinderImpl implements Binder {
 
 		if (optionalInputSignals.isPresent()) {
 			final EventSignal[] eventSignals = optionalInputSignals.get().value();
-			bindEventSignals(dataContext,
-					view,
-					eventSignals);
+			bindEventSignals(	dataContext,
+								view,
+								eventSignals);
 		}
 
 		if (optionalObservableCollection.isPresent()) {
 			final ObservableCollection observableCollection = optionalObservableCollection.get();
-			bindObservableCollection(	dataContext,
+			bindObservableCollection(	modelExecutor,
+										dataContext,
 										view,
 										observableCollection);
 		}
@@ -278,11 +290,13 @@ public class BinderImpl implements Binder {
 								propertySlots);
 		}
 
-		bindChildViewElements(	dataContext,
+		bindChildViewElements(	modelExecutor,
+								dataContext,
 								view);
 	}
 
-	protected void bindObservableCollection(final Object dataContext,
+	protected void bindObservableCollection(final ListeningExecutorService modelExecutor,
+											final Object dataContext,
 											final Object view,
 											final ObservableCollection observableCollection) {
 		checkNotNull(dataContext);
@@ -322,7 +336,8 @@ public class BinderImpl implements Binder {
 								new FutureCallback<Object>() {
 									@Override
 									public void onSuccess(final Object childView) {
-										bind(	childViewDataContext,
+										bind(	modelExecutor,
+												childViewDataContext,
 												childView);
 
 									}
@@ -332,7 +347,8 @@ public class BinderImpl implements Binder {
 										LOG.error(	"Error while creating new child view.",
 													t);
 									}
-								});
+								},
+								modelExecutor);
 				}
 
 				contextCollection.addListEventListener(new ListEventListener<Object>() {
@@ -343,7 +359,8 @@ public class BinderImpl implements Binder {
 
 					@Override
 					public void listChanged(final ListEvent<Object> listChanges) {
-						handleListChanged(	view,
+						handleListChanged(	modelExecutor,
+											view,
 											childViewClass,
 											this.shadowChildDataContextList,
 											listChanges);
@@ -373,7 +390,8 @@ public class BinderImpl implements Binder {
 		}
 	}
 
-	protected void handleListChanged(	final Object view,
+	protected void handleListChanged(	final ListeningExecutorService modelExecutor,
+										final Object view,
 										final Class<?> childViewClass,
 										final List<Object> shadowChildDataContextList,
 										final ListEvent<Object> listChanges) {
@@ -410,7 +428,8 @@ public class BinderImpl implements Binder {
 								new FutureCallback<Object>() {
 									@Override
 									public void onSuccess(final Object childView) {
-										bind(	childViewDataContext,
+										bind(	modelExecutor,
+												childViewDataContext,
 												childView);
 
 									}
@@ -420,7 +439,8 @@ public class BinderImpl implements Binder {
 										LOG.error(	"Error while creating new child view.",
 													t);
 									}
-								});
+								},
+								modelExecutor);
 					break;
 				}
 				case ListEvent.UPDATE: {
@@ -453,7 +473,8 @@ public class BinderImpl implements Binder {
 
 						final Object childView = BinderImpl.this.viewsByDataContextValue.get(oldChildViewDataContext);
 
-						bind(	newChildViewDataContext,
+						bind(	modelExecutor,
+								newChildViewDataContext,
 								childView);
 					}
 
@@ -464,8 +485,8 @@ public class BinderImpl implements Binder {
 	}
 
 	protected void bindEventSignals(final Object dataContext,
-	                                final Object view,
-	                                final EventSignal[] eventSignals) {
+									final Object view,
+									final EventSignal[] eventSignals) {
 		checkNotNull(dataContext);
 		checkNotNull(view);
 		checkNotNull(eventSignals);
@@ -474,7 +495,7 @@ public class BinderImpl implements Binder {
 			final Class<? extends EventSignalFilter> eventSignalFilterType = eventSignal.filter();
 			final String inputSlotName = eventSignal.name();
 
-			//FIXME cache filter & uninstall any previous filter installments
+			// FIXME cache filter & uninstall any previous filter installments
 			final EventSignalFilter eventSignalFilter = this.injector.getInstance(eventSignalFilterType);
 			eventSignalFilter.installFilter(view,
 											new SignalImpl(	dataContext,
@@ -671,7 +692,8 @@ public class BinderImpl implements Binder {
 									});
 	}
 
-	protected void bindChildViewElements(	final Object inheritedModel,
+	protected void bindChildViewElements(	final ListeningExecutorService modelExecutor,
+											final Object inheritedModel,
 											final Object view) {
 		checkNotNull(inheritedModel);
 		checkNotNull(view);
@@ -709,7 +731,8 @@ public class BinderImpl implements Binder {
 				final Optional<PropertySlots> optionalFieldPropertySlots = Optional
 						.<PropertySlots> fromNullable(childViewElement.getAnnotation(PropertySlots.class));
 
-				bindViewElement(inheritedModel,
+				bindViewElement(modelExecutor,
+								inheritedModel,
 								childView,
 								optionalFieldDataContext,
 								optionalFieldInputSignals,

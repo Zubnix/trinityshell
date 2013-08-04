@@ -64,4 +64,10 @@ public class LMBSignalFilter implements EventSignalFilter {
 			}
 		});
 	}
+
+	@Override
+	public void removeFilter(final Object view) {
+		// To change body of implemented methods use File | Settings | File
+		// Templates.
+	}
 }

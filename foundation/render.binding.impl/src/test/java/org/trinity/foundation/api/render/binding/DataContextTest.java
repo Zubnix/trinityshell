@@ -17,6 +17,7 @@ import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Injector;
 
 public class DataContextTest {
@@ -46,9 +47,11 @@ public class DataContextTest {
 												propertySlotInvocatorDelegate,
 												childViewDelegate,
 												viewElementTypes);
-		binder.bind(model,
+		binder.bind(MoreExecutors.sameThreadExecutor(),
+					model,
 					view);
-		binder.updateBinding(	model,
+		binder.updateBinding(	MoreExecutors.sameThreadExecutor(),
+								model,
 								"otherSubModel");
 
 		verify(	propertySlotInvocatorDelegate,

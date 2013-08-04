@@ -17,32 +17,8 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.api.render;
 
-import org.trinity.foundation.api.shared.AsyncListenable;
+package org.trinity.foundation.api.render.binding;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-
-//TODO documentation
-/***************************************
- * Creates new {@link Painter} delegates for a view model.
- *
- ***************************************
- */
-public interface PainterFactory {
-
-	// FIXME this should return a future. painter creation should be done on the
-	// Render thread.
-	/**
-	 * Creates a new {@code Painter} for the given view model. Multiple calls
-	 * with the same model should create a new {@code Painter} instance each
-	 * time.
-	 *
-	 * @param viewModel
-	 *            The view model that the created {@code Painter} will use as a
-	 *            visual base.
-	 * @return a new {@link Painter}
-	 */
-	Painter createPainter(	ListeningExecutorService viewModelExecutor,
-							final AsyncListenable viewModel);
+public @interface DummyExecutor {
 }

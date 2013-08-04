@@ -19,7 +19,7 @@ public class Model {
 		return this.dummySubModel;
 	}
 
-	@PropertyChanged("dummySubModel")
+	@PropertyChanged(value="dummySubModel",executor = DummyExecutor.class)
 	public void setDummySubModel(final DummySubModel dummySubModel) {
 		this.dummySubModel = dummySubModel;
 	}

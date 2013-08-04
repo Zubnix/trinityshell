@@ -20,13 +20,19 @@
 
 package org.trinity.foundation.api.render.binding;
 
+import java.lang.annotation.Annotation;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Key;
 
+// TODO documentation
 /***************************************
  * Post processes a method annotated with {@link PropertyChanged}. It reads the
  * {@link PropertyChanged#value()} and finds for each String value a
@@ -41,6 +47,7 @@ import com.google.inject.Inject;
 public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 
 	private Binder binder;
+	private Injector injector;
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
@@ -49,10 +56,15 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 		final Object changedModel = invocation.getThis();
 
 		final PropertyChanged changedPropertySignal = invocation.getMethod().getAnnotation(PropertyChanged.class);
+		final Class<? extends Annotation> executor = changedPropertySignal.executor();
+		final ListeningExecutorService modelExecutorInstance = injector.getInstance(Key
+				.get(	ListeningExecutorService.class,
+						executor));
 		final String[] changedPropertyNames = changedPropertySignal.value();
 
 		for (final String propertyName : changedPropertyNames) {
-			getBinder().updateBinding(	changedModel,
+			getBinder().updateBinding(	modelExecutorInstance,
+										changedModel,
 										propertyName);
 		}
 
@@ -66,5 +78,10 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 	@Inject
 	void setBinder(final Binder binder) {
 		this.binder = binder;
+	}
+
+	@Inject
+	void setInjector(Injector injector) {
+		this.injector = injector;
 	}
 }

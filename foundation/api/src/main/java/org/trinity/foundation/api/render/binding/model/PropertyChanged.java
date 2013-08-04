@@ -19,6 +19,7 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.model;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -45,4 +46,6 @@ public @interface PropertyChanged {
 	 ***************************************
 	 */
 	String[] value();
+
+	Class<? extends Annotation> executor();
 }

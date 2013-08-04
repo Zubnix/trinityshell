@@ -62,7 +62,7 @@ public class Clock implements HasText, Runnable {
 		return this.text;
 	}
 
-	@PropertyChanged("text")
+	@PropertyChanged(value = "text", executor = ShellExecutor.class)
 	public void setText(final String text) {
 		this.text = text;
 	}

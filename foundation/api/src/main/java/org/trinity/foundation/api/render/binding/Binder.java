@@ -21,6 +21,8 @@ package org.trinity.foundation.api.render.binding;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+
 /***************************************
  * Binds views to models.
  *
@@ -37,8 +39,9 @@ public interface Binder {
 	 *            The name of the property that changed.
 	 ***************************************
 	 */
-	void updateBinding(@Nonnull Object changedViewModel,
-                       @Nonnull String propertyName);
+	void updateBinding(	@Nonnull ListeningExecutorService modelExecutor,
+						@Nonnull Object changedViewModel,
+						@Nonnull String propertyName);
 
 	/***************************************
 	 * Bind a view to a model so it reflects the model's state. The given view
@@ -50,8 +53,9 @@ public interface Binder {
 	 *            The visual representation of the model
 	 ***************************************
 	 */
-	void bind(@Nonnull Object viewModel,
-              @Nonnull Object view);
+	void bind(	@Nonnull ListeningExecutorService modelExecutor,
+				@Nonnull Object viewModel,
+				@Nonnull Object view);
 
 	// TODO
 	// void unbind(Object view);

@@ -11,7 +11,7 @@ public class DummySubModel implements AsyncListenable {
 
 	private boolean booleanProperty;
 
-	@PropertyChanged("booleanProperty")
+	@PropertyChanged(value="booleanProperty",executor = DummyExecutor.class)
 	public void setBooleanProperty(final boolean booleanProperty) {
 		this.booleanProperty = booleanProperty;
 	}
@@ -28,7 +28,7 @@ public class DummySubModel implements AsyncListenable {
 
 	}
 
-	@PropertyChanged("dummySubSubModel")
+	@PropertyChanged(value="dummySubSubModel",executor = DummyExecutor.class)
 	public void setDummySubSubModel(final DummySubSubModel dummySubSubModel) {
 		this.dummySubSubModel = dummySubSubModel;
 	}
