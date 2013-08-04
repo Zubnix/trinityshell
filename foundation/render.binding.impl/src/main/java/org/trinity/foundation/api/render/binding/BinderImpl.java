@@ -474,6 +474,7 @@ public class BinderImpl implements Binder {
 			final Class<? extends EventSignalFilter> eventSignalFilterType = eventSignal.filter();
 			final String inputSlotName = eventSignal.name();
 
+			//FIXME cache filter & uninstall any previous filter installments
 			final EventSignalFilter eventSignalFilter = this.injector.getInstance(eventSignalFilterType);
 			eventSignalFilter.installFilter(view,
 											new SignalImpl(	dataContext,

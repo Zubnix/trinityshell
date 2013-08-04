@@ -1,57 +1,69 @@
-//package org.trinity.foundation.api.render.binding;
-//
-//import static org.mockito.Mockito.mock;
-//import static org.mockito.Mockito.when;
-//
-//import java.util.concurrent.ExecutionException;
-//
-//import org.junit.Test;
-//import org.mockito.Mockito;
-//import org.trinity.foundation.api.render.binding.view.ViewElementTypes;
-//import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
-//import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
-//
-//import com.google.common.util.concurrent.ListenableFuture;
-//
-//public class DataContextTest {
-//
-//	@Test
-//	public void testDataContextNestedValueUpdate() throws ExecutionException, NoSuchMethodException, SecurityException,
-//			InterruptedException {
-//		final Model model = new Model();
-//		final View view = new View();
-//
-//		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = Mockito
-//				.mock(PropertySlotInvocatorDelegate.class);
-//		final ViewElementTypes viewElementTypes = Mockito.mock(ViewElementTypes.class);
-//		Mockito.when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
-//		final EventListenerInstallerDelegate eventListenerInstallerDelegate = Mockito
-//				.mock(EventListenerInstallerDelegate.class);
-//		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
-//		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
-//		when(viewFuture.get()).thenReturn(new CollectionElementView());
-//
-//		Mockito.when(childViewDelegate.newView(	view,
-//												CollectionElementView.class,
-//												0)).thenReturn(viewFuture);
-//		final Binder binder = new BinderImpl(	propertySlotInvocatorDelegate,
-//				eventListenerInstallerDelegate,
-//												childViewDelegate,
-//												viewElementTypes);
-//		binder.bind(model,
-//					view);
-//		binder.updateBinding(	model,
-//								"otherSubModel");
-//
-//		Mockito.verify(	propertySlotInvocatorDelegate,
-//						Mockito.times(2)).invoke(	view.getMouseInputSubView(),
-//													SubView.class.getMethod("handleStringProperty",
-//																			String.class),
-//													"false");
-//		Mockito.verify(eventListenerInstallerDelegate,
-//						Mockito.times(2)).installViewEventListener(PointerInput.class,
-//				view.getMouseInputSubView(),
-//				model.getOtherSubModel().getSubSubModel(),
-//				"onClick");
-//	}
-//}
+package org.trinity.foundation.api.render.binding;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.concurrent.ExecutionException;
+
+import org.junit.Test;
+import org.trinity.foundation.api.render.binding.model.delegate.Signal;
+import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
+import org.trinity.foundation.api.render.binding.view.ViewElementTypes;
+import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
+import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
+
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.inject.Injector;
+
+public class DataContextTest {
+
+	@Test
+	public void testDataContextNestedValueUpdate() throws ExecutionException, NoSuchMethodException, SecurityException,
+			InterruptedException {
+		final Model model = new Model();
+		final View view = new View();
+
+		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
+		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
+		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
+		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
+		when(viewFuture.get()).thenReturn(new CollectionElementView());
+
+		when(childViewDelegate.newView(	view,
+										CollectionElementView.class,
+										0)).thenReturn(viewFuture);
+
+		Injector injector = mock(Injector.class);
+		EventSignalFilter eventSignalFilter = mock(EventSignalFilter.class);
+		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
+
+		final Binder binder = new BinderImpl(	injector,
+												propertySlotInvocatorDelegate,
+												childViewDelegate,
+												viewElementTypes);
+		binder.bind(model,
+					view);
+		binder.updateBinding(	model,
+								"otherSubModel");
+
+		verify(	propertySlotInvocatorDelegate,
+				times(2)).invoke(	view.getMouseInputSubView(),
+									SubView.class.getMethod("handleStringProperty",
+															String.class),
+									"false");
+		// once for bind
+		verify(	eventSignalFilter,
+				times(1)).installFilter(eq(view.getKeyInputSubView()),
+										any(Signal.class));
+		// once for bind, once for bind update
+		verify(	eventSignalFilter,
+				times(2)).installFilter(eq(view.getMouseInputSubView()),
+										any(Signal.class));
+
+	}
+}
