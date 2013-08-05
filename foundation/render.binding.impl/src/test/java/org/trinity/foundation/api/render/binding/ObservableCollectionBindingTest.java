@@ -13,6 +13,7 @@ import org.trinity.foundation.api.render.binding.view.ViewElementTypes;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Injector;
@@ -28,8 +29,8 @@ public class ObservableCollectionBindingTest {
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
-		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
-		when(viewFuture.get()).thenReturn(new CollectionElementView());
+
+		final ListenableFuture<CollectionElementView> viewFuture = Futures.immediateFuture(new CollectionElementView());
 		when(childViewDelegate.newView(	view,
 										CollectionElementView.class,
 										0)).thenReturn(viewFuture);
@@ -61,8 +62,8 @@ public class ObservableCollectionBindingTest {
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
-		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
-		when(viewFuture.get()).thenReturn(new CollectionElementView());
+		final ListenableFuture<CollectionElementView> viewFuture = Futures.immediateFuture(new CollectionElementView());
+
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
 																0)).thenReturn(viewFuture);
@@ -106,10 +107,10 @@ public class ObservableCollectionBindingTest {
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
-		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
-		when(viewFuture.get()).thenReturn(new CollectionElementView());
-		when(viewFuture.get()).thenReturn(new CollectionElementView());
 		final CollectionElementView collectionElementView = new CollectionElementView();
+
+		final ListenableFuture<CollectionElementView> viewFuture = Futures.immediateFuture(collectionElementView);
+
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
 																0)).thenReturn(viewFuture);
@@ -142,8 +143,8 @@ public class ObservableCollectionBindingTest {
 		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
 		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
-		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
-		when(viewFuture.get()).thenReturn(new CollectionElementView());
+		final ListenableFuture<CollectionElementView> viewFuture = Futures.immediateFuture(new CollectionElementView());
+
 		when(childViewDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
 																0)).thenReturn(viewFuture);
