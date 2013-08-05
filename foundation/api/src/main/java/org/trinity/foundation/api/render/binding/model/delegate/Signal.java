@@ -19,17 +19,15 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.model.delegate;
 
-import javax.annotation.Nonnull;
-
 import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
- * A convenience service to call a method used as an event signal slot based on widget
- * toolkit specific events.
+ * A convenience service to call a method used as an event signal slot based on
+ * widget toolkit specific events.
  *
  ***************************************
  */
 public interface Signal {
 
-	void fire();
+	ListenableFuture<Void> fire();
 }

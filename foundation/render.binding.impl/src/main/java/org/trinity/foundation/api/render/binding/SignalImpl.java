@@ -20,8 +20,8 @@
 
 package org.trinity.foundation.api.render.binding;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
@@ -34,20 +34,27 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 
 public class SignalImpl implements Signal {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SignalImpl.class);
 	private static Cache<HashCode, Optional<Method>> eventSlotsByHash = CacheBuilder.newBuilder().concurrencyLevel(1)
 			.build();
-	private final Object viewModel;
-	private final String methodName;
+	private final ListeningExecutorService modelExecutor;
+	private final Object view;
+	private final Map<Object, Object> dataContextValueByView;
+	private final String inputSlotName;
 
-	SignalImpl(	Object viewModel,
-				String methodName) {
-
-		this.viewModel = viewModel;
-		this.methodName = methodName;
+	SignalImpl(	final ListeningExecutorService modelExecutor,
+				final Object view,
+				final Map<Object, Object> dataContextValueByView,
+				final String inputSlotName) {
+		this.modelExecutor = modelExecutor;
+		this.view = view;
+		this.dataContextValueByView = dataContextValueByView;
+		this.inputSlotName = inputSlotName;
 	}
 
 	private static Optional<Method> findSlot(	final Class<?> modelClass,
@@ -83,31 +90,20 @@ public class SignalImpl implements Signal {
 	}
 
 	@Override
-	public void fire() {
-		try {
-			final Optional<Method> optionalInputSlot = findSlot(viewModel.getClass(),
-																methodName);
-			if (optionalInputSlot.isPresent()) {
-				final Method method = optionalInputSlot.get();
-				method.setAccessible(true);
-				method.invoke(viewModel);
+	public ListenableFuture<Void> fire() {
+		return modelExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				final Object viewModel = dataContextValueByView.get(view);
+				final Optional<Method> optionalInputSlot = findSlot(viewModel.getClass(),
+																	inputSlotName);
+				if (optionalInputSlot.isPresent()) {
+					final Method method = optionalInputSlot.get();
+					method.setAccessible(true);
+					method.invoke(viewModel);
+				}
+				return null;
 			}
-
-		} catch (final IllegalArgumentException e) {
-			LOG.error(	"Error while trying to invoke input slot for model=" + viewModel + " with slotname="
-								+ methodName,
-						e);
-		} catch (final IllegalAccessException e) {
-			LOG.error(	"Error while trying to invoke input slot for model=" + viewModel + " with slotname="
-								+ methodName,
-						e);
-		} catch (final InvocationTargetException e) {
-			LOG.error(	"Error while trying to invoke input slot for model=" + viewModel + " with slotname="
-								+ methodName,
-						e);
-		} catch (ExecutionException e) {
-			LOG.error(	"Error while finding event slot for model=" + viewModel + " with slotname=" + methodName,
-						e);
-		}
+		});
 	}
 }

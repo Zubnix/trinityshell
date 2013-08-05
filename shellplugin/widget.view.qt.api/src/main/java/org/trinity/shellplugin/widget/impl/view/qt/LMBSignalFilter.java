@@ -20,11 +20,15 @@
 
 package org.trinity.shellplugin.widget.impl.view.qt;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import javax.annotation.Nonnull;
+
 import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.foundation.api.render.binding.model.delegate.Signal;
 import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
 
-import com.google.common.base.Preconditions;
 import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.core.Qt;
@@ -38,10 +42,13 @@ public class LMBSignalFilter implements EventSignalFilter {
 	}
 
 	@Override
-	public void installFilter(	final Object view,
-								final Signal signal) {
-		Preconditions.checkArgument(view instanceof QObject,
-									"Can only install filter on views of type " + QObject.class.getName());
+	public void installFilter(	@Nonnull final Object view,
+								@Nonnull final Signal signal) {
+		checkNotNull(view);
+		checkNotNull(signal);
+
+		checkArgument(	view instanceof QObject,
+						"Can only install filter on views of type " + QObject.class.getName());
 
 		QApplication.invokeLater(new Runnable() {
 			@Override
@@ -63,11 +70,5 @@ public class LMBSignalFilter implements EventSignalFilter {
 				});
 			}
 		});
-	}
-
-	@Override
-	public void removeFilter(final Object view) {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
 	}
 }

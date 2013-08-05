@@ -21,6 +21,7 @@ package org.trinity.foundation.api.render.binding;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 /***************************************
@@ -39,7 +40,7 @@ public interface Binder {
 	 *            The name of the property that changed.
 	 ***************************************
 	 */
-	void updateBinding(	@Nonnull ListeningExecutorService modelExecutor,
+	ListenableFuture<Void> updateBinding(	@Nonnull ListeningExecutorService modelExecutor,
 						@Nonnull Object changedViewModel,
 						@Nonnull String propertyName);
 
@@ -53,7 +54,7 @@ public interface Binder {
 	 *            The visual representation of the model
 	 ***************************************
 	 */
-	void bind(	@Nonnull ListeningExecutorService modelExecutor,
+	ListenableFuture<Void> bind(	@Nonnull ListeningExecutorService modelExecutor,
 				@Nonnull Object viewModel,
 				@Nonnull Object view);
 

@@ -20,12 +20,12 @@
 
 package org.trinity.foundation.api.render.binding.view;
 
+import javax.annotation.Nonnull;
+
 import org.trinity.foundation.api.render.binding.model.delegate.Signal;
 
 public interface EventSignalFilter {
 
-	void installFilter(	Object view,
-						Signal signal);
-
-	void removeFilter(Object view);
+	void installFilter(	@Nonnull Object view,
+						@Nonnull Signal signal);
 }

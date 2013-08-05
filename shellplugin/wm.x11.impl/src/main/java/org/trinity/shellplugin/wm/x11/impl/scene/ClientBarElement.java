@@ -201,7 +201,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 		return this.closeButton;
 	}
 
-	// called by render executor.
+	// called by shell executor.
 	private void handleClientCloseRequest() {
 		this.displayExecutor.submit(new Callable<Void>() {
 			@Override
@@ -251,9 +251,10 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 		this.clientName = text;
 	}
 
-	// called by render executor.
+	// called by shell executor.
 	@Override
 	public void onPointerInput() {
+		//both calls will be handled by the display executor.
 		ClientBarElement.this.clientXWindow.setInputFocus();
 		ClientBarElement.this.clientXWindow.raise();
 	}

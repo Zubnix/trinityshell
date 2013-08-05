@@ -74,8 +74,8 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				LOG.debug("[view={}] close.",
-						view);
+				LOG.debug(	"[view={}] close.",
+							view);
 				view.close();
 				return null;
 			}
@@ -93,8 +93,8 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				LOG.debug("[view={}] set input focus.",
-						view);
+				LOG.debug(	"[view={}] set input focus.",
+							view);
 				view.setFocus();
 				return null;
 			}
@@ -111,8 +111,8 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				LOG.debug("[view={}] lower.",
-						view);
+				LOG.debug(	"[view={}] lower.",
+							view);
 				view.lower();
 				return null;
 			}
@@ -129,8 +129,8 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				LOG.debug("[view={}] show.",
-						view);
+				LOG.debug(	"[view={}] show.",
+							view);
 				view.show();
 				return null;
 			}
@@ -148,10 +148,10 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				LOG.debug("[view={}] move x={}, y={}.",
-						view,
-						x,
-						y);
+				LOG.debug(	"[view={}] move x={}, y={}.",
+							view,
+							x,
+							y);
 				view.move(	x,
 							y);
 				return null;
@@ -172,12 +172,12 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				LOG.debug("[view={}] move resize x={}, y={}, width={}, height={}.",
-						view,
-						x,
-						y,
-						width,
-						height);
+				LOG.debug(	"[view={}] move resize x={}, y={}, width={}, height={}.",
+							view,
+							x,
+							y,
+							width,
+							height);
 				view.setGeometry(	x,
 									y,
 									width,
@@ -197,8 +197,8 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				LOG.debug("[view={}] raise.",
-						view);
+				LOG.debug(	"[view={}] raise.",
+							view);
 				view.raise();
 				return null;
 			}
@@ -218,11 +218,11 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				LOG.debug("[view={}] set parent parentView={}, x={}, y={}.",
-						view,
-						parentView,
-						x,
-						y);
+				LOG.debug(	"[view={}] set parent parentView={}, x={}, y={}.",
+							view,
+							parentView,
+							x,
+							y);
 				view.setParent(parentView);
 				view.move(	x,
 							y);
@@ -242,10 +242,10 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				LOG.debug("[view={}] resize width={}, height={}.",
-						view,
-						width,
-						height);
+				LOG.debug(	"[view={}] resize width={}, height={}.",
+							view,
+							width,
+							height);
 				view.resize(width,
 							height);
 				return null;
@@ -263,8 +263,8 @@ public class PainterImpl implements Painter {
 		final Callable<Void> callable = new Callable<Void>() {
 			@Override
 			public Void call() {
-				LOG.debug("[view={}] hide.",
-						view);
+				LOG.debug(	"[view={}] hide.",
+							view);
 				view.hide();
 				return null;
 			}
@@ -286,16 +286,15 @@ public class PainterImpl implements Painter {
 						.createQJEventTracker(	PainterImpl.this.model,
 												view);
 				view.installEventFilter(eventTracker);
+				PainterImpl.this.binder.bind(	PainterImpl.this.modelExecutor,
+												PainterImpl.this.model,
+												view);
 
 			}
 		};
 		final ListenableFutureTask<Void> bindViewFuture = ListenableFutureTask.create(	viewBindingRoutine,
 																						null);
 		QApplication.invokeLater(viewBindingRoutine);
-		PainterImpl.this.binder.bind(	this.modelExecutor,
-										this.model,
-										view);
-
 		return bindViewFuture;
 	}
 

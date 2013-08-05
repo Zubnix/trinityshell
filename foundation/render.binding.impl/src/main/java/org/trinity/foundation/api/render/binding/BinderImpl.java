@@ -37,7 +37,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
@@ -74,7 +74,7 @@ import com.google.inject.Singleton;
 
 @Bind
 @Singleton
-@NotThreadSafe
+@ThreadSafe
 public class BinderImpl implements Binder {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BinderImpl.class);
@@ -106,9 +106,25 @@ public class BinderImpl implements Binder {
 	}
 
 	@Override
-	public void bind(	ListeningExecutorService modelExecutor,
-						final Object model,
-						final Object view) {
+	public ListenableFuture<Void> bind(	final ListeningExecutorService modelExecutor,
+										final Object model,
+										final Object view) {
+
+		return modelExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				bindImpl(	modelExecutor,
+							model,
+							view);
+				return null;
+			}
+		});
+
+	}
+
+	protected void bindImpl(ListeningExecutorService modelExecutor,
+							final Object model,
+							final Object view) {
 		LOG.debug(	"Bind model={} to view={}",
 					model,
 					view);
@@ -127,9 +143,23 @@ public class BinderImpl implements Binder {
 	}
 
 	@Override
-	public void updateBinding(	ListeningExecutorService modelExecutor,
-								final Object model,
-								final String propertyName) {
+	public ListenableFuture<Void> updateBinding(final ListeningExecutorService modelExecutor,
+												final Object model,
+												final String propertyName) {
+		return modelExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				updateBindingImpl(	modelExecutor,
+									model,
+									propertyName);
+				return null;
+			}
+		});
+	}
+
+	protected void updateBindingImpl(	final ListeningExecutorService modelExecutor,
+										final Object model,
+										final String propertyName) {
 		LOG.debug(	"Update binding for model={} of property={}",
 					model,
 					propertyName);
@@ -270,7 +300,8 @@ public class BinderImpl implements Binder {
 
 		if (optionalInputSignals.isPresent()) {
 			final EventSignal[] eventSignals = optionalInputSignals.get().value();
-			bindEventSignals(	dataContext,
+			bindEventSignals(	modelExecutor,
+								dataContext,
 								view,
 								eventSignals);
 		}
@@ -336,9 +367,9 @@ public class BinderImpl implements Binder {
 								new FutureCallback<Object>() {
 									@Override
 									public void onSuccess(final Object childView) {
-										bind(	modelExecutor,
-												childViewDataContext,
-												childView);
+										bindImpl(	modelExecutor,
+													childViewDataContext,
+													childView);
 
 									}
 
@@ -428,9 +459,9 @@ public class BinderImpl implements Binder {
 								new FutureCallback<Object>() {
 									@Override
 									public void onSuccess(final Object childView) {
-										bind(	modelExecutor,
-												childViewDataContext,
-												childView);
+										bindImpl(	modelExecutor,
+													childViewDataContext,
+													childView);
 
 									}
 
@@ -473,9 +504,9 @@ public class BinderImpl implements Binder {
 
 						final Object childView = BinderImpl.this.viewsByDataContextValue.get(oldChildViewDataContext);
 
-						bind(	modelExecutor,
-								newChildViewDataContext,
-								childView);
+						bindImpl(	modelExecutor,
+									newChildViewDataContext,
+									childView);
 					}
 
 					break;
@@ -484,7 +515,8 @@ public class BinderImpl implements Binder {
 		}
 	}
 
-	protected void bindEventSignals(final Object dataContext,
+	protected void bindEventSignals(final ListeningExecutorService modelExecutor,
+									final Object dataContext,
 									final Object view,
 									final EventSignal[] eventSignals) {
 		checkNotNull(dataContext);
@@ -498,7 +530,9 @@ public class BinderImpl implements Binder {
 			// FIXME cache filter & uninstall any previous filter installments
 			final EventSignalFilter eventSignalFilter = this.injector.getInstance(eventSignalFilterType);
 			eventSignalFilter.installFilter(view,
-											new SignalImpl(	dataContext,
+											new SignalImpl(	modelExecutor,
+															view,
+															this.dataContextValueByView,
 															inputSlotName));
 
 		}
