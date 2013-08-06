@@ -51,7 +51,7 @@ import com.google.common.cache.CacheBuilder;
 @ExecutionContext(DisplayExecutor.class)
 public class XAtomCache {
 
-	private final Map<Integer, String> atomNameCodes = new HashMap<Integer, String>();
+	private final Map<Integer, String> atomNameCodes = new HashMap<>();
 	private final Cache<String, Integer> atomCodeNames = CacheBuilder.newBuilder().concurrencyLevel(1).build();
 	private final XConnection xConnection;
 

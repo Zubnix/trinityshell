@@ -25,6 +25,7 @@ import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.core.QObject;
 
+@Deprecated
 public interface RenderEventConversion {
 	DisplayEvent convertEvent(	Object view,
 								QObject eventProducer,

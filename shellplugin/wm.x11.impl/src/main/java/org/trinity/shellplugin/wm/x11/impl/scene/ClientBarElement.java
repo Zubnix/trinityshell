@@ -67,7 +67,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	private final WmName wmName;
 	private final WmProtocols wmProtocols;
 	private final ReceivesPointerInput closeButton = new ReceivesPointerInput() {
-		// called by render thread.
+		// called by shell executor.
 		@Override
 		public void onPointerInput() {
 			handleClientCloseRequest();
@@ -228,14 +228,14 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 		data32.setitem(	1,
 						XCB_CURRENT_TIME);
 		client_message_event.setType(this.wmProtocolsAtomId);
-		client_message_event.setWindow(winId.intValue());
+		client_message_event.setWindow(winId);
 		client_message_event.setResponse_type((short) XCB_CLIENT_MESSAGE);
 
 		final xcb_generic_event_t generic_event = new xcb_generic_event_t(	xcb_client_message_event_t.getCPtr(client_message_event),
 																			false);
 		xcb_send_event(	this.xConnection.getConnectionReference().get(),
 						(short) 0,
-						winId.intValue(),
+						winId,
 						xcb_event_mask_t.XCB_EVENT_MASK_NO_EVENT,
 						generic_event);
 		xcb_flush(this.xConnection.getConnectionReference().get());
@@ -255,7 +255,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	@Override
 	public void onPointerInput() {
 		//both calls will be handled by the display executor.
-		ClientBarElement.this.clientXWindow.setInputFocus();
-		ClientBarElement.this.clientXWindow.raise();
+		this.clientXWindow.setInputFocus();
+		this.clientXWindow.raise();
 	}
 }

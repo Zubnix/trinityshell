@@ -51,44 +51,46 @@ import com.google.inject.Singleton;
 @NotThreadSafe
 public final class XEventHandlers {
 
-	private static final Logger LOG = LoggerFactory.getLogger(XEventHandlers.class);
-	/*
-	 * Singletons are eagerly created in Guice by default. So even though nobody
-	 * needs an instance, it's still created anyway. In the case of
-	 * XEventHandlers, when Guice creates it (at binding time at startup), it
-	 * immediately subscribes itself to the XEventBus and starts processing x
-	 * events in it's @Subscribe method as soon as events arrive.
-	 */
-	private final Map<Integer, XEventHandler> conversionMap = new HashMap<Integer, XEventHandler>();
+    private static final Logger LOG = LoggerFactory.getLogger(XEventHandlers.class);
+    private static final int EVENT_CODE_MASK = 0x7f;
 
-	@Inject
-	XEventHandlers(final Set<XEventHandler> eventConversions,
-	               @XEventBus final EventBus xEventBus) {
+    /*
+     * Singletons are eagerly created in Guice by default. So even though nobody
+     * needs an instance, it's still created anyway. In the case of
+     * XEventHandlers, when Guice creates it (at binding time at startup), it
+     * immediately subscribes itself to the XEventBus and starts processing x
+     * events in it's @Subscribe method as soon as events arrive.
+     */
+    private final Map<Integer, XEventHandler> conversionMap = new HashMap<>();
 
-		for (final XEventHandler eventConversion : eventConversions) {
-			this.conversionMap.put(	eventConversion.getEventCode(),
-									eventConversion);
-		}
-		xEventBus.register(this);
-	}
+    @Inject
+    XEventHandlers(final Set<XEventHandler> eventConversions,
+                   @XEventBus final EventBus xEventBus) {
 
-	@Subscribe
-	public void handleXEvent(final xcb_generic_event_t event_t) {
-		final short responseType = event_t.getResponse_type();
+        for (final XEventHandler eventConversion : eventConversions) {
+            this.conversionMap.put(eventConversion.getEventCode(),
+                    eventConversion);
+        }
+        xEventBus.register(this);
+    }
 
-		// TODO handle error cases
-		final int eventCode = responseType & 0x7f;
+    @Subscribe
+    public void handleXEvent(final xcb_generic_event_t event) {
+        final short response_type = event.getResponse_type();
 
-		final XEventHandler eventConversion = this.conversionMap.get(Integer.valueOf(eventCode));
-		if (eventConversion == null) {
-			return;
-		}
+        // TODO handle error cases
+        final int eventCode = response_type & EVENT_CODE_MASK;
 
-		final Optional<? extends DisplayEvent> displayEvent = eventConversion.handle(event_t);
-		final Optional<? extends AsyncListenable> target = eventConversion.getTarget(event_t);
+        final XEventHandler eventConversion = this.conversionMap.get(Integer.valueOf(eventCode));
+        if (eventConversion == null) {
+            return;
+        }
 
-		if (displayEvent.isPresent() && target.isPresent()) {
-			target.get().post(displayEvent.get());
-		}
-	}
+        final Optional<? extends DisplayEvent> displayEvent = eventConversion.handle(event);
+        final Optional<? extends AsyncListenable> target = eventConversion.getTarget(event);
+
+        if (displayEvent.isPresent() && target.isPresent()) {
+            target.get().post(displayEvent.get());
+        }
+    }
 }

@@ -8,7 +8,7 @@
  * View bindings:
  * <ul>
  * <li>{@link org.trinity.foundation.api.render.binding.view.DataContext}</li>
- * <li>{@link org.trinity.foundation.api.render.binding.view.InputSignals}</li>
+ * <li>{@link org.trinity.foundation.api.render.binding.view.EventSignals}</li>
  * <li>
  * {@link org.trinity.foundation.api.render.binding.view.ObservableCollection}</li>
  * <li>{@link org.trinity.foundation.api.render.binding.view.PropertySlots}</li>

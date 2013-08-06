@@ -40,6 +40,7 @@ import com.trolltech.qt.core.QObject;
 
 import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 
+@Deprecated
 @Bind(to = @To(IMPLEMENTATION))
 @Singleton
 @NotThreadSafe
@@ -63,7 +64,7 @@ public class RenderEventConverter {
 										final QEvent event) {
 
 		final Optional<RenderEventConversion> eventConverter = this.conversionByQEventType.get(event.type());
-		DisplayEvent displayEvent = null;
+		final DisplayEvent displayEvent;
 		if (eventConverter.isPresent()) {
 			displayEvent = eventConverter.get().convertEvent(	view,
 																eventProducer,

@@ -37,6 +37,7 @@ import com.trolltech.qt.core.QObject;
  * @author Erik De Rijcke
  * @since 1.0
  */
+@Deprecated
 @Bind(multiple = true)
 @Singleton
 public class FocusGainConversion implements RenderEventConversion {

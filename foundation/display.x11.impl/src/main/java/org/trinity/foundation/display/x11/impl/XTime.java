@@ -58,25 +58,25 @@ public class XTime {
 	}
 
 	@Subscribe
-	public void handleButtonPressed(final xcb_button_press_event_t press_event_t) {
+	public void handleButtonPressed(final xcb_button_press_event_t button_press_event) {
 		// press&release have the same type
-		this.time.set(press_event_t.getTime());
+		this.time.set(button_press_event.getTime());
 	}
 
 	@Subscribe
-	public void handleKeyPressed(final xcb_key_press_event_t key_press_event_t) {
+	public void handleKeyPressed(final xcb_key_press_event_t key_press_event) {
 		// press&release have the same type
-		this.time.set(key_press_event_t.getTime());
+		this.time.set(key_press_event.getTime());
 	}
 
 	@Subscribe
-	public void handlePropertyNotify(final xcb_property_notify_event_t property_notify_event_t) {
-		this.time.set(property_notify_event_t.getTime());
+	public void handlePropertyNotify(final xcb_property_notify_event_t property_notify_event) {
+		this.time.set(property_notify_event.getTime());
 	}
 
 	@Subscribe
-	public void handleEnterNotify(final xcb_enter_notify_event_t enter_notify_event_t) {
+	public void handleEnterNotify(final xcb_enter_notify_event_t enter_notify_event) {
 		// enter & leave have the same type
-		this.time.set(enter_notify_event_t.getTime());
+		this.time.set(enter_notify_event.getTime());
 	}
 }

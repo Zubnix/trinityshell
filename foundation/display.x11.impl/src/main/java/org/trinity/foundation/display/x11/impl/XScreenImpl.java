@@ -8,8 +8,6 @@ import org.trinity.foundation.display.x11.api.XScreen;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Created with IntelliJ IDEA. User: erik Date: 7/12/13 Time: 11:28 PM To change
@@ -19,20 +17,20 @@ import javax.annotation.concurrent.ThreadSafe;
 @ExecutionContext(DisplayExecutor.class)
 public class XScreenImpl implements XScreen {
 
-	private final xcb_screen_t xcb_screen;
+	private final xcb_screen_t screen;
 
-	public XScreenImpl(@Nonnull xcb_screen_t xcb_screen) {
-		this.xcb_screen = xcb_screen;
+	public XScreenImpl(@Nonnull final xcb_screen_t screen) {
+		this.screen = screen;
 	}
 
 	@Override
 	public xcb_screen_t getScreenReference() {
-		return xcb_screen;
+		return screen;
 	}
 
 	@Override
 	public Size getSize() {
-		return new Size(this.xcb_screen.getWidth_in_pixels(),
-						this.xcb_screen.getHeight_in_pixels());
+		return new Size(this.screen.getWidth_in_pixels(),
+						this.screen.getHeight_in_pixels());
 	}
 }

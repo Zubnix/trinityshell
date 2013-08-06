@@ -34,9 +34,10 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.trolltech.qt.gui.QWidget;
 
+@Deprecated
 public class ViewDiscovery {
 
-	private static final Logger logger = LoggerFactory.getLogger(ViewDiscovery.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ViewDiscovery.class);
 	private static final Cache<Class<?>, Optional<Method>> views = CacheBuilder.newBuilder().build();
 
 	ViewDiscovery() {
@@ -44,8 +45,8 @@ public class ViewDiscovery {
 
 	public QWidget lookupView(final Object model) {
 
-		logger.debug(	"Looking up view for model={}",
-						model);
+		LOG.debug("Looking up view for model={}",
+                model);
 
 		final Class<?> modelClass = model.getClass();
 		QWidget view = null;
@@ -66,32 +67,32 @@ public class ViewDiscovery {
 					if (foundView instanceof QWidget) {
 						view = (QWidget) foundView;
 					} else {
-						logger.error(	"Expected found view={} of model={} to be of type={}",
-										foundView,
-										model,
-										QWidget.class.getName());
+						LOG.error("Expected found view={} of model={} to be of type={}",
+                                foundView,
+                                model,
+                                QWidget.class.getName());
 					}
 				} catch (final IllegalAccessException e) {
-					logger.error(	"Can not invoke view getter for model=" + model
-											+ ". Did you declare it as a no arg public method?",
-									e);
+					LOG.error("Can not invoke view getter for model=" + model
+                            + ". Did you declare it as a no arg public method?",
+                            e);
 				} catch (final IllegalArgumentException e) {
-					logger.error(	"Can not invoke view getter for model=" + model
-											+ ". Did you declare it as a no arg public method?",
-									e);
+					LOG.error("Can not invoke view getter for model=" + model
+                            + ". Did you declare it as a no arg public method?",
+                            e);
 				} catch (final InvocationTargetException e) {
-					logger.error(	"Invoking the view getter for model=" + model + " throws an exception.",
-									e);
+					LOG.error("Invoking the view getter for model=" + model + " throws an exception.",
+                            e);
 				}
 			} else {
-				logger.error(	"Can not find view getter on class={} for model={}. Did you annotate a getter with {}?",
-								modelClass.getName(),
-								model,
-								ViewReference.class.getName());
+				LOG.error("Can not find view getter on class={} for model={}. Did you annotate a getter with {}?",
+                        modelClass.getName(),
+                        model,
+                        ViewReference.class.getName());
 			}
 		} catch (final ExecutionException e1) {
-			logger.error(	"Exception while searching for a view on model=" + model,
-							e1);
+			LOG.error("Exception while searching for a view on model=" + model,
+                    e1);
 		}
 		return view;
 	}
@@ -102,9 +103,9 @@ public class ViewDiscovery {
 		for (final Method method : methods) {
 			final ViewReference viewReference = method.getAnnotation(ViewReference.class);
 			if ((viewReference != null) && (foundMethod != null)) {
-				logger.error(	"Found multiple {} on {}",
-								ViewReference.class.getName(),
-								clazz.getName());
+				LOG.error("Found multiple {} on {}",
+                        ViewReference.class.getName(),
+                        clazz.getName());
 			} else if (viewReference != null) {
 				foundMethod = method;
 			}

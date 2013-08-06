@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * to make sure the correct event listeners are installed and the correct event
  * slot is called by the correct execution context.
  * <p>
- * An {@link EventSignal} is used as an argument of {@link InputSignals}.
+ * An {@link EventSignal} is used as an argument of {@link EventSignals}.
  *
  * @see org.trinity.foundation.api.render.binding.model.delegate.Signal
  ***************************************

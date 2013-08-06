@@ -54,9 +54,9 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 @NotThreadSafe
 public class ShellRootWidget extends BaseShellWidget implements Desktop {
 
-	private final EventList<Object> notificationsBar = new BasicEventList<Object>();
-	private final EventList<Object> clientsBar = new BasicEventList<Object>();
-	private final EventList<Object> bottomBar = new BasicEventList<Object>();
+	private final EventList<Object> notificationsBar = new BasicEventList<>();
+	private final EventList<Object> clientsBar = new BasicEventList<>();
+	private final EventList<Object> bottomBar = new BasicEventList<>();
 
 	@Inject
 	ShellRootWidget(final Display display,

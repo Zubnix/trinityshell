@@ -39,6 +39,7 @@ import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
+import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -56,7 +57,6 @@ import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_window_attributes_cookie_t;
 import org.freedesktop.xcb.xcb_get_window_attributes_reply_t;
-import org.freedesktop.xcb.xcb_map_state_t;
 import org.freedesktop.xcb.xcb_query_tree_cookie_t;
 import org.freedesktop.xcb.xcb_query_tree_reply_t;
 import org.freedesktop.xcb.xcb_screen_iterator_t;
@@ -90,7 +90,7 @@ public class XDisplayImpl implements Display {
 			| XCB_EVENT_MASK_STRUCTURE_NOTIFY;
 	private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
 			.putInt(CLIENT_EVENT_MASK);
-	private final List<DisplaySurface> clientDisplaySurfaces = new ArrayList<DisplaySurface>();
+	private final List<DisplaySurface> clientDisplaySurfaces = new ArrayList<>();
 	private final XConnection xConnection;
 	private final XWindowCacheImpl xWindowCache;
 	private final XEventPump xEventPump;
@@ -177,15 +177,15 @@ public class XDisplayImpl implements Display {
 		// find client display surfaces that are already
 		// active on the X server and track them
 
-		final int rootId = screen.getScreenReference().getRoot();
-		final SWIGTYPE_p_xcb_connection_t xConnectionRef = this.xConnection.getConnectionReference().get();
-		final xcb_query_tree_cookie_t query_tree_cookie_t = xcb_query_tree(	xConnectionRef,
-																			rootId);
+		final int root = screen.getScreenReference().getRoot();
+		final SWIGTYPE_p_xcb_connection_t connection = this.xConnection.getConnectionReference().get();
+		final xcb_query_tree_cookie_t query_tree_cookie = xcb_query_tree(	connection,
+																			root);
 		final xcb_generic_error_t e = new xcb_generic_error_t();
 		// this is a one time call, no need to make it
 		// async.
-		final xcb_query_tree_reply_t query_tree_reply = xcb_query_tree_reply(	xConnectionRef,
-																				query_tree_cookie_t,
+		final xcb_query_tree_reply_t query_tree_reply = xcb_query_tree_reply(	connection,
+																				query_tree_cookie,
 																				e);
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
 			XDisplayImpl.LOG.error(	"X error while doing query tree: {}.",
@@ -197,12 +197,12 @@ public class XDisplayImpl implements Display {
 		int tree_children_length = xcb_query_tree_children_length(query_tree_reply);
 		while (tree_children_length > 0) {
 
-			final int clientWindowId = tree_children.getInt();
+			final int tree_child = tree_children.getInt();
 
-			final xcb_get_window_attributes_cookie_t get_window_attributes_cookie = xcb_get_window_attributes(	xConnectionRef,
-																												clientWindowId);
+			final xcb_get_window_attributes_cookie_t get_window_attributes_cookie = xcb_get_window_attributes(	connection,
+																												tree_child);
 
-			final xcb_get_window_attributes_reply_t get_window_attributes_reply = xcb_get_window_attributes_reply(	xConnectionRef,
+			final xcb_get_window_attributes_reply_t get_window_attributes_reply = xcb_get_window_attributes_reply(	connection,
 																													get_window_attributes_cookie,
 																													e);
 
@@ -215,11 +215,11 @@ public class XDisplayImpl implements Display {
 				// Check for override redirect flag and ignore the window if
 				// it's set. Ignore unmapped windows, we'll see them as soon as
 				// they reconfigure/map themselves
-				if ((map_state != xcb_map_state_t.XCB_MAP_STATE_VIEWABLE) || (override_redirect != 0)) {
+				if ((map_state != XCB_MAP_STATE_VIEWABLE) || (override_redirect != 0)) {
 					continue;
 				}
 
-				final DisplaySurface clientWindow = this.xWindowCache.getWindow(clientWindowId);
+				final DisplaySurface clientWindow = this.xWindowCache.getWindow(tree_child);
 				configureClientEvents(clientWindow);
 				trackClient(clientWindow);
 			}
@@ -286,7 +286,7 @@ public class XDisplayImpl implements Display {
 			@Override
 			public List<DisplaySurface> call() throws Exception {
 				// we return a copy
-				return new ArrayList<DisplaySurface>(XDisplayImpl.this.clientDisplaySurfaces);
+				return new ArrayList<>(XDisplayImpl.this.clientDisplaySurfaces);
 			}
 		});
 	}

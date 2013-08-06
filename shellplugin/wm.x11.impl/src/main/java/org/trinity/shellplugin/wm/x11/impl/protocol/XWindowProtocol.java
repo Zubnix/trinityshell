@@ -65,7 +65,7 @@ public class XWindowProtocol {
 	private final XConnection xConnection;
 
 	@Inject
-	XWindowProtocol(@DisplayExecutor ListeningExecutorService displayExecutor,
+	XWindowProtocol(@DisplayExecutor final ListeningExecutorService displayExecutor,
 					final XConnection xConnection) {
 		this.displayExecutor = displayExecutor;
 		this.xConnection = xConnection;

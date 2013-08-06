@@ -41,6 +41,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 @ExecutionContext(ShellExecutor.class)
 @NotThreadSafe
+@Deprecated
 public class BaseShellWidgetGeometryDelegate extends AbstractShellSurfaceGeometryDelegate {
 
 	private final BaseShellWidget shellWidget;

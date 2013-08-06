@@ -28,6 +28,7 @@ import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.core.QObject;
 
+@Deprecated
 public class ViewEventTracker extends QObject {
 
 	private final AsyncListenable eventTarget;

@@ -106,7 +106,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	@Override
 	public Boolean isDestroyedImpl() {
-		return Boolean.valueOf(AbstractShellNode.this.destroyed);
+		return Boolean.valueOf(this.destroyed);
 	}
 
 	@Override
@@ -182,8 +182,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 		}
 
 		// check if our parent is visible.
-		final boolean parentVisible = (getParent() != null) && getParentImpl().isVisibleImpl();
-		return parentVisible;
+        return (getParent() != null) && getParentImpl().isVisibleImpl();
 	}
 
 	@Override

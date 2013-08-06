@@ -19,6 +19,7 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.freedesktop.xcb.LibXcb.xcb_connect;
 import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
 
@@ -44,27 +45,29 @@ import com.google.inject.Singleton;
 @NotThreadSafe
 public class XConnectionImpl implements XConnection {
 
-	private SWIGTYPE_p_xcb_connection_t xcb_connection;
+    private SWIGTYPE_p_xcb_connection_t xcb_connection;
 
-	XConnectionImpl() {
-	}
+    XConnectionImpl() {
+    }
 
-	@Override
-	public void open(	@Nonnull final String displayName,
-						@Nonnegative final int screen) {
-		final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
-		screenBuf.putInt(screen);
-		this.xcb_connection = xcb_connect(	displayName,
-											screenBuf);
-	}
+    @Override
+    public void open(@Nonnull final String displayName,
+                     @Nonnegative final int screen) {
+        checkNotNull(displayName);
 
-	@Override
-	public void close() {
-		xcb_disconnect(this.xcb_connection);
-	}
+        final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
+        screenBuf.putInt(screen);
+        this.xcb_connection = xcb_connect(displayName,
+                screenBuf);
+    }
 
-	@Override
-	public Optional<SWIGTYPE_p_xcb_connection_t> getConnectionReference() {
-		return Optional.fromNullable(this.xcb_connection);
-	}
+    @Override
+    public void close() {
+        xcb_disconnect(this.xcb_connection);
+    }
+
+    @Override
+    public Optional<SWIGTYPE_p_xcb_connection_t> getConnectionReference() {
+        return Optional.fromNullable(this.xcb_connection);
+    }
 }

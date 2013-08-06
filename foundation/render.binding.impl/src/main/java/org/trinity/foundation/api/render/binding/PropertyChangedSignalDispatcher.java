@@ -57,22 +57,18 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 
 		final PropertyChanged changedPropertySignal = invocation.getMethod().getAnnotation(PropertyChanged.class);
 		final Class<? extends Annotation> executor = changedPropertySignal.executor();
-		final ListeningExecutorService modelExecutorInstance = injector.getInstance(Key
+		final ListeningExecutorService modelExecutorInstance = this.injector.getInstance(Key
 				.get(	ListeningExecutorService.class,
 						executor));
 		final String[] changedPropertyNames = changedPropertySignal.value();
 
 		for (final String propertyName : changedPropertyNames) {
-			getBinder().updateBinding(	modelExecutorInstance,
-										changedModel,
-										propertyName);
+			this.binder.updateBinding(modelExecutorInstance,
+                    changedModel,
+                    propertyName);
 		}
 
 		return invocationResult;
-	}
-
-	public Binder getBinder() {
-		return this.binder;
 	}
 
 	@Inject
@@ -81,7 +77,7 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 	}
 
 	@Inject
-	void setInjector(Injector injector) {
+	void setInjector(final Injector injector) {
 		this.injector = injector;
 	}
 }

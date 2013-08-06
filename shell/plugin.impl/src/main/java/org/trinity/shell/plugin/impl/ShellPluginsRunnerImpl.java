@@ -47,27 +47,23 @@ public class ShellPluginsRunnerImpl implements ShellPluginsRunner {
 	public void startAll() {
 		for (final ShellPlugin shellPlugin : this.shellPlugins) {
 			shellPlugin.addListener(new Listener() {
-
 										@Override
 										public void terminated(final State from) {
 											System.err.println(String.format(	"%s TERMINATED (was %s)",
 																				shellPlugin,
 																				from));
 										}
-
 										@Override
 										public void stopping(final State from) {
 											System.err.println(String.format(	"%s STOPPING (was %s)",
 																				shellPlugin,
 																				from));
 										}
-
 										@Override
 										public void starting() {
 											System.err.println(String.format(	"%s STARTING",
 																				shellPlugin));
 										}
-
 										@Override
 										public void running() {
 											System.err.println(String.format(	"%s RUNNING",

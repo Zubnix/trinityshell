@@ -28,6 +28,7 @@ import org.trinity.shell.api.surface.ShellSurfaceParent;
  * Provides visual elements for the user to interact with in the shell scene.
  ***************************************
  */
+@Deprecated
 @ExecutionContext(ShellExecutor.class)
 public interface ShellWidget extends ShellSurfaceParent {
 

@@ -43,6 +43,7 @@ import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
+@Deprecated
 @ThreadSafe
 public class PainterImpl implements Painter {
 

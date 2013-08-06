@@ -116,10 +116,6 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
         }
     }
 
-    /**
-     * @param child
-     * @param visible
-     */
     private void updateChildVisibility(@Nonnull final AbstractShellNode child,
                                        final boolean parentVisible) {
         final boolean childVisible = child.isVisibleImpl();

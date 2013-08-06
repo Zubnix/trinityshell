@@ -35,6 +35,8 @@ import com.google.common.util.concurrent.ListenableFuture;
  *
  ***************************************
  */
+
+@Deprecated
 @ExecutionContext(RenderExecutor.class)
 public interface Painter extends DisplayAreaManipulator {
 
@@ -45,6 +47,7 @@ public interface Painter extends DisplayAreaManipulator {
 	 *
 	 * @return A future {@link DisplaySurface}.
 	 */
+    @Deprecated
 	ListenableFuture<DisplaySurface> getDislaySurface();
 
 	/***************************************
@@ -52,5 +55,6 @@ public interface Painter extends DisplayAreaManipulator {
 	 * {@code Painter}.
 	 ***************************************
 	 */
+    @Deprecated
 	ListenableFuture<Void> bindView();
 }

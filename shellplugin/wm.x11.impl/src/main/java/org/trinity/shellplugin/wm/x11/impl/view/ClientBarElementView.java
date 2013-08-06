@@ -22,7 +22,7 @@ package org.trinity.shellplugin.wm.x11.impl.view;
 
 import org.trinity.foundation.api.render.binding.view.DataContext;
 import org.trinity.foundation.api.render.binding.view.EventSignal;
-import org.trinity.foundation.api.render.binding.view.InputSignals;
+import org.trinity.foundation.api.render.binding.view.EventSignals;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 import org.trinity.foundation.api.shared.Size;
@@ -38,72 +38,73 @@ import com.trolltech.qt.gui.QPixmap;
 
 class ClientBarElementView extends QFrame {
 
-	@PropertySlots({ //
-	@PropertySlot(propertyName = "imageDefinition", methodName = "setImageDefinition", argumentTypes = { ImageDefinition.class }) // HasImageDefinition
-	})
-	@InputSignals({ //
-	@EventSignal(name = "onPointerInput", filter = LMBSignalFilter.class) // ReceivesPointerInput
-	})
-	QLabel clientIconView = new QLabel() {
-		{
-			// workaround for jambi css bug
-			setObjectName("ClientIcon");
-		}
+    @PropertySlots({ //
+            @PropertySlot(propertyName = "imageDefinition", methodName = "setImageDefinition", argumentTypes = {ImageDefinition.class}) // HasImageDefinition
+    })
+    @EventSignals({ //
+            @EventSignal(name = "onPointerInput", filter = LMBSignalFilter.class) // ReceivesPointerInput
+    })
+    QLabel clientIconView = new QLabel() {
+        {
+            // workaround for jambi css bug
+            setObjectName("ClientIcon");
+        }
 
-		@SuppressWarnings("unused")
-		// used by property annotation.
-		void setImageDefinition(final ImageDefinition imageDefinition) {
-			final Size imageSize = imageDefinition.getImageSize();
-			final int width = imageSize.getWidth();
-			final int height = imageSize.getHeight();
-			Preconditions.checkState(	width > 0,
-										"Image width must be > 0");
-			Preconditions.checkState(	height > 0,
-										"Image height must be > 0");
+        @SuppressWarnings("unused")
+            // used by property annotation.
+        void setImageDefinition(final ImageDefinition imageDefinition) {
+            final Size imageSize = imageDefinition.getImageSize();
+            final int width = imageSize.getWidth();
+            final int height = imageSize.getHeight();
+            Preconditions.checkState(width > 0,
+                    "Image width must be > 0");
+            Preconditions.checkState(height > 0,
+                    "Image height must be > 0");
 
-			final byte[] imageData = imageDefinition.getImageData();
+            final byte[] imageData = imageDefinition.getImageData();
 
-			final QPixmap pixmapImage = new QPixmap(width,
-													height);
-			pixmapImage.loadFromData(imageData);
-			setPixmap(pixmapImage);
-		}
-	};
-	@PropertySlots({ //
-	@PropertySlot(propertyName = "text", methodName = "setText", argumentTypes = { String.class }) // HasText
-	})
-	@InputSignals({ //
-	@EventSignal(name = "onPointerInput", filter = LMBSignalFilter.class) // ReceivesPointerInput
-	})
-	QLabel clientNameView = new QLabel() {
-		{
-			// workaround for jambi css bug
-			setObjectName("ClientName");
-		}
-	};
-	@DataContext("closeButton")
-	@InputSignals({ //
-	@EventSignal(name = "onPointerInput", filter = LMBSignalFilter.class) // ReceivesPointerInput
-	})
-	QFrame closeButtonView = new QFrame() {
-		// workaround for jambi css bug
-		{
-			setObjectName("ClientCloseButton");
-		}
-	};
-	QHBoxLayout barItemlayout = new QHBoxLayout(this);
-	{
-		// workaround for jambi css bug
-		setObjectName("ClientBarElement");
+            final QPixmap pixmapImage = new QPixmap(width,
+                    height);
+            pixmapImage.loadFromData(imageData);
+            setPixmap(pixmapImage);
+        }
+    };
+    @PropertySlots({ //
+            @PropertySlot(propertyName = "text", methodName = "setText", argumentTypes = {String.class}) // HasText
+    })
+    @EventSignals({ //
+            @EventSignal(name = "onPointerInput", filter = LMBSignalFilter.class) // ReceivesPointerInput
+    })
+    QLabel clientNameView = new QLabel() {
+        {
+            // workaround for jambi css bug
+            setObjectName("ClientName");
+        }
+    };
+    @DataContext("closeButton")
+    @EventSignals({ //
+            @EventSignal(name = "onPointerInput", filter = LMBSignalFilter.class) // ReceivesPointerInput
+    })
+    QFrame closeButtonView = new QFrame() {
+        // workaround for jambi css bug
+        {
+            setObjectName("ClientCloseButton");
+        }
+    };
+    QHBoxLayout barItemlayout = new QHBoxLayout(this);
 
-		this.barItemlayout.setContentsMargins(new QMargins(	0,
-															0,
-															0,
-															0));
-		setLayout(this.barItemlayout);
+    {
+        // workaround for jambi css bug
+        setObjectName("ClientBarElement");
 
-		this.barItemlayout.addWidget(this.clientIconView);
-		this.barItemlayout.addWidget(this.clientNameView);
-		this.barItemlayout.addWidget(this.closeButtonView);
-	}
+        this.barItemlayout.setContentsMargins(new QMargins(0,
+                0,
+                0,
+                0));
+        setLayout(this.barItemlayout);
+
+        this.barItemlayout.addWidget(this.clientIconView);
+        this.barItemlayout.addWidget(this.clientNameView);
+        this.barItemlayout.addWidget(this.closeButtonView);
+    }
 }

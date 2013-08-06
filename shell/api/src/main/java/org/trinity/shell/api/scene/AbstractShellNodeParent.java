@@ -51,108 +51,110 @@ import javax.annotation.Nullable;
 @ExecutionContext(ShellExecutor.class)
 public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodeParent {
 
-	private final LinkedList<AbstractShellNode> children = new LinkedList<AbstractShellNode>();
-	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
+    private final LinkedList<AbstractShellNode> children = new LinkedList<>();
+    private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-	protected AbstractShellNodeParent(@Nullable @ShellRootNode final ShellNodeParent shellRootNode,
-									    @Nonnull @ShellScene final AsyncListenable shellScene,
-										@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	shellRootNode,
-				shellScene,
-				shellExecutor);
-	}
+    protected AbstractShellNodeParent(@Nullable @ShellRootNode final ShellNodeParent shellRootNode,
+                                      @Nonnull @ShellScene final AsyncListenable shellScene,
+                                      @Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
+        super(shellRootNode,
+                shellScene,
+                shellExecutor);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * The returned array is a copy of the internal array.
-	 */
-	@Override
-	public List<AbstractShellNode> getChildrenImpl() {
-		return new ArrayList<AbstractShellNode>(this.children);
-	}
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * The returned array is a copy of the internal array.
+     */
+    @Override
+    public List<AbstractShellNode> getChildrenImpl() {
+        return new ArrayList<>(this.children);
+    }
 
-	/**
-	 * Refresh the on-screen position of this node's children.
-	 */
-	protected void updateChildrenPosition() {
-		for (final AbstractShellNode child : getChildrenImpl()) {
-			final Coordinate childPosition = child.getPositionImpl();
-			child.getShellNodeGeometryDelegate().move(childPosition);
-		}
-	}
+    /**
+     * Refresh the on-screen position of this node's children.
+     */
+    protected void updateChildrenPosition() {
+        for (final AbstractShellNode child : getChildrenImpl()) {
+            final Coordinate childPosition = child.getPositionImpl();
+            child.getShellNodeGeometryDelegate().move(childPosition);
+        }
+    }
 
-	@Override
-	public Optional<ShellLayoutManager> getLayoutManagerImpl() {
-		return this.optionalLayoutManager;
-	}
+    @Override
+    public Optional<ShellLayoutManager> getLayoutManagerImpl() {
+        return this.optionalLayoutManager;
+    }
 
-	@Override
-	public Void setLayoutManagerImpl(@Nullable final ShellLayoutManager shellLayoutManager) {
-		this.optionalLayoutManager = Optional.of(shellLayoutManager);
-		register(shellLayoutManager);
-		return null;
-	}
+    @Override
+    public Void setLayoutManagerImpl(@Nullable final ShellLayoutManager shellLayoutManager) {
+        this.optionalLayoutManager = Optional.of(shellLayoutManager);
+        if (optionalLayoutManager.isPresent()) {
+            register(shellLayoutManager);
+        }
+        return null;
+    }
 
-	@Override
-	protected void doMove(final boolean execute) {
-		super.doMove(execute);
-		updateChildrenPosition();
-	}
+    @Override
+    protected void doMove(final boolean execute) {
+        super.doMove(execute);
+        updateChildrenPosition();
+    }
 
-	@Override
-	protected void doMoveResize(final boolean execute) {
-		super.doMoveResize(execute);
-		updateChildrenPosition();
-		layout();
-	}
+    @Override
+    protected void doMoveResize(final boolean execute) {
+        super.doMoveResize(execute);
+        updateChildrenPosition();
+        layout();
+    }
 
-	@Override
-	protected void doResize(final boolean execute) {
-		super.doResize(execute);
-		layout();
-	}
+    @Override
+    protected void doResize(final boolean execute) {
+        super.doResize(execute);
+        layout();
+    }
 
-	protected void handleChildReparent(@Nonnull final ShellNode child) {
-		checkArgument(child instanceof AbstractShellNode);
+    protected void handleChildReparent(@Nonnull final ShellNode child) {
+        checkArgument(child instanceof AbstractShellNode);
 
-		final ShellNodeEvent shellNodeEvent;
-		if (this.children.remove(child)) {
-			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
-															toGeoTransformationImpl());
-		} else {
-			this.children.addLast((AbstractShellNode) child);
-			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
-															toGeoTransformationImpl());
-		}
-		post(shellNodeEvent);
-	}
+        final ShellNodeEvent shellNodeEvent;
+        if (this.children.remove(child)) {
+            shellNodeEvent = new ShellNodeChildLeftEvent(this,
+                    toGeoTransformationImpl());
+        } else {
+            this.children.addLast((AbstractShellNode) child);
+            shellNodeEvent = new ShellNodeChildAddedEvent(this,
+                    toGeoTransformationImpl());
+        }
+        post(shellNodeEvent);
+    }
 
-	protected void handleChildStacking(@Nonnull final ShellNode child,
-										final boolean raised) {
-		checkArgument(child instanceof AbstractShellNode);
-		checkArgument(this.children.remove(child));
+    protected void handleChildStacking(@Nonnull final ShellNode child,
+                                       final boolean raised) {
+        checkArgument(child instanceof AbstractShellNode);
+        checkArgument(this.children.remove(child));
 
-		if (raised) {
-			this.children.addLast((AbstractShellNode) child);
-		} else {
-			this.children.addFirst((AbstractShellNode) child);
-		}
-		// TODO fire a specific event?
-	}
+        if (raised) {
+            this.children.addLast((AbstractShellNode) child);
+        } else {
+            this.children.addFirst((AbstractShellNode) child);
+        }
+        // TODO fire a specific event?
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * This call has no effect if no {@link ShellLayoutManager} is set for this
-	 * node.
-	 */
-	@Override
-	public Void layoutImpl() {
-		final Optional<ShellLayoutManager> optionalLayoutManager = getLayoutManagerImpl();
-		if (optionalLayoutManager.isPresent()) {
-			optionalLayoutManager.get().layout(this);
-		}
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * This call has no effect if no {@link ShellLayoutManager} is set for this
+     * node.
+     */
+    @Override
+    public Void layoutImpl() {
+        final Optional<ShellLayoutManager> optionalLayoutManager = getLayoutManagerImpl();
+        if (optionalLayoutManager.isPresent()) {
+            optionalLayoutManager.get().layout(this);
+        }
+        return null;
+    }
 }

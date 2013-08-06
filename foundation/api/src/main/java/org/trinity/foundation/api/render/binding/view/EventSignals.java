@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.FIELD })
-public @interface InputSignals {
+public @interface EventSignals {
 	/***************************************
 	 * All {@code EventSignal}s present on a view element.
 	 *

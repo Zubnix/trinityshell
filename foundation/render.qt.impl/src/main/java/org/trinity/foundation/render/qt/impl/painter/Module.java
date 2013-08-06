@@ -27,6 +27,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.trolltech.qt.core.QObject;
 
+@Deprecated
 @GuiceModule
 class Module extends AbstractModule {
 

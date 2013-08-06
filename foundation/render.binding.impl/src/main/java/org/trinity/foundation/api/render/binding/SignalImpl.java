@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import com.google.common.hash.HashFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.model.delegate.Signal;
@@ -37,73 +38,75 @@ import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
+//TODO documentation
 public class SignalImpl implements Signal {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SignalImpl.class);
-	private static Cache<HashCode, Optional<Method>> eventSlotsByHash = CacheBuilder.newBuilder().concurrencyLevel(1)
-			.build();
-	private final ListeningExecutorService modelExecutor;
-	private final Object view;
-	private final Map<Object, Object> dataContextValueByView;
-	private final String inputSlotName;
+    private static final Logger LOG = LoggerFactory.getLogger(SignalImpl.class);
+    private static final Cache<HashCode, Optional<Method>> EVENT_SLOTS_BY_HASH = CacheBuilder.newBuilder().concurrencyLevel(1)
+            .build();
+    private static final HashFunction HASH_FUNCTION = Hashing.goodFastHash(16);
+    private final ListeningExecutorService modelExecutor;
+    private final Object view;
+    private final Map<Object, Object> dataContextValueByView;
+    private final String inputSlotName;
 
-	SignalImpl(	final ListeningExecutorService modelExecutor,
-				final Object view,
-				final Map<Object, Object> dataContextValueByView,
-				final String inputSlotName) {
-		this.modelExecutor = modelExecutor;
-		this.view = view;
-		this.dataContextValueByView = dataContextValueByView;
-		this.inputSlotName = inputSlotName;
-	}
+    SignalImpl(final ListeningExecutorService modelExecutor,
+               final Object view,
+               final Map<Object, Object> dataContextValueByView,
+               final String inputSlotName) {
+        this.modelExecutor = modelExecutor;
+        this.view = view;
+        this.dataContextValueByView = dataContextValueByView;
+        this.inputSlotName = inputSlotName;
+    }
 
-	private static Optional<Method> findSlot(	final Class<?> modelClass,
-												final String methodName) throws ExecutionException {
+    private static Optional<Method> findSlot(final Class<?> modelClass,
+                                             final String methodName) throws ExecutionException {
 
-		final HashCode hashCode = Hashing.goodFastHash(32).newHasher().putInt(modelClass.hashCode())
-				.putString(methodName).hash();
+        final HashCode hashCode = HASH_FUNCTION.newHasher().putInt(modelClass.hashCode())
+                .putString(methodName).hash();
 
-		return eventSlotsByHash.get(hashCode,
-									new Callable<Optional<Method>>() {
-										@Override
-										public Optional<Method> call() {
-											return getSlot(	modelClass,
-															methodName);
-										}
-									});
-	}
+        return EVENT_SLOTS_BY_HASH.get(hashCode,
+                new Callable<Optional<Method>>() {
+                    @Override
+                    public Optional<Method> call() {
+                        return getSlot(modelClass,
+                                methodName);
+                    }
+                });
+    }
 
-	private static Optional<Method> getSlot(final Class<?> modelClass,
-											final String methodName) {
-		Method inputSlot = null;
-		try {
-			inputSlot = modelClass.getMethod(methodName);
-		} catch (final SecurityException e) {
-			LOG.error(	"Error while trying to find an input slot for class=" + modelClass + " with slotname="
-								+ methodName,
-						e);
-		} catch (final NoSuchMethodException e) {
-			LOG.warn(	"No input slot found for class=" + modelClass + " with slotname=" + methodName,
-						e);
-		}
-		return Optional.fromNullable(inputSlot);
-	}
+    private static Optional<Method> getSlot(final Class<?> modelClass,
+                                            final String methodName) {
+        Method inputSlot = null;
+        try {
+            inputSlot = modelClass.getMethod(methodName);
+        } catch (final SecurityException e) {
+            LOG.error("Error while trying to find an input slot for class=" + modelClass + " with slotname="
+                    + methodName,
+                    e);
+        } catch (final NoSuchMethodException e) {
+            LOG.warn("No input slot found for class=" + modelClass + " with slotname=" + methodName,
+                    e);
+        }
+        return Optional.fromNullable(inputSlot);
+    }
 
-	@Override
-	public ListenableFuture<Void> fire() {
-		return modelExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				final Object viewModel = dataContextValueByView.get(view);
-				final Optional<Method> optionalInputSlot = findSlot(viewModel.getClass(),
-																	inputSlotName);
-				if (optionalInputSlot.isPresent()) {
-					final Method method = optionalInputSlot.get();
-					method.setAccessible(true);
-					method.invoke(viewModel);
-				}
-				return null;
-			}
-		});
-	}
+    @Override
+    public ListenableFuture<Void> fire() {
+        return modelExecutor.submit(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                final Object viewModel = dataContextValueByView.get(view);
+                final Optional<Method> optionalInputSlot = findSlot(viewModel.getClass(),
+                        inputSlotName);
+                if (optionalInputSlot.isPresent()) {
+                    final Method method = optionalInputSlot.get();
+                    method.setAccessible(true);
+                    method.invoke(viewModel);
+                }
+                return null;
+            }
+        });
+    }
 }

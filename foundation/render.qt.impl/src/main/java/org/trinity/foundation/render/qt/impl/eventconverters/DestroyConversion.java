@@ -28,6 +28,7 @@ import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.core.QEvent.Type;
 import com.trolltech.qt.core.QObject;
 
+@Deprecated
 @Bind(multiple = true)
 @Singleton
 public class DestroyConversion implements RenderEventConversion {

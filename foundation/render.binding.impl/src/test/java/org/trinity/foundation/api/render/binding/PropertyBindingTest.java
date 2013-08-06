@@ -9,7 +9,6 @@ import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
 import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
-import org.trinity.foundation.api.render.binding.view.ViewElementTypes;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
 
@@ -26,23 +25,19 @@ public class PropertyBindingTest {
 		final View view = new View();
 
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
-		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
-		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
-		final CollectionElementView collectionElementView = new CollectionElementView();
 		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
 		when(viewFuture.get()).thenReturn(new CollectionElementView());
 		when(childViewDelegate.newView(	view,
 										CollectionElementView.class,
 										0)).thenReturn(viewFuture);
-		Injector injector = mock(Injector.class);
-		EventSignalFilter eventSignalFilter = mock(EventSignalFilter.class);
+		final Injector injector = mock(Injector.class);
+		final EventSignalFilter eventSignalFilter = mock(EventSignalFilter.class);
 		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
 
 		final Binder binder = new BinderImpl(	injector,
 												propertySlotInvocatorDelegate,
-												childViewDelegate,
-												viewElementTypes);
+												childViewDelegate);
 		binder.bind(MoreExecutors.sameThreadExecutor(),
 					model,
 					view);
@@ -79,23 +74,19 @@ public class PropertyBindingTest {
 		final View view = new View();
 
 		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
-		final ViewElementTypes viewElementTypes = mock(ViewElementTypes.class);
-		when(viewElementTypes.getViewElementTypes()).thenReturn(new Class<?>[] { Object.class });
 		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
-		final CollectionElementView collectionElementView = new CollectionElementView();
 		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
 		when(viewFuture.get()).thenReturn(new CollectionElementView());
 		when(childViewDelegate.newView(	view,
 										CollectionElementView.class,
 										0)).thenReturn(viewFuture);
-		Injector injector = mock(Injector.class);
-		EventSignalFilter eventSignalFilter = mock(EventSignalFilter.class);
+		final Injector injector = mock(Injector.class);
+		final EventSignalFilter eventSignalFilter = mock(EventSignalFilter.class);
 		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
 
 		final Binder binder = new BinderImpl(	injector,
 												propertySlotInvocatorDelegate,
-												childViewDelegate,
-												viewElementTypes);
+												childViewDelegate);
 
 		// when
 		binder.bind(MoreExecutors.sameThreadExecutor(),
