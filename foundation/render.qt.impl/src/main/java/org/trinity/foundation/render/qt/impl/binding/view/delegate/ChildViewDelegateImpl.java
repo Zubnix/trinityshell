@@ -80,15 +80,18 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
     public ListenableFuture<Void> destroyView(final Object parentView,
                                               final Object deletedChildView,
                                               final int deletedPosition) {
-        checkArgument(deletedChildView instanceof QWidget,
-                format("Expected view should be of type %s",
-                        QWidget.class.getName()));
+//        checkArgument(deletedChildView instanceof QWidget,
+//                format("Expected view should be of type %s",
+//                        QWidget.class.getName()));
 
         final ListenableFutureTask<Void> destroyTask = ListenableFutureTask.create(new Callable<Void>() {
             @Override
             public Void call() {
-                final QWidget deletedChildViewInstance = (QWidget) deletedChildView;
-                deletedChildViewInstance.close();
+                //FIXME workaround for too eagerly registering view elements with a datacontext
+                if (deletedChildView instanceof QWidget) {
+                    final QWidget deletedChildViewInstance = (QWidget) deletedChildView;
+                    deletedChildViewInstance.close();
+                }
                 return null;
             }
         });

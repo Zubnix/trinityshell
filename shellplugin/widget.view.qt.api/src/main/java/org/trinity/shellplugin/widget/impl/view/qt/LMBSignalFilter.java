@@ -38,37 +38,37 @@ import com.trolltech.qt.gui.QMouseEvent;
 @Bind
 public class LMBSignalFilter implements EventSignalFilter {
 
-	LMBSignalFilter() {
-	}
+    LMBSignalFilter() {
+    }
 
-	@Override
-	public void installFilter(	@Nonnull final Object view,
-								@Nonnull final Signal signal) {
-		checkNotNull(view);
-		checkNotNull(signal);
+    @Override
+    public void installFilter(@Nonnull final Object view,
+                              @Nonnull final Signal signal) {
+        checkNotNull(view);
+        checkNotNull(signal);
 
-		checkArgument(	view instanceof QObject,
-						"Can only install filter on views of type " + QObject.class.getName());
+        checkArgument(view instanceof QObject,
+                "Can only install filter on views of type " + QObject.class.getName());
 
-		QApplication.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				QObject qView = (QObject) view;
-				qView.installEventFilter(new QObject() {
-					@Override
-					public boolean eventFilter(	QObject watched,
-												QEvent event) {
-						if (event.type().equals(QEvent.Type.MouseButtonPress)) {
-							QMouseEvent mouseEvent = (QMouseEvent) event;
-							if (mouseEvent.button().equals(Qt.MouseButton.LeftButton)) {
-								signal.fire();
-								return true;
-							}
-						}
-						return false;
-					}
-				});
-			}
-		});
-	}
+        QApplication.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                final QObject qView = (QObject) view;
+                qView.installEventFilter(new QObject() {
+                    @Override
+                    public boolean eventFilter(final QObject watched,
+                                               final QEvent event) {
+                        if (event.type().equals(QEvent.Type.MouseButtonPress)) {
+                            final QMouseEvent mouseEvent = (QMouseEvent) event;
+                            if (mouseEvent.button().equals(Qt.MouseButton.LeftButton)) {
+                                signal.fire();
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                });
+            }
+        });
+    }
 }
