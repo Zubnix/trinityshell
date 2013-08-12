@@ -25,6 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.util.concurrent.Futures.addCallback;
 import static java.lang.String.format;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -78,11 +79,14 @@ public class BinderImpl implements Binder {
     private static final Logger LOG = LoggerFactory.getLogger(BinderImpl.class);
     private static final Cache<Class<?>, Cache<String, Optional<Method>>> GETTER_CACHE = CacheBuilder.newBuilder()
             .build();
+    private static final Cache<Class<?>, Field[]> DECLARED_FIELDS_CACHE = CacheBuilder.newBuilder()
+            .build();
     private static final String GET_BOOLEAN_PREFIX = "is";
     private static final String GET_PREFIX = "get";
     private final PropertySlotInvocatorDelegate propertySlotDelegate;
     private final Injector injector;
     private final ChildViewDelegate childViewDelegate;
+
     private final Map<Object, Object> dataContextValueByView = new WeakHashMap<>();
     private final Map<Object, Set<Object>> viewsByDataContextValue = new WeakHashMap<>();
     private final Map<Object, PropertySlots> propertySlotsByView = new WeakHashMap<>();
@@ -241,7 +245,7 @@ public class BinderImpl implements Binder {
                                    final Object inheritedDataContext,
                                    final Object view,
                                    final Optional<DataContext> optionalFieldLevelDataContext,
-                                   final Optional<EventSignals> optionalFieldLevelInputSignals,
+                                   final Optional<EventSignals> optionalFieldLevelEventSignals,
                                    final Optional<ObservableCollection> optionalFieldLevelObservableCollection,
                                    final Optional<PropertySlots> optionalFieldLevelPropertySlots) {
         checkNotNull(inheritedDataContext);
@@ -253,7 +257,7 @@ public class BinderImpl implements Binder {
         // absent
         final Optional<DataContext> optionalDataContext = optionalFieldLevelDataContext.or(Optional
                 .<DataContext>fromNullable(viewClass.getAnnotation(DataContext.class)));
-        final Optional<EventSignals> optionalInputSignals = optionalFieldLevelInputSignals.or(Optional
+        final Optional<EventSignals> optionalEventSignals = optionalFieldLevelEventSignals.or(Optional
                 .<EventSignals>fromNullable(viewClass.getAnnotation(EventSignals.class)));
         final Optional<ObservableCollection> optionalObservableCollection = optionalFieldLevelObservableCollection
                 .or(Optional.<ObservableCollection>fromNullable(viewClass.getAnnotation(ObservableCollection.class)));
@@ -268,14 +272,23 @@ public class BinderImpl implements Binder {
             if (optionalDataContextValue.isPresent()) {
                 dataContext = optionalDataContextValue.get();
             } else {
+                //no data context value available so we're not going to bind the view.
                 return;
             }
         }
+
+        //TODO only register a view with a datacontext if they have a binding.
+        //FIXME do a proper clean up of views with child datacontexes.
+//        if (optionalEventSignals.isPresent() || optionalObservableCollection.isPresent() || optionalPropertySlots.isPresent()) {
+//            registerBinding(dataContext,
+//                    view);
+//        }
+
         registerBinding(dataContext,
                 view);
 
-        if (optionalInputSignals.isPresent()) {
-            final EventSignal[] eventSignals = optionalInputSignals.get().value();
+        if (optionalEventSignals.isPresent()) {
+            final EventSignal[] eventSignals = optionalEventSignals.get().value();
             bindEventSignals(modelExecutor,
                     dataContext,
                     view,
@@ -647,15 +660,12 @@ public class BinderImpl implements Binder {
 
             final Class<?> viewClass = view.getClass();
 
-            // TODO Cache field lookup so we only get fields we're potentially
-            // interested in.
-            final Field[] childViewElements = viewClass.getDeclaredFields();
+            final Field[] childViewElements = getDeclaredFields(viewClass);
 
             for (final Field childViewElement : childViewElements) {
 
                 childViewElement.setAccessible(true);
                 final Object childView = childViewElement.get(view);
-                childViewElement.setAccessible(false);
 
                 // filter out null values
                 if (childView == null) {
@@ -685,7 +695,7 @@ public class BinderImpl implements Binder {
                         optionalFieldPropertySlots);
 
             }
-        } catch (IllegalArgumentException | IllegalAccessException e) {
+        } catch (IllegalArgumentException | IllegalAccessException | ExecutionException e) {
             // TODO explanation
             LOG.error("",
                     e);
@@ -733,6 +743,15 @@ public class BinderImpl implements Binder {
         checkNotNull(propertyName);
         return getGetterMethod(modelClass,
                 propertyName);
+    }
+
+    protected Field[] getDeclaredFields(final Class<?> clazz) throws ExecutionException {
+        return DECLARED_FIELDS_CACHE.get(clazz, new Callable<Field[]>() {
+            @Override
+            public Field[] call() {
+                return clazz.getDeclaredFields();
+            }
+        });
     }
 
     protected Optional<Method> getGetterMethod(final Class<?> modelClass,
