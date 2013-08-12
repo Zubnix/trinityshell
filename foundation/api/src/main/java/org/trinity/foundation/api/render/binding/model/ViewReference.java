@@ -24,12 +24,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
 import org.trinity.foundation.api.render.binding.Binder;
 
 /***************************************
- * Marks a method as returning the view of an object (ie a model).
+ * Marks a method as the getter of the view of a model.
  *
- * @see Binder#bind(Object, Object)
+ * @see Binder#bind(ListeningExecutorService, Object, Object)
  ***************************************
  */
 @Retention(RetentionPolicy.RUNTIME)

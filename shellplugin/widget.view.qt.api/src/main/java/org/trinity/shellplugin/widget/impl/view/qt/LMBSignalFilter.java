@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import javax.annotation.Nonnull;
 
 import org.apache.onami.autobind.annotations.Bind;
-import org.trinity.foundation.api.render.binding.model.delegate.Signal;
+import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
 
 import com.trolltech.qt.core.QEvent;
@@ -36,7 +36,7 @@ import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QMouseEvent;
 
 @Bind
-public class LMBSignalFilter implements EventSignalFilter {
+public class LMBSignalFilter extends EventSignalFilter {
 
 	LMBSignalFilter() {
 	}

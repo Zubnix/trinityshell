@@ -32,6 +32,7 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  ***************************************
  */
+@Deprecated
 @ExecutionContext(DisplayExecutor.class)
 @ThreadSafe
 public interface DisplayAreaManipulator {

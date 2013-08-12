@@ -19,13 +19,13 @@
  ******************************************************************************/
 package org.trinity.foundation.api.display.event;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Rectangle;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Notifies that the geometry (size, place) of a {@link DisplaySurface} has
@@ -39,8 +39,9 @@ public class GeometryNotify extends DisplayEvent {
 	private final Rectangle geometry;
 
 	/***************************************
-	 * Create a new <code>GeometryNotify</code> that targets a display resource
-	 * object. The new geometry is specified by the {@link Rectangle} argument.
+	 * Create a new <code>GeometryNotify</code> that targets a
+	 * {@link DisplaySurface}. The new geometry is specified by the
+	 * {@link Rectangle} argument.
 	 *
 	 * @param geometry
 	 *            The new geometry as a {@link Rectangle}.
@@ -51,7 +52,7 @@ public class GeometryNotify extends DisplayEvent {
 	}
 
 	/***************************************
-	 * The new geometry of the targeted display resource.
+	 * The new geometry of the {@link DisplaySurface}.
 	 *
 	 * @return The new geometry as a {@link Rectangle}.
 	 ***************************************

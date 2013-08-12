@@ -25,14 +25,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /***************************************
- * Bind the annotated view element to a property. The property path is
- * constructed by 1 or more properties, seperated by a dot eg. "foo.bar.baz",
- * which would translate to getFoo().getBar().getBaz(). The property is resolved
- * relative to the parent model, that is, the data context of the enclosing view
+ * Makes the annotated view element retrieve its model data relative to the
+ * given data context. The data path is constructed by 1 or more getters,
+ * separated by a dot eg. "foo.bar.baz", which would translate to
+ * getFoo().getBar().getBaz(). The data context is resolved relative to the
+ * 'parent' data context, that is, the data context of the enclosing view
  * element.
  * <p>
  * When this annotation is placed on class level, then all instances of that
- * class are considered as having this annotation on field level. When this
+ * class are considered as having this annotation. When this
  * annotation is placed on both class and field level, the field level
  * annotation will have precedence.
  ***************************************
@@ -41,10 +42,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DataContext {
 	/***************************************
-	 * A property path consisting of 1 or more property names seperated by a dot
+	 * A path of getters consisting of 1 or more getter names seperated by a dot
 	 * eg. "foo.bar.baz".
 	 *
-	 * @return A property path
+	 * @return A getters path
 	 ***************************************
 	 */
 	String value();

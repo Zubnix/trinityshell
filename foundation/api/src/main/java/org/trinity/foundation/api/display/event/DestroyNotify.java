@@ -19,14 +19,16 @@
  ******************************************************************************/
 package org.trinity.foundation.api.display.event;
 
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
 import javax.annotation.concurrent.Immutable;
 
-/**
- * Notifies that a display resource is destroyed.
+/***************************************
+ * Indicates that a {@link DisplaySurface} has been destroyed.
  *
+ ***************************************
  */
 @Immutable
 @ExecutionContext(DisplayExecutor.class)

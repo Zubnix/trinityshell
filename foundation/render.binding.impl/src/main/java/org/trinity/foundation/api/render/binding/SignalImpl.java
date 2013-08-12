@@ -28,7 +28,7 @@ import java.util.concurrent.ExecutionException;
 import com.google.common.hash.HashFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.render.binding.model.delegate.Signal;
+import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;

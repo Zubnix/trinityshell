@@ -20,10 +20,16 @@
 
 package org.trinity.foundation.api.render.binding.view;
 
+import org.trinity.foundation.api.render.binding.view.delegate.Signal;
+
 import javax.annotation.Nonnull;
 
-import org.trinity.foundation.api.render.binding.model.delegate.Signal;
-
+/**
+ * A filter for view events. An event signal filter is used to listen to a
+ * specific view event. When the event arrives, the given {@link Signal} should
+ * be {@link Signal#fire()}d. An event signal filter should not keep any state
+ * as creation and destruction of the filter is undefined.
+ */
 public interface EventSignalFilter {
 
 	void installFilter(	@Nonnull Object view,

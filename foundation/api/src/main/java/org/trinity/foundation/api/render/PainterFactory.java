@@ -29,6 +29,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  *
  ***************************************
  */
+@Deprecated
 public interface PainterFactory {
 
 	// FIXME this should return a future. painter creation should be done on the

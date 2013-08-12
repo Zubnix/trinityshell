@@ -29,7 +29,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import javax.annotation.concurrent.ThreadSafe;
 
-// TODO documentation
+//TODO documentation
+/**
+ *
+ */
 @ExecutionContext(DisplayExecutor.class)
 @ThreadSafe
 public interface Display extends AsyncListenable {

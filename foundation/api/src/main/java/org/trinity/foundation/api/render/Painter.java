@@ -28,11 +28,8 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /****************************************
- * The gatekeeper to the underlying paint back-end. It talks to a paint back-end
- * by feeding it {@link PaintRoutine}s that will be processed by the paint
- * back-end. It thus provides the means to manipulate the visual appearance of
- * the <code>PaintableSurfaceNode</code> it is bound to.
- *
+ * Talks to a paint back-end and manipulates the geometry of the view model it is
+ * bound to. A painter is created through the {@link PainterFactory}.
  ***************************************
  */
 
@@ -47,7 +44,7 @@ public interface Painter extends DisplayAreaManipulator {
 	 *
 	 * @return A future {@link DisplaySurface}.
 	 */
-    @Deprecated
+	@Deprecated
 	ListenableFuture<DisplaySurface> getDislaySurface();
 
 	/***************************************
@@ -55,6 +52,6 @@ public interface Painter extends DisplayAreaManipulator {
 	 * {@code Painter}.
 	 ***************************************
 	 */
-    @Deprecated
+	@Deprecated
 	ListenableFuture<Void> bindView();
 }

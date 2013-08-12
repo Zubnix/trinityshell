@@ -30,10 +30,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import com.google.inject.BindingAnnotation;
+import org.trinity.shell.api.scene.ShellNodeParent;
 
 /**
- * Used when a virtual ShellNodeParent instance is required. This node acts like
- * any other node in the scene but has no visual appearance. Provided by api.
+ * Used when a 'virtual' {@link ShellNodeParent} non-singleton instance is required. This node acts like
+ * any other node in the scene but has no visual appearance. Implementation <b>not</b> provided by the api.
  */
 @BindingAnnotation
 @Target({ TYPE, FIELD, PARAMETER, METHOD })

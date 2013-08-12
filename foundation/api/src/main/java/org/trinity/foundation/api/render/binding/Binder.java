@@ -19,10 +19,10 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding;
 
-import javax.annotation.Nonnull;
-
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+
+import javax.annotation.Nonnull;
 
 /***************************************
  * Binds views to models.
@@ -41,8 +41,8 @@ public interface Binder {
 	 ***************************************
 	 */
 	ListenableFuture<Void> updateBinding(	@Nonnull ListeningExecutorService modelExecutor,
-						@Nonnull Object changedViewModel,
-						@Nonnull String propertyName);
+											@Nonnull Object changedViewModel,
+											@Nonnull String propertyName);
 
 	/***************************************
 	 * Bind a view to a model so it reflects the model's state. The given view
@@ -54,10 +54,7 @@ public interface Binder {
 	 *            The visual representation of the model
 	 ***************************************
 	 */
-	ListenableFuture<Void> bind(	@Nonnull ListeningExecutorService modelExecutor,
-				@Nonnull Object viewModel,
-				@Nonnull Object view);
-
-	// TODO
-	// void unbind(Object view);
+	ListenableFuture<Void> bind(@Nonnull ListeningExecutorService modelExecutor,
+								@Nonnull Object viewModel,
+								@Nonnull Object view);
 }

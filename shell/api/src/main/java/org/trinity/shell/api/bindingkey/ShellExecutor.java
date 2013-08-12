@@ -29,11 +29,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import javax.inject.Singleton;
+
+import org.trinity.foundation.api.shared.ExecutionContext;
+
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.BindingAnnotation;
 
 /**
- * Used for the shell ListenableExecutorService Singleton thread context.
- * Provided by api.
+ * Used for the 'Shell' {@link ExecutionContext}. A {@link Singleton}
+ * {@link ListeningExecutorService} with this key is provided by the
+ * org.trinity.foundation.shell.api package.
  */
 @BindingAnnotation
 @Target({ TYPE, FIELD, PARAMETER, METHOD })

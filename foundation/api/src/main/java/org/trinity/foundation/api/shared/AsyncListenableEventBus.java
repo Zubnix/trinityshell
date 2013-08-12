@@ -32,6 +32,9 @@ import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.MoreExecutors;
 
+/**
+ * Extends Guava's {@link EventBus} with asynchronous event delivery per listener.
+ */
 @ThreadSafe
 public class AsyncListenableEventBus extends EventBus implements AsyncListenable {
 

@@ -19,26 +19,24 @@
  ******************************************************************************/
 package org.trinity.foundation.api.display.bindkey;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.BindingAnnotation;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
+import javax.inject.Singleton;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import javax.inject.Singleton;
-
-import org.trinity.foundation.api.shared.ExecutionContext;
-
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.BindingAnnotation;
-
 /**
  * Used for the 'Display' {@link ExecutionContext}. A {@link Singleton}
- * {@link ListeningExecutorService} with this key is provided by the API
- * package.
+ * {@link ListeningExecutorService} with this key is provided by the
+ * org.trinity.foundation.api.display package.
  */
 @BindingAnnotation
 @Target({ TYPE, FIELD, PARAMETER, METHOD })

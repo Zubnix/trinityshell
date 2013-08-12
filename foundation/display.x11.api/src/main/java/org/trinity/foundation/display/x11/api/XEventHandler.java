@@ -52,7 +52,7 @@ public interface XEventHandler {
 	Optional<? extends DisplayEvent> handle(@Nonnull xcb_generic_event_t event);
 
 	/**
-	 * The target of the returned trinity display event in handle(..).
+	 * The target of the returned trinity display event as returned in {@link XEventHandler#handle(xcb_generic_event_t)}.
 	 * @param event
 	 * @return
 	 */

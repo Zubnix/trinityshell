@@ -23,10 +23,22 @@ package org.trinity.foundation.display.x11.api;
 import org.trinity.foundation.api.display.DisplaySurface;
 
 /**
- *
+ * Caches {@link DisplaySurface} instances to their X window id.
  */
 public interface XWindowCache {
+	/**
+	 * Return the {@link DisplaySurface} with the given X window id. If no
+	 * display surface is present, a new one will be created.
+	 *
+	 * @param windowId
+	 * @return
+	 */
 	DisplaySurface getWindow(final int windowId);
 
+	/**
+	 * Check if the {@link DisplaySurface} with the given X window id is present in the cache.
+	 * @param windowId
+	 * @return
+	 */
 	boolean isPresent(final int windowId);
 }

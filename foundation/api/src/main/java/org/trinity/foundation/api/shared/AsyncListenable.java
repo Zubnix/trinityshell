@@ -29,10 +29,10 @@ import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.MoreExecutors;
 
 /**
- * Extends guava's {@link EventBus} idea with asynchronious event delivery. This
+ * Extends guava's {@link EventBus} idea with asynchronous event delivery. This
  * interface does not (can not) extend from guava's Eventbus as it's developers
  * think it's a good idea to *not* separate implementation (a class) from api
- * (an interface).
+ * (an interface)...
  */
 public interface AsyncListenable {
 	/**

@@ -38,8 +38,8 @@ import com.google.inject.BindingAnnotation;
 
 /**
  * Used for the 'Render' {@link ExecutionContext}. A
- * {@link ListeningExecutorService} {@link Singleton} instance is not provided
- * by the render API.
+ * {@link ListeningExecutorService} {@link Singleton} instance is <b>not</b> provided
+ * by the render API and should be exposed by the implementation package.
  */
 @BindingAnnotation
 @Target({ TYPE, FIELD, PARAMETER, METHOD })

@@ -29,10 +29,15 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.trinity.foundation.api.shared.AsyncListenable;
+
 import com.google.inject.BindingAnnotation;
 
+import javax.inject.Singleton;
+
 /**
- * Used for the AsyncListenable Singleton scene. Provided by api.
+ * Used for the {@link AsyncListenable} shell scene
+ * {@link Singleton}. Instance provided by the org.trinity.shell.api package.
  */
 @BindingAnnotation
 @Target({ TYPE, FIELD, PARAMETER, METHOD })

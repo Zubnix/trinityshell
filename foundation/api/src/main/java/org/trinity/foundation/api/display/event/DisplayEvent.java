@@ -25,7 +25,7 @@ import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
 /**
- * The general superclass for all display based events.
+ * The general superclass for all display related events.
  */
 @Immutable
 @ExecutionContext(DisplayExecutor.class)

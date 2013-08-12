@@ -28,7 +28,7 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
 
 /**
- * The logical screen {@link Singleton}.
+ * The logical screen of a {@link Display}.
  */
 @ExecutionContext(DisplayExecutor.class)
 @ThreadSafe

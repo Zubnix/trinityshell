@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
- * Marks an object as belonging to an execution context, making it thread
+ * Marks an object as belonging to an execution context, making it "thread"
  * confined to said execution context.
  */
 @Documented

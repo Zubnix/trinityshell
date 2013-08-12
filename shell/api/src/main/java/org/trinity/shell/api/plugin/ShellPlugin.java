@@ -30,9 +30,10 @@ import com.google.common.util.concurrent.Service;
  * any additional threads unless absolutely necessary. Instead a shell plugin
  * should hook into the shell thread itself. Should a shell plugin start a new
  * thread then this thread should not call any object internals that live
- * outside it's own shell plugin, instead use the {@link ListenableFuture}s
- * provided throughout the shell api. This keeps for a more thread safe and more
- * predictable behavior of shell plugins.
+ * outside it's own shell plugin implementation, instead use the
+ * {@link ListenableFuture}s provided throughout the shell api. This keeps for a
+ * more thread safe and more predictable behavior of shell
+ * plugins.
  *
  *
  ****************************************/

@@ -19,6 +19,10 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.model;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+import org.trinity.foundation.api.render.binding.Binder;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -29,10 +33,8 @@ import java.lang.annotation.Target;
  * Marks a model method as a manipulator of a property. After the execution of a
  * marked method, the properties with a matching name will be used to update the
  * bound view.
- * <p>
- * This annotation is for optional use with aspect oriented programming.
  *
- * @see {@link org.trinity.foundation.api.render.binding.Binder#updateBinding(Object, String)}
+ * @see {@link Binder#updateBinding(ListeningExecutorService, Object, String)}
  *
  ***************************************
  */
@@ -47,5 +49,11 @@ public @interface PropertyChanged {
 	 */
 	String[] value();
 
+	/**
+	 * The Guice {@link ExecutionContext} binding key to use to retrieve the
+	 * updated property from the model.
+	 *
+	 * @return
+	 */
 	Class<? extends Annotation> executor();
 }

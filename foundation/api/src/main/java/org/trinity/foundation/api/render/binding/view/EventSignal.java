@@ -23,15 +23,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.trinity.foundation.api.render.binding.view.delegate.Signal;
+
 /***************************************
  * Mark a view as a producer of listenable events. It's up to the
- * {@link org.trinity.foundation.api.render.binding.view.delegate.EventListenerInstallerDelegate}
- * to make sure the correct event listeners are installed and the correct event
- * slot is called by the correct execution context.
+ * {@link EventSignalFilter} to make sure the correct event listeners are
+ * installed and the {@link Signal} is fired when an event arrives.
  * <p>
  * An {@link EventSignal} is used as an argument of {@link EventSignals}.
  *
- * @see org.trinity.foundation.api.render.binding.model.delegate.Signal
+ * @see Signal
  ***************************************
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -39,14 +40,20 @@ import java.lang.annotation.Target;
 public @interface EventSignal {
 
 	/***************************************
-	 * The name of the eventslot that should be invoked. The name of the
-	 * {@code EventSlot} is the name of the method that it annotates.
+	 * The name of the no-args model method that should be invoked when an event
+	 * arrives.
 	 *
 	 * @return a method name.
 	 ***************************************
 	 */
 	String name();
 
+	/**
+	 * The type {@link EventSignalFilter} that will be used to listen for view
+	 * events.
+	 *
+	 * @return
+	 */
 	Class<? extends EventSignalFilter> filter();
 
 }

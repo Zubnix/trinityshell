@@ -30,7 +30,7 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /***************************************
- * Delegate to invoke a view method when a bound model property changes. This
+ * Delegate to invoke a view method when the bound model property changes. This
  * delegate should be implemented for a specific widget toolkit.
  *
  * @see PropertySlots

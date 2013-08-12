@@ -27,14 +27,12 @@ import com.google.common.util.concurrent.ListenableFuture;
 /***************************************
  * A delegate to handle the life cycle of a child view element. This delegate
  * should be implemented for a specific widget toolkit.
- *
- *
  ***************************************
  */
 @ExecutionContext(RenderExecutor.class)
 public interface ChildViewDelegate {
 	/***************************************
-	 * Create a new view instance.
+	 * Create a new view element.
 	 *
 	 * @param parentView
 	 *            The parent view of the new view instance.
@@ -50,7 +48,7 @@ public interface ChildViewDelegate {
 									int position);
 
 	/***************************************
-	 * Destroy a view instance.
+	 * Destroy a view element.
 	 *
 	 * @param parentView
 	 *            The parent of the view that should be destroyed.
@@ -67,7 +65,7 @@ public interface ChildViewDelegate {
 										int deletedPosition);
 
 	/***************************************
-	 * Update the position (index) of a view instance, relative to it's parent.
+	 * Update the position (index) of a view element, relative to it's parent.
 	 *
 	 * @param parentView
 	 *            The parent view.

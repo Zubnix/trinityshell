@@ -17,7 +17,7 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.api.render.binding.model.delegate;
+package org.trinity.foundation.api.render.binding.view.delegate;
 
 import com.google.common.util.concurrent.ListenableFuture;
 

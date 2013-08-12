@@ -29,10 +29,15 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import javax.inject.Singleton;
+
+import org.trinity.shell.api.scene.ShellNodeParent;
+
 import com.google.inject.BindingAnnotation;
 
 /**
- * Used for the root ShellNodeParent Singleton. Not provided by api.
+ * Used for the root {@link ShellNodeParent} {@link Singleton}. Instance
+ * <b>not</b> provided by the shell api.
  */
 @BindingAnnotation
 @Target({ TYPE, FIELD, PARAMETER, METHOD })

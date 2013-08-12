@@ -262,7 +262,6 @@ public class BinderImpl implements Binder {
 
         Object dataContext = inheritedDataContext;
         if (optionalDataContext.isPresent()) {
-            // FIXME use modelExecutor to retrieve datacontext value
             final Optional<Object> optionalDataContextValue = getDataContextValueForView(dataContext,
                     view,
                     optionalDataContext.get());

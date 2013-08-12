@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
-import org.trinity.foundation.api.render.binding.model.delegate.Signal;
+import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;

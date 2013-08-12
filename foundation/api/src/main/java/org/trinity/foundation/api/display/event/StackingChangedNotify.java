@@ -26,7 +26,7 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * Notifies that the stacking position of a {@link DisplaySurface} has changed
+ * Notifies that the stacking of a {@link DisplaySurface} has changed
  ***************************************
  */
 @Immutable

@@ -39,7 +39,7 @@ public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator, Asy
 
 	/***************************************
 	 * Query geometry information. The values of the returned {@link Rectangle}
-	 * are display server dependent but are usually in pixels (X11).
+	 * are display server dependent but are usually in pixels.
 	 *
 	 * @return a future {@link Rectangle} corresponding to this
 	 *         {@link DisplaySurface} position, width and a height.
