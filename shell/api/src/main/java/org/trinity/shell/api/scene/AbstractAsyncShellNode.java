@@ -38,7 +38,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 // TODO documentation
 /***************************************
  * Asynchronous abstract implementation of a {@link ShellNode}. Method calls are
- * placed on the injected shell executor queue. Subclasses must implement any
+ * are delegated to the shell executor. Subclasses must implement any
  * concrete internal node manipulation.
  ***************************************
  */

@@ -28,8 +28,7 @@ import org.trinity.shell.api.bindingkey.ShellExecutor;
 import javax.annotation.Nonnull;
 
 /***************************************
- * Creates shell surfaces from a display surface and provides access to the root
- * shell surface.
+ * Creates shell surfaces from a display surface.
  ***************************************
  */
 @ExecutionContext(ShellExecutor.class)

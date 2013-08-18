@@ -43,8 +43,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 /**
- * ************************************ An abstract base {@link ShellWidget}
- * implementation.
+ * An abstract base {@link ShellWidget} implementation.
  * <p/>
  * A <code>BaseShellWidget</code> is manipulated through a {@link Painter} for
  * it's basic geometry operations and through the binding framework for more

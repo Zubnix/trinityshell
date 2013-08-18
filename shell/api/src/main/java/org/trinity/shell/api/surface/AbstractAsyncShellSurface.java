@@ -43,7 +43,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 // TODO from boilerplate code generator
 /***************************************
  * Abstract asynchronous base implementation of a {@link ShellSurface}. Method
- * calls are placed on the injected shell executor queue. Subclasses must
+ * calls are placed on the injected shell executor. Subclasses must
  * implement any concrete internal node manipulation.
  *
  ***************************************

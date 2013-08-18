@@ -58,12 +58,6 @@ import org.trinity.shell.api.scene.event.ShellNodeShowedEvent;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-/**
- * ************************************ An abstract base implementation of a
- * {@link ShellNode}.
- * <p/>
- * **************************************
- */
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
 public abstract class AbstractShellNode extends AbstractAsyncShellNode {
@@ -182,7 +176,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 		}
 
 		// check if our parent is visible.
-        return (getParent() != null) && getParentImpl().isVisibleImpl();
+		return (getParent() != null) && getParentImpl().isVisibleImpl();
 	}
 
 	@Override

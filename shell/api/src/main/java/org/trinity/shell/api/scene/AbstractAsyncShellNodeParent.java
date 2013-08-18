@@ -39,7 +39,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 /***************************************
  * Asynchronous abstract implementation of a {@link ShellNodeParent}. Method
- * calls are placed on the shell executor queue as provide in the constructor.
+ * calls are delegated to the shell executor, provide in the constructor.
  * Subclasses must implement any concrete internal node manipulation.
  ***************************************
  */
