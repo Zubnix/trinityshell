@@ -36,7 +36,7 @@ import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QMouseEvent;
 
 @Bind
-public class LMBSignalFilter extends EventSignalFilter {
+public class LMBSignalFilter implements EventSignalFilter {
 
     LMBSignalFilter() {
     }
