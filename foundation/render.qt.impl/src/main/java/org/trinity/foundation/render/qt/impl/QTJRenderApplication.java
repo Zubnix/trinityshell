@@ -28,16 +28,16 @@ import org.slf4j.LoggerFactory;
 
 import com.trolltech.qt.gui.QApplication;
 
-public class RenderApplication extends QApplication {
+public class QTJRenderApplication extends QApplication {
 
-	private static final Logger logger = LoggerFactory.getLogger(RenderApplication.class);
+	private static final Logger LOG = LoggerFactory.getLogger(QTJRenderApplication.class);
 
-	public RenderApplication() {
+	public QTJRenderApplication() {
 		super(	"Trinity QtJambi Renderer",
 				new String[] {});
 	}
 
-	private static final ExecutorService qRenderEventPump = Executors.newSingleThreadExecutor(new ThreadFactory() {
+	private static final ExecutorService QTJ_THREAD = Executors.newSingleThreadExecutor(new ThreadFactory() {
 
 		@Override
 		public Thread newThread(final Runnable r) {
@@ -47,15 +47,15 @@ public class RenderApplication extends QApplication {
 	});
 
 	public static void start() {
-		qRenderEventPump.submit(new Runnable() {
+		QTJ_THREAD.submit(new Runnable() {
 			@Override
 			public void run() {
-				QApplication.initialize(new String[] {});
+				QApplication.initialize(new String[]{});
 				QApplication.setQuitOnLastWindowClosed(false);
 				final int r = QApplication.exec();
 				if (r != 0) {
-					logger.error(	"QtJambi render application exited with error code={}",
-									r);
+					LOG.error("QtJambi render application exited with error code={}",
+							r);
 				}
 			}
 		});
