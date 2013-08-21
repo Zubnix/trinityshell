@@ -57,21 +57,6 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
     }
 
     @Override
-    public void lower() {
-        for (final AbstractShellNode child : getShellNode().getChildrenImpl()) {
-            child.getShellNodeGeometryDelegate().lower();
-        }
-    }
-
-    @Override
-    public void raise() {
-        final List<AbstractShellNode> children = getShellNode().getChildrenImpl();
-        for (final AbstractShellNode child : children) {
-            child.getShellNodeGeometryDelegate().raise();
-        }
-    }
-
-    @Override
     public void move(@Nonnull final Coordinate position) {
         final ShellVirtualSurface shellNode = getShellNode();
         final ShellNodeTransformation shellNodeTransformation = shellNode.toGeoTransformationImpl();
@@ -98,51 +83,6 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
     public void moveResize(@Nonnull final Coordinate position,
                            @Nonnull final Size size) {
         move(position);
-    }
-
-    @Override
-    public void show() {
-        for (final AbstractShellNode child : getShellNode().getChildrenImpl()) {
-            updateChildVisibility(child,
-                    true);
-        }
-    }
-
-    @Override
-    public void hide() {
-        for (final AbstractShellNode child : getShellNode().getChildrenImpl()) {
-            updateChildVisibility(child,
-                    false);
-        }
-    }
-
-    private void updateChildVisibility(@Nonnull final AbstractShellNode child,
-                                       final boolean parentVisible) {
-        final boolean childVisible = child.isVisibleImpl();
-        // directly update underlying platform specific visibility of
-        // the child
-        if (childVisible & parentVisible) {
-            child.getShellNodeGeometryDelegate().show();
-        } else {
-            child.getShellNodeGeometryDelegate().hide();
-        }
-    }
-
-    @Override
-    public void reparent(@Nonnull final ShellNodeParent parent) {
-        final ShellVirtualSurface shellNode = getShellNode();
-
-        final boolean nodeVisible = shellNode.isVisibleImpl();
-        for (final AbstractShellNode child : shellNode.getChildrenImpl()) {
-            // reparent children to ourself, this will trigger an update of
-            // these children who will search for a compatible
-            // grand-parent for them to be a child of in the underlying
-            // relation.
-            child.getShellNodeGeometryDelegate().reparent(shellNode);
-
-            updateChildVisibility(child,
-                    nodeVisible);
-        }
     }
 
     @Override

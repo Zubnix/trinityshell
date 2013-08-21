@@ -10,7 +10,7 @@
  * additional binding annotations found in the
  * org.trinity.foundation.api.render.binding package. The view can then be
  * exposed to the painter by annotating the view getter with
- * {@link org.trinity.foundation.api.render.binding.model.ViewReference} in the
+ * {@link org.trinity.foundation.api.render.binding.model.ViewFuture} in the
  * model class. Finally, everything is glued together by calling
  * {@link org.trinity.foundation.api.render.Painter#bindView()}.
  * <p>

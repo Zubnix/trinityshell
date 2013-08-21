@@ -49,17 +49,16 @@ public class SceneManager {
 
 	private final ClientBarElementFactory clientBarElementFactory;
 	private final ShellLayoutManager rootLayoutManager;
-	private final ShellRootWidget shellRootNode;
+	private final DesktopImpl shellRootNode;
 	private final XWindowProtocol xWindowProtocol;
 
 	@Inject
 	SceneManager(	final ClientBarElementFactory clientBarElementFactory,
 					final XWindowProtocol xWindowProtocol,
-					final ShellRootWidget shellRootWidget,
-					final ShellLayoutManagerLine shellLayoutManagerLine) {
+					final DesktopImpl desktopImpl) {
 		this.clientBarElementFactory = clientBarElementFactory;
 		this.xWindowProtocol = xWindowProtocol;
-		this.shellRootNode = shellRootWidget;
+		this.shellRootNode = desktopImpl;
 		this.rootLayoutManager = shellLayoutManagerLine;
 
 		this.shellRootNode.setLayoutManager(this.rootLayoutManager);

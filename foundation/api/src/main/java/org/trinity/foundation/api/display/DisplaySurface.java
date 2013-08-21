@@ -35,7 +35,95 @@ import com.google.common.util.concurrent.ListenableFuture;
  */
 @ExecutionContext(DisplayExecutor.class)
 @ThreadSafe
-public interface DisplaySurface extends DisplayArea, DisplayAreaManipulator, AsyncListenable {
+public interface DisplaySurface extends AsyncListenable {
+
+	/***************************************
+	 * Destroy the bound {@link DisplayArea}. A destroyed {@link DisplayArea}
+	 * should be disposed and should not accept any calls made by it's
+	 * {@link DisplayAreaManipulator}.
+	 *
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
+	 ***************************************
+	 */
+	ListenableFuture<Void> destroy();
+
+	/***************************************
+	 * Set the input focus to the bound {@link DisplayArea}. Generated input
+	 * evens will have their source set as coming from the manipulated
+	 * {@link DisplayArea}.
+	 * <p>
+	 * The effects of giving focus to a hidden or destroyed {@link DisplayArea}
+	 * is implementation dependent.
+	 * </p>
+	 *
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
+	 ***************************************
+	 */
+	ListenableFuture<Void> setInputFocus();
+
+	/***************************************
+	 * Move the bound {@link DisplayArea} to the given coordinates, relative to
+	 * the parent. The bound {@link DisplayArea}'s top left corner will be
+	 * positioned at the provided coordinates.
+	 *
+	 * @param x
+	 *            The X coordinate. Usually in pixels but can be implementation
+	 *            dependent.
+	 * @param y
+	 *            The Y coordinate. Usually in pixels but can be implementation
+	 *            dependent. </p>
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
+	 ***************************************
+	 */
+	ListenableFuture<Void> move(int x,
+	                            int y);
+
+	/***************************************
+	 * Perform a move and resize operation on the bound {@link DisplayArea}.
+	 *
+	 *
+	 * @param x
+	 *            The X coordinate. Usually in pixels but can be implementation
+	 *            dependent.
+	 * @param y
+	 *            The Y coordinate. Usually in pixels but can be implementation
+	 *            dependent.
+	 * @param width
+	 *            The width. Usually in pixels but can be implementation
+	 *            dependent.
+	 * @param height
+	 *            The height. Usually in pixels but can be implementation
+	 *            dependent. </p>
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
+	 * @see #move(int, int)
+	 * @see #resize(int, int)
+	 *
+	 ***************************************
+	 */
+	ListenableFuture<Void> moveResize(	int x,
+	                                      int y,
+	                                      int width,
+	                                      int height);
+
+	/***************************************
+	 * Set the size of the bound {@link DisplayArea}.
+	 *
+	 * @param width
+	 *            The width. Usually in pixels but can be implementation
+	 *            dependent.
+	 * @param height
+	 *            The width. Usually in pixels but can be implementation
+	 *            dependent. </p>
+	 * @return A {@link ListenableFuture} that indicates when the operation is
+	 *         done.
+	 ***************************************
+	 */
+	ListenableFuture<Void> resize(	int width,
+	                                  int height);
 
 	/***************************************
 	 * Query geometry information. The values of the returned {@link Rectangle}

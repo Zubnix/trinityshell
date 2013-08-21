@@ -19,7 +19,6 @@
  ******************************************************************************/
 package org.trinity.shell.api.scene;
 
-import org.trinity.foundation.api.display.DisplayArea;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.ExecutionContext;
@@ -42,7 +41,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  ***************************************
  */
 @ExecutionContext(ShellExecutor.class)
-public interface ShellNode extends DisplayArea, AsyncListenable {
+public interface ShellNode extends AsyncListenable {
 
 	/***************************************
 	 * The shell geometry of the node. The relation between the on screen
