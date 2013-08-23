@@ -19,6 +19,7 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
@@ -26,7 +27,6 @@ import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 import javax.annotation.concurrent.NotThreadSafe;
@@ -55,14 +55,7 @@ public class XEventPump implements Callable<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(XEventPump.class);
 	private final XConnection connection;
 	private final EventBus xEventBus;
-	private final ExecutorService xEventPumpExecutor = Executors.newSingleThreadExecutor(new ThreadFactory() {
-
-		@Override
-		public Thread newThread(final Runnable r) {
-			return new Thread(	r,
-								"x-event-pump");
-		}
-	});
+	private ExecutorService xEventPumpExecutor;
 	private final ListeningExecutorService xExecutor;
 
 	@Inject
@@ -100,17 +93,28 @@ public class XEventPump implements Callable<Void> {
 	}
 
 	public void start() {
+		if (this.xEventPumpExecutor == null) {
+			this.xEventPumpExecutor = newSingleThreadExecutor(new ThreadFactory() {
+
+				@Override
+				public Thread newThread(final Runnable r) {
+					return new Thread(	r,
+										"x-event-pump");
+				}
+			});
+		}
 		this.xEventPumpExecutor.submit(this);
 	}
 
 	public void stop() {
 		this.xEventPumpExecutor.shutdown();
 		try {
-			if (this.xEventPumpExecutor.awaitTermination(	10,
+			if (!this.xEventPumpExecutor.awaitTermination(	3,
 															SECONDS)) {
-				return;
+				this.xEventPumpExecutor.shutdownNow();
+				XEventPump.LOG.error("X event pump could not terminate gracefully!");
 			}
-			XEventPump.LOG.error("X event pump could not terminate gracefully!");
+			this.xEventPumpExecutor = null;
 		} catch (final InterruptedException e) {
 			XEventPump.LOG.error(	"X event pump terminate was interrupted.",
 									e);

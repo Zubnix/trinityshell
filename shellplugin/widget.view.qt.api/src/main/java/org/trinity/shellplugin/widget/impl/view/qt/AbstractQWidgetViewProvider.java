@@ -20,32 +20,55 @@
 
 package org.trinity.shellplugin.widget.impl.view.qt;
 
+import static com.google.common.util.concurrent.Futures.transform;
+import static com.google.common.util.concurrent.ListenableFutureTask.create;
+
 import java.util.concurrent.Callable;
 
+import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.DisplaySurfacePool;
+import org.trinity.foundation.api.display.DisplaySurfacePreparation;
+
+import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.inject.Provider;
-import com.trolltech.qt.core.Qt.WidgetAttribute;
-import com.trolltech.qt.core.Qt.WindowType;
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
 public abstract class AbstractQWidgetViewProvider implements Provider<ListenableFuture<Object>> {
 
-	protected AbstractQWidgetViewProvider() {
+	private final DisplaySurfacePool displaySurfacePool;
+
+	protected AbstractQWidgetViewProvider(final DisplaySurfacePool displaySurfacePool) {
+		this.displaySurfacePool = displaySurfacePool;
 	}
 
 	@Override
 	public ListenableFuture<Object> get() {
-		final ListenableFutureTask<Object> futureTask = ListenableFutureTask.create(new Callable<Object>() {
+		final ListenableFuture<DisplaySurfacePreparation> displaySurfacePreparationFuture = this.displaySurfacePool
+				.prepareDisplaySurface();
+
+		return transform(	displaySurfacePreparationFuture,
+							new AsyncFunction<DisplaySurfacePreparation, Object>() {
+								@Override
+								public ListenableFuture<Object> apply(final DisplaySurfacePreparation displaySurfacePreparation) {
+									return prepareView(displaySurfacePreparation);
+								}
+							});
+	}
+
+	protected ListenableFutureTask<Object> prepareView(final DisplaySurfacePreparation displaySurfacePreparation) {
+		final ListenableFutureTask<Object> futureTask = create(new Callable<Object>() {
 			@Override
 			public Object call() {
+
 				final QWidget view = createView();
-				view.setWindowFlags(WindowType.X11BypassWindowManagerHint);
-				view.setAttribute(	WidgetAttribute.WA_DeleteOnClose,
-									true);
-				view.setAttribute(	WidgetAttribute.WA_DontCreateNativeAncestors,
-									true);
+				final long effectiveWinId = view.effectiveWinId();
+				final DisplaySurface viewDisplaySurface = displaySurfacePool.getDisplaySurface(effectiveWinId);
+				store(	view,
+						viewDisplaySurface);
+				displaySurfacePreparation.done();
 				return view;
 			}
 		});
@@ -53,6 +76,10 @@ public abstract class AbstractQWidgetViewProvider implements Provider<Listenable
 		return futureTask;
 	}
 
-	protected abstract QWidget createView();
+	private void store(	final QWidget view,
+						final DisplaySurface viewDisplaySurface) {
 
+	}
+
+	protected abstract QWidget createView();
 }

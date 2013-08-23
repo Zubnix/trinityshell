@@ -25,6 +25,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Provider;
 
 import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
+import org.trinity.foundation.api.display.DisplaySurfacePreparation;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.shared.ExecutionContext;
@@ -41,6 +43,8 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -53,17 +57,21 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
 	private static final Logger LOG = LoggerFactory.getLogger(XWindowPoolImpl.class);
 	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
 	private final Cache<Object, XWindow> xWindows = CacheBuilder.newBuilder().concurrencyLevel(1).build();
+	private final ListeningExecutorService displayExecutor;
+	private final Provider<DisplaySurfacePreparation> displaySurfacePreparationProvider;
 	private final DisplaySurfaceFactory displaySurfaceFactory;
 
 	@Inject
-	XWindowPoolImpl(final DisplaySurfaceFactory displaySurfaceFactory) {
+	XWindowPoolImpl(@DisplayExecutor final ListeningExecutorService displayExecutor,
+					final Provider<DisplaySurfacePreparation> displaySurfacePreparationProvider,
+					final DisplaySurfaceFactory displaySurfaceFactory) {
+		this.displayExecutor = displayExecutor;
+		this.displaySurfacePreparationProvider = displaySurfacePreparationProvider;
 		this.displaySurfaceFactory = displaySurfaceFactory;
 	}
 
 	@Override
 	public DisplaySurface getDisplaySurface(final Object nativeHandle) {
-
-
 
 		final DisplaySurfaceHandle resourceHandle = new XWindowHandle(nativeHandle);
 		XWindow window = null;
@@ -89,6 +97,17 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
 
 	public boolean isPresent(final Object nativeHandle) {
 		return this.xWindows.getIfPresent(nativeHandle) != null;
+	}
+
+	@Override
+	public ListenableFuture<DisplaySurfacePreparation> prepareDisplaySurface() {
+
+		return displayExecutor.submit(new Callable<DisplaySurfacePreparation>() {
+			@Override
+			public DisplaySurfacePreparation call() throws Exception {
+				return XWindowPoolImpl.this.displaySurfacePreparationProvider.get();
+			}
+		});
 	}
 
 	private class DestroyListener {

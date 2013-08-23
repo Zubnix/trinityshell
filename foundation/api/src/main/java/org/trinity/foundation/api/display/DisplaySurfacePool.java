@@ -21,6 +21,8 @@ package org.trinity.foundation.api.display;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 @NotThreadSafe
 public interface DisplaySurfacePool {
 
@@ -34,7 +36,8 @@ public interface DisplaySurfacePool {
 	 * client. This method should be called before any server side display
 	 * surface is created.
 	 *
-	 * @return A {@link DisplaySurfacePreparation}
+	 * @return A {@link DisplaySurfacePreparation} future. The future will
+	 *         return as soon as the display pauses event processing.
 	 */
-	DisplaySurfacePreparation prepareDisplaySurface();
+	ListenableFuture<DisplaySurfacePreparation> prepareDisplaySurface();
 }
