@@ -92,7 +92,7 @@ public class XDisplayImpl implements Display {
 			.putInt(CLIENT_EVENT_MASK);
 	private final List<DisplaySurface> clientDisplaySurfaces = new ArrayList<>();
 	private final XConnection xConnection;
-	private final XWindowCacheImpl xWindowCache;
+	private final XWindowPoolImpl xWindowCache;
 	private final XEventPump xEventPump;
 	private final ListeningExecutorService xExecutor;
 	private final AsyncListenableEventBus displayEventBus;
@@ -102,7 +102,7 @@ public class XDisplayImpl implements Display {
 
 	@Inject
 	XDisplayImpl(	final XConnection xConnection,
-					final XWindowCacheImpl xWindowCache,
+					final XWindowPoolImpl xWindowCache,
 					final XEventPump xEventPump,
 					@DisplayExecutor final ListeningExecutorService xExecutor) {
 		this.xWindowCache = xWindowCache;
@@ -219,7 +219,7 @@ public class XDisplayImpl implements Display {
 					continue;
 				}
 
-				final DisplaySurface clientWindow = this.xWindowCache.getWindow(tree_child);
+				final DisplaySurface clientWindow = this.xWindowCache.getDisplaySurface(tree_child);
 				configureClientEvents(clientWindow);
 				trackClient(clientWindow);
 			}

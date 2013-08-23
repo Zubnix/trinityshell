@@ -19,63 +19,89 @@
  ******************************************************************************/
 package org.trinity.shell.surface.impl;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import org.trinity.foundation.api.display.DisplayAreaManipulator;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.scene.AbstractShellNode;
-import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shell.api.surface.AbstractAsyncShellSurface;
-import org.trinity.shell.api.surface.AbstractShellSurface;
-import org.trinity.shell.api.surface.AbstractShellSurfaceGeometryDelegate;
-import org.trinity.shell.api.surface.ShellSurface;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
-@ExecutionContext(ShellExecutor.class)
+import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.shared.Coordinate;
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.foundation.api.shared.Size;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.scene.AbstractShellNode;
+import org.trinity.shell.api.scene.AbstractShellNodeParent;
+import org.trinity.shell.api.scene.ShellNode;
+import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
+import org.trinity.shell.api.surface.AbstractShellSurface;
+
+/***************************************
+ * A {@link ShellNodeGeometryDelegate} for use with an
+ * {@link org.trinity.shell.api.surface.AbstractShellSurface}.
+ *
+ ***************************************
+ */
 @NotThreadSafe
-public class ShellSurfaceGeometryDelegateImpl extends AbstractShellSurfaceGeometryDelegate {
+@ExecutionContext(ShellExecutor.class)
+public class ShellSurfaceGeometryDelegateImpl implements ShellNodeGeometryDelegate {
 
 	private final AbstractShellSurface abstractShellSurface;
 
-	ShellSurfaceGeometryDelegateImpl(@Nonnull final AbstractShellSurface shellSurface) {
-		this.abstractShellSurface = shellSurface;
+	public ShellSurfaceGeometryDelegateImpl(AbstractShellSurface abstractShellSurface) {
+		this.abstractShellSurface = abstractShellSurface;
 	}
 
 	@Override
-	protected DisplaySurface getSurfacePeer(@Nonnull final ShellSurface shellSurface) {
-		checkArgument(shellSurface instanceof AbstractShellSurface);
-
-		return ((AbstractAsyncShellSurface) shellSurface).getDisplaySurfaceImpl();
+	public AbstractShellSurface getShellNode(){
+		return abstractShellSurface;
 	}
 
-	@Override
-	protected AbstractShellSurface findClosestSameTypeSurface(@Nonnull final ShellNode square) {
-		checkArgument(square instanceof AbstractShellNode);
-
-		if (square == null) {
-			return null;
-		}
-
-		final ShellNodeParent parent = ((AbstractShellNode) square).getParentImpl();
-		if ((parent == null) || parent.equals(square)) {
-			return null;
-		}
-
-		return findClosestSameTypeSurface(parent);
-	}
-
-	@Override
-	public AbstractShellSurface getShellNode() {
-		return this.abstractShellSurface;
-	}
-
-	@Override
-	public DisplayAreaManipulator getShellNodeManipulator() {
+	public DisplaySurface getShellNodeManipulator(){
 		return getShellNode().getDisplaySurfaceImpl();
+	}
+
+	@Override
+	public void resize(@Nonnull final Size size) {
+		getShellNodeManipulator().resize(	size.getWidth(),
+											size.getHeight());
+	}
+
+	@Override
+	public void destroy() {
+		getShellNodeManipulator().destroy();
+	}
+
+	@Override
+	public void move(@Nonnull final Coordinate position) {
+
+		final Coordinate absolutePosition = getAbsolutePosition(getShellNode());
+
+		getShellNodeManipulator().move(	absolutePosition.getX(),
+										absolutePosition.getY());
+	}
+
+	@Override
+	public void moveResize(	@Nonnull final Coordinate position,
+							@Nonnull final Size size) {
+
+		final Coordinate absolutePosition = getAbsolutePosition(getShellNode());
+
+		final DisplaySurface areaManipulator = getShellNodeManipulator();
+		areaManipulator.moveResize(	absolutePosition.getX(),
+									absolutePosition.getY(),
+									size.getWidth(),
+									size.getHeight());
+	}
+
+	private Coordinate getAbsolutePosition(@Nonnull final AbstractShellNode node) {
+		final Coordinate childPosition = node.getPositionImpl();
+		final AbstractShellNodeParent shellParent = node.getParentImpl();
+
+		if ((shellParent == null) || shellParent.equals(node)) {
+			return childPosition;
+		}
+
+		final Coordinate absoluteParentPosition = getAbsolutePosition(shellParent);
+		final Coordinate absolutePosition = childPosition.add(absoluteParentPosition);
+
+		return absolutePosition;
 	}
 }

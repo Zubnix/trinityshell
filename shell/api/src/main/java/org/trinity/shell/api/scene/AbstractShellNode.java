@@ -392,117 +392,32 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	@Override
 	public Void doRaiseImpl() {
-		doRaise(true);
-		return null;
-	}
-
-	/**
-	 * ************************************ Raise the current node but the
-	 * actual delegated execution by this node's
-	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
-	 * the node's state.
-	 *
-	 * @param execute
-	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
-	 *            level execution. **************************************
-	 */
-	protected void doRaise(final boolean execute) {
-		if (execute) {
-			execRaise();
-		}
 		getParentImpl().handleChildStacking(this,
 											true);
 		final ShellNodeRaisedEvent geoEvent = new ShellNodeRaisedEvent(	this,
 																		toGeoTransformationImpl());
 		post(geoEvent);
-	}
-
-	/**
-	 * ************************************ Execute the raise process by this
-	 * node's {@link ShellNodeGeometryDelegate}. This call does not affect the
-	 * node's state. **************************************
-	 */
-	public void execRaise() {
-		getShellNodeGeometryDelegate().raise();
+		return null;
 	}
 
 	@Override
 	public Void doLowerImpl() {
-		doLower(true);
-		return null;
-	}
-
-	/**
-	 * ************************************ Lower the current node but the
-	 * actual delegated execution by this node's
-	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
-	 * the node's state.
-	 *
-	 * @param execute
-	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
-	 *            level execution. **************************************
-	 */
-	protected void doLower(final boolean execute) {
-		if (execute) {
-			execLower();
-		}
 		getParentImpl().handleChildStacking(this,
 											false);
 		final ShellNodeLoweredEvent geoEvent = new ShellNodeLoweredEvent(	this,
 																			toGeoTransformationImpl());
 		post(geoEvent);
-	}
-
-	/**
-	 * ************************************ Execute the lower process by this
-	 * node's {@link ShellNodeGeometryDelegate}. This call does not affect the
-	 * node's state. **************************************
-	 */
-	public void execLower() {
-		getShellNodeGeometryDelegate().lower();
+		return null;
 	}
 
 	@Override
 	public Void doReparentImpl() {
-		doReparent(true);
-		return null;
-	}
-
-	/**
-	 * ************************************ Reparents the current node but the
-	 * actual delegated execution by this node's
-	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
-	 * the node's state.
-	 *
-	 * @param execute
-	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
-	 *            level execution. **************************************
-	 */
-	protected void doReparent(final boolean execute) {
 		flushParentValue();
-		if (execute) {
-			execReparent();
-		}
 		getParentImpl().handleChildReparent(this);
-		// Make sure we have the same size
-		// and place in our new parent
-		// as in our old parent.
-		doMoveResize(execute);
 		final ShellNodeReparentedEvent geoEvent = new ShellNodeReparentedEvent(	this,
-																				toGeoTransformationImpl());
+				toGeoTransformationImpl());
 		post(geoEvent);
-	}
-
-	/**
-	 * ************************************ Execute the reparent process by this
-	 * node's {@link ShellNodeGeometryDelegate}. This call does not affect the
-	 * node's state. **************************************
-	 */
-	public void execReparent() {
-		getShellNodeGeometryDelegate().reparent(getDesiredParent());
+		return null;
 	}
 
 	private void flushParentValue() {
@@ -541,73 +456,22 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	@Override
 	public Void doShowImpl() {
-		doShow(true);
-		return null;
-	}
-
-	/**
-	 * ************************************ Show the current node but the actual
-	 * delegated execution by this node's {@link ShellNodeGeometryDelegate} is
-	 * conditional. This call will affect the node's state.
-	 *
-	 * @param execute
-	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
-	 *            level execution. **************************************
-	 */
-	protected void doShow(final boolean execute) {
 		this.visible = true;
-		if (execute) {
-			execShow();
-		}
+
 		final ShellNodeShowedEvent geoEvent = new ShellNodeShowedEvent(	this,
 																		toGeoTransformationImpl());
 		post(geoEvent);
-	}
-
-	/**
-	 * ************************************ Execute the show process by this
-	 * node's {@link ShellNodeGeometryDelegate} . This call does not affect the
-	 * node's state. **************************************
-	 */
-	public Void execShow() {
-		getShellNodeGeometryDelegate().show();
 		return null;
 	}
 
 	@Override
 	public Void doHideImpl() {
-		doHide(true);
-		return null;
-	}
-
-	/**
-	 * ************************************ Hide the current node but the actual
-	 * delegated execution by this node's {@link ShellNodeGeometryDelegate} is
-	 * conditional. This call will affect the node's state.
-	 *
-	 * @param execute
-	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
-	 *            level execution. **************************************
-	 */
-	protected void doHide(final boolean execute) {
 		this.visible = false;
-		if (execute) {
-			execHide();
-		}
+
 		final ShellNodeHiddenEvent geoEvent = new ShellNodeHiddenEvent(	this,
 																		toGeoTransformationImpl());
 		post(geoEvent);
-	}
-
-	/**
-	 * ************************************ Execute the hide process by this
-	 * node's {@link ShellNodeGeometryDelegate} . This call does not affect the
-	 * node's state. **************************************
-	 */
-	public void execHide() {
-		getShellNodeGeometryDelegate().hide();
+		return null;
 	}
 
 	@Override

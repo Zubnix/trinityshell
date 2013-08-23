@@ -35,25 +35,25 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 // TODO documentation
 /**
- * A <code>ShellClientSurface</code> wraps a {@link DisplaySurface} that was
+ * A <code>ShellSurfaceImpl</code> wraps a {@link DisplaySurface} that was
  * created by an independent program. As such the visual content can not be
- * directly manipulated. A <code>ShellClientSurface</code> is the owner of the
- * <code>PlatformRenderArea</code> it wraps. A <code>ShellClientSurface</code>
+ * directly manipulated. A <code>ShellSurfaceImpl</code> is the owner of the
+ * <code>PlatformRenderArea</code> it wraps. A <code>ShellSurfaceImpl</code>
  * provides functionality to manage and manipulate the geometry and visibility
  * of the <code>PlatformRenderArea</code> it wraps.
  */
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
-public final class ShellClientSurface extends AbstractShellSurface {
+public final class ShellSurfaceImpl extends AbstractShellSurface {
 
 	private final ShellSurfaceGeometryDelegateImpl shellSurfaceGeometryDelegateImpl;
 	private final DisplaySurface displaySurface;
 
 	// created by a custom factory so inject annotations are not needed.
-	ShellClientSurface(@Nonnull final ShellNodeParent shellRootNode,
-	                   @Nonnull @ShellScene final AsyncListenable shellScene,
-	                   @Nonnull @ShellExecutor final ListeningExecutorService shellExecutor,
-	                   @Nonnull @Assisted final DisplaySurface clientDisplaySurface) {
+	ShellSurfaceImpl(@Nonnull final ShellNodeParent shellRootNode,
+	                 @Nonnull @ShellScene final AsyncListenable shellScene,
+	                 @Nonnull @ShellExecutor final ListeningExecutorService shellExecutor,
+	                 @Nonnull @Assisted final DisplaySurface clientDisplaySurface) {
 		super(	shellRootNode,
 				shellScene,
 				shellExecutor);

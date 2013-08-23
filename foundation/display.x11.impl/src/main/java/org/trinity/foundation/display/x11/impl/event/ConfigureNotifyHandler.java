@@ -37,7 +37,7 @@ import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindowCacheImpl;
+import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
@@ -51,11 +51,11 @@ public class ConfigureNotifyHandler implements XEventHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ConfigureNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_CONFIGURE_NOTIFY;
-	private final XWindowCacheImpl xWindowCache;
+	private final XWindowPoolImpl xWindowCache;
 	private final EventBus xEventBus;
 
 	@Inject
-	ConfigureNotifyHandler(final XWindowCacheImpl xWindowCache,
+	ConfigureNotifyHandler(final XWindowPoolImpl xWindowCache,
 	                       @XEventBus final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
@@ -92,7 +92,7 @@ public class ConfigureNotifyHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(final xcb_generic_event_t event_t) {
 		final xcb_configure_notify_event_t configure_notify_event_t = cast(event_t);
 		final int windowId = configure_notify_event_t.getWindow();
-		return Optional.of(this.xWindowCache.getWindow(windowId));
+		return Optional.of(this.xWindowCache.getDisplaySurface(windowId));
 	}
 
 	@Override

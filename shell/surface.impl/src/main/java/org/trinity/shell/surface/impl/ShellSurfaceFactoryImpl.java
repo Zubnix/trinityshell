@@ -68,29 +68,29 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 		return this.shellExecutor.submit(new Callable<ShellSurface>() {
 			@Override
 			public ShellSurface call() {
-				final ShellClientSurface shellClientSurface = new ShellClientSurface(	shellRootNode,
+				final ShellSurfaceImpl shellSurfaceImpl = new ShellSurfaceImpl(	shellRootNode,
 																						shellScene,
 																						shellExecutor,
 																						displaySurface);
 				syncGeoToDisplaySurfaceImpl(displaySurface,
-											shellClientSurface);
-				displaySurface.register(shellClientSurface,
+						shellSurfaceImpl);
+				displaySurface.register(shellSurfaceImpl,
 										shellExecutor);
 
-				return shellClientSurface;
+				return shellSurfaceImpl;
 			}
 		});
 	}
 
 	private void syncGeoToDisplaySurfaceImpl(	final DisplaySurface displaySurface,
-												final ShellClientSurface shellClientSurface) {
+												final ShellSurfaceImpl shellSurfaceImpl) {
 		try {
 			// we need to block/sync here because we dont want to expose an
 			// incomplete shellclientsurface object to other threads.
 			final Rectangle displaySurfaceGeo = displaySurface.getGeometry().get();
-			shellClientSurface.setPositionImpl(displaySurfaceGeo.getPosition());
-			shellClientSurface.setSizeImpl(displaySurfaceGeo.getSize());
-			shellClientSurface.flushSizePlaceValues();
+			shellSurfaceImpl.setPositionImpl(displaySurfaceGeo.getPosition());
+			shellSurfaceImpl.setSizeImpl(displaySurfaceGeo.getSize());
+			shellSurfaceImpl.flushSizePlaceValues();
 		} catch (final InterruptedException e) {
 			LOG.error(	"Interrupted while waiting for display surface geometry.",
 						e);
