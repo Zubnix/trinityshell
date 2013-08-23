@@ -19,9 +19,22 @@
  ******************************************************************************/
 package org.trinity.foundation.api.display;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
+@NotThreadSafe
 public interface DisplaySurfacePool {
 
 	DisplaySurface getDisplaySurface(Object nativeHandle);
 
 	boolean isPresent(Object nativeHandle);
+
+	/**
+	 * Blocks the display execution context from processing any events. This is
+	 * to avoid that a newly created server side DisplaySurface is seen as a
+	 * client. This method should be called before any server side display
+	 * surface is created.
+	 *
+	 * @return A {@link DisplaySurfacePreparation}
+	 */
+	DisplaySurfacePreparation prepareDisplaySurface();
 }
