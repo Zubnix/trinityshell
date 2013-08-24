@@ -20,9 +20,16 @@
 
 package org.trinity.shellplugin.wm.x11.impl.view;
 
+import com.google.inject.Inject;
+import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.shellplugin.widget.impl.view.qt.AbstractQWidgetViewProvider;
 
 public class RootViewProvider extends AbstractQWidgetViewProvider {
+
+	@Inject
+	RootViewProvider(final DisplaySurfacePool displaySurfacePool) {
+		super(displaySurfacePool);
+	}
 
 	@Override
 	protected RootView createView() {

@@ -71,20 +71,19 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
 	}
 
 	@Override
-	public DisplaySurface getDisplaySurface(final Object nativeHandle) {
+	public DisplaySurface getDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
 
-		final DisplaySurfaceHandle resourceHandle = new XWindowHandle(nativeHandle);
 		XWindow window = null;
 		try {
-			window = this.xWindows.get(	nativeHandle,
+			window = this.xWindows.get(	displaySurfaceHandle,
 										new Callable<XWindow>() {
 											@Override
 											public XWindow call() {
 												LOG.debug(	"Xwindow={} added to cache.",
-															nativeHandle);
+															displaySurfaceHandle);
 
 												final XWindow xWindow = (XWindow) XWindowPoolImpl.this.displaySurfaceFactory
-														.createDisplaySurface(resourceHandle);
+														.createDisplaySurface(displaySurfaceHandle);
 												xWindow.register(new DestroyListener(xWindow));
 												return xWindow;
 											}
@@ -95,8 +94,8 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
 		return window;
 	}
 
-	public boolean isPresent(final Object nativeHandle) {
-		return this.xWindows.getIfPresent(nativeHandle) != null;
+	public boolean isPresent(final DisplaySurfaceHandle displaySurfaceHandle) {
+		return this.xWindows.getIfPresent(displaySurfaceHandle) != null;
 	}
 
 	@Override

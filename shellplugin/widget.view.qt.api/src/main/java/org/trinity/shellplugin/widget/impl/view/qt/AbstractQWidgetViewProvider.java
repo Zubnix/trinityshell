@@ -64,21 +64,14 @@ public abstract class AbstractQWidgetViewProvider implements Provider<Listenable
 			public Object call() {
 
 				final QWidget view = createView();
-				final long effectiveWinId = view.effectiveWinId();
-				final DisplaySurface viewDisplaySurface = displaySurfacePool.getDisplaySurface(effectiveWinId);
-				store(	view,
-						viewDisplaySurface);
+				//this will register it in the pool
+				displaySurfacePool.getDisplaySurface(new ViewDisplaySurfaceHandle(view));
 				displaySurfacePreparation.done();
 				return view;
 			}
 		});
 		QApplication.invokeLater(futureTask);
 		return futureTask;
-	}
-
-	private void store(	final QWidget view,
-						final DisplaySurface viewDisplaySurface) {
-
 	}
 
 	protected abstract QWidget createView();

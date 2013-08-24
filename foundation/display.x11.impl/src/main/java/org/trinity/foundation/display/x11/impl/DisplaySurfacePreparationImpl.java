@@ -10,6 +10,7 @@ import org.trinity.foundation.api.display.DisplaySurfacePreparation;
 public class DisplaySurfacePreparationImpl implements DisplaySurfacePreparation {
 
 	private final XEventPump xEventPump;
+	private boolean done = false;
 
 	@Inject
 	DisplaySurfacePreparationImpl(final XEventPump xEventPump) {
@@ -18,7 +19,15 @@ public class DisplaySurfacePreparationImpl implements DisplaySurfacePreparation 
 	}
 
 	@Override
+	public boolean isDone() {
+		return done;
+	}
+
+	@Override
 	public void done() {
-		this.xEventPump.start();
+		if (!done) {
+			this.xEventPump.start();
+			done = true;
+		}
 	}
 }

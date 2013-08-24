@@ -35,6 +35,7 @@ import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 
 import com.google.common.base.Optional;
+import org.trinity.foundation.display.x11.api.XWindowHandle;
 
 @Bind(multiple = true)
 @Singleton
@@ -53,7 +54,7 @@ public class XPropertyChangedHandler implements XEventHandler {
 		final xcb_property_notify_event_t property_notify_event = new xcb_property_notify_event_t(	xcb_generic_event_t.getCPtr(event),
 																									false);
 		final int clientId = property_notify_event.getWindow();
-		displaySurfacePool.getDisplaySurface(clientId).post(property_notify_event);
+		displaySurfacePool.getDisplaySurface(new XWindowHandle(clientId)).post(property_notify_event);
 
 		// no conversion possible
 		return Optional.absent();

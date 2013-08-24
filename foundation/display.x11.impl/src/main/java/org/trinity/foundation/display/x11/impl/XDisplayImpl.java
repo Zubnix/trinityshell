@@ -73,6 +73,7 @@ import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XScreen;
+import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
 import com.google.common.eventbus.Subscribe;
@@ -219,7 +220,7 @@ public class XDisplayImpl implements Display {
 					continue;
 				}
 
-				final DisplaySurface clientWindow = this.xWindowCache.getDisplaySurface(tree_child);
+				final DisplaySurface clientWindow = this.xWindowCache.getDisplaySurface(new XWindowHandle(tree_child));
 				configureClientEvents(clientWindow);
 				trackClient(clientWindow);
 			}

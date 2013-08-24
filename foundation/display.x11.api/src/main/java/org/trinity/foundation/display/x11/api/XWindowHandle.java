@@ -17,7 +17,9 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.display.x11.impl;
+package org.trinity.foundation.display.x11.api;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -26,48 +28,35 @@ import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
-import com.google.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-
 @ExecutionContext(DisplayExecutor.class)
 @Immutable
 public class XWindowHandle implements DisplaySurfaceHandle {
 
-    private final Integer nativeHandle;
+	private final Integer nativeHandle;
 
-    @Inject
-    XWindowHandle(@Nonnull @Assisted final Object nativeHandle) {
-        checkNotNull(nativeHandle);
+	public XWindowHandle(@Nonnull final Integer nativeHandle) {
+		this.nativeHandle = checkNotNull(nativeHandle);
+	}
 
-        if (nativeHandle instanceof Integer) {
-            this.nativeHandle = (Integer) nativeHandle;
-        } else {
-            throw new Error("Can only handle handle native X window handle of type 'Integer'. Got native handle of type: "
-                    + nativeHandle.getClass().getName());
-        }
-    }
+	@Override
+	public Integer getNativeHandle() {
+		return this.nativeHandle;
+	}
 
-    @Override
-    public Integer getNativeHandle() {
-        return this.nativeHandle;
-    }
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj instanceof DisplaySurfaceHandle) {
+			final DisplaySurfaceHandle otherObj = (DisplaySurfaceHandle) obj;
+			return otherObj.getNativeHandle().equals(getNativeHandle());
+		}
+		return false;
+	}
 
-    @Override
-    public boolean equals(final Object obj) {
-        if(obj == null){
-            return false;
-        }
-        if (obj instanceof DisplaySurfaceHandle) {
-            final DisplaySurfaceHandle otherObj = (DisplaySurfaceHandle) obj;
-            return otherObj.getNativeHandle().equals(getNativeHandle());
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return getNativeHandle().hashCode();
-    }
+	@Override
+	public int hashCode() {
+		return getNativeHandle().hashCode();
+	}
 }

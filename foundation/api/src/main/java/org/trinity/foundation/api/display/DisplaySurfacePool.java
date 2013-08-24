@@ -26,9 +26,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 @NotThreadSafe
 public interface DisplaySurfacePool {
 
-	DisplaySurface getDisplaySurface(Object nativeHandle);
+	DisplaySurface getDisplaySurface(DisplaySurfaceHandle displaySurfaceHandle);
 
-	boolean isPresent(Object nativeHandle);
+	boolean isPresent(DisplaySurfaceHandle displaySurfaceHandle);
 
 	/**
 	 * Blocks the display execution context from processing any events. This is

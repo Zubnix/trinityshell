@@ -33,6 +33,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.trinity.foundation.display.x11.api.XConnection;
 
+import org.trinity.foundation.display.x11.api.XWindowHandle;
 import xcb4j.LibXcbLoader;
 
 import com.google.common.util.concurrent.MoreExecutors;
