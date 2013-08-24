@@ -22,9 +22,7 @@ package org.trinity.shellplugin.wm.api;
 
 import java.util.List;
 
-import org.trinity.shell.api.widget.ShellWidget;
-
-public interface Desktop extends ShellWidget {
+public interface Desktop {
 
 	List<Object> getNotificationsBar();
 

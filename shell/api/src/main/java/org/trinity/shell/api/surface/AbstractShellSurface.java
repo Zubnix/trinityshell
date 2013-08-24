@@ -243,7 +243,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	 */
 	@Subscribe
 	public void handleHideNotifyEvent(final HideNotify hideNotify) {
-		doHide(false);
+		doHide();
 	}
 
 	/**
@@ -256,7 +256,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	 */
 	@Subscribe
 	public void handleShowNotifyEvent(final ShowNotify showNotify) {
-		doShow(false);
+		doShow();
 	}
 
 	/* end display event handling */

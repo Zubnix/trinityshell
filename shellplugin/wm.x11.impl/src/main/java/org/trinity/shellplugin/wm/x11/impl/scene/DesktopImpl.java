@@ -28,13 +28,13 @@ import javax.inject.Named;
 
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.Screen;
-import org.trinity.foundation.api.render.PainterFactory;
+import org.trinity.foundation.api.render.binding.Binder;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shell.api.widget.BaseShellWidget;
+import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
 import org.trinity.shellplugin.wm.api.Desktop;
 
 import ca.odell.glazedlists.BasicEventList;
@@ -52,26 +52,24 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 // @To(value = CUSTOM, customs = { ShellNodeParent.class, Desktop.class })
 @ExecutionContext(ShellExecutor.class)
 @NotThreadSafe
-public class ShellRootWidget extends BaseShellWidget implements Desktop {
+public class DesktopImpl implements Desktop {
 
 	private final EventList<Object> notificationsBar = new BasicEventList<>();
 	private final EventList<Object> clientsBar = new BasicEventList<>();
 	private final EventList<Object> bottomBar = new BasicEventList<>();
 
 	@Inject
-	ShellRootWidget(final Display display,
-					@ShellScene final AsyncListenable shellScene,
-					@ShellExecutor final ListeningExecutorService shellExecutor,
-					final PainterFactory painterFactory,
-					@Named("RootView") final Object view) {
-		super(	null,
-				shellScene,
-				shellExecutor,
-				painterFactory,
-				view);
-		getPainter().bindView();
-		// find correct size
+	DesktopImpl(final Display display,
+	            @ShellScene final AsyncListenable shellScene,
+	            @ShellExecutor final ListeningExecutorService shellExecutor,
+	            final Binder binder,
+	            @Named("RootView") final Object view,
+	            final ShellLayoutManagerLine shellLayoutManagerLine) {
 
+		//TODO get view & bind it to this model.
+		//TODO get display surface from view & create shellsurface from display surface & resize to correct size
+
+		// find correct size
 		final ListenableFuture<Screen> screenFuture = display.getScreen();
 		// set correct size
 		addCallback(screenFuture,
@@ -89,11 +87,6 @@ public class ShellRootWidget extends BaseShellWidget implements Desktop {
 							t.printStackTrace();
 						}
 					});
-	}
-
-	@Override
-	public ShellNodeParent getDesiredParent() {
-		return this;
 	}
 
 	@Override

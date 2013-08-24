@@ -48,44 +48,12 @@ public interface ShellNodeGeometryDelegate {
 	 */
 	ShellNode getShellNode();
 
-	/***************************************
-	 * Execute the actual lowering of the handled <code>ShellNode</code>.
-	 ***************************************
-	 */
-	void lower();
-
-	/***************************************
-	 * Execute the actual raising the handled <code>ShellNode</code>.
-	 ***************************************
-	 */
-	void raise();
-
 	void move(Coordinate desiredPosition);
 
 	void resize(Size desiredSize);
 
 	void moveResize(Coordinate desiredPosition,
 					Size desiredSize);
-
-	/***************************************
-	 * Execute the actual showing of the handled <code>ShellNode</code>.
-	 ***************************************
-	 */
-	void show();
-
-	/***************************************
-	 * Execute the actual hiding of the handled <code>ShellNode</code>.
-	 ***************************************
-	 */
-	void hide();
-
-	/***************************************
-	 * Execute the actual parent update of the handled <code>ShellNode</code> .
-	 *
-	 * @param parent
-	 ***************************************
-	 */
-	void reparent(ShellNodeParent parent);
 
 	/***************************************
 	 * Execute the actual destroy process of the handled <code>ShellNode</code>.

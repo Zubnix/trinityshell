@@ -17,15 +17,11 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
+package org.trinity.foundation.api.display;
 
-package org.trinity.foundation.render.qt.impl.painter;
+public interface DisplaySurfacePool {
 
-import org.trinity.foundation.api.shared.AsyncListenable;
+	DisplaySurface getDisplaySurface(Object nativeHandle);
 
-import com.trolltech.qt.core.QObject;
-
-@Deprecated
-public interface ViewEventTrackerFactory {
-	QObject createQJEventTracker(	final AsyncListenable target,
-									final QObject view);
+	boolean isPresent(Object nativeHandle);
 }

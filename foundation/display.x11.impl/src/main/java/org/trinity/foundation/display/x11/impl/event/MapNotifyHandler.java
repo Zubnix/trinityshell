@@ -34,7 +34,7 @@ import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindowCacheImpl;
+import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
@@ -50,11 +50,11 @@ public class MapNotifyHandler implements XEventHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(MapNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_MAP_NOTIFY;
 	private final EventBus xEventBus;
-	private final XWindowCacheImpl xWindowCache;
+	private final XWindowPoolImpl xWindowCache;
 
 	@Inject
 	MapNotifyHandler(	@XEventBus final EventBus xEventBus,
-						final XWindowCacheImpl xWindowCache) {
+						final XWindowPoolImpl xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}
@@ -80,7 +80,7 @@ public class MapNotifyHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(final xcb_generic_event_t event_t) {
 		final xcb_map_notify_event_t map_notify_event_t = cast(event_t);
 		final int windowId = map_notify_event_t.getWindow();
-		return Optional.of(this.xWindowCache.getWindow(windowId));
+		return Optional.of(this.xWindowCache.getDisplaySurface(windowId));
 	}
 
 	@Override

@@ -18,7 +18,7 @@
  * <ul>
  * <li>{@link org.trinity.foundation.api.render.binding.model.EventSlot}:</li>
  * <li>{@link org.trinity.foundation.api.render.binding.model.PropertyChanged}:</li>
- * <li>{@link org.trinity.foundation.api.render.binding.model.ViewReference}:</li>
+ * <li>{@link org.trinity.foundation.api.render.binding.model.ViewFuture}:</li>
  * </ul>
  */
 package org.trinity.foundation.api.render.binding;

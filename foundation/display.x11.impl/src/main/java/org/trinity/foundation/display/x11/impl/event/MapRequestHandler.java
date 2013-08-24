@@ -47,7 +47,7 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindowCacheImpl;
+import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
@@ -68,13 +68,13 @@ public class MapRequestHandler implements XEventHandler {
 	private static final Integer EVENT_CODE = XCB_MAP_REQUEST;
 	private final EventBus xEventBus;
 	private final XConnection xConnection;
-	private final XWindowCacheImpl xWindowCache;
+	private final XWindowPoolImpl xWindowCache;
 	private final Display display;
 
 	@Inject
 	MapRequestHandler(	@XEventBus final EventBus xEventBus,
 						final XConnection xConnection,
-						final XWindowCacheImpl xWindowCache,
+						final XWindowPoolImpl xWindowCache,
 						final Display display) {
 		this.xEventBus = xEventBus;
 		this.xConnection = xConnection;
@@ -105,7 +105,7 @@ public class MapRequestHandler implements XEventHandler {
 		final xcb_map_request_event_t map_request_event_t = cast(event_t);
 		final int windowId = map_request_event_t.getWindow();
 		final boolean present = this.xWindowCache.isPresent(windowId);
-		final DisplaySurface displayEventTarget = this.xWindowCache.getWindow(windowId);
+		final DisplaySurface displayEventTarget = this.xWindowCache.getDisplaySurface(windowId);
 		if (!present) {
 			configureClientEvents(displayEventTarget);
 			// this is a bit of a dirty hack to work around X's model of client
