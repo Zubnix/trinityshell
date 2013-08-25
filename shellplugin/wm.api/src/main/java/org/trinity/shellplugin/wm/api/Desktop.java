@@ -29,4 +29,6 @@ public interface Desktop {
 	List<Object> getClientsBar();
 
 	List<Object> getBottomBar();
+
+	
 }

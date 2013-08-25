@@ -124,26 +124,6 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	public abstract Size getMinSizeImpl();
 
 	@Override
-	public final ListenableFuture<DisplaySurface> getDisplaySurface() {
-		return this.shellExecutor.submit(new Callable<DisplaySurface>() {
-			@Override
-			public DisplaySurface call() throws Exception {
-				return getDisplaySurfaceImpl();
-			}
-		});
-	}
-
-	/***************************************
-	 * Concrete implementation of {@link #getDisplaySurface()}. This method is
-	 * invoked by the Shell thread.
-	 *
-	 * @return a {@link DisplaySurface}
-	 * @see #getDisplaySurface()
-	 ***************************************
-	 */
-	public abstract DisplaySurface getDisplaySurfaceImpl();
-
-	@Override
 	public final ListenableFuture<Integer> getWidthIncrement() {
 		return this.shellExecutor.submit(new Callable<Integer>() {
 			@Override

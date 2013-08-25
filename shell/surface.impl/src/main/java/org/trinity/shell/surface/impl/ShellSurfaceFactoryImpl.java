@@ -21,7 +21,6 @@
 package org.trinity.shell.surface.impl;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -33,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellRootNode;
 import org.trinity.shell.api.bindingkey.ShellScene;
@@ -64,39 +62,21 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 	}
 
 	@Override
-	public ListenableFuture<ShellSurface> createShellClientSurface(@Nonnull final DisplaySurface displaySurface) {
+	public ListenableFuture<ShellSurface> createClientShellSurface(@Nonnull final DisplaySurface clientDisplaySurface) {
 		return this.shellExecutor.submit(new Callable<ShellSurface>() {
 			@Override
 			public ShellSurface call() {
 				final ShellSurfaceImpl shellSurfaceImpl = new ShellSurfaceImpl(	shellRootNode,
-																						shellScene,
-																						shellExecutor,
-																						displaySurface);
-				syncGeoToDisplaySurfaceImpl(displaySurface,
-						shellSurfaceImpl);
-				displaySurface.register(shellSurfaceImpl,
-										shellExecutor);
+																				shellScene,
+																				shellExecutor,
+																				clientDisplaySurface);
+				shellSurfaceImpl.syncGeoToDisplaySurface();
+				clientDisplaySurface.register(	shellSurfaceImpl,
+												shellExecutor);
 
 				return shellSurfaceImpl;
 			}
 		});
 	}
 
-	private void syncGeoToDisplaySurfaceImpl(	final DisplaySurface displaySurface,
-												final ShellSurfaceImpl shellSurfaceImpl) {
-		try {
-			// we need to block/sync here because we dont want to expose an
-			// incomplete shellclientsurface object to other threads.
-			final Rectangle displaySurfaceGeo = displaySurface.getGeometry().get();
-			shellSurfaceImpl.setPositionImpl(displaySurfaceGeo.getPosition());
-			shellSurfaceImpl.setSizeImpl(displaySurfaceGeo.getSize());
-			shellSurfaceImpl.flushSizePlaceValues();
-		} catch (final InterruptedException e) {
-			LOG.error(	"Interrupted while waiting for display surface geometry.",
-						e);
-		} catch (final ExecutionException e) {
-			LOG.error(	"Exception while getting display surface geometry.",
-						e);
-		}
-	}
 }

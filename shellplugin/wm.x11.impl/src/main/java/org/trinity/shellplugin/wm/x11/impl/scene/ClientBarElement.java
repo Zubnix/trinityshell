@@ -44,6 +44,7 @@ import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shellplugin.wm.api.HasText;
 import org.trinity.shellplugin.wm.api.ReceivesPointerInput;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
@@ -64,6 +65,8 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	private static Logger LOG = LoggerFactory.getLogger(ClientBarElement.class);
 	private final ListeningExecutorService shellExecutor;
+	private final XAtomCache xAtomCache;
+	private final ShellSurface client;
 	private final WmName wmName;
 	private final WmProtocols wmProtocols;
 	private final ReceivesPointerInput closeButton = new ReceivesPointerInput() {
@@ -88,16 +91,18 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 						final WmName wmName,
 						final WmProtocols wmProtocols,
 						final XAtomCache xAtomCache,
-						@Assisted final DisplaySurface clientXWindow) {
+						@Assisted final ShellSurface client) {
 		this.displayExecutor = displayExecutor;
 		this.xConnection = xConnection;
 		this.wmName = wmName;
 		this.wmProtocols = wmProtocols;
 		this.shellExecutor = shellExecutor;
+		this.xAtomCache = xAtomCache;
+		this.client = client;
 
 		this.wmDeleteWindowAtomId = xAtomCache.getAtom("WM_DELETE_WINDOW");
 		this.wmProtocolsAtomId = xAtomCache.getAtom("WM_PROTOCOLS");
-		setClientXWindow(clientXWindow);
+		setClientXWindow(client.getDisplaySurface());
 	}
 
 	// called by shell executor
@@ -254,8 +259,10 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	// called by shell executor.
 	@Override
 	public void onPointerInput() {
+
 		//both calls will be handled by the display executor.
+		//TODO use opaque input surface
 		this.clientXWindow.setInputFocus();
-		this.clientXWindow.raise();
+		client.doRaise();
 	}
 }

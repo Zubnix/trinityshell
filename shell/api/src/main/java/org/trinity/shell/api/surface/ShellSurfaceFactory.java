@@ -37,10 +37,10 @@ public interface ShellSurfaceFactory {
 	 * Create a new shell surface that is backed by the given display surface.
 	 * The new shell surface will have the root shell surface as its parent.
 	 *
-	 * @param displaySurface
-	 *            a {@link DisplaySurface}
-	 * @return a new future {@link ShellSurface}.
+	 * @param clientDisplaySurface
+	 *            a {@link DisplaySurface} created by an external client program.
+	 * @return a future {@link ShellSurface}.
 	 ***************************************
 	 */
-	ListenableFuture<ShellSurface> createShellClientSurface(@Nonnull DisplaySurface displaySurface);
+	ListenableFuture<ShellSurface> createClientShellSurface(@Nonnull DisplaySurface clientDisplaySurface);
 }

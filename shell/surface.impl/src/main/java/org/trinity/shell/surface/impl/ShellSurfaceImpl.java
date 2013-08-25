@@ -23,15 +23,21 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.google.inject.assistedinject.Assisted;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
+import org.trinity.shell.api.surface.ShellSurfaceGeometryDelegate;
+
+import java.util.concurrent.ExecutionException;
 
 // TODO documentation
 /**
@@ -46,7 +52,9 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 @ExecutionContext(ShellExecutor.class)
 public final class ShellSurfaceImpl extends AbstractShellSurface {
 
-	private final ShellSurfaceGeometryDelegateImpl shellSurfaceGeometryDelegateImpl;
+	private static final Logger LOG = LoggerFactory.getLogger(ShellSurfaceImpl.class);
+
+	private final ShellSurfaceGeometryDelegate shellSurfaceGeometryDelegateImpl;
 	private final DisplaySurface displaySurface;
 
 	// created by a custom factory so inject annotations are not needed.
@@ -58,16 +66,34 @@ public final class ShellSurfaceImpl extends AbstractShellSurface {
 				shellScene,
 				shellExecutor);
 		this.displaySurface = clientDisplaySurface;
-		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegateImpl(this);
+		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegate(this);
+		syncGeoToDisplaySurface();
+	}
+
+	protected void syncGeoToDisplaySurface() {
+		try {
+			// we need to block/sync here because we dont want to expose an
+			// incomplete shellclientsurface object to other threads.
+			final Rectangle displaySurfaceGeo = getDisplaySurface().getGeometry().get();
+			setPositionImpl(displaySurfaceGeo.getPosition());
+			setSizeImpl(displaySurfaceGeo.getSize());
+			flushSizePlaceValues();
+		} catch (final InterruptedException e) {
+			LOG.error(	"Interrupted while waiting for display surface geometry.",
+					e);
+		} catch (final ExecutionException e) {
+			LOG.error(	"Exception while getting display surface geometry.",
+					e);
+		}
 	}
 
 	@Override
-	public ShellSurfaceGeometryDelegateImpl getShellNodeGeometryDelegate() {
+	public ShellSurfaceGeometryDelegate getShellNodeGeometryDelegate() {
 		return this.shellSurfaceGeometryDelegateImpl;
 	}
 
 	@Override
-	public DisplaySurface getDisplaySurfaceImpl() {
+	public DisplaySurface getDisplaySurface() {
 		return this.displaySurface;
 	}
 

@@ -63,30 +63,9 @@ public class DesktopImpl implements Desktop {
 	            @ShellScene final AsyncListenable shellScene,
 	            @ShellExecutor final ListeningExecutorService shellExecutor,
 	            final Binder binder,
-	            @Named("RootView") final Object view,
+	            @Named("DesktopView") final Object view,
 	            final ShellLayoutManagerLine shellLayoutManagerLine) {
-
-		//TODO get view & bind it to this model.
-		//TODO get display surface from view & create shellsurface from display surface & resize to correct size
-
-		// find correct size
-		final ListenableFuture<Screen> screenFuture = display.getScreen();
-		// set correct size
-		addCallback(screenFuture,
-					new FutureCallback<Screen>() {
-						// called by display executor
-						@Override
-						public void onSuccess(final Screen result) {
-							setSize(result.getSize());
-							doResize();
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							// TODO Auto-generated method stub
-							t.printStackTrace();
-						}
-					});
+		binder.bind(shellExecutor,this,view);
 	}
 
 	@Override

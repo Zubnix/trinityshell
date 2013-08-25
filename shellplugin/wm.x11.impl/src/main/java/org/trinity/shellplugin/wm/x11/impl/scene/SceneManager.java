@@ -32,6 +32,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
@@ -49,16 +50,17 @@ public class SceneManager {
 
 	private final ClientBarElementFactory clientBarElementFactory;
 	private final ShellLayoutManager rootLayoutManager;
-	private final DesktopImpl shellRootNode;
+	private final ShellNodeParent shellRootNode;
 	private final XWindowProtocol xWindowProtocol;
 
 	@Inject
 	SceneManager(	final ClientBarElementFactory clientBarElementFactory,
 					final XWindowProtocol xWindowProtocol,
-					final DesktopImpl desktopImpl) {
+					final ShellNodeParent shellRootNode,
+					final ShellLayoutManagerLine shellLayoutManagerLine) {
 		this.clientBarElementFactory = clientBarElementFactory;
 		this.xWindowProtocol = xWindowProtocol;
-		this.shellRootNode = desktopImpl;
+		this.shellRootNode = shellRootNode;
 		this.rootLayoutManager = shellLayoutManagerLine;
 
 		this.shellRootNode.setLayoutManager(this.rootLayoutManager);

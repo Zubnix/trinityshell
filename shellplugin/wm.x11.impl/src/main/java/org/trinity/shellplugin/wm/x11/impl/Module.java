@@ -39,7 +39,7 @@ class Module extends AbstractModule {
 		install(new FactoryModuleBuilder().implement(	ClientBarElement.class,
 														ClientBarElement.class).build(ClientBarElementFactory.class));
 		bind(DesktopImpl.class).asEagerSingleton();
-		bind(ShellNodeParent.class).annotatedWith(ShellRootNode.class).to(DesktopImpl.class);
+		bind(ShellNodeParent.class).annotatedWith(ShellRootNode.class).toProvider(ShellRootNodeProvider.class);
 		bind(Desktop.class).to(DesktopImpl.class);
 	}
 }

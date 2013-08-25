@@ -17,7 +17,7 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.shell.surface.impl;
+package org.trinity.shell.api.surface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -41,11 +41,11 @@ import org.trinity.shell.api.surface.AbstractShellSurface;
  */
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
-public class ShellSurfaceGeometryDelegateImpl implements ShellNodeGeometryDelegate {
+public class ShellSurfaceGeometryDelegate implements ShellNodeGeometryDelegate {
 
 	private final AbstractShellSurface abstractShellSurface;
 
-	public ShellSurfaceGeometryDelegateImpl(AbstractShellSurface abstractShellSurface) {
+	public ShellSurfaceGeometryDelegate(AbstractShellSurface abstractShellSurface) {
 		this.abstractShellSurface = abstractShellSurface;
 	}
 
@@ -55,7 +55,7 @@ public class ShellSurfaceGeometryDelegateImpl implements ShellNodeGeometryDelega
 	}
 
 	public DisplaySurface getShellNodeManipulator(){
-		return getShellNode().getDisplaySurfaceImpl();
+		return getShellNode().getDisplaySurface();
 	}
 
 	@Override

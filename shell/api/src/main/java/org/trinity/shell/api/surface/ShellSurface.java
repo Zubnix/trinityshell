@@ -81,7 +81,7 @@ public interface ShellSurface extends ShellNode {
 	 * @return a future {@link DisplaySurface}.
 	 ***************************************
 	 */
-	ListenableFuture<DisplaySurface> getDisplaySurface();
+	DisplaySurface getDisplaySurface();
 
 	/***************************************
 	 * The desired delta of the old and new width when this surface's width

@@ -257,7 +257,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	/**
 	 * Make the desired position the actual position.
 	 */
-	public void flushPlaceValues() {
+	protected void flushPlaceValues() {
 		this.position = getDesiredPosition();
 	}
 
@@ -301,7 +301,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	/**
 	 * Make the desired dimensions the current dimension.
 	 */
-	public Void flushSizeValues() {
+	protected Void flushSizeValues() {
 		this.size = getDesiredSize();
 		return null;
 	}
@@ -348,7 +348,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * Make both the desired position and the desired dimension, the current
 	 * position and dimension.
 	 */
-	public Void flushSizePlaceValues() {
+	protected Void flushSizePlaceValues() {
 		flushPlaceValues();
 		flushSizeValues();
 		return null;
@@ -420,7 +420,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 		return null;
 	}
 
-	private void flushParentValue() {
+	protected void flushParentValue() {
 		this.parent = (AbstractShellNodeParent) getDesiredParent();
 	}
 
