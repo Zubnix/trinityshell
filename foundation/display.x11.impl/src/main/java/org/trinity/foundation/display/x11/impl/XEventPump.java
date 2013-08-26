@@ -20,7 +20,6 @@
 package org.trinity.foundation.display.x11.impl;
 
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
 import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
@@ -28,6 +27,9 @@ import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -55,8 +57,16 @@ public class XEventPump implements Callable<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(XEventPump.class);
 	private final XConnection connection;
 	private final EventBus xEventBus;
-	private ExecutorService xEventPumpExecutor;
 	private final ListeningExecutorService xExecutor;
+	private final ExecutorService xEventPumpExecutor = newSingleThreadExecutor(new ThreadFactory() {
+		@Override
+		public Thread newThread(final Runnable r) {
+			return new Thread(	r,
+								"x-event-pump");
+		}
+	});
+	private Lock pauzeLock = new ReentrantLock();
+	private final Condition pauzeCondition = pauzeLock.newCondition();
 
 	@Inject
 	XEventPump(	final XConnection connection,
@@ -65,10 +75,12 @@ public class XEventPump implements Callable<Void> {
 		this.connection = connection;
 		this.xEventBus = xEventBus;
 		this.xExecutor = xExecutor;
+		start();
 	}
 
 	@Override
 	public Void call() {
+
 		final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference().get());
 
 		if (xcb_connection_has_error(this.connection.getConnectionReference().get()) != 0) {
@@ -92,32 +104,28 @@ public class XEventPump implements Callable<Void> {
 		return null;
 	}
 
-	public void start() {
-		if (this.xEventPumpExecutor == null) {
-			this.xEventPumpExecutor = newSingleThreadExecutor(new ThreadFactory() {
-
-				@Override
-				public Thread newThread(final Runnable r) {
-					return new Thread(	r,
-										"x-event-pump");
-				}
-			});
+	public synchronized void start() {
+		pauzeLock.lock();
+		try {
+			pauzeCondition.signalAll();
+			this.xEventPumpExecutor.submit(this);
+		} finally {
+			pauzeLock.unlock();
 		}
-		this.xEventPumpExecutor.submit(this);
 	}
 
-	public void stop() {
-		this.xEventPumpExecutor.shutdown();
-		try {
-			if (!this.xEventPumpExecutor.awaitTermination(	3,
-															SECONDS)) {
-				this.xEventPumpExecutor.shutdownNow();
-				XEventPump.LOG.error("X event pump could not terminate gracefully!");
+	public synchronized void stop() {
+		this.xExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws InterruptedException {
+				pauzeLock.lock();
+				try {
+					pauzeCondition.await();
+					return null;
+				} finally {
+					pauzeLock.unlock();
+				}
 			}
-			this.xEventPumpExecutor = null;
-		} catch (final InterruptedException e) {
-			XEventPump.LOG.error(	"X event pump terminate was interrupted.",
-									e);
-		}
+		});
 	}
 }

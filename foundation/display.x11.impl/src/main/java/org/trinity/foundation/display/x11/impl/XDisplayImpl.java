@@ -94,7 +94,6 @@ public class XDisplayImpl implements Display {
 	private final List<DisplaySurface> clientDisplaySurfaces = new ArrayList<>();
 	private final XConnection xConnection;
 	private final XWindowPoolImpl xWindowCache;
-	private final XEventPump xEventPump;
 	private final ListeningExecutorService xExecutor;
 	private final AsyncListenableEventBus displayEventBus;
 	private final ByteBuffer rootWindowAttributres = allocateDirect(4).order(nativeOrder())
@@ -104,11 +103,9 @@ public class XDisplayImpl implements Display {
 	@Inject
 	XDisplayImpl(	final XConnection xConnection,
 					final XWindowPoolImpl xWindowCache,
-					final XEventPump xEventPump,
 					@DisplayExecutor final ListeningExecutorService xExecutor) {
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
-		this.xEventPump = xEventPump;
 		this.xExecutor = xExecutor;
 		this.displayEventBus = new AsyncListenableEventBus(this.xExecutor);
 		// register to ourself so we can track newly created clients in the
@@ -123,28 +120,23 @@ public class XDisplayImpl implements Display {
 		return this.xExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
-				XDisplayImpl.this.xEventPump.stop();
 				XDisplayImpl.this.xConnection.close();
 				return null;
 			}
 		});
 	}
 
-	public ListenableFuture<Void> open() {
-		// FIXME from config?
-		final String displayName = System.getenv("DISPLAY");
-		final int targetScreen = 0;
+	private ListenableFuture<Void> open() {
+
 
 		return this.xExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
-
-				XDisplayImpl.this.xConnection.open(	displayName,
-													targetScreen);
 				if (xcb_connection_has_error(XDisplayImpl.this.xConnection.getConnectionReference().get()) != 0) {
 					throw new Error("Cannot open display\n");
 				}
-
+				// FIXME from config?
+				final int targetScreen = 0;
 				final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(XDisplayImpl.this.xConnection
 						.getConnectionReference().get()));
 				int screenNr = targetScreen;
@@ -158,7 +150,6 @@ public class XDisplayImpl implements Display {
 				}
 
 				findClientDisplaySurfaces();
-				XDisplayImpl.this.xEventPump.start();
 				return null;
 			}
 		});

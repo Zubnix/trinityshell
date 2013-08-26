@@ -48,10 +48,14 @@ public class XConnectionImpl implements XConnection {
     private SWIGTYPE_p_xcb_connection_t xcb_connection;
 
     XConnectionImpl() {
+	    // FIXME from config?
+	    final String displayName = System.getenv("DISPLAY");
+	    final int targetScreen = 0;
+
+	    open(displayName,targetScreen);
     }
 
-    @Override
-    public void open(@Nonnull final String displayName,
+    private void open(@Nonnull final String displayName,
                      @Nonnegative final int screen) {
         checkNotNull(displayName);
 

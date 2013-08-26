@@ -32,12 +32,14 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellRootNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
 import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.surface.ShellSurface;
+import org.trinity.shellplugin.wm.api.Desktop;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XWindowProtocol;
 
 import com.google.common.eventbus.Subscribe;
@@ -50,15 +52,18 @@ public class SceneManager {
 
 	private final ClientBarElementFactory clientBarElementFactory;
 	private final ShellLayoutManager rootLayoutManager;
+	private final Desktop desktop;
 	private final ShellNodeParent shellRootNode;
 	private final XWindowProtocol xWindowProtocol;
 
 	@Inject
 	SceneManager(	final ClientBarElementFactory clientBarElementFactory,
+					final Desktop desktop,
 					final XWindowProtocol xWindowProtocol,
-					final ShellNodeParent shellRootNode,
+					@ShellRootNode final ShellNodeParent shellRootNode,
 					final ShellLayoutManagerLine shellLayoutManagerLine) {
 		this.clientBarElementFactory = clientBarElementFactory;
+		this.desktop = desktop;
 		this.xWindowProtocol = xWindowProtocol;
 		this.shellRootNode = shellRootNode;
 		this.rootLayoutManager = shellLayoutManagerLine;
@@ -71,21 +76,19 @@ public class SceneManager {
 	public void manageNewClient(final DisplaySurface displaySurface,
 								final ShellSurface client) {
 		this.xWindowProtocol.register(displaySurface);
-		addClientTopBarItem(displaySurface,
-							client);
+		addClientTopBarItem(client);
 		layoutClient(client);
 	}
 
 	// called by shell executor
-	private void addClientTopBarItem(	final DisplaySurface displaySurface,
-										final ShellSurface client) {
-		final ClientBarElement clientBarElement = this.clientBarElementFactory.createClientTopBarItem(displaySurface);
-		this.shellRootNode.getClientsBar().add(clientBarElement);
+	private void addClientTopBarItem(final ShellSurface client) {
+		final ClientBarElement clientBarElement = this.clientBarElementFactory.createClientTopBarItem(client);
+		this.desktop.getClientsBar().add(clientBarElement);
 		client.register(new Object() {
 			// called by shell executor
 			@Subscribe
 			public void onClientDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
-				SceneManager.this.shellRootNode.getClientsBar().remove(clientBarElement);
+				SceneManager.this.desktop.getClientsBar().remove(clientBarElement);
 			}
 		});
 	}

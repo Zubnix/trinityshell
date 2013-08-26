@@ -20,52 +20,52 @@
 
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.onami.autobind.annotations.Bind;
-import org.trinity.foundation.api.display.Display;
-import org.trinity.foundation.api.render.binding.Binder;
+import org.apache.onami.autobind.annotations.To;
+import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.render.ViewDisplayServiceFinder;
 import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellRootNode;
 import org.trinity.shell.api.bindingkey.ShellScene;
-import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
-import org.trinity.shellplugin.wm.api.Desktop;
-
-import ca.odell.glazedlists.BasicEventList;
-import ca.odell.glazedlists.EventList;
+import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
+import org.trinity.shell.api.scene.ShellNodeParent;
+import org.trinity.shell.api.surface.AbstractShellSurface;
+import org.trinity.shell.api.surface.ShellSurfaceGeometryDelegate;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import java.util.concurrent.ExecutionException;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
+import static org.apache.onami.autobind.annotations.To.Type.INTERFACES;
 
 @Bind
-@ExecutionContext(ShellExecutor.class)
-@NotThreadSafe
-public class DesktopImpl implements Desktop {
-
-	private final EventList<Object> notificationsBar = new BasicEventList<>();
-	private final EventList<Object> clientsBar = new BasicEventList<>();
-	private final EventList<Object> bottomBar = new BasicEventList<>();
+@Singleton
+@ShellRootNode
+public class ShellRootNodeImpl extends AbstractShellSurface implements ShellNodeParent {
+	private  DisplaySurface displaySurface;
+	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellSurfaceGeometryDelegate(this);
 
 	@Inject
-	DesktopImpl(final Display display,
-				@ShellScene final AsyncListenable shellScene,
-				@ShellExecutor final ListeningExecutorService shellExecutor,
-				final Binder binder,
-				@Named("DesktopView") final ListenableFuture desktopView,
-				final ShellLayoutManagerLine shellLayoutManagerLine) {
-		addCallback(desktopView, new FutureCallback<Object>() {
+	ShellRootNodeImpl(	final ViewDisplayServiceFinder viewDisplayServiceFinder,
+						@Named("DesktopView") final ListenableFuture desktopView,
+						@ShellScene final AsyncListenable shellScene,
+						@ShellExecutor final ListeningExecutorService shellExecutor) {
+		super(null,
+				shellScene,
+				shellExecutor);
+
+		addCallback(desktopView,new FutureCallback() {
 			@Override
 			public void onSuccess(final Object result) {
-				binder.bind(shellExecutor,
-						this,
-						desktopView);
+				displaySurface = viewDisplayServiceFinder.find(result);
 			}
 
 			@Override
@@ -73,20 +73,16 @@ public class DesktopImpl implements Desktop {
 				//To change body of implemented methods use File | Settings | File Templates.
 			}
 		});
+
 	}
 
 	@Override
-	public EventList<Object> getNotificationsBar() {
-		return this.notificationsBar;
+	public DisplaySurface getDisplaySurface() {
+		return this.displaySurface;
 	}
 
 	@Override
-	public EventList<Object> getClientsBar() {
-		return this.clientsBar;
-	}
-
-	@Override
-	public EventList<Object> getBottomBar() {
-		return this.bottomBar;
+	public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
+		return this.shellNodeGeometryDelegate;
 	}
 }

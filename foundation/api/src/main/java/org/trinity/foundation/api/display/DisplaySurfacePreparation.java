@@ -6,8 +6,9 @@ import javax.annotation.concurrent.ThreadSafe;
  *
  */
 @ThreadSafe
-public interface DisplaySurfacePreparation {
-	boolean isDone();
+public interface DisplaySurfacePreparation extends AutoCloseable {
+	void begin();
 
-    void done();
+	@Override
+	void close();
 }

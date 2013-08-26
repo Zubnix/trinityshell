@@ -62,8 +62,8 @@ public class XWindowTest {
 												XWindowTest.displayName).start();
 
 		XWindowTest.xConnection = new XConnectionImpl();
-		XWindowTest.xConnection.open(	XWindowTest.displayName,
-										XWindowTest.screenNr);
+//		XWindowTest.xConnection.open(	XWindowTest.displayName,
+//										XWindowTest.screenNr);
 
 		final xcb_setup_t setup = LibXcb.xcb_get_setup(XWindowTest.xConnection.getConnectionReference().get());
 		final xcb_screen_iterator_t iter = LibXcb.xcb_setup_roots_iterator(setup);

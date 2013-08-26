@@ -20,16 +20,13 @@
 
 package org.trinity.shellplugin.widget.impl.view.qt;
 
-import static com.google.common.util.concurrent.Futures.transform;
 import static com.google.common.util.concurrent.ListenableFutureTask.create;
 
 import java.util.concurrent.Callable;
 
-import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.api.display.DisplaySurfacePreparation;
 
-import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.inject.Provider;
@@ -39,34 +36,30 @@ import com.trolltech.qt.gui.QWidget;
 public abstract class AbstractQWidgetViewProvider implements Provider<ListenableFuture<Object>> {
 
 	private final DisplaySurfacePool displaySurfacePool;
+	private final DisplaySurfacePreparation displaySurfacePreparation;
 
-	protected AbstractQWidgetViewProvider(final DisplaySurfacePool displaySurfacePool) {
+	protected AbstractQWidgetViewProvider(	final DisplaySurfacePool displaySurfacePool,
+											DisplaySurfacePreparation displaySurfacePreparation) {
 		this.displaySurfacePool = displaySurfacePool;
+		this.displaySurfacePreparation = displaySurfacePreparation;
 	}
 
 	@Override
 	public ListenableFuture<Object> get() {
-		final ListenableFuture<DisplaySurfacePreparation> displaySurfacePreparationFuture = this.displaySurfacePool
-				.prepareDisplaySurface();
-
-		return transform(	displaySurfacePreparationFuture,
-							new AsyncFunction<DisplaySurfacePreparation, Object>() {
-								@Override
-								public ListenableFuture<Object> apply(final DisplaySurfacePreparation displaySurfacePreparation) {
-									return prepareView(displaySurfacePreparation);
-								}
-							});
+			try(DisplaySurfacePreparation displaySurfacePreparation = this.displaySurfacePreparation){
+				displaySurfacePreparation.begin();
+				return prepareView();
+			}
 	}
 
-	protected ListenableFutureTask<Object> prepareView(final DisplaySurfacePreparation displaySurfacePreparation) {
+	protected ListenableFutureTask<Object> prepareView() {
 		final ListenableFutureTask<Object> futureTask = create(new Callable<Object>() {
 			@Override
 			public Object call() {
 
 				final QWidget view = createView();
-				//this will register it in the pool
+				// this will register it in the pool
 				displaySurfacePool.getDisplaySurface(new ViewDisplaySurfaceHandle(view));
-				displaySurfacePreparation.done();
 				return view;
 			}
 		});

@@ -29,15 +29,4 @@ public interface DisplaySurfacePool {
 	DisplaySurface getDisplaySurface(DisplaySurfaceHandle displaySurfaceHandle);
 
 	boolean isPresent(DisplaySurfaceHandle displaySurfaceHandle);
-
-	/**
-	 * Blocks the display execution context from processing any events. This is
-	 * to avoid that a newly created server side DisplaySurface is seen as a
-	 * client. This method should be called before any server side display
-	 * surface is created.
-	 *
-	 * @return A {@link DisplaySurfacePreparation} future. The future will
-	 *         return as soon as the display pauses event processing.
-	 */
-	ListenableFuture<DisplaySurfacePreparation> prepareDisplaySurface();
 }

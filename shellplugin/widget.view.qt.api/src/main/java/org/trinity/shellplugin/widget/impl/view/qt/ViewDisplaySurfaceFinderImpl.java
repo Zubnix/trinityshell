@@ -18,12 +18,35 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
 
-package org.trinity.shellplugin.wm.x11.impl.scene;
+package org.trinity.shellplugin.widget.impl.view.qt;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.inject.Singleton;
+import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.shell.api.surface.ShellSurface;
+import org.trinity.foundation.api.display.DisplaySurfacePool;
+import org.trinity.foundation.api.render.ViewDisplayServiceFinder;
 
-public interface ClientBarElementFactory {
+import com.google.inject.Inject;
+import com.trolltech.qt.gui.QWidget;
 
-	ClientBarElement createClientTopBarItem(final ShellSurface client);
+@Bind
+@Singleton
+public class ViewDisplaySurfaceFinderImpl implements ViewDisplayServiceFinder {
+
+	private final DisplaySurfacePool displaySurfacePool;
+
+	@Inject
+	ViewDisplaySurfaceFinderImpl(DisplaySurfacePool displaySurfacePool) {
+		this.displaySurfacePool = displaySurfacePool;
+	}
+
+	@Override
+	public DisplaySurface find(final Object view) {
+		checkArgument(checkNotNull(view) instanceof QWidget);
+
+		return displaySurfacePool.getDisplaySurface(new ViewDisplaySurfaceHandle((QWidget) view));
+	}
 }

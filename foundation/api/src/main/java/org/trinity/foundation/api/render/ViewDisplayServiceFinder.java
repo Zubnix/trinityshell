@@ -8,5 +8,5 @@ import com.google.common.util.concurrent.ListenableFuture;
  *
  */
 public interface ViewDisplayServiceFinder {
-	ListenableFuture<DisplaySurface> find(Object view);
+	DisplaySurface find(Object view);
 }
