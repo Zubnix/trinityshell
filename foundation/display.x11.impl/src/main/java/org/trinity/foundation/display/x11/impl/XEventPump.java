@@ -65,7 +65,7 @@ public class XEventPump implements Callable<Void> {
 								"x-event-pump");
 		}
 	});
-	private Lock pauzeLock = new ReentrantLock();
+	private final Lock pauzeLock = new ReentrantLock();
 	private final Condition pauzeCondition = pauzeLock.newCondition();
 
 	@Inject

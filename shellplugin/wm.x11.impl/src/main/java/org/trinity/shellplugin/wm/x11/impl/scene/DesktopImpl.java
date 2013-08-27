@@ -24,25 +24,16 @@ import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.onami.autobind.annotations.Bind;
-import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.render.binding.Binder;
-import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.bindingkey.ShellScene;
-import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
 import org.trinity.shellplugin.wm.api.Desktop;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
 
 @Bind
 @ExecutionContext(ShellExecutor.class)
@@ -54,25 +45,13 @@ public class DesktopImpl implements Desktop {
 	private final EventList<Object> bottomBar = new BasicEventList<>();
 
 	@Inject
-	DesktopImpl(final Display display,
-				@ShellScene final AsyncListenable shellScene,
-				@ShellExecutor final ListeningExecutorService shellExecutor,
+	DesktopImpl(@ShellExecutor final ListeningExecutorService shellExecutor,
 				final Binder binder,
-				@Named("DesktopView") final ListenableFuture desktopView,
-				final ShellLayoutManagerLine shellLayoutManagerLine) {
-		addCallback(desktopView, new FutureCallback<Object>() {
-			@Override
-			public void onSuccess(final Object result) {
-				binder.bind(shellExecutor,
-						this,
-						desktopView);
-			}
+				@Named("DesktopView") final Object desktopView) {
 
-			@Override
-			public void onFailure(final Throwable t) {
-				//To change body of implemented methods use File | Settings | File Templates.
-			}
-		});
+		binder.bind(shellExecutor,
+					this,
+					desktopView);
 	}
 
 	@Override

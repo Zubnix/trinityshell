@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.display.event.CreationNotify;
+import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
@@ -112,8 +112,8 @@ public class MapRequestHandler implements XEventHandler {
 			configureClientEvents(displayEventTarget);
 			// this is a bit of a dirty hack to work around X's model of client
 			// discovery.
-			final CreationNotify creationNotify = new CreationNotify(displayEventTarget);
-			this.display.post(creationNotify);
+			final DisplaySurfaceCreationNotify displaySurfaceCreationNotify = new DisplaySurfaceCreationNotify(displayEventTarget,true);
+			this.display.post(displaySurfaceCreationNotify);
 		}
 		return Optional.of(displayEventTarget);
 	}

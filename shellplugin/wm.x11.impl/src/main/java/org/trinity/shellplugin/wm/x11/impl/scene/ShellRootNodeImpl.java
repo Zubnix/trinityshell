@@ -20,14 +20,8 @@
 
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
-import javax.inject.Named;
-
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.render.ViewDisplayServiceFinder;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellRootNode;
@@ -41,38 +35,22 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import java.util.concurrent.ExecutionException;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
-import static org.apache.onami.autobind.annotations.To.Type.INTERFACES;
-
 @Bind
 @Singleton
 @ShellRootNode
 public class ShellRootNodeImpl extends AbstractShellSurface implements ShellNodeParent {
-	private  DisplaySurface displaySurface;
+	private final DisplaySurface displaySurface;
 	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellSurfaceGeometryDelegate(this);
 
 	@Inject
-	ShellRootNodeImpl(	final ViewDisplayServiceFinder viewDisplayServiceFinder,
-						@Named("DesktopView") final ListenableFuture desktopView,
+	ShellRootNodeImpl(	final DisplaySurface displaySurface,
 						@ShellScene final AsyncListenable shellScene,
 						@ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(null,
+		super(	null,
 				shellScene,
 				shellExecutor);
 
-		addCallback(desktopView,new FutureCallback() {
-			@Override
-			public void onSuccess(final Object result) {
-				displaySurface = viewDisplayServiceFinder.find(result);
-			}
-
-			@Override
-			public void onFailure(final Throwable t) {
-				//To change body of implemented methods use File | Settings | File Templates.
-			}
-		});
+		this.displaySurface = displaySurface;
 
 	}
 

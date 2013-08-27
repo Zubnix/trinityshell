@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.CreationNotify;
+import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.plugin.ShellPlugin;
@@ -78,8 +78,8 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 
 	// called by display executor
 	@Subscribe
-	public void handleCreationNotify(final CreationNotify creationNotify) {
-		handleClientDisplaySurface(creationNotify.getDisplaySurface());
+	public void handleCreationNotify(final DisplaySurfaceCreationNotify displaySurfaceCreationNotify) {
+		handleClientDisplaySurface(displaySurfaceCreationNotify.getDisplaySurface());
 	}
 
 	// called by shell executor.
@@ -113,7 +113,7 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 	// Called by display executor for new display surfaces.
 	private void handleClientDisplaySurface(final DisplaySurface displaySurface) {
 		final ListenableFuture<ShellSurface> shellSurfaceFuture = this.shellSurfaceFactory
-				.createClientShellSurface(displaySurface);
+				.createShellSurface(displaySurface);
 		// callback will be called by shell executor.
 		addCallback(shellSurfaceFuture,
 					new FutureCallback<ShellSurface>() {

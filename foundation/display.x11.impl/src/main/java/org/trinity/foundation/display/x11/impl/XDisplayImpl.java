@@ -67,7 +67,7 @@ import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.Screen;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.display.event.CreationNotify;
+import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 import org.trinity.foundation.api.shared.ExecutionContext;
@@ -252,9 +252,9 @@ public class XDisplayImpl implements Display {
 	}
 
 	@Subscribe
-	public void onCreationNotify(final CreationNotify creationNotify) {
+	public void onCreationNotify(final DisplaySurfaceCreationNotify displaySurfaceCreationNotify) {
 		// keep track of all created clients so others can query them later.
-		trackClient(creationNotify.getDisplaySurface());
+		trackClient(displaySurfaceCreationNotify.getDisplaySurface());
 	}
 
 	private void trackClient(final DisplaySurface clientDisplaySurface) {

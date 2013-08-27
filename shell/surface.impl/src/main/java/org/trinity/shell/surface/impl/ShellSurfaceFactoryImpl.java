@@ -62,7 +62,7 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 	}
 
 	@Override
-	public ListenableFuture<ShellSurface> createClientShellSurface(@Nonnull final DisplaySurface clientDisplaySurface) {
+	public ListenableFuture<ShellSurface> createShellSurface(@Nonnull final DisplaySurface clientDisplaySurface) {
 		return this.shellExecutor.submit(new Callable<ShellSurface>() {
 			@Override
 			public ShellSurface call() {

@@ -21,18 +21,19 @@
 package org.trinity.shellplugin.wm.x11.impl.view;
 
 import org.trinity.foundation.api.display.DisplaySurfacePool;
-import org.trinity.foundation.api.display.DisplaySurfacePreparation;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.shellplugin.widget.impl.view.qt.AbstractQWidgetViewProvider;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
 public class RootViewProvider extends AbstractQWidgetViewProvider {
 
 	@Inject
-	RootViewProvider(	final DisplaySurfacePool displaySurfacePool,
-						DisplaySurfacePreparation displaySurfacePreparation) {
-		super(	displaySurfacePool,
-				displaySurfacePreparation);
+	RootViewProvider(	@DisplayExecutor final ListeningExecutorService displayExecutor,
+						final DisplaySurfacePool displaySurfacePool) {
+		super(	displayExecutor,
+				displaySurfacePool);
 	}
 
 	@Override

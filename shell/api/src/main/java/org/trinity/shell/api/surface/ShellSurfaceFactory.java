@@ -42,5 +42,5 @@ public interface ShellSurfaceFactory {
 	 * @return a future {@link ShellSurface}.
 	 ***************************************
 	 */
-	ListenableFuture<ShellSurface> createClientShellSurface(@Nonnull DisplaySurface clientDisplaySurface);
+	ListenableFuture<ShellSurface> createShellSurface(@Nonnull DisplaySurface clientDisplaySurface);
 }

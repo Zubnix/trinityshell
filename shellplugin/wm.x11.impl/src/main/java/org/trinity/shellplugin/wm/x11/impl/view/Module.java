@@ -20,7 +20,6 @@
 
 package org.trinity.shellplugin.wm.x11.impl.view;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.onami.autobind.annotations.GuiceModule;
 
 import com.google.inject.AbstractModule;
@@ -31,6 +30,6 @@ class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(ListenableFuture.class).annotatedWith(Names.named("DesktopView")).toProvider(RootViewProvider.class);
+		bind(Object.class).annotatedWith(Names.named("DesktopView")).toProvider(RootViewProvider.class);
 	}
 }
