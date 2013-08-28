@@ -22,12 +22,12 @@ package org.trinity.shellplugin.wm.x11.impl.view;
 
 import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.shellplugin.widget.impl.view.qt.AbstractQWidgetViewProvider;
+import org.trinity.shellplugin.widget.impl.view.qt.AbstractQWidgetViewReferenceProvider;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
-public class RootViewProvider extends AbstractQWidgetViewProvider {
+public class RootViewProvider extends AbstractQWidgetViewReferenceProvider {
 
 	@Inject
 	RootViewProvider(	@DisplayExecutor final ListeningExecutorService displayExecutor,
@@ -37,7 +37,7 @@ public class RootViewProvider extends AbstractQWidgetViewProvider {
 	}
 
 	@Override
-	protected RootView createView() {
+	protected RootView createViewCall() {
 		return new RootView();
 	}
 }

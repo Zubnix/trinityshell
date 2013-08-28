@@ -5,7 +5,7 @@
  * and create a {@link org.trinity.foundation.api.render.Painter}. The next step
  * is to let the {@code Painter} know which
  * {@link org.trinity.foundation.api.render.binding.view.View} object to use for
- * this model. A model's view is an injected instance of type {@code View} that
+ * this model. A model's view is an injected instance of type {@code BindableView} that
  * implements an existing widget from a 3rd party toolkit, enriched with
  * additional binding annotations found in the
  * org.trinity.foundation.api.render.binding package. The view can then be

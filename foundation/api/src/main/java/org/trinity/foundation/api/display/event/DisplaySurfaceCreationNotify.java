@@ -37,23 +37,12 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 @ExecutionContext(DisplayExecutor.class)
 public class DisplaySurfaceCreationNotify extends DisplayEvent {
 	private final DisplaySurface displaySurface;
-	private final boolean external;
 
-	public DisplaySurfaceCreationNotify(@Nonnull final DisplaySurface displaySurface,
-										final boolean external) {
+	public DisplaySurfaceCreationNotify(@Nonnull final DisplaySurface displaySurface) {
 		this.displaySurface = displaySurface;
-		this.external = external;
 	}
 
 	public DisplaySurface getDisplaySurface() {
 		return this.displaySurface;
-	}
-
-    /**
-     * Indicates if the display surface was created by an external program.
-     * @return
-     */
-	public boolean isExternal() {
-		return external;
 	}
 }

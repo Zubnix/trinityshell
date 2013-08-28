@@ -90,29 +90,29 @@ public class ViewDisplaySurfaceHandle implements DisplaySurfaceHandle {
 	@Override
 	public Integer getNativeHandle() {
 
-//		final FutureTask<Integer> getHandleTask = new FutureTask<Integer>(new Callable<Integer>() {
-//			@Override
-//			public Integer call() {
+		final FutureTask<Integer> getHandleTask = new FutureTask<Integer>(new Callable<Integer>() {
+			@Override
+			public Integer call() {
 				final QWidget visual = ViewDisplaySurfaceHandle.this.visualReference.get();
 				int visualId = 0;
 				if ((visual != null) && !ViewDisplaySurfaceHandle.this.visualDestroyed) {
 					visualId = (int) visual.effectiveWinId();
 				}
 				return Integer.valueOf(visualId);
-//			}
-//		});
-//
-//		QCoreApplication.invokeLater(getHandleTask);
-//		Integer handle = null;
-//		try {
-//			handle = getHandleTask.get();
-//		} catch (final InterruptedException e) {
-//			LOG.error(	"Interrupted while while waiting for native render handle",
-//						e);
-//		} catch (final ExecutionException e) {
-//			LOG.error(	"Exception while querying native render handle",
-//						e);
-//		}
-//		return handle;
+			}
+		});
+
+		QCoreApplication.invokeLater(getHandleTask);
+		Integer handle = null;
+		try {
+			handle = getHandleTask.get();
+		} catch (final InterruptedException e) {
+			LOG.error(	"Interrupted while while waiting for native render handle",
+						e);
+		} catch (final ExecutionException e) {
+			LOG.error(	"Exception while querying native render handle",
+						e);
+		}
+		return handle;
 	}
 }

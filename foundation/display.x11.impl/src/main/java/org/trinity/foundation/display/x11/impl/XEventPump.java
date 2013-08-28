@@ -25,9 +25,9 @@ import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
 import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -66,7 +66,7 @@ public class XEventPump implements Callable<Void> {
 		}
 	});
 	private final Lock pauzeLock = new ReentrantLock();
-	private final Condition pauzeCondition = pauzeLock.newCondition();
+	private CountDownLatch pauzeLatch = new CountDownLatch(1);
 
 	@Inject
 	XEventPump(	final XConnection connection,
@@ -107,7 +107,7 @@ public class XEventPump implements Callable<Void> {
 	public synchronized void start() {
 		pauzeLock.lock();
 		try {
-			pauzeCondition.signalAll();
+			pauzeLatch.countDown();
 			this.xEventPumpExecutor.submit(this);
 		} finally {
 			pauzeLock.unlock();
@@ -115,17 +115,18 @@ public class XEventPump implements Callable<Void> {
 	}
 
 	public synchronized void stop() {
-		this.xExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws InterruptedException {
-				pauzeLock.lock();
-				try {
-					pauzeCondition.await();
+		pauzeLock.lock();
+		try {
+			pauzeLatch = new CountDownLatch(1);
+			this.xEventPumpExecutor.submit(new Callable<Void>() {
+				@Override
+				public Void call() throws InterruptedException {
+					pauzeLatch.await();
 					return null;
-				} finally {
-					pauzeLock.unlock();
 				}
-			}
-		});
+			});
+		} finally {
+			pauzeLock.unlock();
+		}
 	}
 }

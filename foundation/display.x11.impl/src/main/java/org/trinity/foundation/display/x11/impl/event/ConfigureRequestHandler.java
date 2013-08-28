@@ -137,7 +137,7 @@ public class ConfigureRequestHandler implements XEventHandler {
 			configureClientEvents(displayEventTarget);
 			// this is a bit of a dirty hack to work around X's model of client
 			// discovery.
-			final DisplaySurfaceCreationNotify displaySurfaceCreationNotify = new DisplaySurfaceCreationNotify(displayEventTarget,true);
+			final DisplaySurfaceCreationNotify displaySurfaceCreationNotify = new DisplaySurfaceCreationNotify(displayEventTarget);
 			this.display.post(displaySurfaceCreationNotify);
 		}
 

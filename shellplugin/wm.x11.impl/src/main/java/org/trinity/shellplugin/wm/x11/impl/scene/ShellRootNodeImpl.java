@@ -20,8 +20,14 @@
 
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
+import java.util.concurrent.ExecutionException;
+
+import javax.inject.Named;
+
+import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.render.ViewReference;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellRootNode;
@@ -39,25 +45,32 @@ import com.google.inject.Singleton;
 @Singleton
 @ShellRootNode
 public class ShellRootNodeImpl extends AbstractShellSurface implements ShellNodeParent {
-	private final DisplaySurface displaySurface;
+	private final ListenableFuture<DisplaySurface> displaySurface;
 	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellSurfaceGeometryDelegate(this);
 
 	@Inject
-	ShellRootNodeImpl(	final DisplaySurface displaySurface,
+	ShellRootNodeImpl(	@Named("DesktopView") final ViewReference desktopView,
 						@ShellScene final AsyncListenable shellScene,
-						@ShellExecutor final ListeningExecutorService shellExecutor) {
+						@ShellExecutor final ListeningExecutorService shellExecutor) throws ExecutionException,
+			InterruptedException {
 		super(	null,
 				shellScene,
 				shellExecutor);
 
-		this.displaySurface = displaySurface;
-
+		this.displaySurface = desktopView.getViewDisplaySurface();
 	}
 
 	@Override
 	public DisplaySurface getDisplaySurface() {
-		return this.displaySurface;
-	}
+        try {
+            return this.displaySurface.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //TODO implement
+        } catch (ExecutionException e) {
+            e.printStackTrace();  //TODO implement
+        }
+        return null;
+    }
 
 	@Override
 	public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {

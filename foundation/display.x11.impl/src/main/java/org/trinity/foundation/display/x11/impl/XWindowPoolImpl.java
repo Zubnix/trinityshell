@@ -29,10 +29,13 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.*;
+import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.DisplaySurfaceCreator;
+import org.trinity.foundation.api.display.DisplaySurfaceFactory;
+import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DestroyNotify;
-import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
 import com.google.common.base.Throwables;
@@ -52,16 +55,13 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
 	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
 	private final Cache<Object, XWindow> xWindows = CacheBuilder.newBuilder().concurrencyLevel(1).build();
 	private final XEventPump xEventPump;
-    private final Display display;
-    private final DisplaySurfaceFactory displaySurfaceFactory;
+	private final DisplaySurfaceFactory displaySurfaceFactory;
 
 	@Inject
 	XWindowPoolImpl(final XEventPump xEventPump,
-                    final Display display,
 					final DisplaySurfaceFactory displaySurfaceFactory) {
 		this.xEventPump = xEventPump;
-        this.display = display;
-        this.displaySurfaceFactory = displaySurfaceFactory;
+		this.displaySurfaceFactory = displaySurfaceFactory;
 	}
 
 	@Override
@@ -98,9 +98,9 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
 
 		return new DisplaySurfaceCreator() {
 			@Override
-			public void create(final DisplaySurfaceHandle displaySurfaceHandle) {
-                final DisplaySurface displaySurface = getDisplaySurface(displaySurfaceHandle);
-                display.post(new DisplaySurfaceCreationNotify(displaySurface,false));
+			public DisplaySurface create(final DisplaySurfaceHandle displaySurfaceHandle) {
+				final DisplaySurface displaySurface = getDisplaySurface(displaySurfaceHandle);
+				return displaySurface;
 			}
 
 			@Override

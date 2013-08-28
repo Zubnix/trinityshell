@@ -126,5 +126,8 @@ class RootView extends QFrame {
 		this.rootLayout.addWidget(this.bottomBarView);
 
 		setLayout(this.rootLayout);
+
+        setGeometry(0,0,300,300);
+		show();
 	}
 }

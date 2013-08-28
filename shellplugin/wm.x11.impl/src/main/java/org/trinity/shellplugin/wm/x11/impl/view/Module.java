@@ -20,7 +20,10 @@
 
 package org.trinity.shellplugin.wm.x11.impl.view;
 
+import javax.inject.Singleton;
+
 import org.apache.onami.autobind.annotations.GuiceModule;
+import org.trinity.foundation.api.render.ViewReference;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
@@ -30,6 +33,7 @@ class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(Object.class).annotatedWith(Names.named("DesktopView")).toProvider(RootViewProvider.class);
+		bind(ViewReference.class).annotatedWith(Names.named("DesktopView")).toProvider(RootViewProvider.class)
+				.in(Singleton.class);
 	}
 }

@@ -35,6 +35,6 @@ import org.trinity.foundation.api.render.binding.Binder;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
-public @interface ViewReference {
+public @interface BindableView {
 
 }

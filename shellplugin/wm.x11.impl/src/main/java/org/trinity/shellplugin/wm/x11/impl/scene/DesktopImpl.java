@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.onami.autobind.annotations.Bind;
+import org.trinity.foundation.api.render.ViewReference;
 import org.trinity.foundation.api.render.binding.Binder;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
@@ -33,6 +34,8 @@ import org.trinity.shellplugin.wm.api.Desktop;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 @Bind
@@ -47,11 +50,22 @@ public class DesktopImpl implements Desktop {
 	@Inject
 	DesktopImpl(@ShellExecutor final ListeningExecutorService shellExecutor,
 				final Binder binder,
-				@Named("DesktopView") final Object desktopView) {
+				@Named("DesktopView") final ViewReference desktopView) {
 
-		binder.bind(shellExecutor,
-					this,
-					desktopView);
+		Futures.addCallback(desktopView.getView(),
+							new FutureCallback<Object>() {
+								@Override
+								public void onSuccess(final Object view) {
+									binder.bind(shellExecutor,
+												this,
+												view);
+								}
+
+								@Override
+								public void onFailure(final Throwable t) {
+									// TODO implement
+								}
+							});
 	}
 
 	@Override
