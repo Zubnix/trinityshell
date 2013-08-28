@@ -29,7 +29,6 @@ import javax.annotation.Nullable;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.bindingkey.ShellRootNode;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
@@ -48,10 +47,10 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 
 	private final ListeningExecutorService shellExecutor;
 
-	protected AbstractAsyncShellNodeParent(	@Nullable @ShellRootNode final ShellNodeParent shellRootNode,
+	protected AbstractAsyncShellNodeParent(	@Nonnull ShellNodeParent shellNodeParent,
 											@Nonnull @ShellScene final AsyncListenable shellScene,
 											@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	shellRootNode,
+		super(	shellNodeParent,
 				shellScene,
 				shellExecutor);
 		this.shellExecutor = shellExecutor;

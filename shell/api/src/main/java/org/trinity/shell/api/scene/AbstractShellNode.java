@@ -24,7 +24,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.shared.AsyncListenable;
@@ -35,7 +34,6 @@ import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.bindingkey.ShellRootNode;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
@@ -76,17 +74,15 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	private AbstractShellNodeParent desiredParent;
 	private boolean destroyed;
 
-	protected AbstractShellNode(@Nullable @ShellRootNode final ShellNodeParent shellRootNode,
+	protected AbstractShellNode(@Nonnull ShellNodeParent shellNodeParent,
 								@Nonnull @ShellScene final AsyncListenable shellScene,
 								@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
 		super(shellExecutor);
 		this.nodeEventBus = new AsyncListenableEventBus(shellExecutor);
 
 		register(shellScene);
-		if (shellRootNode != null) {
-			setParentImpl(shellRootNode);
-			flushParentValue();
-		}
+		setParentImpl(shellNodeParent);
+		flushParentValue();
 	}
 
 	@Override
@@ -415,7 +411,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 		flushParentValue();
 		getParentImpl().handleChildReparent(this);
 		final ShellNodeReparentedEvent geoEvent = new ShellNodeReparentedEvent(	this,
-				toGeoTransformationImpl());
+																				toGeoTransformationImpl());
 		post(geoEvent);
 		return null;
 	}

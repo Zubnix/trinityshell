@@ -17,7 +17,7 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.render.qt.impl;
+package org.trinity.shellplugin.widget.impl.view.qt;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

@@ -19,6 +19,10 @@
  ******************************************************************************/
 package org.trinity.shell.plugin.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -36,11 +40,17 @@ import com.google.common.util.concurrent.Service.State;
 @Singleton
 public class ShellPluginsRunnerImpl implements ShellPluginsRunner {
 
-	private final Set<ShellPlugin> shellPlugins;
+	private final List<ShellPlugin> shellPlugins;
 
 	@Inject
 	ShellPluginsRunnerImpl(final Set<ShellPlugin> shellPlugins) {
-		this.shellPlugins = shellPlugins;
+		this.shellPlugins = new ArrayList<ShellPlugin>(shellPlugins);
+		Collections.sort(this.shellPlugins, new Comparator<ShellPlugin>() {
+			@Override
+			public int compare(final ShellPlugin o1, final ShellPlugin o2) {
+				return o1.runlevel()-o2.runlevel();
+			}
+		});
 	}
 
 	@Override

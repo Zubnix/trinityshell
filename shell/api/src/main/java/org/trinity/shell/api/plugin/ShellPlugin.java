@@ -32,11 +32,17 @@ import com.google.common.util.concurrent.Service;
  * thread then this thread should not call any object internals that live
  * outside it's own shell plugin implementation, instead use the
  * {@link ListenableFuture}s provided throughout the shell api. This keeps for a
- * more thread safe and more predictable behavior of shell
- * plugins.
+ * more thread safe and more predictable behavior of shell plugins.
  *
  *
  ****************************************/
 public interface ShellPlugin extends Service {
-
+	/**
+	 * The order in which a shellplugin is started is determined by teh
+	 * runlevel. A lower runlevel plugin will start before a higher one. If no
+	 * order is desired a default runlevel of 10 is advised.
+	 *
+	 * @return
+	 */
+	int runlevel();
 }

@@ -32,7 +32,6 @@ import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.bindingkey.ShellRootNode;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
@@ -52,10 +51,10 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	private final LinkedList<AbstractShellNode> children = new LinkedList<>();
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-	protected AbstractShellNodeParent(	@Nullable @ShellRootNode final ShellNodeParent shellRootNode,
+	protected AbstractShellNodeParent(	@Nonnull ShellNodeParent shellNodeParent,
 										@Nonnull @ShellScene final AsyncListenable shellScene,
 										@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	shellRootNode,
+		super(	shellNodeParent,
 				shellScene,
 				shellExecutor);
 	}

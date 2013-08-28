@@ -18,19 +18,25 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
 
-package org.trinity.shellplugin.wm.x11.impl.view;
+package org.trinity.shellplugin.widget.impl.view.qt;
 
-import org.trinity.foundation.api.render.binding.view.PropertySlot;
-import org.trinity.foundation.api.render.binding.view.PropertySlots;
+import org.trinity.foundation.api.display.DisplaySurfacePool;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 
-import com.trolltech.qt.gui.QLabel;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Inject;
 
-@PropertySlots({ //
-@PropertySlot(propertyName = "text", methodName = "setText", argumentTypes = { String.class }) // HasText
-})
-class NotificationsBarElementView extends QLabel {
-	{
-		// workaround for jambi css bug
-		setObjectName("NotificationsBarElement");
+public class RootViewProvider extends AbstractQWidgetViewReferenceProvider {
+
+	@Inject
+	RootViewProvider(	@DisplayExecutor final ListeningExecutorService displayExecutor,
+						final DisplaySurfacePool displaySurfacePool) {
+		super(	displayExecutor,
+				displaySurfacePool);
+	}
+
+	@Override
+	protected RootView createViewCall() {
+		return new RootView();
 	}
 }

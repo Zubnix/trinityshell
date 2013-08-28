@@ -7,7 +7,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
  *
  */
 public interface ViewReference {
-    ListenableFuture<Object> getView();
+    Object getView();
 
-    ListenableFuture<DisplaySurface> getViewDisplaySurface();
+    DisplaySurface getViewDisplaySurface();
 }

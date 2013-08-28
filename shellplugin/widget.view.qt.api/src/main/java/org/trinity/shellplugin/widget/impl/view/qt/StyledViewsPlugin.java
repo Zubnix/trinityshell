@@ -55,6 +55,7 @@ public class StyledViewsPlugin extends AbstractIdleService implements ShellPlugi
 
 	@Override
 	protected void startUp() throws Exception {
+		RenderApplication.start();
 		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(new Callable<Void>() {
 			@Override
 			public Void call() {
@@ -73,5 +74,10 @@ public class StyledViewsPlugin extends AbstractIdleService implements ShellPlugi
 	protected void shutDown() throws Exception {
 		// clear styles?
 
+	}
+
+	@Override
+	public int runlevel() {
+		return 10;
 	}
 }

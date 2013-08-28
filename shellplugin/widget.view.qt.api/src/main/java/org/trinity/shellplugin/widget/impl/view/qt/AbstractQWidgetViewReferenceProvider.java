@@ -25,7 +25,6 @@ import static com.google.common.util.concurrent.ListenableFutureTask.create;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceCreator;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
@@ -42,46 +41,59 @@ public abstract class AbstractQWidgetViewReferenceProvider implements Provider<V
 
 	private final ListeningExecutorService displayExecutor;
 	private final DisplaySurfacePool displaySurfacePool;
+	private final ListenableFutureTask<Object> viewFuture = create(new Callable<Object>() {
+		@Override
+		public Object call() {
+			return createViewCall();
+		}
+	});
+	private final Callable<ViewReference> viewReferenceTask = new Callable<DisplaySurface>() {
+		@Override
+		public DisplaySurface call() throws ExecutionException, InterruptedException {
+			try (DisplaySurfaceCreator displaySurfaceCreator = displaySurfacePool.getDisplaySurfaceCreator()) {
+				QApplication.invokeLater(viewFuture);
+				final Object qWidget = viewFuture.get();
+				DisplaySurface displaySurface = displaySurfaceCreator
+						.create(new ViewDisplaySurfaceHandle((QWidget) qWidget));
+				return new ViewReferenceImpl(	qWidget,
+												displaySurface);
+			}
+		}
+	};
 
-	protected AbstractQWidgetViewReferenceProvider(@DisplayExecutor final ListeningExecutorService displayExecutor,
-                                                   final DisplaySurfacePool displaySurfacePool) {
+	protected AbstractQWidgetViewReferenceProvider(	@DisplayExecutor final ListeningExecutorService displayExecutor,
+													final DisplaySurfacePool displaySurfacePool) {
 		this.displayExecutor = displayExecutor;
 		this.displaySurfacePool = displaySurfacePool;
 	}
 
 	@Override
 	public ViewReference get() {
-
-		final ListenableFutureTask<Object> viewFuture = create(new Callable<Object>() {
-			@Override
-			public Object call() {
-				return createViewCall();
-			}
-		});
-
-        final ListenableFuture<DisplaySurface> displaySurfaceFuture = displayExecutor.submit(new Callable<DisplaySurface>() {
-            @Override
-            public DisplaySurface call() throws ExecutionException, InterruptedException {
-                try (DisplaySurfaceCreator displaySurfaceCreator = displaySurfacePool.getDisplaySurfaceCreator()) {
-                    QApplication.invokeLater(viewFuture);
-                    final Object qWidget = viewFuture.get();
-                    return displaySurfaceCreator.create(new ViewDisplaySurfaceHandle((QWidget) qWidget));
-                }
-            }
-        });
-
-        return new ViewReference() {
-            @Override
-            public ListenableFuture<Object> getView() {
-                return viewFuture;
-            }
-
-            @Override
-            public ListenableFuture<DisplaySurface> getViewDisplaySurface() {
-                return displaySurfaceFuture;
-            }
-        };
-    }
+		return new ViewReferenceImpl();
+	}
 
 	protected abstract Object createViewCall();
+
+	private class ViewReferenceImpl implements ViewReference {
+
+		private final Object view;
+		private final DisplaySurface displaySurface;
+
+		public ViewReferenceImpl(	final Object view,
+									final DisplaySurface displaySurface) {
+
+			this.view = view;
+			this.displaySurface = displaySurface;
+		}
+
+		@Override
+		public Object getView() {
+			return view;
+		}
+
+		@Override
+		public DisplaySurface getViewDisplaySurface() {
+			return displaySurface;
+		}
+	}
 }

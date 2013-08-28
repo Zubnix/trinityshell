@@ -29,7 +29,6 @@ import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.bindingkey.ShellRootNode;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.bindingkey.ShellVirtualNode;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
@@ -62,10 +61,10 @@ public class ShellVirtualSurface extends AbstractShellNodeParent {
 	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellVirtualSurfaceExecutor(this);
 
 	@Inject
-	protected ShellVirtualSurface(	@Nonnull @ShellRootNode final ShellNodeParent rootShellNode,
+	protected ShellVirtualSurface(	@Nonnull ShellNodeParent shellNodeParent,
 									@Nonnull @ShellScene final AsyncListenable shellScene,
 									@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	rootShellNode,
+		super(	shellNodeParent,
 				shellScene,
 				shellExecutor);
 	}

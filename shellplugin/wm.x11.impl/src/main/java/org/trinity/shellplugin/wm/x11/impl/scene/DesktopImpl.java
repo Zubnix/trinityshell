@@ -34,8 +34,6 @@ import org.trinity.shellplugin.wm.api.Desktop;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 @Bind
@@ -52,20 +50,9 @@ public class DesktopImpl implements Desktop {
 				final Binder binder,
 				@Named("DesktopView") final ViewReference desktopView) {
 
-		Futures.addCallback(desktopView.getView(),
-							new FutureCallback<Object>() {
-								@Override
-								public void onSuccess(final Object view) {
-									binder.bind(shellExecutor,
-												this,
-												view);
-								}
-
-								@Override
-								public void onFailure(final Throwable t) {
-									// TODO implement
-								}
-							});
+		binder.bind(shellExecutor,
+					this,
+					desktopView.getView());
 	}
 
 	@Override

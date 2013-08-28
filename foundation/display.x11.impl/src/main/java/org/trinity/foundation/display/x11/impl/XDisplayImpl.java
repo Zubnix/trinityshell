@@ -45,6 +45,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.Nonnull;
@@ -103,7 +104,7 @@ public class XDisplayImpl implements Display {
 	@Inject
 	XDisplayImpl(	final XConnection xConnection,
 					final XWindowPoolImpl xWindowCache,
-					@DisplayExecutor final ListeningExecutorService xExecutor) {
+					@DisplayExecutor final ListeningExecutorService xExecutor) throws ExecutionException, InterruptedException {
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
 		this.xExecutor = xExecutor;

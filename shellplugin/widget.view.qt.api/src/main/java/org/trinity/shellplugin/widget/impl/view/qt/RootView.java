@@ -18,7 +18,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
 
-package org.trinity.shellplugin.wm.x11.impl.view;
+package org.trinity.shellplugin.widget.impl.view.qt;
 
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
 
@@ -127,7 +127,7 @@ class RootView extends QFrame {
 
 		setLayout(this.rootLayout);
 
-        setGeometry(0,0,300,300);
+        showFullScreen();
 		show();
 	}
 }

@@ -21,12 +21,8 @@
 package org.trinity.shellplugin.wm.x11.impl;
 
 import org.apache.onami.autobind.annotations.GuiceModule;
-import org.trinity.shell.api.bindingkey.ShellRootNode;
-import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shellplugin.wm.api.Desktop;
 import org.trinity.shellplugin.wm.x11.impl.scene.ClientBarElement;
 import org.trinity.shellplugin.wm.x11.impl.scene.ClientBarElementFactory;
-import org.trinity.shellplugin.wm.x11.impl.scene.DesktopImpl;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;

@@ -18,29 +18,22 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
 
-package org.trinity.shell.api.bindingkey;
-
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+package org.trinity.shellplugin.widget.impl.view.qt;
 
 import javax.inject.Singleton;
 
-import org.trinity.shell.api.scene.ShellNodeParent;
+import org.apache.onami.autobind.annotations.GuiceModule;
+import org.trinity.foundation.api.render.ViewReference;
 
-import com.google.inject.BindingAnnotation;
+import com.google.inject.AbstractModule;
+import com.google.inject.name.Names;
 
-/**
- * Used for the root {@link ShellNodeParent} {@link Singleton}. Instance
- * <b>not</b> provided by the shell api.
- */
-@BindingAnnotation
-@Target({ TYPE, FIELD, PARAMETER, METHOD })
-@Retention(RUNTIME)
-public @interface ShellRootNode {
+@GuiceModule
+class Module extends AbstractModule {
+
+	@Override
+	protected void configure() {
+		bind(ViewReference.class).annotatedWith(Names.named("DesktopView")).toProvider(RootViewProvider.class)
+				.in(Singleton.class);
+	}
 }

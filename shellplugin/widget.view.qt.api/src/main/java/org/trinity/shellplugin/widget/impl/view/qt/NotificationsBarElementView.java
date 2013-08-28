@@ -18,22 +18,19 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
 
-package org.trinity.shellplugin.wm.x11.impl.view;
+package org.trinity.shellplugin.widget.impl.view.qt;
 
-import javax.inject.Singleton;
+import org.trinity.foundation.api.render.binding.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.view.PropertySlots;
 
-import org.apache.onami.autobind.annotations.GuiceModule;
-import org.trinity.foundation.api.render.ViewReference;
+import com.trolltech.qt.gui.QLabel;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.name.Names;
-
-@GuiceModule
-class Module extends AbstractModule {
-
-	@Override
-	protected void configure() {
-		bind(ViewReference.class).annotatedWith(Names.named("DesktopView")).toProvider(RootViewProvider.class)
-				.in(Singleton.class);
+@PropertySlots({ //
+@PropertySlot(propertyName = "text", methodName = "setText", argumentTypes = { String.class }) // HasText
+})
+class NotificationsBarElementView extends QLabel {
+	{
+		// workaround for jambi css bug
+		setObjectName("NotificationsBarElement");
 	}
 }

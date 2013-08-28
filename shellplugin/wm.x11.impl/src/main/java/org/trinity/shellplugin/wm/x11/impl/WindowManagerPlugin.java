@@ -130,4 +130,9 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 						}
 					});
 	}
+
+	@Override
+	public int runlevel() {
+		return 5;
+	}
 }

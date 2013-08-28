@@ -25,11 +25,9 @@ import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
 import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -65,8 +63,7 @@ public class XEventPump implements Callable<Void> {
 								"x-event-pump");
 		}
 	});
-	private final Lock pauzeLock = new ReentrantLock();
-	private CountDownLatch pauzeLatch = new CountDownLatch(1);
+	private Semaphore waitForExternal = new Semaphore(1);
 
 	@Inject
 	XEventPump(	final XConnection connection,
@@ -75,58 +72,46 @@ public class XEventPump implements Callable<Void> {
 		this.connection = connection;
 		this.xEventBus = xEventBus;
 		this.xExecutor = xExecutor;
-		start();
+		this.xEventPumpExecutor.submit(this);
 	}
 
 	@Override
 	public Void call() {
+		waitForExternal.acquireUninterruptibly();
+		try {
+			final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference()
+					.get());
 
-		final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference().get());
-
-		if (xcb_connection_has_error(this.connection.getConnectionReference().get()) != 0) {
-			final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
-			XEventPump.LOG.error(errorMsg);
-			throw new Error(errorMsg);
-		}
-
-		// pass x event from x-event-pump thread to x-executor thread.
-		this.xExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				XEventPump.this.xEventBus.post(xcb_generic_event);
-				xcb_generic_event.delete();
-				return null;
+			if (xcb_connection_has_error(this.connection.getConnectionReference().get()) != 0) {
+				final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
+				XEventPump.LOG.error(errorMsg);
+				throw new Error(errorMsg);
 			}
-		});
 
-		// schedule next event retrieval
-		this.xEventPumpExecutor.submit(this);
+			// pass x event from x-event-pump thread to x-executor thread.
+
+			this.xExecutor.submit(new Callable<Void>() {
+				@Override
+				public Void call() {
+					XEventPump.this.xEventBus.post(xcb_generic_event);
+					xcb_generic_event.delete();
+					return null;
+				}
+			});
+
+			// schedule next event retrieval
+			this.xEventPumpExecutor.submit(this);
+		} finally {
+			waitForExternal.release();
+		}
 		return null;
 	}
 
 	public synchronized void start() {
-		pauzeLock.lock();
-		try {
-			pauzeLatch.countDown();
-			this.xEventPumpExecutor.submit(this);
-		} finally {
-			pauzeLock.unlock();
-		}
+		waitForExternal.release();
 	}
 
 	public synchronized void stop() {
-		pauzeLock.lock();
-		try {
-			pauzeLatch = new CountDownLatch(1);
-			this.xEventPumpExecutor.submit(new Callable<Void>() {
-				@Override
-				public Void call() throws InterruptedException {
-					pauzeLatch.await();
-					return null;
-				}
-			});
-		} finally {
-			pauzeLock.unlock();
-		}
+		waitForExternal.tryAcquire();
 	}
 }
