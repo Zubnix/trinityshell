@@ -34,7 +34,6 @@ import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
-import org.trinity.shell.api.scene.ShellNodeParent;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -66,11 +65,9 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	private int widthIncrement = DEFAULT_WIDTH_INC;
 	private int heightIncrement = DEFAULT_HEIGHT_INC;
 
-	protected AbstractShellSurface(	@Nonnull ShellNodeParent shellNodeParent,
-									@Nonnull @ShellScene final AsyncListenable shellScene,
+	protected AbstractShellSurface(	@Nonnull @ShellScene final AsyncListenable shellScene,
 									@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	shellNodeParent,
-				shellScene,
+		super(	shellScene,
 				shellExecutor);
 	}
 
@@ -195,12 +192,6 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	}
 
 	/* start display event handling: */
-
-	// TODO button input handling?
-	// TODO focus handling?
-	// TODO key input handling?
-	// TODO pointer enter/leave handling?
-	// TODO stacking handling?
 
 	/**
 	 * Called when an {@code DestroyNotify} arrives for this surface.

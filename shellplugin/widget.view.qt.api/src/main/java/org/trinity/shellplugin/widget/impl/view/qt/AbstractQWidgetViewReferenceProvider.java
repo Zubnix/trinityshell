@@ -47,14 +47,14 @@ public abstract class AbstractQWidgetViewReferenceProvider implements Provider<V
 			return createViewCall();
 		}
 	});
-	private final Callable<ViewReference> viewReferenceTask = new Callable<DisplaySurface>() {
+	private final Callable<ViewReference> viewReferenceTask = new Callable<ViewReference>() {
 		@Override
-		public DisplaySurface call() throws ExecutionException, InterruptedException {
-			try (DisplaySurfaceCreator displaySurfaceCreator = displaySurfacePool.getDisplaySurfaceCreator()) {
+		public ViewReference call() throws ExecutionException, InterruptedException {
+			try (DisplaySurfaceCreator displaySurfaceReferencer = displaySurfacePool.getDisplaySurfaceCreator()) {
 				QApplication.invokeLater(viewFuture);
 				final Object qWidget = viewFuture.get();
-				DisplaySurface displaySurface = displaySurfaceCreator
-						.create(new ViewDisplaySurfaceHandle((QWidget) qWidget));
+				final DisplaySurface displaySurface = displaySurfaceReferencer
+						.reference(new ViewDisplaySurfaceHandle((QWidget) qWidget));
 				return new ViewReferenceImpl(	qWidget,
 												displaySurface);
 			}
@@ -69,7 +69,14 @@ public abstract class AbstractQWidgetViewReferenceProvider implements Provider<V
 
 	@Override
 	public ViewReference get() {
-		return new ViewReferenceImpl();
+		try {
+			return this.displayExecutor.submit(viewReferenceTask).get();
+		} catch (InterruptedException e) {
+			e.printStackTrace(); // TODO implement
+		} catch (ExecutionException e) {
+			e.printStackTrace(); // TODO implement
+		}
+		return null;
 	}
 
 	protected abstract Object createViewCall();

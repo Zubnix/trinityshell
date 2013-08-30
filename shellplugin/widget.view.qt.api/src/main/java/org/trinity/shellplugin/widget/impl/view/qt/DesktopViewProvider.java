@@ -26,11 +26,11 @@ import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
-public class RootViewProvider extends AbstractQWidgetViewReferenceProvider {
+public class DesktopViewProvider extends AbstractQWidgetViewReferenceProvider {
 
 	@Inject
-	RootViewProvider(	@DisplayExecutor final ListeningExecutorService displayExecutor,
-						final DisplaySurfacePool displaySurfacePool) {
+    DesktopViewProvider(@DisplayExecutor final ListeningExecutorService displayExecutor,
+                        final DisplaySurfacePool displaySurfacePool) {
 		super(	displayExecutor,
 				displaySurfacePool);
 	}

@@ -38,7 +38,6 @@ import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.plugin.ShellPlugin;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
-import org.trinity.shellplugin.wm.x11.impl.scene.SceneManager;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.AbstractIdleService;
@@ -52,16 +51,13 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 
 	private static final Logger LOG = LoggerFactory.getLogger(WindowManagerPlugin.class);
 	private final Display display;
-	private final SceneManager sceneManager;
 	private final ShellSurfaceFactory shellSurfaceFactory;
 
 	@Inject
-	WindowManagerPlugin(final SceneManager sceneManager,
-						final ShellSurfaceFactory shellSurfaceFactory,
+	WindowManagerPlugin(final ShellSurfaceFactory shellSurfaceFactory,
 						final Display display) {
 
 		this.display = display;
-		this.sceneManager = sceneManager;
 		this.shellSurfaceFactory = shellSurfaceFactory;
 	}
 
@@ -97,7 +93,9 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 						@Override
 						public void onSuccess(final List<DisplaySurface> displaySurfaces) {
 							for (final DisplaySurface displaySurface : displaySurfaces) {
-								handleClientDisplaySurface(displaySurface);
+								// FIXME filter out non client display surfaces
+								// in the display impl.
+								// handleClientDisplaySurface(displaySurface);
 							}
 						}
 
@@ -119,8 +117,7 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 					new FutureCallback<ShellSurface>() {
 						@Override
 						public void onSuccess(final ShellSurface shellSurface) {
-							WindowManagerPlugin.this.sceneManager.manageNewClient(	displaySurface,
-																					shellSurface);
+							//TODO manage client shell surface
 						}
 
 						@Override

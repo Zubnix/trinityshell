@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
@@ -47,11 +46,9 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 
 	private final ListeningExecutorService shellExecutor;
 
-	protected AbstractAsyncShellNodeParent(	@Nonnull ShellNodeParent shellNodeParent,
-											@Nonnull @ShellScene final AsyncListenable shellScene,
+	protected AbstractAsyncShellNodeParent(	@Nonnull @ShellScene final AsyncListenable shellScene,
 											@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	shellNodeParent,
-				shellScene,
+		super(	shellScene,
 				shellExecutor);
 		this.shellExecutor = shellExecutor;
 	}

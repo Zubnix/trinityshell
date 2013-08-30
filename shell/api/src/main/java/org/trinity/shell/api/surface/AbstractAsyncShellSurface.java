@@ -24,7 +24,6 @@ import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.shared.AsyncListenable;
@@ -33,7 +32,6 @@ import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
-import org.trinity.shell.api.scene.ShellNodeParent;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -41,8 +39,8 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 // TODO from boilerplate code generator
 /***************************************
  * Abstract asynchronous base implementation of a {@link ShellSurface}. Method
- * calls are placed on the injected shell executor. Subclasses must
- * implement any concrete internal node manipulation.
+ * calls are placed on the injected shell executor. Subclasses must implement
+ * any concrete internal node manipulation.
  *
  ***************************************
  */
@@ -52,11 +50,9 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 
 	private final ListeningExecutorService shellExecutor;
 
-	protected AbstractAsyncShellSurface(@Nonnull ShellNodeParent shellNodeParent,
-										@Nonnull @ShellScene final AsyncListenable shellScene,
+	protected AbstractAsyncShellSurface(@Nonnull @ShellScene final AsyncListenable shellScene,
 										@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	shellNodeParent,
-				shellScene,
+		super(	shellScene,
 				shellExecutor);
 		this.shellExecutor = shellExecutor;
 	}

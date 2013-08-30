@@ -61,11 +61,9 @@ public class ShellVirtualSurface extends AbstractShellNodeParent {
 	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellVirtualSurfaceExecutor(this);
 
 	@Inject
-	protected ShellVirtualSurface(	@Nonnull ShellNodeParent shellNodeParent,
-									@Nonnull @ShellScene final AsyncListenable shellScene,
+	protected ShellVirtualSurface(	@Nonnull @ShellScene final AsyncListenable shellScene,
 									@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	shellNodeParent,
-				shellScene,
+		super(	shellScene,
 				shellExecutor);
 	}
 

@@ -28,10 +28,10 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.AbstractShellNode;
-import org.trinity.shell.api.scene.AbstractShellNodeParent;
-import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
-import org.trinity.shell.api.surface.AbstractShellSurface;
+import org.trinity.shell.api.scene.ShellNodeParent;
+
+import com.google.common.base.Optional;
 
 /***************************************
  * A {@link ShellNodeGeometryDelegate} for use with an
@@ -45,16 +45,16 @@ public class ShellSurfaceGeometryDelegate implements ShellNodeGeometryDelegate {
 
 	private final AbstractShellSurface abstractShellSurface;
 
-	public ShellSurfaceGeometryDelegate(AbstractShellSurface abstractShellSurface) {
+	public ShellSurfaceGeometryDelegate(final AbstractShellSurface abstractShellSurface) {
 		this.abstractShellSurface = abstractShellSurface;
 	}
 
 	@Override
-	public AbstractShellSurface getShellNode(){
+	public AbstractShellSurface getShellNode() {
 		return abstractShellSurface;
 	}
 
-	public DisplaySurface getShellNodeManipulator(){
+	public DisplaySurface getShellNodeManipulator() {
 		return getShellNode().getDisplaySurface();
 	}
 
@@ -92,15 +92,15 @@ public class ShellSurfaceGeometryDelegate implements ShellNodeGeometryDelegate {
 	}
 
 	private Coordinate getAbsolutePosition(@Nonnull final AbstractShellNode node) {
-		final Coordinate childPosition = node.getPositionImpl();
-		final AbstractShellNodeParent shellParent = node.getParentImpl();
+		final Coordinate nodePosition = node.getPositionImpl();
+		final Optional<ShellNodeParent> optionalParent = node.getParentImpl();
 
-		if ((shellParent == null) || shellParent.equals(node)) {
-			return childPosition;
+		if ((!optionalParent.isPresent())) {
+			return nodePosition;
 		}
 
-		final Coordinate absoluteParentPosition = getAbsolutePosition(shellParent);
-		final Coordinate absolutePosition = childPosition.add(absoluteParentPosition);
+		final Coordinate absoluteParentPosition = getAbsolutePosition((AbstractShellNode) optionalParent.get());
+		final Coordinate absolutePosition = nodePosition.add(absoluteParentPosition);
 
 		return absolutePosition;
 	}

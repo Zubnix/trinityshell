@@ -98,7 +98,7 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
 
 		return new DisplaySurfaceCreator() {
 			@Override
-			public DisplaySurface create(final DisplaySurfaceHandle displaySurfaceHandle) {
+			public DisplaySurface reference(final DisplaySurfaceHandle displaySurfaceHandle) {
 				final DisplaySurface displaySurface = getDisplaySurface(displaySurfaceHandle);
 				return displaySurface;
 			}

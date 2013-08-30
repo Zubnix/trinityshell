@@ -19,10 +19,11 @@
  ******************************************************************************/
 package org.trinity.shell.surface.impl;
 
+import java.util.concurrent.ExecutionException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import com.google.inject.assistedinject.Assisted;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -31,13 +32,11 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
-import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.surface.AbstractShellSurface;
-
-import com.google.common.util.concurrent.ListeningExecutorService;
 import org.trinity.shell.api.surface.ShellSurfaceGeometryDelegate;
 
-import java.util.concurrent.ExecutionException;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.assistedinject.Assisted;
 
 // TODO documentation
 /**
@@ -58,12 +57,10 @@ public final class ShellSurfaceImpl extends AbstractShellSurface {
 	private final DisplaySurface displaySurface;
 
 	// created by a custom factory so inject annotations are not needed.
-	ShellSurfaceImpl(@Nonnull final ShellNodeParent shellRootNode,
-	                 @Nonnull @ShellScene final AsyncListenable shellScene,
-	                 @Nonnull @ShellExecutor final ListeningExecutorService shellExecutor,
-	                 @Nonnull @Assisted final DisplaySurface clientDisplaySurface) {
-		super(	shellRootNode,
-				shellScene,
+	ShellSurfaceImpl(	@Nonnull @ShellScene final AsyncListenable shellScene,
+						@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor,
+						@Nonnull @Assisted final DisplaySurface clientDisplaySurface) {
+		super(	shellScene,
 				shellExecutor);
 		this.displaySurface = clientDisplaySurface;
 		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegate(this);
@@ -80,10 +77,10 @@ public final class ShellSurfaceImpl extends AbstractShellSurface {
 			flushSizePlaceValues();
 		} catch (final InterruptedException e) {
 			LOG.error(	"Interrupted while waiting for display surface geometry.",
-					e);
+						e);
 		} catch (final ExecutionException e) {
 			LOG.error(	"Exception while getting display surface geometry.",
-					e);
+						e);
 		}
 	}
 

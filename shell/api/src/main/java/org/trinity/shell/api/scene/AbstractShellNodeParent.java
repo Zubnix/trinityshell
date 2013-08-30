@@ -51,11 +51,9 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	private final LinkedList<AbstractShellNode> children = new LinkedList<>();
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-	protected AbstractShellNodeParent(	@Nonnull ShellNodeParent shellNodeParent,
-										@Nonnull @ShellScene final AsyncListenable shellScene,
+	protected AbstractShellNodeParent(	@Nonnull @ShellScene final AsyncListenable shellScene,
 										@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	shellNodeParent,
-				shellScene,
+		super(	shellScene,
 				shellExecutor);
 	}
 
