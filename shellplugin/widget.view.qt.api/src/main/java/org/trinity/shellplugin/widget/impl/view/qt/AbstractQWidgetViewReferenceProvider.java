@@ -31,13 +31,14 @@ import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.render.ViewReference;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Provider;
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QWidget;
 
-public abstract class AbstractQWidgetViewReferenceProvider implements Provider<ViewReference> {
+public abstract class AbstractQWidgetViewReferenceProvider implements Provider<ListenableFuture<ViewReference>> {
 
 	private final ListeningExecutorService displayExecutor;
 	private final DisplaySurfacePool displaySurfacePool;
@@ -55,8 +56,17 @@ public abstract class AbstractQWidgetViewReferenceProvider implements Provider<V
 				final Object qWidget = viewFuture.get();
 				final DisplaySurface displaySurface = displaySurfaceReferencer
 						.reference(new ViewDisplaySurfaceHandle((QWidget) qWidget));
-				return new ViewReferenceImpl(	qWidget,
-												displaySurface);
+				return new ViewReference() {
+					@Override
+					public Object getView() {
+						return qWidget;
+					}
+
+					@Override
+					public DisplaySurface getViewDisplaySurface() {
+						return displaySurface;
+					}
+				};
 			}
 		}
 	};
@@ -68,39 +78,9 @@ public abstract class AbstractQWidgetViewReferenceProvider implements Provider<V
 	}
 
 	@Override
-	public ViewReference get() {
-		try {
-			return this.displayExecutor.submit(viewReferenceTask).get();
-		} catch (InterruptedException e) {
-			e.printStackTrace(); // TODO implement
-		} catch (ExecutionException e) {
-			e.printStackTrace(); // TODO implement
-		}
-		return null;
+	public ListenableFuture<ViewReference> get() {
+		return displayExecutor.submit(viewReferenceTask);
 	}
 
 	protected abstract Object createViewCall();
-
-	private class ViewReferenceImpl implements ViewReference {
-
-		private final Object view;
-		private final DisplaySurface displaySurface;
-
-		public ViewReferenceImpl(	final Object view,
-									final DisplaySurface displaySurface) {
-
-			this.view = view;
-			this.displaySurface = displaySurface;
-		}
-
-		@Override
-		public Object getView() {
-			return view;
-		}
-
-		@Override
-		public DisplaySurface getViewDisplaySurface() {
-			return displaySurface;
-		}
-	}
 }

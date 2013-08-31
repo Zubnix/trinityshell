@@ -25,16 +25,24 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.onami.autobind.annotations.Bind;
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.ViewReference;
 import org.trinity.foundation.api.render.binding.Binder;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.surface.ShellSurface;
+import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shellplugin.wm.api.Desktop;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+
+import static com.google.common.util.concurrent.Futures.addCallback;
 
 @Bind
 @ExecutionContext(ShellExecutor.class)
@@ -44,15 +52,37 @@ public class DesktopImpl implements Desktop {
 	private final EventList<Object> notificationsBar = new BasicEventList<>();
 	private final EventList<Object> clientsBar = new BasicEventList<>();
 	private final EventList<Object> bottomBar = new BasicEventList<>();
+	private final ShellSurfaceFactory shellSurfaceFactory;
 
 	@Inject
 	DesktopImpl(@ShellExecutor final ListeningExecutorService shellExecutor,
 				final Binder binder,
-				@Named("DesktopView") final ViewReference desktopView) {
+				ShellSurfaceFactory shellSurfaceFactory,
+				@Named("DesktopView") final ListenableFuture<ViewReference> desktopViewFuture) {
 
-		binder.bind(shellExecutor,
-					this,
-					desktopView.getView());
+		this.shellSurfaceFactory = shellSurfaceFactory;
+
+		addCallback(desktopViewFuture,
+				new FutureCallback<ViewReference>() {
+					@Override
+					public void onSuccess(final ViewReference viewReference) {
+						binder.bind(shellExecutor,
+								this,
+								viewReference.getView());
+						createShellSurface(viewReference.getViewDisplaySurface());
+					}
+
+					@Override
+					public void onFailure(final Throwable t) {
+
+					}
+				});
+
+	}
+
+	//called by display thread
+	private void createShellSurface(DisplaySurface displaySurface) {
+		final ShellSurface desktopShellSurface = shellSurfaceFactory.createShellSurface(displaySurface);
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import org.apache.onami.autobind.scanner.PackageFilter;
 import org.apache.onami.autobind.scanner.asm.ASMClasspathScanner;
 import org.trinity.shell.api.plugin.ShellPluginsRunner;
 
+import org.trinity.shellplugin.widget.impl.view.qt.RenderApplication;
 import xcb4j.LibXcbLoader;
 
 import com.google.inject.Guice;
@@ -27,7 +28,7 @@ import com.google.inject.Stage;
 public class EntryPoint {
 
 	public static void main(final String[] args) {
-
+		RenderApplication.start();
 		LibXcbLoader.load();
 
 		final Injector injector = Guice.createInjector(	Stage.PRODUCTION,

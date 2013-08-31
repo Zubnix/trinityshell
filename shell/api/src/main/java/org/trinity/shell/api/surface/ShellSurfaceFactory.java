@@ -19,13 +19,11 @@
  ******************************************************************************/
 package org.trinity.shell.api.surface;
 
+import javax.annotation.Nonnull;
+
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.ExecutionContext;
-
-import com.google.common.util.concurrent.ListenableFuture;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
-
-import javax.annotation.Nonnull;
 
 /***************************************
  * Creates shell surfaces from a display surface.
@@ -38,9 +36,10 @@ public interface ShellSurfaceFactory {
 	 * The new shell surface will have the root shell surface as its parent.
 	 *
 	 * @param clientDisplaySurface
-	 *            a {@link DisplaySurface} created by an external client program.
-	 * @return a future {@link ShellSurface}.
+	 *            a {@link DisplaySurface} created by an external client
+	 *            program.
+	 * @return a {@link ShellSurface}.
 	 ***************************************
 	 */
-	ListenableFuture<ShellSurface> createShellSurface(@Nonnull DisplaySurface clientDisplaySurface);
+	ShellSurface createShellSurface(@Nonnull DisplaySurface clientDisplaySurface);
 }

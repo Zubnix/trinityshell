@@ -110,22 +110,8 @@ public class WindowManagerPlugin extends AbstractIdleService implements ShellPlu
 
 	// Called by display executor for new display surfaces.
 	private void handleClientDisplaySurface(final DisplaySurface displaySurface) {
-		final ListenableFuture<ShellSurface> shellSurfaceFuture = this.shellSurfaceFactory
-				.createShellSurface(displaySurface);
-		// callback will be called by shell executor.
-		addCallback(shellSurfaceFuture,
-					new FutureCallback<ShellSurface>() {
-						@Override
-						public void onSuccess(final ShellSurface shellSurface) {
-							//TODO manage client shell surface
-						}
+		final ShellSurface clientShellSurface = this.shellSurfaceFactory.createShellSurface(displaySurface);
 
-						@Override
-						public void onFailure(final Throwable t) {
-							LOG.error(	"Failed to create a shellsurface",
-										t);
-						}
-					});
 	}
 
 	@Override

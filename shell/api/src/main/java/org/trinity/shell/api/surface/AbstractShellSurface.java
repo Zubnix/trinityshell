@@ -247,6 +247,5 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	public void handleShowNotifyEvent(final ShowNotify showNotify) {
 		doShow();
 	}
-
 	/* end display event handling */
 }

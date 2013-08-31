@@ -53,7 +53,6 @@ import com.google.inject.assistedinject.AssistedInject;
 // be negative. childs with size 0, ...)
 // TODO refactor to reuse code and for cleaner reading
 // =>rewrite this sh*t...
-@Bind(to = @To(value = CUSTOM, customs = ShellLayoutManagerLine.class))
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
 public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {

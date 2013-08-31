@@ -20,8 +20,6 @@
 
 package org.trinity.shell.surface.impl;
 
-import java.util.concurrent.Callable;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
@@ -37,7 +35,6 @@ import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 @Bind
@@ -57,20 +54,14 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 	}
 
 	@Override
-	public ListenableFuture<ShellSurface> createShellSurface(@Nonnull final DisplaySurface clientDisplaySurface) {
-		return this.shellExecutor.submit(new Callable<ShellSurface>() {
-			@Override
-			public ShellSurface call() {
-				final ShellSurfaceImpl shellSurfaceImpl = new ShellSurfaceImpl(	shellScene,
-																				shellExecutor,
-																				clientDisplaySurface);
-				shellSurfaceImpl.syncGeoToDisplaySurface();
-				clientDisplaySurface.register(	shellSurfaceImpl,
-												shellExecutor);
+	public ShellSurface createShellSurface(@Nonnull final DisplaySurface displaySurface) {
+		final ShellSurfaceImpl shellSurfaceImpl = new ShellSurfaceImpl(	shellScene,
+																		shellExecutor,
+																		displaySurface);
+		displaySurface.register(shellSurfaceImpl,
+								shellExecutor);
 
-				return shellSurfaceImpl;
-			}
-		});
+		return shellSurfaceImpl;
+
 	}
-
 }

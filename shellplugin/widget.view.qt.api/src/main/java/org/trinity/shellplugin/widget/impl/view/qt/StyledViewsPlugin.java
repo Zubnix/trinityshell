@@ -55,7 +55,7 @@ public class StyledViewsPlugin extends AbstractIdleService implements ShellPlugi
 
 	@Override
 	protected void startUp() throws Exception {
-		RenderApplication.start();
+
 		final ListenableFutureTask<Void> futureTask = ListenableFutureTask.create(new Callable<Void>() {
 			@Override
 			public Void call() {
