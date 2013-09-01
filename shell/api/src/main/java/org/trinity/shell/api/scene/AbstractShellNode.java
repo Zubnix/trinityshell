@@ -348,39 +348,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	@Override
 	public Void doDestroyImpl() {
-		this.doDestroy(true);
+		this.destroyed = true;
+		final ShellNodeDestroyedEvent geoEvent = new ShellNodeDestroyedEvent(	this,
+				toGeoTransformationImpl());
+		post(geoEvent);
 		return null;
 	}
 
-	/**
-	 * ************************************ Destroy the current node but the
-	 * actual delegated execution by this node's
-	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
-	 * the node's state.
-	 *
-	 * @param execute
-	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
-	 *            level execution. **************************************
-	 */
-	protected void doDestroy(final boolean execute) {
-		this.destroyed = true;
-		if (execute) {
-			execDestroy();
-		}
-		final ShellNodeDestroyedEvent geoEvent = new ShellNodeDestroyedEvent(	this,
-																				toGeoTransformationImpl());
-		post(geoEvent);
-	}
-
-	/**
-	 * ************************************ Execute the destroy process by this
-	 * node's {@link ShellNodeGeometryDelegate}. This call does not affect the
-	 * node's state. **************************************
-	 */
-	public void execDestroy() {
-		getShellNodeGeometryDelegate().destroy();
-	}
 
 	@Override
 	public Void doRaiseImpl() {

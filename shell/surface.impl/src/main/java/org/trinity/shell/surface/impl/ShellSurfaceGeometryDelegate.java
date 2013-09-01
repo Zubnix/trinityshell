@@ -17,7 +17,7 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.shell.api.surface;
+package org.trinity.shell.surface.impl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -35,7 +35,7 @@ import com.google.common.base.Optional;
 
 /***************************************
  * A {@link ShellNodeGeometryDelegate} for use with an
- * {@link org.trinity.shell.api.surface.AbstractShellSurface}.
+ * {@link AbstractShellSurface}.
  *
  ***************************************
  */
@@ -60,15 +60,9 @@ public class ShellSurfaceGeometryDelegate implements ShellNodeGeometryDelegate {
 
 	@Override
 	public void resize(@Nonnull final Size size) {
-		getShellNodeManipulator().resize(	size.getWidth(),
-											size.getHeight());
+		getShellNodeManipulator().resize(size.getWidth(),
+				size.getHeight());
 	}
-
-	@Override
-	public void destroy() {
-		getShellNodeManipulator().destroy();
-	}
-
 	@Override
 	public void move(@Nonnull final Coordinate position) {
 

@@ -54,10 +54,4 @@ public interface ShellNodeGeometryDelegate {
 
 	void moveResize(Coordinate desiredPosition,
 					Size desiredSize);
-
-	/***************************************
-	 * Execute the actual destroy process of the handled <code>ShellNode</code>.
-	 ***************************************
-	 */
-	void destroy();
 }

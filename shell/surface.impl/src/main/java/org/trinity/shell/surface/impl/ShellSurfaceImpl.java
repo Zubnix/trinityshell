@@ -19,6 +19,8 @@
  ******************************************************************************/
 package org.trinity.shell.surface.impl;
 
+import static com.google.common.util.concurrent.Futures.addCallback;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -30,16 +32,11 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
-import org.trinity.shell.api.surface.AbstractShellSurface;
-import org.trinity.shell.api.surface.ShellSurfaceGeometryDelegate;
 
 import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.assistedinject.Assisted;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
 
 // TODO documentation
 /**
@@ -58,16 +55,15 @@ public final class ShellSurfaceImpl extends AbstractShellSurface {
 	private final ShellSurfaceGeometryDelegate shellSurfaceGeometryDelegateImpl;
 	@Nonnull
 	private final ListeningExecutorService shellExecutor;
-	private final DisplaySurface displaySurface;
 
 	// created by a custom factory so inject annotations are not needed.
-	ShellSurfaceImpl(	@Nonnull @ShellScene final AsyncListenable shellScene,
-						@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor,
-						@Nonnull @Assisted final DisplaySurface clientDisplaySurface) {
-		super(	shellScene,
+	ShellSurfaceImpl(	@Nonnull @Assisted final DisplaySurface displaySurface,
+						@Nonnull @ShellScene final AsyncListenable shellScene,
+						@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
+		super(	displaySurface,
+				shellScene,
 				shellExecutor);
 		this.shellExecutor = shellExecutor;
-		this.displaySurface = clientDisplaySurface;
 		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegate(this);
 		syncGeoToDisplaySurface();
 	}
@@ -75,30 +71,25 @@ public final class ShellSurfaceImpl extends AbstractShellSurface {
 	private void syncGeoToDisplaySurface() {
 		final ListenableFuture<Rectangle> geometryFuture = getDisplaySurface().getGeometry();
 		addCallback(geometryFuture,
-				new FutureCallback<Rectangle>() {
-					@Override
-					public void onSuccess(final Rectangle displaySurfaceGeo) {
-						setPositionImpl(displaySurfaceGeo.getPosition());
-						setSizeImpl(displaySurfaceGeo.getSize());
-						flushSizePlaceValues();
-					}
+					new FutureCallback<Rectangle>() {
+						@Override
+						public void onSuccess(final Rectangle displaySurfaceGeo) {
+							setPositionImpl(displaySurfaceGeo.getPosition());
+							setSizeImpl(displaySurfaceGeo.getSize());
+							flushSizePlaceValues();
+						}
 
-					@Override
-					public void onFailure(final Throwable t) {
+						@Override
+						public void onFailure(final Throwable t) {
 
-					}
-				},
-				this.shellExecutor);
+						}
+					},
+					this.shellExecutor);
 	}
 
 	@Override
 	public ShellSurfaceGeometryDelegate getShellNodeGeometryDelegate() {
 		return this.shellSurfaceGeometryDelegateImpl;
-	}
-
-	@Override
-	public DisplaySurface getDisplaySurface() {
-		return this.displaySurface;
 	}
 
 	// repeated for package level visibility

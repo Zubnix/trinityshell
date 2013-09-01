@@ -26,6 +26,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
@@ -49,12 +50,20 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent implements ShellSurface {
 
 	private final ListeningExecutorService shellExecutor;
+	private final DisplaySurface displaySurface;
 
-	protected AbstractAsyncShellSurface(@Nonnull @ShellScene final AsyncListenable shellScene,
+	protected AbstractAsyncShellSurface(@Nonnull DisplaySurface displaySurface,
+										@Nonnull @ShellScene final AsyncListenable shellScene,
 										@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
 		super(	shellScene,
 				shellExecutor);
 		this.shellExecutor = shellExecutor;
+		this.displaySurface = displaySurface;
+	}
+
+	@Override
+	public DisplaySurface getDisplaySurface() {
+		return displaySurface;
 	}
 
 	@Override

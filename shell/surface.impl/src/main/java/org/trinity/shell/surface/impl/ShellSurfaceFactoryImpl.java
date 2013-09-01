@@ -55,9 +55,9 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 
 	@Override
 	public ShellSurface createShellSurface(@Nonnull final DisplaySurface displaySurface) {
-		final ShellSurfaceImpl shellSurfaceImpl = new ShellSurfaceImpl(	shellScene,
-																		shellExecutor,
-																		displaySurface);
+		final ShellSurfaceImpl shellSurfaceImpl = new ShellSurfaceImpl(	displaySurface,
+																		shellScene,
+																		shellExecutor);
 		displaySurface.register(shellSurfaceImpl,
 								shellExecutor);
 

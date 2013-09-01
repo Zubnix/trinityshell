@@ -84,13 +84,4 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
                            @Nonnull final Size size) {
         move(position);
     }
-
-    @Override
-    public void destroy() {
-        for (final AbstractShellNode child : getShellNode().getChildrenImpl()) {
-            if (!child.isDestroyedImpl()) {
-                child.doDestroy();
-            }
-        }
-    }
 }
