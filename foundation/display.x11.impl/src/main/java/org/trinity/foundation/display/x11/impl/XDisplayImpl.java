@@ -45,6 +45,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.Nonnull;
@@ -67,12 +68,13 @@ import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.Screen;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.display.event.CreationNotify;
+import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XScreen;
+import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
 import com.google.common.eventbus.Subscribe;
@@ -93,7 +95,6 @@ public class XDisplayImpl implements Display {
 	private final List<DisplaySurface> clientDisplaySurfaces = new ArrayList<>();
 	private final XConnection xConnection;
 	private final XWindowPoolImpl xWindowCache;
-	private final XEventPump xEventPump;
 	private final ListeningExecutorService xExecutor;
 	private final AsyncListenableEventBus displayEventBus;
 	private final ByteBuffer rootWindowAttributres = allocateDirect(4).order(nativeOrder())
@@ -103,11 +104,9 @@ public class XDisplayImpl implements Display {
 	@Inject
 	XDisplayImpl(	final XConnection xConnection,
 					final XWindowPoolImpl xWindowCache,
-					final XEventPump xEventPump,
-					@DisplayExecutor final ListeningExecutorService xExecutor) {
+					@DisplayExecutor final ListeningExecutorService xExecutor) throws ExecutionException, InterruptedException {
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
-		this.xEventPump = xEventPump;
 		this.xExecutor = xExecutor;
 		this.displayEventBus = new AsyncListenableEventBus(this.xExecutor);
 		// register to ourself so we can track newly created clients in the
@@ -122,31 +121,26 @@ public class XDisplayImpl implements Display {
 		return this.xExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
-				XDisplayImpl.this.xEventPump.stop();
 				XDisplayImpl.this.xConnection.close();
 				return null;
 			}
 		});
 	}
 
-	public ListenableFuture<Void> open() {
-		// FIXME from config?
-		final String displayName = System.getenv("DISPLAY");
-		final int targetScreen = 0;
+	private ListenableFuture<Void> open() {
+
 
 		return this.xExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
-
-				XDisplayImpl.this.xConnection.open(	displayName,
-													targetScreen);
 				if (xcb_connection_has_error(XDisplayImpl.this.xConnection.getConnectionReference().get()) != 0) {
 					throw new Error("Cannot open display\n");
 				}
-
+				// FIXME from config?
+				final int targetScreen = 0;
 				final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(XDisplayImpl.this.xConnection
 						.getConnectionReference().get()));
-				int screenNr = targetScreen;
+				int screenNr;
 				for (; iter.getRem() != 0; --screenNr, xcb_screen_next(iter)) {
 					if (targetScreen == 0) {
 						final xcb_screen_t xcb_screen = iter.getData();
@@ -157,7 +151,6 @@ public class XDisplayImpl implements Display {
 				}
 
 				findClientDisplaySurfaces();
-				XDisplayImpl.this.xEventPump.start();
 				return null;
 			}
 		});
@@ -219,7 +212,7 @@ public class XDisplayImpl implements Display {
 					continue;
 				}
 
-				final DisplaySurface clientWindow = this.xWindowCache.getDisplaySurface(tree_child);
+				final DisplaySurface clientWindow = this.xWindowCache.getDisplaySurface(new XWindowHandle(tree_child));
 				configureClientEvents(clientWindow);
 				trackClient(clientWindow);
 			}
@@ -260,9 +253,9 @@ public class XDisplayImpl implements Display {
 	}
 
 	@Subscribe
-	public void onCreationNotify(final CreationNotify creationNotify) {
+	public void onCreationNotify(final DisplaySurfaceCreationNotify displaySurfaceCreationNotify) {
 		// keep track of all created clients so others can query them later.
-		trackClient(creationNotify.getDisplaySurface());
+		trackClient(displaySurfaceCreationNotify.getDisplaySurface());
 	}
 
 	private void trackClient(final DisplaySurface clientDisplaySurface) {
@@ -281,7 +274,7 @@ public class XDisplayImpl implements Display {
 	}
 
 	@Override
-	public ListenableFuture<List<DisplaySurface>> getClientDisplaySurfaces() {
+	public ListenableFuture<List<DisplaySurface>> getDisplaySurfaces() {
 		return this.xExecutor.submit(new Callable<List<DisplaySurface>>() {
 			@Override
 			public List<DisplaySurface> call() throws Exception {

@@ -18,29 +18,22 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
 
-package org.trinity.shell.api.bindingkey;
+package org.trinity.shellplugin.widget.impl.view.qt;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.apache.onami.autobind.annotations.GuiceModule;
+import org.trinity.foundation.api.render.ViewReference;
+import org.trinity.shellplugin.wm.api.viewreferencekey.DesktopViewReference;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 
-import javax.inject.Singleton;
+@GuiceModule
+class Module extends AbstractModule {
 
-import org.trinity.shell.api.scene.ShellNodeParent;
-
-import com.google.inject.BindingAnnotation;
-
-/**
- * Used for the root {@link ShellNodeParent} {@link Singleton}. Instance
- * <b>not</b> provided by the shell api.
- */
-@BindingAnnotation
-@Target({ TYPE, FIELD, PARAMETER, METHOD })
-@Retention(RUNTIME)
-public @interface ShellRootNode {
+	@Override
+	protected void configure() {
+		bind(new TypeLiteral<ListenableFuture<ViewReference>>() {
+		}).annotatedWith(DesktopViewReference.class).toProvider(DesktopViewProvider.class);
+	}
 }

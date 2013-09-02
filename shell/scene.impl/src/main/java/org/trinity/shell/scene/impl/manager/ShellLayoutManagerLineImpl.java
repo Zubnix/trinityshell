@@ -36,14 +36,7 @@ import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMovedResizedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
+import org.trinity.shell.api.scene.event.*;
 import org.trinity.shell.api.scene.manager.AbstractShellLayoutManager;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
 import org.trinity.shell.api.scene.manager.ShellLayoutProperty;
@@ -51,6 +44,8 @@ import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 
 // TODO try to avoid castings
 // TODO refactor/rewrite
@@ -58,7 +53,6 @@ import com.google.common.eventbus.Subscribe;
 // be negative. childs with size 0, ...)
 // TODO refactor to reuse code and for cleaner reading
 // =>rewrite this sh*t...
-@Bind(to = @To(value = CUSTOM, customs = ShellLayoutManagerLine.class))
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
 public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
@@ -66,10 +60,13 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	private static final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(	1,
 																										new Margins(0));
 	private final ChildGeoListener childGeoListener = new ChildGeoListener();
+	private final ShellNodeParent shellNodeParent;
 	private boolean horizontalDirection = true;
 	private boolean inverseDirection = false;
 
-	ShellLayoutManagerLineImpl() {
+	@AssistedInject
+	ShellLayoutManagerLineImpl(@Assisted final ShellNodeParent shellNodeParent) {
+		this.shellNodeParent = shellNodeParent;
 	}
 
 	@Override
@@ -250,7 +247,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	@Override
 	public void addChildNode(	@Nonnull final ShellNode child,
 								@Nonnull final ShellLayoutProperty layoutProperty) {
-		Preconditions.checkArgument(layoutProperty instanceof ShellLayoutPropertyLine);
+		checkArgument(layoutProperty instanceof ShellLayoutPropertyLine);
 
 		child.register(this.childGeoListener);
 		super.addChildNode(	child,
@@ -297,10 +294,9 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		@Subscribe
 		public void handleChildMoveResizeRequest(final ShellNodeMoveResizeRequestEvent shellNodeMoveResizeRequestEvent) {
 			final ShellNode child = shellNodeMoveResizeRequestEvent.getSource();
-			checkArgument(child instanceof AbstractShellNode);
 			if (getLayoutProperty(child).getWeight() == 0) {
 				child.doResize();
-				layout(((AbstractShellNode) child).getParentImpl());
+				layout(shellNodeParent);
 			} else {
 				cancelMoveResize(child);
 			}
@@ -309,20 +305,15 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildDestroyed(final ShellNodeDestroyedEvent shellNodeDestroyedEvent) {
-			final ShellNode child = shellNodeDestroyedEvent.getSource();
-			checkArgument(child instanceof AbstractShellNode);
 			removeChild(shellNodeDestroyedEvent.getSource());
-			layout(((AbstractShellNode) child).getParentImpl());
+			layout(shellNodeParent);
 		}
 
 		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildReparentRequest(final ShellNodeReparentRequestEvent shellNodeReparentRequestEvent) {
-			final ShellNode child = shellNodeReparentRequestEvent.getSource();
-			checkArgument(child instanceof AbstractShellNode);
-			final ShellNodeParent oldParent = ((AbstractShellNode) child).getParentImpl();
 			shellNodeReparentRequestEvent.getSource().doReparent();
-			layout(oldParent);
+			layout(shellNodeParent);
 		}
 
 		@SuppressWarnings("unused")

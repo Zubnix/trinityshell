@@ -31,6 +31,7 @@ import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 
+import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
@@ -38,8 +39,8 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 // TODO documentation
 /***************************************
  * Asynchronous abstract implementation of a {@link ShellNode}. Method calls are
- * are delegated to the shell executor. Subclasses must implement any
- * concrete internal node manipulation.
+ * are delegated to the shell executor. Subclasses must implement any concrete
+ * internal node manipulation.
  ***************************************
  */
 @ThreadSafe
@@ -623,7 +624,7 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 											int y);
 
 	@Override
-	public final ListenableFuture<Void> setParent(final ShellNodeParent parent) {
+	public final ListenableFuture<Void> setParent(final Optional<ShellNodeParent> parent) {
 		return this.shellExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
@@ -633,20 +634,20 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	}
 
 	/***************************************
-	 * Concrete implementation of {@link #setParent(ShellNodeParent)}. This
-	 * method is invoked by the Shell thread.
+	 * Concrete implementation of {@link #setParent(Optional)}. This method is
+	 * invoked by the Shell thread.
 	 *
 	 * @return null
-	 * @see #setParent(ShellNodeParent)
+	 * @see #setParent(Optional)
 	 ***************************************
 	 */
-	public abstract Void setParentImpl(ShellNodeParent parent);
+	public abstract Void setParentImpl(Optional<ShellNodeParent> parent);
 
 	@Override
-	public final ListenableFuture<ShellNodeParent> getParent() {
-		return this.shellExecutor.submit(new Callable<ShellNodeParent>() {
+	public final ListenableFuture<Optional<ShellNodeParent>> getParent() {
+		return this.shellExecutor.submit(new Callable<Optional<ShellNodeParent>>() {
 			@Override
-			public ShellNodeParent call() {
+			public Optional<ShellNodeParent> call() {
 				return getParentImpl();
 			}
 		});
@@ -660,7 +661,7 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	 * @see #getParent()
 	 ***************************************
 	 */
-	public abstract ShellNodeParent getParentImpl();
+	public abstract Optional<ShellNodeParent> getParentImpl();
 
 	@Override
 	public final ListenableFuture<ShellNodeTransformation> toGeoTransformation() {

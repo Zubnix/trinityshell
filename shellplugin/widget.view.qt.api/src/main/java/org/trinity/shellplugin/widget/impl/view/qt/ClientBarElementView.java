@@ -18,7 +18,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
 
-package org.trinity.shellplugin.wm.x11.impl.view;
+package org.trinity.shellplugin.widget.impl.view.qt;
 
 import org.trinity.foundation.api.render.binding.view.DataContext;
 import org.trinity.foundation.api.render.binding.view.EventSignal;
@@ -26,7 +26,6 @@ import org.trinity.foundation.api.render.binding.view.EventSignals;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 import org.trinity.foundation.api.shared.Size;
-import org.trinity.shellplugin.widget.impl.view.qt.LMBSignalFilter;
 import org.trinity.shellplugin.wm.api.ImageDefinition;
 
 import com.google.common.base.Preconditions;
@@ -42,7 +41,7 @@ class ClientBarElementView extends QFrame {
             @PropertySlot(propertyName = "imageDefinition", methodName = "setImageDefinition", argumentTypes = {ImageDefinition.class}) // HasImageDefinition
     })
     @EventSignals({ //
-            @EventSignal(name = "onPointerInput", filter = LMBSignalFilter.class) // ReceivesPointerInput
+            @EventSignal(name = "onPointerInput", filter = LMBSignalFilter.class) // PointerInputReceiver
     })
     QLabel clientIconView = new QLabel() {
         {
@@ -73,7 +72,7 @@ class ClientBarElementView extends QFrame {
             @PropertySlot(propertyName = "text", methodName = "setText", argumentTypes = {String.class}) // HasText
     })
     @EventSignals({ //
-            @EventSignal(name = "onPointerInput", filter = LMBSignalFilter.class) // ReceivesPointerInput
+            @EventSignal(name = "onPointerInput", filter = LMBSignalFilter.class) // PointerInputReceiver
     })
     QLabel clientNameView = new QLabel() {
         {
@@ -83,7 +82,7 @@ class ClientBarElementView extends QFrame {
     };
     @DataContext("closeButton")
     @EventSignals({ //
-            @EventSignal(name = "onPointerInput", filter = LMBSignalFilter.class) // ReceivesPointerInput
+            @EventSignal(name = "onPointerInput", filter = LMBSignalFilter.class) // PointerInputReceiver
     })
     QFrame closeButtonView = new QFrame() {
         // workaround for jambi css bug

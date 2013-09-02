@@ -33,6 +33,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.trinity.foundation.display.x11.api.XConnection;
 
+import org.trinity.foundation.display.x11.api.XWindowHandle;
 import xcb4j.LibXcbLoader;
 
 import com.google.common.util.concurrent.MoreExecutors;
@@ -61,8 +62,8 @@ public class XWindowTest {
 												XWindowTest.displayName).start();
 
 		XWindowTest.xConnection = new XConnectionImpl();
-		XWindowTest.xConnection.open(	XWindowTest.displayName,
-										XWindowTest.screenNr);
+//		XWindowTest.xConnection.open(	XWindowTest.displayName,
+//										XWindowTest.screenNr);
 
 		final xcb_setup_t setup = LibXcb.xcb_get_setup(XWindowTest.xConnection.getConnectionReference().get());
 		final xcb_screen_iterator_t iter = LibXcb.xcb_setup_roots_iterator(setup);

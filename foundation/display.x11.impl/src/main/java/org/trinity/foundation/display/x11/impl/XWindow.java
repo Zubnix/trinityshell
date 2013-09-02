@@ -203,6 +203,8 @@ public final class XWindow implements DisplaySurface {
 										null);
 	}
 
+	@Override
+
 	public ListenableFuture<Void> show() {
 		final int winId = getWindowId();
 
@@ -279,7 +281,7 @@ public final class XWindow implements DisplaySurface {
 																			checkError(e);
 																			return reply.getBorder_width();
 																		}
-																	});
+																	},this.xExecutor);
 
 		return transform(	borderFuture,
 							new Function<Integer, Void>() {
@@ -308,7 +310,7 @@ public final class XWindow implements DisplaySurface {
 									xcb_flush(getConnectionRef());
 									return null;
 								}
-							});
+							},this.xExecutor);
 	}
 
 	public ListenableFuture<Void> raise() {
@@ -416,6 +418,8 @@ public final class XWindow implements DisplaySurface {
 							});
 	}
 
+	@Override
+	@Deprecated
 	public ListenableFuture<Void> hide() {
 		final int winId = getWindowId();
 		return this.xExecutor.submit(	new Runnable() {

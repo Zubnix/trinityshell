@@ -19,9 +19,16 @@
  ******************************************************************************/
 package org.trinity.foundation.api.display;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
+import com.google.common.util.concurrent.ListenableFuture;
+
+@NotThreadSafe
 public interface DisplaySurfacePool {
 
-	DisplaySurface getDisplaySurface(Object nativeHandle);
+	DisplaySurface getDisplaySurface(DisplaySurfaceHandle displaySurfaceHandle);
 
-	boolean isPresent(Object nativeHandle);
+	boolean isPresent(DisplaySurfaceHandle displaySurfaceHandle);
+
+    DisplaySurfaceCreator getDisplaySurfaceCreator();
 }

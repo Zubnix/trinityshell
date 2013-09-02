@@ -34,6 +34,7 @@ import org.trinity.foundation.api.display.event.PointerLeaveNotify;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
+import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
 import com.google.common.base.Optional;
@@ -81,7 +82,7 @@ public class LeaveNotifyHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(final xcb_generic_event_t event_t) {
 		final xcb_enter_notify_event_t enter_notify_event_t = cast(event_t);
 		final int windowId = enter_notify_event_t.getEvent();
-		return Optional.of(this.xWindowCache.getDisplaySurface(windowId));
+		return Optional.of(this.xWindowCache.getDisplaySurface(new XWindowHandle(windowId)));
 	}
 
 	@Override

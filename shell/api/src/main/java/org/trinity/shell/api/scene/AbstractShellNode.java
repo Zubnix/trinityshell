@@ -24,7 +24,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.shared.AsyncListenable;
@@ -35,8 +34,10 @@ import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.bindingkey.ShellRootNode;
 import org.trinity.shell.api.bindingkey.ShellScene;
+
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
@@ -56,8 +57,6 @@ import org.trinity.shell.api.scene.event.ShellNodeResizedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowedEvent;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
 public abstract class AbstractShellNode extends AbstractAsyncShellNode {
@@ -72,30 +71,25 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	private Size desiredSize = new Size(5,
 										5);
 	private boolean visible;
-	private AbstractShellNodeParent parent;
-	private AbstractShellNodeParent desiredParent;
+	private Optional<AbstractShellNodeParent> optionalParent = Optional.absent();
+	private Optional<AbstractShellNodeParent> optionalDesiredParent = Optional.absent();
 	private boolean destroyed;
 
-	protected AbstractShellNode(@Nullable @ShellRootNode final ShellNodeParent shellRootNode,
-								@Nonnull @ShellScene final AsyncListenable shellScene,
+	protected AbstractShellNode(@Nonnull @ShellScene final AsyncListenable shellScene,
 								@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
 		super(shellExecutor);
 		this.nodeEventBus = new AsyncListenableEventBus(shellExecutor);
 
 		register(shellScene);
-		if (shellRootNode != null) {
-			setParentImpl(shellRootNode);
-			flushParentValue();
-		}
 	}
 
 	@Override
 	public ShellNodeTransformation toGeoTransformationImpl() {
 		return new ShellNodeTransformation(	getGeometryImpl(),
-											getParentImpl(),
+											Optional.<ShellNodeParent> fromNullable(getParentImpl().orNull()),
 											new ImmutableRectangle(	getDesiredPosition(),
 																	getDesiredSize()),
-											getDesiredParent());
+											Optional.<ShellNodeParent> fromNullable(getDesiredParent().orNull()));
 	}
 
 	@Override
@@ -104,17 +98,16 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	}
 
 	@Override
-	public AbstractShellNodeParent getParentImpl() {
-		return this.parent;
+	public Optional<ShellNodeParent> getParentImpl() {
+		return Optional.<ShellNodeParent> fromNullable(this.optionalParent.orNull());
 	}
 
 	@Override
-	public Void setParentImpl(final ShellNodeParent parent) {
-		checkArgument(	parent instanceof AbstractShellNodeParent,
-						"Expected parent %s to be of type %s",
-						parent,
-						parent.getClass().getName());
-		this.desiredParent = (AbstractShellNodeParent) parent;
+	public Void setParentImpl(final Optional<ShellNodeParent> parent) {
+		if (parent.isPresent()) {
+			checkArgument(parent.get() instanceof AbstractAsyncShellNodeParent);
+		}
+		this.optionalDesiredParent = Optional.fromNullable((AbstractShellNodeParent) parent.orNull());
 		return null;
 	}
 
@@ -170,13 +163,12 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 		}
 		// we're in the visible state.
 
-		// recursion safeguard
-		if (getParent() == this) {
+		// check if our parent is visible.
+		if (getParentImpl().isPresent()) {
+			return ((AbstractAsyncShellNodeParent) getParentImpl().get()).isVisibleImpl();
+		} else {
 			return true;
 		}
-
-		// check if our parent is visible.
-		return (getParent() != null) && getParentImpl().isVisibleImpl();
 	}
 
 	@Override
@@ -257,7 +249,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	/**
 	 * Make the desired position the actual position.
 	 */
-	public void flushPlaceValues() {
+	protected void flushPlaceValues() {
 		this.position = getDesiredPosition();
 	}
 
@@ -301,7 +293,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	/**
 	 * Make the desired dimensions the current dimension.
 	 */
-	public Void flushSizeValues() {
+	protected Void flushSizeValues() {
 		this.size = getDesiredSize();
 		return null;
 	}
@@ -348,7 +340,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * Make both the desired position and the desired dimension, the current
 	 * position and dimension.
 	 */
-	public Void flushSizePlaceValues() {
+	protected Void flushSizePlaceValues() {
 		flushPlaceValues();
 		flushSizeValues();
 		return null;
@@ -356,44 +348,20 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	@Override
 	public Void doDestroyImpl() {
-		this.doDestroy(true);
+		this.destroyed = true;
+		final ShellNodeDestroyedEvent geoEvent = new ShellNodeDestroyedEvent(	this,
+				toGeoTransformationImpl());
+		post(geoEvent);
 		return null;
 	}
 
-	/**
-	 * ************************************ Destroy the current node but the
-	 * actual delegated execution by this node's
-	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
-	 * the node's state.
-	 *
-	 * @param execute
-	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
-	 *            level execution. **************************************
-	 */
-	protected void doDestroy(final boolean execute) {
-		this.destroyed = true;
-		if (execute) {
-			execDestroy();
-		}
-		final ShellNodeDestroyedEvent geoEvent = new ShellNodeDestroyedEvent(	this,
-																				toGeoTransformationImpl());
-		post(geoEvent);
-	}
-
-	/**
-	 * ************************************ Execute the destroy process by this
-	 * node's {@link ShellNodeGeometryDelegate}. This call does not affect the
-	 * node's state. **************************************
-	 */
-	public void execDestroy() {
-		getShellNodeGeometryDelegate().destroy();
-	}
 
 	@Override
 	public Void doRaiseImpl() {
-		getParentImpl().handleChildStacking(this,
-											true);
+		if (getParentImpl().isPresent()) {
+			((AbstractShellNodeParent) getParentImpl().get()).handleChildStacking(	this,
+																					true);
+		}
 		final ShellNodeRaisedEvent geoEvent = new ShellNodeRaisedEvent(	this,
 																		toGeoTransformationImpl());
 		post(geoEvent);
@@ -402,8 +370,10 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	@Override
 	public Void doLowerImpl() {
-		getParentImpl().handleChildStacking(this,
-											false);
+		if (getParentImpl().isPresent()) {
+			((AbstractShellNodeParent) getParentImpl().get()).handleChildStacking(	this,
+																					false);
+		}
 		final ShellNodeLoweredEvent geoEvent = new ShellNodeLoweredEvent(	this,
 																			toGeoTransformationImpl());
 		post(geoEvent);
@@ -413,15 +383,17 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	@Override
 	public Void doReparentImpl() {
 		flushParentValue();
-		getParentImpl().handleChildReparent(this);
+		if (getParentImpl().isPresent()) {
+			((AbstractShellNodeParent) getParentImpl().get()).handleChildReparent(this);
+		}
 		final ShellNodeReparentedEvent geoEvent = new ShellNodeReparentedEvent(	this,
-				toGeoTransformationImpl());
+																				toGeoTransformationImpl());
 		post(geoEvent);
 		return null;
 	}
 
-	private void flushParentValue() {
-		this.parent = (AbstractShellNodeParent) getDesiredParent();
+	protected void flushParentValue() {
+		this.optionalParent = getDesiredParent();
 	}
 
 	@Override
@@ -444,14 +416,14 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 		return this.desiredSize;
 	}
 
-	/**
-	 * ************************************ The desired parent as set by
-	 * {@link #setParent(ShellNodeParent)}.
+	/**************************************
+	 * The desired parent as set by {@link #setParent(Optional)}.
 	 *
-	 * @return a {@link ShellNodeParent}. **************************************
+	 * @return a {@link ShellNodeParent}.
+	 ***************************************
 	 */
-	public ShellNodeParent getDesiredParent() {
-		return this.desiredParent;
+	public Optional<AbstractShellNodeParent> getDesiredParent() {
+		return this.optionalDesiredParent;
 	}
 
 	@Override

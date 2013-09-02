@@ -34,6 +34,7 @@ import org.trinity.foundation.api.display.event.FocusLostNotify;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
+import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
 import com.google.common.base.Optional;
@@ -82,7 +83,7 @@ public class FocusOutHandler implements XEventHandler {
 		// focus in structure is the same as focus out.
 		final xcb_focus_in_event_t focus_out_event_t = cast(event_t);
 
-		return Optional.of(this.xWindowCache.getDisplaySurface(focus_out_event_t.getEvent()));
+		return Optional.of(this.xWindowCache.getDisplaySurface(new XWindowHandle(focus_out_event_t.getEvent())));
 	}
 
 	@Override

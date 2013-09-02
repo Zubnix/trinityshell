@@ -24,7 +24,6 @@ import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -32,10 +31,8 @@ import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.bindingkey.ShellRootNode;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
-import org.trinity.shell.api.scene.ShellNodeParent;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -43,8 +40,8 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 // TODO from boilerplate code generator
 /***************************************
  * Abstract asynchronous base implementation of a {@link ShellSurface}. Method
- * calls are placed on the injected shell executor. Subclasses must
- * implement any concrete internal node manipulation.
+ * calls are placed on the injected shell executor. Subclasses must implement
+ * any concrete internal node manipulation.
  *
  ***************************************
  */
@@ -53,14 +50,20 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent implements ShellSurface {
 
 	private final ListeningExecutorService shellExecutor;
+	private final DisplaySurface displaySurface;
 
-	protected AbstractAsyncShellSurface(@Nullable @ShellRootNode final ShellNodeParent shellRootNode,
+	protected AbstractAsyncShellSurface(@Nonnull DisplaySurface displaySurface,
 										@Nonnull @ShellScene final AsyncListenable shellScene,
 										@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	shellRootNode,
-				shellScene,
+		super(	shellScene,
 				shellExecutor);
 		this.shellExecutor = shellExecutor;
+		this.displaySurface = displaySurface;
+	}
+
+	@Override
+	public DisplaySurface getDisplaySurface() {
+		return displaySurface;
 	}
 
 	@Override
@@ -122,26 +125,6 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	 ***************************************
 	 */
 	public abstract Size getMinSizeImpl();
-
-	@Override
-	public final ListenableFuture<DisplaySurface> getDisplaySurface() {
-		return this.shellExecutor.submit(new Callable<DisplaySurface>() {
-			@Override
-			public DisplaySurface call() throws Exception {
-				return getDisplaySurfaceImpl();
-			}
-		});
-	}
-
-	/***************************************
-	 * Concrete implementation of {@link #getDisplaySurface()}. This method is
-	 * invoked by the Shell thread.
-	 *
-	 * @return a {@link DisplaySurface}
-	 * @see #getDisplaySurface()
-	 ***************************************
-	 */
-	public abstract DisplaySurface getDisplaySurfaceImpl();
 
 	@Override
 	public final ListenableFuture<Integer> getWidthIncrement() {

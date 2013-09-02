@@ -18,15 +18,25 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
 
-package org.trinity.shellplugin.wm.api;
+package org.trinity.shellplugin.widget.impl.view.qt;
 
-import java.util.List;
+import org.trinity.foundation.api.display.DisplaySurfacePool;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 
-public interface Desktop {
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Inject;
 
-	List<Object> getNotificationsBar();
+public class DesktopViewProvider extends AbstractQWidgetViewReferenceProvider {
 
-	List<Object> getClientsBar();
+	@Inject
+    DesktopViewProvider(@DisplayExecutor final ListeningExecutorService displayExecutor,
+                        final DisplaySurfacePool displaySurfacePool) {
+		super(	displayExecutor,
+				displaySurfacePool);
+	}
 
-	List<Object> getBottomBar();
+	@Override
+	protected RootView createViewCall() {
+		return new RootView();
+	}
 }
