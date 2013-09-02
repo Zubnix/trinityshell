@@ -140,7 +140,7 @@ public class XDisplayImpl implements Display {
 				final int targetScreen = 0;
 				final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(XDisplayImpl.this.xConnection
 						.getConnectionReference().get()));
-				int screenNr = targetScreen;
+				int screenNr;
 				for (; iter.getRem() != 0; --screenNr, xcb_screen_next(iter)) {
 					if (targetScreen == 0) {
 						final xcb_screen_t xcb_screen = iter.getData();
@@ -274,7 +274,7 @@ public class XDisplayImpl implements Display {
 	}
 
 	@Override
-	public ListenableFuture<List<DisplaySurface>> getClientDisplaySurfaces() {
+	public ListenableFuture<List<DisplaySurface>> getDisplaySurfaces() {
 		return this.xExecutor.submit(new Callable<List<DisplaySurface>>() {
 			@Override
 			public List<DisplaySurface> call() throws Exception {

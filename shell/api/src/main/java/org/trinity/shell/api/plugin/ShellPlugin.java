@@ -24,7 +24,7 @@ import com.google.common.util.concurrent.Service;
 
 /*****************************************
  * General marker interface for every shell plugin. Every shell plugin has a
- * <code>start()</code> and <code>stop()</code> method that is called by the
+ * {@code start()} and {@code stop()} method that is called by the
  * shell when a plugin is started and stopped respectively. Calls to
  * {@code start()} and {@code stop} should be non-blocking and should not spawn
  * any additional threads unless absolutely necessary. Instead a shell plugin
@@ -38,11 +38,11 @@ import com.google.common.util.concurrent.Service;
  ****************************************/
 public interface ShellPlugin extends Service {
 	/**
-	 * The order in which a shellplugin is started is determined by teh
+	 * The order in which a shellplugin is started is determined by the
 	 * runlevel. A lower runlevel plugin will start before a higher one. If no
 	 * order is desired a default runlevel of 10 is advised.
 	 *
-	 * @return
+	 * @return the weight of the shell plugin.
 	 */
 	int runlevel();
 }

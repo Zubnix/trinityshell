@@ -22,11 +22,11 @@ package org.trinity.shellplugin.widget.impl.view.qt;
 
 import org.apache.onami.autobind.annotations.GuiceModule;
 import org.trinity.foundation.api.render.ViewReference;
+import org.trinity.shellplugin.wm.api.viewreferencekey.DesktopViewReference;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
-import com.google.inject.name.Names;
 
 @GuiceModule
 class Module extends AbstractModule {
@@ -34,6 +34,6 @@ class Module extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(new TypeLiteral<ListenableFuture<ViewReference>>() {
-		}).annotatedWith(Names.named("DesktopView")).toProvider(DesktopViewProvider.class);
+		}).annotatedWith(DesktopViewReference.class).toProvider(DesktopViewProvider.class);
 	}
 }

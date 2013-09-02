@@ -52,15 +52,15 @@ public interface Display extends AsyncListenable {
 	 *
 	 * @return A collection of client {@link DisplaySurface}s.
 	 */
-	ListenableFuture<List<DisplaySurface>> getClientDisplaySurfaces();
+	ListenableFuture<List<DisplaySurface>> getDisplaySurfaces();
 
 	/***************************************
-	 * Orderly shut down this <code>Display</code>. All resources living on this
-	 * <code>Display</code> will be shut down as well.
-	 *
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
-	 ***************************************
-	 */
+     * Orderly shut down this {@code Display}. All resources living on this
+     * {@code Display} will be shut down as well.
+     *
+     * @return A {@link ListenableFuture} that indicates when the operation is
+     *         done.
+     ***************************************
+     */
 	ListenableFuture<Void> quit();
 }

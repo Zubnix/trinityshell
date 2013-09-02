@@ -20,6 +20,11 @@
 
 package org.trinity.shellplugin.wm.api;
 
-public interface ReceivesPointerInput {
-	void onPointerInput();
+import com.google.common.util.concurrent.ListenableFuture;
+
+public interface Shell {
+
+	ListenableFuture<Void> addStatusElement(Object element);
+
+    ListenableFuture<Void> removeStatusElement(Object element);
 }
