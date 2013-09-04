@@ -624,7 +624,7 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 											int y);
 
 	@Override
-	public final ListenableFuture<Void> setParent(final Optional<ShellNodeParent> parent) {
+	public final ListenableFuture<Void> setParent(final Optional<? extends ShellNodeParent> parent) {
 		return this.shellExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
@@ -641,7 +641,7 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	 * @see #setParent(Optional)
 	 ***************************************
 	 */
-	public abstract Void setParentImpl(Optional<ShellNodeParent> parent);
+	public abstract Void setParentImpl(Optional<? extends ShellNodeParent> parent);
 
 	@Override
 	public final ListenableFuture<Optional<ShellNodeParent>> getParent() {

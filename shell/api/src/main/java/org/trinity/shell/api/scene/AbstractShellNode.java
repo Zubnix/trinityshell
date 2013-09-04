@@ -103,7 +103,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	}
 
 	@Override
-	public Void setParentImpl(final Optional<ShellNodeParent> parent) {
+	public Void setParentImpl(final Optional<? extends ShellNodeParent> parent) {
 		if (parent.isPresent()) {
 			checkArgument(parent.get() instanceof AbstractAsyncShellNodeParent);
 		}
