@@ -61,6 +61,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
+//TODO split up this class
 @Bind
 @Singleton
 @ExecutionContext(ShellExecutor.class)
@@ -78,7 +79,8 @@ public class ShellImpl implements Shell {
 	private final Binder binder;
 	private final ShellSurfaceFactory shellSurfaceFactory;
 	private final ShellLayoutManagerFactory shellLayoutManagerFactory;
-	private final ListenableFuture<ViewReference> desktopViewFuture;
+    private final ClientBarElementFactory clientBarElementFactory;
+    private final ListenableFuture<ViewReference> desktopViewFuture;
 
 	private final Set<DisplaySurface> nonClientDisplaySurfaces = Sets.newHashSet();
 
@@ -88,13 +90,15 @@ public class ShellImpl implements Shell {
 				final Binder binder,
 				final ShellSurfaceFactory shellSurfaceFactory,
 				final ShellLayoutManagerFactory shellLayoutManagerFactory,
+                final ClientBarElementFactory clientBarElementFactory,
 				@DesktopViewReference final ListenableFuture<ViewReference> desktopViewFuture) {
 		this.display = display;
 		this.shellExecutor = shellExecutor;
 		this.binder = binder;
 		this.shellSurfaceFactory = shellSurfaceFactory;
 		this.shellLayoutManagerFactory = shellLayoutManagerFactory;
-		this.desktopViewFuture = desktopViewFuture;
+        this.clientBarElementFactory = clientBarElementFactory;
+        this.desktopViewFuture = desktopViewFuture;
 	}
 
 	public EventList<Object> getNotificationsBar() {
@@ -138,7 +142,7 @@ public class ShellImpl implements Shell {
 						@Override
 						public void onSuccess(final ViewReference viewReference) {
 							ShellImpl.this.binder.bind(	shellExecutor,
-														this,
+														ShellImpl.this,
 														viewReference.getView());
 
 							// FIXME we can still miss display events here.
@@ -225,8 +229,6 @@ public class ShellImpl implements Shell {
 						}
 					});
 	}
-
-	// called by shell executor
 	private void handleClientShellSurface(	final ShellSurface clientShellSurface,
 											final ShellLayoutManagerLine shellLayoutManagerLine) {
 		this.shellExecutor.submit(new Callable<Void>() {
@@ -238,7 +240,9 @@ public class ShellImpl implements Shell {
 																							2,
 																							25,
 																							25)));
-				return null;
+                final ClientBarElement clientTopBarItem = clientBarElementFactory.createClientTopBarItem(clientShellSurface);
+                clientsBar.add(clientTopBarItem);
+                return null;
 			}
 		});
 	}
