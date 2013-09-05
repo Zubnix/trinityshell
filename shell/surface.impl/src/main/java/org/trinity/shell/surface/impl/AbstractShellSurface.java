@@ -25,11 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.GeometryNotify;
-import org.trinity.foundation.api.display.event.GeometryRequest;
-import org.trinity.foundation.api.display.event.HideNotify;
-import org.trinity.foundation.api.display.event.ShowNotify;
-import org.trinity.foundation.api.display.event.ShowRequest;
+import org.trinity.foundation.api.display.event.*;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.ExecutionContext;
@@ -69,12 +65,13 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	private int widthIncrement = DEFAULT_WIDTH_INC;
 	private int heightIncrement = DEFAULT_HEIGHT_INC;
 
-	protected AbstractShellSurface(	@Nonnull DisplaySurface displaySurface,
+	protected AbstractShellSurface(	@Nonnull final DisplaySurface displaySurface,
 									@Nonnull @ShellScene final AsyncListenable shellScene,
 									@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
 		super(	displaySurface,
 				shellScene,
 				shellExecutor);
+        displaySurface.register(this,shellExecutor);
 	}
 
 	@Override
@@ -221,12 +218,12 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	 */
 
 	@Subscribe
-	public void handleShowRequest(ShowRequest showRequest) {
+	public void handleShowRequest(final ShowRequest showRequest) {
 		requestShow();
 	}
 
 	@Subscribe
-	public void handleGeometryRequest(GeometryRequest geometryRequest) {
+	public void handleGeometryRequest(final GeometryRequest geometryRequest) {
 		final boolean configureWidth = geometryRequest.configureWidth();
 		final boolean configureHeight = geometryRequest.configureHeight();
 		final boolean configureX = geometryRequest.configureX();
@@ -263,6 +260,11 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 		doMoveResize(false);
 	}
 
+    @Subscribe
+    public void handleDestroyedNotifyEvent(final DestroyNotify destroyNotify){
+        super.doDestroyImpl();
+    }
+
 	/**
 	 * Called when an {@code HideNotify} arrives for this surface.
 	 * <p>
@@ -273,7 +275,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	 */
 	@Subscribe
 	public void handleHideNotifyEvent(final HideNotify hideNotify) {
-		doHide();
+		doHideImpl();
 	}
 
 	/**
@@ -286,7 +288,7 @@ public abstract class AbstractShellSurface extends AbstractAsyncShellSurface {
 	 */
 	@Subscribe
 	public void handleShowNotifyEvent(final ShowNotify showNotify) {
-		doShow();
+		doShowImpl();
 	}
 	/* end display event handling */
 }

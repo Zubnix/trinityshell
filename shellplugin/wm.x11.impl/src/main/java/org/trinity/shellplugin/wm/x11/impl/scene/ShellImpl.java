@@ -30,7 +30,6 @@ import java.util.concurrent.Callable;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 
-import com.google.inject.Singleton;
 import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +41,7 @@ import org.trinity.foundation.api.render.binding.Binder;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerFactory;
@@ -60,8 +60,9 @@ import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Singleton;
 
-//TODO split up this class
+// TODO split up this class
 @Bind
 @Singleton
 @ExecutionContext(ShellExecutor.class)
@@ -79,8 +80,8 @@ public class ShellImpl implements Shell {
 	private final Binder binder;
 	private final ShellSurfaceFactory shellSurfaceFactory;
 	private final ShellLayoutManagerFactory shellLayoutManagerFactory;
-    private final ClientBarElementFactory clientBarElementFactory;
-    private final ListenableFuture<ViewReference> desktopViewFuture;
+	private final ClientBarElementFactory clientBarElementFactory;
+	private final ListenableFuture<ViewReference> desktopViewFuture;
 
 	private final Set<DisplaySurface> nonClientDisplaySurfaces = Sets.newHashSet();
 
@@ -90,15 +91,15 @@ public class ShellImpl implements Shell {
 				final Binder binder,
 				final ShellSurfaceFactory shellSurfaceFactory,
 				final ShellLayoutManagerFactory shellLayoutManagerFactory,
-                final ClientBarElementFactory clientBarElementFactory,
+				final ClientBarElementFactory clientBarElementFactory,
 				@DesktopViewReference final ListenableFuture<ViewReference> desktopViewFuture) {
 		this.display = display;
 		this.shellExecutor = shellExecutor;
 		this.binder = binder;
 		this.shellSurfaceFactory = shellSurfaceFactory;
 		this.shellLayoutManagerFactory = shellLayoutManagerFactory;
-        this.clientBarElementFactory = clientBarElementFactory;
-        this.desktopViewFuture = desktopViewFuture;
+		this.clientBarElementFactory = clientBarElementFactory;
+		this.desktopViewFuture = desktopViewFuture;
 	}
 
 	public EventList<Object> getNotificationsBar() {
@@ -229,6 +230,7 @@ public class ShellImpl implements Shell {
 						}
 					});
 	}
+
 	private void handleClientShellSurface(	final ShellSurface clientShellSurface,
 											final ShellLayoutManagerLine shellLayoutManagerLine) {
 		this.shellExecutor.submit(new Callable<Void>() {
@@ -240,9 +242,16 @@ public class ShellImpl implements Shell {
 																							2,
 																							25,
 																							25)));
-                final ClientBarElement clientTopBarItem = clientBarElementFactory.createClientTopBarItem(clientShellSurface);
-                clientsBar.add(clientTopBarItem);
-                return null;
+				final ClientBarElement clientTopBarItem = clientBarElementFactory
+						.createClientTopBarItem(clientShellSurface);
+				clientShellSurface.register(new Object() {
+					@Subscribe
+					public void handleDestoryed(final ShellNodeDestroyedEvent destroyedEvent) {
+						clientsBar.remove(clientTopBarItem);
+					}
+				});
+				clientsBar.add(clientTopBarItem);
+				return null;
 			}
 		});
 	}

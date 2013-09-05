@@ -26,36 +26,13 @@ import java.util.concurrent.ExecutorService;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.AsyncListenableEventBus;
-import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.foundation.api.shared.ImmutableRectangle;
-import org.trinity.foundation.api.shared.Rectangle;
-import org.trinity.foundation.api.shared.Size;
+import org.trinity.foundation.api.shared.*;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
+import org.trinity.shell.api.scene.event.*;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeEvent;
-import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
-import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeLoweredEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMovedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMovedResizedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeRaisedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeReparentedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeResizedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeShowedEvent;
 
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
@@ -350,11 +327,10 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	public Void doDestroyImpl() {
 		this.destroyed = true;
 		final ShellNodeDestroyedEvent geoEvent = new ShellNodeDestroyedEvent(	this,
-				toGeoTransformationImpl());
+																				toGeoTransformationImpl());
 		post(geoEvent);
 		return null;
 	}
-
 
 	@Override
 	public Void doRaiseImpl() {
