@@ -30,6 +30,7 @@ import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.DisplaySurfaceCreator;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
@@ -53,30 +54,30 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
 	private static final Logger LOG = LoggerFactory.getLogger(XWindowPoolImpl.class);
 	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
 	private final Cache<Object, XWindow> xWindows = CacheBuilder.newBuilder().concurrencyLevel(1).build();
+	private final XEventPump xEventPump;
 	private final DisplaySurfaceFactory displaySurfaceFactory;
 
 	@Inject
-	XWindowPoolImpl(final DisplaySurfaceFactory displaySurfaceFactory) {
+	XWindowPoolImpl(final XEventPump xEventPump,
+					final DisplaySurfaceFactory displaySurfaceFactory) {
+		this.xEventPump = xEventPump;
 		this.displaySurfaceFactory = displaySurfaceFactory;
 	}
 
 	@Override
-	public DisplaySurface getDisplaySurface(final Object nativeHandle) {
+	public DisplaySurface getDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
 
-
-
-		final DisplaySurfaceHandle resourceHandle = new XWindowHandle(nativeHandle);
 		XWindow window = null;
 		try {
-			window = this.xWindows.get(	nativeHandle,
+			window = this.xWindows.get(	displaySurfaceHandle,
 										new Callable<XWindow>() {
 											@Override
 											public XWindow call() {
 												LOG.debug(	"Xwindow={} added to cache.",
-															nativeHandle);
+															displaySurfaceHandle);
 
 												final XWindow xWindow = (XWindow) XWindowPoolImpl.this.displaySurfaceFactory
-														.createDisplaySurface(resourceHandle);
+														.createDisplaySurface(displaySurfaceHandle);
 												xWindow.register(new DestroyListener(xWindow));
 												return xWindow;
 											}
@@ -87,8 +88,26 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
 		return window;
 	}
 
-	public boolean isPresent(final Object nativeHandle) {
-		return this.xWindows.getIfPresent(nativeHandle) != null;
+	public boolean isPresent(final DisplaySurfaceHandle displaySurfaceHandle) {
+		return this.xWindows.getIfPresent(displaySurfaceHandle) != null;
+	}
+
+	@Override
+	public DisplaySurfaceCreator getDisplaySurfaceCreator() {
+		this.xEventPump.stop();
+
+		return new DisplaySurfaceCreator() {
+			@Override
+			public DisplaySurface reference(final DisplaySurfaceHandle displaySurfaceHandle) {
+				final DisplaySurface displaySurface = getDisplaySurface(displaySurfaceHandle);
+				return displaySurface;
+			}
+
+			@Override
+			public void close() {
+				xEventPump.start();
+			}
+		};
 	}
 
 	private class DestroyListener {

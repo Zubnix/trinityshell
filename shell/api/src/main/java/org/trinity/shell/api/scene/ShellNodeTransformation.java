@@ -26,6 +26,8 @@ import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 
+import com.google.common.base.Optional;
+
 /***************************************
  * A geometric transformation. Current geometric property names end in 0, new
  * ones in 1. A Delta value is the subtraction of the new value with the current
@@ -38,13 +40,13 @@ public class ShellNodeTransformation {
 	private final Rectangle rect0;
 	private final Rectangle rect1;
 	private final Rectangle deltaRect;
-	private final ShellNodeParent parent0;
-	private final ShellNodeParent parent1;
+	private final Optional<ShellNodeParent> parent0;
+	private final Optional<ShellNodeParent> parent1;
 
 	public ShellNodeTransformation(	final Rectangle rect0,
-									final ShellNodeParent parent0,
+									final Optional<ShellNodeParent> parent0,
 									final Rectangle rect1,
-									final ShellNodeParent parent1) {
+									final Optional<ShellNodeParent> parent1) {
 		this.rect0 = rect0;
 		this.rect1 = rect1;
 
@@ -99,7 +101,7 @@ public class ShellNodeTransformation {
 	 * @return a {@link ShellNodeParent}
 	 ***************************************
 	 */
-	public ShellNodeParent getParent0() {
+	public Optional<ShellNodeParent> getParent0() {
 		return this.parent0;
 	}
 
@@ -109,7 +111,7 @@ public class ShellNodeTransformation {
 	 * @return a {@link ShellNodeParent}
 	 ***************************************
 	 */
-	public ShellNodeParent getParent1() {
+	public Optional<ShellNodeParent> getParent1() {
 		return this.parent1;
 	}
 }

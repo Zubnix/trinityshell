@@ -30,15 +30,15 @@ import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
 /**
- * Signals the {@link Display} {@link Singleton} that a new client
- * {@link DisplaySurface} is available.
+ * Signals the {@link Display} {@link Singleton} that a new
+ * {@link DisplaySurface} is created.
  */
 @Immutable
 @ExecutionContext(DisplayExecutor.class)
-public class CreationNotify extends DisplayEvent {
+public class DisplaySurfaceCreationNotify extends DisplayEvent {
 	private final DisplaySurface displaySurface;
 
-	public CreationNotify(@Nonnull final DisplaySurface displaySurface) {
+	public DisplaySurfaceCreationNotify(@Nonnull final DisplaySurface displaySurface) {
 		this.displaySurface = displaySurface;
 	}
 

@@ -17,15 +17,24 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.shell.api.surface;
+package org.trinity.foundation.api.render.binding.model;
 
-import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeParent;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import com.google.common.util.concurrent.ListeningExecutorService;
+import org.trinity.foundation.api.render.binding.Binder;
 
 /***************************************
- * A {@link ShellSurface} that can have child {@link ShellNode}s.
+ * Marks a method as the getter of the view of a model.
+ *
+ * @see Binder#bind(ListeningExecutorService, Object, Object)
  ***************************************
  */
-public interface ShellSurfaceParent extends ShellSurface, ShellNodeParent {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.METHOD })
+public @interface BindableView {
 
 }

@@ -19,14 +19,14 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
 import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadFactory;
 
 import javax.annotation.concurrent.NotThreadSafe;
@@ -55,15 +55,15 @@ public class XEventPump implements Callable<Void> {
 	private static final Logger LOG = LoggerFactory.getLogger(XEventPump.class);
 	private final XConnection connection;
 	private final EventBus xEventBus;
-	private final ExecutorService xEventPumpExecutor = Executors.newSingleThreadExecutor(new ThreadFactory() {
-
+	private final ListeningExecutorService xExecutor;
+	private final ExecutorService xEventPumpExecutor = newSingleThreadExecutor(new ThreadFactory() {
 		@Override
 		public Thread newThread(final Runnable r) {
 			return new Thread(	r,
 								"x-event-pump");
 		}
 	});
-	private final ListeningExecutorService xExecutor;
+	private Semaphore waitForExternal = new Semaphore(1);
 
 	@Inject
 	XEventPump(	final XConnection connection,
@@ -72,48 +72,46 @@ public class XEventPump implements Callable<Void> {
 		this.connection = connection;
 		this.xEventBus = xEventBus;
 		this.xExecutor = xExecutor;
+		this.xEventPumpExecutor.submit(this);
 	}
 
 	@Override
 	public Void call() {
-		final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference().get());
+		waitForExternal.acquireUninterruptibly();
+		try {
+			final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference()
+					.get());
 
-		if (xcb_connection_has_error(this.connection.getConnectionReference().get()) != 0) {
-			final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
-			XEventPump.LOG.error(errorMsg);
-			throw new Error(errorMsg);
-		}
-
-		// pass x event from x-event-pump thread to x-executor thread.
-		this.xExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				XEventPump.this.xEventBus.post(xcb_generic_event);
-				xcb_generic_event.delete();
-				return null;
+			if (xcb_connection_has_error(this.connection.getConnectionReference().get()) != 0) {
+				final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
+				XEventPump.LOG.error(errorMsg);
+				throw new Error(errorMsg);
 			}
-		});
 
-		// schedule next event retrieval
-		this.xEventPumpExecutor.submit(this);
+			// pass x event from x-event-pump thread to x-executor thread.
+
+			this.xExecutor.submit(new Callable<Void>() {
+				@Override
+				public Void call() {
+					XEventPump.this.xEventBus.post(xcb_generic_event);
+					xcb_generic_event.delete();
+					return null;
+				}
+			});
+
+			// schedule next event retrieval
+			this.xEventPumpExecutor.submit(this);
+		} finally {
+			waitForExternal.release();
+		}
 		return null;
 	}
 
-	public void start() {
-		this.xEventPumpExecutor.submit(this);
+	public synchronized void start() {
+		waitForExternal.release();
 	}
 
-	public void stop() {
-		this.xEventPumpExecutor.shutdown();
-		try {
-			if (this.xEventPumpExecutor.awaitTermination(	10,
-															SECONDS)) {
-				return;
-			}
-			XEventPump.LOG.error("X event pump could not terminate gracefully!");
-		} catch (final InterruptedException e) {
-			XEventPump.LOG.error(	"X event pump terminate was interrupted.",
-									e);
-		}
+	public synchronized void stop() {
+		waitForExternal.tryAcquire();
 	}
 }

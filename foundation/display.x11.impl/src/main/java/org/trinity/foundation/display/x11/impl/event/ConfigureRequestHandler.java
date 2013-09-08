@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.display.event.CreationNotify;
+import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.GeometryRequest;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
@@ -53,6 +53,7 @@ import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
+import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
 import com.google.common.base.Optional;
@@ -129,15 +130,15 @@ public class ConfigureRequestHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(final xcb_generic_event_t event_t) {
 		final xcb_configure_request_event_t request_event_t = cast(event_t);
 		final int windowId = request_event_t.getWindow();
-
-		final boolean present = this.xWindowCache.isPresent(windowId);
-		final DisplaySurface displayEventTarget = this.xWindowCache.getDisplaySurface(windowId);
+		final XWindowHandle xWindowHandle = new XWindowHandle(windowId);
+		final boolean present = this.xWindowCache.isPresent(xWindowHandle);
+		final DisplaySurface displayEventTarget = this.xWindowCache.getDisplaySurface(xWindowHandle);
 		if (!present) {
 			configureClientEvents(displayEventTarget);
 			// this is a bit of a dirty hack to work around X's model of client
 			// discovery.
-			final CreationNotify creationNotify = new CreationNotify(displayEventTarget);
-			this.display.post(creationNotify);
+			final DisplaySurfaceCreationNotify displaySurfaceCreationNotify = new DisplaySurfaceCreationNotify(displayEventTarget);
+			this.display.post(displaySurfaceCreationNotify);
 		}
 
 		return Optional.of(displayEventTarget);

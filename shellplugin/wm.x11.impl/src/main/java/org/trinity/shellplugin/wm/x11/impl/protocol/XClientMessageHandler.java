@@ -35,6 +35,7 @@ import org.trinity.foundation.display.x11.api.XEventHandler;
 
 import com.google.common.base.Optional;
 import com.google.inject.Singleton;
+import org.trinity.foundation.display.x11.api.XWindowHandle;
 
 @Bind(multiple = true)
 @Singleton
@@ -52,7 +53,7 @@ public class XClientMessageHandler implements XEventHandler {
 	public Optional<DisplayEvent> handle(@Nonnull final xcb_generic_event_t event) {
 		final xcb_client_message_event_t client_message_event_t = new xcb_client_message_event_t(	xcb_generic_event_t.getCPtr(event),
 																									false);
-		displaySurfacePool.getDisplaySurface(client_message_event_t.getWindow()).post(client_message_event_t);
+		displaySurfacePool.getDisplaySurface(new XWindowHandle(client_message_event_t.getWindow())).post(client_message_event_t);
 		// no conversion possible
 		return Optional.absent();
 	}

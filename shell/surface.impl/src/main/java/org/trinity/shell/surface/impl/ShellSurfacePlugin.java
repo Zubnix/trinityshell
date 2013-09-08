@@ -66,4 +66,9 @@ public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlug
 		this.shellExecutor.awaitTermination(2,
 											TimeUnit.SECONDS);
 	}
+
+	@Override
+	public int runlevel() {
+		return 1;
+	}
 }

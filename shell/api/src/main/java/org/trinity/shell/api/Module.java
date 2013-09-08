@@ -23,6 +23,7 @@ package org.trinity.shell.api;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import org.apache.onami.autobind.annotations.GuiceModule;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.AsyncListenableEventBus;
@@ -66,5 +67,6 @@ class Module extends AbstractModule {
 		bind(ListeningExecutorService.class).annotatedWith(ShellExecutor.class).toInstance(shellExecutor);
 		bind(AsyncListenable.class).annotatedWith(ShellScene.class)
 				.toInstance(new AsyncListenableEventBus(shellExecutor));
+
 	}
 }

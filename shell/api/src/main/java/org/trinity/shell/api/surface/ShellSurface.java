@@ -23,6 +23,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.ShellNode;
+import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -42,7 +43,7 @@ import javax.annotation.Nonnull;
  *
  ***************************************
  */
-public interface ShellSurface extends ShellNode {
+public interface ShellSurface extends ShellNodeParent {
 
 	/***************************************
 	 * The desired delta of the old and new height when this surface's height
@@ -81,7 +82,7 @@ public interface ShellSurface extends ShellNode {
 	 * @return a future {@link DisplaySurface}.
 	 ***************************************
 	 */
-	ListenableFuture<DisplaySurface> getDisplaySurface();
+	DisplaySurface getDisplaySurface();
 
 	/***************************************
 	 * The desired delta of the old and new width when this surface's width

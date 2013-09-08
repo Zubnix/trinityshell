@@ -37,6 +37,7 @@ import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
+import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
 import com.google.common.eventbus.EventBus;
@@ -92,7 +93,7 @@ public class ConfigureNotifyHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(final xcb_generic_event_t event_t) {
 		final xcb_configure_notify_event_t configure_notify_event_t = cast(event_t);
 		final int windowId = configure_notify_event_t.getWindow();
-		return Optional.of(this.xWindowCache.getDisplaySurface(windowId));
+		return Optional.of(this.xWindowCache.getDisplaySurface(new XWindowHandle(windowId)));
 	}
 
 	@Override

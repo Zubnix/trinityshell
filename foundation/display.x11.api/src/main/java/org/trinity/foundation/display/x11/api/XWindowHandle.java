@@ -17,34 +17,46 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.shell.api.surface;
+package org.trinity.foundation.display.x11.api;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.Immutable;
 
-import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.bindingkey.ShellScene;
-import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeParent;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
+@ExecutionContext(DisplayExecutor.class)
+@Immutable
+public class XWindowHandle implements DisplaySurfaceHandle {
 
-/***************************************
- * An {@link AbstractShellSurface} that can have child {@link ShellNode}s.
- *
- ***************************************
- */
-@ExecutionContext(ShellExecutor.class)
-@NotThreadSafe
-public abstract class AbstractShellSurfaceParent extends AbstractShellSurface implements ShellSurfaceParent {
+	private final Integer nativeHandle;
 
-	protected AbstractShellSurfaceParent(	@Nonnull final ShellNodeParent shellRootNode,
-											@Nonnull @ShellScene final AsyncListenable shellScene,
-											@Nonnull@ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	shellRootNode,
-				shellScene,
-				shellExecutor);
+	public XWindowHandle(@Nonnull final Integer nativeHandle) {
+		this.nativeHandle = checkNotNull(nativeHandle);
+	}
+
+	@Override
+	public Integer getNativeHandle() {
+		return this.nativeHandle;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj instanceof DisplaySurfaceHandle) {
+			final DisplaySurfaceHandle otherObj = (DisplaySurfaceHandle) obj;
+			return otherObj.getNativeHandle().equals(getNativeHandle());
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return getNativeHandle().hashCode();
 	}
 }

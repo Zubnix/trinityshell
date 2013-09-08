@@ -37,7 +37,7 @@ import com.google.common.base.Optional;
  */
 @NotThreadSafe
 @ExecutionContext(DisplayExecutor.class)
-public interface XConnection extends Closeable {
+public interface XConnection {
 	/**
 	 * The XCB connection reference. The optional reference will be absent if no
 	 * connection is present.
@@ -46,20 +46,19 @@ public interface XConnection extends Closeable {
 	 */
 	Optional<SWIGTYPE_p_xcb_connection_t> getConnectionReference();
 
-	/**
-	 * Open a connection to an X display server.
-	 *
-	 * @param displayName
-	 *            The display to connect to.
-	 * @param screen
-	 *            The screen of the display to connect to.
-	 */
-	void open(	@Nonnull String displayName,
-				@Nonnegative int screen);
+//	/**
+//	 * Open a connection to an X display server.
+//	 *
+//	 * @param displayName
+//	 *            The display to connect to.
+//	 * @param screen
+//	 *            The screen of the display to connect to.
+//	 */
+//	void open(	@Nonnull String displayName,
+//				@Nonnegative int screen);
 
 	/**
 	 * Close the connection to the underlying X display server.
 	 */
-	@Override
 	void close();
 }

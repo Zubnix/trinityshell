@@ -15,7 +15,6 @@ package org.trinity.bootstrap;
 import org.apache.onami.autobind.configuration.StartupModule;
 import org.apache.onami.autobind.scanner.PackageFilter;
 import org.apache.onami.autobind.scanner.asm.ASMClasspathScanner;
-import org.trinity.foundation.render.qt.impl.QTJRenderApplication;
 import org.trinity.shell.api.plugin.ShellPluginsRunner;
 
 import xcb4j.LibXcbLoader;
@@ -28,9 +27,9 @@ import com.google.inject.Stage;
 public class EntryPoint {
 
 	public static void main(final String[] args) {
-
+		//TODO start javafx application
 		LibXcbLoader.load();
-		QTJRenderApplication.start();
+		
 
 		final Injector injector = Guice.createInjector(	Stage.PRODUCTION,
 														StartupModule.create(ASMClasspathScanner.class,

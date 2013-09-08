@@ -19,6 +19,7 @@
  ******************************************************************************/
 package org.trinity.shell.api.scene;
 
+import com.google.common.base.Optional;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.ExecutionContext;
@@ -150,7 +151,7 @@ public interface ShellNode extends AsyncListenable {
 	ListenableFuture<Boolean> isVisible();
 
 	/***************************************
-	 * Reset any value set by {@link #setX(int)} or {@link #setY(int)} to this
+	 * Reset any value set by {@link #setPosition(Coordinate)} to this
 	 * node's current position.
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
@@ -160,7 +161,7 @@ public interface ShellNode extends AsyncListenable {
 	ListenableFuture<Void> cancelPendingMove();
 
 	/***************************************
-	 * Reset any value set by {@link #setWidth(int)} and {@link #setHeight(int)}
+	 * Reset any value set by {@link #setSize(int, int)}
 	 * to this node's current size.
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
@@ -189,7 +190,7 @@ public interface ShellNode extends AsyncListenable {
 
 	/***************************************
 	 * Change the parent of this node to the parent that was specified in
-	 * {@link #setParent(ShellNodeParent)}.
+	 * {@link #setParent(Optional)}.
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
@@ -282,7 +283,6 @@ public interface ShellNode extends AsyncListenable {
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 * @see #addShellNodeEventHandler(Object).
 	 ***************************************
 	 */
 	ListenableFuture<Void> requestLower();
@@ -295,7 +295,6 @@ public interface ShellNode extends AsyncListenable {
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 * @see #addShellNodeEventHandler(Object).
 	 ***************************************
 	 */
 	ListenableFuture<Void> requestMove();
@@ -309,7 +308,6 @@ public interface ShellNode extends AsyncListenable {
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 * @see #addShellNodeEventHandler(Object).
 	 ***************************************
 	 */
 	ListenableFuture<Void> requestMoveResize();
@@ -322,7 +320,6 @@ public interface ShellNode extends AsyncListenable {
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 * @see #addShellNodeEventHandler(Object).
 	 ***************************************
 	 */
 	ListenableFuture<Void> requestRaise();
@@ -336,7 +333,6 @@ public interface ShellNode extends AsyncListenable {
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 * @see #addShellNodeEventHandler(Object).
 	 ***************************************
 	 */
 	ListenableFuture<Void> requestReparent();
@@ -350,7 +346,6 @@ public interface ShellNode extends AsyncListenable {
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 * @see #addShellNodeEventHandler(Object).
 	 ***************************************
 	 */
 	ListenableFuture<Void> requestResize();
@@ -363,7 +358,6 @@ public interface ShellNode extends AsyncListenable {
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 * @see #addShellNodeEventHandler(Object).
 	 ***************************************
 	 */
 	ListenableFuture<Void> requestShow();
@@ -376,7 +370,6 @@ public interface ShellNode extends AsyncListenable {
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
-	 * @see #addShellNodeEventHandler(Object).
 	 ***************************************
 	 */
 	ListenableFuture<Void> requestHide();
@@ -392,7 +385,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> setParent(final ShellNodeParent parent);
+	ListenableFuture<Void> setParent(final Optional<ShellNodeParent> parent);
 
 	/***************************************
 	 * The shell parent of this node.
@@ -400,7 +393,7 @@ public interface ShellNode extends AsyncListenable {
 	 * @return a future {@link ShellNodeParent}.
 	 ***************************************
 	 */
-	ListenableFuture<ShellNodeParent> getParent();
+	ListenableFuture<Optional<ShellNodeParent>> getParent();
 
 	/**
 	 * The desired transformation of this node. The "0" named properties match
