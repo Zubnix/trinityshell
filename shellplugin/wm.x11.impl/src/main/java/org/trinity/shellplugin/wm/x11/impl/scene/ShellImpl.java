@@ -39,10 +39,14 @@ import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.render.ViewReference;
 import org.trinity.foundation.api.render.binding.Binder;
 import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.foundation.api.shared.Margins;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.plugin.ShellPlugin;
+import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
+import org.trinity.shell.api.scene.manager.ShellLayoutManagerFactory;
+import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
+import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shellplugin.wm.api.Shell;
@@ -53,15 +57,17 @@ import ca.odell.glazedlists.EventList;
 
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Singleton;
 
+// TODO split up this class
 @Bind
+@Singleton
 @ExecutionContext(ShellExecutor.class)
 @NotThreadSafe
-public class ShellImpl extends AbstractIdleService implements Shell, ShellPlugin {
+public class ShellImpl implements Shell {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ShellImpl.class);
 
@@ -71,7 +77,11 @@ public class ShellImpl extends AbstractIdleService implements Shell, ShellPlugin
 	private final EventList<Object> bottomBar = new BasicEventList<>();
 	private final Display display;
 	private final ListeningExecutorService shellExecutor;
+	private final Binder binder;
 	private final ShellSurfaceFactory shellSurfaceFactory;
+	private final ShellLayoutManagerFactory shellLayoutManagerFactory;
+	private final ClientBarElementFactory clientBarElementFactory;
+	private final ListenableFuture<ViewReference> desktopViewFuture;
 
 	private final Set<DisplaySurface> nonClientDisplaySurfaces = Sets.newHashSet();
 
@@ -80,52 +90,16 @@ public class ShellImpl extends AbstractIdleService implements Shell, ShellPlugin
 				@ShellExecutor final ListeningExecutorService shellExecutor,
 				final Binder binder,
 				final ShellSurfaceFactory shellSurfaceFactory,
+				final ShellLayoutManagerFactory shellLayoutManagerFactory,
+				final ClientBarElementFactory clientBarElementFactory,
 				@DesktopViewReference final ListenableFuture<ViewReference> desktopViewFuture) {
 		this.display = display;
 		this.shellExecutor = shellExecutor;
+		this.binder = binder;
 		this.shellSurfaceFactory = shellSurfaceFactory;
-
-		addCallback(desktopViewFuture,
-					new FutureCallback<ViewReference>() {
-						@Override
-						public void onSuccess(final ViewReference viewReference) {
-							binder.bind(shellExecutor,
-										this,
-										viewReference.getView());
-
-							final DisplaySurface viewDisplaySurface = viewReference.getViewDisplaySurface();
-							nonClientDisplaySurfaces.add(viewDisplaySurface);
-							final ShellSurface desktopShellSurface = shellSurfaceFactory
-									.createShellSurface(viewDisplaySurface);
-							configureDesktopShellSurfaceBehavior(desktopShellSurface);
-							handleDesktopShellSurface(desktopShellSurface);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							LOG.error(	"Failed to get ViewReference.",
-										t);
-						}
-					});
-	}
-
-	// called by display thread so we avoid missing any display methods.
-	private void configureDesktopShellSurfaceBehavior(final ShellSurface desktopShellSurface) {
-		desktopShellSurface.register(new Object() {
-			@Subscribe
-			public void handleMoveResizeRequest(final ShellNodeMoveResizeRequestEvent event) {
-				desktopShellSurface.doMoveResize();
-			}
-
-			@Subscribe
-			public void handleShowRequest(final ShellNodeShowRequestEvent event) {
-				desktopShellSurface.doShow();
-			}
-		});
-	}
-
-	private void handleDesktopShellSurface(final ShellSurface desktopShellSurface) {
-		// TODO implement
+		this.shellLayoutManagerFactory = shellLayoutManagerFactory;
+		this.clientBarElementFactory = clientBarElementFactory;
+		this.desktopViewFuture = desktopViewFuture;
 	}
 
 	public EventList<Object> getNotificationsBar() {
@@ -162,31 +136,77 @@ public class ShellImpl extends AbstractIdleService implements Shell, ShellPlugin
 		});
 	}
 
-	// called by shell executor.
 	@Override
-	protected void startUp() {
+	public void start() {
+		addCallback(desktopViewFuture,
+					new FutureCallback<ViewReference>() {
+						@Override
+						public void onSuccess(final ViewReference viewReference) {
+							ShellImpl.this.binder.bind(	shellExecutor,
+														ShellImpl.this,
+														viewReference.getView());
+
+							// FIXME we can still miss display events here.
+							final DisplaySurface viewDisplaySurface = viewReference.getViewDisplaySurface();
+							ShellImpl.this.nonClientDisplaySurfaces.add(viewDisplaySurface);
+							final ShellSurface desktopShellSurface = ShellImpl.this.shellSurfaceFactory
+									.createShellSurface(viewDisplaySurface);
+							configureDesktopShellSurfaceBehavior(desktopShellSurface);
+							handleDesktopShellSurface(desktopShellSurface);
+						}
+
+						@Override
+						public void onFailure(final Throwable t) {
+							LOG.error(	"Failed to get ViewReference.",
+										t);
+						}
+					});
+	}
+
+	// called by display thread so we avoid missing any display methods.
+	private void configureDesktopShellSurfaceBehavior(final ShellSurface desktopShellSurface) {
+		desktopShellSurface.register(new Object() {
+			@Subscribe
+			public void handleMoveResizeRequest(final ShellNodeMoveResizeRequestEvent event) {
+				desktopShellSurface.doMoveResize();
+			}
+
+			@Subscribe
+			public void handleShowRequest(final ShellNodeShowRequestEvent event) {
+				desktopShellSurface.doShow();
+			}
+		});
+	}
+
+	private void handleDesktopShellSurface(final ShellSurface desktopShellSurface) {
+		final ShellLayoutManagerLine clientShellLayoutManagerLine = this.shellLayoutManagerFactory
+				.createShellLayoutManagerLine(desktopShellSurface);
 		// We register without specifying an executor. This
 		// means our listener (@Subscribe method) will be
 		// called by the "Display" thread.
-		this.display.register(this);
+		this.display.register(new Object() {
+			// called by display executor
+			@Subscribe
+			public void handleCreationNotify(final DisplaySurfaceCreationNotify displaySurfaceCreationNotify) {
+				final DisplaySurface displaySurface = displaySurfaceCreationNotify.getDisplaySurface();
+				final ShellSurface clientShellSurface = ShellImpl.this.shellSurfaceFactory
+						.createShellSurface(displaySurface);
+				handleClientShellSurface(	clientShellSurface,
+											clientShellLayoutManagerLine);
+			}
+		});
 		// search & manage existing clients on the display server.
-		find();
-	}
-
-	// called by display executor
-	@Subscribe
-	public void handleCreationNotify(final DisplaySurfaceCreationNotify displaySurfaceCreationNotify) {
-		createClientShellSurface(displaySurfaceCreationNotify.getDisplaySurface());
+		find(clientShellLayoutManagerLine);
 	}
 
 	// called by shell executor.
 	@Override
-	protected void shutDown() throws Exception {
+	public void stop() {
 		this.display.unregister(this);
 	}
 
-	// called by shell executor
-	private void find() {
+	// called by display executor
+	private void find(final ShellLayoutManagerLine shellLayoutManagerLine) {
 		final ListenableFuture<List<DisplaySurface>> clientDisplaySurfaces = this.display.getDisplaySurfaces();
 		// called by display thread
 		addCallback(clientDisplaySurfaces,
@@ -196,7 +216,10 @@ public class ShellImpl extends AbstractIdleService implements Shell, ShellPlugin
 							removeAll(	displaySurfaces,
 										ShellImpl.this.nonClientDisplaySurfaces);
 							for (final DisplaySurface displaySurface : displaySurfaces) {
-								createClientShellSurface(displaySurface);
+								final ShellSurface clientShellSurface = ShellImpl.this.shellSurfaceFactory
+										.createShellSurface(displaySurface);
+								handleClientShellSurface(	clientShellSurface,
+															shellLayoutManagerLine);
 							}
 						}
 
@@ -208,26 +231,28 @@ public class ShellImpl extends AbstractIdleService implements Shell, ShellPlugin
 					});
 	}
 
-	// Called by display executor for new display surfaces.
-	private void createClientShellSurface(final DisplaySurface displaySurface) {
-		final ShellSurface clientShellSurface = this.shellSurfaceFactory.createShellSurface(displaySurface);
+	private void handleClientShellSurface(	final ShellSurface clientShellSurface,
+											final ShellLayoutManagerLine shellLayoutManagerLine) {
 		this.shellExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				handleClientShellSurface(clientShellSurface);
+				shellLayoutManagerLine.addChildNode(clientShellSurface,
+													new ShellLayoutPropertyLine(1,
+																				new Margins(2,
+																							2,
+																							25,
+																							25)));
+				final ClientBarElement clientTopBarItem = clientBarElementFactory
+						.createClientTopBarItem(clientShellSurface);
+				clientShellSurface.register(new Object() {
+					@Subscribe
+					public void handleDestoryed(final ShellNodeDestroyedEvent destroyedEvent) {
+						clientsBar.remove(clientTopBarItem);
+					}
+				});
+				clientsBar.add(clientTopBarItem);
 				return null;
 			}
 		});
-
-	}
-
-    //called by shell executor
-	private void handleClientShellSurface(final ShellSurface clientShellSurface) {
-		// TODO implement
-	}
-
-	@Override
-	public int runlevel() {
-		return 5;
 	}
 }

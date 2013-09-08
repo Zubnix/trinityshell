@@ -31,6 +31,7 @@ import javax.annotation.concurrent.Immutable;
  */
 @Immutable
 @ExecutionContext(DisplayExecutor.class)
+@Deprecated
 public class HideNotify extends DisplayEvent {
 
 }

@@ -32,7 +32,7 @@ class Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		install(new FactoryModuleBuilder().implement(	ClientBarElement.class,
-														ClientBarElement.class).build(ClientBarElementFactory.class));
+        install(new FactoryModuleBuilder().implement(ClientBarElement.class,
+                ClientBarElement.class).build(ClientBarElementFactory.class));
 	}
 }

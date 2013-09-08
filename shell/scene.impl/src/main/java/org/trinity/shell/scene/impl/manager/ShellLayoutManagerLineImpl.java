@@ -20,29 +20,33 @@
 package org.trinity.shell.scene.impl.manager;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.AbstractShellNode;
+import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shell.api.scene.event.*;
+import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMovedResizedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 import org.trinity.shell.api.scene.manager.AbstractShellLayoutManager;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
 import org.trinity.shell.api.scene.manager.ShellLayoutProperty;
 import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 
-import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -60,13 +64,12 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	private static final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(	1,
 																										new Margins(0));
 	private final ChildGeoListener childGeoListener = new ChildGeoListener();
-	private final ShellNodeParent shellNodeParent;
 	private boolean horizontalDirection = true;
 	private boolean inverseDirection = false;
 
 	@AssistedInject
 	ShellLayoutManagerLineImpl(@Assisted final ShellNodeParent shellNodeParent) {
-		this.shellNodeParent = shellNodeParent;
+		super((AbstractShellNodeParent) shellNodeParent);
 	}
 
 	@Override
@@ -296,7 +299,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 			final ShellNode child = shellNodeMoveResizeRequestEvent.getSource();
 			if (getLayoutProperty(child).getWeight() == 0) {
 				child.doResize();
-				layout(shellNodeParent);
+				layout(getShellNodeParent());
 			} else {
 				cancelMoveResize(child);
 			}
@@ -306,14 +309,14 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		@Subscribe
 		public void handleChildDestroyed(final ShellNodeDestroyedEvent shellNodeDestroyedEvent) {
 			removeChild(shellNodeDestroyedEvent.getSource());
-			layout(shellNodeParent);
+			layout(getShellNodeParent());
 		}
 
 		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildReparentRequest(final ShellNodeReparentRequestEvent shellNodeReparentRequestEvent) {
 			shellNodeReparentRequestEvent.getSource().doReparent();
-			layout(shellNodeParent);
+			layout(getShellNodeParent());
 		}
 
 		@SuppressWarnings("unused")

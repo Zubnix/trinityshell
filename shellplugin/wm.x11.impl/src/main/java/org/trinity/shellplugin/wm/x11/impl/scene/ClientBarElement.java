@@ -65,7 +65,6 @@ public class ClientBarElement implements HasText, PointerInputReceiver {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ClientBarElement.class);
 	private final ListeningExecutorService shellExecutor;
-	private final ShellSurface client;
 	private final WmName wmName;
 	private final WmProtocols wmProtocols;
 	private final PointerInputReceiver closeButton = new PointerInputReceiver() {
@@ -96,7 +95,6 @@ public class ClientBarElement implements HasText, PointerInputReceiver {
 		this.wmName = wmName;
 		this.wmProtocols = wmProtocols;
 		this.shellExecutor = shellExecutor;
-		this.client = client;
 
 		this.wmDeleteWindowAtomId = xAtomCache.getAtom("WM_DELETE_WINDOW");
 		this.wmProtocolsAtomId = xAtomCache.getAtom("WM_PROTOCOLS");
@@ -258,7 +256,8 @@ public class ClientBarElement implements HasText, PointerInputReceiver {
 	@Override
 	public void onPointerInput() {
 		//TODO use opaque input surface
+		this.clientXWindow.show();
 		this.clientXWindow.setInputFocus();
-		client.doRaise();
+		this.clientXWindow.raise();
 	}
 }

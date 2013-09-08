@@ -385,7 +385,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> setParent(final Optional<ShellNodeParent> parent);
+	ListenableFuture<Void> setParent(final Optional<? extends ShellNodeParent> parent);
 
 	/***************************************
 	 * The shell parent of this node.

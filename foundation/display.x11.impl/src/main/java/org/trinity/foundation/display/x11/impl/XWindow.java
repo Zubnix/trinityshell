@@ -110,23 +110,23 @@ public final class XWindow implements DisplaySurface {
 	}
 
 	@Override
-	public void register(final Object listener) {
+	public void register(@Nonnull final Object listener) {
 		this.xWindowEventBus.register(listener);
 	}
 
 	@Override
-	public void post(final Object event) {
+	public void post(@Nonnull final Object event) {
 		this.xWindowEventBus.post(event);
 	}
 
 	@Override
-	public void unregister(final Object listener) {
+	public void unregister(@Nonnull final Object listener) {
 		this.xWindowEventBus.unregister(listener);
 	}
 
 	@Override
-	public void register(	final Object listener,
-							final ExecutorService executor) {
+	public void register(@Nonnull	final Object listener,
+	                     @Nonnull	final ExecutorService executor) {
 		this.xWindowEventBus.register(	listener,
 										executor);
 	}
@@ -154,7 +154,7 @@ public final class XWindow implements DisplaySurface {
 	}
 
 	private int getWindowId() {
-		return ((Integer) this.resourceHandle.getNativeHandle()).intValue();
+		return (Integer) this.resourceHandle.getNativeHandle();
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
@@ -313,6 +313,7 @@ public final class XWindow implements DisplaySurface {
 							},this.xExecutor);
 	}
 
+	@Override
 	public ListenableFuture<Void> raise() {
 		final int winId = getWindowId();
 
@@ -336,7 +337,7 @@ public final class XWindow implements DisplaySurface {
 											final int x,
 											final int y) {
 
-		final int parentId = ((Integer) ((DisplaySurface) parent).getDisplaySurfaceHandle().getNativeHandle());
+		final int parentId = (int) parent.getDisplaySurfaceHandle().getNativeHandle();
 		final int winId = getWindowId();
 
 		return this.xExecutor.submit(	new Runnable() {

@@ -27,4 +27,9 @@ public interface Shell {
 	ListenableFuture<Void> addStatusElement(Object element);
 
     ListenableFuture<Void> removeStatusElement(Object element);
+
+    void start();
+
+    // called by shell executor.
+    void stop();
 }

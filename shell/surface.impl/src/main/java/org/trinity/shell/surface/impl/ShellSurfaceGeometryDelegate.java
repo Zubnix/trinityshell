@@ -35,7 +35,7 @@ import com.google.common.base.Optional;
 
 /***************************************
  * A {@link ShellNodeGeometryDelegate} for use with an
- * {@link AbstractShellSurface}.
+ * {@link ShellSurfaceImpl}.
  *
  ***************************************
  */
@@ -43,14 +43,14 @@ import com.google.common.base.Optional;
 @ExecutionContext(ShellExecutor.class)
 public class ShellSurfaceGeometryDelegate implements ShellNodeGeometryDelegate {
 
-	private final AbstractShellSurface abstractShellSurface;
+	private final ShellSurfaceImpl abstractShellSurface;
 
-	public ShellSurfaceGeometryDelegate(final AbstractShellSurface abstractShellSurface) {
+	public ShellSurfaceGeometryDelegate(final ShellSurfaceImpl abstractShellSurface) {
 		this.abstractShellSurface = abstractShellSurface;
 	}
 
 	@Override
-	public AbstractShellSurface getShellNode() {
+	public ShellSurfaceImpl getShellNode() {
 		return abstractShellSurface;
 	}
 
