@@ -53,7 +53,7 @@ import com.google.common.eventbus.Subscribe;
 @NotThreadSafe
 public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
-	private final Map<ShellNode, ShellLayoutProperty> childrenWithLayoutProperty = new LinkedHashMap<ShellNode, ShellLayoutProperty>();
+	private final Map<ShellNode, ShellLayoutProperty> childrenWithLayoutProperty = new LinkedHashMap<>();
     private final AbstractShellNodeParent shellNodeParent;
 
     protected AbstractShellLayoutManager(final AbstractShellNodeParent shellNodeParent) {
@@ -71,6 +71,8 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
         child.doReparent();
 		this.childrenWithLayoutProperty.put(child,
                 layoutProperty);
+
+	    layout(getShellNodeParent());
 	}
 
 	@Override
@@ -110,7 +112,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	@Override
 	public List<ShellNode> getChildren() {
-		return new ArrayList<ShellNode>(this.childrenWithLayoutProperty.keySet());
+		return new ArrayList<>(this.childrenWithLayoutProperty.keySet());
 	}
 
 	@Override

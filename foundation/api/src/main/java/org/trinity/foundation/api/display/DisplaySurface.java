@@ -146,4 +146,7 @@ public interface DisplaySurface extends AsyncListenable {
 
 	@Deprecated
 	ListenableFuture<Void> hide();
+
+	@Deprecated
+	ListenableFuture<Void> raise();
 }
