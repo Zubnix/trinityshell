@@ -75,7 +75,7 @@
 		<!-- widget views qt api -->
 		<dependency>
 			<groupId>org.trinity</groupId>
-			<artifactId>shellplugin.widget.view.qt.api</artifactId>
+			<artifactId>shellplugin.wm.view.javafx</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- window management -->

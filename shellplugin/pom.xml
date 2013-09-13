@@ -11,7 +11,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>widget.view.qt.api</module>
+        <module>wm.view.javafx</module>
 		<module>wm.api</module>
 		<module>wm.x11.impl</module>
 	</modules>

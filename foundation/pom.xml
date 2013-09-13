@@ -15,7 +15,6 @@
 		<module>api</module>
         <module>display.x11.api</module>
 		<module>display.x11.impl</module>
-		<module>render.qt.impl</module>
         <module>render.javafx.impl</module>
 		<module>render.binding.impl</module>
 	</modules>
