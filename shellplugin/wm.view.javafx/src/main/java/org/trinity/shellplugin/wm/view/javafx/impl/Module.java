@@ -1,5 +1,7 @@
 package org.trinity.shellplugin.wm.view.javafx.impl;
 
+import com.cathive.fx.guice.GuiceFXMLLoader;
+import com.google.inject.name.Names;
 import javafx.application.Application;
 
 import org.apache.onami.autobind.annotations.GuiceModule;
