@@ -24,8 +24,9 @@ import com.cathive.fx.guice.fxml.FXMLLoadingModule;
 import com.cathive.fx.guice.prefs.PersistentPropertyModule;
 import com.cathive.fx.guice.thread.FxApplicationThreadModule;
 import com.google.inject.AbstractModule;
+import org.apache.onami.autobind.annotations.GuiceModule;
 
-
+@GuiceModule
 public class FXModule extends AbstractModule {
 
 	private final Runnable applicationStartTask;

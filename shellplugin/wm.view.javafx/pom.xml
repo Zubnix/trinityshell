@@ -46,6 +46,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>shellplugin.wm.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.cathive.fx</groupId>
             <artifactId>fx-guice</artifactId>
             <version>${fx-guice.version}</version>
