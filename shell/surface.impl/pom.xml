@@ -9,6 +9,7 @@
 
 	<artifactId>shell.surface.impl</artifactId>
 	<name>Shell Surface Implementation</name>
+    <packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>

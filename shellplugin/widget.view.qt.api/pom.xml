@@ -11,6 +11,7 @@
 
 	<artifactId>shellplugin.widget.view.qt.api</artifactId>
 	<name>Shellplugin Widget View QtJambi API</name>
+    <packaging>bundle</packaging>
 
 	<repositories>
 		<repository>

@@ -11,4 +11,5 @@
 
 	<artifactId>shellplugin.wm.api</artifactId>
 	<name>Shell Window Manager API</name>
+    <packaging>bundle</packaging>
 </project>

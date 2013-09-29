@@ -1,35 +1,37 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<groupId>org.trinity</groupId>
-		<artifactId>foundation</artifactId>
-		<version>0.0.2</version>
-	</parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.trinity</groupId>
+        <artifactId>foundation</artifactId>
+        <version>0.0.2</version>
+    </parent>
 
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>foundation.render.qt.impl</artifactId>
-	<name>Foundation Render Qt Jambi Implementation</name>
+    <artifactId>foundation.render.qt.impl</artifactId>
+    <name>Foundation Render Qt Jambi Implementation</name>
+    <packaging>bundle</packaging>
 
-	<repositories>
-		<repository>
-			<id>qtjambi</id>
-			<name>qtjambi</name>
-			<url>http://qtjambi.sourceforge.net/maven2/</url>
-			<releases>
-			</releases>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>qtjambi</id>
+            <name>qtjambi</name>
+            <url>http://qtjambi.sourceforge.net/maven2/</url>
+            <releases>
+            </releases>
+        </repository>
+    </repositories>
 
-	<dependencies>
-		<dependency>
-			<groupId>net.sf.qtjambi</groupId>
-			<artifactId>qtjambi</artifactId>
-			<!-- <version>4.5.2_01</version> -->
-			<version>4.6.3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>foundation.api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>net.sf.qtjambi</groupId>
+            <artifactId>qtjambi</artifactId>
+            <!-- <version>4.5.2_01</version> -->
+            <version>4.6.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>foundation.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
