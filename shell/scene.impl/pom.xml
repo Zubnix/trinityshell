@@ -9,6 +9,7 @@
 
 	<artifactId>shell.scene.impl</artifactId>
 	<name>Shell Scene implementation</name>
+    <packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>

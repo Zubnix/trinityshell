@@ -9,6 +9,7 @@
 
 	<artifactId>shell.api</artifactId>
 	<name>Shell API</name>
+	<packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>

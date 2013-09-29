@@ -9,6 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>foundation.render.binding.impl</artifactId>
 	<name>Foundation Render Binding Implementation</name>
+	<packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>

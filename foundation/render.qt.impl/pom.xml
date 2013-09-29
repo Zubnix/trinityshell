@@ -8,6 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>foundation.render.qt.impl</artifactId>
 	<name>Foundation Render Qt Jambi Implementation</name>
+	<packaging>bundle</packaging>
 
 	<repositories>
 		<repository>

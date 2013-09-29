@@ -10,7 +10,7 @@
 
 	<artifactId>foundation.display.x11.api</artifactId>
 	<name>Foundation Implementation X Display API</name>
-
+	<packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>

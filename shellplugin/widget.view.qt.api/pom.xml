@@ -1,38 +1,39 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.trinity</groupId>
-        <artifactId>shellplugin</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>org.trinity</groupId>
+		<artifactId>shellplugin</artifactId>
+		<version>0.0.3-SNAPSHOT</version>
+	</parent>
 
-    <artifactId>shellplugin.widget.view.qt.api</artifactId>
-    <name>Shellplugin Widget View QtJambi API</name>
+	<artifactId>shellplugin.widget.view.qt.api</artifactId>
+	<name>Shellplugin Widget View QtJambi API</name>
+	<packaging>bundle</packaging>
 
-    <repositories>
-        <repository>
-            <id>qtjambi</id>
-            <name>qtjambi</name>
-            <url>http://qtjambi.sourceforge.net/maven2/</url>
-            <releases>
-            </releases>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>qtjambi</id>
+			<name>qtjambi</name>
+			<url>http://qtjambi.sourceforge.net/maven2/</url>
+			<releases>
+			</releases>
+		</repository>
+	</repositories>
 
-    <dependencies>
-        <dependency>
-            <groupId>net.sf.qtjambi</groupId>
-            <artifactId>qtjambi</artifactId>
-            <!-- <version>4.5.2_01</version> -->
-            <version>4.6.3.2</version>
-        </dependency>
-        <dependency>
+	<dependencies>
+		<dependency>
+			<groupId>net.sf.qtjambi</groupId>
+			<artifactId>qtjambi</artifactId>
+			<!-- <version>4.5.2_01</version> -->
+			<version>4.6.3.2</version>
+		</dependency>
+		<dependency>
             <groupId>org.trinity</groupId>
             <version>${project.version}</version>
             <artifactId>shellplugin.wm.x11.impl</artifactId>
         </dependency>
-    </dependencies>
+	</dependencies>
 </project>
