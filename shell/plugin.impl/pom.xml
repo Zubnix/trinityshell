@@ -9,6 +9,7 @@
 
 	<artifactId>shell.plugin.impl</artifactId>
 	<name>Shell Plugin Implementation</name>
+    <packaging>bundle</packaging>
 
 	<dependencies>
 		<dependency>

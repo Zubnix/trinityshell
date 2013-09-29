@@ -4,7 +4,7 @@
 
     <groupId>org.trinity</groupId>
     <artifactId>trinity</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+   <version>0.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Trinity</name>
@@ -128,10 +128,8 @@
         </dependency>
 
     </dependencies>
-
     <build>
         <plugins>
-            <!-- Turn on error-prone -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -139,21 +137,7 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
-                    <compilerId>javac-with-errorprone</compilerId>
-                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.plexus</groupId>
-                        <artifactId>plexus-compiler-javac</artifactId>
-                        <version>2.3</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.codehaus.plexus</groupId>
-                        <artifactId>plexus-compiler-javac-errorprone</artifactId>
-                        <version>2.3</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

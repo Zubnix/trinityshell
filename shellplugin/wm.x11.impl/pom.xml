@@ -11,6 +11,7 @@
 
     <artifactId>shellplugin.wm.x11.impl</artifactId>
     <name>Shell Window Manager X11 implementation</name>
+    <packaging>bundle</packaging>
 
     <properties>
         <!-- dep versions -->
