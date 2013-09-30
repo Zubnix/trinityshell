@@ -1,56 +1,39 @@
 package org.trinity.shellplugin.wm.view.javafx.impl;
 
-import java.io.IOException;
-import java.util.concurrent.Callable;
-
 import com.cathive.fx.guice.GuiceFXMLLoader;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import javafx.application.Platform;
+import org.trinity.foundation.api.display.DisplaySurfacePool;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 
-import javafx.scene.Node;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.render.ViewReference;
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListenableFutureTask;
-import com.google.inject.Provider;
 
-public class DesktopViewReferenceProvider implements Provider<ListenableFuture<ViewReference>> {
+public class DesktopViewReferenceProvider extends AbstractFXViewReferenceProvider {
 
-	private final GuiceFXMLLoader fxmlLoader;
+    private GuiceFXMLLoader fxmlLoader;
 
-	@Inject
-	DesktopViewReferenceProvider(GuiceFXMLLoader fxmlLoader) {
-		this.fxmlLoader = fxmlLoader;
-	}
+    @Inject
+    DesktopViewReferenceProvider(
+            @Nonnull @DisplayExecutor ListeningExecutorService displayExecutor,
+            @Nonnull DisplaySurfacePool displaySurfacePool,
+            GuiceFXMLLoader fxmlLoader
+    ) {
+        super(
+                displayExecutor,
+                displaySurfacePool,
+                fxmlLoader
+        );
+        this.fxmlLoader = fxmlLoader;
+    }
 
-	@Override
-	public ListenableFuture<ViewReference> get() {
-
-		ListenableFutureTask<ViewReference> task = ListenableFutureTask.create(new Callable<ViewReference>() {
-			@Override
-			public ViewReference call() throws Exception {
-				return constructViewReference();
-			}
-		});
-		Platform.runLater(task);
-		return task;
-	}
-
-	private ViewReference constructViewReference() throws IOException {
-		GuiceFXMLLoader.Result desktopNodeResult = fxmlLoader.load(getClass().getResource("Desktop.fxml"));
-		desktopNodeResult.getController();
-
-		return new ViewReference() {
-			@Override
-			public Object getView() {
-				return null;  //To change body of implemented methods use File | Settings | File Templates.
-			}
-
-			@Override
-			public DisplaySurface getViewDisplaySurface() {
-				return null;  //To change body of implemented methods use File | Settings | File Templates.
-			}
-		};
-	}
+    @Override
+    protected GuiceFXMLLoader.Result createViewObject() {
+        try {
+            return this.fxmlLoader.load(getClass().getResource("Desktop.fxml"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
