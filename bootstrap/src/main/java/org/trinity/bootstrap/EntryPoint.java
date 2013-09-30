@@ -12,30 +12,27 @@
  */
 package org.trinity.bootstrap;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Stage;
 import org.apache.onami.autobind.configuration.StartupModule;
 import org.apache.onami.autobind.scanner.PackageFilter;
 import org.apache.onami.autobind.scanner.asm.ASMClasspathScanner;
 import org.trinity.shell.api.plugin.ShellPluginsRunner;
-
-import org.trinity.shellplugin.wm.view.javafx.api.AbstractApplication;
 import xcb4j.LibXcbLoader;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Stage;
 
 
 public class EntryPoint {
 
-	public static void main(final String[] args) {
-		//TODO make a more generic 'pre' initialization mechanism
-		LibXcbLoader.load();
+    public static void main(final String[] args) {
+        //TODO make a more generic 'pre' initialization mechanism
+        LibXcbLoader.load();
 
-		final Injector injector = Guice.createInjector(	Stage.PRODUCTION,
-														StartupModule.create(ASMClasspathScanner.class,
-																PackageFilter.create("org.trinity")));
+        final Injector injector = Guice.createInjector(Stage.PRODUCTION,
+                StartupModule.create(ASMClasspathScanner.class,
+                        PackageFilter.create("org.trinity")));
 
-		final ShellPluginsRunner shellPluginsRunner = injector.getInstance(ShellPluginsRunner.class);
-		shellPluginsRunner.startAll();
-	}
+        final ShellPluginsRunner shellPluginsRunner = injector.getInstance(ShellPluginsRunner.class);
+        shellPluginsRunner.startAll();
+    }
 }

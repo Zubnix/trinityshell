@@ -18,38 +18,40 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
 
-package org.trinity.shellplugin.wm.view.javafx.api;
+package org.trinity.foundation.render.javafx.api;
 
 import com.cathive.fx.guice.fxml.FXMLLoadingModule;
 import com.cathive.fx.guice.prefs.PersistentPropertyModule;
 import com.cathive.fx.guice.thread.FxApplicationThreadModule;
 import com.google.inject.AbstractModule;
-import org.apache.onami.autobind.annotations.GuiceModule;
 
-@GuiceModule
-public class FXModule extends AbstractModule {
+public abstract class FXModule extends AbstractModule {
 
-	private final Runnable applicationStartTask;
+    private final Runnable applicationStartTask;
 
-	public FXModule(Runnable applicationStartTask) {
-		this.applicationStartTask = applicationStartTask;
-	}
+    protected FXModule(Runnable applicationStartTask) {
+        this.applicationStartTask = applicationStartTask;
+    }
 
-	@Override
-	protected void configure() {
+    @Override
+    protected void configure() {
 
-		install(new FXMLLoadingModule());
-		install(new FxApplicationThreadModule());
-		install(new PersistentPropertyModule());
+        install(new FXMLLoadingModule());
+        install(new FxApplicationThreadModule());
+        install(new PersistentPropertyModule());
 
-		new Thread(	applicationStartTask,
-					"JFX Application").start();
-		try {
-			final AbstractApplication application = AbstractApplication.GET();
-			requestInjection(application);
-			bind((Class<AbstractApplication>) application.getClass()).toInstance(application);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-	}
+        new Thread(applicationStartTask,
+                   "JFX Application").start();
+        try {
+            final AbstractApplication application = AbstractApplication.GET();
+            requestInjection(application);
+            bind((Class<AbstractApplication>) application.getClass()).toInstance(application);
+        } catch(InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        fxConfigure();
+    }
+
+    protected abstract void fxConfigure();
 }
