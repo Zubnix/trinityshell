@@ -25,11 +25,11 @@ import com.cathive.fx.guice.prefs.PersistentPropertyModule;
 import com.cathive.fx.guice.thread.FxApplicationThreadModule;
 import com.google.inject.AbstractModule;
 
-public abstract class FXModule extends AbstractModule {
+public abstract class AbstractFXModule extends AbstractModule {
 
     private final Runnable applicationStartTask;
 
-    protected FXModule(Runnable applicationStartTask) {
+    protected AbstractFXModule(Runnable applicationStartTask) {
         this.applicationStartTask = applicationStartTask;
     }
 
@@ -43,9 +43,9 @@ public abstract class FXModule extends AbstractModule {
         new Thread(applicationStartTask,
                    "JFX Application").start();
         try {
-            final AbstractApplication application = AbstractApplication.GET();
+            final AbstractFXApplication application = AbstractFXApplication.GET();
             requestInjection(application);
-            bind((Class<AbstractApplication>) application.getClass()).toInstance(application);
+            bind((Class<AbstractFXApplication>) application.getClass()).toInstance(application);
         } catch(InterruptedException e) {
             throw new RuntimeException(e);
         }

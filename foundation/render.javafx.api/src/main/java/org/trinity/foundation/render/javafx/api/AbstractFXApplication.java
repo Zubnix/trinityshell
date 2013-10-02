@@ -4,10 +4,10 @@ import javafx.application.Application;
 
 import java.util.concurrent.CountDownLatch;
 
-public abstract class AbstractApplication extends Application {
+public abstract class AbstractFXApplication extends Application {
 
     private static final CountDownLatch INSTANCE_LATCH = new CountDownLatch(1);
-    private static AbstractApplication INSTANCE;
+    private static AbstractFXApplication INSTANCE;
 
     @Override
     public void init() {
@@ -15,7 +15,7 @@ public abstract class AbstractApplication extends Application {
         INSTANCE_LATCH.countDown();
     }
 
-    public static AbstractApplication GET() throws InterruptedException {
+    public static AbstractFXApplication GET() throws InterruptedException {
         INSTANCE_LATCH.await();
         return INSTANCE;
     }
