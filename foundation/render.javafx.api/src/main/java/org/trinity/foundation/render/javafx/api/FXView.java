@@ -17,30 +17,39 @@ public class FXView extends Region {
     private static final Logger LOG = LoggerFactory.getLogger(FXView.class);
 
     private final String resourcePath = "%s.fxml";
-    private GuiceFXMLLoader loader;
+    private final GuiceFXMLLoader loader;
 
-    protected FXView(@Nonnull GuiceFXMLLoader loader) {
+    protected FXView(@Nonnull final GuiceFXMLLoader loader) {
         this.loader = loader;
         this.loadFXML();
     }
 
     private void loadFXML() {
         try {
-            GuiceFXMLLoader.Result result = loader.load(this.getViewURL());
-            Node root = result.getRoot();
+            final GuiceFXMLLoader.Result result = loader.load(this.getViewURL());
+            final Node root = result.getRoot();
             this.getChildren().add(root);
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             LOG.error("",
-                      ex);
+                    ex);
         }
     }
 
     private String getViewPath() {
         return String.format(resourcePath,
-                             this.getClass().getSimpleName());
+                this.getClass().getSimpleName());
     }
 
     private URL getViewURL() {
         return this.getClass().getClassLoader().getResource(this.getViewPath());
+    }
+
+    public void setParent(final FXView parentFxView) {
+        parentFxView.getChildren().add(this);
+    }
+
+    public void close() {
+        final FXView parent = (FXView) getParent();
+        parent.getChildren().remove(this);
     }
 }
