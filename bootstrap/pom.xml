@@ -1,118 +1,124 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<artifactId>trinity</artifactId>
-		<groupId>org.trinity</groupId>
-		<version>0.0.3-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <artifactId>trinity</artifactId>
+        <groupId>org.trinity</groupId>
+        <version>0.0.3-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>bootstrap</artifactId>
-	<name>Trinitry Bootstrap</name>
+    <artifactId>bootstrap</artifactId>
+    <name>Trinitry Bootstrap</name>
 
-	<dependencies>
-		<!-- foundation api -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>foundation.api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-
-		<!--foundation implementation -->
-		<!-- display X11 -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>foundation.display.x11.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<!-- render qt -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>foundation.render.qt.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<!-- render bindings -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>foundation.render.binding.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+    <dependencies>
+        <!-- foundation api -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>foundation.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- render javafx -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>foundation.render.javafx.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
 
-		<!-- shell api -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>shell.api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+        <!--foundation implementation -->
+        <!-- display X11 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>foundation.display.x11.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- render javafx -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>foundation.render.javafx.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- render bindings -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>foundation.render.binding.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
 
-		<!-- shell implementation -->
-		<!-- scene -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>shell.scene.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<!-- surface -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>shell.surface.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<!-- plugin -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>shell.plugin.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+        <!-- shell api -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>shell.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
 
-		<!-- shellplugins -->
-		<!-- widget views qt api -->
-		<dependency>
-			<groupId>org.trinity</groupId>
-			<artifactId>shellplugin.wm.view.javafx</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<!-- window management -->
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>shellplugin.wm.api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>shellplugin.wm.x11.impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+        <!-- shell implementation -->
+        <!-- scene -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>shell.scene.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- surface -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>shell.surface.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- plugin -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>shell.plugin.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <!-- shellplugins -->
+        <!-- widget views qt api -->
+        <dependency>
+            <groupId>org.trinity</groupId>
+            <artifactId>shellplugin.wm.view.javafx</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- window management -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>shellplugin.wm.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>shellplugin.wm.x11.impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- logging implementation -->
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.0.10</version>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.10</version>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>org.trinity.bootstrap.EntryPoint</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.trinity.bootstrap.EntryPoint</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

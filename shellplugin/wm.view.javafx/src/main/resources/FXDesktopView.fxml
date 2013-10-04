@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.BorderPane?>
-<BorderPane id="BorderPane" fx:id="desktop" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-            minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1"
-            xmlns="http://javafx.com/javafx/2.2"
-            fx:controller="org.trinity.shellplugin.wm.view.javafx.impl.FXDesktopView"/>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/2.2" styleClass="desktop">
+    <top>
+        <HBox styleClass=".top-bar" spacing="0" prefHeight="25" />
+    </top>
+
+    <center>
+        <AnchorPane styleClass=".application-area"/>
+    </center>
+
+    <bottom>
+        <HBox styleClass=".bottom-bar" spacing="0" prefHeight="25" />
+    </bottom>
+</BorderPane>

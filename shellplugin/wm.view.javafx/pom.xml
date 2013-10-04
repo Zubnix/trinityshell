@@ -36,6 +36,11 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>shellplugin.wm.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>foundation.render.javafx.api</artifactId>
             <version>${project.version}</version>
         </dependency>

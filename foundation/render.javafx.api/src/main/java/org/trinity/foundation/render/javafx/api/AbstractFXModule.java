@@ -29,7 +29,7 @@ public abstract class AbstractFXModule extends AbstractModule {
 
     private final Runnable applicationStartTask;
 
-    protected AbstractFXModule(Runnable applicationStartTask) {
+    protected AbstractFXModule(final Runnable applicationStartTask) {
         this.applicationStartTask = applicationStartTask;
     }
 

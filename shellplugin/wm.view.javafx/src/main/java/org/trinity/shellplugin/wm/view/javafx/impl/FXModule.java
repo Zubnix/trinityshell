@@ -7,6 +7,7 @@ import org.apache.onami.autobind.annotations.GuiceModule;
 import org.trinity.foundation.api.render.ViewReference;
 import org.trinity.foundation.render.javafx.api.AbstractFXModule;
 import org.trinity.foundation.render.javafx.api.FXViewReferenceProvider;
+import org.trinity.shellplugin.wm.api.viewreferencekey.DesktopViewReference;
 
 @GuiceModule
 public class FXModule extends AbstractFXModule {
@@ -22,6 +23,6 @@ public class FXModule extends AbstractFXModule {
     @Override
     protected void fxConfigure() {
         bind(new TypeLiteral<ListenableFuture<ViewReference>>() {
-        }).toProvider(new FXViewReferenceProvider<>(FXDesktopView.class));
+        }).annotatedWith(DesktopViewReference.class).toProvider(new FXViewReferenceProvider<>(FXDesktopView.class));
     }
 }
