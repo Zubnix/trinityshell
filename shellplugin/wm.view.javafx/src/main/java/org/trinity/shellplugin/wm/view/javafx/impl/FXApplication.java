@@ -2,6 +2,7 @@ package org.trinity.shellplugin.wm.view.javafx.impl;
 
 
 import com.cathive.fx.guice.GuiceApplication;
+import com.google.inject.Injector;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
@@ -13,6 +14,8 @@ public abstract class FXApplication extends GuiceApplication {
 
     @Inject
     private FXDesktopView desktop;
+    @Inject
+    private Injector injector;
 
     @Override
     public void start(final Stage stage) throws Exception {
@@ -23,5 +26,11 @@ public abstract class FXApplication extends GuiceApplication {
         stage.setHeight(r.getHeight());
         stage.setScene(scene);
         stage.show();
+
+        postStart();
+    }
+
+    public void postStart() {
+
     }
 }

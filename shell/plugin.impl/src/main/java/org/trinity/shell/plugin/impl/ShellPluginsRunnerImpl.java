@@ -19,86 +19,88 @@
  ******************************************************************************/
 package org.trinity.shell.plugin.impl;
 
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.Service.Listener;
+import com.google.common.util.concurrent.Service.State;
+import org.apache.onami.autobind.annotations.Bind;
+import org.trinity.shell.api.plugin.ShellPlugin;
+import org.trinity.shell.api.plugin.ShellPluginsRunner;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import org.apache.onami.autobind.annotations.Bind;
-import org.trinity.shell.api.plugin.ShellPlugin;
-import org.trinity.shell.api.plugin.ShellPluginsRunner;
-
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.common.util.concurrent.Service.Listener;
-import com.google.common.util.concurrent.Service.State;
-
 @Bind
 @Singleton
 public class ShellPluginsRunnerImpl implements ShellPluginsRunner {
 
-	private final List<ShellPlugin> shellPlugins;
+    private final List<ShellPlugin> shellPlugins;
 
-	@Inject
-	ShellPluginsRunnerImpl(final Set<ShellPlugin> shellPlugins) {
-		this.shellPlugins = new ArrayList<ShellPlugin>(shellPlugins);
-		Collections.sort(this.shellPlugins, new Comparator<ShellPlugin>() {
-			@Override
-			public int compare(final ShellPlugin o1, final ShellPlugin o2) {
-				return o1.runlevel()-o2.runlevel();
-			}
-		});
-        startAll();
-	}
+    @Inject
+    ShellPluginsRunnerImpl(final Set<ShellPlugin> shellPlugins) {
+        this.shellPlugins = new ArrayList<ShellPlugin>(shellPlugins);
+        Collections.sort(this.shellPlugins,
+                         new Comparator<ShellPlugin>() {
+                             @Override
+                             public int compare(final ShellPlugin o1,
+                                                final ShellPlugin o2) {
+                                 return o1.runlevel() - o2.runlevel();
+                             }
+                         });
+    }
 
-	@Override
-	public void startAll() {
-		for (final ShellPlugin shellPlugin : this.shellPlugins) {
-			shellPlugin.addListener(new Listener() {
-										@Override
-										public void terminated(final State from) {
-											System.err.println(String.format(	"%s TERMINATED (was %s)",
-																				shellPlugin,
-																				from));
-										}
-										@Override
-										public void stopping(final State from) {
-											System.err.println(String.format(	"%s STOPPING (was %s)",
-																				shellPlugin,
-																				from));
-										}
-										@Override
-										public void starting() {
-											System.err.println(String.format(	"%s STARTING",
-																				shellPlugin));
-										}
-										@Override
-										public void running() {
-											System.err.println(String.format(	"%s RUNNING",
-																				shellPlugin));
-										}
+    @Override
+    public void startAll() {
+        for(final ShellPlugin shellPlugin : this.shellPlugins) {
+            shellPlugin.addListener(new Listener() {
+                @Override
+                public void terminated(final State from) {
+                    System.err.println(String.format("%s TERMINATED (was %s)",
+                                                     shellPlugin,
+                                                     from));
+                }
 
-										@Override
-										public void failed(	final State from,
-															final Throwable failure) {
-											System.err.println(String.format(	"%s FAILED (was %s)",
-																				shellPlugin,
-																				from));
-											failure.printStackTrace();
-										}
-									},
-									MoreExecutors.sameThreadExecutor());
-			shellPlugin.start();
-		}
-	}
+                @Override
+                public void stopping(final State from) {
+                    System.err.println(String.format("%s STOPPING (was %s)",
+                                                     shellPlugin,
+                                                     from));
+                }
 
-	@Override
-	public void stopAll() {
-		for (final ShellPlugin shellPlugin : this.shellPlugins) {
-			shellPlugin.stop();
-		}
-	}
+                @Override
+                public void starting() {
+                    System.err.println(String.format("%s STARTING",
+                                                     shellPlugin));
+                }
+
+                @Override
+                public void running() {
+                    System.err.println(String.format("%s RUNNING",
+                                                     shellPlugin));
+                }
+
+                @Override
+                public void failed(final State from,
+                                   final Throwable failure) {
+                    System.err.println(String.format("%s FAILED (was %s)",
+                                                     shellPlugin,
+                                                     from));
+                    failure.printStackTrace();
+                }
+            },
+                                    MoreExecutors.sameThreadExecutor());
+            shellPlugin.start();
+        }
+    }
+
+    @Override
+    public void stopAll() {
+        for(final ShellPlugin shellPlugin : this.shellPlugins) {
+            shellPlugin.stop();
+        }
+    }
 }

@@ -16,6 +16,7 @@ import com.google.inject.Module;
 import org.apache.onami.autobind.configuration.StartupModule;
 import org.apache.onami.autobind.scanner.PackageFilter;
 import org.apache.onami.autobind.scanner.asm.ASMClasspathScanner;
+import org.trinity.shell.api.plugin.ShellPluginsRunner;
 import org.trinity.shellplugin.wm.view.javafx.impl.FXApplication;
 import xcb4j.LibXcbLoader;
 
@@ -34,5 +35,11 @@ public class EntryPoint extends FXApplication {
         StartupModule startupModule = StartupModule.create(ASMClasspathScanner.class,
                                                            PackageFilter.create("org.trinity"));
         modules.add(startupModule);
+    }
+
+    @Override
+    public void postStart() {
+        ShellPluginsRunner instance = getInjector().getInstance(ShellPluginsRunner.class);
+        instance.startAll();
     }
 }
