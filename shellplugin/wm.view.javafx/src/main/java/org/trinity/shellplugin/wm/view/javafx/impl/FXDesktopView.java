@@ -6,11 +6,13 @@ import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.render.javafx.api.FXView;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 
 
 @Bind(to = @To(IMPLEMENTATION))
+@Singleton
 public class FXDesktopView extends FXView {
 
     @Inject
