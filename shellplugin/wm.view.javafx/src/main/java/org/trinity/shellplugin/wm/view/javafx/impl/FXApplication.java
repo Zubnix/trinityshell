@@ -1,19 +1,18 @@
 package org.trinity.shellplugin.wm.view.javafx.impl;
 
+
+import com.cathive.fx.guice.GuiceApplication;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.layout.Region;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.trinity.foundation.render.javafx.api.AbstractFXApplication;
 
 import javax.inject.Inject;
 
-
-public class FXApplication extends AbstractFXApplication {
+public abstract class FXApplication extends GuiceApplication {
 
     @Inject
-    private Region desktop;
+    private FXDesktopView desktop;
 
     @Override
     public void start(final Stage stage) throws Exception {
@@ -23,5 +22,6 @@ public class FXApplication extends AbstractFXApplication {
         stage.setWidth(r.getWidth());
         stage.setHeight(r.getHeight());
         stage.setScene(scene);
+        stage.show();
     }
 }

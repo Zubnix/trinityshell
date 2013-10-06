@@ -51,6 +51,7 @@ public class ShellPluginsRunnerImpl implements ShellPluginsRunner {
 				return o1.runlevel()-o2.runlevel();
 			}
 		});
+        startAll();
 	}
 
 	@Override

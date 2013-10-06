@@ -1,0 +1,23 @@
+.view {
+    -fx-skin: "org.trinity.shellplugin.wm.view.javafx.impl.FXDesktopSkin";
+}
+
+.skin {
+
+}
+
+.desktop {
+    -fx-background-color: gray;
+}
+
+.top-bar {
+    -fx-background-color: white;
+}
+
+.bottom-bar {
+    -fx-background-color: white;
+}
+
+.application-area {
+
+}

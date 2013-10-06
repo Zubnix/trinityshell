@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml" styleClass="skin">
+    <BorderPane styleClass="desktop">
+        <top>
+            <HBox styleClass="top-bar" spacing="0" prefHeight="25"/>
+        </top>
+
+        <center>
+            <AnchorPane styleClass="application-area"/>
+        </center>
+
+        <bottom>
+            <HBox styleClass="bottom-bar" spacing="0" prefHeight="25"/>
+        </bottom>
+    </BorderPane>
+</fx:root>

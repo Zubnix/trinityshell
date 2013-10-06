@@ -12,27 +12,27 @@
  */
 package org.trinity.bootstrap;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Stage;
+import com.google.inject.Module;
 import org.apache.onami.autobind.configuration.StartupModule;
 import org.apache.onami.autobind.scanner.PackageFilter;
 import org.apache.onami.autobind.scanner.asm.ASMClasspathScanner;
-import org.trinity.shell.api.plugin.ShellPluginsRunner;
+import org.trinity.shellplugin.wm.view.javafx.impl.FXApplication;
 import xcb4j.LibXcbLoader;
 
+import java.util.List;
 
-public class EntryPoint {
+
+public class EntryPoint extends FXApplication {
 
     public static void main(final String[] args) {
-        //TODO make a more generic 'pre' initialization mechanism
         LibXcbLoader.load();
+        launch(args);
+    }
 
-        final Injector injector = Guice.createInjector(Stage.PRODUCTION,
-                StartupModule.create(ASMClasspathScanner.class,
-                        PackageFilter.create("org.trinity")));
-
-        final ShellPluginsRunner shellPluginsRunner = injector.getInstance(ShellPluginsRunner.class);
-        shellPluginsRunner.startAll();
+    @Override
+    public void init(final List<Module> modules) throws Exception {
+        StartupModule startupModule = StartupModule.create(ASMClasspathScanner.class,
+                                                           PackageFilter.create("org.trinity"));
+        modules.add(startupModule);
     }
 }

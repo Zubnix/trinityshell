@@ -28,6 +28,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceCreator;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 
 import javax.inject.Inject;
 import java.util.concurrent.Callable;
@@ -38,6 +39,7 @@ import static com.google.common.util.concurrent.ListenableFutureTask.create;
 public abstract class AbstractViewReferenceProvider<V> implements Provider<ListenableFuture<ViewReference>> {
 
     @Inject
+    @DisplayExecutor
     private ListeningExecutorService displayExecutor;
     @Inject
     private DisplaySurfacePool displaySurfacePool;
