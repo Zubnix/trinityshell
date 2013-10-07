@@ -2,13 +2,18 @@ package org.trinity.shellplugin.wm.view.javafx;
 
 
 import com.cathive.fx.guice.GuiceApplication;
+import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import javax.inject.Inject;
+import java.util.Set;
+
+import static com.google.inject.Stage.PRODUCTION;
 
 public abstract class FXApplication extends GuiceApplication {
 

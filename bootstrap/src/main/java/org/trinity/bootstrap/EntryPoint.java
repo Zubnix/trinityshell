@@ -12,6 +12,8 @@
  */
 package org.trinity.bootstrap;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.google.inject.Module;
 import org.apache.onami.autobind.configuration.StartupModule;
 import org.apache.onami.autobind.scanner.PackageFilter;
@@ -21,6 +23,9 @@ import org.trinity.shellplugin.wm.view.javafx.FXApplication;
 import xcb4j.LibXcbLoader;
 
 import java.util.List;
+import java.util.Set;
+
+import static com.google.inject.Stage.PRODUCTION;
 
 
 public class EntryPoint extends FXApplication {
@@ -35,6 +40,12 @@ public class EntryPoint extends FXApplication {
         final StartupModule startupModule = StartupModule.create(ASMClasspathScanner.class,
                                                            PackageFilter.create("org.trinity"));
         modules.add(startupModule);
+    }
+
+    @Override
+    protected Injector createInjector(final Set<Module> modules) {
+        return Guice.createInjector(PRODUCTION,
+                                    modules);
     }
 
     @Override

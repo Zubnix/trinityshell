@@ -19,18 +19,10 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
-import static java.util.concurrent.Executors.newSingleThreadExecutor;
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
-import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
-import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.ThreadFactory;
-
-import javax.annotation.concurrent.NotThreadSafe;
-
+import com.google.common.eventbus.EventBus;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_event_t;
@@ -41,10 +33,16 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.concurrent.NotThreadSafe;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadFactory;
+
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
+import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
+import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 
 @Bind(to = @To(IMPLEMENTATION))
 @Singleton
@@ -77,14 +75,14 @@ public class XEventPump implements Callable<Void> {
 
 	@Override
 	public Void call() {
-		waitForExternal.acquireUninterruptibly();
-		try {
-			final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference()
-					.get());
 
-			if (xcb_connection_has_error(this.connection.getConnectionReference().get()) != 0) {
-				final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
-				XEventPump.LOG.error(errorMsg);
+        final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference()
+                                                                                        .get());
+        waitForExternal.acquireUninterruptibly();
+        try {
+            if(xcb_connection_has_error(this.connection.getConnectionReference().get()) != 0) {
+                final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
+                XEventPump.LOG.error(errorMsg);
 				throw new Error(errorMsg);
 			}
 
@@ -112,6 +110,6 @@ public class XEventPump implements Callable<Void> {
 	}
 
 	public synchronized void stop() {
-		waitForExternal.tryAcquire();
-	}
+        waitForExternal.acquireUninterruptibly();
+    }
 }

@@ -7,3 +7,6 @@
 [submodule "externals/autobind"]
 	path = externals/autobind
 	url = https://github.com/Zubnix/apache-onami-autobind.git
+[submodule "externals/fx-guice"]
+	path = externals/fx-guice
+	url = git@github.com:Zubnix/fx-guice.git
