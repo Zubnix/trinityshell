@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.wm.view.javafx.impl;
+package org.trinity.shellplugin.wm.view.javafx;
 
 
 import org.apache.onami.autobind.annotations.Bind;
@@ -13,15 +13,15 @@ import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 
 @Bind(to = @To(IMPLEMENTATION))
 @Singleton
-public class FXDesktopView extends FXView {
+public class DesktopView extends FXView {
 
     @Inject
-    FXDesktopView() {
-        getStyleClass().add("view");
+    DesktopView() {
+        getStyleClass().add("desktop-view");
     }
 
     @Override
     protected String getUserAgentStylesheet() {
-        return FXDesktopView.class.getResource("FXDesktopView.css").toExternalForm();
+        return getClass().getResource("/org/trinity/shellplugin/wm/view/javafx/skin/skin.css").toExternalForm();
     }
 }

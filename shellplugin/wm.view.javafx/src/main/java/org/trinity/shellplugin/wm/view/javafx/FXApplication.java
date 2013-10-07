@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.wm.view.javafx.impl;
+package org.trinity.shellplugin.wm.view.javafx;
 
 
 import com.cathive.fx.guice.GuiceApplication;
@@ -13,7 +13,7 @@ import javax.inject.Inject;
 public abstract class FXApplication extends GuiceApplication {
 
     @Inject
-    private FXDesktopView desktop;
+    private DesktopView desktop;
     @Inject
     private Injector injector;
 

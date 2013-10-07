@@ -78,10 +78,16 @@
 
 
         <!-- shellplugins -->
-        <!-- widget views qt api -->
+        <!-- widget views javafx -->
         <dependency>
-            <groupId>org.trinity</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>shellplugin.wm.view.javafx</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- widget views javafx skin-->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>shellplugin.wm.view.javafx.skin</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- window management -->

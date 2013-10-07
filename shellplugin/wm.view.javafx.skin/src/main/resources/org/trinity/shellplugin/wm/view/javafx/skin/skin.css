@@ -1,0 +1,23 @@
+/* start views */
+.desktop-view {
+    -fx-skin: "org.trinity.shellplugin.wm.view.javafx.skin.DesktopSkin";
+}
+/* end views */
+
+.desktop {
+    -fx-background-color: gray;
+}
+
+.top-bar {
+    -fx-background-color: white;
+    -fx-border-bottom: 2px solid blue;
+}
+
+.bottom-bar {
+    -fx-background-color: white;
+    -fx-border-top: 2px solid green;
+}
+
+.application-area {
+
+}

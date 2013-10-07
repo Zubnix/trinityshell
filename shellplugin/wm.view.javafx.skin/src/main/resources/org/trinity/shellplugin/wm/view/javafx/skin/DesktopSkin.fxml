@@ -3,7 +3,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml" styleClass="skin">
+<?import java.net.URL?>
+<fx:root type="com.sun.javafx.scene.control.skin.SkinBase" xmlns:fx="http://javafx.com/fxml">
     <BorderPane styleClass="desktop">
         <top>
             <HBox styleClass="top-bar" spacing="0" prefHeight="25"/>

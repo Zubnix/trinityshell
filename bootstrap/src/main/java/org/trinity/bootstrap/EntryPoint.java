@@ -17,7 +17,7 @@ import org.apache.onami.autobind.configuration.StartupModule;
 import org.apache.onami.autobind.scanner.PackageFilter;
 import org.apache.onami.autobind.scanner.asm.ASMClasspathScanner;
 import org.trinity.shell.api.plugin.ShellPluginsRunner;
-import org.trinity.shellplugin.wm.view.javafx.impl.FXApplication;
+import org.trinity.shellplugin.wm.view.javafx.FXApplication;
 import xcb4j.LibXcbLoader;
 
 import java.util.List;
@@ -32,14 +32,14 @@ public class EntryPoint extends FXApplication {
 
     @Override
     public void init(final List<Module> modules) throws Exception {
-        StartupModule startupModule = StartupModule.create(ASMClasspathScanner.class,
+        final StartupModule startupModule = StartupModule.create(ASMClasspathScanner.class,
                                                            PackageFilter.create("org.trinity"));
         modules.add(startupModule);
     }
 
     @Override
     public void postStart() {
-        ShellPluginsRunner instance = getInjector().getInstance(ShellPluginsRunner.class);
+        final ShellPluginsRunner instance = getInjector().getInstance(ShellPluginsRunner.class);
         instance.startAll();
     }
 }

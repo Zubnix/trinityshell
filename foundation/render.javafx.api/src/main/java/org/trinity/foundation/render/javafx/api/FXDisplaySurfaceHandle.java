@@ -15,18 +15,18 @@ public class FXDisplaySurfaceHandle implements DisplaySurfaceHandle {
 
     private final Node node;
 
-    public FXDisplaySurfaceHandle(Node node) {
+    public FXDisplaySurfaceHandle(final Node node) {
         this.node = node;
     }
 
     @Override
     public Long getNativeHandle() {
         final Window window = node.getScene().getWindow();
-        WindowStage stagePeer = (WindowStage) window.impl_getPeer();
+        final WindowStage stagePeer = (WindowStage) window.impl_getPeer();
         try {
             final Field platformWindowField = WindowStage.class.getDeclaredField("platformWindow");
             platformWindowField.setAccessible(true);
-            com.sun.glass.ui.Window platformWindow = (com.sun.glass.ui.Window) platformWindowField.get(stagePeer);
+            final com.sun.glass.ui.Window platformWindow = (com.sun.glass.ui.Window) platformWindowField.get(stagePeer);
             return platformWindow.getNativeWindow();
         } catch(NoSuchFieldException | IllegalAccessException e) {
             LOG.error("Error while trying to find native window id from JavaFX Node " + node,
@@ -46,7 +46,7 @@ public class FXDisplaySurfaceHandle implements DisplaySurfaceHandle {
             return false;
         }
 
-        DisplaySurfaceHandle otherObj = (DisplaySurfaceHandle) obj;
+        final DisplaySurfaceHandle otherObj = (DisplaySurfaceHandle) obj;
 
         return getNativeHandle().equals(otherObj.getNativeHandle());
     }

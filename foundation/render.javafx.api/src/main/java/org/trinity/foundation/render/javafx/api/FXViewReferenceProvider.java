@@ -18,12 +18,12 @@ public class FXViewReferenceProvider<V extends FXView> extends AbstractViewRefer
 
     private final Class<V> fxViewClass;
 
-    public FXViewReferenceProvider(@Nonnull Class<V> fxViewClass) {
+    public FXViewReferenceProvider(@Nonnull final Class<V> fxViewClass) {
         this.fxViewClass = fxViewClass;
     }
 
     @Override
-    protected void invokeViewBuild(ListenableFutureTask<V> viewFuture) {
+    protected void invokeViewBuild(final ListenableFutureTask<V> viewFuture) {
         Platform.runLater(viewFuture);
     }
 
@@ -49,7 +49,7 @@ public class FXViewReferenceProvider<V extends FXView> extends AbstractViewRefer
     }
 
     @Override
-    protected DisplaySurfaceHandle createDisplaySurfaceHandle(V createdViewObject) {
+    protected DisplaySurfaceHandle createDisplaySurfaceHandle(final V createdViewObject) {
         return new FXDisplaySurfaceHandle(createdViewObject);
     }
 }

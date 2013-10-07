@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.wm.view.javafx.impl;
+package org.trinity.shellplugin.wm.view.javafx;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.AbstractModule;
@@ -9,11 +9,11 @@ import org.trinity.foundation.render.javafx.api.FXViewReferenceProvider;
 import org.trinity.shellplugin.wm.api.viewreferencekey.DesktopViewReference;
 
 @GuiceModule
-public class FXModule extends AbstractModule {
+public class Module extends AbstractModule {
 
     @Override
     protected void configure() {
         bind(new TypeLiteral<ListenableFuture<ViewReference>>() {
-        }).annotatedWith(DesktopViewReference.class).toProvider(new FXViewReferenceProvider<>(FXDesktopView.class));
+        }).annotatedWith(DesktopViewReference.class).toProvider(new FXViewReferenceProvider<>(DesktopView.class));
     }
 }
