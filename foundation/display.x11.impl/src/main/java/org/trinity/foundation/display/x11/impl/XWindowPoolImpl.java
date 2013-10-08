@@ -51,80 +51,81 @@ import com.google.inject.Singleton;
 @NotThreadSafe
 public class XWindowPoolImpl implements DisplaySurfacePool {
 
-	private static final Logger LOG = LoggerFactory.getLogger(XWindowPoolImpl.class);
-	public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
-	private final Cache<Object, XWindow> xWindows = CacheBuilder.newBuilder().concurrencyLevel(1).build();
-	private final XEventPump xEventPump;
-	private final DisplaySurfaceFactory displaySurfaceFactory;
+    private static final Logger LOG = LoggerFactory.getLogger(XWindowPoolImpl.class);
+    public final Map<Integer, XWindow> windows = new HashMap<Integer, XWindow>();
+    private final Cache<Object, XWindow> xWindows = CacheBuilder.newBuilder().concurrencyLevel(1).build();
+    private final XEventPump xEventPump;
+    private final DisplaySurfaceFactory displaySurfaceFactory;
 
-	@Inject
-	XWindowPoolImpl(final XEventPump xEventPump,
-					final DisplaySurfaceFactory displaySurfaceFactory) {
-		this.xEventPump = xEventPump;
-		this.displaySurfaceFactory = displaySurfaceFactory;
-	}
+    @Inject
+    XWindowPoolImpl(final XEventPump xEventPump,
+                    final DisplaySurfaceFactory displaySurfaceFactory) {
+        this.xEventPump = xEventPump;
+        this.displaySurfaceFactory = displaySurfaceFactory;
+    }
 
-	@Override
-	public DisplaySurface getDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
+    @Override
+    public DisplaySurface getDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
 
-		XWindow window = null;
-		try {
-			window = this.xWindows.get(	displaySurfaceHandle,
-										new Callable<XWindow>() {
-											@Override
-											public XWindow call() {
-												LOG.debug(	"Xwindow={} added to cache.",
-															displaySurfaceHandle);
+        XWindow window = null;
+        try {
+            window = this.xWindows.get(displaySurfaceHandle.getNativeHandle().hashCode(),
+                    new Callable<XWindow>() {
+                        @Override
+                        public XWindow call() {
+                            LOG.debug("Xwindow={} added to cache.",
+                                    displaySurfaceHandle);
 
-												final XWindow xWindow = (XWindow) XWindowPoolImpl.this.displaySurfaceFactory
-														.createDisplaySurface(displaySurfaceHandle);
-												xWindow.register(new DestroyListener(xWindow));
-												return xWindow;
-											}
-										});
-		} catch (final ExecutionException e) {
-			Throwables.propagate(e);
-		}
-		return window;
-	}
+                            final XWindow xWindow = (XWindow) XWindowPoolImpl.this.displaySurfaceFactory
+                                    .createDisplaySurface(displaySurfaceHandle);
+                            xWindow.register(new DestroyListener(xWindow));
+                            return xWindow;
+                        }
+                    });
+        } catch (final ExecutionException e) {
+            Throwables.propagate(e);
+        }
+        return window;
+    }
 
-	public boolean isPresent(final DisplaySurfaceHandle displaySurfaceHandle) {
-		return this.xWindows.getIfPresent(displaySurfaceHandle) != null;
-	}
+    public boolean isPresent(final DisplaySurfaceHandle displaySurfaceHandle) {
 
-	@Override
-	public DisplaySurfaceCreator getDisplaySurfaceCreator() {
-		this.xEventPump.stop();
+        return this.xWindows.getIfPresent(displaySurfaceHandle.getNativeHandle().hashCode()) != null;
+    }
 
-		return new DisplaySurfaceCreator() {
-			@Override
-			public DisplaySurface reference(final DisplaySurfaceHandle displaySurfaceHandle) {
-				final DisplaySurface displaySurface = getDisplaySurface(displaySurfaceHandle);
-				return displaySurface;
-			}
+    @Override
+    public DisplaySurfaceCreator getDisplaySurfaceCreator() {
+        this.xEventPump.stop();
 
-			@Override
-			public void close() {
-				xEventPump.start();
-			}
-		};
-	}
+        return new DisplaySurfaceCreator() {
+            @Override
+            public DisplaySurface reference(final DisplaySurfaceHandle displaySurfaceHandle) {
+                final DisplaySurface displaySurface = getDisplaySurface(displaySurfaceHandle);
+                return displaySurface;
+            }
 
-	private class DestroyListener {
-		private final XWindow window;
+            @Override
+            public void close() {
+                xEventPump.start();
+            }
+        };
+    }
 
-		public DestroyListener(final XWindow window) {
-			this.window = window;
-		}
+    private class DestroyListener {
+        private final XWindow window;
 
-		@Subscribe
-		public void destroyed(final DestroyNotify destroyNotify) {
-			final Integer windowId = (Integer) this.window.getDisplaySurfaceHandle().getNativeHandle();
-			XWindowPoolImpl.this.xWindows.invalidate(windowId);
-			this.window.unregister(this);
+        public DestroyListener(final XWindow window) {
+            this.window = window;
+        }
 
-			LOG.debug(	"Xwindow={} removed from cache.",
-						windowId);
-		}
-	}
+        @Subscribe
+        public void destroyed(final DestroyNotify destroyNotify) {
+            final Integer windowId = (Integer) this.window.getDisplaySurfaceHandle().getNativeHandle();
+            XWindowPoolImpl.this.xWindows.invalidate(windowId);
+            this.window.unregister(this);
+
+            LOG.debug("Xwindow={} removed from cache.",
+                    windowId);
+        }
+    }
 }

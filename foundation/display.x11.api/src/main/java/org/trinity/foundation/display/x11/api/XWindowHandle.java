@@ -19,44 +19,44 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @ExecutionContext(DisplayExecutor.class)
 @Immutable
 public class XWindowHandle implements DisplaySurfaceHandle {
 
-	private final Integer nativeHandle;
+    private final Integer nativeHandle;
 
-	public XWindowHandle(@Nonnull final Integer nativeHandle) {
-		this.nativeHandle = checkNotNull(nativeHandle);
-	}
+    public XWindowHandle(@Nonnull final Integer nativeHandle) {
+        this.nativeHandle = checkNotNull(nativeHandle);
+    }
 
-	@Override
-	public Integer getNativeHandle() {
-		return this.nativeHandle;
-	}
+    @Override
+    public Integer getNativeHandle() {
+        return this.nativeHandle;
+    }
 
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj instanceof DisplaySurfaceHandle) {
-			final DisplaySurfaceHandle otherObj = (DisplaySurfaceHandle) obj;
-			return otherObj.getNativeHandle().equals(getNativeHandle());
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof DisplaySurfaceHandle) {
+            final DisplaySurfaceHandle otherObj = (DisplaySurfaceHandle) obj;
+            return otherObj.getNativeHandle().equals(getNativeHandle());
+        }
+        return false;
+    }
 
-	@Override
-	public int hashCode() {
-		return getNativeHandle().hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return getNativeHandle().intValue();
+    }
 }

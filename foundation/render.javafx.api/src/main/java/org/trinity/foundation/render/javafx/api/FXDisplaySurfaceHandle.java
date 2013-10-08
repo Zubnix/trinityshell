@@ -28,9 +28,9 @@ public class FXDisplaySurfaceHandle implements DisplaySurfaceHandle {
             platformWindowField.setAccessible(true);
             final com.sun.glass.ui.Window platformWindow = (com.sun.glass.ui.Window) platformWindowField.get(stagePeer);
             return platformWindow.getNativeWindow();
-        } catch(NoSuchFieldException | IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             LOG.error("Error while trying to find native window id from JavaFX Node " + node,
-                      e);
+                    e);
         }
         return 0L;
     }
@@ -42,12 +42,15 @@ public class FXDisplaySurfaceHandle implements DisplaySurfaceHandle {
 
     @Override
     public boolean equals(final Object obj) {
-        if(!(obj instanceof DisplaySurfaceHandle)) {
+        if (obj == null) {
             return false;
         }
 
-        final DisplaySurfaceHandle otherObj = (DisplaySurfaceHandle) obj;
+        if (obj instanceof DisplaySurfaceHandle) {
+            final DisplaySurfaceHandle otherObj = (DisplaySurfaceHandle) obj;
+            return getNativeHandle().equals(otherObj.getNativeHandle());
+        }
 
-        return getNativeHandle().equals(otherObj.getNativeHandle());
+        return false;
     }
 }
