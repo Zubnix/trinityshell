@@ -14,43 +14,25 @@ package org.trinity.bootstrap;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Module;
 import org.apache.onami.autobind.configuration.StartupModule;
 import org.apache.onami.autobind.scanner.PackageFilter;
 import org.apache.onami.autobind.scanner.asm.ASMClasspathScanner;
 import org.trinity.shell.api.plugin.ShellPluginsRunner;
-import org.trinity.shellplugin.wm.view.javafx.FXApplication;
 import xcb4j.LibXcbLoader;
-
-import java.util.List;
-import java.util.Set;
 
 import static com.google.inject.Stage.PRODUCTION;
 
 
-public class EntryPoint extends FXApplication {
+public class EntryPoint {
 
     public static void main(final String[] args) {
         LibXcbLoader.load();
-        launch(args);
-    }
-
-    @Override
-    public void init(final List<Module> modules) throws Exception {
         final StartupModule startupModule = StartupModule.create(ASMClasspathScanner.class,
-                                                           PackageFilter.create("org.trinity"));
-        modules.add(startupModule);
-    }
+                PackageFilter.create("org.trinity"));
+        final Injector injector = Guice.createInjector(PRODUCTION,
+                startupModule);
 
-    @Override
-    protected Injector createInjector(final Set<Module> modules) {
-        return Guice.createInjector(PRODUCTION,
-                                    modules);
-    }
-
-    @Override
-    public void postStart() {
-        final ShellPluginsRunner instance = getInjector().getInstance(ShellPluginsRunner.class);
+        final ShellPluginsRunner instance = injector.getInstance(ShellPluginsRunner.class);
         instance.startAll();
     }
 }

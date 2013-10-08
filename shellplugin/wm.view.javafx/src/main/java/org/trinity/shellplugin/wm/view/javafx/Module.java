@@ -13,7 +13,10 @@ public class Module extends AbstractModule {
 
     @Override
     protected void configure() {
+
+        final FXViewReferenceProvider<DesktopView> viewReferenceProvider = new FXViewReferenceProvider<>(DesktopView.class);
+        requestInjection(viewReferenceProvider);
         bind(new TypeLiteral<ListenableFuture<ViewReference>>() {
-        }).annotatedWith(DesktopViewReference.class).toProvider(new FXViewReferenceProvider<>(DesktopView.class));
+        }).annotatedWith(DesktopViewReference.class).toProvider(viewReferenceProvider);
     }
 }

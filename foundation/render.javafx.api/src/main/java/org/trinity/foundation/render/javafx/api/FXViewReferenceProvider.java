@@ -3,7 +3,6 @@ package org.trinity.foundation.render.javafx.api;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import javafx.application.Platform;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.render.AbstractViewReferenceProvider;
@@ -24,7 +23,7 @@ public class FXViewReferenceProvider<V extends FXView> extends AbstractViewRefer
 
     @Override
     protected void invokeViewBuild(final ListenableFutureTask<V> viewFuture) {
-        Platform.runLater(viewFuture);
+        viewFuture.run();
     }
 
     @Override
