@@ -28,9 +28,9 @@ public class EntryPoint {
     public static void main(final String[] args) {
         LibXcbLoader.load();
         final StartupModule startupModule = StartupModule.create(ASMClasspathScanner.class,
-                PackageFilter.create("org.trinity"));
+                                                                 PackageFilter.create("org.trinity"));
         final Injector injector = Guice.createInjector(PRODUCTION,
-                startupModule);
+                                                       startupModule);
 
         final ShellPluginsRunner instance = injector.getInstance(ShellPluginsRunner.class);
         instance.startAll();

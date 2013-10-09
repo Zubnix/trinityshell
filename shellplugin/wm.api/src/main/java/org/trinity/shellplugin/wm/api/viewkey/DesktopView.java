@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.wm.api.viewreferencekey;
+package org.trinity.shellplugin.wm.api.viewkey;
 
 import com.google.inject.BindingAnnotation;
 
@@ -14,5 +14,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @BindingAnnotation
 @Target({ TYPE, FIELD, PARAMETER, METHOD })
 @Retention(RUNTIME)
-public @interface DesktopViewReference {
+public @interface DesktopView {
 }

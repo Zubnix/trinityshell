@@ -20,23 +20,22 @@
 
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
-import static com.google.common.collect.Iterables.removeAll;
-import static com.google.common.util.concurrent.Futures.addCallback;
-
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Callable;
-
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Inject;
-
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
+import com.google.common.collect.Sets;
+import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Singleton;
 import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
-import org.trinity.foundation.api.render.ViewReference;
+import org.trinity.foundation.api.render.ViewBuilder;
+import org.trinity.foundation.api.render.ViewBuilderResult;
 import org.trinity.foundation.api.render.binding.Binder;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
@@ -50,17 +49,16 @@ import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 import org.trinity.shellplugin.wm.api.Shell;
-import org.trinity.shellplugin.wm.api.viewreferencekey.DesktopViewReference;
+import org.trinity.shellplugin.wm.api.viewkey.DesktopView;
 
-import ca.odell.glazedlists.BasicEventList;
-import ca.odell.glazedlists.EventList;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
 
-import com.google.common.collect.Sets;
-import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Singleton;
+import static com.google.common.collect.Iterables.removeAll;
+import static com.google.common.util.concurrent.Futures.addCallback;
 
 // TODO split up this class
 @Bind
@@ -81,33 +79,33 @@ public class ShellImpl implements Shell {
 	private final ShellSurfaceFactory shellSurfaceFactory;
 	private final ShellLayoutManagerFactory shellLayoutManagerFactory;
 	private final ClientBarElementFactory clientBarElementFactory;
-	private final ListenableFuture<ViewReference> desktopViewFuture;
+    private ViewBuilder viewBuilder;
 
-	private final Set<DisplaySurface> nonClientDisplaySurfaces = Sets.newHashSet();
+    private final Set<DisplaySurface> nonClientDisplaySurfaces = Sets.newHashSet();
 
-	@Inject
-	ShellImpl(	final Display display,
-				@ShellExecutor final ListeningExecutorService shellExecutor,
-				final Binder binder,
-				final ShellSurfaceFactory shellSurfaceFactory,
+    @Inject
+    ShellImpl(final Display display,
+              @ShellExecutor final ListeningExecutorService shellExecutor,
+              final Binder binder,
+              final ShellSurfaceFactory shellSurfaceFactory,
 				final ShellLayoutManagerFactory shellLayoutManagerFactory,
 				final ClientBarElementFactory clientBarElementFactory,
-				@DesktopViewReference final ListenableFuture<ViewReference> desktopViewFuture) {
-		this.display = display;
-		this.shellExecutor = shellExecutor;
-		this.binder = binder;
-		this.shellSurfaceFactory = shellSurfaceFactory;
-		this.shellLayoutManagerFactory = shellLayoutManagerFactory;
-		this.clientBarElementFactory = clientBarElementFactory;
-		this.desktopViewFuture = desktopViewFuture;
-	}
+                @DesktopView final ViewBuilder viewBuilder) {
+        this.display = display;
+        this.shellExecutor = shellExecutor;
+        this.binder = binder;
+        this.shellSurfaceFactory = shellSurfaceFactory;
+        this.shellLayoutManagerFactory = shellLayoutManagerFactory;
+        this.clientBarElementFactory = clientBarElementFactory;
+        this.viewBuilder = viewBuilder;
+    }
 
-	public EventList<Object> getNotificationsBar() {
-		return this.notificationsBar;
-	}
+    public EventList<Object> getNotificationsBar() {
+        return this.notificationsBar;
+    }
 
-	public EventList<Object> getClientsBar() {
-		return this.clientsBar;
+    public EventList<Object> getClientsBar() {
+        return this.clientsBar;
 	}
 
 	public EventList<Object> getBottomBar() {
@@ -138,33 +136,26 @@ public class ShellImpl implements Shell {
 
 	@Override
 	public void start() {
-		addCallback(desktopViewFuture,
-					new FutureCallback<ViewReference>() {
-						@Override
-						public void onSuccess(final ViewReference viewReference) {
-							ShellImpl.this.binder.bind(	shellExecutor,
-														ShellImpl.this,
-														viewReference.getView());
 
-							// FIXME we can still miss display events here.
-							final DisplaySurface viewDisplaySurface = viewReference.getViewDisplaySurface();
-							ShellImpl.this.nonClientDisplaySurfaces.add(viewDisplaySurface);
-							final ShellSurface desktopShellSurface = ShellImpl.this.shellSurfaceFactory
-									.createShellSurface(viewDisplaySurface);
-							configureDesktopShellSurfaceBehavior(desktopShellSurface);
-							handleDesktopShellSurface(desktopShellSurface);
-						}
+        viewBuilder.build(new ViewBuilderResult() {
+            @Override
+            public void onResult(final Object bindableView,
+                                 final DisplaySurface viewDisplaySurface) {
+                ShellImpl.this.binder.bind(shellExecutor,
+                                           ShellImpl.this,
+                                           bindableView);
 
-						@Override
-						public void onFailure(final Throwable t) {
-							LOG.error(	"Failed to get ViewReference.",
-										t);
-						}
-					});
-	}
+                ShellImpl.this.nonClientDisplaySurfaces.add(viewDisplaySurface);
+                final ShellSurface desktopShellSurface = ShellImpl.this.shellSurfaceFactory
+                        .createShellSurface(viewDisplaySurface);
+                configureDesktopShellSurfaceBehavior(desktopShellSurface);
+                handleDesktopShellSurface(desktopShellSurface);
+            }
+        });
+    }
 
-	// called by display thread so we avoid missing any display methods.
-	private void configureDesktopShellSurfaceBehavior(final ShellSurface desktopShellSurface) {
+    // called by display thread so we avoid missing any display methods.
+    private void configureDesktopShellSurfaceBehavior(final ShellSurface desktopShellSurface) {
 		desktopShellSurface.register(new Object() {
 			@Subscribe
 			public void handleMoveResizeRequest(final ShellNodeMoveResizeRequestEvent event) {

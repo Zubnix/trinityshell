@@ -2,6 +2,7 @@ package org.trinity.foundation.render.javafx.api;
 
 import com.sun.javafx.tk.quantum.WindowStage;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,11 @@ public class FXDisplaySurfaceHandle implements DisplaySurfaceHandle {
 
     @Override
     public Long getNativeHandle() {
-        final Window window = node.getScene().getWindow();
+        Scene scene = node.getScene();
+        if(scene == null) {
+            return 0L;
+        }
+        final Window window = scene.getWindow();
         final WindowStage stagePeer = (WindowStage) window.impl_getPeer();
         try {
             final Field platformWindowField = WindowStage.class.getDeclaredField("platformWindow");
@@ -31,8 +36,8 @@ public class FXDisplaySurfaceHandle implements DisplaySurfaceHandle {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             LOG.error("Error while trying to find native window id from JavaFX Node " + node,
                     e);
+            return 0L;
         }
-        return 0L;
     }
 
     @Override
