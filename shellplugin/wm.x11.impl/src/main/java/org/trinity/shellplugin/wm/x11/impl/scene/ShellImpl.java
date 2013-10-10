@@ -224,26 +224,36 @@ public class ShellImpl implements Shell {
 
 	private void handleClientShellSurface(	final ShellSurface clientShellSurface,
 											final ShellLayoutManagerLine shellLayoutManagerLine) {
-		this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				shellLayoutManagerLine.addChildNode(clientShellSurface,
-													new ShellLayoutPropertyLine(1,
-																				new Margins(2,
-																							2,
-																							25,
-																							25)));
-				final ClientBarElement clientTopBarItem = clientBarElementFactory
-						.createClientTopBarItem(clientShellSurface);
-				clientShellSurface.register(new Object() {
-					@Subscribe
-					public void handleDestoryed(final ShellNodeDestroyedEvent destroyedEvent) {
-						clientsBar.remove(clientTopBarItem);
-					}
-				});
-				clientsBar.add(clientTopBarItem);
-				return null;
-			}
-		});
-	}
+        //check if we haven't missed any destroy event.
+        addCallback(clientShellSurface.isDestroyed(),
+                    new FutureCallback<Boolean>() {
+                        @Override
+                        public void onSuccess(final Boolean destroyed) {
+                            if(!destroyed) {
+                                //if not then we manage it.
+                                shellLayoutManagerLine.addChildNode(clientShellSurface,
+                                                                    new ShellLayoutPropertyLine(1,
+                                                                                                new Margins(2,
+                                                                                                            2,
+                                                                                                            25,
+                                                                                                            25)));
+                                final ClientBarElement clientTopBarItem = clientBarElementFactory
+                                        .createClientTopBarItem(clientShellSurface);
+
+                                clientShellSurface.register(new Object() {
+                                    @Subscribe
+                                    public void handleDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
+                                        clientsBar.remove(clientTopBarItem);
+                                    }
+                                });
+                                clientsBar.add(clientTopBarItem);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(final Throwable t) {
+                            //To change body of implemented methods use File | Settings | File Templates.
+                        }
+                    });
+    }
 }
