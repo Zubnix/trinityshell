@@ -19,20 +19,41 @@
  ******************************************************************************/
 package org.trinity.shell.api.scene;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import java.util.concurrent.ExecutorService;
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.AsyncListenableEventBus;
+import org.trinity.foundation.api.shared.Coordinate;
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.foundation.api.shared.ImmutableRectangle;
+import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.api.shared.Size;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellScene;
+import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeEvent;
+import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
+import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeLoweredEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMovedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMovedResizedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeRaisedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeReparentedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeResizedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeShowedEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import java.util.concurrent.ExecutorService;
 
-import org.trinity.foundation.api.shared.*;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.bindingkey.ShellScene;
-import org.trinity.shell.api.scene.event.*;
-
-import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListeningExecutorService;
+import static com.google.common.base.Preconditions.checkArgument;
 
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
@@ -71,7 +92,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	@Override
 	public Boolean isDestroyedImpl() {
-		return Boolean.valueOf(this.destroyed);
+		return this.destroyed;
 	}
 
 	@Override
@@ -463,6 +484,18 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	@Override
 	public void register(@Nonnull final Object listener) {
 		this.nodeEventBus.register(listener);
+	}
+
+	@Override
+	public void scheduleRegister(@Nonnull final Object listener) {
+		this.nodeEventBus.scheduleRegister(listener);
+	}
+
+	@Override
+	public void scheduleRegister(	@Nonnull final Object listener,
+									@Nonnull final ExecutorService listenerActivationExecutor) {
+		this.nodeEventBus.scheduleRegister(	listener,
+											listenerActivationExecutor);
 	}
 
 	@Override

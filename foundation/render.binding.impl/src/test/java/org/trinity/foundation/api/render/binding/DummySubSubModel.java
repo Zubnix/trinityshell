@@ -1,9 +1,10 @@
 package org.trinity.foundation.api.render.binding;
 
-import java.util.concurrent.ExecutorService;
-
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.api.shared.AsyncListenable;
+
+import javax.annotation.Nonnull;
+import java.util.concurrent.ExecutorService;
 
 public class DummySubSubModel implements AsyncListenable {
 
@@ -19,26 +20,35 @@ public class DummySubSubModel implements AsyncListenable {
 	}
 
 	@Override
-	public void register(final Object listener) {
+	public void register(@Nonnull final Object listener) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void register(	final Object listener,
-							final ExecutorService executor) {
+	public void register(	@Nonnull final Object listener,
+							@Nonnull final ExecutorService executor) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void unregister(final Object listener) {
+	public void scheduleRegister(@Nonnull final Object listener) {
+	}
+
+	@Override
+	public void scheduleRegister(	@Nonnull final Object listener,
+									@Nonnull final ExecutorService listenerActivationExecutor) {
+	}
+
+	@Override
+	public void unregister(@Nonnull final Object listener) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void post(final Object event) {
+	public void post(@Nonnull final Object event) {
 		// TODO Auto-generated method stub
 
 	}

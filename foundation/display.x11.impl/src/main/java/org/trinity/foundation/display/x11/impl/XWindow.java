@@ -101,6 +101,18 @@ public final class XWindow implements DisplaySurface {
 	}
 
 	@Override
+	public void scheduleRegister(@Nonnull final Object listener) {
+		this.xWindowEventBus.scheduleRegister(listener);
+	}
+
+	@Override
+	public void scheduleRegister(	@Nonnull final Object listener,
+									@Nonnull final ExecutorService listenerActivationExecutor) {
+		this.xWindowEventBus.scheduleRegister(	listener,
+												listenerActivationExecutor);
+	}
+
+	@Override
 	public void post(@Nonnull final Object event) {
 		this.xWindowEventBus.post(event);
 	}
@@ -111,8 +123,8 @@ public final class XWindow implements DisplaySurface {
 	}
 
 	@Override
-	public void register(@Nonnull	final Object listener,
-	                     @Nonnull	final ExecutorService executor) {
+	public void register(	@Nonnull final Object listener,
+							@Nonnull final ExecutorService executor) {
 		this.xWindowEventBus.register(	listener,
 										executor);
 	}
@@ -140,10 +152,10 @@ public final class XWindow implements DisplaySurface {
 	}
 
 	private int getWindowId() {
-        return ((Number) this.resourceHandle.getNativeHandle()).intValue();
-    }
+		return ((Number) this.resourceHandle.getNativeHandle()).intValue();
+	}
 
-    private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
+	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
 		return this.xConnection.getConnectionReference().get();
 	}
 
@@ -190,7 +202,6 @@ public final class XWindow implements DisplaySurface {
 	}
 
 	@Override
-
 	public ListenableFuture<Void> show() {
 		final int winId = getWindowId();
 
@@ -247,11 +258,11 @@ public final class XWindow implements DisplaySurface {
 				.submit(new Callable<xcb_get_geometry_cookie_t>() {
 					@Override
 					public xcb_get_geometry_cookie_t call() {
-						LOG.debug("[winId={}] get geometry request.",
-								winId);
+						LOG.debug(	"[winId={}] get geometry request.",
+									winId);
 
 						return xcb_get_geometry(getConnectionRef(),
-								winId);
+												winId);
 					}
 				});
 
@@ -267,7 +278,8 @@ public final class XWindow implements DisplaySurface {
 																			checkError(e);
 																			return reply.getBorder_width();
 																		}
-																	},this.xExecutor);
+																	},
+																	this.xExecutor);
 
 		return transform(	borderFuture,
 							new Function<Integer, Void>() {
@@ -296,7 +308,8 @@ public final class XWindow implements DisplaySurface {
 									xcb_flush(getConnectionRef());
 									return null;
 								}
-							},this.xExecutor);
+							},
+							this.xExecutor);
 	}
 
 	@Override
@@ -319,33 +332,34 @@ public final class XWindow implements DisplaySurface {
 										null);
 	}
 
-	public ListenableFuture<Void> setParent(final DisplaySurface parent,
-											final int x,
-											final int y) {
-
-		final int parentId = (int) parent.getDisplaySurfaceHandle().getNativeHandle();
-		final int winId = getWindowId();
-
-		return this.xExecutor.submit(	new Runnable() {
-
-											@Override
-											public void run() {
-												LOG.debug(	"[winId={}] set parent parentId={}, x={}, y={}.",
-															parentId,
-															x,
-															y,
-															winId);
-
-												xcb_reparent_window(getConnectionRef(),
-																	winId,
-																	parentId,
-																	(short) x,
-																	(short) y);
-												xcb_flush(getConnectionRef());
-											}
-										},
-										null);
-	}
+	// public ListenableFuture<Void> setParent(final DisplaySurface parent,
+	// final int x,
+	// final int y) {
+	//
+	// final int parentId = (int)
+	// parent.getDisplaySurfaceHandle().getNativeHandle();
+	// final int winId = getWindowId();
+	//
+	// return this.xExecutor.submit( new Runnable() {
+	//
+	// @Override
+	// public void run() {
+	// LOG.debug( "[winId={}] set parent parentId={}, x={}, y={}.",
+	// parentId,
+	// x,
+	// y,
+	// winId);
+	//
+	// xcb_reparent_window(getConnectionRef(),
+	// winId,
+	// parentId,
+	// (short) x,
+	// (short) y);
+	// xcb_flush(getConnectionRef());
+	// }
+	// },
+	// null);
+	// }
 
 	@Override
 	public ListenableFuture<Void> resize(	final int width,
@@ -358,11 +372,11 @@ public final class XWindow implements DisplaySurface {
 				.submit(new Callable<xcb_get_geometry_cookie_t>() {
 					@Override
 					public xcb_get_geometry_cookie_t call() {
-						LOG.debug("[winId={}] get geometry request.",
-								winId);
+						LOG.debug(	"[winId={}] get geometry request.",
+									winId);
 
 						return xcb_get_geometry(getConnectionRef(),
-								winId);
+												winId);
 					}
 				});
 
@@ -431,11 +445,11 @@ public final class XWindow implements DisplaySurface {
 				.submit(new Callable<xcb_get_geometry_cookie_t>() {
 					@Override
 					public xcb_get_geometry_cookie_t call() {
-						LOG.debug("[winId={}] get geometry request.",
-								winId);
+						LOG.debug(	"[winId={}] get geometry request.",
+									winId);
 
 						return xcb_get_geometry(getConnectionRef(),
-								winId);
+												winId);
 					}
 				});
 

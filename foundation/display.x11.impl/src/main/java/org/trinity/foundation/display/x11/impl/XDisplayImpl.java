@@ -19,40 +19,9 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
-import static java.nio.ByteBuffer.allocateDirect;
-import static java.nio.ByteOrder.nativeOrder;
-import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
-import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
-import static org.freedesktop.xcb.LibXcb.xcb_flush;
-import static org.freedesktop.xcb.LibXcb.xcb_get_setup;
-import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes;
-import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes_reply;
-import static org.freedesktop.xcb.LibXcb.xcb_query_tree;
-import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children;
-import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children_length;
-import static org.freedesktop.xcb.LibXcb.xcb_query_tree_reply;
-import static org.freedesktop.xcb.LibXcb.xcb_screen_next;
-import static org.freedesktop.xcb.LibXcb.xcb_setup_roots_iterator;
-import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
-import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW;
-import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW;
-import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE;
-import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY;
-import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
-import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
-
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -68,8 +37,8 @@ import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.Screen;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.DestroyNotify;
+import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
@@ -77,9 +46,23 @@ import org.trinity.foundation.display.x11.api.XScreen;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
-import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+
+import static java.nio.ByteBuffer.allocateDirect;
+import static java.nio.ByteOrder.nativeOrder;
+import static org.freedesktop.xcb.LibXcb.*;
+import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
+import static org.freedesktop.xcb.xcb_event_mask_t.*;
+import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 
 @Bind
 @Singleton
@@ -104,7 +87,8 @@ public class XDisplayImpl implements Display {
 	@Inject
 	XDisplayImpl(	final XConnection xConnection,
 					final XWindowPoolImpl xWindowCache,
-					@DisplayExecutor final ListeningExecutorService xExecutor) throws ExecutionException, InterruptedException {
+					@DisplayExecutor final ListeningExecutorService xExecutor) throws ExecutionException,
+			InterruptedException {
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
 		this.xExecutor = xExecutor;
@@ -128,7 +112,6 @@ public class XDisplayImpl implements Display {
 	}
 
 	private ListenableFuture<Void> open() {
-
 
 		return this.xExecutor.submit(new Callable<Void>() {
 			@Override
@@ -236,7 +219,7 @@ public class XDisplayImpl implements Display {
 
 	@Override
 	public void register(@Nonnull final Object listener) {
-		this.displayEventBus.register(listener);
+		this.displayEventBus.scheduleRegister(listener);
 	}
 
 	@Override
@@ -244,6 +227,18 @@ public class XDisplayImpl implements Display {
 							@Nonnull final ExecutorService executor) {
 		this.displayEventBus.register(	listener,
 										executor);
+	}
+
+	@Override
+	public void scheduleRegister(@Nonnull final Object listener) {
+		this.displayEventBus.scheduleRegister(listener);
+	}
+
+	@Override
+	public void scheduleRegister(	@Nonnull final Object listener,
+									@Nonnull final ExecutorService listenerActivationExecutor) {
+		this.displayEventBus.scheduleRegister(	listener,
+												listenerActivationExecutor);
 	}
 
 	@Override
@@ -260,7 +255,8 @@ public class XDisplayImpl implements Display {
 
 	private void trackClient(final DisplaySurface clientDisplaySurface) {
 		clientDisplaySurface.register(new Object() {
-			@Subscribe
+			@SuppressWarnings("UnusedParameters")
+            @Subscribe
 			public void handleClientDestroyed(final DestroyNotify destroyNotify) {
 				XDisplayImpl.this.clientDisplaySurfaces.remove(clientDisplaySurface);
 			}

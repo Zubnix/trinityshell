@@ -20,13 +20,12 @@
 
 package org.trinity.foundation.api.shared;
 
-import java.util.concurrent.ExecutorService;
-
-import javax.annotation.Nonnull;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.MoreExecutors;
+
+import javax.annotation.Nonnull;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Extends guava's {@link EventBus} idea with asynchronous event delivery. This
@@ -36,22 +35,34 @@ import com.google.common.util.concurrent.MoreExecutors;
  */
 public interface AsyncListenable {
 	/**
-	 * Register a listener who's {@link Subscribe}d methods will be invoked by
-	 * the {@link MoreExecutors#sameThreadExecutor()}, ie the thread that calls
-	 * {@link #post(Object)} on this object.
+	 * Immediately register a listener who's {@link Subscribe}d methods will be
+	 * invoked by the {@link MoreExecutors#sameThreadExecutor()}, ie the thread
+	 * that calls {@link #post(Object)} on this object.
+	 * <p>
+	 * This method should be used if the calling executor service is the same as
+	 * than the one that owns this object.
 	 *
 	 * @see {@link EventBus#register(Object)}
 	 * @param listener
+	 *            An object with a public, single argument, {@link Subscribe}
+	 *            method.
 	 */
 	void register(@Nonnull Object listener);
 
 	/**
-	 * Register a listener who's {@link Subscribe}d methods will be invoked by
-	 * the given {@link ExecutorService}.
+	 * Immediately register a listener who's {@link Subscribe}d methods will be
+	 * invoked by the given {@link ExecutorService}.
+	 * <p>
+	 * This method should be used if the calling executor service is the same as
+	 * than the one that owns this object.
 	 *
 	 * @see {@link EventBus#register(Object)}
 	 * @param listener
+	 *            An object with a public, single argument, {@link Subscribe}
+	 *            method.
 	 * @param executor
+	 *            The executor that will call the listener when an event
+	 *            arrives.
 	 */
 	void register(	@Nonnull Object listener,
 					@Nonnull ExecutorService executor);
@@ -59,6 +70,7 @@ public interface AsyncListenable {
 	/**
 	 * @see {@link EventBus#unregister(Object)}
 	 * @param listener
+	 *            An previously registered listener.
 	 */
 	void unregister(@Nonnull Object listener);
 
@@ -67,6 +79,40 @@ public interface AsyncListenable {
 	 *
 	 * @see {@link EventBus#post(Object)}
 	 * @param event
+	 *            The even to post.
 	 */
 	void post(@Nonnull Object event);
+
+	/**
+	 * Same as {@link #register(Object)} but the registration task is delegated
+	 * to the executor service that handle's the posting of events. Ie the
+	 * executor service that 'owns' this object.
+	 * <p>
+	 * This method should be used if the calling executor service is different
+	 * than the one that owns this object.
+	 *
+	 * @param listener
+	 *            An object with a public, single argument, {@link Subscribe}
+	 *            method.
+	 */
+	void scheduleRegister(@Nonnull Object listener);
+
+	/**
+	 * Same as {@link #register(Object, java.util.concurrent.ExecutorService)}
+	 * but the registration task is delegated to the executor service that
+	 * handle's the posting of events. Ie the executor service that 'owns' this
+	 * object.
+	 * <p>
+	 * This method should be used if the calling executor service is different
+	 * than the one that owns this object.
+	 *
+	 * @param listener
+	 *            An object with a public, single argument, {@link Subscribe}
+	 *            method.
+	 * @param listenerActivationExecutor
+	 *            The executor that will call the listener when an event
+	 *            arrives.
+	 */
+	void scheduleRegister(	@Nonnull Object listener,
+							@Nonnull ExecutorService listenerActivationExecutor);
 }
