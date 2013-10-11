@@ -3,6 +3,7 @@ package org.trinity.shellplugin.wm.view.javafx;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Skin;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.onami.autobind.annotations.Bind;
@@ -24,6 +25,9 @@ public class DesktopView extends FXView {
     private static DesktopView DESKTOPVIEW_HACK;
     private static final CountDownLatch STARTUP_HACK = new CountDownLatch(1);
 
+    //reference our skin as a 'local' field so the view binder can pick it up.
+    private final Skin<?> skin;
+
     @Inject
     DesktopView() throws InterruptedException {
         getStyleClass().add("desktop-view");
@@ -37,11 +41,13 @@ public class DesktopView extends FXView {
         }.start();
 
         STARTUP_HACK.await();
+
+        skin = getSkin();
     }
 
     @Override
     protected String getUserAgentStylesheet() {
-        return getClass().getResource("/org/trinity/shellplugin/wm/view/javafx/skin/skin.css").toExternalForm();
+        return getClass().getResource("/skin.css").toExternalForm();
     }
 
     /**

@@ -19,12 +19,14 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.view;
 
-import java.lang.annotation.ElementType;
+import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
+
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /***************************************
  * Bind every child view of the marked view to the respective element of the
@@ -32,8 +34,9 @@ import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate
  * the {@link ChildViewDelegate}.
  ***************************************
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.TYPE })
+@Retention(RUNTIME)
+@Target({FIELD,
+         TYPE})
 public @interface ObservableCollection {
 
 	/***************************************

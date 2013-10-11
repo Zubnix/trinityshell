@@ -19,10 +19,12 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.view;
 
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /***************************************
  * Makes the annotated view element retrieve its model data relative to the
@@ -38,8 +40,9 @@ import java.lang.annotation.Target;
  * annotation will have precedence.
  ***************************************
  */
-@Target({ ElementType.FIELD, ElementType.TYPE })
-@Retention(RetentionPolicy.RUNTIME)
+@Target({FIELD,
+         TYPE})
+@Retention(RUNTIME)
 public @interface DataContext {
 	/***************************************
 	 * A path of getters consisting of 1 or more getter names seperated by a dot

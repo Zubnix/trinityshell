@@ -19,11 +19,15 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl.event;
 
-import javax.annotation.concurrent.Immutable;
-
+import com.google.common.base.Optional;
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.AsyncListenable;
@@ -32,10 +36,8 @@ import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
-import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 @Bind(multiple = true)
 @Singleton
@@ -43,27 +45,29 @@ import com.google.inject.Singleton;
 @Immutable
 public class GenericErrorHandler implements XEventHandler {
 
-	private final Integer eventCode = 0;
-	private final EventBus xEventBus;
+    private static final Logger LOG = LoggerFactory.getLogger(GenericErrorHandler.class);
 
-	@Inject
-	GenericErrorHandler(@XEventBus final EventBus xEventBus) {
+    private final Integer eventCode = 0;
+    private final EventBus xEventBus;
+
+    @Inject
+    GenericErrorHandler(@XEventBus final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 	}
 
 	@Override
-	public Optional<DisplayEvent> handle(final xcb_generic_event_t event_t) {
-		final xcb_generic_error_t request_error = new xcb_generic_error_t(	xcb_generic_event_t.getCPtr(event_t),
+    public Optional<DisplayEvent> handle(@Nonnull final xcb_generic_event_t event_t) {
+        final xcb_generic_error_t request_error = new xcb_generic_error_t(	xcb_generic_event_t.getCPtr(event_t),
 																			false);
 		this.xEventBus.post(request_error);
 
-		throw new RuntimeException(XcbErrorUtil.toString(request_error));
-		// TODO error event?
-	}
+        LOG.error(XcbErrorUtil.toString(request_error));
+        return Optional.absent();
+    }
 
-	@Override
-	public Optional<AsyncListenable> getTarget(final xcb_generic_event_t event_t) {
-		// TODO return display server?
+    @Override
+    public Optional<AsyncListenable> getTarget(@Nonnull final xcb_generic_event_t event_t) {
+        // TODO return display server?
 		return Optional.absent();
 	}
 

@@ -2,19 +2,23 @@
 .desktop-view {
     -fx-skin: "org.trinity.shellplugin.wm.view.javafx.skin.DesktopSkin";
 }
+
+.client-info-view {
+    -fx-skin: "org.trinity.shellplugin.wm.view.javafx.skin.ClientInfoSkin";
+}
 /* end views */
 
 .desktop {
-    -fx-background-color: gray;
+    -fx-background-color: #eee8d5;
 }
 
 .top-bar {
-    -fx-background-color: white;
+    -fx-background-color: #268bd2;
     -fx-border-bottom: 2px solid blue;
 }
 
 .bottom-bar {
-    -fx-background-color: white;
+    -fx-background-color: #859900;
     -fx-border-top: 2px solid green;
 }
 

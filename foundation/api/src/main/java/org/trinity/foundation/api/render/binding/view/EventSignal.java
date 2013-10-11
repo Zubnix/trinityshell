@@ -19,11 +19,12 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.view;
 
+import org.trinity.foundation.api.render.binding.view.delegate.Signal;
+
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.trinity.foundation.api.render.binding.view.delegate.Signal;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /***************************************
  * Mark a view as a producer of listenable events. It's up to the
@@ -35,7 +36,7 @@ import org.trinity.foundation.api.render.binding.view.delegate.Signal;
  * @see Signal
  ***************************************
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RUNTIME)
 @Target({})
 public @interface EventSignal {
 

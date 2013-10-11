@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.inject.Injector;
 import javafx.application.Platform;
+import javafx.scene.layout.Pane;
 import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
 import org.trinity.foundation.render.javafx.api.FXView;
@@ -31,9 +32,9 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
 
     @Override
     public <T> ListenableFuture<T> newView(final Object parentView, final Class<T> childViewType, final int position) {
-        checkArgument(parentView instanceof FXView,
-                format("Expected parent view should be of type %s",
-                        FXView.class.getName()));
+        checkArgument(parentView instanceof Pane,
+                      format("Expected parent view should be of type %s",
+                             Pane.class.getName()));
         checkArgument(FXView.class.isAssignableFrom(childViewType),
                 format("Expected child view should be of type %s",
                         FXView.class.getName()));
@@ -41,7 +42,7 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
         final ListenableFutureTask<T> newViewTask = ListenableFutureTask.create(new Callable<T>() {
             @Override
             public T call() throws Exception {
-                final FXView parentViewInstance = (FXView) parentView;
+                final Pane parentViewInstance = (Pane) parentView;
 
                 final T childView = ChildViewDelegateImpl.this.injector.getInstance(childViewType);
                 final FXView childViewInstance = (FXView) childView;

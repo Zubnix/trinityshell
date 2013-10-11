@@ -20,43 +20,9 @@
 
 package org.trinity.foundation.api.render.binding;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.util.concurrent.Futures.addCallback;
-import static java.lang.String.format;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.WeakHashMap;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-
-import javax.annotation.concurrent.ThreadSafe;
-
-import org.apache.onami.autobind.annotations.Bind;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.render.binding.view.DataContext;
-import org.trinity.foundation.api.render.binding.view.EventSignal;
-import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
-import org.trinity.foundation.api.render.binding.view.EventSignals;
-import org.trinity.foundation.api.render.binding.view.ObservableCollection;
-import org.trinity.foundation.api.render.binding.view.PropertyAdapter;
-import org.trinity.foundation.api.render.binding.view.PropertySlot;
-import org.trinity.foundation.api.render.binding.view.PropertySlots;
-import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
-import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
-
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
 import ca.odell.glazedlists.event.ListEventListener;
-
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
@@ -69,6 +35,39 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import org.apache.onami.autobind.annotations.Bind;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.render.binding.view.DataContext;
+import org.trinity.foundation.api.render.binding.view.EventSignal;
+import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
+import org.trinity.foundation.api.render.binding.view.EventSignals;
+import org.trinity.foundation.api.render.binding.view.ObservableCollection;
+import org.trinity.foundation.api.render.binding.view.PropertyAdapter;
+import org.trinity.foundation.api.render.binding.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.view.PropertySlots;
+import org.trinity.foundation.api.render.binding.view.SubView;
+import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
+import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.util.concurrent.Futures.addCallback;
+import static java.lang.String.format;
 
 @Bind
 @Singleton
@@ -101,10 +100,10 @@ public class BinderImpl implements Binder {
 	}
 
 	@Override
-	public ListenableFuture<Void> bind(	final ListeningExecutorService modelExecutor,
-										final Object model,
-										final Object view) {
-		checkNotNull(modelExecutor);
+    public ListenableFuture<Void> bind(@Nonnull final ListeningExecutorService modelExecutor,
+                                       @Nonnull final Object model,
+                                       @Nonnull final Object view) {
+        checkNotNull(modelExecutor);
 		checkNotNull(model);
 		checkNotNull(view);
 
@@ -137,10 +136,10 @@ public class BinderImpl implements Binder {
 	}
 
 	@Override
-	public ListenableFuture<Void> updateBinding(final ListeningExecutorService modelExecutor,
-												final Object model,
-												final String propertyName) {
-		checkNotNull(modelExecutor);
+    public ListenableFuture<Void> updateBinding(@Nonnull final ListeningExecutorService modelExecutor,
+                                                @Nonnull final Object model,
+                                                @Nonnull final String propertyName) {
+        checkNotNull(modelExecutor);
 		checkNotNull(model);
 		checkNotNull(propertyName);
 
@@ -375,10 +374,10 @@ public class BinderImpl implements Binder {
 
 					// We use a shadow list because glazedlists does not
 					// give us the deleted object...
-					private final List<Object> shadowChildDataContextList = new ArrayList<Object>(contextCollection);
+                    private final List<Object> shadowChildDataContextList = new ArrayList<>(contextCollection);
 
-					@Override
-					public void listChanged(final ListEvent<Object> listChanges) {
+                    @Override
+                    public void listChanged(final ListEvent<Object> listChanges) {
 						handleListChanged(	modelExecutor,
 											view,
 											childViewClass,
@@ -664,30 +663,36 @@ public class BinderImpl implements Binder {
 
 			for (final Field childViewElement : childViewElements) {
 
-				childViewElement.setAccessible(true);
-				final Object childView = childViewElement.get(view);
 
-				// filter out null values
-				if (childView == null) {
-					continue;
-				}
+                childViewElement.setAccessible(true);
+                final Object childView = childViewElement.get(view);
 
-				// recursion safety
-				if (this.dataContextValueByView.containsKey(childView)) {
-					continue;
-				}
+                // filter out null values
+                if(childView == null) {
+                    continue;
+                }
 
-				final Optional<DataContext> optionalFieldDataContext = Optional
-						.<DataContext> fromNullable(childViewElement.getAnnotation(DataContext.class));
-				final Optional<EventSignals> optionalFieldInputSignals = Optional
-						.<EventSignals> fromNullable(childViewElement.getAnnotation(EventSignals.class));
-				final Optional<ObservableCollection> optionalFieldObservableCollection = Optional
-						.<ObservableCollection> fromNullable(childViewElement.getAnnotation(ObservableCollection.class));
-				final Optional<PropertySlots> optionalFieldPropertySlots = Optional
-						.<PropertySlots> fromNullable(childViewElement.getAnnotation(PropertySlots.class));
+                if(childViewElement.getAnnotation(SubView.class) == null && childView.getClass()
+                                                                                     .getAnnotation(SubView.class) == null) {
+                    continue;
+                }
 
-				bindViewElement(modelExecutor,
-								inheritedModel,
+                // recursion safety
+                if(this.dataContextValueByView.containsKey(childView)) {
+                    continue;
+                }
+
+                final Optional<DataContext> optionalFieldDataContext = Optional
+                        .fromNullable(childViewElement.getAnnotation(DataContext.class));
+                final Optional<EventSignals> optionalFieldInputSignals = Optional
+                        .fromNullable(childViewElement.getAnnotation(EventSignals.class));
+                final Optional<ObservableCollection> optionalFieldObservableCollection = Optional
+                        .fromNullable(childViewElement.getAnnotation(ObservableCollection.class));
+                final Optional<PropertySlots> optionalFieldPropertySlots = Optional
+                        .fromNullable(childViewElement.getAnnotation(PropertySlots.class));
+
+                bindViewElement(modelExecutor,
+                                inheritedModel,
 								childView,
 								optionalFieldDataContext,
 								optionalFieldInputSignals,

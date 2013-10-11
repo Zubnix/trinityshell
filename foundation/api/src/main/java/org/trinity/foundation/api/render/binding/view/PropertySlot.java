@@ -20,8 +20,9 @@
 package org.trinity.foundation.api.render.binding.view;
 
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /***************************************
  * Marks a view method as the handler method for a changed model property. A
@@ -35,7 +36,7 @@ import java.lang.annotation.Target;
  *
  ***************************************
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RUNTIME)
 @Target({})
 public @interface PropertySlot {
 
