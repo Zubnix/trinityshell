@@ -12,7 +12,6 @@ public class ClientInfoView extends FXView {
     @SubView
     private final Skin<?> skin;
 
-
     @Inject
     ClientInfoView() {
         getStyleClass().add("client-info-view");

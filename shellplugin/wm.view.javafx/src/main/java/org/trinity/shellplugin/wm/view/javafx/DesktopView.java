@@ -21,7 +21,7 @@ import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 @Bind(to = @To(IMPLEMENTATION))
 public class DesktopView extends FXView {
 
-    //HACK HACK HACK since JavaFX has a *special* (cough) way of initializing an application, we can't inject it
+    //HACK HACK HACK since JavaFX has a *special* way of initializing an application, we can't inject it
     //with Guice. So we have to come up with a hack.
     private static DesktopView DESKTOPVIEW_HACK;
     private static final CountDownLatch STARTUP_HACK = new CountDownLatch(1);
