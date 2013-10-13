@@ -1,2 +1,9 @@
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
 <fx:root type="com.sun.javafx.scene.control.skin.SkinBase" xmlns:fx="http://javafx.com/fxml">
+    <HBox>
+        <Label text="Client name goes here :)"/>
+        <Button text="Close button here."/>
+    </HBox>
 </fx:root>

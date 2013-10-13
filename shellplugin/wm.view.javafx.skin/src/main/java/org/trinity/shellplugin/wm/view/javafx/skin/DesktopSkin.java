@@ -12,7 +12,6 @@ import org.trinity.shellplugin.wm.view.javafx.DesktopView;
 import java.io.IOException;
 
 
-@SubView
 public class DesktopSkin extends SkinBase<DesktopView, DesktopBehavior> {
 
     @FXML
@@ -23,7 +22,7 @@ public class DesktopSkin extends SkinBase<DesktopView, DesktopBehavior> {
 
     public DesktopSkin(final DesktopView desktopView) throws IOException {
         super(desktopView,
-                new DesktopBehavior(desktopView));
+              new DesktopBehavior(desktopView));
 
         final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/DesktopSkin.fxml"));
         fxmlLoader.setRoot(this);

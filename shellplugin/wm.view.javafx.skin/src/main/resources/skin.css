@@ -8,6 +8,9 @@
 }
 /* end views */
 
+.client-label {
+    -fx-background-color: white;
+}
 .desktop {
     -fx-background-color: #eee8d5;
 }

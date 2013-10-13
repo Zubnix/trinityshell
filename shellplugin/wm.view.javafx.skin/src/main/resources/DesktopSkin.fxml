@@ -6,7 +6,7 @@
 <fx:root type="com.sun.javafx.scene.control.skin.SkinBase" xmlns:fx="http://javafx.com/fxml">
     <BorderPane styleClass="desktop">
         <top>
-            <HBox fx:id="topBar" styleClass="top-bar" spacing="0" prefHeight="25"/>
+            <HBox fx:id="topBar" styleClass="top-bar" spacing="10" prefHeight="25"/>
         </top>
 
         <center>

@@ -8,6 +8,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
+import org.trinity.foundation.api.render.binding.view.SubView;
 import org.trinity.foundation.render.javafx.api.FXView;
 import org.trinity.foundation.render.javafx.api.FXViewBuilder;
 
@@ -26,6 +27,7 @@ public class DesktopView extends FXView {
     private static final CountDownLatch STARTUP_HACK = new CountDownLatch(1);
 
     //reference our skin as a 'local' field so the view binder can pick it up.
+    @SubView
     private final Skin<?> skin;
 
     @Inject
@@ -41,7 +43,6 @@ public class DesktopView extends FXView {
         }.start();
 
         STARTUP_HACK.await();
-
         skin = getSkin();
     }
 
