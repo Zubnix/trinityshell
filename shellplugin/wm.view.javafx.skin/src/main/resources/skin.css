@@ -8,6 +8,11 @@
 }
 /* end views */
 
+.icon {
+    -fx-font-family: FontAwesome;
+    -fx-font-size: 24;
+}
+
 .client-label {
     -fx-background-color: white;
 }
