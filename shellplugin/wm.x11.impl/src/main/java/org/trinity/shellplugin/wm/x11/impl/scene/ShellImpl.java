@@ -235,8 +235,8 @@ public class ShellImpl implements Shell {
                                                                     new ShellLayoutPropertyLine(1,
                                                                                                 new Margins(2,
                                                                                                             2,
-                                                                                                            25,
-                                                                                                            25)));
+                                                                                                            35,
+                                                                                                            45)));
                                 final ClientBarElement clientTopBarItem = clientBarElementFactory
                                         .createClientTopBarItem(clientShellSurface);
 
@@ -252,7 +252,7 @@ public class ShellImpl implements Shell {
 
                         @Override
                         public void onFailure(final Throwable t) {
-                            //To change body of implemented methods use File | Settings | File Templates.
+                            //TODO
                         }
                     });
     }

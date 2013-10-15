@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
 <?import org.trinity.shellplugin.wm.view.javafx.skin.Icon?>
 <fx:root fx:id="viewModel" type="com.sun.javafx.scene.control.skin.SkinBase" xmlns:fx="http://javafx.com/fxml">
-
-    <fx:define xmlns:fx="http://javafx.com/fxml">
-        <Icon  fx:id="iconremove" styleClass="icon" text="&#xf00D;"/>
-    </fx:define>
-
-    <HBox>
-        <Label text="${viewModel.clientName}"/>
-        <fx:copy source="iconremove"/>
+    <HBox styleClass="client-label" spacing="2">
+        <Text text="${viewModel.clientName}"/>
+        <Icon styleClass="icon" fx:value="REMOVE_CIRCLE"/>
     </HBox>
 </fx:root>
