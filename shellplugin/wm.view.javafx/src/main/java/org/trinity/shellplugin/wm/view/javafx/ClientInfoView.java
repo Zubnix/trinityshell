@@ -8,7 +8,7 @@ import org.trinity.foundation.render.javafx.api.FXView;
 
 public class ClientInfoView extends FXView {
 
-    //reference our skin as a 'local' field so the view binder can pick it up.
+    //reference our skin as a subview so the view binder can pick it up.
     @SubView
     private final Skin<?> skin;
 

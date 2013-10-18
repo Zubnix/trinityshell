@@ -46,7 +46,7 @@ import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shellplugin.wm.api.HasText;
-import org.trinity.shellplugin.wm.api.PointerInputReceiver;
+import org.trinity.shellplugin.wm.api.ReceivesPointerInput;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.ProtocolListener;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmName;
@@ -61,13 +61,13 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
 @ExecutionContext(ShellExecutor.class)
-public class ClientBarElement implements HasText, PointerInputReceiver {
+public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ClientBarElement.class);
 	private final ListeningExecutorService shellExecutor;
 	private final WmName wmName;
 	private final WmProtocols wmProtocols;
-	private final PointerInputReceiver closeButton = new PointerInputReceiver() {
+	private final ReceivesPointerInput closeButton = new ReceivesPointerInput() {
 		// called by shell executor.
 		@Override
 		public void onPointerInput() {
@@ -198,7 +198,7 @@ public class ClientBarElement implements HasText, PointerInputReceiver {
 		}
 	}
 
-	public PointerInputReceiver getCloseButton() {
+	public ReceivesPointerInput getCloseButton() {
 		return this.closeButton;
 	}
 

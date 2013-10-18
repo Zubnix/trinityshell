@@ -20,6 +20,6 @@
 
 package org.trinity.shellplugin.wm.api;
 
-public interface PointerInputReceiver {
+public interface ReceivesPointerInput {
 	void onPointerInput();
 }

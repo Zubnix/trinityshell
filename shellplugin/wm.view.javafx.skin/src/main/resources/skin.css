@@ -47,7 +47,7 @@
 }
 
 .client-label .icon:hover {
-    -fx-fill: cyan;
+    -fx-fill: red;
 }
 
 .client-label Text {
