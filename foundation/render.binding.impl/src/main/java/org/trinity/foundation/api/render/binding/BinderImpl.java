@@ -154,6 +154,10 @@ public class BinderImpl implements Binder {
         try {
             Field subViewField = changedViewModel.getClass().getField(subViewName);
             Object dataModel = dataModelByViewModel.get(changedViewModel);
+            if(dataModel == null) {
+                //our 'parent' view model is not yet bind. we will be bound when our parent view model is bound.
+                return;
+            }
 
             bindSubViewElement(dataModelExecutor,
                                subViewField,
@@ -738,7 +742,7 @@ public class BinderImpl implements Binder {
 
             final Class<?> viewModelClass = viewModel.getClass();
 
-            final Field[] viewModelFields = getDeclaredFields(viewModelClass);
+            final Field[] viewModelFields = getFields(viewModelClass);
 
             for(final Field subViewModelField : viewModelFields) {
                 bindSubViewElement(dataModelExecutor,
@@ -757,6 +761,10 @@ public class BinderImpl implements Binder {
                                       Field subViewModelField,
                                       final Object inheritedDataModel,
                                       final Object viewModel) throws IllegalAccessException {
+        checkNotNull(dataModelExecutor);
+        checkNotNull(subViewModelField);
+        checkNotNull(inheritedDataModel);
+        checkNotNull(viewModel);
 
         //find any previously associated value and remove it
         Object oldSubViewModel = subviewModelByNameAndViewModel.get(viewModel,
@@ -765,7 +773,6 @@ public class BinderImpl implements Binder {
             unregisterBinding(oldSubViewModel);
         }
 
-        subViewModelField.setAccessible(true);
         final Object subViewModel = subViewModelField.get(viewModel);
 
         // filter out null values
@@ -849,10 +856,10 @@ public class BinderImpl implements Binder {
                                propertyName);
     }
 
-    protected Field[] getDeclaredFields(final Class<?> clazz) {
+    protected Field[] getFields(final Class<?> clazz) {
         Field[] fields = DECLARED_FIELDS_CACHE.get(clazz);
         if(fields == null) {
-            fields = clazz.getDeclaredFields();
+            fields = clazz.getFields();
             DECLARED_FIELDS_CACHE.put(clazz,
                                       fields);
         }

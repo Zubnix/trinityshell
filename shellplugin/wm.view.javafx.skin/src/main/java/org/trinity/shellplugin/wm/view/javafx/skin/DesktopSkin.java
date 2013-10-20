@@ -24,7 +24,7 @@ public class DesktopSkin extends SkinBase<DesktopView, DesktopBehavior> {
     @SubView
     @ObservableCollection(value = "clientsBar",
                           view = ClientInfoView.class)
-    private Pane topBar;
+    public Pane topBar;
 
     public DesktopSkin(final DesktopView desktopView) throws IOException {
         super(desktopView,

@@ -21,12 +21,12 @@ public class ClientInfoSkin extends SkinBase<ClientInfoView, ClientInfoBehavior>
 
     private final StringProperty clientName = new SimpleStringProperty("Client name goes here :)");
 
-    @FXML
+    //@FXML
     @SubView
     @DataModelContext("closeButton")
     @EventSignals(@EventSignal(name = "onPointerInput",
                                filter = PointerInputFilter.class))
-    private Icon closeButton;
+    public Icon closeButton;
 
     public ClientInfoSkin(final ClientInfoView clientInfoView) throws IOException {
         super(clientInfoView,
