@@ -43,12 +43,12 @@ public @interface PropertySlot {
 	/**
 	 * The datacontext of this specific annotation, relative to current active
 	 * datacontext, either implicit (inherited) or explicit from a
-	 * {@link DataContext}.
+	 * {@link DataModelContext}.
 	 *
 	 * @return A property path consisting of 1 or more property names seperated
 	 *         by a dot eg. "foo.bar.baz".
 	 */
-	String dataContext() default "";
+	String dataModelContext() default "";
 
 	/***************************************
 	 * The model property name.

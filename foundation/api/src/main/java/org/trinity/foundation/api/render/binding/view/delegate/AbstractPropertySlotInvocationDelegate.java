@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
 /**
  *
  */
-public abstract class AbstractPropertySlotInvocatorDelegate implements PropertySlotInvocatorDelegate {
+public abstract class AbstractPropertySlotInvocationDelegate implements PropertySlotInvocationDelegate {
     @Override
     public ListenableFuture<Void> invoke(final Object view, final Method viewMethod, final Object argument) {
         final ListenableFutureTask<Void> invokeTask = ListenableFutureTask.create(new Callable<Void>() {

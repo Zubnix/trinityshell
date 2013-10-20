@@ -19,8 +19,6 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.view;
 
-import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -31,7 +29,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /***************************************
  * Bind every child view of the marked view to the respective element of the
  * referenced collection. Correctly handling these child views is delegated to
- * the {@link ChildViewDelegate}.
+ * the {@link org.trinity.foundation.api.render.binding.view.delegate.SubViewModelDelegate}.
  ***************************************
  */
 @Retention(RUNTIME)

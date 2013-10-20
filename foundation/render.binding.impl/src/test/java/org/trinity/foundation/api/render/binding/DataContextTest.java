@@ -10,10 +10,10 @@ import static org.mockito.Mockito.when;
 import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
+import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocationDelegate;
 import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
-import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
-import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
+import org.trinity.foundation.api.render.binding.view.delegate.SubViewModelDelegate;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -27,13 +27,13 @@ public class DataContextTest {
 		final Model model = new Model();
 		final View view = new View();
 
-		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
+		final PropertySlotInvocationDelegate propertySlotInvocationDelegate = mock(PropertySlotInvocationDelegate.class);
 
-		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		final SubViewModelDelegate subViewModelDelegate = mock(SubViewModelDelegate.class);
 		final ListenableFuture<CollectionElementView> viewFuture = mock(ListenableFuture.class);
 		when(viewFuture.get()).thenReturn(new CollectionElementView());
 
-		when(childViewDelegate.newView(	view,
+		when(subViewModelDelegate.newView(	view,
 										CollectionElementView.class,
 										0)).thenReturn(viewFuture);
 
@@ -42,16 +42,16 @@ public class DataContextTest {
 		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
 
 		final Binder binder = new BinderImpl(	injector,
-												propertySlotInvocatorDelegate,
-												childViewDelegate);
+                                                 propertySlotInvocationDelegate,
+                                                subViewModelDelegate);
 		binder.bind(MoreExecutors.sameThreadExecutor(),
 					model,
 					view);
-		binder.updateBinding(	MoreExecutors.sameThreadExecutor(),
-								model,
-								"otherSubModel");
+		binder.updateDataModelBinding(MoreExecutors.sameThreadExecutor(),
+                                      model,
+                                      "otherSubModel");
 
-		verify(	propertySlotInvocatorDelegate,
+		verify(propertySlotInvocationDelegate,
 				times(2)).invoke(	view.getMouseInputSubView(),
 									SubView.class.getMethod("handleStringProperty",
 															String.class),

@@ -5,5 +5,5 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 public interface ViewBuilder {
 
-    ListenableFuture<Void> build(ViewBuilderResult viewBuildResult);
+    ListenableFuture<Object[]> build(ViewBuilderResult viewBuildResult);
 }

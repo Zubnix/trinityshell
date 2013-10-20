@@ -32,10 +32,10 @@ public abstract class AbstractViewBuilder implements ViewBuilder {
     });
 
     @Override
-    public ListenableFuture<Void> build(final ViewBuilderResult viewBuildResult) {
-        return displayExecutor.submit(new Callable<Void>() {
+    public ListenableFuture<Object[]> build(final ViewBuilderResult viewBuildResult) {
+        return displayExecutor.submit(new Callable<Object[]>() {
             @Override
-            public Void call() throws ExecutionException, InterruptedException {
+            public Object[] call() throws ExecutionException, InterruptedException {
                 try(DisplaySurfaceCreator displaySurfaceCreator = displaySurfacePool.getDisplaySurfaceCreator()) {
                     invokeViewBuild(viewFuture);
                     final Object createdViewObject = viewFuture.get();
@@ -44,7 +44,8 @@ public abstract class AbstractViewBuilder implements ViewBuilder {
                             .reference(createdDisplaySurfaceHandle);
                     viewBuildResult.onResult(createdViewObject,
                                              displaySurface);
-                    return null;
+                    return new Object[]{createdViewObject,
+                                        displaySurface};
                 }
             }
         });

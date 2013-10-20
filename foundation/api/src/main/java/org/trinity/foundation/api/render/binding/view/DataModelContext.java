@@ -43,7 +43,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({FIELD,
          TYPE})
 @Retention(RUNTIME)
-public @interface DataContext {
+public @interface DataModelContext {
 	/***************************************
 	 * A path of getters consisting of 1 or more getter names seperated by a dot
 	 * eg. "foo.bar.baz".

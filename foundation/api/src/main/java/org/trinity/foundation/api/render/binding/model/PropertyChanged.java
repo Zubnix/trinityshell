@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  * marked method, the properties with a matching name will be used to update the
  * bound view.
  *
- * @see {@link Binder#updateBinding(ListeningExecutorService, Object, String)}
+ * @see {@link Binder#updateDataModelBinding(ListeningExecutorService, Object, String)}
  *
  ***************************************
  */

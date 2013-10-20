@@ -1,5 +1,6 @@
 package org.trinity.shellplugin.wm.view.javafx;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -8,9 +9,11 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
+import org.trinity.foundation.api.render.binding.Binder;
 import org.trinity.foundation.api.render.binding.view.SubView;
 import org.trinity.foundation.render.javafx.api.FXView;
 import org.trinity.foundation.render.javafx.api.FXViewBuilder;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 
 import javax.inject.Inject;
 import java.util.concurrent.CountDownLatch;
@@ -26,12 +29,11 @@ public class DesktopView extends FXView {
     private static DesktopView DESKTOPVIEW_HACK;
     private static final CountDownLatch STARTUP_HACK = new CountDownLatch(1);
 
-    //reference our skin as a 'local' field so the view binder can pick it up.
-    @SubView
-    private final Skin<?> skin;
-
     @Inject
-    DesktopView() throws InterruptedException {
+    DesktopView(final @ShellExecutor ListeningExecutorService shellExecutor,
+                final Binder binder) throws InterruptedException {
+        super(shellExecutor,
+              binder);
         getStyleClass().add("desktop-view");
 
         DESKTOPVIEW_HACK = this;
@@ -41,9 +43,8 @@ public class DesktopView extends FXView {
                 Application.launch(FXApplication.class);
             }
         }.start();
-
         STARTUP_HACK.await();
-        skin = getSkin();
+
     }
 
     @Override

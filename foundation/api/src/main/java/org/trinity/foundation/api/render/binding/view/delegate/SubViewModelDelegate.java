@@ -30,7 +30,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  ***************************************
  */
 @ExecutionContext(RenderExecutor.class)
-public interface ChildViewDelegate {
+public interface SubViewModelDelegate {
 	/***************************************
 	 * Create a new view element.
 	 *

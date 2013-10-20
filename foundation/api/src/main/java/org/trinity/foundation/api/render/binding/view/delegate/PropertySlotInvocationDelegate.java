@@ -39,7 +39,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  ***************************************
  */
 @ExecutionContext(RenderExecutor.class)
-public interface PropertySlotInvocatorDelegate {
+public interface PropertySlotInvocationDelegate {
 
 	/***************************************
 	 * Invoke a view method with the given argument.

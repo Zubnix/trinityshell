@@ -140,7 +140,7 @@ public class ShellImpl implements Shell {
         viewBuilder.build(new ViewBuilderResult() {
             @Override
             public void onResult(final Object bindableView,
-                                 final DisplaySurface viewDisplaySurface) {
+                                     final DisplaySurface viewDisplaySurface) {
                 ShellImpl.this.binder.bind(shellExecutor,
                                            ShellImpl.this,
                                            bindableView);

@@ -1,21 +1,19 @@
 package org.trinity.shellplugin.wm.view.javafx;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import javafx.scene.control.Skin;
-import org.trinity.foundation.api.render.binding.view.SubView;
+import org.trinity.foundation.api.render.binding.Binder;
 import org.trinity.foundation.render.javafx.api.FXView;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
 
 
 public class ClientInfoView extends FXView {
 
-    //reference our skin as a subview so the view binder can pick it up.
-    @SubView
-    private final Skin<?> skin;
-
     @Inject
-    ClientInfoView() {
+    ClientInfoView(final @ShellExecutor ListeningExecutorService shellExecutor,
+                   final Binder binder) {
+        super(shellExecutor,binder);
         getStyleClass().add("client-info-view");
-        skin = getSkin();
     }
 
     @Override

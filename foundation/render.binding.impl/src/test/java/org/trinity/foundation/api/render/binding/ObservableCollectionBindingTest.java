@@ -9,8 +9,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.junit.Test;
 import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
-import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
-import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocatorDelegate;
+import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocationDelegate;
+import org.trinity.foundation.api.render.binding.view.delegate.SubViewModelDelegate;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -24,11 +24,11 @@ public class ObservableCollectionBindingTest {
 		final Model model = new Model();
 		final View view = new View();
 
-		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
-		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		final PropertySlotInvocationDelegate propertySlotInvocationDelegate = mock(PropertySlotInvocationDelegate.class);
+		final SubViewModelDelegate subViewModelDelegate = mock(SubViewModelDelegate.class);
 
 		final ListenableFuture<CollectionElementView> viewFuture = Futures.immediateFuture(new CollectionElementView());
-		when(childViewDelegate.newView(	view,
+		when(subViewModelDelegate.newView(	view,
 										CollectionElementView.class,
 										0)).thenReturn(viewFuture);
 
@@ -37,13 +37,13 @@ public class ObservableCollectionBindingTest {
 		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
 
 		final Binder binder = new BinderImpl(	injector,
-												propertySlotInvocatorDelegate,
-												childViewDelegate);
+                                                 propertySlotInvocationDelegate,
+                                                subViewModelDelegate);
 		binder.bind(MoreExecutors.sameThreadExecutor(),
 					model,
 					view);
 
-		verify(	childViewDelegate,
+		verify(subViewModelDelegate,
 				times(1)).newView(	view,
 									CollectionElementView.class,
 									0);
@@ -54,14 +54,14 @@ public class ObservableCollectionBindingTest {
 		final Model model = new Model();
 		final View view = new View();
 
-		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
-		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		final PropertySlotInvocationDelegate propertySlotInvocationDelegate = mock(PropertySlotInvocationDelegate.class);
+		final SubViewModelDelegate subViewModelDelegate = mock(SubViewModelDelegate.class);
 		final ListenableFuture<CollectionElementView> viewFuture = Futures.immediateFuture(new CollectionElementView());
 
-		when(childViewDelegate.<CollectionElementView> newView(	view,
+		when(subViewModelDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
 																0)).thenReturn(viewFuture);
-		when(childViewDelegate.<CollectionElementView> newView(	view,
+		when(subViewModelDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
 																1)).thenReturn(viewFuture);
 
@@ -70,8 +70,8 @@ public class ObservableCollectionBindingTest {
 		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
 
 		final Binder binder = new BinderImpl(	injector,
-												propertySlotInvocatorDelegate,
-												childViewDelegate);
+                                                 propertySlotInvocationDelegate,
+                                                subViewModelDelegate);
 		binder.bind(MoreExecutors.sameThreadExecutor(),
 					model,
 					view);
@@ -80,11 +80,11 @@ public class ObservableCollectionBindingTest {
 
 		model.getDummySubModels().add(childDummySubModel);
 
-		verify(	childViewDelegate,
+		verify(subViewModelDelegate,
 				times(1)).newView(	view,
 															CollectionElementView.class,
 															0);
-		verify(	childViewDelegate,
+		verify(subViewModelDelegate,
 				times(1)).newView(	view,
 															CollectionElementView.class,
 															1);
@@ -96,13 +96,13 @@ public class ObservableCollectionBindingTest {
 		final Model model = new Model();
 		final View view = new View();
 
-		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
-		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		final PropertySlotInvocationDelegate propertySlotInvocationDelegate = mock(PropertySlotInvocationDelegate.class);
+		final SubViewModelDelegate subViewModelDelegate = mock(SubViewModelDelegate.class);
 		final CollectionElementView collectionElementView = new CollectionElementView();
 
 		final ListenableFuture<CollectionElementView> viewFuture = Futures.immediateFuture(collectionElementView);
 
-		when(childViewDelegate.<CollectionElementView> newView(	view,
+		when(subViewModelDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
 																0)).thenReturn(viewFuture);
 
@@ -111,14 +111,14 @@ public class ObservableCollectionBindingTest {
 		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
 
 		final Binder binder = new BinderImpl(	injector,
-												propertySlotInvocatorDelegate,
-												childViewDelegate);
+                                                 propertySlotInvocationDelegate,
+                                                subViewModelDelegate);
 		binder.bind(MoreExecutors.sameThreadExecutor(),
 					model,
 					view);
 
 		model.getDummySubModels().remove(0);
-		verify(	childViewDelegate,
+		verify(subViewModelDelegate,
 				times(1)).destroyView(	view,
 										collectionElementView,
 										0);
@@ -129,17 +129,17 @@ public class ObservableCollectionBindingTest {
 		final Model model = new Model();
 		final View view = new View();
 
-		final PropertySlotInvocatorDelegate propertySlotInvocatorDelegate = mock(PropertySlotInvocatorDelegate.class);
-		final ChildViewDelegate childViewDelegate = mock(ChildViewDelegate.class);
+		final PropertySlotInvocationDelegate propertySlotInvocationDelegate = mock(PropertySlotInvocationDelegate.class);
+		final SubViewModelDelegate subViewModelDelegate = mock(SubViewModelDelegate.class);
 		final ListenableFuture<CollectionElementView> viewFuture = Futures.immediateFuture(new CollectionElementView());
 
-		when(childViewDelegate.<CollectionElementView> newView(	view,
+		when(subViewModelDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
 																0)).thenReturn(viewFuture);
-		when(childViewDelegate.<CollectionElementView> newView(	view,
+		when(subViewModelDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
 																1)).thenReturn(viewFuture);
-		when(childViewDelegate.<CollectionElementView> newView(	view,
+		when(subViewModelDelegate.<CollectionElementView> newView(	view,
 																CollectionElementView.class,
 																2)).thenReturn(viewFuture);
 
@@ -148,8 +148,8 @@ public class ObservableCollectionBindingTest {
 		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
 
 		final Binder binder = new BinderImpl(	injector,
-												propertySlotInvocatorDelegate,
-												childViewDelegate);
+                                                 propertySlotInvocationDelegate,
+                                                subViewModelDelegate);
 		binder.bind(MoreExecutors.sameThreadExecutor(),
 					model,
 					view);

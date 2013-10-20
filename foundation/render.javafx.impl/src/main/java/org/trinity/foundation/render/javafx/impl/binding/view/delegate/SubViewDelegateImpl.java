@@ -1,19 +1,25 @@
 package org.trinity.foundation.render.javafx.impl.binding.view.delegate;
 
+import com.google.common.base.Function;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.inject.Injector;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import org.apache.onami.autobind.annotations.Bind;
-import org.trinity.foundation.api.render.binding.view.delegate.ChildViewDelegate;
+import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.render.ViewBuilderResult;
+import org.trinity.foundation.api.render.binding.view.delegate.SubViewModelDelegate;
 import org.trinity.foundation.render.javafx.api.FXView;
+import org.trinity.foundation.render.javafx.api.FXViewBuilder;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.concurrent.Callable;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.util.concurrent.Futures.transform;
 import static java.lang.String.format;
 
 /**
@@ -21,17 +27,21 @@ import static java.lang.String.format;
  */
 @Bind
 @Singleton
-public class ChildViewDelegateImpl implements ChildViewDelegate {
+public class SubViewDelegateImpl implements SubViewModelDelegate {
 
     private final Injector injector;
 
     @Inject
-    ChildViewDelegateImpl(final Injector injector) {
+    SubViewDelegateImpl(final Injector injector) {
         this.injector = injector;
     }
 
     @Override
-    public <T> ListenableFuture<T> newView(final Object parentView, final Class<T> childViewType, final int position) {
+    public <T> ListenableFuture<T> newView(
+            final Object parentView,
+            final Class<T> childViewType,
+            final int position
+                                          ) {
         checkArgument(parentView instanceof Pane,
                       format("Expected parent view should be of type %s",
                              Pane.class.getName()));
@@ -39,28 +49,41 @@ public class ChildViewDelegateImpl implements ChildViewDelegate {
                 format("Expected child view should be of type %s",
                         FXView.class.getName()));
 
-        final ListenableFutureTask<T> newViewTask = ListenableFutureTask.create(new Callable<T>() {
-            @Override
-            public T call() throws Exception {
-                final Pane parentViewInstance = (Pane) parentView;
+        final FXViewBuilder subViewBuilder = new FXViewBuilder((Class<? extends FXView>) childViewType);
+        injector.injectMembers(subViewBuilder);
 
-                final T childView = ChildViewDelegateImpl.this.injector.getInstance(childViewType);
-                final FXView childViewInstance = (FXView) childView;
+        ListenableFuture<Object[]> subViewBuildFuture = subViewBuilder.build(
+                new ViewBuilderResult() {
+                    @Override
+                    public void onResult(final Object bindableView,
+                                         final DisplaySurface viewDisplaySurface) {
+                        final FXView childView = (FXView) bindableView;
+                        final Pane parentViewInstance = (Pane) parentView;
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                childView.setParent(parentViewInstance);
+                            }
+                        });
+                    }
+                });
 
-                childViewInstance.setParent(parentViewInstance);
-
-
-                return (T) childViewInstance;
-            }
-        });
-
-        Platform.runLater(newViewTask);
-
-        return newViewTask;
+        return transform(subViewBuildFuture,
+                         new Function<Object[], T>() {
+                             @Nullable
+                             @Override
+                             public T apply(@Nullable final Object[] input) {
+                                 return (T) input[0];
+                             }
+                         });
     }
 
     @Override
-    public ListenableFuture<Void> destroyView(final Object parentView, final Object deletedChildView, final int deletedPosition) {
+    public ListenableFuture<Void> destroyView(
+            final Object parentView,
+            final Object deletedChildView,
+            final int deletedPosition
+                                             ) {
 
         final ListenableFutureTask<Void> destroyTask = ListenableFutureTask.create(new Callable<Void>() {
             @Override

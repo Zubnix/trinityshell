@@ -7,7 +7,7 @@
  * <p>
  * BindableView bindings:
  * <ul>
- * <li>{@link org.trinity.foundation.api.render.binding.view.DataContext}</li>
+ * <li>{@link org.trinity.foundation.api.render.binding.view.DataModelContext}</li>
  * <li>{@link org.trinity.foundation.api.render.binding.view.EventSignals}</li>
  * <li>
  * {@link org.trinity.foundation.api.render.binding.view.ObservableCollection}</li>

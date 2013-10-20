@@ -32,29 +32,41 @@ import javax.annotation.Nonnull;
 public interface Binder {
 
 	/***************************************
-	 * Update the bound views so they reflect the state of the changed model.
-	 *
-	 * @param changedViewModel
-	 *            The view model that changed.
-	 * @param propertyName
-	 *            The name of the property that changed.
-	 ***************************************
-	 */
-	ListenableFuture<Void> updateBinding(	@Nonnull ListeningExecutorService modelExecutor,
-											@Nonnull Object changedViewModel,
-											@Nonnull String propertyName);
+     * Update the bound views so they reflect the state of the changed data model.
+     * @param dataModelExecutor The executor that operates on the data model.
+     * @param changedDataModel The data model who's property changed.
+     * @param propertyName The name of the property that changed.
+     * @return A future indicating when the operation is done.
+     ***************************************
+     */
+    ListenableFuture<Void> updateDataModelBinding(@Nonnull ListeningExecutorService dataModelExecutor,
+                                                  @Nonnull Object changedDataModel,
+                                                  @Nonnull String propertyName);
 
-	/***************************************
-	 * Bind a view to a model so it reflects the model's state. The given view
-	 * model will be the data context of the given view.
-	 *
-	 * @param viewModel
-	 *            The model to visually represent
-	 * @param view
-	 *            The visual representation of the model
-	 ***************************************
-	 */
-	ListenableFuture<Void> bind(@Nonnull ListeningExecutorService modelExecutor,
-								@Nonnull Object viewModel,
-								@Nonnull Object view);
+    /**
+     * ************************************
+     * Bind a view model to a data model so a view reflects the data model's state. The given data model
+     * model will be used as the root data model context for the given view model.
+     *
+     * @param dataModelExecutor The executor that operates on the data model.
+     * @param dataModel         The data model to visually represent
+     * @param viewModel         The visual representation of the data model
+     * @return A future indicating when the operation is done.
+     ***************************************
+     */
+    ListenableFuture<Void> bind(@Nonnull ListeningExecutorService dataModelExecutor,
+                                @Nonnull Object dataModel,
+                                @Nonnull Object viewModel);
+
+    /**
+     * Update a bound view so that the changed sub view is reflected.
+     *
+     * @param dataModelExecutor The executor that operates on the data model.
+     * @param changedViewModel  The view model who's sub view changed.
+     * @param subViewName       The name of the sub view that changed.
+     * @return  future indicating when the operation is done.
+     */
+    ListenableFuture<Void> updateViewModelBinding(@Nonnull ListeningExecutorService dataModelExecutor,
+                                                  @Nonnull Object changedViewModel,
+                                                  @Nonnull String subViewName);
 }

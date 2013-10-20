@@ -1,6 +1,6 @@
 package org.trinity.foundation.api.render.binding;
 
-import org.trinity.foundation.api.render.binding.view.DataContext;
+import org.trinity.foundation.api.render.binding.view.DataModelContext;
 import org.trinity.foundation.api.render.binding.view.EventSignal;
 import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
 import org.trinity.foundation.api.render.binding.view.EventSignals;
@@ -9,10 +9,10 @@ import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 
 @ObservableCollection(value = "dummySubModels", view = CollectionElementView.class)
-@PropertySlots(@PropertySlot(dataContext = "class", propertyName = "name", methodName = "setClassName", argumentTypes = String.class))
+@PropertySlots(@PropertySlot(dataModelContext = "class", propertyName = "name", methodName = "setClassName", argumentTypes = String.class))
 public class View {
 
-	@DataContext("otherSubModel.subSubModel")
+	@DataModelContext("otherSubModel.subSubModel")
 	@PropertySlots(@PropertySlot(propertyName = "booleanProperty", methodName = "handleStringProperty", argumentTypes = String.class, adapter = BooleanToStringAdapter.class))
 	private SubView mouseInputSubView = new SubView();
 	@EventSignals(@EventSignal(name = "onKey", filter = EventSignalFilter.class))

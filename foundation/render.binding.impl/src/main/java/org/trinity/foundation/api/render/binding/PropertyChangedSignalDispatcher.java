@@ -36,10 +36,9 @@ import com.google.inject.Key;
 /***************************************
  * Post processes a method annotated with {@link PropertyChanged}. It reads the
  * {@link PropertyChanged#value()} and finds for each String value a
- * {@link ViewProperty} and {@link PropertySlot} with the same name. Each
- * matching {@code ViewProperty} will be read and it's corresponding
- * {@code PropertySlot} will be invoked. Invoking the {@code PropertySlot} is
- * done through an underlying {@link ViewSlotHandler} implementation.
+ * matching method on the view model. Each
+ * matching property will be read and it's corresponding
+ * method on the view model will be invoked.
  * <p>
  * This class is used by Google Guice AOP.
  ***************************************
@@ -63,9 +62,9 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 		final String[] changedPropertyNames = changedPropertySignal.value();
 
 		for (final String propertyName : changedPropertyNames) {
-			this.binder.updateBinding(modelExecutorInstance,
-                    changedModel,
-                    propertyName);
+			this.binder.updateDataModelBinding(modelExecutorInstance,
+                                               changedModel,
+                                               propertyName);
 		}
 
 		return invocationResult;
