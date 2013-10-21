@@ -20,7 +20,6 @@ public class DesktopSkin extends SkinBase<DesktopView, DesktopBehavior> {
                       16.0);
     }
 
-    @FXML
     @SubView
     @ObservableCollection(value = "clientsBar",
                           view = ClientInfoView.class)

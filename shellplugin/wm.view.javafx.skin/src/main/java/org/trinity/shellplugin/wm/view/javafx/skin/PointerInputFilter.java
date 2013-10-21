@@ -15,12 +15,11 @@ public class PointerInputFilter implements EventSignalFilter {
     public void installFilter(@Nonnull final Object view,
                               @Nonnull final Signal signal) {
         Node node = (Node) view;
-        node.addEventFilter(MOUSE_CLICKED,
-                            new EventHandler<MouseEvent>() {
-                                public void handle(MouseEvent event) {
-                                    event.consume();
-                                    signal.fire();
-                                }
-                            });
+        node.addEventHandler(MOUSE_CLICKED,
+                             new EventHandler<MouseEvent>() {
+                                 public void handle(MouseEvent event) {
+                                     signal.fire();
+                                 }
+                             });
     }
 }
