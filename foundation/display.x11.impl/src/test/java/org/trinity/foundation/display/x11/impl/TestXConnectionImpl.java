@@ -26,8 +26,8 @@ public class TestXConnectionImpl {
 
     @Test
     public void testOpen() {
-
-        //GIVEN: DISPLAY=":0"
+        //given
+        //an X display server on :0
         String display = ":0";
         SWIGTYPE_p_xcb_connection_t connection = mock(SWIGTYPE_p_xcb_connection_t.class);
 
@@ -38,10 +38,12 @@ public class TestXConnectionImpl {
         mockStatic(System.class);
         when(System.getenv(eq("DISPLAY"))).thenReturn(display);
 
-        //WHEN x connection object is constructed
+        //when
+        //XConnectionImpl is constructed
         new XConnectionImpl();
 
-        //THEN a new xcb X connection should be established on ":0".
+        //then
+        //a new xcb X connection should be established on ":0".
         verifyStatic();
         System.getenv("DISPLAY");
 
@@ -52,7 +54,8 @@ public class TestXConnectionImpl {
 
     @Test
     public void testClose() {
-        //GIVEN: open display on ":0"
+        //given
+        //an open XConnectionImpl on ":0"
         String display = ":0";
         SWIGTYPE_p_xcb_connection_t connection = mock(SWIGTYPE_p_xcb_connection_t.class);
 
@@ -65,10 +68,12 @@ public class TestXConnectionImpl {
 
         XConnectionImpl xConnection = new XConnectionImpl();
 
-        //WHEN x connection object is close
+        //when
+        //XConnectionImpl object is close
         xConnection.close();
 
-        //THEN the underlying connection to the X server should be closed
+        //then
+        //the underlying connection to the X server should be closed
         verifyStatic();
         xcb_disconnect(connection);
     }
