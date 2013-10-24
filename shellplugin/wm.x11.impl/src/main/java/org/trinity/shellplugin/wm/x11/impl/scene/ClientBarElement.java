@@ -20,16 +20,13 @@
 
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
-import static com.google.common.util.concurrent.Futures.addCallback;
-import static org.freedesktop.xcb.LibXcb.xcb_flush;
-import static org.freedesktop.xcb.LibXcb.xcb_send_event;
-import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
-import static org.freedesktop.xcb.LibXcbConstants.XCB_CURRENT_TIME;
-
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
-import java.util.concurrent.Callable;
-
+import com.google.common.base.Optional;
+import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import org.freedesktop.xcb.IntArray;
 import org.freedesktop.xcb.xcb_client_message_event_t;
 import org.freedesktop.xcb.xcb_event_mask_t;
@@ -52,13 +49,15 @@ import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.ProtocolListener;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmName;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmProtocols;
 
-import com.google.common.base.Optional;
-import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+import java.util.concurrent.Callable;
+
+import static com.google.common.util.concurrent.Futures.addCallback;
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
+import static org.freedesktop.xcb.LibXcb.xcb_send_event;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CURRENT_TIME;
 
 @ExecutionContext(ShellExecutor.class)
 public class ClientBarElement implements HasText, ReceivesPointerInput {
@@ -198,6 +197,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 		}
 	}
 
+    //used by view
 	public ReceivesPointerInput getCloseButton() {
 		return this.closeButton;
 	}
@@ -234,13 +234,13 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 		final xcb_generic_event_t generic_event = new xcb_generic_event_t(	xcb_client_message_event_t.getCPtr(client_message_event),
 																			false);
-		xcb_send_event(	this.xConnection.getConnectionReference().get(),
-						(short) 0,
+        xcb_send_event(this.xConnection.getConnectionReference(),
+                       (short) 0,
 						winId,
 						xcb_event_mask_t.XCB_EVENT_MASK_NO_EVENT,
 						generic_event);
-		xcb_flush(this.xConnection.getConnectionReference().get());
-	}
+        xcb_flush(this.xConnection.getConnectionReference());
+    }
 
 	@Override
 	public String getText() {

@@ -71,10 +71,9 @@ public class WmProtocols extends AbstractCachedProtocol<xcb_icccm_get_wm_protoco
 
 	@Override
 	protected ListenableFuture<Optional<xcb_icccm_get_wm_protocols_reply_t>> queryProtocol(final DisplaySurface xWindow) {
-		final int window = ((Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle()).intValue();
+		final int window = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
 		final xcb_get_property_cookie_t get_property_cookie = xcb_icccm_get_wm_protocols(	this.xConnection
-																									.getConnectionReference()
-																									.get(),
+																									.getConnectionReference(),
 																							window,
 																							getProtocolAtomId());
 		return this.displayExecutor.submit(new Callable<Optional<xcb_icccm_get_wm_protocols_reply_t>>() {
@@ -84,7 +83,7 @@ public class WmProtocols extends AbstractCachedProtocol<xcb_icccm_get_wm_protoco
 				final xcb_generic_error_t e = new xcb_generic_error_t();
 				final xcb_icccm_get_wm_protocols_reply_t wm_protocols = new xcb_icccm_get_wm_protocols_reply_t();
 				final short stat = xcb_icccm_get_wm_protocols_reply(WmProtocols.this.xConnection
-																			.getConnectionReference().get(),
+																			.getConnectionReference(),
 																	get_property_cookie,
 																	wm_protocols,
 																	e);

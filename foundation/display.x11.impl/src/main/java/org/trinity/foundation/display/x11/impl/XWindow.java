@@ -156,7 +156,7 @@ public final class XWindow implements DisplaySurface {
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-		return this.xConnection.getConnectionReference().get();
+		return this.xConnection.getConnectionReference();
 	}
 
 	@Override
@@ -181,25 +181,25 @@ public final class XWindow implements DisplaySurface {
 										null);
 	}
 
-	public ListenableFuture<Void> lower() {
-
-		final int winId = getWindowId();
-
-		return this.xExecutor.submit(	new Runnable() {
-
-											@Override
-											public void run() {
-												LOG.debug(	"[winId={}] lower.",
-															winId);
-												xcb_configure_window(	getConnectionRef(),
-																		winId,
-																		XWindow.LOWER_VALUE_MASK,
-																		XWindow.LOWER_VALUE_LIST_BUFFER);
-												xcb_flush(getConnectionRef());
-											}
-										},
-										null);
-	}
+//	public ListenableFuture<Void> lower() {
+//
+//		final int winId = getWindowId();
+//
+//		return this.xExecutor.submit(	new Runnable() {
+//
+//											@Override
+//											public void run() {
+//												LOG.debug(	"[winId={}] lower.",
+//															winId);
+//												xcb_configure_window(	getConnectionRef(),
+//																		winId,
+//																		XWindow.LOWER_VALUE_MASK,
+//																		XWindow.LOWER_VALUE_LIST_BUFFER);
+//												xcb_flush(getConnectionRef());
+//											}
+//										},
+//										null);
+//	}
 
 	@Override
 	public ListenableFuture<Void> show() {

@@ -36,7 +36,6 @@ import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 
-import com.google.common.base.Optional;
 import com.google.inject.Singleton;
 
 @Bind
@@ -71,7 +70,7 @@ public class XConnectionImpl implements XConnection {
     }
 
     @Override
-    public Optional<SWIGTYPE_p_xcb_connection_t> getConnectionReference() {
-        return Optional.fromNullable(this.xcb_connection);
+    public SWIGTYPE_p_xcb_connection_t getConnectionReference() {
+        return this.xcb_connection;
     }
 }

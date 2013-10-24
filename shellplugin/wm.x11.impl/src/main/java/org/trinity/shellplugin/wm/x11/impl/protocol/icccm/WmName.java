@@ -26,7 +26,6 @@ import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
 
 import java.util.concurrent.Callable;
 
-import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -74,8 +73,7 @@ public class WmName extends AbstractCachedProtocol<xcb_icccm_get_text_property_r
 	protected ListenableFuture<Optional<xcb_icccm_get_text_property_reply_t>> queryProtocol(final DisplaySurface xWindow) {
 		final int window = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
 		final xcb_get_property_cookie_t get_property_cookie = xcb_icccm_get_wm_name(this.xConnection
-																							.getConnectionReference()
-																							.get(),
+																							.getConnectionReference(),
 																					window);
 		final xcb_generic_error_t e = new xcb_generic_error_t();
 		final xcb_icccm_get_text_property_reply_t prop = new xcb_icccm_get_text_property_reply_t();
@@ -84,7 +82,7 @@ public class WmName extends AbstractCachedProtocol<xcb_icccm_get_text_property_r
 			@Override
 			public Optional<xcb_icccm_get_text_property_reply_t> call() throws Exception {
 
-				final short stat = xcb_icccm_get_wm_name_reply(	WmName.this.xConnection.getConnectionReference().get(),
+				final short stat = xcb_icccm_get_wm_name_reply(	WmName.this.xConnection.getConnectionReference(),
 																get_property_cookie,
 																prop,
 																e);

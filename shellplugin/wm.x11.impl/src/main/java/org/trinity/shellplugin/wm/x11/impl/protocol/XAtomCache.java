@@ -80,25 +80,24 @@ public class XAtomCache {
 
 	private Integer internAtom(final String atomName) {
 		final xcb_intern_atom_cookie_t cookie_t = xcb_intern_atom(	XAtomCache.this.xConnection
-																			.getConnectionReference().get(),
+																			.getConnectionReference(),
 																	(short) 0,
 																	atomName.length(),
 																	atomName);
 
 		final xcb_generic_error_t e = new xcb_generic_error_t();
-		final xcb_intern_atom_reply_t reply_t = xcb_intern_atom_reply(	this.xConnection.getConnectionReference().get(),
+		final xcb_intern_atom_reply_t reply_t = xcb_intern_atom_reply(	this.xConnection.getConnectionReference(),
 																		cookie_t,
 																		e);
 		if (xcb_generic_error_t.getCPtr(e) != 0) {
 			throw new RuntimeException("xcb error");
 		}
-		final int atomId = reply_t.getAtom();
-		return Integer.valueOf(atomId);
+		return reply_t.getAtom();
 	}
 
 	public String getAtomName(final int atomId) {
 
-		final String atomName = this.atomNameCodes.get(Integer.valueOf(atomId));
+		final String atomName = this.atomNameCodes.get(atomId);
 		if (atomName == null) {
 			throw new NullPointerException(format(	"Atom with id %d was not interned.",
 													atomId));

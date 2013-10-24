@@ -33,6 +33,7 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -55,8 +56,9 @@ public class XEventPump implements Callable<Void> {
     private final EventBus xEventBus;
     private final ListeningExecutorService xExecutor;
     private final ExecutorService xEventPumpExecutor = newSingleThreadExecutor(new ThreadFactory() {
+        @Nonnull
         @Override
-        public Thread newThread(final Runnable r) {
+        public Thread newThread(@Nonnull final Runnable r) {
             return new Thread(r,
                     "x-event-pump");
         }
@@ -77,13 +79,12 @@ public class XEventPump implements Callable<Void> {
     @Override
     public Void call() {
 
-        final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference()
-                .get());
+        final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference());
 
         try {
             waitForExternal.acquireUninterruptibly();
 
-            if (xcb_connection_has_error(this.connection.getConnectionReference().get()) != 0) {
+            if(xcb_connection_has_error(this.connection.getConnectionReference()) != 0) {
                 final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
                 XEventPump.LOG.error(errorMsg);
                 throw new Error(errorMsg);

@@ -42,6 +42,7 @@ import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import java.nio.ByteBuffer;
 
@@ -83,7 +84,7 @@ public class ConfigureRequestHandler implements XEventHandler {
     }
 
     @Override
-    public Optional<GeometryRequest> handle(final xcb_generic_event_t event_t) {
+    public Optional<GeometryRequest> handle(@Nonnull final xcb_generic_event_t event_t) {
         final xcb_configure_request_event_t request_event = cast(event_t);
 
         LOG.debug("Received X event={}",
@@ -125,7 +126,7 @@ public class ConfigureRequestHandler implements XEventHandler {
     }
 
     @Override
-    public Optional<DisplaySurface> getTarget(final xcb_generic_event_t event_t) {
+    public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
         final xcb_configure_request_event_t request_event_t = cast(event_t);
         final int windowId = request_event_t.getWindow();
         final XWindowHandle xWindowHandle = new XWindowHandle(windowId);
@@ -148,16 +149,16 @@ public class ConfigureRequestHandler implements XEventHandler {
         LOG.debug("[winId={}] configure client evens.",
                 winId);
 
-        xcb_change_window_attributes(this.xConnection.getConnectionReference().get(),
+        xcb_change_window_attributes(this.xConnection.getConnectionReference(),
                 winId,
                 XCB_CW_EVENT_MASK,
                 CLIENT_EVENTS_CONFIG_BUFFER);
-        xcb_flush(this.xConnection.getConnectionReference().get());
+        xcb_flush(this.xConnection.getConnectionReference());
     }
 
     @Override
     public Integer getEventCode() {
 
-        return this.EVENT_CODE;
+        return EVENT_CODE;
     }
 }

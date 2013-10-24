@@ -20,17 +20,11 @@
 
 package org.trinity.foundation.display.x11.api;
 
-import java.io.Closeable;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
-
-import com.google.common.base.Optional;
 
 /**
  * A connection to an X display server.
@@ -42,9 +36,9 @@ public interface XConnection {
 	 * The XCB connection reference. The optional reference will be absent if no
 	 * connection is present.
 	 *
-	 * @return
+	 * @return The underlying native X connection.
 	 */
-	Optional<SWIGTYPE_p_xcb_connection_t> getConnectionReference();
+	SWIGTYPE_p_xcb_connection_t getConnectionReference();
 
 //	/**
 //	 * Open a connection to an X display server.

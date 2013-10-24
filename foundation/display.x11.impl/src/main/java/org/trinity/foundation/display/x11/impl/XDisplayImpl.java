@@ -116,13 +116,13 @@ public class XDisplayImpl implements Display {
 		return this.xExecutor.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
-				if (xcb_connection_has_error(XDisplayImpl.this.xConnection.getConnectionReference().get()) != 0) {
+				if (xcb_connection_has_error(XDisplayImpl.this.xConnection.getConnectionReference()) != 0) {
 					throw new Error("Cannot open display\n");
 				}
 				// FIXME from config?
 				final int targetScreen = 0;
 				final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(XDisplayImpl.this.xConnection
-						.getConnectionReference().get()));
+						.getConnectionReference()));
 				int screenNr;
 				for (; iter.getRem() != 0; --screenNr, xcb_screen_next(iter)) {
 					if (targetScreen == 0) {
@@ -142,11 +142,11 @@ public class XDisplayImpl implements Display {
 	private void configureRootEvents(final xcb_screen_t xcb_screen) {
 		final int rootId = xcb_screen.getRoot();
 
-		xcb_change_window_attributes(	this.xConnection.getConnectionReference().get(),
+		xcb_change_window_attributes(	this.xConnection.getConnectionReference(),
 										rootId,
 										XCB_CW_EVENT_MASK,
 										rootWindowAttributres);
-		xcb_flush(this.xConnection.getConnectionReference().get());
+		xcb_flush(this.xConnection.getConnectionReference());
 	}
 
 	private void findClientDisplaySurfaces() {
@@ -154,7 +154,7 @@ public class XDisplayImpl implements Display {
 		// active on the X server and track them
 
 		final int root = screen.getScreenReference().getRoot();
-		final SWIGTYPE_p_xcb_connection_t connection = this.xConnection.getConnectionReference().get();
+		final SWIGTYPE_p_xcb_connection_t connection = this.xConnection.getConnectionReference();
 		final xcb_query_tree_cookie_t query_tree_cookie = xcb_query_tree(	connection,
 																			root);
 		final xcb_generic_error_t e = new xcb_generic_error_t();
@@ -210,11 +210,11 @@ public class XDisplayImpl implements Display {
 		LOG.debug(	"[winId={}] configure client evens.",
 					winId);
 
-		xcb_change_window_attributes(	this.xConnection.getConnectionReference().get(),
+		xcb_change_window_attributes(	this.xConnection.getConnectionReference(),
 										winId,
 										XCB_CW_EVENT_MASK,
 										CLIENT_EVENTS_CONFIG_BUFFER);
-		xcb_flush(this.xConnection.getConnectionReference().get());
+		xcb_flush(this.xConnection.getConnectionReference());
 	}
 
 	@Override

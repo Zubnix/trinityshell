@@ -31,6 +31,7 @@ import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTI
 
 import java.nio.ByteBuffer;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.apache.onami.autobind.annotations.Bind;
@@ -84,7 +85,7 @@ public class MapRequestHandler implements XEventHandler {
 	}
 
 	@Override
-	public Optional<ShowRequest> handle(final xcb_generic_event_t event) {
+	public Optional<ShowRequest> handle(@Nonnull final xcb_generic_event_t event) {
 
 		final xcb_map_request_event_t map_request_event = cast(event);
 
@@ -102,7 +103,7 @@ public class MapRequestHandler implements XEventHandler {
 	}
 
 	@Override
-	public Optional<DisplaySurface> getTarget(final xcb_generic_event_t event_t) {
+	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_map_request_event_t map_request_event_t = cast(event_t);
 		final int windowId = map_request_event_t.getWindow();
 		final XWindowHandle xWindowHandle = new XWindowHandle(windowId);
@@ -124,11 +125,11 @@ public class MapRequestHandler implements XEventHandler {
 		LOG.debug(	"[winId={}] configure client evens.",
 					winId);
 
-		xcb_change_window_attributes(	this.xConnection.getConnectionReference().get(),
+		xcb_change_window_attributes(	this.xConnection.getConnectionReference(),
 										winId,
 										XCB_CW_EVENT_MASK,
 										CLIENT_EVENTS_CONFIG_BUFFER);
-		xcb_flush(this.xConnection.getConnectionReference().get());
+		xcb_flush(this.xConnection.getConnectionReference());
 	}
 
 	@Override

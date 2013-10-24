@@ -77,9 +77,9 @@ public class WmState extends AbstractCachedProtocol<int[]> {
 
 		final Integer winId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
 		final xcb_get_property_cookie_t get_wm_state_cookie = xcb_get_property(	this.xConnection
-																						.getConnectionReference().get(),
+																						.getConnectionReference(),
 																				(short) 0,
-																				winId.intValue(),
+                                                                                winId,
 																				getProtocolAtomId(),
 																				getProtocolAtomId(),
 																				0,
@@ -92,8 +92,7 @@ public class WmState extends AbstractCachedProtocol<int[]> {
 				final int[] reply = new int[2];
 
 				final xcb_get_property_reply_t get_wm_state_reply = xcb_get_property_reply(	WmState.this.xConnection
-																									.getConnectionReference()
-																									.get(),
+																									.getConnectionReference(),
 																							get_wm_state_cookie,
 																							e);
 				if (xcb_generic_error_t.getCPtr(e) != 0) {

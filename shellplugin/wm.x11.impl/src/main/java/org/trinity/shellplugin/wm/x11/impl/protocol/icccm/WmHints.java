@@ -20,16 +20,9 @@
 
 package org.trinity.shellplugin.wm.x11.impl.protocol.icccm;
 
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
-import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_hints;
-import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_hints_reply;
-
-import java.util.concurrent.Callable;
-
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -44,9 +37,14 @@ import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 
-import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.concurrent.Callable;
+
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
+import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_hints;
+import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_hints_reply;
 
 @Singleton
 @Bind(to = @To(IMPLEMENTATION))
@@ -74,18 +72,17 @@ public class WmHints extends AbstractCachedProtocol<xcb_icccm_wm_hints_t> {
 
 		final Integer winId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
 		final xcb_get_property_cookie_t get_wm_hints_cookie = xcb_icccm_get_wm_hints(	this.xConnection
-																								.getConnectionReference()
-																								.get(),
-																						winId.intValue());
+                                                                                                 .getConnectionReference(),
+                                                                                         winId);
 
-		return this.displayExecutor.submit(new Callable<Optional<xcb_icccm_wm_hints_t>>() {
+        return this.displayExecutor.submit(new Callable<Optional<xcb_icccm_wm_hints_t>>() {
 			@Override
 			public Optional<xcb_icccm_wm_hints_t> call() throws Exception {
 				final xcb_icccm_wm_hints_t hints = new xcb_icccm_wm_hints_t();
 				final xcb_generic_error_t e = new xcb_generic_error_t();
 
-				final short stat = xcb_icccm_get_wm_hints_reply(WmHints.this.xConnection.getConnectionReference().get(),
-																get_wm_hints_cookie,
+                final short stat = xcb_icccm_get_wm_hints_reply(WmHints.this.xConnection.getConnectionReference(),
+                                                                get_wm_hints_cookie,
 																hints,
 																e);
 				if (xcb_generic_error_t.getCPtr(e) != 0) {
