@@ -101,12 +101,26 @@ public class TestXDisplayImpl {
 
         xcb_query_tree_cookie_t xcb_query_tree_cookie = mock(xcb_query_tree_cookie_t.class);
         xcb_query_tree_reply_t xcb_query_tree_reply = mock(xcb_query_tree_reply_t.class);
+        ByteBuffer treeChildren = mock(ByteBuffer.class);
+        int nroChildren = 3;
+        int childId0 = 2;
+        int childId1 = 4;
+        int childId2 = 6;
 
         when(xcb_query_tree(xcb_connection,
                             rootWindowId)).thenReturn(xcb_query_tree_cookie);
         when(xcb_query_tree_reply(eq(xcb_connection),
                                   eq(xcb_query_tree_cookie),
                                   (xcb_generic_error_t) any())).thenReturn(xcb_query_tree_reply);
+        when(xcb_query_tree_children(xcb_query_tree_reply)).thenReturn(treeChildren);
+        when(xcb_query_tree_children_length(xcb_query_tree_reply)).thenReturn(nroChildren);
+        when(treeChildren.getInt()).thenReturn(childId0,
+                                               childId1,
+                                               childId2);
+
+
+
+
         //TODO more mocking
 
         //when

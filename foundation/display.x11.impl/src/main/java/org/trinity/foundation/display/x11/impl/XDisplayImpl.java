@@ -128,8 +128,8 @@ public class XDisplayImpl implements Display {
 					if (targetScreen == 0) {
 						final xcb_screen_t xcb_screen = iter.getData();
 						configureRootEvents(xcb_screen);
-						screen = new XScreenImpl(xcb_screen);
-						break;
+                        XDisplayImpl.this.screen = new XScreenImpl(xcb_screen);
+                        break;
 					}
 				}
 
