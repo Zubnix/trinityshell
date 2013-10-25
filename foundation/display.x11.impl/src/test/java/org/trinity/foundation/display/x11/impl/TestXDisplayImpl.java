@@ -4,6 +4,8 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
+import org.freedesktop.xcb.xcb_get_window_attributes_cookie_t;
+import org.freedesktop.xcb.xcb_get_window_attributes_reply_t;
 import org.freedesktop.xcb.xcb_query_tree_cookie_t;
 import org.freedesktop.xcb.xcb_query_tree_reply_t;
 import org.freedesktop.xcb.xcb_screen_iterator_t;
@@ -16,8 +18,11 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.display.x11.api.XConnection;
 
 import java.nio.ByteBuffer;
@@ -26,6 +31,8 @@ import java.util.concurrent.ExecutionException;
 
 import static org.freedesktop.xcb.LibXcb.*;
 import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
+import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_UNMAPPED;
+import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -93,11 +100,6 @@ public class TestXDisplayImpl {
         when(xcb_screen_iterator.getRem()).thenReturn(1,
                                                       0);
         when(xcb_screen.getRoot()).thenReturn(rootWindowId);
-        doNothing().when(xcb_change_window_attributes(eq(xcb_connection),
-                                                      eq(rootWindowId),
-                                                      eq(XCB_CW_EVENT_MASK),
-                                                      (ByteBuffer) any()));
-        doNothing().when(xcb_flush(xcb_connection));
 
         xcb_query_tree_cookie_t xcb_query_tree_cookie = mock(xcb_query_tree_cookie_t.class);
         xcb_query_tree_reply_t xcb_query_tree_reply = mock(xcb_query_tree_reply_t.class);
@@ -118,10 +120,27 @@ public class TestXDisplayImpl {
                                                childId1,
                                                childId2);
 
+        xcb_get_window_attributes_cookie_t get_window_attributes_cookie = mock(xcb_get_window_attributes_cookie_t.class);
+        xcb_get_window_attributes_reply_t get_window_attributes_reply = mock(xcb_get_window_attributes_reply_t.class);
 
+        when(xcb_get_window_attributes(eq(xcb_connection),
+                                       anyInt())).thenReturn(get_window_attributes_cookie);
+        when(xcb_get_window_attributes_reply(eq(xcb_connection),
+                                             eq(get_window_attributes_cookie),
+                                             (xcb_generic_error_t) any())).thenReturn(get_window_attributes_reply);
+        when(get_window_attributes_reply.getOverride_redirect()).thenReturn((short) 1,
+                                                                            (short) 0,
+                                                                            (short) 0);
+        when(get_window_attributes_reply.getMap_state()).thenReturn((short) XCB_MAP_STATE_VIEWABLE,
+                                                                    (short) XCB_MAP_STATE_UNMAPPED,
+                                                                    (short) XCB_MAP_STATE_VIEWABLE);
 
+        DisplaySurface clientWindow = mock(DisplaySurface.class);
+        DisplaySurfaceHandle displaySurfaceHandle = mock(DisplaySurfaceHandle.class);
 
-        //TODO more mocking
+        when(xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenReturn(clientWindow);
+        when(clientWindow.getDisplaySurfaceHandle()).thenReturn(displaySurfaceHandle);
+        when(displaySurfaceHandle.getNativeHandle()).thenReturn(6);
 
         //when
         //a new XDisplay is created
@@ -133,5 +152,6 @@ public class TestXDisplayImpl {
         //the clients are discovered
         //the clients are configured
         //client destruction is tracked
+
     }
 }
