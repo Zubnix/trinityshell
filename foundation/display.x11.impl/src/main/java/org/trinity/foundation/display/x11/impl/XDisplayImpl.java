@@ -95,9 +95,8 @@ public class XDisplayImpl implements Display {
 		this.displayEventBus = new AsyncListenableEventBus(this.xExecutor);
 		// register to ourself so we can track newly created clients in the
 		// "Display" thread. See onCreationNotify(...).
-		this.displayEventBus.register(	this,
-										this.xExecutor);
-		open();
+        this.displayEventBus.register(this);
+        open();
 	}
 
 	@Override
