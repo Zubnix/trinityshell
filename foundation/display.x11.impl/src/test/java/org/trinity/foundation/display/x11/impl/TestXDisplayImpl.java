@@ -18,24 +18,31 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XWindowHandle;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import static java.nio.ByteBuffer.allocateDirect;
+import static java.nio.ByteOrder.nativeOrder;
 import static org.freedesktop.xcb.LibXcb.*;
 import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
+import static org.freedesktop.xcb.xcb_event_mask_t.*;
 import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_UNMAPPED;
 import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.verifyNoMoreInteractions;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LibXcb.class)
@@ -144,14 +151,36 @@ public class TestXDisplayImpl {
 
         //when
         //a new XDisplay is created
-        XDisplayImpl xDisplay = new XDisplayImpl(xConnection,
-                                                 xWindowPool,
-                                                 xExecutor);
+        new XDisplayImpl(xConnection,
+                         xWindowPool,
+                         xExecutor);
         //then
         //the root window is configured
         //the clients are discovered
         //the clients are configured
         //client destruction is tracked
+        final ByteBuffer rootWindowAttributes = allocateDirect(4).order(nativeOrder())
+                .putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
+        verifyStatic();
+        xcb_change_window_attributes(eq(xcb_connection),
+                                     eq(rootWindowId),
+                                     eq(XCB_CW_EVENT_MASK),
+                                     eq(rootWindowAttributes));
+
+        XWindowHandle clientHandle = new XWindowHandle(6);
+        verify(xWindowPool).getDisplaySurface(eq(clientHandle));
+        verifyNoMoreInteractions(xWindowPool);
+
+        final int CLIENT_EVENT_MASK = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
+                | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+        final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
+                .putInt(CLIENT_EVENT_MASK);
+        verifyStatic();
+        xcb_change_window_attributes(eq(xcb_connection),
+                                     eq(6),
+                                     eq(XCB_CW_EVENT_MASK),
+                                     eq(CLIENT_EVENTS_CONFIG_BUFFER));
+
 
     }
 }

@@ -80,7 +80,7 @@ public class XDisplayImpl implements Display {
 	private final XWindowPoolImpl xWindowCache;
 	private final ListeningExecutorService xExecutor;
 	private final AsyncListenableEventBus displayEventBus;
-	private final ByteBuffer rootWindowAttributres = allocateDirect(4).order(nativeOrder())
+	private final ByteBuffer rootWindowAttributes = allocateDirect(4).order(nativeOrder())
 			.putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
 	private XScreen screen;
 
@@ -145,7 +145,7 @@ public class XDisplayImpl implements Display {
 		xcb_change_window_attributes(	this.xConnection.getConnectionReference(),
 										rootId,
 										XCB_CW_EVENT_MASK,
-										rootWindowAttributres);
+                                        rootWindowAttributes);
 		xcb_flush(this.xConnection.getConnectionReference());
 	}
 
@@ -172,6 +172,7 @@ public class XDisplayImpl implements Display {
 		final ByteBuffer tree_children = xcb_query_tree_children(query_tree_reply).order(nativeOrder());
 		int tree_children_length = xcb_query_tree_children_length(query_tree_reply);
 		while (tree_children_length > 0) {
+            tree_children_length--;
 
 			final int tree_child = tree_children.getInt();
 
@@ -199,8 +200,6 @@ public class XDisplayImpl implements Display {
 				configureClientEvents(clientWindow);
 				trackClient(clientWindow);
 			}
-
-			tree_children_length--;
 		}
 	}
 
