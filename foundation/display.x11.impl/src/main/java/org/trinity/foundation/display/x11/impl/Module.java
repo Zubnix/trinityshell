@@ -19,12 +19,18 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.name.Names;
 import org.apache.onami.autobind.annotations.GuiceModule;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import javax.annotation.Nonnull;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadFactory;
+
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 @GuiceModule
 class Module extends AbstractModule {
@@ -33,5 +39,14 @@ class Module extends AbstractModule {
 	protected void configure() {
 		install(new FactoryModuleBuilder().implement(	DisplaySurface.class,
 														XWindow.class).build(DisplaySurfaceFactory.class));
-	}
+        bind(ExecutorService.class).annotatedWith(Names.named("XEventPumpExecutor"))
+                .toInstance(newSingleThreadExecutor(new ThreadFactory() {
+                    @Nonnull
+                    @Override
+                    public Thread newThread(@Nonnull final Runnable r) {
+                        return new Thread(r,
+                                          "x-event-pump");
+                    }
+                }));
+    }
 }
