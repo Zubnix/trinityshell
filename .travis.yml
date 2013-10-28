@@ -2,3 +2,5 @@ language: java
 jdk:
     - openjdk7
     - oraclejdk7
+before_install:
+    - git submodule update --init --recursive
