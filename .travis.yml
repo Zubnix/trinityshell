@@ -7,4 +7,4 @@ before_install:
     - git submodule update --init --recursive
     - sudo apt-get update -qq
     - sudo apt-get install libxcb-render-util0-dev libxcb-keysyms1-dev libxcb-image0-dev libxcb1-dev libxcb-xvmc0-dev libxcb-xv0-dev libxcb-xtest0-dev libxcb-xprint0-dev libxcb-xinerama0-dev libxcb-xfixes0-dev libxcb-xf86dri0-dev libxcb-xevie0-dev libxcb-util0-dev libxcb-sync0-dev libxcb-shm0-dev libxcb-shape0-dev libxcb-res0-dev libxcb-render0-dev libxcb-icccm4-dev
-    - sudo apt-get install libxcb-ewmh-dev libxcb-glx0-dev libxcb-randr0-dev libxcb-dri2    -0-dev libxcb-dpms0-dev libxcb-damage0-dev libxcb-composite0-dev
+    - sudo apt-get install libxcb-ewmh-dev libxcb-glx0-dev libxcb-randr0-dev libxcb-dri2-0-dev libxcb-dpms0-dev libxcb-damage0-dev libxcb-composite0-dev
