@@ -218,7 +218,8 @@
                         <excludePackageNames>*impl*:org.trinity.bootstrap</excludePackageNames>
                         <linksource>true</linksource>
                         <minmemory>16m</minmemory>
-                        <maxmemory>128m</maxmemory>
+			<maxmemory>128m</maxmemory>
+			<additionalparam>-Xdoclint:none</additionalparam>
                     </configuration>
                 </plugin>
             </plugins>
