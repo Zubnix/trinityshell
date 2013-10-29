@@ -64,7 +64,7 @@ public class SignalImpl implements Signal {
                                              final String methodName) throws ExecutionException {
 
         final HashCode hashCode = HASH_FUNCTION.newHasher().putInt(modelClass.hashCode())
-                .putString(methodName).hash();
+                .putUnencodedChars(methodName).hash();
 
         return EVENT_SLOTS_BY_HASH.get(hashCode,
                 new Callable<Optional<Method>>() {
