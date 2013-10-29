@@ -1,14 +1,22 @@
 notifications:
     email: false
+
 language: java
+
 jdk:
-    - openjdk7
-    - oraclejdk7
     - oraclejdk8
+
 before_install:
     - git submodule update --init --recursive
+    - sudo add-apt-repository -y ppa:webupd8team/java
     - sudo apt-get update -qq
+    - sudo /bin/echo -e oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+
+install:
+    - apt-get install -y oracle-java8-installer
     - sudo apt-get install -qq swig libxcb-render-util0-dev libxcb-keysyms1-dev libxcb-image0-dev libxcb1-dev libxcb-xvmc0-dev libxcb-xv0-dev libxcb-xtest0-dev libxcb-xprint0-dev libxcb-xinerama0-dev libxcb-xfixes0-dev libxcb-xf86dri0-dev libxcb-xevie0-dev libxcb-util0-dev libxcb-sync0-dev libxcb-shm0-dev libxcb-shape0-dev libxcb-res0-dev libxcb-render0-dev libxcb-icccm4-dev libxcb-ewmh1-dev libxcb-glx0-dev libxcb-randr0-dev libxcb-dri2-0-dev libxcb-dpms0-dev libxcb-damage0-dev libxcb-composite0-dev
     - mvn -DskipTests -f externals/xcb4j/pom.xml -U clean install
     - mvn -DskipTests -f externals/fx-guice/pom.xml -U clean install
     - mvn -DskipTests -f externals/autobind/pom.xml -U clean install
+
+before_script: sudo update-java-alternatives -s java-8-oracle
