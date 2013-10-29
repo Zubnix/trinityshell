@@ -1,4 +1,4 @@
-package org.trinity.shellplugin.wm.view.javafx.skin;
+package org.trinity.shellplugin.wm.view.javafx;
 
 import javafx.event.EventHandler;
 import javafx.scene.Node;

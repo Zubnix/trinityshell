@@ -1,6 +1,7 @@
 package org.trinity.foundation.render.javafx.api;
 
-import com.sun.javafx.tk.quantum.WindowStage;
+
+import com.sun.javafx.tk.TKStage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Window;
@@ -26,16 +27,18 @@ public class FXDisplaySurfaceHandle implements DisplaySurfaceHandle {
         if(scene == null) {
             return 0L;
         }
+
         final Window window = scene.getWindow();
-        final WindowStage stagePeer = (WindowStage) window.impl_getPeer();
+        TKStage stagePeer = window.impl_getPeer();
         try {
-            final Field platformWindowField = WindowStage.class.getDeclaredField("platformWindow");
+            final Field platformWindowField = stagePeer.getClass()
+                                                       .getDeclaredField("platformWindow");
             platformWindowField.setAccessible(true);
             final com.sun.glass.ui.Window platformWindow = (com.sun.glass.ui.Window) platformWindowField.get(stagePeer);
             return platformWindow.getNativeWindow();
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch(NoSuchFieldException | IllegalAccessException e) {
             LOG.error("Error while trying to find native window id from JavaFX Node " + node,
-                    e);
+                      e);
             return 0L;
         }
     }
