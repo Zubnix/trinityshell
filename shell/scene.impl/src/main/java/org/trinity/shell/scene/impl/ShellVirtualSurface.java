@@ -31,8 +31,8 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.bindingkey.ShellVirtualNode;
-import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
+import org.trinity.shell.api.scene.DefaultShellNode;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.ShellNodeParent;
@@ -70,7 +70,7 @@ public class ShellVirtualSurface extends AbstractShellNodeParent {
 
 	@Override
 	public Void doDestroyImpl() {
-		for (final AbstractShellNode child : getChildrenImpl()) {
+		for (final DefaultShellNode child : getChildrenImpl()) {
 			if (!child.isDestroyedImpl()) {
 				child.doDestroy();
 			}

@@ -67,7 +67,14 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
 
             window = (XWindow) XWindowPoolImpl.this.displaySurfaceFactory
                     .createDisplaySurface(displaySurfaceHandle);
-            window.register(new DestroyListener(window));
+            final XWindow finalWindow = window;
+            window.register(new Object(){
+                @Subscribe
+                public void destroyed(final DestroyNotify destroyNotify) {
+                    XWindowPoolImpl.this.windows.remove(finalWindow.getDisplaySurfaceHandle().getNativeHandle().hashCode());
+                    finalWindow.unregister(this);
+                }
+            });
             windows.put(windowHash,
                         window);
         }
@@ -94,20 +101,5 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
                 xEventPump.start();
             }
         };
-    }
-
-    private class DestroyListener {
-        private final XWindow window;
-
-        public DestroyListener(final XWindow window) {
-            this.window = window;
-        }
-
-        @Subscribe
-        public void destroyed(final DestroyNotify destroyNotify) {
-
-            XWindowPoolImpl.this.windows.remove(this.window.getDisplaySurfaceHandle().getNativeHandle().hashCode());
-            this.window.unregister(this);
-        }
     }
 }

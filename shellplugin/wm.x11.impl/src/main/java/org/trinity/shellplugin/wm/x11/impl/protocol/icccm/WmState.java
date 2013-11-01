@@ -20,19 +20,9 @@
 
 package org.trinity.shellplugin.wm.x11.impl.protocol.icccm;
 
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
-import static org.freedesktop.xcb.LibXcb.xcb_get_property;
-import static org.freedesktop.xcb.LibXcb.xcb_get_property_reply;
-import static org.freedesktop.xcb.LibXcb.xcb_get_property_value;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.concurrent.Callable;
-
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -47,9 +37,14 @@ import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 
-import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
+import static org.freedesktop.xcb.LibXcb.*;
 
 @Bind(to = @To(IMPLEMENTATION))
 @Singleton
@@ -84,33 +79,29 @@ public class WmState extends AbstractCachedProtocol<int[]> {
 																				getProtocolAtomId(),
 																				0,
 																				2);
-		return this.wmExecutor.submit(new Callable<Optional<int[]>>() {
+        return this.wmExecutor.submit(() -> {
+            final xcb_generic_error_t e = new xcb_generic_error_t();
+            final int[] reply = new int[2];
 
-			@Override
-			public Optional<int[]> call() {
-				final xcb_generic_error_t e = new xcb_generic_error_t();
-				final int[] reply = new int[2];
+            final xcb_get_property_reply_t get_wm_state_reply = xcb_get_property_reply(WmState.this.xConnection
+                                                                                               .getConnectionReference(),
+                                                                                       get_wm_state_cookie,
+                                                                                       e);
+            if(xcb_generic_error_t.getCPtr(e) != 0) {
+                final String errorString = XcbErrorUtil.toString(e);
+                LOG.error(errorString);
+                return Optional.absent();
+            }
+            if(get_wm_state_reply.getLength() == 0) {
+                return Optional.absent();
+            }
+            final ByteBuffer wm_state_property_value = xcb_get_property_value(get_wm_state_reply).order(ByteOrder
+                                                                                                                .nativeOrder());
+            reply[0] = wm_state_property_value.getInt();
+            reply[1] = wm_state_property_value.getInt();
 
-				final xcb_get_property_reply_t get_wm_state_reply = xcb_get_property_reply(	WmState.this.xConnection
-																									.getConnectionReference(),
-																							get_wm_state_cookie,
-																							e);
-				if (xcb_generic_error_t.getCPtr(e) != 0) {
-					final String errorString = XcbErrorUtil.toString(e);
-					LOG.error(errorString);
-					return Optional.absent();
-				}
-				if (get_wm_state_reply.getLength() == 0) {
-					return Optional.absent();
-				}
-				final ByteBuffer wm_state_property_value = xcb_get_property_value(get_wm_state_reply).order(ByteOrder
-						.nativeOrder());
-				reply[0] = wm_state_property_value.getInt();
-				reply[1] = wm_state_property_value.getInt();
-
-				return Optional.of(reply);
-			}
-		});
-	}
+            return Optional.of(reply);
+        });
+    }
 
 }

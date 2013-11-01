@@ -40,7 +40,6 @@ import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.concurrent.Callable;
 
 import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_hints;
@@ -75,30 +74,27 @@ public class WmHints extends AbstractCachedProtocol<xcb_icccm_wm_hints_t> {
                                                                                                  .getConnectionReference(),
                                                                                          winId);
 
-        return this.displayExecutor.submit(new Callable<Optional<xcb_icccm_wm_hints_t>>() {
-			@Override
-			public Optional<xcb_icccm_wm_hints_t> call() throws Exception {
-				final xcb_icccm_wm_hints_t hints = new xcb_icccm_wm_hints_t();
-				final xcb_generic_error_t e = new xcb_generic_error_t();
+        return this.displayExecutor.submit(() -> {
+            final xcb_icccm_wm_hints_t hints = new xcb_icccm_wm_hints_t();
+            final xcb_generic_error_t e = new xcb_generic_error_t();
 
-                final short stat = xcb_icccm_get_wm_hints_reply(WmHints.this.xConnection.getConnectionReference(),
-                                                                get_wm_hints_cookie,
-																hints,
-																e);
-				if (xcb_generic_error_t.getCPtr(e) != 0) {
-					final String errorString = XcbErrorUtil.toString(e);
-					LOG.error(errorString);
-					return Optional.absent();
-				}
+            final short stat = xcb_icccm_get_wm_hints_reply(WmHints.this.xConnection.getConnectionReference(),
+                                                            get_wm_hints_cookie,
+                                                            hints,
+                                                            e);
+            if(xcb_generic_error_t.getCPtr(e) != 0) {
+                final String errorString = XcbErrorUtil.toString(e);
+                LOG.error(errorString);
+                return Optional.absent();
+            }
 
-				if (stat == 0) {
-					LOG.error(	"Failed to read wm_hints reply from client={}",
-								winId);
-					return Optional.absent();
-				}
+            if(stat == 0) {
+                LOG.error("Failed to read wm_hints reply from client={}",
+                          winId);
+                return Optional.absent();
+            }
 
-				return Optional.of(hints);
-			}
-		});
-	}
+            return Optional.of(hints);
+        });
+    }
 }

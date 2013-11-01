@@ -63,13 +63,10 @@ public abstract class AbstractCachedProtocol<P> {
 							@Nonnull final XAtomCache xAtomCache,
 							@Nonnull final String protocolName) {
 		this.displayExecutor = displayExecutor;
-		displayExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				AbstractCachedProtocol.this.protocolAtomId = xAtomCache.getAtom(protocolName);
-				return null;
-			}
-		});
+		displayExecutor.submit(() -> {
+            this.protocolAtomId = xAtomCache.getAtom(protocolName);
+            return null;
+        });
 	}
 
 	public int getProtocolAtomId() {
@@ -79,47 +76,31 @@ public abstract class AbstractCachedProtocol<P> {
 	public ListenableFuture<Void> addProtocolListener(	@Nonnull final DisplaySurface xWindow,
 														@Nonnull final ProtocolListener<P> listener,
 														@Nonnull final ExecutorService executor) {
-		return this.displayExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				AsyncListenable listeners = AbstractCachedProtocol.this.listenersByWindow.get(xWindow);
-				if (listeners == null) {
-					listeners = new AsyncListenableEventBus(MoreExecutors.sameThreadExecutor());
-					listenersByWindow.put(	xWindow,
-											listeners);
-				}
-				listeners.register(	listener,
-									executor);
-				return null;
-			}
-		});
+		return this.displayExecutor.submit(() -> {
+            AsyncListenable listeners = this.listenersByWindow.get(xWindow);
+            if (listeners == null) {
+                listeners = new AsyncListenableEventBus(MoreExecutors.sameThreadExecutor());
+                listenersByWindow.put(	xWindow,
+                                        listeners);
+            }
+            listeners.register(	listener,
+                                executor);
+            return null;
+        });
 	}
 
 	public ListenableFuture<Optional<P>> get(@Nonnull final DisplaySurface xWindow) {
 
-		final ListenableFuture<Optional<P>> protocolFuture = this.displayExecutor.submit(new Callable<Optional<P>>() {
-			@Override
-			public Optional<P> call() throws Exception {
-				return AbstractCachedProtocol.this.protocolCache.get(xWindow);
-			}
-		});
+		final ListenableFuture<Optional<P>> protocolFuture = this.displayExecutor.submit((Callable<Optional<P>>) () -> AbstractCachedProtocol.this.protocolCache.get(xWindow));
 
 		return transform(	protocolFuture,
-							new AsyncFunction<Optional<P>, Optional<P>>() {
-								@Override
-								public ListenableFuture<Optional<P>> apply(final Optional<P> protocol) {
-									if (protocol == null) {
-										trackProtocol(xWindow);
-										return queryProtocol(xWindow);
-									}
-									return MoreExecutors.sameThreadExecutor().submit(new Callable<Optional<P>>() {
-										@Override
-										public Optional<P> call() {
-											return protocol;
-										}
-									});
-								}
-							});
+                             (AsyncFunction<Optional<P>, Optional<P>>) protocol -> {
+                                 if (protocol == null) {
+                                     trackProtocol(xWindow);
+                                     return queryProtocol(xWindow);
+                                 }
+                                 return MoreExecutors.sameThreadExecutor().submit(() -> protocol);
+                             });
 	}
 
 	protected void trackProtocol(final DisplaySurface xWindow) {
@@ -157,20 +138,16 @@ public abstract class AbstractCachedProtocol<P> {
 
 	public ListenableFuture<Void> removeProtocolListener(	@Nonnull final DisplaySurface xWindow,
 															@Nonnull final ProtocolListener<P> listener) {
-
-		return this.displayExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				final AsyncListenable listeners = AbstractCachedProtocol.this.listenersByWindow.get(xWindow);
-				listeners.unregister(listener);
-				return null;
-			}
-		});
+		return this.displayExecutor.submit(() -> {
+            final AsyncListenable listeners = this.listenersByWindow.get(xWindow);
+            listeners.unregister(listener);
+            return null;
+        });
 	}
 
 	protected void notifyProtocolListeners(	final DisplaySurface xWindow,
 											final Optional<P> protocol) {
-		final AsyncListenable listeners = AbstractCachedProtocol.this.listenersByWindow.get(xWindow);
+		final AsyncListenable listeners = this.listenersByWindow.get(xWindow);
 		listeners.post(protocol);
 	}
 }

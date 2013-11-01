@@ -81,5 +81,5 @@ public @interface PropertySlot {
 	 * @return a {@link PropertyAdapter}.
 	 ***************************************
 	 */
-	Class<? extends PropertyAdapter<?>> adapter() default DefaultPropertyAdapter.class;
+	Class<? extends PropertyAdapter> adapter() default PropertyAdapter.class;
 }

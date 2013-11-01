@@ -57,7 +57,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
-public abstract class AbstractShellNode extends AbstractAsyncShellNode {
+public abstract class AbstractShellNode implements DefaultShellNode {
 
 	private final AsyncListenableEventBus nodeEventBus;
 	private Coordinate position = new Coordinate(	0,
@@ -72,16 +72,21 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	private Optional<AbstractShellNodeParent> optionalParent = Optional.absent();
 	private Optional<AbstractShellNodeParent> optionalDesiredParent = Optional.absent();
 	private boolean destroyed;
+    private ListeningExecutorService shellExecutor;
 
-	protected AbstractShellNode(@Nonnull @ShellScene final AsyncListenable shellScene,
+    protected AbstractShellNode(@Nonnull @ShellScene final AsyncListenable shellScene,
 								@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(shellExecutor);
-		this.nodeEventBus = new AsyncListenableEventBus(shellExecutor);
-
+        this.shellExecutor = shellExecutor;
+        this.nodeEventBus = new AsyncListenableEventBus(shellExecutor);
 		register(shellScene);
 	}
 
-	@Override
+    @Override
+    public ListeningExecutorService getShellExecutor() {
+        return this.shellExecutor;
+    }
+
+    @Override
 	public ShellNodeTransformation toGeoTransformationImpl() {
 		return new ShellNodeTransformation(	getGeometryImpl(),
 											Optional.<ShellNodeParent> fromNullable(getParentImpl().orNull()),
@@ -103,7 +108,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	@Override
 	public Void setParentImpl(final Optional<? extends ShellNodeParent> parent) {
 		if (parent.isPresent()) {
-			checkArgument(parent.get() instanceof AbstractAsyncShellNodeParent);
+			checkArgument(parent.get() instanceof DefaultShellNodeParent);
 		}
 		this.optionalDesiredParent = Optional.fromNullable((AbstractShellNodeParent) parent.orNull());
 		return null;
@@ -163,7 +168,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 		// check if our parent is visible.
 		if (getParentImpl().isPresent()) {
-			return ((AbstractAsyncShellNodeParent) getParentImpl().get()).isVisibleImpl();
+			return ((DefaultShellNodeParent) getParentImpl().get()).isVisibleImpl();
 		} else {
 			return true;
 		}

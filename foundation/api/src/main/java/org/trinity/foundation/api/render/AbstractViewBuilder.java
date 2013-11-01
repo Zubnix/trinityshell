@@ -11,8 +11,6 @@ import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 
 import javax.inject.Inject;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import static com.google.common.util.concurrent.ListenableFutureTask.create;
 
@@ -24,29 +22,21 @@ public abstract class AbstractViewBuilder implements ViewBuilder {
     @Inject
     private DisplaySurfacePool displaySurfacePool;
 
-    private final ListenableFutureTask<Object> viewFuture = create(new Callable<Object>() {
-        @Override
-        public Object call() {
-            return createViewObject();
-        }
-    });
+    private final ListenableFutureTask<Object> viewFuture = create(this::createViewObject);
 
     @Override
     public ListenableFuture<Object[]> build(final ViewBuilderResult viewBuildResult) {
-        return displayExecutor.submit(new Callable<Object[]>() {
-            @Override
-            public Object[] call() throws ExecutionException, InterruptedException {
-                try(DisplaySurfaceCreator displaySurfaceCreator = displaySurfacePool.getDisplaySurfaceCreator()) {
-                    invokeViewBuild(viewFuture);
-                    final Object createdViewObject = viewFuture.get();
-                    DisplaySurfaceHandle createdDisplaySurfaceHandle = createDisplaySurfaceHandle(createdViewObject);
-                    final DisplaySurface displaySurface = displaySurfaceCreator
-                            .reference(createdDisplaySurfaceHandle);
-                    viewBuildResult.onResult(createdViewObject,
-                                             displaySurface);
-                    return new Object[]{createdViewObject,
-                                        displaySurface};
-                }
+        return displayExecutor.submit(() -> {
+            try(DisplaySurfaceCreator displaySurfaceCreator = displaySurfacePool.getDisplaySurfaceCreator()) {
+                invokeViewBuild(viewFuture);
+                final Object createdViewObject = viewFuture.get();
+                DisplaySurfaceHandle createdDisplaySurfaceHandle = createDisplaySurfaceHandle(createdViewObject);
+                final DisplaySurface displaySurface = displaySurfaceCreator
+                        .reference(createdDisplaySurfaceHandle);
+                viewBuildResult.onResult(createdViewObject,
+                                         displaySurface);
+                return new Object[]{createdViewObject,
+                                    displaySurface};
             }
         });
     }

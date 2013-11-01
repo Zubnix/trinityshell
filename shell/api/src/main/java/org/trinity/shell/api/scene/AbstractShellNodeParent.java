@@ -46,9 +46,9 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * **************************************
  */
 @ExecutionContext(ShellExecutor.class)
-public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodeParent {
+public abstract class AbstractShellNodeParent extends AbstractShellNode implements DefaultShellNodeParent {
 
-	private final LinkedList<AbstractShellNode> children = new LinkedList<>();
+	private final LinkedList<DefaultShellNode> children = new LinkedList<>();
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
 	protected AbstractShellNodeParent(	@Nonnull @ShellScene final AsyncListenable shellScene,
@@ -63,7 +63,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	 * The returned array is a copy of the internal array.
 	 */
 	@Override
-	public List<AbstractShellNode> getChildrenImpl() {
+	public List<DefaultShellNode> getChildrenImpl() {
 		return new ArrayList<>(this.children);
 	}
 
@@ -71,7 +71,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	 * Refresh the on-screen position of this node's children.
 	 */
 	protected void updateChildrenPosition() {
-		for (final AbstractShellNode child : getChildrenImpl()) {
+		for (final DefaultShellNode child : getChildrenImpl()) {
 			final Coordinate childPosition = child.getPositionImpl();
 			child.getShellNodeGeometryDelegate().move(childPosition);
 		}
@@ -84,6 +84,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 
 	@Override
 	public Void setLayoutManagerImpl(@Nullable final ShellLayoutManager shellLayoutManager) {
+        //FIXME this is a bad construct. Don't allow null and add a 'removeLayoutManager' method.
 		this.optionalLayoutManager = Optional.of(shellLayoutManager);
 		if (optionalLayoutManager.isPresent()) {
 			register(shellLayoutManager);
@@ -111,14 +112,14 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	}
 
 	protected void handleChildReparent(@Nonnull final ShellNode child) {
-		checkArgument(child instanceof AbstractShellNode);
+		checkArgument(child instanceof DefaultShellNode);
 
 		final ShellNodeEvent shellNodeEvent;
 		if (this.children.remove(child)) {
 			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
 															toGeoTransformationImpl());
 		} else {
-			this.children.addLast((AbstractShellNode) child);
+			this.children.addLast((DefaultShellNode) child);
 			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
 															toGeoTransformationImpl());
 		}
@@ -127,13 +128,13 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 
 	protected void handleChildStacking(	@Nonnull final ShellNode child,
 										final boolean raised) {
-		checkArgument(child instanceof AbstractShellNode);
+		checkArgument(child instanceof DefaultShellNode);
 		checkArgument(this.children.remove(child));
 
 		if (raised) {
-			this.children.addLast((AbstractShellNode) child);
+			this.children.addLast((DefaultShellNode) child);
 		} else {
-			this.children.addFirst((AbstractShellNode) child);
+			this.children.addFirst((DefaultShellNode) child);
 		}
 		// TODO fire a specific event?
 	}

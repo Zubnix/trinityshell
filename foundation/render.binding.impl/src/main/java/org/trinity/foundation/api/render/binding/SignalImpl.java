@@ -22,7 +22,6 @@ package org.trinity.foundation.api.render.binding;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import com.google.common.hash.HashFunction;
@@ -67,13 +66,8 @@ public class SignalImpl implements Signal {
                 .putUnencodedChars(methodName).hash();
 
         return EVENT_SLOTS_BY_HASH.get(hashCode,
-                new Callable<Optional<Method>>() {
-                    @Override
-                    public Optional<Method> call() {
-                        return getSlot(modelClass,
-                                methodName);
-                    }
-                });
+                                       () -> getSlot(modelClass,
+                                               methodName));
     }
 
     private static Optional<Method> getSlot(final Class<?> modelClass,
@@ -94,19 +88,16 @@ public class SignalImpl implements Signal {
 
     @Override
     public ListenableFuture<Void> fire() {
-        return modelExecutor.submit(new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                final Object viewModel = dataContextValueByView.get(view);
-                final Optional<Method> optionalInputSlot = findSlot(viewModel.getClass(),
-                        inputSlotName);
-                if (optionalInputSlot.isPresent()) {
-                    final Method method = optionalInputSlot.get();
-                    method.setAccessible(true);
-                    method.invoke(viewModel);
-                }
-                return null;
+        return modelExecutor.submit(() -> {
+            final Object viewModel = dataContextValueByView.get(view);
+            final Optional<Method> optionalInputSlot = findSlot(viewModel.getClass(),
+                    inputSlotName);
+            if (optionalInputSlot.isPresent()) {
+                final Method method = optionalInputSlot.get();
+                method.setAccessible(true);
+                method.invoke(viewModel);
             }
+            return null;
         });
     }
 }

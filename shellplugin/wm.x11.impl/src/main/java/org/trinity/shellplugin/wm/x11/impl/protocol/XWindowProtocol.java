@@ -39,7 +39,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.nio.ByteBuffer;
-import java.util.concurrent.Callable;
 
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
@@ -67,14 +66,11 @@ public class XWindowProtocol {
 	}
 
 	public ListenableFuture<Void> register(final DisplaySurface xWindow) {
-		return displayExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				final Integer xWindowId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
-				listenForXProtocol(xWindowId);
-				return null;
-			}
-		});
+		return displayExecutor.submit(() -> {
+            final Integer xWindowId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
+            listenForXProtocol(xWindowId);
+            return null;
+        });
 	}
 
 	private void listenForXProtocol(final Integer xWindowId) {

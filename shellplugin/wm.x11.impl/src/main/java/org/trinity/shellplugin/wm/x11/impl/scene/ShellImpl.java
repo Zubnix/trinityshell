@@ -35,7 +35,6 @@ import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.render.ViewBuilder;
-import org.trinity.foundation.api.render.ViewBuilderResult;
 import org.trinity.foundation.api.render.binding.Binder;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
@@ -55,7 +54,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import static com.google.common.collect.Iterables.removeAll;
 import static com.google.common.util.concurrent.Futures.addCallback;
@@ -114,44 +113,42 @@ public class ShellImpl implements Shell {
 
 	@Override
 	public ListenableFuture<Void> addStatusElement(final Object element) {
-		return this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				ShellImpl.this.notificationsBar.add(element);
-				return null;
-			}
-		});
-	}
+        return this.shellExecutor.submit(() -> {
+            this.notificationsBar.add(element);
+            return null;
+        });
+    }
 
-	@Override
-	public ListenableFuture<Void> removeStatusElement(final Object element) {
-		return this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				ShellImpl.this.notificationsBar.remove(element);
-				return null;
-			}
-		});
-	}
+    @Override
+    public ListenableFuture<Void> removeStatusElement(final Object element) {
+        return this.shellExecutor.submit(() -> {
+            ShellImpl.this.notificationsBar.remove(element);
+            return null;
+        });
+    }
 
-	@Override
+    @Override
 	public void start() {
+        try {
+            viewBuilder.build((bindableView,
+                               viewDisplaySurface) -> {
+                this.binder.bind(shellExecutor,
+                                 ShellImpl.this,
+                                 bindableView);
 
-        viewBuilder.build(new ViewBuilderResult() {
-            @Override
-            public void onResult(final Object bindableView,
-                                     final DisplaySurface viewDisplaySurface) {
-                ShellImpl.this.binder.bind(shellExecutor,
-                                           ShellImpl.this,
-                                           bindableView);
-
-                ShellImpl.this.nonClientDisplaySurfaces.add(viewDisplaySurface);
-                final ShellSurface desktopShellSurface = ShellImpl.this.shellSurfaceFactory
+                this.nonClientDisplaySurfaces.add(viewDisplaySurface);
+                final ShellSurface desktopShellSurface = this.shellSurfaceFactory
                         .createShellSurface(viewDisplaySurface);
                 configureDesktopShellSurfaceBehavior(desktopShellSurface);
                 handleDesktopShellSurface(desktopShellSurface);
-            }
-        });
+            }).get();
+        } catch(InterruptedException e) {
+            LOG.error("Interrupted while trying to instantiate shell desktop view.",
+                      e);
+        } catch(ExecutionException e) {
+            LOG.error("Execution exception while trying to instantiate shell desktop view.",
+                      e);
+        }
     }
 
     // called by display thread so we avoid missing any display methods.
@@ -175,7 +172,7 @@ public class ShellImpl implements Shell {
 		// We register without specifying an executor. This
 		// means our listener (@Subscribe method) will be
 		// called by the "Display" thread.
-		this.display.register(new Object() {
+        this.display.register(new Object() {
 			// called by display executor
 			@Subscribe
 			public void handleCreationNotify(final DisplaySurfaceCreationNotify displaySurfaceCreationNotify) {

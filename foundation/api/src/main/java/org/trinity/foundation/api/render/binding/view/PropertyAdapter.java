@@ -19,6 +19,9 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.view;
 
+import org.trinity.foundation.api.render.bindkey.RenderExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 import javax.annotation.Nullable;
 
 /***************************************
@@ -30,6 +33,8 @@ import javax.annotation.Nullable;
  * @see PropertySlot
  ***************************************
  */
+@FunctionalInterface
+@ExecutionContext(RenderExecutor.class)
 public interface PropertyAdapter<T> {
 
 	/***************************************
@@ -40,5 +45,5 @@ public interface PropertyAdapter<T> {
 	 * @return the transformatin.
 	 ***************************************
 	 */
-	Object adapt(@Nullable T property);
+    Object adapt(@Nullable T property);
 }

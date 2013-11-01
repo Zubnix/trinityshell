@@ -23,14 +23,12 @@ import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.scene.AbstractShellNode;
+import org.trinity.shell.api.scene.DefaultShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
-import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.List;
 
 // TODO documentation
 
@@ -63,7 +61,7 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
 
         final Coordinate deltaPosition = shellNodeTransformation.getDeltaRect().getPosition();
 
-        for (final AbstractShellNode child : shellNode.getChildrenImpl()) {
+        for (final DefaultShellNode child : shellNode.getChildrenImpl()) {
             final Coordinate oldRelPosition = child.getPositionImpl();
 
             final Coordinate newRelPosition = oldRelPosition.add(deltaPosition);
