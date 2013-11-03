@@ -57,7 +57,7 @@ import static org.freedesktop.xcb.xcb_stack_mode_t.XCB_STACK_MODE_ABOVE;
 
 @ExecutionContext(DisplayExecutor.class)
 @ThreadSafe
-public final class XWindow implements DisplaySurface {
+public class XWindow implements DisplaySurface {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
 	private static final ByteBuffer MOVE_VALUE_LIST_BUFFER = allocateDirect(8).order(nativeOrder());

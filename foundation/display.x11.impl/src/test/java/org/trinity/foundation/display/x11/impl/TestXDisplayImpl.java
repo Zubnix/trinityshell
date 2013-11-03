@@ -1,11 +1,9 @@
 package org.trinity.foundation.display.x11.impl;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
-import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_window_attributes_cookie_t;
 import org.freedesktop.xcb.xcb_get_window_attributes_reply_t;
 import org.freedesktop.xcb.xcb_query_tree_cookie_t;
@@ -19,8 +17,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -35,6 +31,7 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
 import static org.freedesktop.xcb.LibXcb.*;
@@ -67,14 +64,11 @@ public class TestXDisplayImpl {
 
     @Before
     public void setup() {
-        when(xExecutor.submit(Matchers.<Callable>any())).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(final InvocationOnMock invocation) throws Throwable {
-                Object arg0 = invocation.getArguments()[0];
-                Callable<?> submittedCallable = (Callable<?>) arg0;
-                Object result = submittedCallable.call();
-                return Futures.immediateFuture(result);
-            }
+        when(xExecutor.submit(Matchers.<Callable>any())).thenAnswer(invocation -> {
+            Object arg0 = invocation.getArguments()[0];
+            Callable<?> submittedCallable = (Callable<?>) arg0;
+            Object result = submittedCallable.call();
+            return immediateFuture(result);
         });
 
         when(xConnection.getConnectionReference()).thenReturn(xcb_connection);
@@ -128,7 +122,7 @@ public class TestXDisplayImpl {
                             rootWindowId)).thenReturn(xcb_query_tree_cookie);
         when(xcb_query_tree_reply(eq(xcb_connection),
                                   eq(xcb_query_tree_cookie),
-                                  (xcb_generic_error_t) any())).thenReturn(xcb_query_tree_reply);
+                                  any())).thenReturn(xcb_query_tree_reply);
         when(xcb_query_tree_children(xcb_query_tree_reply)).thenReturn(treeChildren);
         when(xcb_query_tree_children_length(xcb_query_tree_reply)).thenReturn(nroChildren);
         when(treeChildren.getInt()).thenReturn(childId0,
@@ -142,7 +136,7 @@ public class TestXDisplayImpl {
                                        anyInt())).thenReturn(get_window_attributes_cookie);
         when(xcb_get_window_attributes_reply(eq(xcb_connection),
                                              eq(get_window_attributes_cookie),
-                                             (xcb_generic_error_t) any())).thenReturn(get_window_attributes_reply);
+                                             any())).thenReturn(get_window_attributes_reply);
         when(get_window_attributes_reply.getOverride_redirect()).thenReturn((short) 1,
                                                                             (short) 0,
                                                                             (short) 0);
@@ -153,7 +147,7 @@ public class TestXDisplayImpl {
         DisplaySurface clientWindow = mock(DisplaySurface.class);
         DisplaySurfaceHandle displaySurfaceHandle = mock(DisplaySurfaceHandle.class);
 
-        when(xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenReturn(clientWindow);
+        when(xWindowPool.getDisplaySurface(any())).thenReturn(clientWindow);
         when(clientWindow.getDisplaySurfaceHandle()).thenReturn(displaySurfaceHandle);
         when(displaySurfaceHandle.getNativeHandle()).thenReturn(6);
 
