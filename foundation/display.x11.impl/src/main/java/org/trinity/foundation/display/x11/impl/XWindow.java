@@ -216,16 +216,15 @@ public final class XWindow implements DisplaySurface {
         });
 
         final ListenableFuture<Integer> borderFuture = transform(geometryRequest,
-                                                                 (xcb_get_geometry_cookie_t cookie_t) -> {
+                                                                 (Function<xcb_get_geometry_cookie_t, Integer>) geo_cookie -> {
                                                                      final xcb_generic_error_t e = new xcb_generic_error_t();
                                                                      final xcb_get_geometry_reply_t reply = xcb_get_geometry_reply(getConnectionRef(),
-                                                                                                                                   cookie_t,
+                                                                                                                                   geo_cookie,
                                                                                                                                    e);
 
                                                                      checkError(e);
                                                                      return reply.getBorder_width();
-                                                                 },
-                                                                 this.xExecutor);
+                                                                 });
 
         return transform(borderFuture,
                          (Function<Integer, Void>) border -> {
@@ -249,11 +248,10 @@ public final class XWindow implements DisplaySurface {
 															XWindow.MOVE_RESIZE_VALUE_LIST_BUFFER);
 									xcb_flush(getConnectionRef());
 									return null;
-							},
-							this.xExecutor);
-	}
+                         });
+    }
 
-	@Override
+    @Override
     @Deprecated
     public ListenableFuture<Void> raise() {
         return this.xExecutor.submit(() -> {
