@@ -26,12 +26,16 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
+import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellScene;
+import org.trinity.shell.api.scene.AbstractShellNodeParent;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import org.trinity.shell.api.scene.DefaultShellNodeParent;
+import com.google.common.util.concurrent.ListeningExecutorService;
 
 // TODO from boilerplate code generator
 /***************************************
@@ -43,11 +47,33 @@ import org.trinity.shell.api.scene.DefaultShellNodeParent;
  */
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
-public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface {
+public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent implements ShellSurface {
+
+	private final ListeningExecutorService shellExecutor;
+	private final DisplaySurface displaySurface;
+
+	protected AbstractAsyncShellSurface(@Nonnull DisplaySurface displaySurface,
+										@Nonnull @ShellScene final AsyncListenable shellScene,
+										@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
+		super(	shellScene,
+				shellExecutor);
+		this.shellExecutor = shellExecutor;
+		this.displaySurface = displaySurface;
+	}
 
 	@Override
-	public default ListenableFuture<Integer> getHeightIncrement() {
-		return getShellExecutor().submit((Callable<Integer>) this::getHeightIncrementImpl);
+	public DisplaySurface getDisplaySurface() {
+		return displaySurface;
+	}
+
+	@Override
+	public final ListenableFuture<Integer> getHeightIncrement() {
+		return this.shellExecutor.submit(new Callable<Integer>() {
+			@Override
+			public Integer call() throws Exception {
+				return getHeightIncrementImpl();
+			}
+		});
 	}
 
 	/***************************************
@@ -58,11 +84,16 @@ public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface
 	 * @see #getHeightIncrement()
 	 ***************************************
 	 */
-	Integer getHeightIncrementImpl();
+	public abstract Integer getHeightIncrementImpl();
 
 	@Override
-	public default ListenableFuture<Size> getMaxSize() {
-		return getShellExecutor().submit((Callable<Size>) this::getMaxSizeImpl);
+	public final ListenableFuture<Size> getMaxSize() {
+		return this.shellExecutor.submit(new Callable<Size>() {
+			@Override
+			public Size call() throws Exception {
+				return getMaxSizeImpl();
+			}
+		});
 	}
 
 	/***************************************
@@ -73,11 +104,16 @@ public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface
 	 * @see #getMaxSize()
 	 ***************************************
 	 */
-	Size getMaxSizeImpl();
+	public abstract Size getMaxSizeImpl();
 
 	@Override
-	public default ListenableFuture<Size> getMinSize() {
-		return getShellExecutor().submit((Callable<Size>) this::getMinSizeImpl);
+	public final ListenableFuture<Size> getMinSize() {
+		return this.shellExecutor.submit(new Callable<Size>() {
+			@Override
+			public Size call() throws Exception {
+				return getMinSizeImpl();
+			}
+		});
 	}
 
 	/***************************************
@@ -88,11 +124,16 @@ public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface
 	 * @see #getMinSize()
 	 ***************************************
 	 */
-	Size getMinSizeImpl();
+	public abstract Size getMinSizeImpl();
 
 	@Override
-	public default ListenableFuture<Integer> getWidthIncrement() {
-		return getShellExecutor().submit((Callable<Integer>) this::getWidthIncrementImpl);
+	public final ListenableFuture<Integer> getWidthIncrement() {
+		return this.shellExecutor.submit(new Callable<Integer>() {
+			@Override
+			public Integer call() throws Exception {
+				return getWidthIncrementImpl();
+			}
+		});
 	}
 
 	/***************************************
@@ -103,11 +144,16 @@ public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface
 	 * @see #getWidthIncrement()
 	 ***************************************
 	 */
-	Integer getWidthIncrementImpl();
+	public abstract Integer getWidthIncrementImpl();
 
 	@Override
-	public default ListenableFuture<Boolean> isMovable() {
-		return getShellExecutor().submit((Callable<Boolean>) this::isMovableImpl);
+	public final ListenableFuture<Boolean> isMovable() {
+		return this.shellExecutor.submit(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return isMovableImpl();
+			}
+		});
 	}
 
 	/***************************************
@@ -121,8 +167,13 @@ public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface
 	public abstract Boolean isMovableImpl();
 
 	@Override
-	public default ListenableFuture<Boolean> isResizable() {
-		return getShellExecutor().submit((Callable<Boolean>) this::isResizableImpl);
+	public final ListenableFuture<Boolean> isResizable() {
+		return this.shellExecutor.submit(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return isResizableImpl();
+			}
+		});
 	}
 
 	/***************************************
@@ -133,11 +184,16 @@ public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface
 	 * @see #isResizable()
 	 ***************************************
 	 */
-	Boolean isResizableImpl();
+	public abstract Boolean isResizableImpl();
 
 	@Override
-	public default ListenableFuture<Void> setHeightIncrement(@Nonnegative final int heightIncrement) {
-		return getShellExecutor().submit((Callable<Void>) () -> setHeightIncrementImpl(heightIncrement));
+	public final ListenableFuture<Void> setHeightIncrement(@Nonnegative final int heightIncrement) {
+		return this.shellExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				return setHeightIncrementImpl(heightIncrement);
+			}
+		});
 	}
 
 	/***************************************
@@ -148,11 +204,16 @@ public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface
 	 * @see #setHeightIncrement(int)
 	 ***************************************
 	 */
-	Void setHeightIncrementImpl(@Nonnegative int heightIncrement);
+	public abstract Void setHeightIncrementImpl(@Nonnegative int heightIncrement);
 
 	@Override
-	public default ListenableFuture<Void> setMaxSize(@Nonnull final Size maxSize) {
-		return getShellExecutor().submit((Callable<Void>) () -> setMaxSizeImpl(maxSize));
+	public final ListenableFuture<Void> setMaxSize(@Nonnull final Size maxSize) {
+		return this.shellExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				return setMaxSizeImpl(maxSize);
+			}
+		});
 	}
 
 	/***************************************
@@ -163,11 +224,16 @@ public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface
 	 * @see #setMaxSize(Size)
 	 ***************************************
 	 */
-	Void setMaxSizeImpl(Size maxSize);
+	public abstract Void setMaxSizeImpl(Size maxSize);
 
 	@Override
-	public default ListenableFuture<Void> setMinSize(@Nonnull final Size minSize) {
-		return getShellExecutor().submit((Callable<Void>) () -> setMinSizeImpl(minSize));
+	public final ListenableFuture<Void> setMinSize(@Nonnull final Size minSize) {
+		return this.shellExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				return setMinSizeImpl(minSize);
+			}
+		});
 	}
 
 	/***************************************
@@ -178,11 +244,16 @@ public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface
 	 * @see #setMinSize(Size)
 	 ***************************************
 	 */
-	Void setMinSizeImpl(Size maxSize);
+	public abstract Void setMinSizeImpl(Size maxSize);
 
 	@Override
-	public default ListenableFuture<Void> setMovable(final boolean movable) {
-		return getShellExecutor().submit((Callable<Void>) () -> setMovableImpl(movable));
+	public final ListenableFuture<Void> setMovable(final boolean movable) {
+		return this.shellExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				return setMovableImpl(movable);
+			}
+		});
 	}
 
 	/***************************************
@@ -193,11 +264,16 @@ public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface
 	 * @see #setMovable(boolean)
 	 ***************************************
 	 */
-	Void setMovableImpl(boolean movable);
+	public abstract Void setMovableImpl(boolean movable);
 
 	@Override
-	public default ListenableFuture<Void> setResizable(final boolean resizable) {
-		return getShellExecutor().submit((Callable<Void>) () -> setResizableImpl(resizable));
+	public final ListenableFuture<Void> setResizable(final boolean resizable) {
+		return this.shellExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				return setResizableImpl(resizable);
+			}
+		});
 	}
 
 	/***************************************
@@ -208,11 +284,16 @@ public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface
 	 * @see #setResizable(boolean)
 	 ***************************************
 	 */
-	Void setResizableImpl(boolean resizable);
+	public abstract Void setResizableImpl(boolean resizable);
 
 	@Override
-	public default ListenableFuture<Void> setWidthIncrement(@Nonnegative final int widthIncrement) {
-		return getShellExecutor().submit((Callable<Void>) () -> setWidthIncrementImpl(widthIncrement));
+	public final ListenableFuture<Void> setWidthIncrement(@Nonnegative final int widthIncrement) {
+		return this.shellExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				return setWidthIncrementImpl(widthIncrement);
+			}
+		});
 	}
 
 	/***************************************
@@ -223,5 +304,5 @@ public interface DefaultShellSurface extends DefaultShellNodeParent,ShellSurface
 	 * @see #setWidthIncrement(int)
 	 ***************************************
 	 */
-	Void setWidthIncrementImpl(@Nonnegative int widthIncrement);
+	public abstract Void setWidthIncrementImpl(@Nonnegative int widthIncrement);
 }

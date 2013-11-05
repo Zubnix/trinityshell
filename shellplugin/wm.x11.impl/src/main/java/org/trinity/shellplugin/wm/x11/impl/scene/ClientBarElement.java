@@ -21,6 +21,7 @@
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
 import com.google.common.base.Optional;
+import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -44,11 +45,13 @@ import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shellplugin.wm.api.HasText;
 import org.trinity.shellplugin.wm.api.ReceivesPointerInput;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
+import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.ProtocolListener;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmName;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmProtocols;
 
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
+import java.util.concurrent.Callable;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
 import static org.freedesktop.xcb.LibXcb.xcb_flush;
@@ -105,13 +108,25 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 		// client name handling
 		this.wmName.addProtocolListener(clientXWindow,
-                                        this::updateClientName,
+										new ProtocolListener<xcb_icccm_get_text_property_reply_t>() {
+											@Override
+											@Subscribe
+											public void onProtocolChanged(final Optional<xcb_icccm_get_text_property_reply_t> protocol) {
+												updateClientName(protocol);
+											}
+										},
 										shellExecutor);
 		queryClientName(clientXWindow);
 
 		// client close request handling
 		this.wmProtocols.addProtocolListener(	clientXWindow,
-                                                this::updateCanSendWmDeleteMsg,
+												new ProtocolListener<xcb_icccm_get_wm_protocols_reply_t>() {
+													@Override
+													@Subscribe
+													public void onProtocolChanged(final Optional<xcb_icccm_get_wm_protocols_reply_t> protocol) {
+														updateCanSendWmDeleteMsg(protocol);
+													}
+												},
 												shellExecutor);
 		queryCanSendWmDeleteMsg(clientXWindow);
 	}
@@ -189,14 +204,17 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	// called by shell executor.
 	private void handleClientCloseRequest() {
-		this.displayExecutor.submit(() -> {
-            if (ClientBarElement.this.canSendWmDeleteMsg) {
-                sendWmDeleteMessage(ClientBarElement.this.clientXWindow);
-            } else {
-                ClientBarElement.this.clientXWindow.destroy();
-            }
-            return null;
-        });
+		this.displayExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() {
+				if (ClientBarElement.this.canSendWmDeleteMsg) {
+					sendWmDeleteMessage(ClientBarElement.this.clientXWindow);
+				} else {
+					ClientBarElement.this.clientXWindow.destroy();
+				}
+				return null;
+			}
+		});
 	}
 
 	// called by display executor

@@ -71,21 +71,27 @@ public class XEventPump implements Callable<Void> {
 
     @Override
     public Void call() {
+
         if(xcb_connection_has_error(this.connection.getConnectionReference()) != 0) {
             final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
             LOG.error(errorMsg);
             throw new Error(errorMsg);
         }
+
         final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference());
 
         try {
             waitForExternal.acquireUninterruptibly();
             // pass x event from x-event-pump thread to x-executor thread.
-            this.xExecutor.submit(() -> {
-                XEventPump.this.xEventBus.post(xcb_generic_event);
-                xcb_generic_event.delete();
-                return null;
+            this.xExecutor.submit(new Callable<Void>() {
+                @Override
+                public Void call() {
+                    XEventPump.this.xEventBus.post(xcb_generic_event);
+                    xcb_generic_event.delete();
+                    return null;
+                }
             });
+
             // schedule next event retrieval
             this.xEventPumpExecutor.submit(this);
         } finally {

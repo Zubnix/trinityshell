@@ -63,6 +63,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -116,11 +117,14 @@ public class BinderImpl implements Binder {
         checkNotNull(dataModel);
         checkNotNull(viewModel);
 
-        return dataModelExecutor.submit(() -> {
-            bindImpl(dataModelExecutor,
-                     dataModel,
-                     viewModel);
-            return null;
+        return dataModelExecutor.submit(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                bindImpl(dataModelExecutor,
+                         dataModel,
+                         viewModel);
+                return null;
+            }
         });
 
     }
@@ -133,11 +137,14 @@ public class BinderImpl implements Binder {
         checkNotNull(changedViewModel);
         checkNotNull(subViewName);
 
-        return dataModelExecutor.submit(() -> {
-            updateViewModelBindingImpl(dataModelExecutor,
-                                       changedViewModel,
-                                       subViewName);
-            return null;
+        return dataModelExecutor.submit(new Callable<Void>() {
+            @Override
+            public Void call() {
+                updateViewModelBindingImpl(dataModelExecutor,
+                                           changedViewModel,
+                                           subViewName);
+                return null;
+            }
         });
     }
 
@@ -171,10 +178,10 @@ public class BinderImpl implements Binder {
         bindViewElement(modelExecutor,
                         dataModel,
                         viewModel,
-                        Optional.absent(),
-                        Optional.absent(),
-                        Optional.absent(),
-                        Optional.absent());
+                        Optional.<DataModelContext>absent(),
+                        Optional.<EventSignals>absent(),
+                        Optional.<ObservableCollection>absent(),
+                        Optional.<PropertySlots>absent());
     }
 
     @Override
@@ -185,11 +192,14 @@ public class BinderImpl implements Binder {
         checkNotNull(changedDataModel);
         checkNotNull(propertyName);
 
-        return dataModelExecutor.submit(() -> {
-            updateBindingImpl(dataModelExecutor,
-                              changedDataModel,
-                              propertyName);
-            return null;
+        return dataModelExecutor.submit(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                updateBindingImpl(dataModelExecutor,
+                                  changedDataModel,
+                                  propertyName);
+                return null;
+            }
         });
     }
 
@@ -214,6 +224,7 @@ public class BinderImpl implements Binder {
         if(!this.dataModelContextByViewModelAndParentDataModel.containsRow(dataModel)) {
             return;
         }
+
         for(final Entry<Object, DataModelContext> dataModelContextForViewModel : this
                 .dataModelContextByViewModelAndParentDataModel
                 .column(dataModel).entrySet()) {
@@ -243,6 +254,7 @@ public class BinderImpl implements Binder {
 
     protected void updateProperties(final Object dataModel,
                                     final String propertyName) {
+
         try {
             final Optional<Method> optionalGetter = findGetter(dataModel.getClass(),
                                                                propertyName);
@@ -265,6 +277,7 @@ public class BinderImpl implements Binder {
                     }
                 }
             }
+
         } catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             // TODO explanation
             LOG.error("",
@@ -283,16 +296,21 @@ public class BinderImpl implements Binder {
         checkNotNull(viewModel);
 
         final Class<?> viewModelClass = viewModel.getClass();
+
         // check for class level annotations if field level annotations are
         // absent
-        final Optional<DataModelContext> optionalDataModelContext = optionalFieldLevelDataModelContext.or(Optional.fromNullable(viewModelClass
-                                                                                                                                        .getAnnotation(DataModelContext.class)));
-        final Optional<EventSignals> optionalEventSignals = optionalFieldLevelEventSignals.or(Optional.fromNullable(viewModelClass
-                                                                                                                            .getAnnotation(EventSignals.class)));
+        final Optional<DataModelContext> optionalDataModelContext = optionalFieldLevelDataModelContext.or(Optional
+                                                                                                                  .<DataModelContext>fromNullable(viewModelClass
+                                                                                                                                                          .getAnnotation(DataModelContext.class)));
+        final Optional<EventSignals> optionalEventSignals = optionalFieldLevelEventSignals.or(Optional
+                                                                                                      .<EventSignals>fromNullable(viewModelClass
+                                                                                                                                          .getAnnotation(EventSignals.class)));
         final Optional<ObservableCollection> optionalObservableCollection = optionalFieldLevelObservableCollection
-                .or(Optional.<ObservableCollection>fromNullable(viewModelClass.getAnnotation(ObservableCollection.class)));
-        final Optional<PropertySlots> optionalPropertySlots = optionalFieldLevelPropertySlots.or(Optional.fromNullable(viewModelClass
-                                                                                                                               .getAnnotation(PropertySlots.class)));
+                .or(Optional.<ObservableCollection>fromNullable(viewModelClass
+                                                                        .getAnnotation(ObservableCollection.class)));
+        final Optional<PropertySlots> optionalPropertySlots = optionalFieldLevelPropertySlots.or(Optional
+                                                                                                         .<PropertySlots>fromNullable(viewModelClass
+                                                                                                                                              .getAnnotation(PropertySlots.class)));
 
         Object dataModel;
         if(optionalDataModelContext.isPresent()) {
@@ -491,9 +509,9 @@ public class BinderImpl implements Binder {
 
                 final Set<Object> changedChildViewModels = BinderImpl.this.viewModelsByDataModel
                         .get(childDataModel);
-                for(final Object changedChildViewModel : changedChildViewModels) {
+                for(final Object changedChildviewModel : changedChildViewModels) {
                     this.subViewModelDelegate.updateChildViewPosition(viewModel,
-                                                                      changedChildViewModel,
+                                                                      changedChildviewModel,
                                                                       i,
                                                                       newPosition);
                 }
@@ -567,6 +585,7 @@ public class BinderImpl implements Binder {
         for(final EventSignal eventSignal : eventSignals) {
             final Class<? extends EventSignalFilter> eventSignalFilterType = eventSignal.filter();
             final String inputSlotName = eventSignal.name();
+
             // FIXME cache filter & uninstall any previous filter installments
             final EventSignalFilter eventSignalFilter = this.injector.getInstance(eventSignalFilterType);
             eventSignalFilter.installFilter(viewModel,
@@ -681,7 +700,7 @@ public class BinderImpl implements Binder {
             final Class<?>[] viewMethodArgumentTypes = propertySlot.argumentTypes();
             final Method targetViewMethod = viewModel.getClass().getMethod(viewModelMethodName,
                                                                            viewMethodArgumentTypes);
-            final Class<? extends PropertyAdapter> propertyAdapterType = propertySlot.adapter();
+            final Class<? extends PropertyAdapter<?>> propertyAdapterType = propertySlot.adapter();
             @SuppressWarnings("rawtypes")
             final PropertyAdapter propertyAdapter = propertyAdapterType.newInstance();
             @SuppressWarnings("unchecked")
@@ -760,10 +779,12 @@ public class BinderImpl implements Binder {
         if(subViewModel == null) {
             return;
         }
+
         if(subViewModelField.getAnnotation(SubView.class) == null && subViewModel.getClass()
                                                                                  .getAnnotation(SubView.class) == null) {
             return;
         }
+
         // recursion safety
         if(this.dataModelByViewModel.containsKey(subViewModel)) {
             return;
@@ -853,8 +874,10 @@ public class BinderImpl implements Binder {
 
         if(methodOptional == null) {
             //initialized methodOptional and store it in cache
+
             Method foundMethod = null;
             String getterMethodName = toGetterMethodName(propertyName);
+
             try {
                 foundMethod = dataModelClass.getMethod(getterMethodName);
             } catch(final NoSuchMethodException e) {
@@ -867,6 +890,7 @@ public class BinderImpl implements Binder {
                     // TODO explanation
                     LOG.error("",
                               e1);
+
                 } catch(final SecurityException e1) {
                     LOG.error(format("Property %s is not accessible on %s. Did you declare it as public?",
                                      propertyName,

@@ -19,26 +19,23 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.view;
 
+import org.trinity.foundation.api.render.bindkey.RenderExecutor;
+import org.trinity.foundation.api.shared.ExecutionContext;
+
 import javax.annotation.Nullable;
 
 /***************************************
- * Transforms a model property value to one or more other values so it can be
- * used to invoke a view method. To transform to multiple different types of
- * objects, simply return an array of objects containing the values in same
- * order as the view method arguments.
+ * A default implementation of a {@link PropertyAdapter}. It simply returns the
+ * property value without modification. Used as the default value in
+ * {@link PropertySlot#adapter()}.
  *
- * @see PropertySlot
  ***************************************
  */
-public interface PropertyAdapter<T> {
+@ExecutionContext(RenderExecutor.class)
+public class DefaultPropertyAdapter implements PropertyAdapter<Object> {
 
-	/***************************************
-	 * Transforms a model property value to one or more other values.
-	 *
-	 * @param property
-	 *            A model property
-	 * @return the transformatin.
-	 ***************************************
-	 */
-	Object adapt(@Nullable T property);
+	@Override
+	public Object adapt(@Nullable final Object property) {
+		return property;
+	}
 }

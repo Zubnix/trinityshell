@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -41,10 +42,15 @@ public class ShellPluginsRunnerImpl implements ShellPluginsRunner {
 
     @Inject
     ShellPluginsRunnerImpl(final Set<ShellPlugin> shellPlugins) {
-        this.shellPlugins = new ArrayList<>(shellPlugins);
+        this.shellPlugins = new ArrayList<ShellPlugin>(shellPlugins);
         Collections.sort(this.shellPlugins,
-                         (o1,
-                          o2) -> o1.runlevel() - o2.runlevel());
+                         new Comparator<ShellPlugin>() {
+                             @Override
+                             public int compare(final ShellPlugin o1,
+                                                final ShellPlugin o2) {
+                                 return o1.runlevel() - o2.runlevel();
+                             }
+                         });
     }
 
     @Override
@@ -87,14 +93,14 @@ public class ShellPluginsRunnerImpl implements ShellPluginsRunner {
                 }
             },
                                     MoreExecutors.sameThreadExecutor());
-            shellPlugin.startAsync();
+            shellPlugin.start();
         }
     }
 
     @Override
     public void stopAll() {
         for(final ShellPlugin shellPlugin : this.shellPlugins) {
-            shellPlugin.stopAsync();
+            shellPlugin.stop();
         }
     }
 }

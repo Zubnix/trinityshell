@@ -20,14 +20,20 @@
 
 package org.trinity.shell.api.scene;
 
-import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListenableFuture;
-import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.scene.manager.ShellLayoutManager;
-
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import javax.annotation.Nonnull;
+
+import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.shell.api.bindingkey.ShellScene;
+import org.trinity.shell.api.scene.manager.ShellLayoutManager;
+
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 
 /***************************************
  * Asynchronous abstract implementation of a {@link ShellNodeParent}. Method
@@ -36,12 +42,26 @@ import java.util.concurrent.Callable;
  ***************************************
  */
 @ExecutionContext(ShellExecutor.class)
-public interface DefaultShellNodeParent extends DefaultShellNode,ShellNodeParent {
+public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode implements ShellNodeParent {
+
+	private final ListeningExecutorService shellExecutor;
+
+	protected AbstractAsyncShellNodeParent(	@Nonnull @ShellScene final AsyncListenable shellScene,
+											@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
+		super(	shellScene,
+				shellExecutor);
+		this.shellExecutor = shellExecutor;
+	}
 
 	@Override
-	public default ListenableFuture<Optional<ShellLayoutManager>> getLayoutManager() {
-        return getShellExecutor().submit((Callable<Optional<ShellLayoutManager>>) this::getLayoutManagerImpl);
-    }
+	public final ListenableFuture<Optional<ShellLayoutManager>> getLayoutManager() {
+		return this.shellExecutor.submit(new Callable<Optional<ShellLayoutManager>>() {
+			@Override
+			public Optional<ShellLayoutManager> call() throws Exception {
+				return getLayoutManagerImpl();
+			}
+		});
+	}
 
 	/***************************************
 	 * Concrete implementation of {@link #getLayoutManager()}. This method is
@@ -51,12 +71,17 @@ public interface DefaultShellNodeParent extends DefaultShellNode,ShellNodeParent
 	 * @see #getLayoutManager()
 	 ***************************************
 	 */
-	Optional<ShellLayoutManager> getLayoutManagerImpl();
+	public abstract Optional<ShellLayoutManager> getLayoutManagerImpl();
 
 	@Override
-	public default ListenableFuture<Void> layout() {
-        return getShellExecutor().submit((Callable<Void>) this::layoutImpl);
-    }
+	public final ListenableFuture<Void> layout() {
+		return this.shellExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				return layoutImpl();
+			}
+		});
+	}
 
 	/***************************************
 	 * Concrete implementation of {@link #layout()}. This method is invoked by
@@ -66,12 +91,17 @@ public interface DefaultShellNodeParent extends DefaultShellNode,ShellNodeParent
 	 * @see #layout()
 	 ***************************************
 	 */
-	Void layoutImpl();
+	public abstract Void layoutImpl();
 
 	@Override
-	public default ListenableFuture<Void> setLayoutManager(final ShellLayoutManager shellLayoutManager) {
-        return getShellExecutor().submit((Callable<Void>) () -> setLayoutManagerImpl(shellLayoutManager));
-    }
+	public final ListenableFuture<Void> setLayoutManager(final ShellLayoutManager shellLayoutManager) {
+		return this.shellExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				return setLayoutManagerImpl(shellLayoutManager);
+			}
+		});
+	}
 
 	/***************************************
 	 * Concrete implementation of {@link #setLayoutManager(ShellLayoutManager)}.
@@ -81,12 +111,17 @@ public interface DefaultShellNodeParent extends DefaultShellNode,ShellNodeParent
 	 * @see #setLayoutManager(ShellLayoutManager)
 	 ***************************************
 	 */
-	Void setLayoutManagerImpl(ShellLayoutManager shellLayoutManager);
+	public abstract Void setLayoutManagerImpl(ShellLayoutManager shellLayoutManager);
 
 	@Override
-	public default ListenableFuture<List<ShellNode>> getChildren() {
-        return getShellExecutor().submit((Callable<List<ShellNode>>) () -> (List<ShellNode>) getChildrenImpl());
-    }
+	public final ListenableFuture<List<ShellNode>> getChildren() {
+		return this.shellExecutor.submit(new Callable<List<ShellNode>>() {
+			@Override
+			public List<ShellNode> call() throws Exception {
+				return (List<ShellNode>) getChildrenImpl();
+			}
+		});
+	}
 
 	/***************************************
 	 * Concrete implementation of {@link #getChildren()}. This method is invoked
@@ -96,5 +131,5 @@ public interface DefaultShellNodeParent extends DefaultShellNode,ShellNodeParent
 	 * @see #getChildren()
 	 ***************************************
 	 */
-	List<? extends ShellNode> getChildrenImpl();
+	public abstract List<? extends ShellNode> getChildrenImpl();
 }

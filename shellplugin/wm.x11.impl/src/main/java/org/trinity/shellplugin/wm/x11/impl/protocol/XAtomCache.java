@@ -19,8 +19,20 @@
  ******************************************************************************/
 package org.trinity.shellplugin.wm.x11.impl.protocol;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import static java.lang.String.format;
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
+import static org.freedesktop.xcb.LibXcb.xcb_intern_atom;
+import static org.freedesktop.xcb.LibXcb.xcb_intern_atom_reply;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -30,17 +42,8 @@ import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-
-import static java.lang.String.format;
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
-import static org.freedesktop.xcb.LibXcb.xcb_intern_atom;
-import static org.freedesktop.xcb.LibXcb.xcb_intern_atom_reply;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 @Bind(to = @To(IMPLEMENTATION))
 @Singleton
@@ -61,13 +64,16 @@ public class XAtomCache {
 
 		try {
 			return this.atomCodeNames.get(	atomName,
-                                              () -> {
-                                                  final Integer atomId = internAtom(atomName);
-                                                  XAtomCache.this.atomNameCodes.put(atomId,
-                                                                                    atomName);
-                                                  return atomId;
-                                              });
-        } catch (final ExecutionException e) {
+											new Callable<Integer>() {
+												@Override
+												public Integer call() {
+													final Integer atomId = internAtom(atomName);
+													XAtomCache.this.atomNameCodes.put(	atomId,
+																						atomName);
+													return atomId;
+												}
+											});
+		} catch (final ExecutionException e) {
 			throw new RuntimeException(e);
 		}
 	}

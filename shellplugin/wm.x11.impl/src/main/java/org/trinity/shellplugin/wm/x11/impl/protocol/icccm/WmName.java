@@ -20,9 +20,16 @@
 
 package org.trinity.shellplugin.wm.x11.impl.protocol.icccm;
 
-import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
+import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
+import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name;
+import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
+
+import java.util.concurrent.Callable;
+
+import javax.annotation.concurrent.ThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -36,13 +43,9 @@ import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 
-import javax.annotation.concurrent.ThreadSafe;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
-import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name;
-import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 
 @Bind(to = @To(IMPLEMENTATION))
 @Singleton
@@ -75,18 +78,22 @@ public class WmName extends AbstractCachedProtocol<xcb_icccm_get_text_property_r
 		final xcb_generic_error_t e = new xcb_generic_error_t();
 		final xcb_icccm_get_text_property_reply_t prop = new xcb_icccm_get_text_property_reply_t();
 
-        return this.displayExecutor.submit(() -> {
-            final short stat = xcb_icccm_get_wm_name_reply(WmName.this.xConnection.getConnectionReference(),
-                                                           get_property_cookie,
-                                                           prop,
-                                                           e);
-            if(stat == 0) {
-                LOG.error("Error retrieving wm_name reply from client={}",
-                          window);
-                return Optional.absent();
-            }
+		return this.displayExecutor.submit(new Callable<Optional<xcb_icccm_get_text_property_reply_t>>() {
+			@Override
+			public Optional<xcb_icccm_get_text_property_reply_t> call() throws Exception {
 
-            return Optional.<xcb_icccm_get_text_property_reply_t>of(prop);
-        });
-    }
+				final short stat = xcb_icccm_get_wm_name_reply(	WmName.this.xConnection.getConnectionReference(),
+																get_property_cookie,
+																prop,
+																e);
+				if (stat == 0) {
+					LOG.error(	"Error retrieving wm_name reply from client={}",
+								window);
+					return Optional.absent();
+				}
+
+				return Optional.of(prop);
+			}
+		});
+	}
 }

@@ -19,23 +19,24 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
-import com.google.inject.Singleton;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.freedesktop.xcb.LibXcb.xcb_connect;
+import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Inject;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.freedesktop.xcb.LibXcb.xcb_connect;
-import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
+import com.google.inject.Singleton;
 
 @Bind
 @Singleton
@@ -45,7 +46,6 @@ public class XConnectionImpl implements XConnection {
 
     private SWIGTYPE_p_xcb_connection_t xcb_connection;
 
-    @Inject
     XConnectionImpl() {
 	    // FIXME from config?
 	    final String displayName = System.getenv("DISPLAY");
@@ -55,13 +55,13 @@ public class XConnectionImpl implements XConnection {
     }
 
     private void open(@Nonnull final String displayName,
-                      @Nonnegative final int screen) {
+                     @Nonnegative final int screen) {
         checkNotNull(displayName);
 
         final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
         screenBuf.putInt(screen);
-        this.xcb_connection = xcb_connect(  displayName,
-                                            screenBuf);
+        this.xcb_connection = xcb_connect(displayName,
+                screenBuf);
     }
 
     @Override

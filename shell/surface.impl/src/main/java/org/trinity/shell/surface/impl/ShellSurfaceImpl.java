@@ -19,11 +19,13 @@
  ******************************************************************************/
 package org.trinity.shell.surface.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.util.concurrent.Futures.addCallback;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+
 import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.assistedinject.Assisted;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.GeometryNotify;
@@ -38,14 +40,12 @@ import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
-import org.trinity.shell.api.scene.AbstractShellNodeParent;
-import org.trinity.shell.api.surface.DefaultShellSurface;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.util.concurrent.Futures.addCallback;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.assistedinject.Assisted;
+import org.trinity.shell.api.surface.AbstractAsyncShellSurface;
 
 // TODO documentation
 /**
@@ -58,7 +58,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  */
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
-public class ShellSurfaceImpl extends AbstractShellNodeParent implements DefaultShellSurface {
+public final class ShellSurfaceImpl extends AbstractAsyncShellSurface {
 
     public static final boolean DEFAULT_IS_RESIZABLE = true;
     public static final boolean DEFAULT_IS_MOVABLE = true;
@@ -79,28 +79,21 @@ public class ShellSurfaceImpl extends AbstractShellNodeParent implements Default
     private int heightIncrement = DEFAULT_HEIGHT_INC;
 
 	private final ShellSurfaceGeometryDelegate shellSurfaceGeometryDelegateImpl;
-    private final DisplaySurface displaySurface;
-    @Nonnull
-    private final ListeningExecutorService shellExecutor;
+	@Nonnull
+	private final ListeningExecutorService shellExecutor;
 
-    // created by a custom factory so inject annotations are not needed.
+	// created by a custom factory so inject annotations are not needed.
 	ShellSurfaceImpl(	@Nonnull @Assisted final DisplaySurface displaySurface,
 						@Nonnull @ShellScene final AsyncListenable shellScene,
 						@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-        super(
-                shellScene,
-                shellExecutor);
-        this.displaySurface = displaySurface;
-        this.shellExecutor = shellExecutor;
-        this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegate(this);
-        syncGeoToDisplaySurface();
+		super(	displaySurface,
+				shellScene,
+				shellExecutor);
+		this.shellExecutor = shellExecutor;
+		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegate(this);
+		syncGeoToDisplaySurface();
         displaySurface.register(this,shellExecutor);
 	}
-
-    @Override
-    public DisplaySurface getDisplaySurface() {
-        return this.displaySurface;
-    }
 
     @Override
     public Void doDestroyImpl() {
