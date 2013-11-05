@@ -203,7 +203,7 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>2.9.1</version>
                     <configuration>
-                        <verbose>true</verbose>
+                        <verbose>false</verbose>
                         <groups>
                             <group>
                                 <title>Foundation API</title>
@@ -221,7 +221,15 @@
                         <excludePackageNames>*impl*:org.trinity.bootstrap</excludePackageNames>
                         <linksource>true</linksource>
                         <minmemory>16m</minmemory>
-			            <maxmemory>128m</maxmemory>
+			<maxmemory>128m</maxmemory>
+			<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+			<docletArtifact>                                                         
+				<groupId>org.umlgraph</groupId>
+				<artifactId>umlgraph</artifactId>
+				<version>5.6</version>
+			</docletArtifact>
+			<additionalparam>-views</additionalparam>
+			<useStandardDocletOptions>true</useStandardDocletOptions>
                     </configuration>
                 </plugin>
             </plugins>
