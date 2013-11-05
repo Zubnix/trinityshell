@@ -28,8 +28,8 @@ public class TestXConnectionImpl {
     public void testOpen() {
         //given
         //an X display server on :0
-        String display = ":0";
-        SWIGTYPE_p_xcb_connection_t connection = mock(SWIGTYPE_p_xcb_connection_t.class);
+        final String display = ":0";
+        final SWIGTYPE_p_xcb_connection_t connection = mock(SWIGTYPE_p_xcb_connection_t.class);
 
         mockStatic(LibXcb.class);
         when(xcb_connect(eq(display),
@@ -56,8 +56,8 @@ public class TestXConnectionImpl {
     public void testClose() {
         //given
         //an open XConnectionImpl on ":0"
-        String display = ":0";
-        SWIGTYPE_p_xcb_connection_t connection = mock(SWIGTYPE_p_xcb_connection_t.class);
+        final String display = ":0";
+        final SWIGTYPE_p_xcb_connection_t connection = mock(SWIGTYPE_p_xcb_connection_t.class);
 
         mockStatic(LibXcb.class);
         when(xcb_connect(eq(display),
@@ -66,7 +66,7 @@ public class TestXConnectionImpl {
         mockStatic(System.class);
         when(System.getenv(eq("DISPLAY"))).thenReturn(display);
 
-        XConnectionImpl xConnection = new XConnectionImpl();
+        final XConnectionImpl xConnection = new XConnectionImpl();
 
         //when
         //XConnectionImpl object is close

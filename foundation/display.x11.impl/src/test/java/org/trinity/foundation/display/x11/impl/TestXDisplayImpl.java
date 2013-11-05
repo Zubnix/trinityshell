@@ -4,6 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
+import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_window_attributes_cookie_t;
 import org.freedesktop.xcb.xcb_get_window_attributes_reply_t;
 import org.freedesktop.xcb.xcb_query_tree_cookie_t;
@@ -17,6 +18,8 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -41,8 +44,6 @@ import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_UNMAPPED;
 import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -64,11 +65,14 @@ public class TestXDisplayImpl {
 
     @Before
     public void setup() {
-        when(xExecutor.submit(Matchers.<Callable>any())).thenAnswer(invocation -> {
-            Object arg0 = invocation.getArguments()[0];
-            Callable<?> submittedCallable = (Callable<?>) arg0;
-            Object result = submittedCallable.call();
-            return immediateFuture(result);
+        when(xExecutor.submit(Matchers.<Callable>any())).thenAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(final InvocationOnMock invocation) throws Throwable {
+                final Object arg0 = invocation.getArguments()[0];
+                final Callable<?> submittedCallable = (Callable<?>) arg0;
+                final Object result = submittedCallable.call();
+                return immediateFuture(result);
+            }
         });
 
         when(xConnection.getConnectionReference()).thenReturn(xcb_connection);
@@ -97,10 +101,10 @@ public class TestXDisplayImpl {
         //an underlying X server with several clients
         mockStatic(LibXcb.class);
 
-        xcb_setup_t xcb_setup = mock(xcb_setup_t.class);
-        xcb_screen_iterator_t xcb_screen_iterator = mock(xcb_screen_iterator_t.class);
-        xcb_screen_t xcb_screen = mock(xcb_screen_t.class);
-        int rootWindowId = 123;
+        final xcb_setup_t xcb_setup = mock(xcb_setup_t.class);
+        final xcb_screen_iterator_t xcb_screen_iterator = mock(xcb_screen_iterator_t.class);
+        final xcb_screen_t xcb_screen = mock(xcb_screen_t.class);
+        final int rootWindowId = 123;
 
         when(xcb_connection_has_error(xcb_connection)).thenReturn(0);
         when(xcb_get_setup(xcb_connection)).thenReturn(xcb_setup);
@@ -110,33 +114,33 @@ public class TestXDisplayImpl {
                                                       0);
         when(xcb_screen.getRoot()).thenReturn(rootWindowId);
 
-        xcb_query_tree_cookie_t xcb_query_tree_cookie = mock(xcb_query_tree_cookie_t.class);
-        xcb_query_tree_reply_t xcb_query_tree_reply = mock(xcb_query_tree_reply_t.class);
-        ByteBuffer treeChildren = mock(ByteBuffer.class);
-        int nroChildren = 3;
-        int childId0 = 2;
-        int childId1 = 4;
-        int childId2 = 6;
+        final xcb_query_tree_cookie_t xcb_query_tree_cookie = mock(xcb_query_tree_cookie_t.class);
+        final xcb_query_tree_reply_t xcb_query_tree_reply = mock(xcb_query_tree_reply_t.class);
+        final ByteBuffer treeChildren = mock(ByteBuffer.class);
+        final int nroChildren = 3;
+        final int childId0 = 2;
+        final int childId1 = 4;
+        final int childId2 = 6;
 
         when(xcb_query_tree(xcb_connection,
                             rootWindowId)).thenReturn(xcb_query_tree_cookie);
         when(xcb_query_tree_reply(eq(xcb_connection),
                                   eq(xcb_query_tree_cookie),
-                                  any())).thenReturn(xcb_query_tree_reply);
+                (xcb_generic_error_t) any())).thenReturn(xcb_query_tree_reply);
         when(xcb_query_tree_children(xcb_query_tree_reply)).thenReturn(treeChildren);
         when(xcb_query_tree_children_length(xcb_query_tree_reply)).thenReturn(nroChildren);
         when(treeChildren.getInt()).thenReturn(childId0,
                                                childId1,
                                                childId2);
 
-        xcb_get_window_attributes_cookie_t get_window_attributes_cookie = mock(xcb_get_window_attributes_cookie_t.class);
-        xcb_get_window_attributes_reply_t get_window_attributes_reply = mock(xcb_get_window_attributes_reply_t.class);
+        final xcb_get_window_attributes_cookie_t get_window_attributes_cookie = mock(xcb_get_window_attributes_cookie_t.class);
+        final xcb_get_window_attributes_reply_t get_window_attributes_reply = mock(xcb_get_window_attributes_reply_t.class);
 
         when(xcb_get_window_attributes(eq(xcb_connection),
                                        anyInt())).thenReturn(get_window_attributes_cookie);
         when(xcb_get_window_attributes_reply(eq(xcb_connection),
                                              eq(get_window_attributes_cookie),
-                                             any())).thenReturn(get_window_attributes_reply);
+                (xcb_generic_error_t) any())).thenReturn(get_window_attributes_reply);
         when(get_window_attributes_reply.getOverride_redirect()).thenReturn((short) 1,
                                                                             (short) 0,
                                                                             (short) 0);
@@ -144,22 +148,22 @@ public class TestXDisplayImpl {
                                                                     (short) XCB_MAP_STATE_UNMAPPED,
                                                                     (short) XCB_MAP_STATE_VIEWABLE);
 
-        DisplaySurface clientWindow = mock(DisplaySurface.class);
-        DisplaySurfaceHandle displaySurfaceHandle = mock(DisplaySurfaceHandle.class);
+        final DisplaySurface clientWindow = mock(DisplaySurface.class);
+        final DisplaySurfaceHandle displaySurfaceHandle = mock(DisplaySurfaceHandle.class);
 
-        when(xWindowPool.getDisplaySurface(any())).thenReturn(clientWindow);
+        when(xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenReturn(clientWindow);
         when(clientWindow.getDisplaySurfaceHandle()).thenReturn(displaySurfaceHandle);
         when(displaySurfaceHandle.getNativeHandle()).thenReturn(6);
 
-        DisplaySurface newClient = mock(DisplaySurface.class);
-        DisplaySurfaceCreationNotify displaySurfaceCreationNotify = mock(DisplaySurfaceCreationNotify.class);
+        final DisplaySurface newClient = mock(DisplaySurface.class);
+        final DisplaySurfaceCreationNotify displaySurfaceCreationNotify = mock(DisplaySurfaceCreationNotify.class);
 
         when(displaySurfaceCreationNotify.getDisplaySurface()).thenReturn(newClient);
 
         //when
         //a new XDisplay is created
         //a client is created
-        XDisplayImpl xDisplay = new XDisplayImpl(xConnection,
+        final XDisplayImpl xDisplay = new XDisplayImpl(xConnection,
                                                  xWindowPool,
                                                  xExecutor);
         xDisplay.post(displaySurfaceCreationNotify);
@@ -178,7 +182,7 @@ public class TestXDisplayImpl {
                                      eq(XCB_CW_EVENT_MASK),
                                      eq(rootWindowAttributes));
 
-        XWindowHandle clientHandle = new XWindowHandle(6);
+        final XWindowHandle clientHandle = new XWindowHandle(6);
         verify(xWindowPool).getDisplaySurface(eq(clientHandle));
         verifyNoMoreInteractions(xWindowPool);
         assertTrue(xDisplay.getDisplaySurfaces().get().get(0) == clientWindow);
@@ -193,11 +197,11 @@ public class TestXDisplayImpl {
                                      eq(XCB_CW_EVENT_MASK),
                                      eq(CLIENT_EVENTS_CONFIG_BUFFER));
 
-        ArgumentCaptor<Object> destroyListenerCaptor = ArgumentCaptor.forClass(Object.class);
+        final ArgumentCaptor<Object> destroyListenerCaptor = ArgumentCaptor.forClass(Object.class);
         verify(clientWindow).register(destroyListenerCaptor.capture());
-        Object destroyListener = destroyListenerCaptor.getValue();
+        final Object destroyListener = destroyListenerCaptor.getValue();
         Method listenerMethod = null;
-        for(Method method : destroyListener.getClass().getMethods()) {
+        for(final Method method : destroyListener.getClass().getMethods()) {
             if(method.getAnnotation(Subscribe.class) != null && method.getParameterTypes().length == 1 && method
                     .getParameterTypes()[0].equals(DestroyNotify.class)) {
                 listenerMethod = method;

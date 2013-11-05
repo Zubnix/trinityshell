@@ -49,9 +49,9 @@ public class TestXEventPump {
         when(xExecutor.submit(Matchers.<Callable>any())).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {
-                Object arg0 = invocation.getArguments()[0];
-                Callable<?> submittedCallable = (Callable<?>) arg0;
-                Object result = submittedCallable.call();
+                final Object arg0 = invocation.getArguments()[0];
+                final Callable<?> submittedCallable = (Callable<?>) arg0;
+                final Object result = submittedCallable.call();
                 return Futures.immediateFuture(result);
             }
         });
@@ -66,7 +66,7 @@ public class TestXEventPump {
         //an X server with no errors
         mockStatic(LibXcb.class);
 
-        xcb_generic_event_t xcb_generic_event = mock(xcb_generic_event_t.class);
+        final xcb_generic_event_t xcb_generic_event = mock(xcb_generic_event_t.class);
 
         when(xcb_connection_has_error(xcb_connection)).thenReturn(0);
 
@@ -107,7 +107,7 @@ public class TestXEventPump {
         //an X server with no errors
         mockStatic(LibXcb.class);
 
-        xcb_generic_event_t xcb_generic_event = mock(xcb_generic_event_t.class);
+        final xcb_generic_event_t xcb_generic_event = mock(xcb_generic_event_t.class);
 
         when(xcb_connection_has_error(xcb_connection)).thenReturn(0);
 
@@ -137,7 +137,7 @@ public class TestXEventPump {
         verify(xEventBus,
                never()).post(xcb_generic_event);
         xEventPump.start();
-        boolean timeout = !waitForEvent.await(1,
+        final boolean timeout = !waitForEvent.await(1,
                                               TimeUnit.SECONDS);
         if(timeout) {
             throw new TimeoutException("Timeout while waiting 1 second for X event to arrive.");

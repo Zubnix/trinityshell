@@ -6,6 +6,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
+import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_geometry_cookie_t;
 import org.freedesktop.xcb.xcb_get_geometry_reply_t;
 import org.junit.Before;
@@ -59,11 +60,14 @@ public class TestXWindow {
     @Before
     public void setup() {
         when(xConnection.getConnectionReference()).thenReturn(xcb_connection);
-        when(xExecutor.submit(Matchers.<Callable>any())).thenAnswer(invocation -> {
-            Object arg0 = invocation.getArguments()[0];
-            Callable<?> submittedCallable = (Callable<?>) arg0;
-            Object result = submittedCallable.call();
-            return Futures.immediateFuture(result);
+        when(xExecutor.submit(Matchers.<Callable>any())).thenAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(final InvocationOnMock invocation) throws Throwable {
+                final Object arg0 = invocation.getArguments()[0];
+                final Callable<?> submittedCallable = (Callable<?>) arg0;
+                final Object result = submittedCallable.call();
+                return Futures.immediateFuture(result);
+            }
         });
         when(displaySurfaceHandle.getNativeHandle()).thenReturn(nativeHandle);
     }
@@ -114,8 +118,8 @@ public class TestXWindow {
 
         //when
         //the XWindow is moved
-        int x = 567;
-        int y = 890;
+        final int x = 567;
+        final int y = 890;
         xWindow.move(x,
                      y);
 
@@ -123,15 +127,15 @@ public class TestXWindow {
         //the native X server window should be moved
         verifyStatic();
         final int MOVE_VALUE_MASK = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
-        ArgumentCaptor<ByteBuffer> byteBufferArgumentCaptor = ArgumentCaptor.forClass(ByteBuffer.class);
+        final ArgumentCaptor<ByteBuffer> byteBufferArgumentCaptor = ArgumentCaptor.forClass(ByteBuffer.class);
         xcb_configure_window(eq(xcb_connection),
                              eq(nativeHandle),
                              eq(MOVE_VALUE_MASK),
                              byteBufferArgumentCaptor.capture());
         xcb_flush(xcb_connection);
-        ByteBuffer value = byteBufferArgumentCaptor.getValue();
-        int passedX = value.getInt(0);
-        int passedY = value.getInt(4);
+        final ByteBuffer value = byteBufferArgumentCaptor.getValue();
+        final int passedX = value.getInt(0);
+        final int passedY = value.getInt(4);
         assertEquals(x,
                      passedX);
         assertEquals(y,
@@ -143,23 +147,23 @@ public class TestXWindow {
         //given
         //an XWindow with a border width
         mockStatic(LibXcb.class);
-        xcb_get_geometry_cookie_t geo_cookie = mock(xcb_get_geometry_cookie_t.class);
-        xcb_get_geometry_reply_t geo_reply = mock(xcb_get_geometry_reply_t.class);
-        int borderWidth = 3;
+        final xcb_get_geometry_cookie_t geo_cookie = mock(xcb_get_geometry_cookie_t.class);
+        final xcb_get_geometry_reply_t geo_reply = mock(xcb_get_geometry_reply_t.class);
+        final int borderWidth = 3;
 
         when(xcb_get_geometry(xcb_connection,
                               nativeHandle)).thenReturn(geo_cookie);
         when(xcb_get_geometry_reply(eq(xcb_connection),
                                     eq(geo_cookie),
-                                    any())).thenReturn(geo_reply);
+                (xcb_generic_error_t) any())).thenReturn(geo_reply);
         when(geo_reply.getBorder_width()).thenReturn(borderWidth);
 
         //when
         //the XWindow is moved and resized
-        int width = 123;
-        int height = 456;
-        int x = 789;
-        int y = 1011;
+        final int width = 123;
+        final int height = 456;
+        final int x = 789;
+        final int y = 1011;
 
         xWindow.moveResize(x,
                            y,
@@ -170,18 +174,18 @@ public class TestXWindow {
         //the native X server window is moved and resized
         final int MOVE_RESIZE_VALUE_MASK = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y
                 | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-        ArgumentCaptor<ByteBuffer> byteBufferArgumentCaptor = ArgumentCaptor.forClass(ByteBuffer.class);
+        final ArgumentCaptor<ByteBuffer> byteBufferArgumentCaptor = ArgumentCaptor.forClass(ByteBuffer.class);
         verifyStatic();
         xcb_configure_window(eq(xcb_connection),
                              eq(nativeHandle),
                              eq(MOVE_RESIZE_VALUE_MASK),
                              byteBufferArgumentCaptor.capture());
         xcb_flush(xcb_connection);
-        ByteBuffer value = byteBufferArgumentCaptor.getValue();
-        int passedX = value.getInt(0);
-        int passedY = value.getInt(4);
-        int passedWidth = value.getInt(8);
-        int passedHeight = value.getInt(12);
+        final ByteBuffer value = byteBufferArgumentCaptor.getValue();
+        final int passedX = value.getInt(0);
+        final int passedY = value.getInt(4);
+        final int passedWidth = value.getInt(8);
+        final int passedHeight = value.getInt(12);
 
         assertEquals(x,
                      passedX);
@@ -198,21 +202,21 @@ public class TestXWindow {
         //given
         //an XWindow
         mockStatic(LibXcb.class);
-        xcb_get_geometry_cookie_t geo_cookie = mock(xcb_get_geometry_cookie_t.class);
-        xcb_get_geometry_reply_t geo_reply = mock(xcb_get_geometry_reply_t.class);
-        int borderWidth = 4;
+        final xcb_get_geometry_cookie_t geo_cookie = mock(xcb_get_geometry_cookie_t.class);
+        final xcb_get_geometry_reply_t geo_reply = mock(xcb_get_geometry_reply_t.class);
+        final int borderWidth = 4;
 
         when(xcb_get_geometry(xcb_connection,
                               nativeHandle)).thenReturn(geo_cookie);
         when(xcb_get_geometry_reply(eq(xcb_connection),
                                     eq(geo_cookie),
-                                    any())).thenReturn(geo_reply);
+                (xcb_generic_error_t) any())).thenReturn(geo_reply);
         when(geo_reply.getBorder_width()).thenReturn(borderWidth);
 
         //when
         //the XWindow is resized
-        int width = 12;
-        int height = 34;
+        final int width = 12;
+        final int height = 34;
 
         xWindow.resize(width,
                        height);
@@ -220,16 +224,16 @@ public class TestXWindow {
         //then
         //the native X server window is resized, taking into account it's X window border.
         final int RESIZE_VALUE_MASK = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-        ArgumentCaptor<ByteBuffer> byteBufferArgumentCaptor = ArgumentCaptor.forClass(ByteBuffer.class);
+        final ArgumentCaptor<ByteBuffer> byteBufferArgumentCaptor = ArgumentCaptor.forClass(ByteBuffer.class);
         verifyStatic();
         xcb_configure_window(eq(xcb_connection),
                              eq(nativeHandle),
                              eq(RESIZE_VALUE_MASK),
                              byteBufferArgumentCaptor.capture());
         xcb_flush(xcb_connection);
-        ByteBuffer value = byteBufferArgumentCaptor.getValue();
-        int passedWidth = value.getInt(0);
-        int passedHeight = value.getInt(4);
+        final ByteBuffer value = byteBufferArgumentCaptor.getValue();
+        final int passedWidth = value.getInt(0);
+        final int passedHeight = value.getInt(4);
 
         assertEquals(width - (2 * borderWidth),
                      passedWidth);
@@ -242,19 +246,19 @@ public class TestXWindow {
         //given
         //and XWindow
         mockStatic(LibXcb.class);
-        xcb_get_geometry_cookie_t geo_cookie = mock(xcb_get_geometry_cookie_t.class);
-        xcb_get_geometry_reply_t geo_reply = mock(xcb_get_geometry_reply_t.class);
-        int borderWidth = 5;
-        int givenX = 321;
-        int givenY = 112;
-        int givenWidth = 987;
-        int givenHeight = 654;
+        final xcb_get_geometry_cookie_t geo_cookie = mock(xcb_get_geometry_cookie_t.class);
+        final xcb_get_geometry_reply_t geo_reply = mock(xcb_get_geometry_reply_t.class);
+        final int borderWidth = 5;
+        final int givenX = 321;
+        final int givenY = 112;
+        final int givenWidth = 987;
+        final int givenHeight = 654;
 
         when(xcb_get_geometry(xcb_connection,
                               nativeHandle)).thenReturn(geo_cookie);
         when(xcb_get_geometry_reply(eq(xcb_connection),
                                     eq(geo_cookie),
-                                    any())).thenReturn(geo_reply);
+                (xcb_generic_error_t) any())).thenReturn(geo_reply);
         when(geo_reply.getBorder_width()).thenReturn(borderWidth);
         when(geo_reply.getX()).thenReturn((short) givenX);
         when(geo_reply.getY()).thenReturn((short) givenY);
@@ -263,16 +267,16 @@ public class TestXWindow {
 
         //when
         //the XWindow's geometry is requested
-        ListenableFuture<Rectangle> geometry = xWindow.getGeometry();
+        final ListenableFuture<Rectangle> geometry = xWindow.getGeometry();
 
         //then
         //the native X server window's geometry is returned.
         verifyStatic();
         xcb_get_geometry_reply(eq(xcb_connection),
                                eq(geo_cookie),
-                               any());
+                (xcb_generic_error_t) any());
 
-        Rectangle rectangle = geometry.get();
+        final Rectangle rectangle = geometry.get();
         assertEquals(givenX,
                      rectangle.getPosition().getX());
         assertEquals(givenY,

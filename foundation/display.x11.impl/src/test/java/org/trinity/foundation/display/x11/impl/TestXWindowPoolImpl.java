@@ -60,9 +60,9 @@ public class TestXWindowPoolImpl {
 
         //when
         //a windows pool presence is requested
-        boolean present0 = xWindowPool.isPresent(displaySurfaceHandle);
+        final boolean present0 = xWindowPool.isPresent(displaySurfaceHandle);
         xWindowPool.getDisplaySurface(displaySurfaceHandle);
-        boolean present1 = xWindowPool.isPresent(displaySurfaceHandle);
+        final boolean present1 = xWindowPool.isPresent(displaySurfaceHandle);
 
         //then
         //the pool reports if the window is cached
@@ -83,7 +83,7 @@ public class TestXWindowPoolImpl {
 
         //then
         //event processing is halted until the window is cached
-        InOrder inOrder = inOrder(xEventPump,displaySurfaceFactory);
+        final InOrder inOrder = inOrder(xEventPump,displaySurfaceFactory);
 
         inOrder.verify(xEventPump).stop();
         inOrder.verify(displaySurfaceFactory).createDisplaySurface(displaySurfaceHandle);

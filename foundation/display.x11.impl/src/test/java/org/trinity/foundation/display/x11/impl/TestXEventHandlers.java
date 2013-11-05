@@ -38,7 +38,7 @@ public class TestXEventHandlers {
 
         final EventBus eventBus = mock(EventBus.class);
 
-        XEventHandlers xEventHandlers = new XEventHandlers(new HashSet() {{add(xEventHandler0); add(xEventHandler1);}},
+        final XEventHandlers xEventHandlers = new XEventHandlers(new HashSet() {{add(xEventHandler0); add(xEventHandler1);}},
                                                            eventBus);
         //when
         //an event arrives with code 1
