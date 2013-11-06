@@ -36,7 +36,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.render.ViewBuilder;
 import org.trinity.foundation.api.render.ViewBuilderResult;
-import org.trinity.foundation.api.render.binding.Binder;
+import org.trinity.foundation.api.render.binding.ViewBinder;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
@@ -56,6 +56,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import static com.google.common.collect.Iterables.removeAll;
 import static com.google.common.util.concurrent.Futures.addCallback;
@@ -75,7 +76,7 @@ public class ShellImpl implements Shell {
 	private final EventList<Object> bottomBar = new BasicEventList<>();
 	private final Display display;
 	private final ListeningExecutorService shellExecutor;
-	private final Binder binder;
+	private final ViewBinder viewBinder;
 	private final ShellSurfaceFactory shellSurfaceFactory;
 	private final ShellLayoutManagerFactory shellLayoutManagerFactory;
 	private final ClientBarElementFactory clientBarElementFactory;
@@ -86,14 +87,14 @@ public class ShellImpl implements Shell {
     @Inject
     ShellImpl(final Display display,
               @ShellExecutor final ListeningExecutorService shellExecutor,
-              final Binder binder,
+              final ViewBinder viewBinder,
               final ShellSurfaceFactory shellSurfaceFactory,
 				final ShellLayoutManagerFactory shellLayoutManagerFactory,
 				final ClientBarElementFactory clientBarElementFactory,
                 @DesktopView final ViewBuilder viewBuilder) {
         this.display = display;
         this.shellExecutor = shellExecutor;
-        this.binder = binder;
+        this.viewBinder = viewBinder;
         this.shellSurfaceFactory = shellSurfaceFactory;
         this.shellLayoutManagerFactory = shellLayoutManagerFactory;
         this.clientBarElementFactory = clientBarElementFactory;
@@ -137,21 +138,25 @@ public class ShellImpl implements Shell {
 	@Override
 	public void start() {
 
-        viewBuilder.build(new ViewBuilderResult() {
-            @Override
-            public void onResult(final Object bindableView,
-                                     final DisplaySurface viewDisplaySurface) {
-                ShellImpl.this.binder.bind(shellExecutor,
-                                           ShellImpl.this,
-                                           bindableView);
+        try {
+            viewBuilder.build(new ViewBuilderResult() {
+                @Override
+                public void onResult(final Object bindableView,
+                                         final DisplaySurface viewDisplaySurface) {
+                    ShellImpl.this.viewBinder.bind(shellExecutor,
+                                               ShellImpl.this,
+                                               bindableView);
 
-                ShellImpl.this.nonClientDisplaySurfaces.add(viewDisplaySurface);
-                final ShellSurface desktopShellSurface = ShellImpl.this.shellSurfaceFactory
-                        .createShellSurface(viewDisplaySurface);
-                configureDesktopShellSurfaceBehavior(desktopShellSurface);
-                handleDesktopShellSurface(desktopShellSurface);
-            }
-        });
+                    ShellImpl.this.nonClientDisplaySurfaces.add(viewDisplaySurface);
+                    final ShellSurface desktopShellSurface = ShellImpl.this.shellSurfaceFactory
+                            .createShellSurface(viewDisplaySurface);
+                    configureDesktopShellSurfaceBehavior(desktopShellSurface);
+                    handleDesktopShellSurface(desktopShellSurface);
+                }
+            }).get();
+        } catch(InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     // called by display thread so we avoid missing any display methods.

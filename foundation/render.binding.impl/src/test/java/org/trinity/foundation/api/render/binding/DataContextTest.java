@@ -41,13 +41,13 @@ public class DataContextTest {
 		final EventSignalFilter eventSignalFilter = mock(EventSignalFilter.class);
 		when(injector.getInstance(EventSignalFilter.class)).thenReturn(eventSignalFilter);
 
-		final Binder binder = new BinderImpl(	injector,
+		final ViewBinder viewBinder = new ViewBinderImpl(	injector,
                                                  propertySlotInvocationDelegate,
                                                 subViewModelDelegate);
-		binder.bind(MoreExecutors.sameThreadExecutor(),
+		viewBinder.bind(MoreExecutors.sameThreadExecutor(),
 					model,
 					view);
-		binder.updateDataModelBinding(MoreExecutors.sameThreadExecutor(),
+		viewBinder.updateDataModelBinding(MoreExecutors.sameThreadExecutor(),
                                       model,
                                       "otherSubModel");
 

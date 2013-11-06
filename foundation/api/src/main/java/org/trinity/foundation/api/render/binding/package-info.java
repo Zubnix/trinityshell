@@ -5,7 +5,7 @@
  * viewmodel, which can be any type of object, and view, usually of type
  * {@link org.trinity.foundation.api.render.binding.view.View}.
  * <p>
- * BindableView bindings:
+ * View bindings:
  * <ul>
  * <li>{@link org.trinity.foundation.api.render.binding.view.DataModelContext}</li>
  * <li>{@link org.trinity.foundation.api.render.binding.view.EventSignals}</li>

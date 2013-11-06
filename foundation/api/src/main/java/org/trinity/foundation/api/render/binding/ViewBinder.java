@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  *
  ***************************************
  */
-public interface Binder {
+public interface ViewBinder {
 
 	/***************************************
      * Update the bound views so they reflect the state of the changed data model.

@@ -228,7 +228,7 @@
 				<artifactId>umlgraph</artifactId>
 				<version>5.6</version>
 			</docletArtifact>
-			<additionalparam>-views</additionalparam>
+			<additionalparam>-Xdoclint:none -views</additionalparam>
 			<useStandardDocletOptions>true</useStandardDocletOptions>
                     </configuration>
                 </plugin>
