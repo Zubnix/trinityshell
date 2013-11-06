@@ -20,7 +20,6 @@
 package org.trinity.foundation.api.render.binding.model;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import org.trinity.foundation.api.render.binding.Binder;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
 import java.lang.annotation.Annotation;
@@ -34,7 +33,7 @@ import java.lang.annotation.Target;
  * marked method, the properties with a matching name will be used to update the
  * bound view.
  *
- * @see {@link Binder#updateDataModelBinding(ListeningExecutorService, Object, String)}
+ * @see {@link org.trinity.foundation.api.render.binding.ViewBinder#updateDataModelBinding(ListeningExecutorService, Object, String)}
  *
  ***************************************
  */
@@ -44,7 +43,7 @@ public @interface PropertyChanged {
 	/****************************************
 	 * The name(s) of the properties that were updated.
 	 *
-	 * @return
+	 * @return the properties that changed.
 	 ***************************************
 	 */
 	String[] value();
@@ -53,7 +52,7 @@ public @interface PropertyChanged {
 	 * The Guice {@link ExecutionContext} binding key to use to retrieve the
 	 * updated property from the model.
 	 *
-	 * @return
+	 * @return the executor to use when reading the property from the model
 	 */
 	Class<? extends Annotation> executor();
 }

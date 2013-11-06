@@ -25,7 +25,6 @@ import java.lang.annotation.Annotation;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
-import org.trinity.foundation.api.render.binding.view.PropertySlot;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -45,7 +44,7 @@ import com.google.inject.Key;
  */
 public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 
-	private Binder binder;
+	private ViewBinder viewBinder;
 	private Injector injector;
 
 	@Override
@@ -62,7 +61,7 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 		final String[] changedPropertyNames = changedPropertySignal.value();
 
 		for (final String propertyName : changedPropertyNames) {
-			this.binder.updateDataModelBinding(modelExecutorInstance,
+			this.viewBinder.updateDataModelBinding(modelExecutorInstance,
                                                changedModel,
                                                propertyName);
 		}
@@ -71,8 +70,8 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 	}
 
 	@Inject
-	void setBinder(final Binder binder) {
-		this.binder = binder;
+	void setBinder(final ViewBinder viewBinder) {
+		this.viewBinder = viewBinder;
 	}
 
 	@Inject

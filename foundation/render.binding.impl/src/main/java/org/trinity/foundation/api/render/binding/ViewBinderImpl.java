@@ -74,9 +74,9 @@ import static java.lang.String.format;
 @Bind
 @Singleton
 @ThreadSafe
-public class BinderImpl implements Binder {
+public class ViewBinderImpl implements ViewBinder {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BinderImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ViewBinderImpl.class);
     private static final Table<Class<?>, String, Optional<Method>> GETTER_CACHE = HashBasedTable.create();
     private static final Map<Class<?>, Field[]> DECLARED_FIELDS_CACHE = new HashMap<>();
     private static final String GET_BOOLEAN_PREFIX = "is";
@@ -101,9 +101,9 @@ public class BinderImpl implements Binder {
     private final Table<Object, String, Object> subviewModelByNameAndViewModel = HashBasedTable.create();
 
     @Inject
-    BinderImpl(final Injector injector,
-               final PropertySlotInvocationDelegate propertySlotInvocationDelegate,
-               final SubViewModelDelegate subViewModelDelegate) {
+    ViewBinderImpl(final Injector injector,
+                   final PropertySlotInvocationDelegate propertySlotInvocationDelegate,
+                   final SubViewModelDelegate subViewModelDelegate) {
         this.injector = injector;
         this.subViewModelDelegate = subViewModelDelegate;
         this.propertySlotInvocationDelegate = propertySlotInvocationDelegate;
@@ -450,7 +450,7 @@ public class BinderImpl implements Binder {
 
         final Set<Object> removedChildViewModels = this.viewModelsByDataModel.get(removedChildDataModel);
         for(final Object removedChildView : removedChildViewModels) {
-            BinderImpl.this.subViewModelDelegate.destroyView(viewModel,
+            ViewBinderImpl.this.subViewModelDelegate.destroyView(viewModel,
                                                              removedChildView,
                                                              sourceIndex);
         }
@@ -507,7 +507,7 @@ public class BinderImpl implements Binder {
                 shadowChildDataModelList.add(newPosition,
                                              childDataModel);
 
-                final Set<Object> changedChildViewModels = BinderImpl.this.viewModelsByDataModel
+                final Set<Object> changedChildViewModels = ViewBinderImpl.this.viewModelsByDataModel
                         .get(childDataModel);
                 for(final Object changedChildviewModel : changedChildViewModels) {
                     this.subViewModelDelegate.updateChildViewPosition(viewModel,

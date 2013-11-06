@@ -1,6 +1,7 @@
 package org.trinity.foundation.render.javafx.api;
 
 
+import com.sun.javafx.application.PlatformImpl;
 import com.sun.javafx.tk.TKStage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -10,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 
 import java.lang.reflect.Field;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 public class FXDisplaySurfaceHandle implements DisplaySurfaceHandle {
 
@@ -35,8 +39,15 @@ public class FXDisplaySurfaceHandle implements DisplaySurfaceHandle {
                                                        .getDeclaredField("platformWindow");
             platformWindowField.setAccessible(true);
             final com.sun.glass.ui.Window platformWindow = (com.sun.glass.ui.Window) platformWindowField.get(stagePeer);
-            return platformWindow.getNativeWindow();
-        } catch(NoSuchFieldException | IllegalAccessException e) {
+            FutureTask<Long> nativeWindowTask = new FutureTask<>(new Callable<Long>() {
+                @Override
+                public Long call() throws Exception {
+                    return platformWindow.getNativeWindow();
+                }
+            });
+            PlatformImpl.runLater(nativeWindowTask);
+            return nativeWindowTask.get();
+        } catch(ExecutionException | InterruptedException | NoSuchFieldException | IllegalAccessException e) {
             LOG.error("Error while trying to find native window id from JavaFX Node " + node,
                       e);
             return 0L;
