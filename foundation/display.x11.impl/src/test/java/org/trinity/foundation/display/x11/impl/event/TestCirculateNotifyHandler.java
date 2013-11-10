@@ -85,11 +85,9 @@ public class TestCirculateNotifyHandler {
             }
         });
 
-
         //when
         //the target of the xcb_generic_event_t event is requested
         final Optional<DisplaySurface> target = circulateNotifyHandler.getTarget(xcb_generic_event);
-
 
         //then
         //the correct DisplaySurface is returned
@@ -99,6 +97,4 @@ public class TestCirculateNotifyHandler {
                      windowHandleArgumentCaptor.getValue().getNativeHandle());
         assertTrue(target.isPresent());
     }
-
-
 }
