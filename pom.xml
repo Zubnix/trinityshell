@@ -32,7 +32,7 @@
 
     <properties>
         <!-- dep versions -->
-        <guice.version>3.0</guice.version>
+        <guice.version>4.0-beta</guice.version>
         <guava.version>15.0</guava.version>
         <onami.autobind.version>0.9.2-SNAPSHOT</onami.autobind.version>
         <findbugs.version>2.0.2</findbugs.version>
@@ -165,6 +165,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
+                    <fork>true</fork>
+                    <compilerVersion>1.8</compilerVersion>
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
