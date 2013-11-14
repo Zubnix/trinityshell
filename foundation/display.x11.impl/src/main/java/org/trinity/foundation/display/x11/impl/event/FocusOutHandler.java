@@ -19,10 +19,10 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl.event;
 
-import static org.freedesktop.xcb.LibXcbConstants.XCB_FOCUS_OUT;
-
-import javax.annotation.concurrent.Immutable;
-
+import com.google.common.base.Optional;
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_focus_in_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
@@ -33,14 +33,14 @@ import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.FocusLostNotify;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventHandler;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
-import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+
+import static org.freedesktop.xcb.LibXcbConstants.XCB_FOCUS_OUT;
 
 @Bind(multiple = true)
 @Singleton
@@ -61,7 +61,7 @@ public class FocusOutHandler implements XEventHandler {
 	}
 
 	@Override
-	public Optional<FocusLostNotify> handle(final xcb_generic_event_t event_t) {
+	public Optional<FocusLostNotify> handle(@Nonnull final xcb_generic_event_t event_t) {
 		// focus in structure is the same as focus out.
 		final xcb_focus_in_event_t focus_out_event = cast(event_t);
 
@@ -79,7 +79,7 @@ public class FocusOutHandler implements XEventHandler {
 	}
 
 	@Override
-	public Optional<DisplaySurface> getTarget(final xcb_generic_event_t event_t) {
+	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		// focus in structure is the same as focus out.
 		final xcb_focus_in_event_t focus_out_event_t = cast(event_t);
 
