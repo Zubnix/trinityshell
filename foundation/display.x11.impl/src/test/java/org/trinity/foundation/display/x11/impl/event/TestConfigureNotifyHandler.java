@@ -26,6 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -54,11 +55,11 @@ public class TestConfigureNotifyHandler {
         //an xcb_generic_event_t
         mockStatic(LibXcbJNI.class);
 
-        short x = 2;
-        short y = 4;
-        int width = 10;
-        int height = 20;
-        int border = 7;
+        final short x = 2;
+        final short y = 4;
+        final int width = 10;
+        final int height = 20;
+        final int border = 7;
         when(LibXcbJNI.xcb_configure_notify_event_t_x_get(anyLong(),
                                                           (xcb_configure_notify_event_t) any())).thenReturn(x);
         when(LibXcbJNI.xcb_configure_notify_event_t_y_get(anyLong(),
@@ -80,7 +81,7 @@ public class TestConfigureNotifyHandler {
         //then
         //the xcb_circulate_notify_event_t is posted on the x event bus
         //the event is converted to a StackingChangedNotify
-        verify(xEventBus).post(any(xcb_configure_notify_event_t.class));
+        verify(xEventBus).post(isA(xcb_configure_notify_event_t.class));
         assertTrue(stackingChangedNotifyOptional.isPresent());
         assertEquals(x,
                      stackingChangedNotifyOptional.get().getGeometry().getPosition().getX());

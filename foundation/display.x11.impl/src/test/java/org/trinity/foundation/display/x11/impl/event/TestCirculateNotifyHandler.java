@@ -58,7 +58,7 @@ public class TestCirculateNotifyHandler {
         //then
         //the xcb_circulate_notify_event_t is posted on the x event bus
         //the event is converted to a StackingChangedNotify
-        verify(xEventBus).post(any(xcb_circulate_notify_event_t.class));
+        verify(xEventBus).post(isA(xcb_circulate_notify_event_t.class));
         assertTrue(stackingChangedNotifyOptional.isPresent());
     }
 
