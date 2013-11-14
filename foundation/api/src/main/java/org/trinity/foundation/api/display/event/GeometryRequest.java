@@ -73,7 +73,7 @@ public class GeometryRequest extends DisplayEvent {
 	 * Indicates if the X value of the new geometry, as specific in
 	 * {@link #getGeometry()}, should be interpreted.
 	 *
-	 * @return
+	 * @return true if the X value should be configured, false if not.
 	 */
 	public boolean configureX() {
 		return this.configureX;
@@ -83,7 +83,7 @@ public class GeometryRequest extends DisplayEvent {
 	 * Indicates if the Y value of the new geometry, as specific in
 	 * {@link #getGeometry()}, should be interpreted.
 	 *
-	 * @return
+	 * @return true if the Y value should be configured, false if not.
 	 */
 	public boolean configureY() {
 		return this.configureY;
@@ -93,7 +93,7 @@ public class GeometryRequest extends DisplayEvent {
 	 * Indicates if the width value of the new geometry, as specific in
 	 * {@link #getGeometry()}, should be interpreted.
 	 *
-	 * @return
+	 * @return true if the width value should be configured, false if not.
 	 */
 	public boolean configureWidth() {
 		return this.configureWidth;
@@ -103,7 +103,7 @@ public class GeometryRequest extends DisplayEvent {
 	 * Indicates if the height value of the new geometry, as specific in
 	 * {@link #getGeometry()}, should be interpreted.
 	 *
-	 * @return
+	 * @return true if the height value should be configured, false if not.
 	 */
 	public boolean configureHeight() {
 		return this.configureHeight;

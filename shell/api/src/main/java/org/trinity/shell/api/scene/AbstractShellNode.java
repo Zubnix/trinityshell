@@ -150,7 +150,7 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	/**
 	 * {@inheritDoc}
-	 * <p/>
+	 * <p>
 	 * This method will only return true if this node is in the visible state an
 	 * all of its parents in the hierarchy are visible as well.
 	 */

@@ -30,7 +30,7 @@ import java.util.List;
 
 /***************************************
  * A {@link ShellNode} that can have child <code>ShellNode</code>s. A node's
- * parent can be changed by calling {@link ShellNode#setParent(ShellNodeParent)}
+ * parent can be changed by calling {@link ShellNode#setParent(Optional)}
  * followed by either {@link ShellNode#doReparent()} or
  * {@link ShellNode#requestReparent()}. <code>doReparent</code> guarantees that
  * the child will have the desired parent as its new parent.
@@ -54,6 +54,8 @@ public interface ShellNodeParent extends ShellNode {
 
 	/***************************************
 	 * Layout all child <code>ShellNode</code>s.
+     *
+     * @return null
 	 ***************************************
 	 */
 	ListenableFuture<Void> layout();
@@ -62,7 +64,9 @@ public interface ShellNodeParent extends ShellNode {
 	 * Change the layout manager of this parent to the desired layout manager.
 	 *
 	 * @param shellLayoutManager
-	 *            A {@link ShellLayoutManager}.f
+	 *            A {@link ShellLayoutManager}.
+     *
+     * @return null
 	 ***************************************
 	 */
 	ListenableFuture<Void> setLayoutManager(ShellLayoutManager shellLayoutManager);

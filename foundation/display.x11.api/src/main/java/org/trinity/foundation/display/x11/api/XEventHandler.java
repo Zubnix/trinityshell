@@ -35,15 +35,17 @@ import com.google.common.base.Optional;
  * Implementers should simply provide the event code of the X event they're
  * interested in and use Guice's 'multiple' bind mechanism to register the event
  * handler.
- * <p/>
+ * <p>
  * Optionally the X event can be converted to a trinitiy display event in which
- * case the corresponding target should also be provided.
+ * case the corresponding target should also be provided. If a target and display event
+ * are both present then the display event will be posted to the target in the display
+ * execution context.
  */
 @ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public interface XEventHandler {
 	/**
-	 * Handle an X event and optionally convert it to the corresponding trinitiy
+	 * Handle an X event and optionally convert it to the corresponding trinity
 	 * display event.
 	 *
 	 * @param event The X event to handle
@@ -53,14 +55,14 @@ public interface XEventHandler {
 
 	/**
 	 * The target of the returned trinity display event as returned in {@link XEventHandler#handle(xcb_generic_event_t)}.
-	 * @param event
-	 * @return
+	 * @param event The xcb event to handle
+	 * @return An optional object that is the target of the given xcb event.
 	 */
 	Optional<? extends AsyncListenable> getTarget(@Nonnull xcb_generic_event_t event);
 
 	/**
 	 * The code of the X event to handle.
-	 * @return
+	 * @return an xcb event code.
 	 */
 	Integer getEventCode();
 }

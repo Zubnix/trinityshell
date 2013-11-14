@@ -130,8 +130,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * Change the maximum size. Attempts to change to size of this node beyond
 	 * the maximum size are silently ignored.
 	 *
-	 * @param size
-	 *            a {@link Size}
+	 * @param size a {@link Size}
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #getMaxSize()
@@ -141,7 +140,7 @@ public interface ShellSurface extends ShellNodeParent {
 
 	/***************************************
 	 *
-	 * @param size
+	 * @param size a {@link Size}
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #getMinSize()

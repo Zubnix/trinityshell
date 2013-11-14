@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  * marked method, the properties with a matching name will be used to update the
  * bound view.
  *
- * @see {@link org.trinity.foundation.api.render.binding.ViewBinder#updateDataModelBinding(ListeningExecutorService, Object, String)}
+ * @see org.trinity.foundation.api.render.binding.ViewBinder#updateDataModelBinding(ListeningExecutorService, Object, String)
  *
  ***************************************
  */

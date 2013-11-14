@@ -59,7 +59,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 
 	/**
 	 * {@inheritDoc}
-	 * <p/>
+	 * <p>
 	 * The returned array is a copy of the internal array.
 	 */
 	@Override
@@ -140,7 +140,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 
 	/**
 	 * {@inheritDoc}
-	 * <p/>
+	 * <p>
 	 * This call has no effect if no {@link ShellLayoutManager} is set for this
 	 * node.
 	 */

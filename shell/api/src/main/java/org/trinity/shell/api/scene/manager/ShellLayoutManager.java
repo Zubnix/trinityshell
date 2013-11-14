@@ -107,8 +107,8 @@ public interface ShellLayoutManager {
 	 * Layout all child {@link ShellNode}s. This method should only be called by
 	 * a {@link ShellNodeParent}.
 	 *
-	 * @param containerNode
-	 *            The parent {@link ShellNode}.
+	 * @param parent
+     *              The parent {@link ShellNode}.
 	 ***************************************
 	 */
 	void layout(ShellNodeParent parent);

@@ -21,6 +21,7 @@ package org.trinity.foundation.display.x11.impl.event;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_UNMAP_NOTIFY;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.apache.onami.autobind.annotations.Bind;
@@ -61,7 +62,7 @@ public class UnmapNotifyHandler implements XEventHandler {
 	}
 
 	@Override
-	public Optional<HideNotify> handle(final xcb_generic_event_t event) {
+	public Optional<HideNotify> handle(@Nonnull final xcb_generic_event_t event) {
 		final xcb_unmap_notify_event_t unmap_notify_event = cast(event);
 
 		LOG.debug(	"Received X event={}",
@@ -77,7 +78,7 @@ public class UnmapNotifyHandler implements XEventHandler {
 	}
 
 	@Override
-	public Optional<DisplaySurface> getTarget(final xcb_generic_event_t event_t) {
+	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_unmap_notify_event_t unmap_notify_event_t = cast(event_t);
 		final int windowId = unmap_notify_event_t.getWindow();
 		final int reportWindowId = unmap_notify_event_t.getEvent();

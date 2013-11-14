@@ -199,7 +199,8 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	/***************************************
 	 * Concrete implementation of {@link #setHeightIncrement(int)}. This method
 	 * is invoked by the Shell thread.
-	 *
+     *
+	 * @param heightIncrement The absolute incrementation used when adjusting the height of this surface, usually in pixels.
 	 * @return null
 	 * @see #setHeightIncrement(int)
 	 ***************************************
@@ -220,6 +221,7 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	 * Concrete implementation of {@link #setMaxSize(Size)}. This method is
 	 * invoked by the Shell thread.
 	 *
+     * @param maxSize The maximum size of this shell surface, usually in pixels.
 	 * @return null
 	 * @see #setMaxSize(Size)
 	 ***************************************
@@ -240,6 +242,7 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	 * Concrete implementation of {@link #setMinSize(Size)}. This method is
 	 * invoked by the Shell thread.
 	 *
+     * @param maxSize The minimum size of this shell surface, usually in pixels.
 	 * @return null
 	 * @see #setMinSize(Size)
 	 ***************************************
@@ -260,6 +263,7 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	 * Concrete implementation of {@link #setMovable(boolean)}. This method is
 	 * invoked by the Shell thread.
 	 *
+     * @param movable True if this shell surface should be movable, false if not.
 	 * @return null
 	 * @see #setMovable(boolean)
 	 ***************************************
@@ -280,6 +284,7 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	 * Concrete implementation of {@link #setResizable(boolean)}. This method is
 	 * invoked by the Shell thread.
 	 *
+     * @param resizable True if this shell surface should be resizable, false if not.
 	 * @return null
 	 * @see #setResizable(boolean)
 	 ***************************************
@@ -300,6 +305,7 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 	 * Concrete implementation of {@link #setWidthIncrement(int)}. This method
 	 * is invoked by the Shell thread.
 	 *
+     * @param widthIncrement The absolute incrementation used when adjusting the width of this surface, usually in pixels.
 	 * @return null
 	 * @see #setWidthIncrement(int)
 	 ***************************************

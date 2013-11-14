@@ -25,7 +25,6 @@ import com.google.common.util.concurrent.ListenableFuture;
  * ************************************
  * A convenience service to call a method used as an event signal slot based on
  * widget toolkit specific events.
- * <p/>
  * **************************************
  */
 public interface Signal {

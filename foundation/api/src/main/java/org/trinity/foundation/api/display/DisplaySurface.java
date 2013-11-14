@@ -53,7 +53,6 @@ public interface DisplaySurface extends AsyncListenable {
 	 * <p>
 	 * The effects of giving focus to a hidden or destroyed DisplaySurface
 	 * is implementation dependent.
-	 * </p>
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
@@ -70,7 +69,7 @@ public interface DisplaySurface extends AsyncListenable {
 	 *            dependent.
 	 * @param y
 	 *            The Y coordinate. Usually in pixels but can be implementation
-	 *            dependent. </p>
+	 *            dependent.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 ***************************************
@@ -93,7 +92,7 @@ public interface DisplaySurface extends AsyncListenable {
 	 *            dependent.
 	 * @param height
 	 *            The height. Usually in pixels but can be implementation
-	 *            dependent. </p>
+	 *            dependent.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #move(int, int)
@@ -114,7 +113,7 @@ public interface DisplaySurface extends AsyncListenable {
 	 *            dependent.
 	 * @param height
 	 *            The width. Usually in pixels but can be implementation
-	 *            dependent. </p>
+	 *            dependent.
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 ***************************************

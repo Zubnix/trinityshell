@@ -593,6 +593,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	 * Concrete implementation of {@link #setSize(int, int)}. This method should
 	 * only be invoked by the Shell thread.
 	 *
+     * @param width The desired width, usually in pixels
+     * @param height The desired height, usually in pixels.
 	 * @return null
 	 * @see #setSize(int, int)
 	 ***************************************
@@ -616,6 +618,8 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	 * Concrete implementation of {@link #setPosition(int, int)}. This method is
 	 * invoked by the Shell thread.
 	 *
+     * @param x The desired horizontal position, usually in pixels
+     * @param y The desired vertical position, usually in pixels.
 	 * @return null
 	 * @see #setPosition(int, int)
 	 ***************************************
@@ -637,6 +641,7 @@ public abstract class AbstractAsyncShellNode implements ShellNode {
 	 * Concrete implementation of {@link #setParent(Optional)}. This method is
 	 * invoked by the Shell thread.
 	 *
+     * @param parent An optional parent. An absent parent indicates the removal of this node's parent.
 	 * @return null
 	 * @see #setParent(Optional)
 	 ***************************************

@@ -40,7 +40,9 @@ public interface SubViewModelDelegate {
 	 *            The type of the new view instance.
 	 * @param position
 	 *            The position (index) of the new view, relative to it's parent.
+     * @param <T> The type of the new view.
 	 * @return a future new view instance.
+     *
 	 ***************************************
 	 */
 	<T> ListenableFuture<T> newView(Object parentView,

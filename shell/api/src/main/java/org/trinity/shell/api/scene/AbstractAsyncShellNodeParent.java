@@ -107,6 +107,7 @@ public abstract class AbstractAsyncShellNodeParent extends AbstractShellNode imp
 	 * Concrete implementation of {@link #setLayoutManager(ShellLayoutManager)}.
 	 * This method is invoked by the Shell thread.
 	 *
+     * @param shellLayoutManager The shell layout manager that will be used to layout this parent's child nodes.
 	 * @return null
 	 * @see #setLayoutManager(ShellLayoutManager)
 	 ***************************************

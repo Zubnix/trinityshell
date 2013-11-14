@@ -21,6 +21,7 @@ package org.trinity.foundation.display.x11.impl.event;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_MAP_NOTIFY;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.apache.onami.autobind.annotations.Bind;
@@ -61,7 +62,7 @@ public class MapNotifyHandler implements XEventHandler {
 	}
 
 	@Override
-	public Optional<ShowNotify> handle(final xcb_generic_event_t event) {
+	public Optional<ShowNotify> handle(@Nonnull final xcb_generic_event_t event) {
 		final xcb_map_notify_event_t map_notify_event = cast(event);
 
 		LOG.debug(	"Received X event={}",
@@ -78,7 +79,7 @@ public class MapNotifyHandler implements XEventHandler {
 	}
 
 	@Override
-	public Optional<DisplaySurface> getTarget(final xcb_generic_event_t event_t) {
+	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_map_notify_event_t map_notify_event_t = cast(event_t);
 		final int windowId = map_notify_event_t.getWindow();
 		return Optional.of(this.xWindowCache.getDisplaySurface(new XWindowHandle(windowId)));

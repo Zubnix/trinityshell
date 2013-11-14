@@ -47,7 +47,7 @@ public class ImmutableRectangle implements Rectangle {
 
 	/**
 	 * Create a new {@code ImmutableRectangle} with the given {@code Coordinate}
-	 * as the position, and the given width & height as its dimension.
+	 * as the position, and the given width &amp; height as its dimension.
 	 *
 	 * @param position
 	 *            A {@link Coordinate}
@@ -83,7 +83,7 @@ public class ImmutableRectangle implements Rectangle {
 
 	/**
 	 * Create a new {@code ImmutableRectangle} with the given x and y value as
-	 * the position, and the given width & height as its dimension.
+	 * the position, and the given width &amp; height as its dimension.
 	 *
 	 * @param x
 	 *            an int, depicting the horizontal position.

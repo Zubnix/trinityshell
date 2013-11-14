@@ -53,7 +53,7 @@ public @interface EventSignal {
 	 * The type {@link EventSignalFilter} that will be used to listen for view
 	 * events.
 	 *
-	 * @return
+	 * @return The type that will be used to find a filter implementation.
 	 */
 	Class<? extends EventSignalFilter> filter();
 

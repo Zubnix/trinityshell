@@ -41,12 +41,12 @@ public interface AsyncListenable {
 	 * <p>
 	 * This method should be used if the calling executor service is the same as
 	 * than the one that owns this object.
-	 *
-	 * @see {@link EventBus#register(Object)}
+     * @see EventBus#register(Object)
 	 * @param listener
 	 *            An object with a public, single argument, {@link Subscribe}
 	 *            method.
-	 */
+     *
+     */
 	void register(@Nonnull Object listener);
 
 	/**
@@ -56,7 +56,7 @@ public interface AsyncListenable {
 	 * This method should be used if the calling executor service is the same as
 	 * than the one that owns this object.
 	 *
-	 * @see {@link EventBus#register(Object)}
+	 * @see EventBus#register(Object)
 	 * @param listener
 	 *            An object with a public, single argument, {@link Subscribe}
 	 *            method.
@@ -68,7 +68,7 @@ public interface AsyncListenable {
 					@Nonnull ExecutorService executor);
 
 	/**
-	 * @see {@link EventBus#unregister(Object)}
+	 * @see EventBus#unregister(Object)
 	 * @param listener
 	 *            An previously registered listener.
 	 */
@@ -77,7 +77,7 @@ public interface AsyncListenable {
 	/**
 	 * Asynchronously post an event.
 	 *
-	 * @see {@link EventBus#post(Object)}
+	 * @see EventBus#post(Object)
 	 * @param event
 	 *            The even to post.
 	 */

@@ -21,6 +21,7 @@ package org.trinity.foundation.display.x11.impl.event;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_LEAVE_NOTIFY;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.apache.onami.autobind.annotations.Bind;
@@ -61,7 +62,7 @@ public class LeaveNotifyHandler implements XEventHandler {
 	}
 
 	@Override
-	public Optional<PointerLeaveNotify> handle(final xcb_generic_event_t event) {
+	public Optional<PointerLeaveNotify> handle(@Nonnull final xcb_generic_event_t event) {
 		// enter has same structure as leave
 		final xcb_enter_notify_event_t enter_notify_event = cast(event);
 
@@ -79,7 +80,7 @@ public class LeaveNotifyHandler implements XEventHandler {
 	}
 
 	@Override
-	public Optional<DisplaySurface> getTarget(final xcb_generic_event_t event_t) {
+	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_enter_notify_event_t enter_notify_event_t = cast(event_t);
 		final int windowId = enter_notify_event_t.getEvent();
 		return Optional.of(this.xWindowCache.getDisplaySurface(new XWindowHandle(windowId)));
@@ -87,6 +88,6 @@ public class LeaveNotifyHandler implements XEventHandler {
 
 	@Override
 	public Integer getEventCode() {
-		return this.EVENT_CODE;
+		return EVENT_CODE;
 	}
 }

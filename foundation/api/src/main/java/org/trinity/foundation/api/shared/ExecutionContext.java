@@ -45,7 +45,7 @@ public @interface ExecutionContext {
 	 * {@link ListeningExecutorService} where execution for this object will
 	 * take place.
 	 *
-	 * @return
+	 * @return An 'binding key' annotation used by the Guice framework to find the corresponding implementation.
 	 */
 	Class<? extends Annotation> value();
 }

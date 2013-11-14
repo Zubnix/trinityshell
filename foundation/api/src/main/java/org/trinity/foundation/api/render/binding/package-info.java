@@ -2,8 +2,7 @@
 /**
  * A basic <a href="http://en.wikipedia.org/wiki/Model_View_ViewModel">model
  * view - viewmodel</a> pattern. It offers the following bindings between a
- * viewmodel, which can be any type of object, and view, usually of type
- * {@link org.trinity.foundation.api.render.binding.view.View}.
+ * viewmodel, which can be any type of object, and view, usually a 3rd party widget toolkit object.
  * <p>
  * View bindings:
  * <ul>
@@ -16,9 +15,7 @@
  * <p>
  * Model bindings:
  * <ul>
- * <li>{@link org.trinity.foundation.api.render.binding.model.EventSlot}:</li>
  * <li>{@link org.trinity.foundation.api.render.binding.model.PropertyChanged}:</li>
- * <li>{@link org.trinity.foundation.api.render.binding.model.ViewFuture}:</li>
  * </ul>
  */
 package org.trinity.foundation.api.render.binding;

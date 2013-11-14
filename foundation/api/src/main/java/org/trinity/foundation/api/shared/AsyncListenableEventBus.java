@@ -70,8 +70,6 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 *
 	 * @see EventBus#register(Object)
 	 */
 	@Override
@@ -100,8 +98,6 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 *
 	 * @see EventBus#unregister(Object)
 	 */
 	@Override
@@ -117,8 +113,6 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 *
 	 * @see EventBus#post(Object)
 	 */
 	@Override
