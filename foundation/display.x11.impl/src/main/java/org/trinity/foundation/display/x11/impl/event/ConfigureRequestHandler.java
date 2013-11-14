@@ -75,11 +75,11 @@ public class ConfigureRequestHandler implements XEventHandler {
     @Inject
     ConfigureRequestHandler(@XEventBus final EventBus xEventBus,
                             final XConnection xConnection,
-                            final XWindowPoolImpl xWindowCache,
+                            final XWindowPoolImpl xWindowPool,
                             final Display display) {
         this.xEventBus = xEventBus;
         this.xConnection = xConnection;
-        this.xWindowCache = xWindowCache;
+        this.xWindowCache = xWindowPool;
         this.display = display;
     }
 
