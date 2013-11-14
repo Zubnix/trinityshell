@@ -21,15 +21,13 @@ import org.trinity.foundation.api.display.event.GeometryNotify;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
-import static org.freedesktop.xcb.LibXcbJNI.xcb_configure_notify_event_t_window_get;
+import static org.freedesktop.xcb.LibXcbJNI.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
@@ -60,17 +58,17 @@ public class TestConfigureNotifyHandler {
         final int width = 10;
         final int height = 20;
         final int border = 7;
-        when(LibXcbJNI.xcb_configure_notify_event_t_x_get(anyLong(),
-                                                          (xcb_configure_notify_event_t) any())).thenReturn(x);
-        when(LibXcbJNI.xcb_configure_notify_event_t_y_get(anyLong(),
-                                                          (xcb_configure_notify_event_t) any())).thenReturn(y);
-        when(LibXcbJNI.xcb_configure_notify_event_t_width_get(anyLong(),
-                                                              (xcb_configure_notify_event_t) any())).thenReturn(width);
-        when(LibXcbJNI.xcb_configure_notify_event_t_height_get(anyLong(),
-                                                               (xcb_configure_notify_event_t) any()))
+        when(xcb_configure_notify_event_t_x_get(anyLong(),
+                                                (xcb_configure_notify_event_t) any())).thenReturn(x);
+        when(xcb_configure_notify_event_t_y_get(anyLong(),
+                                                (xcb_configure_notify_event_t) any())).thenReturn(y);
+        when(xcb_configure_notify_event_t_width_get(anyLong(),
+                                                    (xcb_configure_notify_event_t) any())).thenReturn(width);
+        when(xcb_configure_notify_event_t_height_get(anyLong(),
+                                                     (xcb_configure_notify_event_t) any()))
                 .thenReturn(height);
-        when(LibXcbJNI.xcb_configure_notify_event_t_border_width_get(anyLong(),
-                                                                     (xcb_configure_notify_event_t) any()))
+        when(xcb_configure_notify_event_t_border_width_get(anyLong(),
+                                                           (xcb_configure_notify_event_t) any()))
                 .thenReturn(border);
 
         //when
