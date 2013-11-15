@@ -81,9 +81,11 @@ public class ViewBinderImpl implements ViewBinder {
     private static final Map<Class<?>, Field[]> DECLARED_FIELDS_CACHE = new HashMap<>();
     private static final String GET_BOOLEAN_PREFIX = "is";
     private static final String GET_PREFIX = "get";
+
     private final PropertySlotInvocationDelegate propertySlotInvocationDelegate;
     private final Injector injector;
     private final SubViewModelDelegate subViewModelDelegate;
+
     //<ViewModel,DataModel>
     private final Map<Object, Object> dataModelByViewModel = new WeakHashMap<>();
     //<DataModel,Set<ViewModel>>
@@ -152,8 +154,8 @@ public class ViewBinderImpl implements ViewBinder {
                                               @Nonnull final Object changedViewModel,
                                               @Nonnull final String subViewName) {
         try {
-            Field subViewField = changedViewModel.getClass().getField(subViewName);
-            Object dataModel = dataModelByViewModel.get(changedViewModel);
+            final Field subViewField = changedViewModel.getClass().getField(subViewName);
+            final Object dataModel = dataModelByViewModel.get(changedViewModel);
             if(dataModel == null) {
                 //our 'parent' view model is not yet bind. we will be bound when our parent view model is bound.
                 return;
@@ -312,7 +314,7 @@ public class ViewBinderImpl implements ViewBinder {
                                                                                                          .<PropertySlots>fromNullable(viewModelClass
                                                                                                                                               .getAnnotation(PropertySlots.class)));
 
-        Object dataModel;
+        final Object dataModel;
         if(optionalDataModelContext.isPresent()) {
             final Optional<Object> optionalDataModel = getDataModelForView(inheritedDataModel,
                                                                            viewModel,
@@ -443,7 +445,7 @@ public class ViewBinderImpl implements ViewBinder {
     }
 
     protected void handleListEventDelete(final Object viewModel,
-                                         int sourceIndex,
+                                         final int sourceIndex,
                                          final List<Object> shadowChildDataModelList) {
         final Object removedChildDataModel = shadowChildDataModelList.remove(sourceIndex);
         checkNotNull(removedChildDataModel);
@@ -615,7 +617,7 @@ public class ViewBinderImpl implements ViewBinder {
     protected void unregisterBinding(final Object viewModel) {
         checkNotNull(viewModel);
 
-        Object dataModel = this.dataModelByViewModel.remove(viewModel);
+        final Object dataModel = this.dataModelByViewModel.remove(viewModel);
         this.viewModelsByDataModel.remove(dataModel,
                                           viewModel);
 
@@ -758,7 +760,7 @@ public class ViewBinderImpl implements ViewBinder {
     }
 
     protected void bindSubViewElement(final ListeningExecutorService dataModelExecutor,
-                                      Field subViewModelField,
+                                      final Field subViewModelField,
                                       final Object inheritedDataModel,
                                       final Object viewModel) throws IllegalAccessException {
         checkNotNull(dataModelExecutor);
@@ -767,7 +769,7 @@ public class ViewBinderImpl implements ViewBinder {
         checkNotNull(viewModel);
 
         //find any previously associated value and remove it
-        Object oldSubViewModel = subviewModelByNameAndViewModel.get(viewModel,
+        final Object oldSubViewModel = subviewModelByNameAndViewModel.get(viewModel,
                                                                     subViewModelField.getName());
         if(oldSubViewModel != null) {
             unregisterBinding(oldSubViewModel);
