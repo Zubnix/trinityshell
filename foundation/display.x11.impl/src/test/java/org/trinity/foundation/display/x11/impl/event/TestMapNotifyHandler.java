@@ -31,6 +31,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+@Deprecated
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LibXcbJNI.class)
 public class TestMapNotifyHandler {
