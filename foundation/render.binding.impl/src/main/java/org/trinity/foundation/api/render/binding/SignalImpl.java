@@ -20,23 +20,22 @@
 
 package org.trinity.foundation.api.render.binding;
 
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-
-import com.google.common.hash.HashFunction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.render.binding.view.delegate.Signal;
-
 import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.render.binding.view.delegate.Signal;
+
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 //TODO documentation
 public class SignalImpl implements Signal {
@@ -46,22 +45,22 @@ public class SignalImpl implements Signal {
             .build();
     private static final HashFunction HASH_FUNCTION = Hashing.goodFastHash(16);
     private final ListeningExecutorService modelExecutor;
-    private final Object view;
-    private final Map<Object, Object> dataContextValueByView;
-    private final String inputSlotName;
+    private final Object viewModel;
+    private final Map<Object, Object> dataModelByViewModel;
+    private final String targetMethodName;
 
     SignalImpl(final ListeningExecutorService modelExecutor,
-               final Object view,
-               final Map<Object, Object> dataContextValueByView,
-               final String inputSlotName) {
+               final Object viewModel,
+               final Map<Object, Object> dataModelByViewModel,
+               final String targetMethodName) {
         this.modelExecutor = modelExecutor;
-        this.view = view;
-        this.dataContextValueByView = dataContextValueByView;
-        this.inputSlotName = inputSlotName;
+        this.viewModel = viewModel;
+        this.dataModelByViewModel = dataModelByViewModel;
+        this.targetMethodName = targetMethodName;
     }
 
-    private static Optional<Method> findSlot(final Class<?> modelClass,
-                                             final String methodName) throws ExecutionException {
+    private static Optional<Method> findMethod(final Class<?> modelClass,
+                                               final String methodName) throws ExecutionException {
 
         final HashCode hashCode = HASH_FUNCTION.newHasher().putInt(modelClass.hashCode())
                 .putUnencodedChars(methodName).hash();
@@ -97,13 +96,13 @@ public class SignalImpl implements Signal {
         return modelExecutor.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                final Object viewModel = dataContextValueByView.get(view);
-                final Optional<Method> optionalInputSlot = findSlot(viewModel.getClass(),
-                        inputSlotName);
+                final Object dataModel = dataModelByViewModel.get(SignalImpl.this.viewModel);
+                final Optional<Method> optionalInputSlot = findMethod(dataModel.getClass(),
+                        targetMethodName);
                 if (optionalInputSlot.isPresent()) {
                     final Method method = optionalInputSlot.get();
                     method.setAccessible(true);
-                    method.invoke(viewModel);
+                    method.invoke(dataModel);
                 }
                 return null;
             }
