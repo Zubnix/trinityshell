@@ -19,11 +19,10 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl.event;
 
-import static org.freedesktop.xcb.LibXcbConstants.XCB_MAP_NOTIFY;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
+import com.google.common.base.Optional;
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_map_notify_event_t;
@@ -34,14 +33,14 @@ import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventHandler;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
-import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+
+import static org.freedesktop.xcb.LibXcbConstants.XCB_MAP_NOTIFY;
 
 @Bind(multiple = true)
 @Singleton
@@ -52,13 +51,13 @@ public class MapNotifyHandler implements XEventHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(MapNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_MAP_NOTIFY;
 	private final EventBus xEventBus;
-	private final XWindowPoolImpl xWindowCache;
+	private final XWindowPoolImpl xWindowPool;
 
 	@Inject
 	MapNotifyHandler(	@XEventBus final EventBus xEventBus,
-						final XWindowPoolImpl xWindowCache) {
+						final XWindowPoolImpl xWindowPool) {
 		this.xEventBus = xEventBus;
-		this.xWindowCache = xWindowCache;
+		this.xWindowPool = xWindowPool;
 	}
 
 	@Override
@@ -82,7 +81,7 @@ public class MapNotifyHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_map_notify_event_t map_notify_event_t = cast(event_t);
 		final int windowId = map_notify_event_t.getWindow();
-		return Optional.of(this.xWindowCache.getDisplaySurface(new XWindowHandle(windowId)));
+		return Optional.of(this.xWindowPool.getDisplaySurface(new XWindowHandle(windowId)));
 	}
 
 	@Override
