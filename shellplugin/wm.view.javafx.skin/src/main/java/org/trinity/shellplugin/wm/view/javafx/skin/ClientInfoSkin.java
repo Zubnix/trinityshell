@@ -48,7 +48,7 @@ public class ClientInfoSkin extends StackPane implements Skin<ClientInfoViewImpl
     }
 
     public StringProperty clientNameProperty() {
-        return clientName;
+        return this.clientName;
     }
 
     public String getClientName() {

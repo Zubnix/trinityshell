@@ -115,7 +115,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 												updateClientName(protocol);
 											}
 										},
-										shellExecutor);
+                                        this.shellExecutor);
 		queryClientName(clientXWindow);
 
 		// client close request handling
@@ -127,7 +127,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 														updateCanSendWmDeleteMsg(protocol);
 													}
 												},
-												shellExecutor);
+                                                this.shellExecutor);
 		queryCanSendWmDeleteMsg(clientXWindow);
 	}
 
@@ -184,7 +184,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 										t);
 						}
 					},
-					shellExecutor);
+                    this.shellExecutor);
 	}
 
 	// called by shell executor

@@ -20,11 +20,7 @@
 
 package org.trinity.shell.surface.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.google.common.util.concurrent.ListeningExecutorService;
 import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +31,10 @@ import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shell.api.surface.ShellSurfaceFactory;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Bind
 @Singleton
@@ -55,13 +54,13 @@ public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {
 
 	@Override
 	public ShellSurface createShellSurface(@Nonnull final DisplaySurface displaySurface) {
-		final ShellSurfaceImpl shellSurfaceImpl = new ShellSurfaceImpl(	displaySurface,
-																		shellScene,
-																		shellExecutor);
-		displaySurface.register(shellSurfaceImpl,
-								shellExecutor);
+        final ShellSurfaceImpl shellSurfaceImpl = new ShellSurfaceImpl(displaySurface,
+                                                                       this.shellScene,
+                                                                       this.shellExecutor);
+        displaySurface.register(shellSurfaceImpl,
+                                this.shellExecutor);
 
-		return shellSurfaceImpl;
+        return shellSurfaceImpl;
 
-	}
+    }
 }

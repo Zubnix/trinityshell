@@ -54,7 +54,7 @@ public class XPropertyChangedHandler implements XEventHandler {
 		final xcb_property_notify_event_t property_notify_event = new xcb_property_notify_event_t(	xcb_generic_event_t.getCPtr(event),
 																									false);
 		final int clientId = property_notify_event.getWindow();
-		displaySurfacePool.getDisplaySurface(new XWindowHandle(clientId)).post(property_notify_event);
+        this.displaySurfacePool.getDisplaySurface(new XWindowHandle(clientId)).post(property_notify_event);
 
 		// no conversion possible
 		return Optional.absent();

@@ -76,7 +76,7 @@ import static java.lang.String.format;
 @ThreadSafe
 public class ViewBinderImpl implements ViewBinder {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ViewBinderImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ViewBinderImpl.class);
     private static final Table<Class<?>, String, Optional<Method>> GETTER_CACHE = HashBasedTable.create();
     private static final Map<Class<?>, Field[]> DECLARED_FIELDS_CACHE = new HashMap<>();
     private static final String GET_BOOLEAN_PREFIX = "is";
@@ -129,6 +129,7 @@ public class ViewBinderImpl implements ViewBinder {
 
     }
 
+
     @Override
     public ListenableFuture<Void> updateViewModelBinding(@Nonnull final ListeningExecutorService dataModelExecutor,
                                                          @Nonnull final Object changedViewModel,
@@ -153,7 +154,7 @@ public class ViewBinderImpl implements ViewBinder {
                                               @Nonnull final String subViewName) {
         try {
             Field subViewField = changedViewModel.getClass().getField(subViewName);
-            Object dataModel = dataModelByViewModel.get(changedViewModel);
+            Object dataModel = this.dataModelByViewModel.get(changedViewModel);
             if(dataModel == null) {
                 //our 'parent' view model is not yet bind. we will be bound when our parent view model is bound.
                 return;
@@ -451,8 +452,8 @@ public class ViewBinderImpl implements ViewBinder {
         final Set<Object> removedChildViewModels = this.viewModelsByDataModel.get(removedChildDataModel);
         for(final Object removedChildView : removedChildViewModels) {
             ViewBinderImpl.this.subViewModelDelegate.destroyView(viewModel,
-                                                             removedChildView,
-                                                             sourceIndex);
+                                                                 removedChildView,
+                                                                 sourceIndex);
         }
         this.viewModelsByDataModel.removeAll(removedChildDataModel);
     }
@@ -608,8 +609,8 @@ public class ViewBinderImpl implements ViewBinder {
             this.viewModelsByDataModel.remove(oldDataModel,
                                               viewModel);
         }
-        viewModelsByDataModel.put(dataModel,
-                                  viewModel);
+        this.viewModelsByDataModel.put(dataModel,
+                                       viewModel);
     }
 
     protected void unregisterBinding(final Object viewModel) {
@@ -767,8 +768,8 @@ public class ViewBinderImpl implements ViewBinder {
         checkNotNull(viewModel);
 
         //find any previously associated value and remove it
-        Object oldSubViewModel = subviewModelByNameAndViewModel.get(viewModel,
-                                                                    subViewModelField.getName());
+        Object oldSubViewModel = this.subviewModelByNameAndViewModel.get(viewModel,
+                                                                         subViewModelField.getName());
         if(oldSubViewModel != null) {
             unregisterBinding(oldSubViewModel);
         }

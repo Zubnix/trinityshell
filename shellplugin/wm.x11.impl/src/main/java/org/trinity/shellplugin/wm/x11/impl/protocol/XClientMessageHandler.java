@@ -53,7 +53,7 @@ public class XClientMessageHandler implements XEventHandler {
 	public Optional<DisplayEvent> handle(@Nonnull final xcb_generic_event_t event) {
 		final xcb_client_message_event_t client_message_event_t = new xcb_client_message_event_t(	xcb_generic_event_t.getCPtr(event),
 																									false);
-		displaySurfacePool.getDisplaySurface(new XWindowHandle(client_message_event_t.getWindow())).post(client_message_event_t);
+        this.displaySurfacePool.getDisplaySurface(new XWindowHandle(client_message_event_t.getWindow())).post(client_message_event_t);
 		// no conversion possible
 		return Optional.absent();
 	}

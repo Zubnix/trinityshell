@@ -94,13 +94,13 @@ public class SignalImpl implements Signal {
 
     @Override
     public ListenableFuture<Void> fire() {
-        return modelExecutor.submit(new Callable<Void>() {
+        return this.modelExecutor.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                final Object viewModel = dataContextValueByView.get(view);
+                final Object viewModel = SignalImpl.this.dataContextValueByView.get(SignalImpl.this.view);
                 final Optional<Method> optionalInputSlot = findSlot(viewModel.getClass(),
-                        inputSlotName);
-                if (optionalInputSlot.isPresent()) {
+                                                                    SignalImpl.this.inputSlotName);
+                if(optionalInputSlot.isPresent()) {
                     final Method method = optionalInputSlot.get();
                     method.setAccessible(true);
                     method.invoke(viewModel);

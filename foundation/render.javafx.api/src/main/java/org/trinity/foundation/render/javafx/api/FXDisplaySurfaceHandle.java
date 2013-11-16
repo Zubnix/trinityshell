@@ -27,7 +27,7 @@ public class FXDisplaySurfaceHandle implements DisplaySurfaceHandle {
 
     @Override
     public Long getNativeHandle() {
-        Scene scene = node.getScene();
+        Scene scene = this.node.getScene();
         if(scene == null) {
             return 0L;
         }
@@ -48,7 +48,7 @@ public class FXDisplaySurfaceHandle implements DisplaySurfaceHandle {
             PlatformImpl.runLater(nativeWindowTask);
             return nativeWindowTask.get();
         } catch(ExecutionException | InterruptedException | NoSuchFieldException | IllegalAccessException e) {
-            LOG.error("Error while trying to find native window id from JavaFX Node " + node,
+            LOG.error("Error while trying to find native window id from JavaFX Node " + this.node,
                       e);
             return 0L;
         }
