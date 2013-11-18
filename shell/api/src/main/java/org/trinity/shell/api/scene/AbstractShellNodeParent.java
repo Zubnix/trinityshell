@@ -19,15 +19,8 @@
  ******************************************************************************/
 package org.trinity.shell.api.scene;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.ExecutionContext;
@@ -38,8 +31,13 @@ import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
-import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListeningExecutorService;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * An abstract base implementation of a {@link ShellNodeParent}.
@@ -85,7 +83,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	@Override
 	public Void setLayoutManagerImpl(@Nullable final ShellLayoutManager shellLayoutManager) {
 		this.optionalLayoutManager = Optional.of(shellLayoutManager);
-		if (optionalLayoutManager.isPresent()) {
+		if (this.optionalLayoutManager.isPresent()) {
 			register(shellLayoutManager);
 		}
 		return null;

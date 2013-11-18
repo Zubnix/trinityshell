@@ -33,7 +33,7 @@ public class FXViewBuilder extends AbstractViewBuilder {
 
     @Override
     protected Object createViewObject() {
-        return injector.getInstance(this.viewClass);
+        return this.injector.getInstance(this.viewClass);
     }
 
     @Override

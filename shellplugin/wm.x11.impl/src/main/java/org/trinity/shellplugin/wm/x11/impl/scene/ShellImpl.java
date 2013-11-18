@@ -139,13 +139,13 @@ public class ShellImpl implements Shell {
 	public void start() {
 
         try {
-            viewBuilder.build(new ViewBuilderResult() {
+            this.viewBuilder.build(new ViewBuilderResult() {
                 @Override
                 public void onResult(final Object bindableView,
-                                         final DisplaySurface viewDisplaySurface) {
-                    ShellImpl.this.viewBinder.bind(shellExecutor,
-                                               ShellImpl.this,
-                                               bindableView);
+                                     final DisplaySurface viewDisplaySurface) {
+                    ShellImpl.this.viewBinder.bind(ShellImpl.this.shellExecutor,
+                                                   ShellImpl.this,
+                                                   bindableView);
 
                     ShellImpl.this.nonClientDisplaySurfaces.add(viewDisplaySurface);
                     final ShellSurface desktopShellSurface = ShellImpl.this.shellSurfaceFactory
@@ -242,16 +242,16 @@ public class ShellImpl implements Shell {
                                                                                                             2,
                                                                                                             35,
                                                                                                             45)));
-                                final ClientBarElement clientTopBarItem = clientBarElementFactory
+                                final ClientBarElement clientTopBarItem = ShellImpl.this.clientBarElementFactory
                                         .createClientTopBarItem(clientShellSurface);
 
                                 clientShellSurface.register(new Object() {
                                     @Subscribe
                                     public void handleDestroyed(final ShellNodeDestroyedEvent destroyedEvent) {
-                                        clientsBar.remove(clientTopBarItem);
+                                        ShellImpl.this.clientsBar.remove(clientTopBarItem);
                                     }
                                 });
-                                clientsBar.add(clientTopBarItem);
+                                ShellImpl.this.clientsBar.add(clientTopBarItem);
                             }
                         }
 

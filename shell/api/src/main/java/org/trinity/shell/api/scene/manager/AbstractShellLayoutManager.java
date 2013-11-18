@@ -19,17 +19,9 @@
  ******************************************************************************/
 package org.trinity.shell.api.scene.manager;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+import com.google.common.eventbus.Subscribe;
 import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
@@ -42,8 +34,14 @@ import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 
-import com.google.common.base.Preconditions;
-import com.google.common.eventbus.Subscribe;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 // TODO documentation
 /**
@@ -61,7 +59,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
     }
 
     public AbstractShellNodeParent getShellNodeParent() {
-        return shellNodeParent;
+        return this.shellNodeParent;
     }
 
     @Override

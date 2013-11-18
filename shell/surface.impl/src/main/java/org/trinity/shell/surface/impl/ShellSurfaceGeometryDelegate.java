@@ -51,7 +51,7 @@ public class ShellSurfaceGeometryDelegate implements ShellNodeGeometryDelegate {
 
 	@Override
 	public ShellSurfaceImpl getShellNode() {
-		return abstractShellSurface;
+		return this.abstractShellSurface;
 	}
 
 	public DisplaySurface getShellNodeManipulator() {

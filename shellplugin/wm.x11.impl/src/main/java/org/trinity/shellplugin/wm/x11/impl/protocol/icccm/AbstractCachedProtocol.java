@@ -20,17 +20,13 @@
 
 package org.trinity.shellplugin.wm.x11.impl.protocol.icccm;
 
-import static com.google.common.util.concurrent.Futures.addCallback;
-import static com.google.common.util.concurrent.Futures.transform;
-
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
-
+import com.google.common.base.Optional;
+import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.AsyncFunction;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,13 +37,15 @@ import org.trinity.foundation.api.shared.AsyncListenableEventBus;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 
-import com.google.common.base.Optional;
-import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.AsyncFunction;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+
+import static com.google.common.util.concurrent.Futures.addCallback;
+import static com.google.common.util.concurrent.Futures.transform;
 
 @ThreadSafe
 @ExecutionContext(DisplayExecutor.class)
@@ -85,10 +83,10 @@ public abstract class AbstractCachedProtocol<P> {
 				AsyncListenable listeners = AbstractCachedProtocol.this.listenersByWindow.get(xWindow);
 				if (listeners == null) {
 					listeners = new AsyncListenableEventBus(MoreExecutors.sameThreadExecutor());
-					listenersByWindow.put(	xWindow,
-											listeners);
-				}
-				listeners.register(	listener,
+                    AbstractCachedProtocol.this.listenersByWindow.put(xWindow,
+                                                                      listeners);
+                }
+                listeners.register(	listener,
 									executor);
 				return null;
 			}

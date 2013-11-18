@@ -50,7 +50,7 @@ public class SubViewDelegateImpl implements SubViewModelDelegate {
                         FXView.class.getName()));
 
         final FXViewBuilder subViewBuilder = new FXViewBuilder((Class<? extends FXView>) childViewType);
-        injector.injectMembers(subViewBuilder);
+        this.injector.injectMembers(subViewBuilder);
 
         ListenableFuture<Object[]> subViewBuildFuture = subViewBuilder.build(
                 new ViewBuilderResult() {

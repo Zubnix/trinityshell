@@ -20,12 +20,8 @@
 
 package org.trinity.shell.api.surface;
 
-import java.util.concurrent.Callable;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.AsyncListenable;
 import org.trinity.foundation.api.shared.ExecutionContext;
@@ -34,8 +30,10 @@ import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+import java.util.concurrent.Callable;
 
 // TODO from boilerplate code generator
 /***************************************
@@ -63,7 +61,7 @@ public abstract class AbstractAsyncShellSurface extends AbstractShellNodeParent 
 
 	@Override
 	public DisplaySurface getDisplaySurface() {
-		return displaySurface;
+		return this.displaySurface;
 	}
 
 	@Override

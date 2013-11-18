@@ -67,14 +67,14 @@ public class XWindowProtocol {
 	}
 
 	public ListenableFuture<Void> register(final DisplaySurface xWindow) {
-		return displayExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				final Integer xWindowId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
-				listenForXProtocol(xWindowId);
-				return null;
-			}
-		});
+		return this.displayExecutor.submit(new Callable<Void>() {
+            @Override
+            public Void call() {
+                final Integer xWindowId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
+                listenForXProtocol(xWindowId);
+                return null;
+            }
+        });
 	}
 
 	private void listenForXProtocol(final Integer xWindowId) {
