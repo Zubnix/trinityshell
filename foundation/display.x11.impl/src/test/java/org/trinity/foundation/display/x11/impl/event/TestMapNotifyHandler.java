@@ -3,8 +3,8 @@ package org.trinity.foundation.display.x11.impl.event;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.LibXcbJNI;
-import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.freedesktop.xcb.xcb_map_notify_event_t;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -16,11 +16,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.display.event.PointerEnterNotify;
+import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
-import static org.freedesktop.xcb.LibXcbJNI.xcb_enter_notify_event_t_event_get;
+import static org.freedesktop.xcb.LibXcbJNI.xcb_map_notify_event_t_window_get;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -31,15 +31,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+@Deprecated
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LibXcbJNI.class)
-public class TestEnterNotifyHandler {
+public class TestMapNotifyHandler {
     @Mock
     private EventBus xEventBus;
     @Mock
     private XWindowPoolImpl xWindowPool;
     @InjectMocks
-    private EnterNotifyHandler enterNotifyHandler;
+    private MapNotifyHandler mapNotifyHandler;
     @Mock
     private xcb_generic_event_t xcb_generic_event;
 
@@ -48,28 +49,28 @@ public class TestEnterNotifyHandler {
     @Test
     public void testEventHandling() {
         //given
-        //a EnterNotifyHandler
+        //a MapNotifyHandler
         //an xcb_generic_event_t
 
         //when
         //an xcb_generic_event_t event arrives
-        final Optional<PointerEnterNotify> pointerEnterNotifyOptional = enterNotifyHandler.handle(xcb_generic_event);
+        final Optional<ShowNotify> showNotifyOptional = mapNotifyHandler.handle(xcb_generic_event);
 
         //then
-        //the xcb_enter_notify_event_t is posted on the x event bus
-        //the event is converted to a PointerEnterNotify
-        verify(xEventBus).post(isA(xcb_enter_notify_event_t.class));
-        assertTrue(pointerEnterNotifyOptional.isPresent());
+        //the xcb_map_notify_event_t is posted on the x event bus
+        //the event is converted to a ShowNotify
+        verify(xEventBus).post(isA(xcb_map_notify_event_t.class));
+        assertTrue(showNotifyOptional.isPresent());
     }
 
     @Test
     public void testGetTarget() {
         //given
-        //a EnterNotifyHandler
+        //a MapNotifyHandler
         //an xcb_generic_event_t
         mockStatic(LibXcbJNI.class);
-        when(xcb_enter_notify_event_t_event_get(anyLong(),
-                (xcb_enter_notify_event_t) any())).thenReturn(targetWindowId);
+        when(xcb_map_notify_event_t_window_get(anyLong(),
+                (xcb_map_notify_event_t) any())).thenReturn(targetWindowId);
 
         final DisplaySurface displaySurface = mock(DisplaySurface.class);
         when(displaySurface.getDisplaySurfaceHandle()).thenReturn(new XWindowHandle(targetWindowId));
@@ -87,7 +88,7 @@ public class TestEnterNotifyHandler {
 
         //when
         //the target of the xcb_generic_event_t event is requested
-        final Optional<DisplaySurface> target = enterNotifyHandler.getTarget(xcb_generic_event);
+        final Optional<DisplaySurface> target = mapNotifyHandler.getTarget(xcb_generic_event);
 
         //then
         //the correct DisplaySurface is returned

@@ -19,11 +19,10 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl.event;
 
-import static org.freedesktop.xcb.LibXcbConstants.XCB_UNMAP_NOTIFY;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
+import com.google.common.base.Optional;
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_unmap_notify_event_t;
@@ -34,14 +33,14 @@ import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventHandler;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
-import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+
+import static org.freedesktop.xcb.LibXcbConstants.XCB_UNMAP_NOTIFY;
 
 @Bind(multiple = true)
 @Singleton
@@ -51,14 +50,14 @@ public class UnmapNotifyHandler implements XEventHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UnmapNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_UNMAP_NOTIFY;
-	private final XWindowPoolImpl xWindowCache;
+	private final XWindowPoolImpl xWindowPool;
 	private final EventBus xEventBus;
 
 	@Inject
 	UnmapNotifyHandler(	@XEventBus final EventBus xEventBus,
-						final XWindowPoolImpl xWindowCache) {
+						final XWindowPoolImpl xWindowPool) {
 		this.xEventBus = xEventBus;
-		this.xWindowCache = xWindowCache;
+		this.xWindowPool = xWindowPool;
 	}
 
 	@Override
@@ -85,7 +84,7 @@ public class UnmapNotifyHandler implements XEventHandler {
 		if (windowId != reportWindowId) {
 			return Optional.absent();
 		}
-		return Optional.of(this.xWindowCache.getDisplaySurface(new XWindowHandle(windowId)));
+		return Optional.of(this.xWindowPool.getDisplaySurface(new XWindowHandle(windowId)));
 	}
 
 	@Override

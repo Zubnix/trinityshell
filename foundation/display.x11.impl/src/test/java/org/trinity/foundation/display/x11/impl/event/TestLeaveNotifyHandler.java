@@ -16,7 +16,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.display.event.PointerEnterNotify;
+import org.trinity.foundation.api.display.event.PointerLeaveNotify;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
@@ -33,13 +33,13 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LibXcbJNI.class)
-public class TestEnterNotifyHandler {
+public class TestLeaveNotifyHandler {
     @Mock
     private EventBus xEventBus;
     @Mock
     private XWindowPoolImpl xWindowPool;
     @InjectMocks
-    private EnterNotifyHandler enterNotifyHandler;
+    private LeaveNotifyHandler leaveNotifyHandler;
     @Mock
     private xcb_generic_event_t xcb_generic_event;
 
@@ -48,18 +48,18 @@ public class TestEnterNotifyHandler {
     @Test
     public void testEventHandling() {
         //given
-        //a EnterNotifyHandler
+        //a LeaveNotifyHandler
         //an xcb_generic_event_t
 
         //when
         //an xcb_generic_event_t event arrives
-        final Optional<PointerEnterNotify> pointerEnterNotifyOptional = enterNotifyHandler.handle(xcb_generic_event);
+        final Optional<PointerLeaveNotify> pointerLeaveNotifyOptional = leaveNotifyHandler.handle(xcb_generic_event);
 
         //then
-        //the xcb_enter_notify_event_t is posted on the x event bus
-        //the event is converted to a PointerEnterNotify
+        //the xcb_enter_notify_event_t is posted on the x event bus (enter and leave are the same type in xcb)
+        //the event is converted to a PointerLeaveNotify
         verify(xEventBus).post(isA(xcb_enter_notify_event_t.class));
-        assertTrue(pointerEnterNotifyOptional.isPresent());
+        assertTrue(pointerLeaveNotifyOptional.isPresent());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class TestEnterNotifyHandler {
 
         //when
         //the target of the xcb_generic_event_t event is requested
-        final Optional<DisplaySurface> target = enterNotifyHandler.getTarget(xcb_generic_event);
+        final Optional<DisplaySurface> target = leaveNotifyHandler.getTarget(xcb_generic_event);
 
         //then
         //the correct DisplaySurface is returned
