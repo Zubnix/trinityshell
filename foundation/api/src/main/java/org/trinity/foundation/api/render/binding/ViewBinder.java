@@ -19,6 +19,7 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding;
 
+import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
@@ -33,15 +34,18 @@ public interface ViewBinder {
 
 	/***************************************
      * Update the bound views so they reflect the state of the changed data model.
-     * @param dataModelExecutor The executor that operates on the data model.
-     * @param changedDataModel The data model who's property changed.
-     * @param propertyName The name of the property that changed.
+     * @param dataModelExecutor     The executor that operates on the data model.
+     * @param changedDataModel      The data model who's property changed.
+     * @param oldPropertyValue      The old value of the property.
+     * @param newPropertyValue      The new value of the property.
      * @return A future indicating when the operation is done.
      ***************************************
      */
     ListenableFuture<Void> updateDataModelBinding(@Nonnull ListeningExecutorService dataModelExecutor,
-                                                  @Nonnull Object changedDataModel,
-                                                  @Nonnull String propertyName);
+                                                  @Nonnull Object dataModel,
+                                                  @Nonnull String propertyName,
+                                                  @Nonnull Optional<Object> oldPropertyValue,
+                                                  @Nonnull Optional<Object> newPropertyValue);
 
     /**
      * ************************************
@@ -63,10 +67,13 @@ public interface ViewBinder {
      *
      * @param dataModelExecutor The executor that operates on the data model.
      * @param changedViewModel  The view model who's sub view changed.
-     * @param subViewName       The name of the sub view that changed.
+     * @param oldSubView        The field value of the old sub view.
+     * @param newSubView        The field value of the new sub view.
      * @return  future indicating when the operation is done.
      */
-    ListenableFuture<Void> updateViewModelBinding(@Nonnull ListeningExecutorService dataModelExecutor,
-                                                  @Nonnull Object changedViewModel,
-                                                  @Nonnull String subViewName);
+    ListenableFuture<Void> updateViewModelBinding(@Nonnull final ListeningExecutorService dataModelExecutor,
+                                                  @Nonnull final Object parentViewModel,
+                                                  @Nonnull final String subViewFieldName,
+                                                  @Nonnull final Optional<Object> oldSubView,
+                                                  @Nonnull final Optional<Object> newSubView);
 }

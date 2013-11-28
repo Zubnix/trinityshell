@@ -40,6 +40,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({})
 public @interface EventSignal {
 
+
+    /**
+     * The datacontext for this specific annotation, relative to current active
+     * datacontext, either implicit (inherited) or explicit from a
+     * {@link DataModelContext}.
+     *
+     * @return A property path consisting of 1 or more property names seperated
+     *         by a dot eg. "foo.bar.baz".
+     */
+    String dataModelContext() default "";
+
 	/***************************************
 	 * The name of the no-args model method that should be invoked when an event
 	 * arrives.

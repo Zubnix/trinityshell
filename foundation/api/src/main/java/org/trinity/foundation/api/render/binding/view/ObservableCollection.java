@@ -37,6 +37,16 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
          TYPE})
 public @interface ObservableCollection {
 
+    /**
+     * The datacontext for this specific annotation, relative to current active
+     * datacontext, either implicit (inherited) or explicit from a
+     * {@link DataModelContext}.
+     *
+     * @return A property path consisting of 1 or more property names seperated
+     *         by a dot eg. "foo.bar.baz".
+     */
+    String dataModelContext() default "";
+
 	/***************************************
 	 * The referenced collection property. Valid collection types are
 	 * implementation dependent.

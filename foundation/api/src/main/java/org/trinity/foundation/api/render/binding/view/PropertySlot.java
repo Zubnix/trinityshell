@@ -41,7 +41,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface PropertySlot {
 
 	/**
-	 * The datacontext of this specific annotation, relative to current active
+	 * The datacontext for this specific annotation, relative to current active
 	 * datacontext, either implicit (inherited) or explicit from a
 	 * {@link DataModelContext}.
 	 *

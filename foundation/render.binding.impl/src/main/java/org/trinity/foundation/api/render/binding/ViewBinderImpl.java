@@ -76,16 +76,14 @@ import static java.lang.String.format;
 @ThreadSafe
 public class ViewBinderImpl implements ViewBinder {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ViewBinderImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ViewBinderImpl.class);
     private static final Table<Class<?>, String, Optional<Method>> GETTER_CACHE = HashBasedTable.create();
     private static final Map<Class<?>, Field[]> DECLARED_FIELDS_CACHE = new HashMap<>();
     private static final String GET_BOOLEAN_PREFIX = "is";
     private static final String GET_PREFIX = "get";
-
     private final PropertySlotInvocationDelegate propertySlotInvocationDelegate;
     private final Injector injector;
     private final SubViewModelDelegate subViewModelDelegate;
-
     //<ViewModel,DataModel>
     private final Map<Object, Object> dataModelByViewModel = new WeakHashMap<>();
     //<DataModel,Set<ViewModel>>
@@ -131,6 +129,7 @@ public class ViewBinderImpl implements ViewBinder {
 
     }
 
+
     @Override
     public ListenableFuture<Void> updateViewModelBinding(@Nonnull final ListeningExecutorService dataModelExecutor,
                                                          @Nonnull final Object changedViewModel,
@@ -155,16 +154,16 @@ public class ViewBinderImpl implements ViewBinder {
                                               @Nonnull final String subViewName) {
         try {
             final Field subViewField = changedViewModel.getClass().getField(subViewName);
-            final Object dataModel = dataModelByViewModel.get(changedViewModel);
+            final Object dataModel = this.dataModelByViewModel.get(changedViewModel);
             if(dataModel == null) {
                 //our 'parent' view model is not yet bind. we will be bound when our parent view model is bound.
                 return;
             }
 
-            bindSubViewElement(dataModelExecutor,
-                               subViewField,
-                               dataModel,
-                               changedViewModel);
+            bindSubView(dataModelExecutor,
+                        subViewField,
+                        dataModel,
+                        changedViewModel);
         } catch(NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -361,8 +360,27 @@ public class ViewBinderImpl implements ViewBinder {
                             viewModel);
     }
 
+    protected Object getPrivateDataContextModel(final Object dataModel,
+                                                final String privateDataModelContext) {
+        checkNotNull(dataModel);
+        checkNotNull(privateDataModelContext);
+
+        Object privateDataModel = dataModel;
+        if(privateDataModelContext.isEmpty()) {
+            privateDataModel = dataModel;
+        } else {
+            final Optional<Object> optionalRelativeDataModel = getDataModel(dataModel,
+                                                                            privateDataModelContext);
+            if(optionalRelativeDataModel.isPresent()) {
+                privateDataModel = optionalRelativeDataModel.get();
+            }
+        }
+
+        return privateDataModel;
+    }
+
     protected void bindObservableCollection(final ListeningExecutorService dataModelExecutor,
-                                            final Object dataModel,
+                                            Object dataModel,
                                             final Object viewModel,
                                             final ObservableCollection observableCollection) {
         checkNotNull(dataModel);
@@ -370,8 +388,11 @@ public class ViewBinderImpl implements ViewBinder {
         checkNotNull(observableCollection);
 
         try {
-            final String collectionProperty = observableCollection.value();
 
+            dataModel = getPrivateDataContextModel(dataModel,
+                                                   observableCollection.dataModelContext());
+
+            final String collectionProperty = observableCollection.value();
             final Optional<Method> collectionGetter = findGetter(dataModel.getClass(),
                                                                  collectionProperty);
             if(!collectionGetter.isPresent()) {
@@ -453,8 +474,8 @@ public class ViewBinderImpl implements ViewBinder {
         final Set<Object> removedChildViewModels = this.viewModelsByDataModel.get(removedChildDataModel);
         for(final Object removedChildView : removedChildViewModels) {
             ViewBinderImpl.this.subViewModelDelegate.destroyView(viewModel,
-                                                             removedChildView,
-                                                             sourceIndex);
+                                                                 removedChildView,
+                                                                 sourceIndex);
         }
         this.viewModelsByDataModel.removeAll(removedChildDataModel);
     }
@@ -580,23 +601,35 @@ public class ViewBinderImpl implements ViewBinder {
                                     final Object dataModel,
                                     final Object viewModel,
                                     final EventSignal[] eventSignals) {
-        checkNotNull(dataModel);
         checkNotNull(viewModel);
         checkNotNull(eventSignals);
 
         for(final EventSignal eventSignal : eventSignals) {
-            final Class<? extends EventSignalFilter> eventSignalFilterType = eventSignal.filter();
-            final String inputSlotName = eventSignal.name();
-
-            // FIXME cache filter & uninstall any previous filter installments
-            final EventSignalFilter eventSignalFilter = this.injector.getInstance(eventSignalFilterType);
-            eventSignalFilter.installFilter(viewModel,
-                                            new SignalImpl(dataModelExecutor,
-                                                           viewModel,
-                                                           this.dataModelByViewModel,
-                                                           inputSlotName));
+            bindEventSignal(dataModelExecutor,
+                            dataModel,
+                            viewModel,
+                            eventSignal);
 
         }
+    }
+
+    protected void bindEventSignal(final ListeningExecutorService dataModelExecutor,
+                                   final Object dataModel,
+                                   final Object viewModel,
+                                   final EventSignal eventSignal) {
+
+        final Class<? extends EventSignalFilter> eventSignalFilterType = eventSignal.filter();
+        final String inputSlotName = eventSignal.name();
+        final EventSignalFilter eventSignalFilter = this.injector.getInstance(eventSignalFilterType);
+        final String privateDataModelContext = eventSignal.dataModelContext();
+        eventSignalFilter.installFilter(viewModel,
+                                        new SignalImpl(dataModelExecutor,
+                                                       inputSlotName) {
+                                            public Object getDataModel() {
+                                                return getPrivateDataContextModel(dataModel,
+                                                                                  privateDataModelContext);
+                                            }
+                                        });
     }
 
     protected void registerBinding(final Object dataModel,
@@ -610,8 +643,8 @@ public class ViewBinderImpl implements ViewBinder {
             this.viewModelsByDataModel.remove(oldDataModel,
                                               viewModel);
         }
-        viewModelsByDataModel.put(dataModel,
-                                  viewModel);
+        this.viewModelsByDataModel.put(dataModel,
+                                       viewModel);
     }
 
     protected void unregisterBinding(final Object viewModel) {
@@ -643,7 +676,7 @@ public class ViewBinderImpl implements ViewBinder {
         }
     }
 
-    protected void bindPropertySlot(final Object dataModel,
+    protected void bindPropertySlot(Object dataModel,
                                     final Object viewModel,
                                     final PropertySlot propertySlot) {
         checkNotNull(dataModel);
@@ -651,32 +684,22 @@ public class ViewBinderImpl implements ViewBinder {
         checkNotNull(propertySlot);
 
         try {
-            final String propertySlotDataModelContext = propertySlot.dataModelContext();
-            final Object propertyDataModel;
-            if(propertySlotDataModelContext.isEmpty()) {
-                propertyDataModel = dataModel;
-            } else {
-                final Optional<Object> optionalRelativeDataModel = getDataModel(dataModel,
-                                                                                propertySlotDataModelContext);
-                if(optionalRelativeDataModel.isPresent()) {
-                    propertyDataModel = optionalRelativeDataModel.get();
-                } else {
-                    return;
-                }
-            }
+            dataModel = getPrivateDataContextModel(dataModel,
+                                                   propertySlot.dataModelContext());
+
             final String propertyName = propertySlot.propertyName();
-            final Optional<Method> optionalGetter = findGetter(propertyDataModel.getClass(),
+            final Optional<Method> optionalGetter = findGetter(dataModel.getClass(),
                                                                propertyName);
             if(optionalGetter.isPresent()) {
                 final Method getter = optionalGetter.get();
 
                 // workaround for bug (4071957) submitted in
                 // 1997(!) and still not fixed by sun/oracle.
-                if(propertyDataModel.getClass().isAnonymousClass()) {
+                if(dataModel.getClass().isAnonymousClass()) {
                     getter.setAccessible(true);
                 }
 
-                final Object propertyInstance = optionalGetter.get().invoke(propertyDataModel);
+                final Object propertyInstance = optionalGetter.get().invoke(dataModel);
 
                 invokePropertySlot(viewModel,
                                    propertySlot,
@@ -747,10 +770,10 @@ public class ViewBinderImpl implements ViewBinder {
             final Field[] viewModelFields = getFields(viewModelClass);
 
             for(final Field subViewModelField : viewModelFields) {
-                bindSubViewElement(dataModelExecutor,
-                                   subViewModelField,
-                                   inheritedDataModel,
-                                   viewModel);
+                bindSubView(dataModelExecutor,
+                            subViewModelField,
+                            inheritedDataModel,
+                            viewModel);
             }
         } catch(IllegalArgumentException | IllegalAccessException e) {
             // TODO explanation
@@ -759,18 +782,18 @@ public class ViewBinderImpl implements ViewBinder {
         }
     }
 
-    protected void bindSubViewElement(final ListeningExecutorService dataModelExecutor,
-                                      final Field subViewModelField,
-                                      final Object inheritedDataModel,
-                                      final Object viewModel) throws IllegalAccessException {
+    protected void bindSubView(final ListeningExecutorService dataModelExecutor,
+                               final Field subViewModelField,
+                               final Object inheritedDataModel,
+                               final Object viewModel) throws IllegalAccessException {
         checkNotNull(dataModelExecutor);
         checkNotNull(subViewModelField);
         checkNotNull(inheritedDataModel);
         checkNotNull(viewModel);
 
         //find any previously associated value and remove it
-        final Object oldSubViewModel = subviewModelByNameAndViewModel.get(viewModel,
-                                                                    subViewModelField.getName());
+        final Object oldSubViewModel = this.subviewModelByNameAndViewModel.get(viewModel,
+                                                                         subViewModelField.getName());
         if(oldSubViewModel != null) {
             unregisterBinding(oldSubViewModel);
         }
@@ -782,10 +805,16 @@ public class ViewBinderImpl implements ViewBinder {
             return;
         }
 
-        if(subViewModelField.getAnnotation(SubView.class) == null && subViewModel.getClass()
-                                                                                 .getAnnotation(SubView.class) == null) {
+        final Optional<SubView> subViewOptional = Optional.fromNullable(subViewModelField.getAnnotation(SubView.class))
+                                                    .or(Optional.fromNullable(subViewModel
+                                                                                      .getClass()
+                                                                                      .getAnnotation(SubView.class)));
+
+        if(!subViewOptional.isPresent()) {
             return;
         }
+
+        final SubView subView = subViewOptional.get();
 
         // recursion safety
         if(this.dataModelByViewModel.containsKey(subViewModel)) {

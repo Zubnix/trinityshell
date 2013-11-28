@@ -33,34 +33,27 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 //TODO documentation
-public class SignalImpl implements Signal {
+public abstract class SignalImpl implements Signal {
 
     private static final Logger LOG = LoggerFactory.getLogger(SignalImpl.class);
     private static final Cache<HashCode, Optional<Method>> EVENT_SLOTS_BY_HASH = CacheBuilder.newBuilder().concurrencyLevel(1)
             .build();
     private static final HashFunction HASH_FUNCTION = Hashing.goodFastHash(16);
     private final ListeningExecutorService modelExecutor;
-    private final Object viewModel;
-    private final Map<Object, Object> dataModelByViewModel;
-    private final String targetMethodName;
+    private final String inputSlotName;
 
     SignalImpl(final ListeningExecutorService modelExecutor,
-               final Object viewModel,
-               final Map<Object, Object> dataModelByViewModel,
-               final String targetMethodName) {
+               final String inputSlotName) {
         this.modelExecutor = modelExecutor;
-        this.viewModel = viewModel;
-        this.dataModelByViewModel = dataModelByViewModel;
-        this.targetMethodName = targetMethodName;
+        this.inputSlotName = inputSlotName;
     }
 
-    private static Optional<Method> findMethod(final Class<?> modelClass,
-                                               final String methodName) throws ExecutionException {
+    private static Optional<Method> findSlot(final Class<?> modelClass,
+                                             final String methodName) throws ExecutionException {
 
         final HashCode hashCode = HASH_FUNCTION.newHasher().putInt(modelClass.hashCode())
                 .putUnencodedChars(methodName).hash();
@@ -93,19 +86,21 @@ public class SignalImpl implements Signal {
 
     @Override
     public ListenableFuture<Void> fire() {
-        return modelExecutor.submit(new Callable<Void>() {
+        return this.modelExecutor.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                final Object dataModel = dataModelByViewModel.get(SignalImpl.this.viewModel);
-                final Optional<Method> optionalInputSlot = findMethod(dataModel.getClass(),
-                        targetMethodName);
-                if (optionalInputSlot.isPresent()) {
+                final Object viewModel = getDataModel();
+                final Optional<Method> optionalInputSlot = findSlot(viewModel.getClass(),
+                                                                    SignalImpl.this.inputSlotName);
+                if(optionalInputSlot.isPresent()) {
                     final Method method = optionalInputSlot.get();
                     method.setAccessible(true);
-                    method.invoke(dataModel);
+                    method.invoke(viewModel);
                 }
                 return null;
             }
         });
     }
+
+    protected abstract Object getDataModel();
 }
