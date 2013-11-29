@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -17,7 +18,6 @@ public class ViewBinderImpl2 implements ViewBinder {
     private final ViewBindingsTraverser viewBindingsTraverser;
 
     private final Multimap<DataModelProperty, AbstractViewBinding> dataModelPopertyToViewBindings = HashMultimap.create();
-    private final Multimap<Object, AbstractViewBinding> viewModelToViewBindings = HashMultimap.create();
 
     @Inject
     ViewBinderImpl2(final ViewBindingsTraverser viewBindingsTraverser) {
@@ -34,9 +34,9 @@ public class ViewBinderImpl2 implements ViewBinder {
             @Override
             public Void call() {
                 updateDataModelBinding(dataModel,
-                                       propertyName,
-                                       oldPropertyValue,
-                                       newPropertyValue);
+                        propertyName,
+                        oldPropertyValue,
+                        newPropertyValue);
                 return null;
             }
         });
@@ -46,21 +46,43 @@ public class ViewBinderImpl2 implements ViewBinder {
                                        @Nonnull final String propertyName,
                                        @Nonnull final Optional<Object> oldPropertyValue,
                                        @Nonnull final Optional<Object> newPropertyValue) {
-        if(oldPropertyValue.equals(newPropertyValue)) {
+        if (oldPropertyValue.equals(newPropertyValue)) {
             return;
         }
 
         final DataModelProperty dataModelProperty = new DataModelPropertyImpl(dataModel,
-                                                                              propertyName);
+                propertyName);
+
+        //find all impacted view bindings
         final Collection<AbstractViewBinding> abstractViewBindings = this.dataModelPopertyToViewBindings
                 .removeAll(dataModelProperty);
-        for(final AbstractViewBinding abstractViewBinding : abstractViewBindings) {
+
+        //find all data model properties that point to the impacted view binding
+        final Multimap<AbstractViewBinding, DataModelProperty> viewBindingToDataModelProperties = HashMultimap.create();
+        Multimaps.invertFrom(this.dataModelPopertyToViewBindings, viewBindingToDataModelProperties);
+
+        //for each view binding that was impacted by the changed data model property.
+        for (final AbstractViewBinding abstractViewBinding : abstractViewBindings) {
+            //unbind the view binding
             abstractViewBinding.unbind();
-            final Collection<DataModelProperty> newDataModelProperties = abstractViewBinding.bind();
-            for(final DataModelProperty newDataModelProperty : newDataModelProperties) {
-                this.dataModelPopertyToViewBindings.put(newDataModelProperty,
-                                                        abstractViewBinding);
+            //remove all data model properties that were pointing to the view binding
+            final Collection<DataModelProperty> dataModelProperties = viewBindingToDataModelProperties.get(abstractViewBinding);
+            for (final DataModelProperty oldModelProperty : dataModelProperties) {
+                this.dataModelPopertyToViewBindings.remove(oldModelProperty, abstractViewBinding);
             }
+
+            //rebind the view & update the data model properties that point to this view model
+            bindViewBinding(abstractViewBinding);
+        }
+    }
+
+    private void bindViewBinding(final AbstractViewBinding abstractViewBinding) {
+        //bind the view binding
+        final Collection<DataModelProperty> newDataModelProperties = abstractViewBinding.bind();
+        //link these new data model properties to this view binding
+        for (final DataModelProperty newDataModelProperty : newDataModelProperties) {
+            this.dataModelPopertyToViewBindings.put(newDataModelProperty,
+                    abstractViewBinding);
         }
     }
 
@@ -81,7 +103,7 @@ public class ViewBinderImpl2 implements ViewBinder {
     private void bind(@Nonnull final Object dataModel,
                       @Nonnull final Object viewModel) {
         final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create(dataModel,
-                                                                       viewModel);
+                viewModel);
         updateBindings(viewBindingMeta);
     }
 
@@ -89,47 +111,32 @@ public class ViewBinderImpl2 implements ViewBinder {
         final FluentIterable<ViewBindingMeta> viewBindingMetas = this.viewBindingsTraverser
                 .preOrderTraversal(rootViewBindingMeta);
 
-        for(final ViewBindingMeta viewBindingMeta : viewBindingMetas) {
+        for (final ViewBindingMeta viewBindingMeta : viewBindingMetas) {
             createBindings(viewBindingMeta);
         }
     }
 
     private void createBindings(final ViewBindingMeta bindingMeta) {
 
-        //create property binding
-        if(bindingMeta.getPropertySlots().isPresent()) {
+        //if there are property slots
+        if (bindingMeta.getPropertySlots().isPresent()) {
             final PropertyBinding propertyBinding = new PropertyBinding(bindingMeta);
-            final Collection<DataModelProperty> dataModelProperties = propertyBinding.bind();
-            for(final DataModelProperty dataModelProperty : dataModelProperties) {
-                this.dataModelPopertyToViewBindings.put(dataModelProperty,
-                                                        propertyBinding);
-            }
-            this.viewModelToViewBindings.put(bindingMeta.getViewModel(),
-                                             propertyBinding);
+            //create property binding
+            bindViewBinding(propertyBinding);
         }
 
-        //bind collection
-        if(bindingMeta.getObservableCollection().isPresent()) {
+        //if there is an observable collection
+        if (bindingMeta.getObservableCollection().isPresent()) {
             final CollectionBinding collectionBinding = new CollectionBinding(bindingMeta);
-            final Collection<DataModelProperty> dataModelProperties = collectionBinding.bind();
-            for(final DataModelProperty dataModelProperty : dataModelProperties) {
-                this.dataModelPopertyToViewBindings.put(dataModelProperty,
-                                                        collectionBinding);
-            }
-            this.viewModelToViewBindings.put(bindingMeta.getViewModel(),
-                                             collectionBinding);
+            //bind collection binding
+            bindViewBinding(collectionBinding);
         }
 
-        //bind view event
-        if(bindingMeta.getEventSignals().isPresent()) {
+        //if this view emits events
+        if (bindingMeta.getEventSignals().isPresent()) {
             final EventBinding eventBinding = new EventBinding(bindingMeta);
-            final Collection<DataModelProperty> dataModelProperties = eventBinding.bind();
-            for(final DataModelProperty dataModelProperty : dataModelProperties) {
-                this.dataModelPopertyToViewBindings.put(dataModelProperty,
-                                                        eventBinding);
-            }
-            this.viewModelToViewBindings.put(bindingMeta.getViewModel(),
-                                             eventBinding);
+            //bind view event
+            bindViewBinding(eventBinding);
         }
     }
 
@@ -143,9 +150,9 @@ public class ViewBinderImpl2 implements ViewBinder {
             @Override
             public Void call() {
                 updateViewModelBinding(parentViewModel,
-                                       fieldName,
-                                       oldSubView,
-                                       newSubView);
+                        fieldName,
+                        oldSubView,
+                        newSubView);
                 return null;
             }
         });

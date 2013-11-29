@@ -52,6 +52,9 @@ public class ViewBindingMeta {
 
         subviewField.setAccessible(true);
         final Object viewModel = subviewField.get(parentViewBindingMeta.getViewModel());
+        if(viewModel == null){
+            return Optional.absent();
+        }
         final Class<?> subviewClass = viewModel.getClass();
 
         final Optional<ObservableCollection> observableCollection = scanFieldObservableCollection(subviewField).or(scanClassObservableCollection(subviewClass));
