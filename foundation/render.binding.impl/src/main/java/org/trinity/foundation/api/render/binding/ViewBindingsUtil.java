@@ -4,55 +4,58 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
+import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
-public class DataContextNavigator {
+public class ViewBindingsUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataContextNavigator.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ViewBindingsUtil.class);
 
-    private static final Table<Class<?>, String, Optional<Method>> GETTER_CACHE = HashBasedTable.create();
+	private static final Table<Class<?>, String, Optional<Method>> GETTER_CACHE = HashBasedTable.create();
+	private static final Table<Class<?>, String, Optional<Field>>  FIELD_CACHE  = HashBasedTable.create();
+	private static final Map<Class<?>, Field[]>                    FIELDS_CACHE = Maps.newHashMap();
 
-    private static final String GET_BOOLEAN_PREFIX = "is";
-    private static final String GET_PREFIX = "get";
+	private static final String GET_BOOLEAN_PREFIX = "is";
+	private static final String GET_PREFIX         = "get";
 
-    private DataContextNavigator() {
-    }
+	private ViewBindingsUtil() {
+	}
 
-    public static boolean appendDataModelPropertyChain(final LinkedList<DataModelProperty> dataModelPropertyChain,
-                                                       final String propertyChain) {
-        checkNotNull(dataModelPropertyChain);
-        checkNotNull(propertyChain);
+	public static boolean appendDataModelPropertyChain(final LinkedList<DataModelProperty> dataModelPropertyChain,
+													   final String propertyChain) {
+		checkNotNull(dataModelPropertyChain);
+		checkNotNull(propertyChain);
+		checkArgument(!dataModelPropertyChain.isEmpty());
 
-        if(dataModelPropertyChain.isEmpty()) {
-            return false;
-        }
+		final Iterable<String> propertyNames = toPropertyNames(propertyChain);
+		final LinkedList<DataModelProperty> appendedDataModelChain = new LinkedList<>();
 
-        final Iterable<String> propertyNames = toPropertyNames(propertyChain);
-        final LinkedList<DataModelProperty> appendedDataModelChain = new LinkedList<>();
+		boolean aborted = false;
+		DataModelProperty dataModelProperty = dataModelPropertyChain.getLast();
+		try {
 
-        boolean aborted = false;
-        DataModelProperty dataModelProperty = dataModelPropertyChain.getLast();
-        try {
+			for(final String propertyName : propertyNames) {
 
-            for(final String propertyName : propertyNames) {
+				final Object dataModel = dataModelProperty.getDataModel();
+				final Class<?> dataModelClass = dataModel.getClass();
+				final Optional<Method> dataModelGetter = getGetterMethod(dataModelClass,
+																		 propertyName);
 
-                final Object dataModel = dataModelProperty.getDataModel();
-                final Class<?> dataModelClass = dataModel.getClass();
-                final Optional<Method> dataModelGetter = getGetterMethod(dataModelClass,
-                                                                         propertyName);
-
-                if(dataModelGetter.isPresent()) {
-                    final Object nextDataModel = dataModelGetter.get().invoke(dataModel);
-                    if(nextDataModel == null) {
+				if(dataModelGetter.isPresent()) {
+					final Object nextDataModel = dataModelGetter.get().invoke(dataModel);
+					if(nextDataModel == null) {
                         aborted = true;
                         break;
                     }
@@ -82,13 +85,52 @@ public class DataContextNavigator {
         return Splitter.on('.').trimResults().omitEmptyStrings().split(subModelPath);
     }
 
-    public static Optional<Method> getGetterMethod(final Class<?> dataModelClass,
-                                                   final String propertyName) {
+	public static Field[] getFields(final Class<?> viewModelClass) {
+		Field[] fields = FIELDS_CACHE.get(viewModelClass);
+		if(fields == null) {
+			fields = viewModelClass.getDeclaredFields();
+			for(final Field field : fields) {
+				field.setAccessible(true);
+			}
+			FIELDS_CACHE.put(viewModelClass,
+							 fields);
+		}
 
-        checkNotNull(dataModelClass);
-        checkNotNull(propertyName);
+		return fields;
+	}
 
-        Optional<Method> methodOptional = GETTER_CACHE.get(dataModelClass,
+	public static Optional<Field> getField(final Class<?> viewModelClass,
+										   final String subViewFieldName) {
+		Optional<Field> fieldOptional = FIELD_CACHE.get(viewModelClass,
+														subViewFieldName);
+		if(fieldOptional == null) {
+
+			Field foundField = null;
+			try {
+				foundField = viewModelClass.getDeclaredField(subViewFieldName);
+				foundField.setAccessible(true);
+			}
+			catch(NoSuchFieldException e) {
+				// TODO explanation
+				LOG.error("",
+						  e);
+			}
+			fieldOptional = Optional.fromNullable(foundField);
+			FIELD_CACHE.put(viewModelClass,
+							subViewFieldName,
+							fieldOptional);
+		}
+
+		return fieldOptional;
+	}
+
+	public static Optional<Method> getGetterMethod(final Class<?> dataModelClass,
+												   final String propertyName) {
+
+		checkNotNull(dataModelClass);
+		checkNotNull(propertyName);
+
+		Optional<Method> methodOptional = GETTER_CACHE.get(dataModelClass,
                                                            propertyName);
 
         if(methodOptional == null) {

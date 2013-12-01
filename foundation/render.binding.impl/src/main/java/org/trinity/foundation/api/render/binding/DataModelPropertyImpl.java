@@ -1,5 +1,6 @@
 package org.trinity.foundation.api.render.binding;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +34,9 @@ public class DataModelPropertyImpl implements DataModelProperty {
 
     @Override
     public Optional<Object> getPropertyValue() {
-        final Optional<Method> getterMethod = DataContextNavigator.getGetterMethod(getDataModel().getClass(),
-                                                                                   getPropertyName());
-        final Optional<Object> propertyValue;
+		final Optional<Method> getterMethod = ViewBindingsUtil.getGetterMethod(getDataModel().getClass(),
+																			   getPropertyName());
+		Optional<Object> propertyValue;
         if(getterMethod.isPresent()) {
             try {
                 final Object property = getterMethod.get().invoke(getDataModel());
@@ -64,15 +65,15 @@ public class DataModelPropertyImpl implements DataModelProperty {
         }
         final DataModelProperty other = (DataModelProperty) obj;
 
-        return com.google.common.base.Objects.equal(getDataModel(),
-                                                    other.getDataModel())
-                && com.google.common.base.Objects.equal(getPropertyName(),
-                                                        other.getPropertyName());
-    }
+		return Objects.equal(getDataModel(),
+							 other.getDataModel())
+				&& Objects.equal(getPropertyName(),
+								 other.getPropertyName());
+	}
 
     @Override
     public int hashCode() {
-        return com.google.common.base.Objects.hashCode(getDataModel(),
-                                                       getPropertyName());
+		return Objects.hashCode(getDataModel(),
+								getPropertyName());
     }
 }

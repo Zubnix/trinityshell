@@ -1,7 +1,8 @@
 package org.trinity.foundation.api.render.binding;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.DataModelContext;
 import org.trinity.foundation.api.render.binding.view.EventSignal;
 import org.trinity.foundation.api.render.binding.view.EventSignals;
@@ -10,78 +11,89 @@ import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 import org.trinity.foundation.api.render.binding.view.SubView;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 
-public class ViewBindingMeta {
+public abstract class ViewBindingMeta {
 
-    private final Function<LinkedList<DataModelProperty>, Boolean> dataContextResolution;
+	private static final Logger LOG = LoggerFactory.getLogger(ViewBindingMeta.class);
 
-    private final Object viewModel;
+	private final Object viewModel;
 
-    private final Optional<ObservableCollection> observableCollection;
-    private final Optional<DataModelContext> dataModelContext;
-    private final Optional<EventSignal[]> eventSignals;
-    private final Optional<PropertySlot[]> propertySlots;
+	private final Optional<ObservableCollection> observableCollection;
+	private final Optional<DataModelContext>     dataModelContext;
+	private final Optional<EventSignal[]>        eventSignals;
+	private final Optional<PropertySlot[]>       propertySlots;
 
-    public static ViewBindingMeta create(final Object dataModel,
-                                         final Object viewModel) {
+	ViewBindingMeta(final Object viewModel,
+					final Optional<ObservableCollection> observableCollection,
+					final Optional<DataModelContext> dataModelContext,
+					final Optional<EventSignal[]> eventSignals,
+					final Optional<PropertySlot[]> propertySlots) {
 
-        final Class<?> subviewClass = viewModel.getClass();
+		this.viewModel = viewModel;
+		this.observableCollection = observableCollection;
+		this.dataModelContext = dataModelContext;
+		this.eventSignals = eventSignals;
+		this.propertySlots = propertySlots;
+	}
 
-        final Optional<ObservableCollection> observableCollection = scanClassObservableCollection(subviewClass);
-        final Optional<DataModelContext> dataModelContext = scanClassDataModelContext(subviewClass);
-        final Optional<EventSignal[]> eventSignals = scanClassEventSignals(subviewClass);
-        final Optional<PropertySlot[]> propertySlots = scanClassPropertySlots(subviewClass);
+	public static ViewBindingMeta create(final Object dataModel,
+										 final Object viewModel) {
 
-        return new ViewBindingMeta(viewModel,
-                                   dataModel,
-                                   observableCollection,
-                                   dataModelContext,
-                                   eventSignals,
-                                   propertySlots);
-    }
+		final Class<?> subviewClass = viewModel.getClass();
 
-    public static Optional<ViewBindingMeta> create(final ViewBindingMeta parentViewBindingMeta,
-                                                   final Field subviewField) throws IllegalAccessException {
+		final Optional<ObservableCollection> observableCollection = scanClassObservableCollection(subviewClass);
+		final Optional<DataModelContext> dataModelContext = scanClassDataModelContext(subviewClass);
+		final Optional<EventSignal[]> eventSignals = scanClassEventSignals(subviewClass);
+		final Optional<PropertySlot[]> propertySlots = scanClassPropertySlots(subviewClass);
 
-        if(subviewField.getAnnotation(SubView.class) == null) {
-            return Optional.absent();
-        }
+		return new RootViewBindingMeta(viewModel,
+									   dataModel,
+									   observableCollection,
+									   dataModelContext,
+									   eventSignals,
+									   propertySlots);
+	}
 
-        subviewField.setAccessible(true);
-        final Object viewModel = subviewField.get(parentViewBindingMeta.getViewModel());
-        if(viewModel == null){
-            return Optional.absent();
-        }
-        final Class<?> subviewClass = viewModel.getClass();
+	public static Optional<ViewBindingMeta> create(@Nonnull final ViewBindingMeta parentViewBindingMeta,
+												   @Nonnull final Field subviewField,
+												   @Nonnull final Object subviewValue) {
 
-        final Optional<ObservableCollection> observableCollection = scanFieldObservableCollection(subviewField).or(scanClassObservableCollection(subviewClass));
-        final Optional<DataModelContext> dataModelContext = scanFieldDataModelContext(subviewField).or(scanClassDataModelContext(subviewClass));
-        final Optional<EventSignal[]> eventSignals = scanFieldEventSignals(subviewField).or(scanClassEventSignals(subviewClass));
-        final Optional<PropertySlot[]> propertySlots = scanFieldPropertySlots(subviewField).or(scanClassPropertySlots(subviewClass));
+		if(subviewField.getAnnotation(SubView.class) == null) {
+			return Optional.absent();
+		}
 
-        return Optional.of(new ViewBindingMeta(viewModel,
-                                               parentViewBindingMeta,
-                                               observableCollection,
-                                               dataModelContext,
-                                               eventSignals,
-                                               propertySlots));
-    }
+		final Class<?> subviewClass = subviewValue.getClass();
 
-    private static Optional<PropertySlot[]> scanFieldPropertySlots(final Field subviewField) {
+		final Optional<ObservableCollection> observableCollection = scanFieldObservableCollection(subviewField).or(scanClassObservableCollection(subviewClass));
+		final Optional<DataModelContext> dataModelContext = scanFieldDataModelContext(subviewField).or(scanClassDataModelContext(subviewClass));
+		final Optional<EventSignal[]> eventSignals = scanFieldEventSignals(subviewField).or(scanClassEventSignals(subviewClass));
+		final Optional<PropertySlot[]> propertySlots = scanFieldPropertySlots(subviewField).or(scanClassPropertySlots(subviewClass));
 
-        final PropertySlots fieldLevelPropertySlots = subviewField.getAnnotation(PropertySlots.class);
-        final Optional<PropertySlot[]> fieldLevelOptionalPropertySlots;
-        if(fieldLevelPropertySlots == null) {
-            fieldLevelOptionalPropertySlots = Optional.absent();
-        } else {
-            fieldLevelOptionalPropertySlots = Optional.of(fieldLevelPropertySlots.value());
-        }
+		return Optional.<ViewBindingMeta>of(new SubViewBindingMeta(subviewValue,
+																   parentViewBindingMeta,
+																   subviewField,
+																   observableCollection,
+																   dataModelContext,
+																   eventSignals,
+																   propertySlots));
+	}
 
-        return fieldLevelOptionalPropertySlots;
-    }
+	private static Optional<PropertySlot[]> scanFieldPropertySlots(final Field subviewField) {
+
+		final PropertySlots fieldLevelPropertySlots = subviewField.getAnnotation(PropertySlots.class);
+		final Optional<PropertySlot[]> fieldLevelOptionalPropertySlots;
+		if(fieldLevelPropertySlots == null) {
+			fieldLevelOptionalPropertySlots = Optional.absent();
+		}
+		else {
+			fieldLevelOptionalPropertySlots = Optional.of(fieldLevelPropertySlots.value());
+		}
+
+		return fieldLevelOptionalPropertySlots;
+	}
 
     private static Optional<PropertySlot[]> scanClassPropertySlots(final Class<?> subviewClass) {
 
@@ -135,79 +147,26 @@ public class ViewBindingMeta {
         return Optional.fromNullable(subviewClass.getAnnotation(DataModelContext.class));
     }
 
-    private ViewBindingMeta(final Object viewModel,
-                            final ViewBindingMeta parentViewBindingMeta,
-                            final Optional<ObservableCollection> observableCollection,
-                            final Optional<DataModelContext> dataModelContext,
-                            final Optional<EventSignal[]> eventSignals,
-                            final Optional<PropertySlot[]> propertySlots) {
-        this.viewModel = viewModel;
-        this.observableCollection = observableCollection;
-        this.dataModelContext = dataModelContext;
-        this.eventSignals = eventSignals;
-        this.propertySlots = propertySlots;
 
-        final String dataContextPath = dataModelContext.isPresent() ? dataModelContext.get().value() : "";
+	public Optional<ObservableCollection> getObservableCollection() {
+		return this.observableCollection;
+	}
 
-        this.dataContextResolution = new Function<LinkedList<DataModelProperty>, Boolean>() {
-            @Nullable
-            @Override
-            public Boolean apply(@Nullable final LinkedList<DataModelProperty> input) {
-                final Boolean parentSuccess = parentViewBindingMeta.resolveDataModelChain(input);
-                Boolean success = Boolean.FALSE;
-                if(parentSuccess) {
-                    success = DataContextNavigator.appendDataModelPropertyChain(input,
-                                                                                dataContextPath);
-                }
-                return parentSuccess && success;
-            }
-        };
+	public Optional<EventSignal[]> getEventSignals() {
+		return this.eventSignals;
+	}
+
+	public Optional<PropertySlot[]> getPropertySlots() {
+		return this.propertySlots;
+	}
+
+	public Optional<DataModelContext> getDataModelContext() {
+		return this.dataModelContext;
+	}
+
+	public Object getViewModel() {
+		return this.viewModel;
     }
 
-    private ViewBindingMeta(final Object viewModel,
-                            final Object dataModel,
-                            final Optional<ObservableCollection> observableCollection,
-                            final Optional<DataModelContext> dataModelContext,
-                            final Optional<EventSignal[]> eventSignals,
-                            final Optional<PropertySlot[]> propertySlots) {
-        this.viewModel = viewModel;
-        this.observableCollection = observableCollection;
-        this.dataModelContext = dataModelContext;
-        this.eventSignals = eventSignals;
-        this.propertySlots = propertySlots;
-
-        final RootDataModelProperty rootDataModelProperty = new RootDataModelProperty(dataModel);
-        this.dataContextResolution = new Function<LinkedList<DataModelProperty>, Boolean>() {
-            @Nullable
-            @Override
-            public Boolean apply(@Nullable final LinkedList<DataModelProperty> input) {
-                input.add(rootDataModelProperty);
-                return Boolean.TRUE;
-            }
-        };
-    }
-
-    public Optional<ObservableCollection> getObservableCollection() {
-        return this.observableCollection;
-    }
-
-    public Optional<EventSignal[]> getEventSignals() {
-        return this.eventSignals;
-    }
-
-    public Optional<PropertySlot[]> getPropertySlots() {
-        return this.propertySlots;
-    }
-
-    public Optional<DataModelContext> getDataModelContext() {
-        return this.dataModelContext;
-    }
-
-    public Object getViewModel() {
-        return this.viewModel;
-    }
-
-    public boolean resolveDataModelChain(final LinkedList<DataModelProperty> dataModelChain) {
-        return this.dataContextResolution.apply(dataModelChain);
-    }
+	public abstract boolean resolveDataModelChain(final LinkedList<DataModelProperty> dataModelChain);
 }

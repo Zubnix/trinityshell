@@ -13,17 +13,22 @@ public class ViewBindingsTraverser extends TreeTraverser<ViewBindingMeta> {
     public Iterable<ViewBindingMeta> children(final ViewBindingMeta root) {
         final Object viewModel = root.getViewModel();
         final Class<?> viewModelClass = viewModel.getClass();
-        final Field[] declaredFields = viewModelClass.getDeclaredFields();
+		final Field[] declaredFields = ViewBindingsUtil.getFields(viewModelClass);
 
-        final List<ViewBindingMeta> viewBindingMetas = new LinkedList<>();
-        for(final Field declaredField : declaredFields) {
+		final List<ViewBindingMeta> viewBindingMetas = new LinkedList<>();
+		for(final Field declaredField : declaredFields) {
 
-            try {
-                final Optional<ViewBindingMeta> viewBindingMetaOptional = ViewBindingMeta.create(root,
-                                                                                                 declaredField);
-                if(viewBindingMetaOptional.isPresent()) {
-                    viewBindingMetas.add(viewBindingMetaOptional.get());
-                }
+			try {
+				final Object subViewValue = declaredField.get(viewModel);
+				if(subViewValue == null) {
+					continue;
+				}
+				final Optional<ViewBindingMeta> viewBindingMetaOptional = ViewBindingMeta.create(root,
+																								 declaredField,
+																								 subViewValue);
+				if(viewBindingMetaOptional.isPresent()) {
+					viewBindingMetas.add(viewBindingMetaOptional.get());
+				}
             } catch(IllegalAccessException e) {
                 e.printStackTrace();
             }

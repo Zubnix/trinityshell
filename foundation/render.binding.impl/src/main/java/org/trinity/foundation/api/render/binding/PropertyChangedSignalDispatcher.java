@@ -20,16 +20,15 @@
 
 package org.trinity.foundation.api.render.binding;
 
-import java.lang.annotation.Annotation;
-
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
-import org.trinity.foundation.api.render.binding.model.PropertyChanged;
-
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.trinity.foundation.api.render.binding.model.PropertyChanged;
+
+import java.lang.annotation.Annotation;
 
 // TODO documentation
 /***************************************
@@ -61,9 +60,9 @@ public class PropertyChangedSignalDispatcher implements MethodInterceptor {
 		final String[] changedPropertyNames = changedPropertySignal.value();
 
 		for (final String propertyName : changedPropertyNames) {
-			this.viewBinder.updateDataModelBinding(modelExecutorInstance,
-                                               changedModel,
-                                               propertyName);
+//			this.viewBinder.updateDataModelBinding(modelExecutorInstance,
+//                                               changedModel,
+//                                               propertyName);
 		}
 
 		return invocationResult;
