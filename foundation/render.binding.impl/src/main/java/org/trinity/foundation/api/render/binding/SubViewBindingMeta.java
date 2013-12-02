@@ -12,6 +12,8 @@ import java.util.LinkedList;
 
 public class SubViewBindingMeta extends ViewBindingMeta {
 
+
+
 	private final String          dataContextPath;
 	private final Object          viewModel;
 	private final ViewBindingMeta parentViewBindingMeta;

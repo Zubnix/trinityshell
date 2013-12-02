@@ -3,7 +3,6 @@ package org.trinity.foundation.api.render.binding;
 import com.google.common.base.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -108,9 +107,7 @@ public class RootViewBindingMetaTest {
 		assertEquals(this.dataModel,
 					 dataModelChain.getFirst().getPropertyValue().get());
 
-		final InOrder inOrder = inOrder(this.dataModel);
-		inOrder.verify(this.dataModel).getFoo();
-		inOrder.verify(this.dataModel).getBar();
+		verify(this.dataModel).getFoo();
 	}
 
 	@Test
@@ -118,7 +115,7 @@ public class RootViewBindingMetaTest {
 		//given
 		//a root view binding meta with relative unresolvable dataContext
 		final DataModelContext dataModelContextValue = mock(DataModelContext.class);
-		when(dataModelContextValue.value()).thenReturn("foo.bar.baz");
+		when(dataModelContextValue.value()).thenReturn("foo.bar.baz.qux");
 		when(this.dataModelContext.isPresent()).thenReturn(TRUE);
 		when(this.dataModelContext.get()).thenReturn(dataModelContextValue);
 
@@ -137,16 +134,15 @@ public class RootViewBindingMetaTest {
 		//then
 		//the path is not completely resolved
 		assertFalse(pathResolved);
-		assertEquals(3,
+		assertEquals(4,
 					 dataModelChain.size());
 		assertEquals(this.dataModel,
 					 dataModelChain.getFirst().getDataModel());
 		assertEquals(this.dataModel,
 					 dataModelChain.getFirst().getPropertyValue().get());
 
-		final InOrder inOrder = inOrder(this.dataModel);
-		inOrder.verify(this.dataModel).getFoo();
-		inOrder.verify(this.dataModel).getBar();
+		verify(this.dataModel).getFoo();
+		verify(this.dataModel).getBar();
 	}
 
 	@Test

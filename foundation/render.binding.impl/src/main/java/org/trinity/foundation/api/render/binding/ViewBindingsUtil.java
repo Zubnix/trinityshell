@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.Map;
@@ -44,36 +43,22 @@ public class ViewBindingsUtil {
 
 		boolean aborted = false;
 		DataModelProperty dataModelProperty = dataModelPropertyChain.getLast();
-		try {
 
-			for(final String propertyName : propertyNames) {
+		for(final String propertyName : propertyNames) {
 
-				final Object dataModel = dataModelProperty.getDataModel();
-				final Class<?> dataModelClass = dataModel.getClass();
-				final Optional<Method> dataModelGetter = getGetterMethod(dataModelClass,
-																		 propertyName);
+			final Optional<Object> propertyValue = dataModelProperty.getPropertyValue();
 
-				if(dataModelGetter.isPresent()) {
-					final Object nextDataModel = dataModelGetter.get().invoke(dataModel);
-					if(nextDataModel == null) {
-                        aborted = true;
-                        break;
-                    }
-
-                    dataModelProperty = new DataModelPropertyImpl(nextDataModel,
-                                                              propertyName);
-                    appendedDataModelChain.add(dataModelProperty);
-                } else {
-                    aborted = true;
-                    break;
-                }
-            }
-        } catch(final IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            LOG.error(String.format("Can not access getter on %s. Is it a no argument public method?",
-                                    dataModelProperty),
-                      e);
-            aborted = true;
-        }
+			if(propertyValue.isPresent()) {
+				final Object nextDataModel = propertyValue.get();
+				dataModelProperty = new DataModelPropertyImpl(nextDataModel,
+															  propertyName);
+				appendedDataModelChain.add(dataModelProperty);
+			}
+			else {
+				aborted = true;
+				break;
+			}
+		}
 
         dataModelPropertyChain.addAll(appendedDataModelChain);
         return !aborted;
