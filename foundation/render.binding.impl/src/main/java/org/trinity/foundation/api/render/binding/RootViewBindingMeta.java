@@ -36,7 +36,7 @@ public class RootViewBindingMeta extends ViewBindingMeta {
 	@Override
 	public boolean resolveDataModelChain(final LinkedList<DataModelProperty> dataModelChain) {
 		dataModelChain.add(this.rootDataModelProperty);
-		return ViewBindingsUtil.appendDataModelPropertyChain(dataModelChain,
+		return appendDataModelPropertyChain(dataModelChain,
 															 this.dataContextPath);
 	}
 

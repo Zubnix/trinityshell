@@ -72,7 +72,7 @@ public @interface PropertySlot {
 	 * @return the argument types, in order.
 	 ***************************************
 	 */
-	Class<?>[] argumentTypes();
+	Class<?>[] argumentTypes() default {};
 
 	/***************************************
 	 * An optional {@link PropertyAdapter} that will be used to transform the

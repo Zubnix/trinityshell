@@ -70,8 +70,6 @@ public class RootViewBindingMetaTest {
 		assertEquals(1,
 					 dataModelChain.size());
 		assertEquals(this.dataModel,
-					 dataModelChain.getFirst().getDataModel());
-		assertEquals(this.dataModel,
 					 dataModelChain.getFirst().getPropertyValue().get());
 	}
 
@@ -102,8 +100,6 @@ public class RootViewBindingMetaTest {
 		assertTrue(pathResolved);
 		assertEquals(3,
 					 dataModelChain.size());
-		assertEquals(this.dataModel,
-					 dataModelChain.getFirst().getDataModel());
 		assertEquals(this.dataModel,
 					 dataModelChain.getFirst().getPropertyValue().get());
 
@@ -136,8 +132,6 @@ public class RootViewBindingMetaTest {
 		assertFalse(pathResolved);
 		assertEquals(4,
 					 dataModelChain.size());
-		assertEquals(this.dataModel,
-					 dataModelChain.getFirst().getDataModel());
 		assertEquals(this.dataModel,
 					 dataModelChain.getFirst().getPropertyValue().get());
 

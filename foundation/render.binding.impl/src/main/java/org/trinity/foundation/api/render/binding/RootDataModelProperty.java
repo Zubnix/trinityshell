@@ -6,24 +6,10 @@ import javax.annotation.Nonnull;
 
 public class RootDataModelProperty implements DataModelProperty {
 
-    @Nonnull
-    private final Object dataModel;
     private final Optional<Object> dataModelObjectOptional;
-    private final String propertyName = "";
 
-    public RootDataModelProperty(@Nonnull final Object dataModel) {
-        this.dataModel = dataModel;
-        this.dataModelObjectOptional = Optional.of(this.dataModel);
-    }
-
-    @Override
-    public Object getDataModel() {
-        return this.dataModel;
-    }
-
-    @Override
-    public String getPropertyName() {
-        return this.propertyName;
+    public RootDataModelProperty(@Nonnull final Object rootDataModel) {
+        this.dataModelObjectOptional = Optional.of(rootDataModel);
     }
 
     @Override
@@ -39,17 +25,14 @@ public class RootDataModelProperty implements DataModelProperty {
         if(getClass() != obj.getClass()) {
             return false;
         }
-        final DataModelProperty other = (DataModelProperty) obj;
+        final RootDataModelProperty other = (RootDataModelProperty) obj;
 
-        return com.google.common.base.Objects.equal(getDataModel(),
-                                                    other.getDataModel())
-                && com.google.common.base.Objects.equal(getPropertyName(),
-                                                        other.getPropertyName());
+        return com.google.common.base.Objects.equal(this.dataModelObjectOptional,
+                                                    other.dataModelObjectOptional);
     }
 
     @Override
     public int hashCode() {
-        return com.google.common.base.Objects.hashCode(getDataModel(),
-                                                       getPropertyName());
+        return com.google.common.base.Objects.hashCode(this.dataModelObjectOptional);
     }
 }

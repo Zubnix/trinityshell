@@ -42,7 +42,7 @@ public class SubViewBindingMeta extends ViewBindingMeta {
 		final Boolean parentSuccess = this.parentViewBindingMeta.resolveDataModelChain(dataModelChain);
 		Boolean success = Boolean.FALSE;
 		if(parentSuccess) {
-			success = ViewBindingsUtil.appendDataModelPropertyChain(dataModelChain,
+			success = appendDataModelPropertyChain(dataModelChain,
 																	this.dataContextPath);
 		}
 		return parentSuccess && success;
