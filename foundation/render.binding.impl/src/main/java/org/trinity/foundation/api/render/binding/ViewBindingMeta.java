@@ -5,10 +5,8 @@ import com.google.common.base.Splitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.DataModelContext;
-import org.trinity.foundation.api.render.binding.view.EventSignal;
 import org.trinity.foundation.api.render.binding.view.EventSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
-import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 import org.trinity.foundation.api.render.binding.view.SubView;
 
@@ -27,14 +25,14 @@ public abstract class ViewBindingMeta {
 
 	private final Optional<ObservableCollection> observableCollection;
 	private final Optional<DataModelContext>     dataModelContext;
-	private final Optional<EventSignal[]>        eventSignals;
-	private final Optional<PropertySlot[]>       propertySlots;
+	private final Optional<EventSignals>        eventSignals;
+	private final Optional<PropertySlots>       propertySlots;
 
 	ViewBindingMeta(final Object viewModel,
 					final Optional<ObservableCollection> observableCollection,
 					final Optional<DataModelContext> dataModelContext,
-					final Optional<EventSignal[]> eventSignals,
-					final Optional<PropertySlot[]> propertySlots) {
+					final Optional<EventSignals> eventSignals,
+					final Optional<PropertySlots> propertySlots) {
 
 		this.viewModel = viewModel;
 		this.observableCollection = observableCollection;
@@ -50,8 +48,8 @@ public abstract class ViewBindingMeta {
 
 		final Optional<ObservableCollection> observableCollection = scanClassObservableCollection(subviewClass);
 		final Optional<DataModelContext> dataModelContext = scanClassDataModelContext(subviewClass);
-		final Optional<EventSignal[]> eventSignals = scanClassEventSignals(subviewClass);
-		final Optional<PropertySlot[]> propertySlots = scanClassPropertySlots(subviewClass);
+		final Optional<EventSignals> eventSignals = scanClassEventSignals(subviewClass);
+		final Optional<PropertySlots> propertySlots = scanClassPropertySlots(subviewClass);
 
 		return new RootViewBindingMeta(viewModel,
 									   dataModel,
@@ -73,8 +71,8 @@ public abstract class ViewBindingMeta {
 
 		final Optional<ObservableCollection> observableCollection = scanFieldObservableCollection(subviewField).or(scanClassObservableCollection(subviewClass));
 		final Optional<DataModelContext> dataModelContext = scanFieldDataModelContext(subviewField).or(scanClassDataModelContext(subviewClass));
-		final Optional<EventSignal[]> eventSignals = scanFieldEventSignals(subviewField).or(scanClassEventSignals(subviewClass));
-		final Optional<PropertySlot[]> propertySlots = scanFieldPropertySlots(subviewField).or(scanClassPropertySlots(subviewClass));
+		final Optional<EventSignals> eventSignals = scanFieldEventSignals(subviewField).or(scanClassEventSignals(subviewClass));
+		final Optional<PropertySlots> propertySlots = scanFieldPropertySlots(subviewField).or(scanClassPropertySlots(subviewClass));
 
 		return Optional.<ViewBindingMeta>of(new SubViewBindingMeta(subviewValue,
 																   parentViewBindingMeta,
@@ -85,52 +83,52 @@ public abstract class ViewBindingMeta {
 																   propertySlots));
 	}
 
-	private static Optional<PropertySlot[]> scanFieldPropertySlots(final Field subviewField) {
+	private static Optional<PropertySlots> scanFieldPropertySlots(final Field subviewField) {
 
 		final PropertySlots fieldLevelPropertySlots = subviewField.getAnnotation(PropertySlots.class);
-		final Optional<PropertySlot[]> fieldLevelOptionalPropertySlots;
+		final Optional<PropertySlots> fieldLevelOptionalPropertySlots;
 		if(fieldLevelPropertySlots == null) {
 			fieldLevelOptionalPropertySlots = Optional.absent();
 		}
 		else {
-			fieldLevelOptionalPropertySlots = Optional.of(fieldLevelPropertySlots.value());
+			fieldLevelOptionalPropertySlots = Optional.of(fieldLevelPropertySlots);
 		}
 
 		return fieldLevelOptionalPropertySlots;
 	}
 
-    private static Optional<PropertySlot[]> scanClassPropertySlots(final Class<?> subviewClass) {
+    private static Optional<PropertySlots> scanClassPropertySlots(final Class<?> subviewClass) {
 
         final PropertySlots classLevelPropertySlots = subviewClass.getAnnotation(PropertySlots.class);
-        final Optional<PropertySlot[]> classLevelOptionalPropertySlots;
+        final Optional<PropertySlots> classLevelOptionalPropertySlots;
         if(classLevelPropertySlots == null) {
             classLevelOptionalPropertySlots = Optional.absent();
         } else {
-            classLevelOptionalPropertySlots = Optional.of(classLevelPropertySlots.value());
+            classLevelOptionalPropertySlots = Optional.of(classLevelPropertySlots);
         }
 
         return classLevelOptionalPropertySlots;
     }
 
-    private static Optional<EventSignal[]> scanClassEventSignals(final Class<?> subviewClass) {
+    private static Optional<EventSignals> scanClassEventSignals(final Class<?> subviewClass) {
         final EventSignals classLevelEventSignals = subviewClass.getAnnotation(EventSignals.class);
-        final Optional<EventSignal[]> classLevelOptionalEventSignals;
+        final Optional<EventSignals> classLevelOptionalEventSignals;
         if(classLevelEventSignals == null) {
             classLevelOptionalEventSignals = Optional.absent();
         } else {
-            classLevelOptionalEventSignals = Optional.of(classLevelEventSignals.value());
+            classLevelOptionalEventSignals = Optional.of(classLevelEventSignals);
         }
 
         return classLevelOptionalEventSignals;
     }
 
-    private static Optional<EventSignal[]> scanFieldEventSignals(final Field subviewField) {
+    private static Optional<EventSignals> scanFieldEventSignals(final Field subviewField) {
         final EventSignals fieldLevelEventSignals = subviewField.getAnnotation(EventSignals.class);
-        final Optional<EventSignal[]> fieldLevelOptionalEventSignals;
+        final Optional<EventSignals> fieldLevelOptionalEventSignals;
         if(fieldLevelEventSignals == null) {
             fieldLevelOptionalEventSignals = Optional.absent();
         } else {
-            fieldLevelOptionalEventSignals = Optional.of(fieldLevelEventSignals.value());
+            fieldLevelOptionalEventSignals = Optional.of(fieldLevelEventSignals);
         }
         return fieldLevelOptionalEventSignals;
     }
@@ -156,11 +154,11 @@ public abstract class ViewBindingMeta {
 		return this.observableCollection;
 	}
 
-	public Optional<EventSignal[]> getEventSignals() {
+	public Optional<EventSignals> getEventSignals() {
 		return this.eventSignals;
 	}
 
-	public Optional<PropertySlot[]> getPropertySlots() {
+	public Optional<PropertySlots> getPropertySlots() {
 		return this.propertySlots;
 	}
 

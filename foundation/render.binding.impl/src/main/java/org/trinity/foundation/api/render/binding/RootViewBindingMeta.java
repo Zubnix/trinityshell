@@ -3,9 +3,9 @@ package org.trinity.foundation.api.render.binding;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import org.trinity.foundation.api.render.binding.view.DataModelContext;
-import org.trinity.foundation.api.render.binding.view.EventSignal;
+import org.trinity.foundation.api.render.binding.view.EventSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
-import org.trinity.foundation.api.render.binding.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.view.PropertySlots;
 
 import java.util.LinkedList;
 
@@ -20,8 +20,8 @@ public class RootViewBindingMeta extends ViewBindingMeta {
 						final Object dataModel,
 						final Optional<ObservableCollection> observableCollection,
 						final Optional<DataModelContext> dataModelContext,
-						final Optional<EventSignal[]> eventSignals,
-						final Optional<PropertySlot[]> propertySlots) {
+						final Optional<EventSignals> eventSignals,
+						final Optional<PropertySlots> propertySlots) {
 		super(viewModel,
 			  observableCollection,
 			  dataModelContext,

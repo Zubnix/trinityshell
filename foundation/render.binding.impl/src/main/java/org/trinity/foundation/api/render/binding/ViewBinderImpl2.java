@@ -53,7 +53,7 @@ public class ViewBinderImpl2 implements ViewBinder {
         });
     }
 
-    public void updateDataModelBinding(@Nonnull final Object dataModel,
+    private void updateDataModelBinding(@Nonnull final Object dataModel,
                                        @Nonnull final String propertyName,
                                        @Nonnull final Optional<Object> oldPropertyValue,
                                        @Nonnull final Optional<Object> newPropertyValue) {
@@ -240,7 +240,7 @@ public class ViewBinderImpl2 implements ViewBinder {
             try {
                 foundField = viewModelClass.getDeclaredField(subViewFieldName);
                 foundField.setAccessible(true);
-            } catch (NoSuchFieldException e) {
+            } catch (final NoSuchFieldException e) {
                 // TODO explanation
                 LOG.error("",
                         e);

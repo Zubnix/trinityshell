@@ -7,16 +7,20 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.trinity.foundation.api.render.binding.view.DataModelContext;
-import org.trinity.foundation.api.render.binding.view.EventSignal;
+import org.trinity.foundation.api.render.binding.view.EventSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
-import org.trinity.foundation.api.render.binding.view.PropertySlot;
+import org.trinity.foundation.api.render.binding.view.PropertySlots;
 
 import java.util.LinkedList;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RootViewBindingMetaTest {
@@ -40,9 +44,9 @@ public class RootViewBindingMetaTest {
 	@Mock
 	private Optional<DataModelContext>     dataModelContext;
 	@Mock
-	private Optional<EventSignal[]>        eventSignals;
+	private Optional<EventSignals>        eventSignals;
 	@Mock
-	private Optional<PropertySlot[]>       propertySlots;
+	private Optional<PropertySlots>       propertySlots;
 	//@InjectMocks for some reason mockito is totally confused as what to inject so we create the object manually
 	private RootViewBindingMeta            rootViewBindingMeta;
 
