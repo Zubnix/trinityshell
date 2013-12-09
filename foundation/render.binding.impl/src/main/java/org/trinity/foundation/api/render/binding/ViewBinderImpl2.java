@@ -25,14 +25,23 @@ public class ViewBinderImpl2 implements ViewBinder {
     private static final Table<Class<?>, String, Optional<Field>> FIELD_CACHE = HashBasedTable.create();
 
     private final ViewBindingsTraverser viewBindingsTraverser;
+    private final CollectionBindingFactory collectionBindingFactory;
+    private final EventBindingFactory eventBindingFactory;
+    private final PropertyBindingFactory propertyBindingFactory;
 
     private final Multimap<DataModelProperty, AbstractViewBinding> dataModelPopertyToViewBindings = HashMultimap.create();
     private final Multimap<Object, ViewBindingMeta> viewModelToViewBindingMetas = HashMultimap.create();
     private final Multimap<ViewBindingMeta, AbstractViewBinding> viewBindingMetaToAbstractViewBindings = HashMultimap.create();
 
     @Inject
-    ViewBinderImpl2(final ViewBindingsTraverser viewBindingsTraverser) {
+    ViewBinderImpl2(final ViewBindingsTraverser viewBindingsTraverser,
+                    final CollectionBindingFactory collectionBindingFactory,
+                    final EventBindingFactory eventBindingFactory,
+                    final PropertyBindingFactory propertyBindingFactory) {
         this.viewBindingsTraverser = viewBindingsTraverser;
+        this.collectionBindingFactory = collectionBindingFactory;
+        this.eventBindingFactory = eventBindingFactory;
+        this.propertyBindingFactory = propertyBindingFactory;
     }
 
     @Override
@@ -61,7 +70,7 @@ public class ViewBinderImpl2 implements ViewBinder {
             return;
         }
 
-        final DataModelProperty dataModelProperty = new DataModelPropertyImpl(dataModel,
+        final DataModelProperty dataModelProperty = new RelativeDataModelProperty(dataModel,
                 propertyName);
 
         //find all impacted view bindings
@@ -134,21 +143,21 @@ public class ViewBinderImpl2 implements ViewBinder {
     private void createBindings(final ViewBindingMeta bindingMeta) {
         //if there are property slots
         if (bindingMeta.getPropertySlots().isPresent()) {
-            final PropertyBinding propertyBinding = new PropertyBinding(bindingMeta);
+            final PropertyBinding propertyBinding = this.propertyBindingFactory.createPropertyBinding(bindingMeta);
             //create property binding
             bindViewBinding(propertyBinding);
         }
 
         //if there is an observable collection
         if (bindingMeta.getObservableCollection().isPresent()) {
-            final CollectionBinding collectionBinding = new CollectionBinding(bindingMeta);
+            final CollectionBinding collectionBinding = this.collectionBindingFactory.createCollectionBinding(bindingMeta);
             //bind collection binding
             bindViewBinding(collectionBinding);
         }
 
         //if this view emits events
         if (bindingMeta.getEventSignals().isPresent()) {
-            final EventBinding eventBinding = new EventBinding(bindingMeta);
+            final EventBinding eventBinding = this.eventBindingFactory.createEventBinding(bindingMeta);
             //bind view event
             bindViewBinding(eventBinding);
         }

@@ -2,8 +2,6 @@ package org.trinity.foundation.api.render.binding;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.DataModelContext;
 import org.trinity.foundation.api.render.binding.view.EventSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
@@ -18,8 +16,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class ViewBindingMeta {
-
-	private static final Logger LOG = LoggerFactory.getLogger(ViewBindingMeta.class);
 
 	private final Object viewModel;
 
@@ -188,7 +184,7 @@ public abstract class ViewBindingMeta {
 
             if(propertyValue.isPresent()) {
                 final Object nextDataModel = propertyValue.get();
-                dataModelProperty = new DataModelPropertyImpl(nextDataModel,
+                dataModelProperty = new RelativeDataModelProperty(nextDataModel,
                         propertyName);
                 appendedDataModelChain.add(dataModelProperty);
             }

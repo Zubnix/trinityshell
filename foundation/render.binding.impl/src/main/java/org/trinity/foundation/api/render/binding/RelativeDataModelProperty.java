@@ -15,9 +15,9 @@ import java.text.MessageFormat;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
-public class DataModelPropertyImpl implements DataModelProperty {
+public class RelativeDataModelProperty implements DataModelProperty {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataModelPropertyImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RelativeDataModelProperty.class);
 
     private static final Table<Class<?>, String, Optional<Method>> GETTER_CACHE = HashBasedTable.create();
     private static final String GET_BOOLEAN_PREFIX = "is";
@@ -26,8 +26,8 @@ public class DataModelPropertyImpl implements DataModelProperty {
     private final Object dataModel;
     private final String propertyName;
 
-    public DataModelPropertyImpl(final Object dataModel,
-                                 final String propertyName) {
+    public RelativeDataModelProperty(final Object dataModel,
+                                     final String propertyName) {
         this.dataModel = dataModel;
         this.propertyName = propertyName;
     }
@@ -60,7 +60,7 @@ public class DataModelPropertyImpl implements DataModelProperty {
         if(getClass() != obj.getClass()) {
             return false;
         }
-        final DataModelPropertyImpl other = (DataModelPropertyImpl) obj;
+        final RelativeDataModelProperty other = (RelativeDataModelProperty) obj;
 
 		return Objects.equal(this.dataModel,
 							 other.dataModel)

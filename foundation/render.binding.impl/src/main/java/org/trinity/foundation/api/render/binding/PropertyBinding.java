@@ -1,9 +1,14 @@
 package org.trinity.foundation.api.render.binding;
 
+import com.google.inject.assistedinject.Assisted;
+
+import javax.inject.Inject;
 import java.util.Collection;
 
 public class PropertyBinding extends AbstractViewBinding{
-    public PropertyBinding(final ViewBindingMeta viewBindingMeta) {
+
+    @Inject
+    PropertyBinding(@Assisted final ViewBindingMeta viewBindingMeta) {
         super(viewBindingMeta);
     }
 
