@@ -35,7 +35,7 @@ public interface ViewBinder {
 	/***************************************
      * Update the bound views so they reflect the state of the changed data model.
      * @param dataModelExecutor     The executor that operates on the data model.
-     * @param changedDataModel      The data model who's property changed.
+     * @param dataModel      The data model who's property changed.
      * @param oldPropertyValue      The old value of the property.
      * @param newPropertyValue      The new value of the property.
      * @return A future indicating when the operation is done.
@@ -62,11 +62,15 @@ public interface ViewBinder {
                                 @Nonnull Object dataModel,
                                 @Nonnull Object viewModel);
 
-    /**
-     * Update a bound view so that the changed sub view is reflected.
-     *
-     * @param dataModelExecutor The executor that operates on the data model.
-     * @param changedViewModel  The view model who's sub view changed.
+	ListenableFuture<Void> unbind(@Nonnull ListeningExecutorService dataModelExecutor,
+								  @Nonnull Object dataModel,
+								  @Nonnull Object viewModel);
+
+	/**
+	 * Update a bound view so that the changed sub view is reflected.
+	 *
+	 * @param dataModelExecutor The executor that operates on the data model.
+	 * @param parentViewModel  The view model who's sub view changed.
      * @param oldSubView        The field value of the old sub view.
      * @param newSubView        The field value of the new sub view.
      * @return  future indicating when the operation is done.
