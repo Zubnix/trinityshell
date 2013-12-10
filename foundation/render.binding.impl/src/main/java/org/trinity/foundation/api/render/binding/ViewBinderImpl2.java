@@ -21,18 +21,18 @@ import java.util.concurrent.Callable;
 
 public class ViewBinderImpl2 implements ViewBinder {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ViewBinderImpl2.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ViewBinderImpl2.class);
 
-	private static final Table<Class<?>, String, Optional<Field>> FIELD_CACHE = HashBasedTable.create();
+    private static final Table<Class<?>, String, Optional<Field>> FIELD_CACHE = HashBasedTable.create();
 
-	private final ViewBindingsTraverser viewBindingsTraverser;
-	private final CollectionBindingFactory collectionBindingFactory;
+    private final ViewBindingsTraverser viewBindingsTraverser;
+    private final CollectionBindingFactory collectionBindingFactory;
     private final EventBindingFactory eventBindingFactory;
     private final PropertyBindingFactory propertyBindingFactory;
 
-	private final Multimap<DataModelProperty, ViewBinding> dataModelPopertyToViewBindings = HashMultimap.create();
-	private final Multimap<Object, ViewBindingMeta>        viewModelToViewBindingMetas    = HashMultimap.create();
-	private final Multimap<ViewBindingMeta, ViewBinding>   viewBindingMetaToViewBindings  = HashMultimap.create();
+    private final Multimap<DataModelProperty, ViewBinding> dataModelPopertyToViewBindings = HashMultimap.create();
+    private final Multimap<Object, ViewBindingMeta> viewModelToViewBindingMetas = HashMultimap.create();
+    private final Multimap<ViewBindingMeta, ViewBinding> viewBindingMetaToViewBindings = HashMultimap.create();
 
     @Inject
     ViewBinderImpl2(final ViewBindingsTraverser viewBindingsTraverser,
@@ -45,198 +45,207 @@ public class ViewBinderImpl2 implements ViewBinder {
         this.propertyBindingFactory = propertyBindingFactory;
     }
 
-	@Override
-	public ListenableFuture<Void> updateDataModelBinding(@Nonnull final ListeningExecutorService dataModelExecutor,
-														 @Nonnull final Object dataModel,
-														 @Nonnull final String propertyName,
-														 @Nonnull final Optional<Object> oldPropertyValue,
-														 @Nonnull final Optional<Object> newPropertyValue) {
-		return dataModelExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				updateDataModelBinding(dataModel,
-									   propertyName,
-									   oldPropertyValue,
-									   newPropertyValue);
-				return null;
-			}
-		});
-	}
-
-	private void updateDataModelBinding(@Nonnull final Object dataModel,
-										@Nonnull final String propertyName,
-										@Nonnull final Optional<Object> oldPropertyValue,
-										@Nonnull final Optional<Object> newPropertyValue) {
-		if(oldPropertyValue.equals(newPropertyValue)) {
-			return;
-		}
-
-		final DataModelProperty dataModelProperty = new DataModelPropertyImpl(dataModel,
-																			  propertyName);
-
-		//find all impacted view bindings
-		final Collection<ViewBinding> viewBindings = this.dataModelPopertyToViewBindings
-				.removeAll(dataModelProperty);
-
-		//find all data model properties that point to the impacted view binding
-		final Multimap<ViewBinding, DataModelProperty> viewBindingToDataModelProperties = HashMultimap.create();
-		Multimaps.invertFrom(this.dataModelPopertyToViewBindings,
-							 viewBindingToDataModelProperties);
-
-		//for each view binding that was impacted by the changed data model property.
-		for(final ViewBinding viewBinding : viewBindings) {
-
-			//unbind the view binding
-			viewBinding.unbind();
-
-			//remove all remaining data model properties that were pointing to the view binding
-			final Collection<DataModelProperty> dataModelProperties = viewBindingToDataModelProperties.get(viewBinding);
-			for(final DataModelProperty oldModelProperty : dataModelProperties) {
-				this.dataModelPopertyToViewBindings.remove(oldModelProperty,
-														   viewBinding);
-			}
-
-			//rebind the view & update the data model properties that point to this view model
-			bindViewBinding(viewBinding);
-		}
-	}
-
-	private void bindViewBinding(final ViewBinding viewBinding) {
-
-		//bind the view binding
-		final Collection<DataModelProperty> newDataModelProperties = viewBinding.bind();
-
-		//link these new data model properties to this view binding
-		for(final DataModelProperty newDataModelProperty : newDataModelProperties) {
-			this.dataModelPopertyToViewBindings.put(newDataModelProperty,
-													viewBinding);
-		}
-
-		//link the binding description to the created binding
-		this.viewBindingMetaToViewBindings.put(viewBinding.getViewBindingMeta(),
-											   viewBinding);
-	}
-
-	@Override
-	public ListenableFuture<Void> bind(@Nonnull final ListeningExecutorService dataModelExecutor,
-									   @Nonnull final Object dataModel,
-									   @Nonnull final Object viewModel) {
-		return dataModelExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				bind(dataModel,
-					 viewModel);
-				return null;
-			}
-		});
-	}
-
-	@Override
-	public ListenableFuture<Void> unbind(@Nonnull final ListeningExecutorService dataModelExecutor,
-										 @Nonnull final Object dataModel,
-										 @Nonnull final Object viewModel) {
-		return dataModelExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				unbind(dataModel,
-					   viewModel);
-				return null;
-			}
-		});
-	}
-
-	private void unbind(@Nonnull final Object dataModel,
-						@Nonnull final Object viewModel) {
-		final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create(dataModel,
-																	   viewModel);
-		removeAllBindings(viewBindingMeta);
-	}
-
-	private void removeAllBindings(final ViewBindingMeta rootBindingMeta) {
-		final FluentIterable<ViewBindingMeta> viewBindingMetas = this.viewBindingsTraverser.postOrderTraversal(rootBindingMeta);
-
-		for(final ViewBindingMeta viewBindingMeta : viewBindingMetas) {
-			removeBindings(viewBindingMeta);
-		}
-	}
-
-	private void removeBindings(final ViewBindingMeta viewBindingMeta) {
-
-		final Collection<ViewBinding> viewBindings = this.viewBindingMetaToViewBindings.removeAll(viewBindingMeta);
-		for(final ViewBinding viewBinding : viewBindings) {
-			viewBinding.unbind();
-		}
-
-		this.viewModelToViewBindingMetas.remove(viewBindingMeta.getViewModel(),
-												viewBindingMeta);
-	}
-
-
-	private void bind(@Nonnull final Object dataModel,
-					  @Nonnull final Object viewModel) {
-		final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create(dataModel,
-																	   viewModel);
-		createAllBindings(viewBindingMeta);
-	}
-
-	private void createAllBindings(final ViewBindingMeta rootViewBindingMeta) {
-		final FluentIterable<ViewBindingMeta> viewBindingMetas = this.viewBindingsTraverser.preOrderTraversal(rootViewBindingMeta);
-
-		for(final ViewBindingMeta viewBindingMeta : viewBindingMetas) {
-			createBindings(viewBindingMeta);
-		}
-	}
-
-	private void createBindings(final ViewBindingMeta bindingMeta) {
-
-		//if there are property slots
-		if(bindingMeta.getPropertySlots().isPresent()) {
-			for(final PropertySlot propertySlot : bindingMeta.getPropertySlots().get().value()) {
-				//final PropertyBinding propertyBinding; = new PropertyBinding(bindingMeta);
-				//create property binding
-				//bindViewBinding(propertyBinding);
-			}
-		}
-
-		//if there is an observable collection
-		if(bindingMeta.getObservableCollection().isPresent()) {
-			final CollectionBinding collectionBinding = new CollectionBinding(bindingMeta);
-
-			//bind collection binding
-			bindViewBinding(collectionBinding);
-		}
-
-		//if this view emits events
-		if(bindingMeta.getEventSignals().isPresent()) {
-			final EventBinding eventBinding = new EventBinding(bindingMeta);
-
-			//bind view event
-			bindViewBinding(eventBinding);
-		}
-	}
-
-	@Override
-	public ListenableFuture<Void> updateViewModelBinding(@Nonnull final ListeningExecutorService dataModelExecutor,
-														 @Nonnull final Object parentViewModel,
-														 @Nonnull final String fieldName,
-														 @Nonnull final Optional<Object> oldSubView,
-														 @Nonnull final Optional<Object> newSubView) {
-		return dataModelExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-                updateViewModelBinding(parentViewModel,
-                        fieldName,
-                        oldSubView,
-                        newSubView);
+    @Override
+    public ListenableFuture<Void> updateDataModelBinding(@Nonnull final ListeningExecutorService dataModelExecutor,
+                                                         @Nonnull final Object dataModel,
+                                                         @Nonnull final String propertyName,
+                                                         @Nonnull final Optional<Object> oldPropertyValue,
+                                                         @Nonnull final Optional<Object> newPropertyValue) {
+        return dataModelExecutor.submit(new Callable<Void>() {
+            @Override
+            public Void call() {
+                updateDataModelBinding(dataModel,
+                        propertyName,
+                        oldPropertyValue,
+                        newPropertyValue);
                 return null;
             }
         });
     }
 
-    private void updateViewModelBinding(@Nonnull final Object parentViewModel,
-                                        @Nonnull final String subViewFieldName,
-                                        @Nonnull final Optional<Object> oldSubView,
-                                        @Nonnull final Optional<Object> newSubView) {
+    private void updateDataModelBinding(@Nonnull final Object dataModel,
+                                        @Nonnull final String propertyName,
+                                        @Nonnull final Optional<Object> oldPropertyValue,
+                                        @Nonnull final Optional<Object> newPropertyValue) {
+        if (oldPropertyValue.equals(newPropertyValue)) {
+            return;
+        }
+
+        final DataModelProperty dataModelProperty = new RelativeDataModelProperty(dataModel,
+                propertyName);
+
+        //find all impacted view bindings
+        final Collection<ViewBinding> viewBindings = this.dataModelPopertyToViewBindings
+                .removeAll(dataModelProperty);
+
+        //find all data model properties that point to the impacted view binding
+        final Multimap<ViewBinding, DataModelProperty> viewBindingToDataModelProperties = HashMultimap.create();
+        Multimaps.invertFrom(this.dataModelPopertyToViewBindings,
+                viewBindingToDataModelProperties);
+
+        //for each view binding that was impacted by the changed data model property.
+        for (final ViewBinding viewBinding : viewBindings) {
+
+            //unbind the view binding
+            viewBinding.unbind();
+
+            //remove all remaining data model properties that were pointing to the view binding
+            final Collection<DataModelProperty> dataModelProperties = viewBindingToDataModelProperties.get(viewBinding);
+            for (final DataModelProperty oldModelProperty : dataModelProperties) {
+                this.dataModelPopertyToViewBindings.remove(oldModelProperty,
+                        viewBinding);
+            }
+
+            //rebind the view & update the data model properties that point to this view model
+            bindViewBinding(viewBinding);
+        }
+    }
+
+    private void bindViewBinding(final ViewBinding viewBinding) {
+
+        //bind the view binding
+        final Collection<DataModelProperty> newDataModelProperties = viewBinding.bind();
+
+        //link these new data model properties to this view binding
+        for (final DataModelProperty newDataModelProperty : newDataModelProperties) {
+            this.dataModelPopertyToViewBindings.put(newDataModelProperty,
+                    viewBinding);
+        }
+
+        //link the binding description to the created binding
+        this.viewBindingMetaToViewBindings.put(viewBinding.getViewBindingMeta(),
+                viewBinding);
+    }
+
+    @Override
+    public ListenableFuture<Void> bind(@Nonnull final ListeningExecutorService dataModelExecutor,
+                                       @Nonnull final Object dataModel,
+                                       @Nonnull final Object viewModel) {
+        return dataModelExecutor.submit(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                bindViewModelToDataModel(   dataModelExecutor,
+                                            dataModel,
+                                            viewModel);
+                return null;
+            }
+        });
+    }
+
+    @Override
+    public ListenableFuture<Void> unbind(@Nonnull final ListeningExecutorService dataModelExecutor,
+                                         @Nonnull final Object dataModel,
+                                         @Nonnull final Object viewModel) {
+        return dataModelExecutor.submit(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                unbind(dataModel,
+                        viewModel);
+                return null;
+            }
+        });
+    }
+
+    private void unbind(@Nonnull final Object dataModel,
+                        @Nonnull final Object viewModel) {
+        final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create(dataModel,
+                viewModel);
+        removeAllBindings(viewBindingMeta);
+    }
+
+    private void removeAllBindings(final ViewBindingMeta rootBindingMeta) {
+        final FluentIterable<ViewBindingMeta> viewBindingMetas = this.viewBindingsTraverser.postOrderTraversal(rootBindingMeta);
+
+        for (final ViewBindingMeta viewBindingMeta : viewBindingMetas) {
+            removeBindings(viewBindingMeta);
+        }
+    }
+
+    private void removeBindings(final ViewBindingMeta viewBindingMeta) {
+
+        final Collection<ViewBinding> viewBindings = this.viewBindingMetaToViewBindings.removeAll(viewBindingMeta);
+        for (final ViewBinding viewBinding : viewBindings) {
+            viewBinding.unbind();
+        }
+
+        this.viewModelToViewBindingMetas.remove(viewBindingMeta.getViewModel(),
+                viewBindingMeta);
+    }
+
+
+    private void bindViewModelToDataModel(  @Nonnull final ListeningExecutorService dataModelExecutor,
+                                            @Nonnull final Object dataModel,
+                                            @Nonnull final Object viewModel) {
+        final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create(dataModel,
+                viewModel);
+        createAllBindings(  dataModelExecutor,
+                            viewBindingMeta);
+    }
+
+    private void createAllBindings(final ListeningExecutorService dataModelExecutor,
+                                   final ViewBindingMeta rootViewBindingMeta) {
+        final FluentIterable<ViewBindingMeta> viewBindingMetas = this.viewBindingsTraverser.preOrderTraversal(rootViewBindingMeta);
+
+        for (final ViewBindingMeta viewBindingMeta : viewBindingMetas) {
+            createBindings( dataModelExecutor,
+                            viewBindingMeta);
+        }
+    }
+
+    private void createBindings(final ListeningExecutorService dataModelExecutor,
+                                final ViewBindingMeta bindingMeta) {
+
+        //if there are property slots
+        if (bindingMeta.getPropertySlots().isPresent()) {
+            for (final PropertySlot propertySlot : bindingMeta.getPropertySlots().get().value()) {
+                final PropertyBinding propertyBinding = this.propertyBindingFactory.createPropertyBinding(bindingMeta,
+                        propertySlot);
+                //bind property binding
+                bindViewBinding(propertyBinding);
+            }
+        }
+
+        //if there is an observable collection
+        if (bindingMeta.getObservableCollection().isPresent()) {
+            final CollectionBinding collectionBinding = this.collectionBindingFactory.createCollectionBinding(  bindingMeta,
+                                                                                                                dataModelExecutor,
+                                                                                                                bindingMeta.getObservableCollection().get());
+            //bind collection binding
+            bindViewBinding(collectionBinding);
+        }
+
+        //if this view emits events
+        if (bindingMeta.getEventSignals().isPresent()) {
+            final EventBinding eventBinding = this.eventBindingFactory.createEventBinding(bindingMeta);
+            //bind view event
+            bindViewBinding(eventBinding);
+        }
+    }
+
+    @Override
+    public ListenableFuture<Void> updateViewModelBinding(@Nonnull final ListeningExecutorService dataModelExecutor,
+                                                         @Nonnull final Object parentViewModel,
+                                                         @Nonnull final String fieldName,
+                                                         @Nonnull final Optional<Object> oldSubView,
+                                                         @Nonnull final Optional<Object> newSubView) {
+        return dataModelExecutor.submit(new Callable<Void>() {
+            @Override
+            public Void call() {
+                updateViewModelBindingImpl( dataModelExecutor,
+                                            parentViewModel,
+                                            fieldName,
+                                            oldSubView,
+                                            newSubView);
+                return null;
+            }
+        });
+    }
+
+    private void updateViewModelBindingImpl(@Nonnull final ListeningExecutorService dataModelExecutor,
+                                            @Nonnull final Object parentViewModel,
+                                            @Nonnull final String subViewFieldName,
+                                            @Nonnull final Optional<Object> oldSubView,
+                                            @Nonnull final Optional<Object> newSubView) {
         if (oldSubView.equals(newSubView)) {
             return;
         }
@@ -257,44 +266,45 @@ public class ViewBinderImpl2 implements ViewBinder {
         //if an old subview was present
         if (oldSubView.isPresent()) {
 
-			//then for each of the parent binding descriptions
-			for(final ViewBindingMeta parentViewBindingMeta : parentViewBindingMetas) {
+            //then for each of the parent binding descriptions
+            for (final ViewBindingMeta parentViewBindingMeta : parentViewBindingMetas) {
 
-				//recreate the old subview binding description
-				final ViewBindingMeta oldBindingMeta = ViewBindingMeta.create(parentViewBindingMeta,
-																			  field.get(),
-																			  oldSubView.get());
+                //recreate the old subview binding description
+                final ViewBindingMeta oldBindingMeta = ViewBindingMeta.create(parentViewBindingMeta,
+                        field.get(),
+                        oldSubView.get());
 
-				//use it to find and remove all old view bindings
-				removeAllBindings(oldBindingMeta);
-			}
-		}
+                //use it to find and remove all old view bindings
+                removeAllBindings(oldBindingMeta);
+            }
+        }
 
-		//if the new subview has a value
-		if(newSubView.isPresent()) {
+        //if the new subview has a value
+        if (newSubView.isPresent()) {
 
-			//then for each of the parent binding descriptions
-			for(final ViewBindingMeta parentViewBindingMeta : parentViewBindingMetas) {
+            //then for each of the parent binding descriptions
+            for (final ViewBindingMeta parentViewBindingMeta : parentViewBindingMetas) {
 
-				//create a new subview binding description
-				final ViewBindingMeta newBindingMeta = ViewBindingMeta.create(parentViewBindingMeta,
-																			  field.get(),
-																			  newSubView.get());
+                //create a new subview binding description
+                final ViewBindingMeta newBindingMeta = ViewBindingMeta.create(parentViewBindingMeta,
+                        field.get(),
+                        newSubView.get());
 
-				//and create all bindings from this description.
-				createAllBindings(newBindingMeta);
-			}
-		}
-	}
+                //and create all bindings from this description.
+                createAllBindings(  dataModelExecutor,
+                                    newBindingMeta);
+            }
+        }
+    }
 
-	private Optional<Field> getField(final Class<?> viewModelClass,
-									 final String subViewFieldName) {
-		Optional<Field> fieldOptional = FIELD_CACHE.get(viewModelClass,
-														subViewFieldName);
-		if(fieldOptional == null) {
+    private Optional<Field> getField(final Class<?> viewModelClass,
+                                     final String subViewFieldName) {
+        Optional<Field> fieldOptional = FIELD_CACHE.get(viewModelClass,
+                subViewFieldName);
+        if (fieldOptional == null) {
 
-			Field foundField = null;
-			try {
+            Field foundField = null;
+            try {
                 foundField = viewModelClass.getDeclaredField(subViewFieldName);
                 foundField.setAccessible(true);
             } catch (final NoSuchFieldException e) {

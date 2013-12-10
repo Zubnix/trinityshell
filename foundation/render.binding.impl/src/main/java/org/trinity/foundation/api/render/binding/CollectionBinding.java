@@ -41,9 +41,10 @@ public class CollectionBinding implements ViewBinding {
 	private final ObservableCollection     observableCollection;
 
 	@Inject
-	CollectionBinding(final ViewBindingMeta viewBindingMeta,
+	CollectionBinding(
 					  final ViewBinder viewBinder,
 					  final SubViewModelDelegate subViewModelDelegate,
+                      @Assisted final ViewBindingMeta viewBindingMeta,
 					  @Assisted final ListeningExecutorService dataModelExecutor,
 					  @Assisted final ObservableCollection observableCollection) {
 		this.viewBindingMeta = viewBindingMeta;
@@ -83,8 +84,8 @@ public class CollectionBinding implements ViewBinding {
 			return properties;
 		}
 
-		final DataModelProperty collectionProperty = new DataModelPropertyImpl(lastPropertyValue.get(),
-																			   collectionPropertyName);
+		final DataModelProperty collectionProperty = new RelativeDataModelProperty( lastPropertyValue.get(),
+																			        collectionPropertyName);
 		properties.add(collectionProperty);
 		final Optional<Object> collectionPropertyValue = collectionProperty.getPropertyValue();
 
