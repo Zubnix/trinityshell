@@ -6,7 +6,6 @@ import org.trinity.foundation.api.render.binding.view.DataModelContext;
 import org.trinity.foundation.api.render.binding.view.EventSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
-import org.trinity.foundation.api.render.binding.view.SubView;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -55,13 +54,9 @@ public abstract class ViewBindingMeta {
 									   propertySlots);
 	}
 
-	public static Optional<ViewBindingMeta> create(@Nonnull final ViewBindingMeta parentViewBindingMeta,
-												   @Nonnull final Field subviewField,
-												   @Nonnull final Object subviewValue) {
-
-		if(subviewField.getAnnotation(SubView.class) == null) {
-			return Optional.absent();
-		}
+	public static ViewBindingMeta create(@Nonnull final ViewBindingMeta parentViewBindingMeta,
+										 @Nonnull final Field subviewField,
+										 @Nonnull final Object subviewValue) {
 
 		final Class<?> subviewClass = subviewValue.getClass();
 
@@ -70,13 +65,13 @@ public abstract class ViewBindingMeta {
 		final Optional<EventSignals> eventSignals = scanFieldEventSignals(subviewField).or(scanClassEventSignals(subviewClass));
 		final Optional<PropertySlots> propertySlots = scanFieldPropertySlots(subviewField).or(scanClassPropertySlots(subviewClass));
 
-		return Optional.<ViewBindingMeta>of(new SubViewBindingMeta(subviewValue,
-																   parentViewBindingMeta,
-																   subviewField,
-																   observableCollection,
-																   dataModelContext,
-																   eventSignals,
-																   propertySlots));
+		return new SubViewBindingMeta(subviewValue,
+									  parentViewBindingMeta,
+									  subviewField,
+									  observableCollection,
+									  dataModelContext,
+									  eventSignals,
+									  propertySlots);
 	}
 
 	private static Optional<PropertySlots> scanFieldPropertySlots(final Field subviewField) {

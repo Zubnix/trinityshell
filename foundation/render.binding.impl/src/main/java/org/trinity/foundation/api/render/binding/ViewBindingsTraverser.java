@@ -1,10 +1,10 @@
 package org.trinity.foundation.api.render.binding;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.common.collect.TreeTraverser;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
+import org.trinity.foundation.api.render.binding.view.SubView;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
@@ -32,14 +32,19 @@ public class ViewBindingsTraverser extends TreeTraverser<ViewBindingMeta> {
 				if(subViewValue == null) {
 					continue;
 				}
-				final Optional<ViewBindingMeta> viewBindingMetaOptional = ViewBindingMeta.create(root,
-																								 declaredField,
-																								 subViewValue);
-				if(viewBindingMetaOptional.isPresent()) {
-					viewBindingMetas.add(viewBindingMetaOptional.get());
+
+				final SubView subView = declaredField.getAnnotation(SubView.class);
+				if(subView == null) {
+					continue;
 				}
-            } catch(final IllegalAccessException e) {
-                e.printStackTrace();
+
+				final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create(root,
+																			   declaredField,
+																			   subViewValue);
+				viewBindingMetas.add(viewBindingMeta);
+			}
+			catch(final IllegalAccessException e) {
+				e.printStackTrace();
             }
         }
 

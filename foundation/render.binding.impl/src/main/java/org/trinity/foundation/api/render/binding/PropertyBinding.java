@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class PropertyBinding extends AbstractViewBinding{
+public class PropertyBinding implements ViewBinding {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyBinding.class);
 
@@ -28,11 +28,15 @@ public class PropertyBinding extends AbstractViewBinding{
 					final PropertySlotInvocationDelegate propertySlotInvocationDelegate,
 					@Assisted final ViewBindingMeta viewBindingMeta,
 					@Assisted final PropertySlot propertySlot) {
-		super(viewBindingMeta);
 		this.injector = injector;
 		this.propertySlotInvocationDelegate = propertySlotInvocationDelegate;
 		this.viewBindingMeta = viewBindingMeta;
 		this.propertySlot = propertySlot;
+	}
+
+	@Override
+	public ViewBindingMeta getViewBindingMeta() {
+		return this.viewBindingMeta;
 	}
 
 	@Override
@@ -98,6 +102,6 @@ public class PropertyBinding extends AbstractViewBinding{
 
 	@Override
 	public void unbind() {
-
+		//property binding is stateless, nothing to do here.
 	}
 }
