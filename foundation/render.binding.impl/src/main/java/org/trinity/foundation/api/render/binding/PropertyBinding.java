@@ -58,7 +58,7 @@ public class PropertyBinding extends AbstractViewBinding{
 
 			if(parentDataModelPropertyValue.isPresent()) {
 				final String propertyName = this.propertySlot.propertyName();
-				final DataModelPropertyImpl dataModelProperty = new DataModelPropertyImpl(parentDataModelPropertyValue.get(),
+				final DataModelProperty dataModelProperty = new RelativeDataModelProperty(parentDataModelPropertyValue.get(),
 																						  propertyName);
 				dataModelProperties.add(dataModelProperty);
 				final Optional<Object> propertyValue = dataModelProperty.getPropertyValue();
