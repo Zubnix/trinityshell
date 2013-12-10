@@ -100,8 +100,8 @@ public class PropertyBindingTest {
 			public Object answer(final InvocationOnMock invocation) throws Throwable {
 				final Object[] args = invocation.getArguments();
 				final LinkedList<DataModelProperty> arg0 = (LinkedList<DataModelProperty>) args[0];
-				arg0.add(new RootDataModelProperty(PropertyBindingTest.this.fooValue));
-				arg0.add(new RootDataModelProperty(PropertyBindingTest.this.barValue));
+				arg0.add(new ConstantDataModelProperty(PropertyBindingTest.this.fooValue));
+				arg0.add(new ConstantDataModelProperty(PropertyBindingTest.this.barValue));
 				return TRUE;
 			}
 		});
@@ -136,7 +136,7 @@ public class PropertyBindingTest {
 			public Object answer(final InvocationOnMock invocation) throws Throwable {
 				final Object[] args = invocation.getArguments();
 				final LinkedList<DataModelProperty> arg0 = (LinkedList<DataModelProperty>) args[0];
-				arg0.add(new RootDataModelProperty(PropertyBindingTest.this.fooValue));
+				arg0.add(new ConstantDataModelProperty(PropertyBindingTest.this.fooValue));
 				return FALSE;
 			}
 		});

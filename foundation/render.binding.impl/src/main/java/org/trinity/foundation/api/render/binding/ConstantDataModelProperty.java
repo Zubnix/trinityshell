@@ -4,11 +4,11 @@ import com.google.common.base.Optional;
 
 import javax.annotation.Nonnull;
 
-public class RootDataModelProperty implements DataModelProperty {
+public class ConstantDataModelProperty implements DataModelProperty {
 
     private final Optional<Object> dataModelObjectOptional;
 
-    public RootDataModelProperty(@Nonnull final Object rootDataModel) {
+    public ConstantDataModelProperty(@Nonnull final Object rootDataModel) {
         this.dataModelObjectOptional = Optional.of(rootDataModel);
     }
 
@@ -25,7 +25,7 @@ public class RootDataModelProperty implements DataModelProperty {
         if(getClass() != obj.getClass()) {
             return false;
         }
-        final RootDataModelProperty other = (RootDataModelProperty) obj;
+        final ConstantDataModelProperty other = (ConstantDataModelProperty) obj;
 
         return com.google.common.base.Objects.equal(this.dataModelObjectOptional,
                                                     other.dataModelObjectOptional);
