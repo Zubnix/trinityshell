@@ -20,8 +20,8 @@ public abstract class ViewBindingMeta {
 
 	private final Optional<ObservableCollection> observableCollection;
 	private final Optional<DataModelContext>     dataModelContext;
-	private final Optional<EventSignals>        eventSignals;
-	private final Optional<PropertySlots>       propertySlots;
+	private final Optional<EventSignals>         eventSignals;
+	private final Optional<PropertySlots>        propertySlots;
 
 	ViewBindingMeta(final Object viewModel,
 					final Optional<ObservableCollection> observableCollection,
@@ -88,57 +88,60 @@ public abstract class ViewBindingMeta {
 		return fieldLevelOptionalPropertySlots;
 	}
 
-    private static Optional<PropertySlots> scanClassPropertySlots(final Class<?> subviewClass) {
+	private static Optional<PropertySlots> scanClassPropertySlots(final Class<?> subviewClass) {
 
-        final PropertySlots classLevelPropertySlots = subviewClass.getAnnotation(PropertySlots.class);
-        final Optional<PropertySlots> classLevelOptionalPropertySlots;
-        if(classLevelPropertySlots == null) {
-            classLevelOptionalPropertySlots = Optional.absent();
-        } else {
-            classLevelOptionalPropertySlots = Optional.of(classLevelPropertySlots);
-        }
+		final PropertySlots classLevelPropertySlots = subviewClass.getAnnotation(PropertySlots.class);
+		final Optional<PropertySlots> classLevelOptionalPropertySlots;
+		if(classLevelPropertySlots == null) {
+			classLevelOptionalPropertySlots = Optional.absent();
+		}
+		else {
+			classLevelOptionalPropertySlots = Optional.of(classLevelPropertySlots);
+		}
 
-        return classLevelOptionalPropertySlots;
-    }
+		return classLevelOptionalPropertySlots;
+	}
 
-    private static Optional<EventSignals> scanClassEventSignals(final Class<?> subviewClass) {
-        final EventSignals classLevelEventSignals = subviewClass.getAnnotation(EventSignals.class);
-        final Optional<EventSignals> classLevelOptionalEventSignals;
-        if(classLevelEventSignals == null) {
-            classLevelOptionalEventSignals = Optional.absent();
-        } else {
-            classLevelOptionalEventSignals = Optional.of(classLevelEventSignals);
-        }
+	private static Optional<EventSignals> scanClassEventSignals(final Class<?> subviewClass) {
+		final EventSignals classLevelEventSignals = subviewClass.getAnnotation(EventSignals.class);
+		final Optional<EventSignals> classLevelOptionalEventSignals;
+		if(classLevelEventSignals == null) {
+			classLevelOptionalEventSignals = Optional.absent();
+		}
+		else {
+			classLevelOptionalEventSignals = Optional.of(classLevelEventSignals);
+		}
 
-        return classLevelOptionalEventSignals;
-    }
+		return classLevelOptionalEventSignals;
+	}
 
-    private static Optional<EventSignals> scanFieldEventSignals(final Field subviewField) {
-        final EventSignals fieldLevelEventSignals = subviewField.getAnnotation(EventSignals.class);
-        final Optional<EventSignals> fieldLevelOptionalEventSignals;
-        if(fieldLevelEventSignals == null) {
-            fieldLevelOptionalEventSignals = Optional.absent();
-        } else {
-            fieldLevelOptionalEventSignals = Optional.of(fieldLevelEventSignals);
-        }
-        return fieldLevelOptionalEventSignals;
-    }
+	private static Optional<EventSignals> scanFieldEventSignals(final Field subviewField) {
+		final EventSignals fieldLevelEventSignals = subviewField.getAnnotation(EventSignals.class);
+		final Optional<EventSignals> fieldLevelOptionalEventSignals;
+		if(fieldLevelEventSignals == null) {
+			fieldLevelOptionalEventSignals = Optional.absent();
+		}
+		else {
+			fieldLevelOptionalEventSignals = Optional.of(fieldLevelEventSignals);
+		}
+		return fieldLevelOptionalEventSignals;
+	}
 
-    private static Optional<ObservableCollection> scanFieldObservableCollection(final Field subviewField) {
-        return Optional.fromNullable(subviewField.getAnnotation(ObservableCollection.class));
-    }
+	private static Optional<ObservableCollection> scanFieldObservableCollection(final Field subviewField) {
+		return Optional.fromNullable(subviewField.getAnnotation(ObservableCollection.class));
+	}
 
-    private static Optional<ObservableCollection> scanClassObservableCollection(final Class<?> subviewClass) {
-        return Optional.fromNullable(subviewClass.getAnnotation(ObservableCollection.class));
-    }
+	private static Optional<ObservableCollection> scanClassObservableCollection(final Class<?> subviewClass) {
+		return Optional.fromNullable(subviewClass.getAnnotation(ObservableCollection.class));
+	}
 
-    private static Optional<DataModelContext> scanFieldDataModelContext(final Field subviewField) {
-        return Optional.fromNullable(subviewField.getAnnotation(DataModelContext.class));
-    }
+	private static Optional<DataModelContext> scanFieldDataModelContext(final Field subviewField) {
+		return Optional.fromNullable(subviewField.getAnnotation(DataModelContext.class));
+	}
 
-    private static Optional<DataModelContext> scanClassDataModelContext(final Class<?> subviewClass) {
-        return Optional.fromNullable(subviewClass.getAnnotation(DataModelContext.class));
-    }
+	private static Optional<DataModelContext> scanClassDataModelContext(final Class<?> subviewClass) {
+		return Optional.fromNullable(subviewClass.getAnnotation(DataModelContext.class));
+	}
 
 
 	public Optional<ObservableCollection> getObservableCollection() {
@@ -159,45 +162,45 @@ public abstract class ViewBindingMeta {
 
 	public Object getViewModel() {
 		return this.viewModel;
-    }
+	}
 
-    protected boolean appendDataModelPropertyChain(final LinkedList<DataModelProperty> dataModelPropertyChain,
-                                                       final String propertyChain) {
-        checkNotNull(dataModelPropertyChain);
-        checkNotNull(propertyChain);
-        checkArgument(!dataModelPropertyChain.isEmpty());
+	protected boolean appendDataModelPropertyChain(final LinkedList<DataModelProperty> dataModelPropertyChain,
+												   final String propertyChain) {
+		checkNotNull(dataModelPropertyChain);
+		checkNotNull(propertyChain);
+		checkArgument(!dataModelPropertyChain.isEmpty());
 
-        final Iterable<String> propertyNames = toPropertyNames(propertyChain);
-        final LinkedList<DataModelProperty> appendedDataModelChain = new LinkedList<>();
+		final Iterable<String> propertyNames = toPropertyNames(propertyChain);
+		final LinkedList<DataModelProperty> appendedDataModelChain = new LinkedList<>();
 
-        boolean aborted = false;
-        DataModelProperty dataModelProperty = dataModelPropertyChain.getLast();
+		boolean aborted = false;
+		DataModelProperty dataModelProperty = dataModelPropertyChain.getLast();
 
-        for(final String propertyName : propertyNames) {
+		for(final String propertyName : propertyNames) {
 
-            final Optional<Object> propertyValue = dataModelProperty.getPropertyValue();
+			final Optional<Object> propertyValue = dataModelProperty.getPropertyValue();
 
-            if(propertyValue.isPresent()) {
-                final Object nextDataModel = propertyValue.get();
-                dataModelProperty = new RelativeDataModelProperty(nextDataModel,
-                        propertyName);
-                appendedDataModelChain.add(dataModelProperty);
-            }
-            else {
-                aborted = true;
-                break;
-            }
-        }
+			if(propertyValue.isPresent()) {
+				final Object nextDataModel = propertyValue.get();
+				dataModelProperty = new RelativeDataModelProperty(nextDataModel,
+																  propertyName);
+				appendedDataModelChain.add(dataModelProperty);
+			}
+			else {
+				aborted = true;
+				break;
+			}
+		}
 
-        dataModelPropertyChain.addAll(appendedDataModelChain);
-        return !aborted;
-    }
+		dataModelPropertyChain.addAll(appendedDataModelChain);
+		return !aborted;
+	}
 
-    protected static Iterable<String> toPropertyNames(final String subModelPath) {
-        checkNotNull(subModelPath);
+	protected static Iterable<String> toPropertyNames(final String subModelPath) {
+		checkNotNull(subModelPath);
 
-        return Splitter.on('.').trimResults().omitEmptyStrings().split(subModelPath);
-    }
+		return Splitter.on('.').trimResults().omitEmptyStrings().split(subModelPath);
+	}
 
 	public abstract boolean resolveDataModelChain(final LinkedList<DataModelProperty> dataModelChain);
 }
