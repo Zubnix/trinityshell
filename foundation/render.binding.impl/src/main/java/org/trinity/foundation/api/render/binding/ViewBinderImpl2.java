@@ -12,6 +12,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.render.binding.view.EventSignal;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 
 import javax.annotation.Nonnull;
@@ -54,10 +55,10 @@ public class ViewBinderImpl2 implements ViewBinder {
         return dataModelExecutor.submit(new Callable<Void>() {
             @Override
             public Void call() {
-                updateDataModelBinding(dataModel,
-                        propertyName,
-                        oldPropertyValue,
-                        newPropertyValue);
+                updateDataModelBinding( dataModel,
+                                        propertyName,
+                                        oldPropertyValue,
+                                        newPropertyValue);
                 return null;
             }
         });
@@ -75,13 +76,12 @@ public class ViewBinderImpl2 implements ViewBinder {
                 propertyName);
 
         //find all impacted view bindings
-        final Collection<ViewBinding> viewBindings = this.dataModelPopertyToViewBindings
-                .removeAll(dataModelProperty);
+        final Collection<ViewBinding> viewBindings = this.dataModelPopertyToViewBindings.removeAll(dataModelProperty);
 
         //find all data model properties that point to the impacted view binding
         final Multimap<ViewBinding, DataModelProperty> viewBindingToDataModelProperties = HashMultimap.create();
-        Multimaps.invertFrom(this.dataModelPopertyToViewBindings,
-                viewBindingToDataModelProperties);
+        Multimaps.invertFrom(   this.dataModelPopertyToViewBindings,
+                                viewBindingToDataModelProperties);
 
         //for each view binding that was impacted by the changed data model property.
         for (final ViewBinding viewBinding : viewBindings) {
@@ -92,8 +92,8 @@ public class ViewBinderImpl2 implements ViewBinder {
             //remove all remaining data model properties that were pointing to the view binding
             final Collection<DataModelProperty> dataModelProperties = viewBindingToDataModelProperties.get(viewBinding);
             for (final DataModelProperty oldModelProperty : dataModelProperties) {
-                this.dataModelPopertyToViewBindings.remove(oldModelProperty,
-                        viewBinding);
+                this.dataModelPopertyToViewBindings.remove( oldModelProperty,
+                                                            viewBinding);
             }
 
             //rebind the view & update the data model properties that point to this view model
@@ -108,13 +108,13 @@ public class ViewBinderImpl2 implements ViewBinder {
 
         //link these new data model properties to this view binding
         for (final DataModelProperty newDataModelProperty : newDataModelProperties) {
-            this.dataModelPopertyToViewBindings.put(newDataModelProperty,
-                    viewBinding);
+            this.dataModelPopertyToViewBindings.put(    newDataModelProperty,
+                                                        viewBinding);
         }
 
         //link the binding description to the created binding
-        this.viewBindingMetaToViewBindings.put(viewBinding.getViewBindingMeta(),
-                viewBinding);
+        this.viewBindingMetaToViewBindings.put( viewBinding.getViewBindingMeta(),
+                                                viewBinding);
     }
 
     @Override
@@ -168,16 +168,16 @@ public class ViewBinderImpl2 implements ViewBinder {
             viewBinding.unbind();
         }
 
-        this.viewModelToViewBindingMetas.remove(viewBindingMeta.getViewModel(),
-                viewBindingMeta);
+        this.viewModelToViewBindingMetas.remove(    viewBindingMeta.getViewModel(),
+                                                    viewBindingMeta);
     }
 
 
     private void bindViewModelToDataModel(  @Nonnull final ListeningExecutorService dataModelExecutor,
                                             @Nonnull final Object dataModel,
                                             @Nonnull final Object viewModel) {
-        final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create(dataModel,
-                viewModel);
+        final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create( dataModel,
+                                                                        viewModel);
         createAllBindings(  dataModelExecutor,
                             viewBindingMeta);
     }
@@ -198,8 +198,8 @@ public class ViewBinderImpl2 implements ViewBinder {
         //if there are property slots
         if (bindingMeta.getPropertySlots().isPresent()) {
             for (final PropertySlot propertySlot : bindingMeta.getPropertySlots().get().value()) {
-                final PropertyBinding propertyBinding = this.propertyBindingFactory.createPropertyBinding(bindingMeta,
-                        propertySlot);
+                final PropertyBinding propertyBinding = this.propertyBindingFactory.createPropertyBinding(  bindingMeta,
+                                                                                                            propertySlot);
                 //bind property binding
                 bindViewBinding(propertyBinding);
             }
@@ -216,9 +216,12 @@ public class ViewBinderImpl2 implements ViewBinder {
 
         //if this view emits events
         if (bindingMeta.getEventSignals().isPresent()) {
-            final EventBinding eventBinding = this.eventBindingFactory.createEventBinding(bindingMeta);
-            //bind view event
-            bindViewBinding(eventBinding);
+            for (final EventSignal eventSignal: bindingMeta.getEventSignals().get().value()) {
+                final EventBinding eventBinding = this.eventBindingFactory.createEventBinding(  dataModelExecutor,
+                                                                                                bindingMeta,
+                                                                                                eventSignal);
+                bindViewBinding(eventBinding);
+            }
         }
     }
 
@@ -251,12 +254,12 @@ public class ViewBinderImpl2 implements ViewBinder {
         }
 
         final Class<?> parentViewModelClass = parentViewModel.getClass();
-        final Optional<Field> field = getField(parentViewModelClass,
-                subViewFieldName);
+        final Optional<Field> field = getField( parentViewModelClass,
+                                                subViewFieldName);
         if (!field.isPresent()) {
-            LOG.warn("Subview field name {} not found on object {}. Not updating subview.",
-                    subViewFieldName,
-                    parentViewModel);
+            LOG.warn(   "Subview field name {} not found on object {}. Not updating subview.",
+                        subViewFieldName,
+                        parentViewModel);
             return;
         }
 
@@ -270,9 +273,9 @@ public class ViewBinderImpl2 implements ViewBinder {
             for (final ViewBindingMeta parentViewBindingMeta : parentViewBindingMetas) {
 
                 //recreate the old subview binding description
-                final ViewBindingMeta oldBindingMeta = ViewBindingMeta.create(parentViewBindingMeta,
-                        field.get(),
-                        oldSubView.get());
+                final ViewBindingMeta oldBindingMeta = ViewBindingMeta.create(  parentViewBindingMeta,
+                                                                                field.get(),
+                                                                                oldSubView.get());
 
                 //use it to find and remove all old view bindings
                 removeAllBindings(oldBindingMeta);
@@ -286,9 +289,9 @@ public class ViewBinderImpl2 implements ViewBinder {
             for (final ViewBindingMeta parentViewBindingMeta : parentViewBindingMetas) {
 
                 //create a new subview binding description
-                final ViewBindingMeta newBindingMeta = ViewBindingMeta.create(parentViewBindingMeta,
-                        field.get(),
-                        newSubView.get());
+                final ViewBindingMeta newBindingMeta = ViewBindingMeta.create(  parentViewBindingMeta,
+                                                                                field.get(),
+                                                                                newSubView.get());
 
                 //and create all bindings from this description.
                 createAllBindings(  dataModelExecutor,
@@ -299,8 +302,8 @@ public class ViewBinderImpl2 implements ViewBinder {
 
     private Optional<Field> getField(final Class<?> viewModelClass,
                                      final String subViewFieldName) {
-        Optional<Field> fieldOptional = FIELD_CACHE.get(viewModelClass,
-                subViewFieldName);
+        Optional<Field> fieldOptional = FIELD_CACHE.get(    viewModelClass,
+                                                            subViewFieldName);
         if (fieldOptional == null) {
 
             Field foundField = null;
@@ -309,13 +312,13 @@ public class ViewBinderImpl2 implements ViewBinder {
                 foundField.setAccessible(true);
             } catch (final NoSuchFieldException e) {
                 // TODO explanation
-                LOG.error("",
-                        e);
+                LOG.error(  "",
+                            e);
             }
             fieldOptional = Optional.fromNullable(foundField);
-            FIELD_CACHE.put(viewModelClass,
-                    subViewFieldName,
-                    fieldOptional);
+            FIELD_CACHE.put(    viewModelClass,
+                                subViewFieldName,
+                                fieldOptional);
         }
 
         return fieldOptional;

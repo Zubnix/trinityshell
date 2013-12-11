@@ -34,4 +34,9 @@ public interface EventSignalFilter {
 
 	void installFilter(	@Nonnull Object view,
 						@Nonnull Signal signal);
+
+    void uninstallFilter(@Nonnull Object view,
+                         @Nonnull Signal signal);
+
+
 }

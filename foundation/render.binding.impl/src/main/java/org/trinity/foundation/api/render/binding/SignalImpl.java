@@ -21,8 +21,6 @@
 package org.trinity.foundation.api.render.binding;
 
 import com.google.common.base.Optional;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
@@ -33,39 +31,42 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
-//TODO documentation
-public abstract class SignalImpl implements Signal {
+public class SignalImpl implements Signal {
 
     private static final Logger LOG = LoggerFactory.getLogger(SignalImpl.class);
-    private static final Cache<HashCode, Optional<Method>> EVENT_SLOTS_BY_HASH = CacheBuilder.newBuilder().concurrencyLevel(1)
-            .build();
+    private static final Map<HashCode, Optional<Method>> EVENT_SLOTS_BY_HASH = new HashMap<>();
     private static final HashFunction HASH_FUNCTION = Hashing.goodFastHash(16);
+
     private final ListeningExecutorService modelExecutor;
-    private final String inputSlotName;
+    private final Object eventSignalReceiver;
+    private final Optional<Method> slot;
 
     SignalImpl(final ListeningExecutorService modelExecutor,
+               final Object eventSignalReceiver,
                final String inputSlotName) {
         this.modelExecutor = modelExecutor;
-        this.inputSlotName = inputSlotName;
+        this.eventSignalReceiver = eventSignalReceiver;
+
+        slot = findSlot(this.eventSignalReceiver.getClass(), inputSlotName);
     }
 
     private static Optional<Method> findSlot(final Class<?> modelClass,
-                                             final String methodName) throws ExecutionException {
+                                             final String methodName) {
 
         final HashCode hashCode = HASH_FUNCTION.newHasher().putInt(modelClass.hashCode())
                 .putUnencodedChars(methodName).hash();
 
-        return EVENT_SLOTS_BY_HASH.get(hashCode,
-                new Callable<Optional<Method>>() {
-                    @Override
-                    public Optional<Method> call() {
-                        return getSlot(modelClass,
-                                methodName);
-                    }
-                });
+        Optional<Method> methodOptional = EVENT_SLOTS_BY_HASH.get(hashCode);
+        if (methodOptional == null) {
+            methodOptional = getSlot(modelClass, methodName);
+            EVENT_SLOTS_BY_HASH.put(hashCode, methodOptional);
+        }
+
+        return methodOptional;
     }
 
     private static Optional<Method> getSlot(final Class<?> modelClass,
@@ -78,7 +79,7 @@ public abstract class SignalImpl implements Signal {
                     + methodName,
                     e);
         } catch (final NoSuchMethodException e) {
-            LOG.warn("No input slot found for class=" + modelClass + " with slotname=" + methodName,
+            LOG.warn("No event slot found for class=" + modelClass + " with slotname=" + methodName,
                     e);
         }
         return Optional.fromNullable(inputSlot);
@@ -89,18 +90,13 @@ public abstract class SignalImpl implements Signal {
         return this.modelExecutor.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                final Object viewModel = getDataModel();
-                final Optional<Method> optionalInputSlot = findSlot(viewModel.getClass(),
-                                                                    SignalImpl.this.inputSlotName);
-                if(optionalInputSlot.isPresent()) {
-                    final Method method = optionalInputSlot.get();
+                if (slot.isPresent()) {
+                    final Method method = slot.get();
                     method.setAccessible(true);
-                    method.invoke(viewModel);
+                    method.invoke(eventSignalReceiver);
                 }
                 return null;
             }
         });
     }
-
-    protected abstract Object getDataModel();
 }
