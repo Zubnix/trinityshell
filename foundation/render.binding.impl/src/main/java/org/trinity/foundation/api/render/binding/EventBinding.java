@@ -13,28 +13,31 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 public class EventBinding implements ViewBinding {
-    private final Injector injector;
-    private final ListeningExecutorService dataModelExecutor;
-    private final ViewBindingMeta viewBindingMeta;
-    private final EventSignal eventSignal;
+	private final Injector                 injector;
+	private final SignalFactory            signalFactory;
+	private final ListeningExecutorService dataModelExecutor;
+	private final ViewBindingMeta          viewBindingMeta;
+	private final EventSignal              eventSignal;
 
-    private Optional<Signal> optionalSignal = Optional.absent();
+	private Optional<Signal> optionalSignal = Optional.absent();
 
-    @Inject
-    EventBinding(final Injector injector,
-                 @Assisted final ListeningExecutorService dataModelExecutor,
-                 @Assisted final ViewBindingMeta viewBindingMeta,
-                 @Assisted final EventSignal eventSignal) {
-        this.injector = injector;
-        this.dataModelExecutor = dataModelExecutor;
-        this.viewBindingMeta = viewBindingMeta;
-        this.eventSignal = eventSignal;
-    }
+	@Inject
+	EventBinding(final Injector injector,
+				 final SignalFactory signalFactory,
+				 @Assisted final ListeningExecutorService dataModelExecutor,
+				 @Assisted final ViewBindingMeta viewBindingMeta,
+				 @Assisted final EventSignal eventSignal) {
+		this.injector = injector;
+		this.signalFactory = signalFactory;
+		this.dataModelExecutor = dataModelExecutor;
+		this.viewBindingMeta = viewBindingMeta;
+		this.eventSignal = eventSignal;
+	}
 
-    @Override
-    public ViewBindingMeta getViewBindingMeta() {
-        return this.viewBindingMeta;
-    }
+	@Override
+	public ViewBindingMeta getViewBindingMeta() {
+		return this.viewBindingMeta;
+	}
 
     @Override
     public Collection<DataModelProperty> bind() {
@@ -65,20 +68,20 @@ public class EventBinding implements ViewBinding {
 
     private void bindEventSignal(final Object eventReceiver) {
         final EventSignalFilter eventSignalFilter = this.injector.getInstance(this.eventSignal.filter());
-        final Signal signal = new SignalImpl(   this.dataModelExecutor,
-                                                eventReceiver,
-                                                this.eventSignal.name());
-        this.optionalSignal = Optional.of(signal);
-        eventSignalFilter.installFilter(    this.viewBindingMeta.getViewModel(),
-                                            signal);
-    }
+		final Signal signal = this.signalFactory.createSignal(this.dataModelExecutor,
+															  eventReceiver,
+															  this.eventSignal.name());
+		this.optionalSignal = Optional.of(signal);
+		eventSignalFilter.installFilter(this.viewBindingMeta.getViewModel(),
+										signal);
+	}
 
-    @Override
-    public void unbind() {
+	@Override
+	public void unbind() {
         if(this.optionalSignal.isPresent()){
-            final EventSignalFilter eventSignalFilter = injector.getInstance(this.eventSignal.filter());
-            eventSignalFilter.uninstallFilter(  this.viewBindingMeta.getViewModel(),
-                                                this.optionalSignal.get());
-        }
-    }
+			final EventSignalFilter eventSignalFilter = this.injector.getInstance(this.eventSignal.filter());
+			eventSignalFilter.uninstallFilter(this.viewBindingMeta.getViewModel(),
+											  this.optionalSignal.get());
+		}
+	}
 }

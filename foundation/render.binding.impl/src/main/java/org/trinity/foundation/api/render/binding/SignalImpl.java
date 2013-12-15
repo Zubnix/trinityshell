@@ -26,10 +26,12 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.assistedinject.Assisted;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 
+import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,17 +47,19 @@ public class SignalImpl implements Signal {
     private final Object eventSignalReceiver;
     private final Optional<Method> slot;
 
-    SignalImpl(final ListeningExecutorService modelExecutor,
-               final Object eventSignalReceiver,
-               final String inputSlotName) {
+	@Inject
+    SignalImpl(@Assisted final ListeningExecutorService modelExecutor,
+			   @Assisted final Object eventSignalReceiver,
+			   @Assisted final String inputSlotName) {
         this.modelExecutor = modelExecutor;
         this.eventSignalReceiver = eventSignalReceiver;
 
-        slot = findSlot(this.eventSignalReceiver.getClass(), inputSlotName);
-    }
+		this.slot = findSlot(this.eventSignalReceiver.getClass(),
+							 inputSlotName);
+	}
 
-    private static Optional<Method> findSlot(final Class<?> modelClass,
-                                             final String methodName) {
+	private static Optional<Method> findSlot(final Class<?> modelClass,
+											 final String methodName) {
 
         final HashCode hashCode = HASH_FUNCTION.newHasher().putInt(modelClass.hashCode())
                 .putUnencodedChars(methodName).hash();
@@ -90,11 +94,11 @@ public class SignalImpl implements Signal {
         return this.modelExecutor.submit(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                if (slot.isPresent()) {
-                    final Method method = slot.get();
-                    method.setAccessible(true);
-                    method.invoke(eventSignalReceiver);
-                }
+				if(SignalImpl.this.slot.isPresent()) {
+					final Method method = SignalImpl.this.slot.get();
+					method.setAccessible(true);
+					method.invoke(SignalImpl.this.eventSignalReceiver);
+				}
                 return null;
             }
         });
