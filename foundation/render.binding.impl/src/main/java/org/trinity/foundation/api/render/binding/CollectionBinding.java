@@ -4,8 +4,8 @@ import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEvent;
 import ca.odell.glazedlists.event.ListEventListener;
 import com.google.common.base.Optional;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -31,8 +31,9 @@ public class CollectionBinding implements ViewBinding {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CollectionBinding.class);
 
-	//BiMap<DataModel,ChildViewModel>
-	private final BiMap<Object, Object> dataModelElementToViewModelElement = HashBiMap.create();
+	//Table<DataModel,Index,ChildViewModel>
+	private final Table<Object, Integer, Object> dataModelElementToViewModelElement = HashBasedTable.create();
+
 
 	private final ViewBindingMeta          viewBindingMeta;
 	private final ViewBinder               viewBinder;
@@ -41,10 +42,9 @@ public class CollectionBinding implements ViewBinding {
 	private final ObservableCollection     observableCollection;
 
 	@Inject
-	CollectionBinding(
-					  final ViewBinder viewBinder,
+	CollectionBinding(final ViewBinder viewBinder,
 					  final SubViewModelDelegate subViewModelDelegate,
-                      @Assisted final ViewBindingMeta viewBindingMeta,
+					  @Assisted final ViewBindingMeta viewBindingMeta,
 					  @Assisted final ListeningExecutorService dataModelExecutor,
 					  @Assisted final ObservableCollection observableCollection) {
 		this.viewBindingMeta = viewBindingMeta;
@@ -176,12 +176,13 @@ public class CollectionBinding implements ViewBinding {
 		final Object removedChildDataModel = shadowChildDataModelList.remove(sourceIndex);
 		checkNotNull(removedChildDataModel);
 
-		final Object removedChildViewModel = this.dataModelElementToViewModelElement.remove(removedChildDataModel);
+		final Object removedChildViewModel = this.dataModelElementToViewModelElement.remove(removedChildDataModel,
+																							sourceIndex);
 
-		final ListenableFuture<Void> leftOverViewModelsListenableFuture = this.viewBinder.unbind(this.dataModelExecutor,
-																								 removedChildDataModel,
-																								 removedChildViewModel);
-		addCallback(leftOverViewModelsListenableFuture,
+		final ListenableFuture<Void> unbindFuture = this.viewBinder.unbind(this.dataModelExecutor,
+																		   removedChildDataModel,
+																		   removedChildViewModel);
+		addCallback(unbindFuture,
 					new FutureCallback<Void>() {
 						@Override
 						public void onSuccess(@Nullable final Void result) {
@@ -226,6 +227,7 @@ public class CollectionBinding implements ViewBinding {
 																   elementDataModel,
 																   childViewModel);
 							CollectionBinding.this.dataModelElementToViewModelElement.put(elementDataModel,
+																						  elementIndex,
 																						  childViewModel);
 						}
 
@@ -252,7 +254,8 @@ public class CollectionBinding implements ViewBinding {
 				shadowChildDataModelList.add(newPosition,
 											 childDataModel);
 
-				final Object changedChildViewModel = this.dataModelElementToViewModelElement.get(childDataModel);
+				final Object changedChildViewModel = this.dataModelElementToViewModelElement.get(childDataModel,
+																								 sourceIndex);
 
 				this.subViewModelDelegate.updateChildViewPosition(this.getViewBindingMeta().getViewModel(),
 																  changedChildViewModel,
@@ -268,8 +271,10 @@ public class CollectionBinding implements ViewBinding {
 			checkNotNull(oldChildDataModel);
 			checkNotNull(newChildDataModel);
 
-			final Object changedChildViewModel = this.dataModelElementToViewModelElement.remove(oldChildDataModel);
+			final Object changedChildViewModel = this.dataModelElementToViewModelElement.remove(oldChildDataModel,
+																								sourceIndex);
 			this.dataModelElementToViewModelElement.put(newChildDataModel,
+														sourceIndex,
 														changedChildViewModel);
 
 			this.viewBinder.unbind(this.dataModelExecutor,
