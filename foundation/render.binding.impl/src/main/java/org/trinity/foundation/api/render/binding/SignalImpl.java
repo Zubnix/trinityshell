@@ -39,20 +39,20 @@ import java.util.concurrent.Callable;
 
 public class SignalImpl implements Signal {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SignalImpl.class);
-    private static final Map<HashCode, Optional<Method>> EVENT_SLOTS_BY_HASH = new HashMap<>();
-    private static final HashFunction HASH_FUNCTION = Hashing.goodFastHash(16);
+	private static final Logger                          LOG                 = LoggerFactory.getLogger(SignalImpl.class);
+	private static final Map<HashCode, Optional<Method>> EVENT_SLOTS_BY_HASH = new HashMap<>();
+	private static final HashFunction                    HASH_FUNCTION       = Hashing.goodFastHash(16);
 
-    private final ListeningExecutorService modelExecutor;
-    private final Object eventSignalReceiver;
-    private final Optional<Method> slot;
+	private final ListeningExecutorService dataModelExecutor;
+	private final Object                   eventSignalReceiver;
+	private final Optional<Method>         slot;
 
 	@Inject
-    SignalImpl(@Assisted final ListeningExecutorService modelExecutor,
+	SignalImpl(@Assisted final ListeningExecutorService dataModelExecutor,
 			   @Assisted final Object eventSignalReceiver,
 			   @Assisted final String inputSlotName) {
-        this.modelExecutor = modelExecutor;
-        this.eventSignalReceiver = eventSignalReceiver;
+		this.dataModelExecutor = dataModelExecutor;
+		this.eventSignalReceiver = eventSignalReceiver;
 
 		this.slot = findSlot(this.eventSignalReceiver.getClass(),
 							 inputSlotName);
@@ -61,46 +61,50 @@ public class SignalImpl implements Signal {
 	private static Optional<Method> findSlot(final Class<?> modelClass,
 											 final String methodName) {
 
-        final HashCode hashCode = HASH_FUNCTION.newHasher().putInt(modelClass.hashCode())
-                .putUnencodedChars(methodName).hash();
+		final HashCode hashCode = HASH_FUNCTION.newHasher().putInt(modelClass.hashCode())
+											   .putUnencodedChars(methodName).hash();
 
-        Optional<Method> methodOptional = EVENT_SLOTS_BY_HASH.get(hashCode);
-        if (methodOptional == null) {
-            methodOptional = getSlot(modelClass, methodName);
-            EVENT_SLOTS_BY_HASH.put(hashCode, methodOptional);
-        }
+		Optional<Method> methodOptional = EVENT_SLOTS_BY_HASH.get(hashCode);
+		if(methodOptional == null) {
+			methodOptional = getSlot(modelClass,
+									 methodName);
+			EVENT_SLOTS_BY_HASH.put(hashCode,
+									methodOptional);
+		}
 
-        return methodOptional;
-    }
+		return methodOptional;
+	}
 
-    private static Optional<Method> getSlot(final Class<?> modelClass,
-                                            final String methodName) {
-        Method inputSlot = null;
-        try {
-            inputSlot = modelClass.getMethod(methodName);
-        } catch (final SecurityException e) {
-            LOG.error("Error while trying to find an input slot for class=" + modelClass + " with slotname="
-                    + methodName,
-                    e);
-        } catch (final NoSuchMethodException e) {
-            LOG.warn("No event slot found for class=" + modelClass + " with slotname=" + methodName,
-                    e);
-        }
-        return Optional.fromNullable(inputSlot);
-    }
+	private static Optional<Method> getSlot(final Class<?> modelClass,
+											final String methodName) {
+		Method inputSlot = null;
+		try {
+			inputSlot = modelClass.getMethod(methodName);
+		}
+		catch(final SecurityException e) {
+			LOG.error("Error while trying to find an input slot for class=" + modelClass + " with slotname="
+							  + methodName,
+					  e);
+		}
+		catch(final NoSuchMethodException e) {
+			LOG.warn("No event slot found for class=" + modelClass + " with slotname=" + methodName,
+					 e);
+		}
+		return Optional.fromNullable(inputSlot);
+	}
 
-    @Override
-    public ListenableFuture<Void> fire() {
-        return this.modelExecutor.submit(new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
+	@Override
+	public ListenableFuture<Void> fire() {
+		return this.dataModelExecutor.submit(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
 				if(SignalImpl.this.slot.isPresent()) {
 					final Method method = SignalImpl.this.slot.get();
 					method.setAccessible(true);
 					method.invoke(SignalImpl.this.eventSignalReceiver);
 				}
-                return null;
-            }
-        });
-    }
+				return null;
+			}
+		});
+	}
 }
