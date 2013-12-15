@@ -33,23 +33,23 @@ public abstract class AbstractViewBuilder implements ViewBuilder {
 
     @Override
     public ListenableFuture<Object[]> build(final ViewBuilderResult viewBuildResult) {
-        return displayExecutor.submit(new Callable<Object[]>() {
-            @Override
-            public Object[] call() throws ExecutionException, InterruptedException {
-                try(DisplaySurfaceCreator displaySurfaceCreator = displaySurfacePool.getDisplaySurfaceCreator()) {
-                    invokeViewBuild(viewFuture);
-                    final Object createdViewObject = viewFuture.get();
-                    DisplaySurfaceHandle createdDisplaySurfaceHandle = createDisplaySurfaceHandle(createdViewObject);
-                    final DisplaySurface displaySurface = displaySurfaceCreator
-                            .reference(createdDisplaySurfaceHandle);
-                    viewBuildResult.onResult(createdViewObject,
-                                             displaySurface);
-                    return new Object[]{createdViewObject,
-                                        displaySurface};
-                }
-            }
-        });
-    }
+		return this.displayExecutor.submit(new Callable<Object[]>() {
+			@Override
+			public Object[] call() throws ExecutionException, InterruptedException {
+				try(DisplaySurfaceCreator displaySurfaceCreator = AbstractViewBuilder.this.displaySurfacePool.getDisplaySurfaceCreator()) {
+					invokeViewBuild(AbstractViewBuilder.this.viewFuture);
+					final Object createdViewObject = AbstractViewBuilder.this.viewFuture.get();
+					final DisplaySurfaceHandle createdDisplaySurfaceHandle = createDisplaySurfaceHandle(createdViewObject);
+					final DisplaySurface displaySurface = displaySurfaceCreator
+							.reference(createdDisplaySurfaceHandle);
+					viewBuildResult.onResult(createdViewObject,
+											 displaySurface);
+					return new Object[]{createdViewObject,
+										displaySurface};
+				}
+			}
+		});
+	}
 
     protected abstract void invokeViewBuild(ListenableFutureTask<Object> viewFuture);
 

@@ -12,31 +12,32 @@ import javax.inject.Inject;
 
 public class FXViewBuilder extends AbstractViewBuilder {
 
-    @Inject
-    private Injector injector;
+	@Inject
+	private Injector injector;
 
-    private Class<? extends FXView> viewClass;
+	private final Class<? extends FXView> viewClass;
 
-    public FXViewBuilder(Class<? extends FXView> viewClass) {
-        this.viewClass = viewClass;
-    }
+	public FXViewBuilder(final Class<? extends FXView> viewClass) {
+		this.viewClass = viewClass;
+	}
 
-    @Override
-    protected void invokeViewBuild(final ListenableFutureTask<Object> viewFuture) {
+	@Override
+	protected void invokeViewBuild(final ListenableFutureTask<Object> viewFuture) {
 
-        if(Platform.isFxApplicationThread()) {
-            viewFuture.run();
-        } else {
-            Platform.runLater(viewFuture);
-        }
-    }
+		if(Platform.isFxApplicationThread()) {
+			viewFuture.run();
+		}
+		else {
+			Platform.runLater(viewFuture);
+		}
+	}
 
-    @Override
-    protected Object createViewObject() {
-        return this.injector.getInstance(this.viewClass);
-    }
+	@Override
+	protected Object createViewObject() {
+		return this.injector.getInstance(this.viewClass);
+	}
 
-    @Override
+	@Override
     protected DisplaySurfaceHandle createDisplaySurfaceHandle(final Object createdViewObject) {
         return new FXDisplaySurfaceHandle((Node) createdViewObject);
     }
