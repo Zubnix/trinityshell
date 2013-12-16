@@ -35,8 +35,9 @@ public interface ViewBinder {
 	/***************************************
      * Update the bound views so they reflect the state of the changed data model.
      * @param dataModelExecutor     The executor that operates on the data model.
-     * @param dataModel      The data model who's property changed.
-     * @param oldPropertyValue      The old value of the property.
+	 * @param dataModel            The data model who's property changed.
+	 * @param propertyName            The name of the property.
+	 * @param oldPropertyValue      The old value of the property.
      * @param newPropertyValue      The new value of the property.
      * @return A future indicating when the operation is done.
      ***************************************
@@ -70,14 +71,15 @@ public interface ViewBinder {
 	 * Update a bound view so that the changed sub view is reflected.
 	 *
 	 * @param dataModelExecutor The executor that operates on the data model.
-	 * @param parentViewModel  The view model who's sub view changed.
-     * @param oldSubView        The field value of the old sub view.
+	 * @param parentViewModel   The view model who's sub view changed.
+	 * @param subViewFieldName  The name of the field that holds the sub view.
+	 * @param oldSubView        The field value of the old sub view.
      * @param newSubView        The field value of the new sub view.
      * @return  future indicating when the operation is done.
      */
     ListenableFuture<Void> updateViewModelBinding(@Nonnull final ListeningExecutorService dataModelExecutor,
                                                   @Nonnull final Object parentViewModel,
                                                   @Nonnull final String subViewFieldName,
-                                                  @Nonnull final Optional<Object> oldSubView,
-                                                  @Nonnull final Optional<Object> newSubView);
+												  @Nonnull final Optional<?> oldSubView,
+												  @Nonnull final Optional<?> newSubView);
 }

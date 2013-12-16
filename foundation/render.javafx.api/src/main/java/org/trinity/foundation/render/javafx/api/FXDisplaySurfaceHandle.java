@@ -27,20 +27,20 @@ public class FXDisplaySurfaceHandle implements DisplaySurfaceHandle {
 
     @Override
     public Long getNativeHandle() {
-        Scene scene = this.node.getScene();
-        if(scene == null) {
+		final Scene scene = this.node.getScene();
+		if(scene == null) {
             return 0L;
         }
 
         final Window window = scene.getWindow();
-        TKStage stagePeer = window.impl_getPeer();
-        try {
+		final TKStage stagePeer = window.impl_getPeer();
+		try {
             final Field platformWindowField = stagePeer.getClass()
                                                        .getDeclaredField("platformWindow");
             platformWindowField.setAccessible(true);
             final com.sun.glass.ui.Window platformWindow = (com.sun.glass.ui.Window) platformWindowField.get(stagePeer);
-            FutureTask<Long> nativeWindowTask = new FutureTask<>(new Callable<Long>() {
-                @Override
+			final FutureTask<Long> nativeWindowTask = new FutureTask<>(new Callable<Long>() {
+				@Override
                 public Long call() throws Exception {
                     return platformWindow.getNativeWindow();
                 }

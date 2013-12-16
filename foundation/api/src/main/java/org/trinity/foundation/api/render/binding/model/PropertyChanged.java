@@ -19,7 +19,9 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.model;
 
+import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import org.trinity.foundation.api.render.binding.ViewBinder;
 import org.trinity.foundation.api.shared.ExecutionContext;
 
 import java.lang.annotation.Annotation;
@@ -33,7 +35,7 @@ import java.lang.annotation.Target;
  * marked method, the properties with a matching name will be used to update the
  * bound view.
  *
- * @see org.trinity.foundation.api.render.binding.ViewBinder#updateDataModelBinding(ListeningExecutorService, Object, String)
+ * @see ViewBinder#updateDataModelBinding(ListeningExecutorService, Object, String, Optional, Optional)
  *
  ***************************************
  */

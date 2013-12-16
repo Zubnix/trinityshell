@@ -37,12 +37,10 @@ public class SubViewDelegateImpl implements SubViewModelDelegate {
     }
 
     @Override
-    public <T> ListenableFuture<T> newView(
-            final Object parentView,
-            final Class<T> childViewType,
-            final int position
-                                          ) {
-        checkArgument(parentView instanceof Pane,
+	public <T> ListenableFuture<T> newView(final Object parentView,
+										   final Class<T> childViewType,
+										   final int position) {
+		checkArgument(parentView instanceof Pane,
                       format("Expected parent view should be of type %s",
                              Pane.class.getName()));
         checkArgument(FXView.class.isAssignableFrom(childViewType),
@@ -52,14 +50,14 @@ public class SubViewDelegateImpl implements SubViewModelDelegate {
         final FXViewBuilder subViewBuilder = new FXViewBuilder((Class<? extends FXView>) childViewType);
         this.injector.injectMembers(subViewBuilder);
 
-        ListenableFuture<Object[]> subViewBuildFuture = subViewBuilder.build(
-                new ViewBuilderResult() {
-                    @Override
-                    public void onResult(final Object bindableView,
-                                         final DisplaySurface viewDisplaySurface) {
-                        final FXView childView = (FXView) bindableView;
-                        final Pane parentViewInstance = (Pane) parentView;
-                        Platform.runLater(new Runnable() {
+		final ListenableFuture<Object[]> subViewBuildFuture = subViewBuilder.build(
+				new ViewBuilderResult() {
+					@Override
+					public void onResult(final Object bindableView,
+										 final DisplaySurface viewDisplaySurface) {
+						final FXView childView = (FXView) bindableView;
+						final Pane parentViewInstance = (Pane) parentView;
+						Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
                                 childView.setParent(parentViewInstance);
@@ -79,15 +77,13 @@ public class SubViewDelegateImpl implements SubViewModelDelegate {
     }
 
     @Override
-    public ListenableFuture<Void> destroyView(
-            final Object parentView,
-            final Object deletedChildView,
-            final int deletedPosition
-                                             ) {
+	public ListenableFuture<Void> destroyView(final Object parentView,
+											  final Object deletedChildView,
+											  final int deletedPosition) {
 
-        final ListenableFutureTask<Void> destroyTask = ListenableFutureTask.create(new Callable<Void>() {
-            @Override
-            public Void call() {
+		final ListenableFutureTask<Void> destroyTask = ListenableFutureTask.create(new Callable<Void>() {
+			@Override
+			public Void call() {
                 //FIXME workaround for too eagerly registering view elements with a datacontext
                 if (deletedChildView instanceof FXView) {
                     final FXView deletedChildViewInstance = (FXView) deletedChildView;
@@ -102,9 +98,12 @@ public class SubViewDelegateImpl implements SubViewModelDelegate {
     }
 
     @Override
-    public ListenableFuture<Void> updateChildViewPosition(final Object parentView, final Object childView, final int oldPosition, final int newPosition) {
-        checkArgument(parentView instanceof FXView,
-                format("Expected parent view should be of type %s",
+	public ListenableFuture<Void> updateChildViewPosition(final Object parentView,
+														  final Object childView,
+														  final int oldPosition,
+														  final int newPosition) {
+		checkArgument(parentView instanceof FXView,
+					  format("Expected parent view should be of type %s",
                         FXView.class.getName()));
 
         checkArgument(childView instanceof FXView,

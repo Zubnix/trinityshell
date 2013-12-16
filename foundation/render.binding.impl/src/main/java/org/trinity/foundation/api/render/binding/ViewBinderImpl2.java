@@ -229,8 +229,8 @@ public class ViewBinderImpl2 implements ViewBinder {
     public ListenableFuture<Void> updateViewModelBinding(@Nonnull final ListeningExecutorService dataModelExecutor,
                                                          @Nonnull final Object parentViewModel,
                                                          @Nonnull final String fieldName,
-                                                         @Nonnull final Optional<Object> oldSubView,
-                                                         @Nonnull final Optional<Object> newSubView) {
+                                                         @Nonnull final Optional<?> oldSubView,
+                                                         @Nonnull final Optional<?> newSubView) {
         return dataModelExecutor.submit(new Callable<Void>() {
             @Override
             public Void call() {
@@ -247,8 +247,8 @@ public class ViewBinderImpl2 implements ViewBinder {
     private void updateViewModelBindingImpl(@Nonnull final ListeningExecutorService dataModelExecutor,
                                             @Nonnull final Object parentViewModel,
                                             @Nonnull final String subViewFieldName,
-                                            @Nonnull final Optional<Object> oldSubView,
-                                            @Nonnull final Optional<Object> newSubView) {
+                                            @Nonnull final Optional<?> oldSubView,
+                                            @Nonnull final Optional<?> newSubView) {
         if (oldSubView.equals(newSubView)) {
             return;
         }
