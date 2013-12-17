@@ -20,6 +20,7 @@
 
 package org.trinity.foundation.api.render.binding;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
@@ -58,7 +59,29 @@ public class SignalImpl implements Signal {
 							 inputSlotName);
 	}
 
-	private static Optional<Method> findSlot(final Class<?> modelClass,
+    @Override
+    public boolean equals(final Object obj) {
+        if(obj == null) {
+            return false;
+        }
+        if(getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final SignalImpl other = (SignalImpl) obj;
+
+        return Objects.equal(   this.eventSignalReceiver,
+                                other.eventSignalReceiver) && Objects.equal(this.slot,
+                                                                            other.slot);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.eventSignalReceiver,
+                                this.slot);
+    }
+
+    private static Optional<Method> findSlot(final Class<?> modelClass,
 											 final String methodName) {
 
 		final HashCode hashCode = HASH_FUNCTION.newHasher().putInt(modelClass.hashCode())

@@ -14,6 +14,8 @@ import org.mockito.stubbing.Answer;
 import java.util.concurrent.Callable;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,7 +32,6 @@ public class SignalImplTest {
 	@Spy
 	private DataModel                eventSignalReceiver;
 
-	private SignalImpl signal;
 
 	@Before
 	public void setUp() {
@@ -50,13 +51,13 @@ public class SignalImplTest {
 	public void testFire() {
 		//given
 		//a signal with a valid slot
-		this.signal = new SignalImpl(this.dataModelExecutor,
-									 this.eventSignalReceiver,
-									 "onFoo");
+        final SignalImpl signal = new SignalImpl(this.dataModelExecutor,
+									             this.eventSignalReceiver,
+									             "onFoo");
 
 		//when
 		//the signal is fired
-		this.signal.fire();
+		signal.fire();
 
 		//then
 		//the data model slot is invoked
@@ -67,17 +68,61 @@ public class SignalImplTest {
 	public void testFireNoSlot() {
 		//given
 		//a signal with an invalid slot
-		this.signal = new SignalImpl(this.dataModelExecutor,
-									 this.eventSignalReceiver,
-									 "onBar");
+        final SignalImpl signal = new SignalImpl(this.dataModelExecutor,
+									             this.eventSignalReceiver,
+									             "onBar");
 
 		//when
 		//the signal is fired
-		this.signal.fire();
+		signal.fire();
 
 		//then
 		//the data model slot is not invoked
 		verify(this.eventSignalReceiver,
 			   never()).onFoo();
 	}
+
+    @Test
+    public void testEquals(){
+        //given
+        //2 signal objects with the same receiver & the same method name
+        final SignalImpl signal0 = new SignalImpl(this.dataModelExecutor,
+                                                  this.eventSignalReceiver,
+                                                  "onFoo");
+        final SignalImpl signal1 = new SignalImpl(this.dataModelExecutor,
+                                                  this.eventSignalReceiver,
+                                                  "onFoo");
+
+        //when
+        //the signals are compared for equality
+        final boolean equals0 = signal0.equals(signal1);
+        final boolean equals1 = signal1.equals(signal0);
+
+        //then
+        //the signals are equal
+        assertTrue(equals0);
+        assertTrue(equals1);
+    }
+
+    @Test
+    public void testHashCode(){
+        //given
+        //2 signal objects with the same receiver & the same method name
+        final SignalImpl signal0 = new SignalImpl(this.dataModelExecutor,
+                                                  this.eventSignalReceiver,
+                                                  "onFoo");
+        final SignalImpl signal1 = new SignalImpl(this.dataModelExecutor,
+                                                  this.eventSignalReceiver,
+                                                  "onFoo");
+
+        //when
+        //the signal hashcodes are compared
+        final int hashCode0 = signal0.hashCode();
+        final int hashCode1 = signal1.hashCode();
+
+        //then
+        //the hashcodes are the same
+        assertEquals(hashCode0,
+                     hashCode1);
+    }
 }
