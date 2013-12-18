@@ -32,8 +32,8 @@ public class FXView extends Control {
 				viewBinder.updateViewModelBinding(modelExecutor,
 												  FXView.this,
 												  "skin",
-												  Optional.of(oldSkin),
-												  Optional.of(newSkin));
+												  Optional.fromNullable(oldSkin),
+												  Optional.fromNullable(newSkin));
 			}
 		});
 	}
