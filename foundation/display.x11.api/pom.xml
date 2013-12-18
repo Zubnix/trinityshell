@@ -23,6 +23,14 @@
 			<artifactId>foundation.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+        <!-- logging implementation for test log output -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.10</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 </project>
 
