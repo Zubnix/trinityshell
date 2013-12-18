@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.org/Zubnix/trinityshell.png?branch=0.0.3-SNAPSHOT)](https://travis-ci.org/Zubnix/trinityshell)
+
 Trinity shell is a Java base desktop shell for Linux.  
 It is higly modular by design and uses Google Guice to glue different functional modules together. Currently the display module uses XCB through XCB4J to talk to the X display server while the render module uses Qt through QtJambi to do the drawing. Window manager and shell functionality is provided by shell plugins that are loaded by the shell module.  
 It is still a young project that is usable but not usefull as a lot of very basic window managing controls are still missing. The project's ambition is to become a tool and library for Java developers to build their own fully fledged desktop, including hardware accelerated compositing, tiling window management etc.
