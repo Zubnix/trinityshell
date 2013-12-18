@@ -40,7 +40,6 @@ public class FXView extends Control {
 
 	public void setParent(final Pane parentFxView) {
 		parentFxView.getChildren().add(this);
-		parentFxView.layout();
 	}
 
 	public void close() {
