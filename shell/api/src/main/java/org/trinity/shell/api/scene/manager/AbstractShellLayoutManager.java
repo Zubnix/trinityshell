@@ -59,7 +59,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
     }
 
     public AbstractShellNodeParent getShellNodeParent() {
-        return this.shellNodeParent;
+		return this.shellNodeParent;
     }
 
     @Override
