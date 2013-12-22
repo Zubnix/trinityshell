@@ -19,11 +19,7 @@
  ******************************************************************************/
 package org.trinity.shell.scene.impl;
 
-import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-
+import com.google.common.util.concurrent.ListeningExecutorService;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.shared.AsyncListenable;
@@ -37,7 +33,10 @@ import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
+import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
 
 // TODO documentation
 /**
@@ -51,8 +50,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
  * <code>ShellLayoutManager</code> which means it can manage it's children's
  * geometry requests if necessary.
  *
- * @author Erik De Rijcke
- * @since 1.0
  */
 @Bind(to = @To(value = CUSTOM, customs = { ShellNode.class, ShellNodeParent.class }))
 @ShellVirtualNode

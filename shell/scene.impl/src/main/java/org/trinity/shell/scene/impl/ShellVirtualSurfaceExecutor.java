@@ -25,12 +25,10 @@ import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
-import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.List;
 
 // TODO documentation
 
@@ -38,8 +36,6 @@ import java.util.List;
  * A <code>ShellGeoVExecutor</code> executes the actual geometry changes for a
  * {@link ShellVirtualSurface}.
  *
- * @author Erik De Rijcke
- * @since 1.0
  */
 @NotThreadSafe
 @ExecutionContext(ShellExecutor.class)
