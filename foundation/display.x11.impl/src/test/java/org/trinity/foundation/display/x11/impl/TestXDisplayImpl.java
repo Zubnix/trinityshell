@@ -65,8 +65,8 @@ public class TestXDisplayImpl {
 
     @Before
     public void setup() {
-        when(xExecutor.submit(Matchers.<Callable>any())).thenAnswer(new Answer<Object>() {
-            @Override
+		when(this.xExecutor.submit(Matchers.<Callable>any())).thenAnswer(new Answer<Object>() {
+			@Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {
                 final Object arg0 = invocation.getArguments()[0];
                 final Callable<?> submittedCallable = (Callable<?>) arg0;
@@ -75,21 +75,21 @@ public class TestXDisplayImpl {
             }
         });
 
-        when(xConnection.getConnectionReference()).thenReturn(xcb_connection);
-    }
+		when(this.xConnection.getConnectionReference()).thenReturn(this.xcb_connection);
+	}
 
     @Test(expected = Error.class)
     public void testXDisplayConstructionXError() throws ExecutionException, InterruptedException {
         //given
         //an underlying X server with errors
         mockStatic(LibXcb.class);
-        when(xcb_connection_has_error(xcb_connection)).thenReturn(1);
-        //when
+		when(xcb_connection_has_error(this.xcb_connection)).thenReturn(1);
+		//when
         //a new XDisplay is created
-        new XDisplayImpl(xConnection,
-                         xWindowPool,
-                         xExecutor);
-        //then
+		new XDisplayImpl(this.xConnection,
+						 this.xWindowPool,
+						 this.xExecutor);
+		//then
         //the XDisplay object throws an Error
     }
 
@@ -106,9 +106,9 @@ public class TestXDisplayImpl {
         final xcb_screen_t xcb_screen = mock(xcb_screen_t.class);
         final int rootWindowId = 123;
 
-        when(xcb_connection_has_error(xcb_connection)).thenReturn(0);
-        when(xcb_get_setup(xcb_connection)).thenReturn(xcb_setup);
-        when(xcb_setup_roots_iterator(xcb_setup)).thenReturn(xcb_screen_iterator);
+		when(xcb_connection_has_error(this.xcb_connection)).thenReturn(0);
+		when(xcb_get_setup(this.xcb_connection)).thenReturn(xcb_setup);
+		when(xcb_setup_roots_iterator(xcb_setup)).thenReturn(xcb_screen_iterator);
         when(xcb_screen_iterator.getData()).thenReturn(xcb_screen);
         when(xcb_screen_iterator.getRem()).thenReturn(1,
                                                       0);
@@ -122,10 +122,10 @@ public class TestXDisplayImpl {
         final int childId1 = 4;
         final int childId2 = 6;
 
-        when(xcb_query_tree(xcb_connection,
-                            rootWindowId)).thenReturn(xcb_query_tree_cookie);
-        when(xcb_query_tree_reply(eq(xcb_connection),
-                                  eq(xcb_query_tree_cookie),
+		when(xcb_query_tree(this.xcb_connection,
+							rootWindowId)).thenReturn(xcb_query_tree_cookie);
+		when(xcb_query_tree_reply(eq(this.xcb_connection),
+								  eq(xcb_query_tree_cookie),
                 (xcb_generic_error_t) any())).thenReturn(xcb_query_tree_reply);
         when(xcb_query_tree_children(xcb_query_tree_reply)).thenReturn(treeChildren);
         when(xcb_query_tree_children_length(xcb_query_tree_reply)).thenReturn(nroChildren);
@@ -136,10 +136,10 @@ public class TestXDisplayImpl {
         final xcb_get_window_attributes_cookie_t get_window_attributes_cookie = mock(xcb_get_window_attributes_cookie_t.class);
         final xcb_get_window_attributes_reply_t get_window_attributes_reply = mock(xcb_get_window_attributes_reply_t.class);
 
-        when(xcb_get_window_attributes(eq(xcb_connection),
-                                       anyInt())).thenReturn(get_window_attributes_cookie);
-        when(xcb_get_window_attributes_reply(eq(xcb_connection),
-                                             eq(get_window_attributes_cookie),
+		when(xcb_get_window_attributes(eq(this.xcb_connection),
+									   anyInt())).thenReturn(get_window_attributes_cookie);
+		when(xcb_get_window_attributes_reply(eq(this.xcb_connection),
+											 eq(get_window_attributes_cookie),
                 (xcb_generic_error_t) any())).thenReturn(get_window_attributes_reply);
         when(get_window_attributes_reply.getOverride_redirect()).thenReturn((short) 1,
                                                                             (short) 0,
@@ -151,8 +151,8 @@ public class TestXDisplayImpl {
         final DisplaySurface clientWindow = mock(DisplaySurface.class);
         final DisplaySurfaceHandle displaySurfaceHandle = mock(DisplaySurfaceHandle.class);
 
-        when(xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenReturn(clientWindow);
-        when(clientWindow.getDisplaySurfaceHandle()).thenReturn(displaySurfaceHandle);
+		when(this.xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenReturn(clientWindow);
+		when(clientWindow.getDisplaySurfaceHandle()).thenReturn(displaySurfaceHandle);
         when(displaySurfaceHandle.getNativeHandle()).thenReturn(6);
 
         final DisplaySurface newClient = mock(DisplaySurface.class);
@@ -163,10 +163,10 @@ public class TestXDisplayImpl {
         //when
         //a new XDisplay is created
         //a client is created
-        final XDisplayImpl xDisplay = new XDisplayImpl(xConnection,
-                                                 xWindowPool,
-                                                 xExecutor);
-        xDisplay.post(displaySurfaceCreationNotify);
+		final XDisplayImpl xDisplay = new XDisplayImpl(this.xConnection,
+													   this.xWindowPool,
+													   this.xExecutor);
+		xDisplay.post(displaySurfaceCreationNotify);
 
         //then
         //the root window is configured
@@ -177,23 +177,23 @@ public class TestXDisplayImpl {
         final ByteBuffer rootWindowAttributes = allocateDirect(4).order(nativeOrder())
                 .putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
         verifyStatic();
-        xcb_change_window_attributes(eq(xcb_connection),
-                                     eq(rootWindowId),
+		xcb_change_window_attributes(eq(this.xcb_connection),
+									 eq(rootWindowId),
                                      eq(XCB_CW_EVENT_MASK),
                                      eq(rootWindowAttributes));
 
         final XWindowHandle clientHandle = new XWindowHandle(6);
-        verify(xWindowPool).getDisplaySurface(eq(clientHandle));
-        verifyNoMoreInteractions(xWindowPool);
-        assertTrue(xDisplay.getDisplaySurfaces().get().get(0) == clientWindow);
+		verify(this.xWindowPool).getDisplaySurface(eq(clientHandle));
+		verifyNoMoreInteractions(this.xWindowPool);
+		assertTrue(xDisplay.getDisplaySurfaces().get().get(0) == clientWindow);
 
         final int CLIENT_EVENT_MASK = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
                 | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
         final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
                 .putInt(CLIENT_EVENT_MASK);
         verifyStatic();
-        xcb_change_window_attributes(eq(xcb_connection),
-                                     eq(6),
+		xcb_change_window_attributes(eq(this.xcb_connection),
+									 eq(6),
                                      eq(XCB_CW_EVENT_MASK),
                                      eq(CLIENT_EVENTS_CONFIG_BUFFER));
 
