@@ -20,11 +20,11 @@
 
 package org.trinity.foundation.display.x11.api;
 
-import javax.annotation.concurrent.NotThreadSafe;
-
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.ExecutionContext;
+
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * A connection to an X display server.
@@ -39,17 +39,6 @@ public interface XConnection {
 	 * @return The underlying native X connection.
 	 */
 	SWIGTYPE_p_xcb_connection_t getConnectionReference();
-
-//	/**
-//	 * Open a connection to an X display server.
-//	 *
-//	 * @param displayName
-//	 *            The display to connect to.
-//	 * @param screen
-//	 *            The screen of the display to connect to.
-//	 */
-//	void open(	@Nonnull String displayName,
-//				@Nonnegative int screen);
 
 	/**
 	 * Close the connection to the underlying X display server.
