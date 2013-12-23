@@ -9,7 +9,7 @@
 
     <name>Trinity</name>
     <description>A Java desktop shell.</description>
-    <url>http://code.google.com/p/ewm</url>
+    <url>https://github.com/Zubnix/trinityshell</url>
     <inceptionYear>2009-11-06</inceptionYear>
     <developers>
         <developer>
@@ -34,6 +34,7 @@
         <!-- dep versions -->
         <guice.version>4.0-beta</guice.version>
         <guava.version>15.0</guava.version>
+        <!--autobind is build from source -->
         <onami.autobind.version>0.9.2-SNAPSHOT</onami.autobind.version>
         <findbugs.version>2.0.2</findbugs.version>
         <slf4j.version>1.7.5</slf4j.version>
@@ -41,7 +42,14 @@
         <!-- test dep versions -->
         <junit.version>4.11</junit.version>
         <mockito.version>1.9.5</mockito.version>
-        <powermock.version>1.5.1</powermock.version>
+        <powermock.version>1.5.2</powermock.version>
+
+        <!-- plugin dep versions-->
+        <maven.bundle.plugin.version>2.4.0</maven.bundle.plugin.version>
+        <maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
+        <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
+        <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
+        <umlgraph.version>5.6.6</umlgraph.version>
 
         <!-- java version -->
         <maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>
@@ -59,13 +67,6 @@
         <module>shellplugin</module>
         <module>bootstrap</module>
     </modules>
-
-    <!--<repositories>-->
-    <!--<repository>-->
-    <!--<id>apache-snapshots</id>-->
-    <!--<url>https://repository.apache.org/snapshots/</url>-->
-    <!--</repository>-->
-    <!--</repositories>-->
 
     <dependencies>
         <!-- google guice+guava -->
@@ -109,7 +110,7 @@
             <version>${onami.autobind.version}</version>
         </dependency>
         <dependency>
-        <groupId>org.apache.onami.autobind.scanner</groupId>
+            <groupId>org.apache.onami.autobind.scanner</groupId>
             <artifactId>org.apache.onami.autobind.scanner.asm</artifactId>
             <version>${onami.autobind.version}</version>
         </dependency>
@@ -151,7 +152,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.4.0</version>
+                <version>${maven.bundle.plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -163,10 +164,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <fork>true</fork>
-                    <compilerVersion>1.8</compilerVersion>
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
@@ -174,7 +173,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
+                <version>${maven.source.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -187,7 +186,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
+                <version>${maven.javadoc.plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -203,7 +202,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.9.1</version>
+                    <version>${maven.source.plugin.version}</version>
                     <configuration>
                         <verbose>false</verbose>
                         <groups>
@@ -223,15 +222,15 @@
                         <excludePackageNames>*impl*:org.trinity.bootstrap</excludePackageNames>
                         <linksource>true</linksource>
                         <minmemory>16m</minmemory>
-			<maxmemory>128m</maxmemory>
-			<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-			<docletArtifact>                                                         
-				<groupId>org.umlgraph</groupId>
-				<artifactId>umlgraph</artifactId>
-				<version>5.6</version>
-			</docletArtifact>
-			<additionalparam>-views</additionalparam>
-			<useStandardDocletOptions>true</useStandardDocletOptions>
+                        <maxmemory>128m</maxmemory>
+                        <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                        <docletArtifact>
+                            <groupId>org.umlgraph</groupId>
+                            <artifactId>umlgraph</artifactId>
+                            <version>${umlgraph.version}</version>
+                        </docletArtifact>
+                        <additionalparam>-Xdoclint:none -views</additionalparam>
+                        <useStandardDocletOptions>true</useStandardDocletOptions>
                     </configuration>
                 </plugin>
             </plugins>
