@@ -19,6 +19,8 @@
  ******************************************************************************/
 package org.trinity.foundation.api.shared;
 
+import com.google.common.base.Objects;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
@@ -73,5 +75,27 @@ public class Coordinate {
 	public Coordinate subtract(final Coordinate coordinate) {
 		return new Coordinate(	getX() - coordinate.getX(),
 								getY() - coordinate.getY());
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if(obj == null) {
+			return false;
+		}
+		if(getClass() != obj.getClass()) {
+			return false;
+		}
+		final Coordinate other = (Coordinate) obj;
+
+		return Objects.equal(this.x,
+							 other.x)
+				&& Objects.equal(this.y,
+								 other.y);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.x,
+								this.y);
 	}
 }
