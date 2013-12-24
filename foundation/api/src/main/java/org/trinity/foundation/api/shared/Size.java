@@ -20,6 +20,8 @@
 
 package org.trinity.foundation.api.shared;
 
+import com.google.common.base.Objects;
+
 import javax.annotation.Nonnegative;
 import javax.annotation.concurrent.Immutable;
 
@@ -40,5 +42,27 @@ public class Size {
 
 	public int getHeight() {
 		return this.height;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if(obj == null) {
+			return false;
+		}
+		if(getClass() != obj.getClass()) {
+			return false;
+		}
+		final Size other = (Size) obj;
+
+		return Objects.equal(this.width,
+							 other.width)
+				&& Objects.equal(this.height,
+								 other.height);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.width,
+								this.height);
 	}
 }
