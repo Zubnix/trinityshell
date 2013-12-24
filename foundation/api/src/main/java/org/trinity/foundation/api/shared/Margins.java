@@ -19,6 +19,8 @@
  ******************************************************************************/
 package org.trinity.foundation.api.shared;
 
+import com.google.common.base.Objects;
+
 import javax.annotation.Nonnegative;
 import javax.annotation.concurrent.Immutable;
 
@@ -123,5 +125,33 @@ public class Margins {
 	 */
 	public int getTop() {
 		return this.top;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if(obj == null) {
+			return false;
+		}
+		if(getClass() != obj.getClass()) {
+			return false;
+		}
+		final Margins other = (Margins) obj;
+
+		return Objects.equal(this.top,
+							 other.top)
+				&& Objects.equal(this.right,
+								 other.right)
+				&& Objects.equal(this.bottom,
+								 other.bottom)
+				&& Objects.equal(this.left,
+								 other.left);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.top,
+								this.right,
+								this.bottom,
+								this.left);
 	}
 }
