@@ -39,32 +39,33 @@ import java.util.concurrent.ExecutorService;
 public class AsyncListenableEventBus extends EventBus implements AsyncListenable {
 
 	private final Map<Object, AsyncEventBus> asyncEventBusByListener = new WeakHashMap<>();
-	private final ExecutorService listenableExecutorService;
+	private final ExecutorService postingExecutorService;
 
 	public AsyncListenableEventBus(@Nonnull final ExecutorService postingExecutorService) {
-		this.listenableExecutorService = postingExecutorService;
+		this.postingExecutorService = postingExecutorService;
 	}
 
 	@Override
 	public void register(@Nonnull final Object listener) {
-		handleRegister(	listener,
-						MoreExecutors.sameThreadExecutor(),
-						MoreExecutors.sameThreadExecutor());
-	}
-
-	public void register(	@Nonnull final Object listener,
-							@Nonnull final ExecutorService listenerActivationExecutor) {
-		handleRegister(	listener,
-						listenerActivationExecutor,
-						MoreExecutors.sameThreadExecutor());
+		handleRegister(listener,
+					   MoreExecutors.sameThreadExecutor(),
+					   MoreExecutors.sameThreadExecutor());
 	}
 
 	@Override
-	public void scheduleRegister(	@Nonnull final Object listener,
-									@Nonnull final ExecutorService listenerActivationExecutor) {
-		handleRegister(	listener,
-						listenerActivationExecutor,
-						this.listenableExecutorService);
+	public void register(@Nonnull final Object listener,
+						 @Nonnull final ExecutorService listenerActivationExecutor) {
+		handleRegister(listener,
+					   listenerActivationExecutor,
+					   MoreExecutors.sameThreadExecutor());
+	}
+
+	@Override
+	public void scheduleRegister(@Nonnull final Object listener,
+								 @Nonnull final ExecutorService listenerActivationExecutor) {
+		handleRegister(listener,
+					   listenerActivationExecutor,
+					   this.postingExecutorService);
 
 	}
 
@@ -74,14 +75,14 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 	 */
 	@Override
 	public void scheduleRegister(@Nonnull final Object listener) {
-		handleRegister(	listener,
-						MoreExecutors.sameThreadExecutor(),
-						this.listenableExecutorService);
+		handleRegister(listener,
+					   MoreExecutors.sameThreadExecutor(),
+					   this.postingExecutorService);
 	}
 
-	protected void handleRegister(	@Nonnull final Object listener,
-									@Nonnull final ExecutorService listenerActivationExecutor,
-									@Nonnull final ExecutorService listenerRegistrationExecutor) {
+	protected void handleRegister(@Nonnull final Object listener,
+								  @Nonnull final ExecutorService listenerActivationExecutor,
+								  @Nonnull final ExecutorService listenerRegistrationExecutor) {
 		// schedule the listener for inclusion when the next event notification
 		// starts.
 		listenerRegistrationExecutor.submit(new Callable<Void>() {
@@ -96,13 +97,14 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 		});
 	}
 
+	//TODO there might be more variations needed, just like the register method...
 	/**
 	 * {@inheritDoc}
 	 * @see EventBus#unregister(Object)
 	 */
 	@Override
 	public void unregister(@Nonnull final Object object) {
-		this.listenableExecutorService.submit(new Callable<Void>() {
+		this.postingExecutorService.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
 				AsyncListenableEventBus.this.asyncEventBusByListener.remove(object);
@@ -117,11 +119,10 @@ public class AsyncListenableEventBus extends EventBus implements AsyncListenable
 	 */
 	@Override
 	public void post(@Nonnull final Object event) {
-		this.listenableExecutorService.submit(new Callable<Void>() {
+		this.postingExecutorService.submit(new Callable<Void>() {
 			@Override
 			public Void call() {
-
-				for (final AsyncEventBus asyncEventBus : AsyncListenableEventBus.this.asyncEventBusByListener.values()) {
+				for(final AsyncEventBus asyncEventBus : AsyncListenableEventBus.this.asyncEventBusByListener.values()) {
 					asyncEventBus.post(event);
 				}
 				return null;
