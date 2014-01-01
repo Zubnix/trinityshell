@@ -90,22 +90,25 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	}
 
 	@Override
-	protected void doMove(final boolean execute) {
-		super.doMove(execute);
+	public Void doMoveImpl() {
+		super.doMoveImpl();
 		updateChildrenPosition();
+		return null;
 	}
 
 	@Override
-	protected void doMoveResize(final boolean execute) {
-		super.doMoveResize(execute);
+	public Void doMoveResizeImpl() {
+		super.doMoveResizeImpl();
 		updateChildrenPosition();
 		layout();
+		return null;
 	}
 
 	@Override
-	protected void doResize(final boolean execute) {
-		super.doResize(execute);
+	public Void doResizeImpl() {
+		super.doResizeImpl();
 		layout();
+		return null;
 	}
 
 	protected void handleChildReparent(@Nonnull final ShellNode child) {

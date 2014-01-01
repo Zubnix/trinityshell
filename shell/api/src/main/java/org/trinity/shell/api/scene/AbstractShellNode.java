@@ -30,24 +30,7 @@ import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
-import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeEvent;
-import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
-import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeLoweredEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMovedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMovedResizedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeRaisedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeReparentedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeResizedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeShowedEvent;
+import org.trinity.shell.api.scene.event.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -211,37 +194,12 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	@Override
 	public Void doMoveImpl() {
-		doMove(true);
-		return null;
-	}
-
-	/**
-	 * ************************************ Move the current node but the actual
-	 * delegated execution by this node's {@link ShellNodeGeometryDelegate} is
-	 * conditional. This call will affect the node's state.
-	 *
-	 * @param execute
-	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
-	 *            level execution. **************************************
-	 */
-	protected void doMove(final boolean execute) {
 		flushPlaceValues();
-		if (execute) {
-			execMove();
-		}
-		final ShellNodeMovedEvent geoEvent = new ShellNodeMovedEvent(	this,
-																		toGeoTransformationImpl());
+		getShellNodeGeometryDelegate().move(getPositionImpl());
+		final ShellNodeMovedEvent geoEvent = new ShellNodeMovedEvent(this,
+																	 toGeoTransformationImpl());
 		post(geoEvent);
-	}
-
-	/**
-	 * ************************************ Execute the move process by this
-	 * node's {@link ShellNodeGeometryDelegate} . This call does not affect the
-	 * node's state. **************************************
-	 */
-	public void execMove() {
-		getShellNodeGeometryDelegate().move(getDesiredPosition());
+		return null;
 	}
 
 	/**
@@ -253,38 +211,11 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	@Override
 	public Void doResizeImpl() {
-		doResize(true);
-		return null;
-	}
-
-	/**
-	 * ************************************ Resize the current node but the
-	 * actual delegated execution by this node's
-	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
-	 * the node's state.
-	 *
-	 * @param execute
-	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
-	 *            level execution. **************************************
-	 */
-	protected void doResize(final boolean execute) {
 		flushSizeValues();
-		if (execute) {
-			execResize();
-		}
+		getShellNodeGeometryDelegate().resize(getSizeImpl());
 		final ShellNodeResizedEvent geoEvent = new ShellNodeResizedEvent(	this,
-																			toGeoTransformationImpl());
+																			 toGeoTransformationImpl());
 		post(geoEvent);
-	}
-
-	/**
-	 * ************************************ Execute the resize process by this
-	 * node's {@link ShellNodeGeometryDelegate}. This call does not affect the
-	 * node's state. **************************************
-	 */
-	public Void execResize() {
-		getShellNodeGeometryDelegate().resize(getDesiredSize());
 		return null;
 	}
 
@@ -298,39 +229,12 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 
 	@Override
 	public Void doMoveResizeImpl() {
-		doMoveResize(true);
-		return null;
-	}
-
-	/**
-	 * ************************************ Move and resize the current node but
-	 * the actual delegated execution by this node's
-	 * {@link ShellNodeGeometryDelegate} is conditional. This call will affect
-	 * the node's state.
-	 *
-	 * @param execute
-	 *            True to execute the process by the this node's
-	 *            {@link ShellNodeGeometryDelegate}, false to ignore the low
-	 *            level execution. **************************************
-	 */
-	protected void doMoveResize(final boolean execute) {
 		flushSizePlaceValues();
-		if (execute) {
-			execMoveResize();
-		}
-		final ShellNodeMovedResizedEvent geoEvent = new ShellNodeMovedResizedEvent(	this,
-																					toGeoTransformationImpl());
-		post(geoEvent);
-	}
-
-	/**
-	 * ************************************ Execute the move and resize process
-	 * by this node's {@link ShellNodeGeometryDelegate}. This call does not
-	 * affect the node's state. **************************************
-	 */
-	public Void execMoveResize() {
 		getShellNodeGeometryDelegate().moveResize(	getDesiredPosition(),
-													getDesiredSize());
+													  getDesiredSize());
+		final ShellNodeMovedResizedEvent geoEvent = new ShellNodeMovedResizedEvent(	this,
+																					   toGeoTransformationImpl());
+		post(geoEvent);
 		return null;
 	}
 

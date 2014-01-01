@@ -19,13 +19,11 @@
  ******************************************************************************/
 package org.trinity.shell.surface.impl;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.util.concurrent.Futures.addCallback;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
 import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.assistedinject.Assisted;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.GeometryNotify;
@@ -40,12 +38,14 @@ import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
-
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.assistedinject.Assisted;
+import org.trinity.shell.api.scene.event.ShellNodeMovedResizedEvent;
 import org.trinity.shell.api.surface.AbstractAsyncShellSurface;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.util.concurrent.Futures.addCallback;
 
 // TODO documentation
 /**
@@ -278,7 +278,14 @@ public final class ShellSurfaceImpl extends AbstractAsyncShellSurface {
         final Rectangle geometry = geometryNotify.getGeometry();
         setPositionImpl(geometry.getPosition());
         setSizeImpl(geometry.getSize());
-        doMoveResize(false);
+
+		flushSizePlaceValues();
+		final ShellNodeMovedResizedEvent geoEvent = new ShellNodeMovedResizedEvent(	this,
+																					   toGeoTransformationImpl());
+		post(geoEvent);
+
+		updateChildrenPosition();
+		layout();
     }
 
     @Subscribe
@@ -337,8 +344,8 @@ public final class ShellSurfaceImpl extends AbstractAsyncShellSurface {
 	}
 
 	// repeated for package level visibility
-	@Override
-	protected void doMoveResize(final boolean execute) {
-		super.doMoveResize(execute);
-	}
+//	@Override
+//	protected void doMoveResize(final boolean execute) {
+//		super.doMoveResize(execute);
+//	}
 }
