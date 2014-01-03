@@ -19,14 +19,14 @@
  ******************************************************************************/
 package org.trinity.shell.api.scene;
 
-import javax.annotation.concurrent.Immutable;
-
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.shell.api.bindingkey.ShellExecutor;
 
-import com.google.common.base.Optional;
+import javax.annotation.concurrent.Immutable;
 
 /***************************************
  * A geometric transformation. Current geometric property names end in 0, new
@@ -113,5 +113,33 @@ public class ShellNodeTransformation {
 	 */
 	public Optional<ShellNodeParent> getParent1() {
 		return this.parent1;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if(obj == null) {
+			return false;
+		}
+		if(getClass() != obj.getClass()) {
+			return false;
+		}
+		final ShellNodeTransformation other = (ShellNodeTransformation) obj;
+
+		return Objects.equal(this.rect0,
+							 other.rect0)
+				&& Objects.equal(this.rect1,
+								 other.rect1)
+				&& Objects.equal(this.parent0,
+								 other.parent0)
+				&& Objects.equal(this.parent1,
+								 other.parent1);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(this.rect0,
+								this.rect1,
+								this.parent0,
+								this.parent1);
 	}
 }
