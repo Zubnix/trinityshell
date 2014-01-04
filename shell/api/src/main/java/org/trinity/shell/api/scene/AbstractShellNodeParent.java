@@ -100,14 +100,14 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	public Void doMoveResizeImpl() {
 		super.doMoveResizeImpl();
 		updateChildrenPosition();
-		layout();
+		layoutImpl();
 		return null;
 	}
 
 	@Override
 	public Void doResizeImpl() {
 		super.doResizeImpl();
-		layout();
+		layoutImpl();
 		return null;
 	}
 
