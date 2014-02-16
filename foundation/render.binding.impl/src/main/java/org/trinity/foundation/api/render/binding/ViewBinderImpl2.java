@@ -47,24 +47,7 @@ public class ViewBinderImpl2 implements ViewBinder {
     }
 
     @Override
-    public ListenableFuture<Void> updateDataModelBinding(@Nonnull final ListeningExecutorService dataModelExecutor,
-                                                         @Nonnull final Object dataModel,
-                                                         @Nonnull final String propertyName,
-                                                         @Nonnull final Optional<Object> oldPropertyValue,
-                                                         @Nonnull final Optional<Object> newPropertyValue) {
-        return dataModelExecutor.submit(new Callable<Void>() {
-            @Override
-            public Void call() {
-                updateDataModelBinding( dataModel,
-                                        propertyName,
-                                        oldPropertyValue,
-                                        newPropertyValue);
-                return null;
-            }
-        });
-    }
-
-    private void updateDataModelBinding(@Nonnull final Object dataModel,
+    public void updateDataModelBinding(@Nonnull final Object dataModel,
                                         @Nonnull final String propertyName,
                                         @Nonnull final Optional<Object> oldPropertyValue,
                                         @Nonnull final Optional<Object> newPropertyValue) {
@@ -117,36 +100,10 @@ public class ViewBinderImpl2 implements ViewBinder {
                                                 viewBinding);
     }
 
-    @Override
-    public ListenableFuture<Void> bind(@Nonnull final ListeningExecutorService dataModelExecutor,
-                                       @Nonnull final Object dataModel,
-                                       @Nonnull final Object viewModel) {
-        return dataModelExecutor.submit(new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                bindViewModelToDataModel(   dataModelExecutor,
-                                            dataModel,
-                                            viewModel);
-                return null;
-            }
-        });
-    }
+
 
     @Override
-    public ListenableFuture<Void> unbind(@Nonnull final ListeningExecutorService dataModelExecutor,
-                                         @Nonnull final Object dataModel,
-                                         @Nonnull final Object viewModel) {
-        return dataModelExecutor.submit(new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                unbind(dataModel,
-                        viewModel);
-                return null;
-            }
-        });
-    }
-
-    private void unbind(@Nonnull final Object dataModel,
+    public void unbind(@Nonnull final Object dataModel,
                         @Nonnull final Object viewModel) {
         final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create(dataModel,
                 viewModel);
@@ -173,26 +130,27 @@ public class ViewBinderImpl2 implements ViewBinder {
     }
 
 
-    private void bindViewModelToDataModel(  @Nonnull final ListeningExecutorService dataModelExecutor,
+    @Override
+    public void bind(
                                             @Nonnull final Object dataModel,
                                             @Nonnull final Object viewModel) {
         final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create( dataModel,
                                                                         viewModel);
-        createAllBindings(  dataModelExecutor,
+        createAllBindings(
                             viewBindingMeta);
     }
 
-    private void createAllBindings(final ListeningExecutorService dataModelExecutor,
+    private void createAllBindings(
                                    final ViewBindingMeta rootViewBindingMeta) {
         final FluentIterable<ViewBindingMeta> viewBindingMetas = this.viewBindingsTraverser.preOrderTraversal(rootViewBindingMeta);
 
         for (final ViewBindingMeta viewBindingMeta : viewBindingMetas) {
-            createBindings( dataModelExecutor,
+            createBindings(
                             viewBindingMeta);
         }
     }
 
-    private void createBindings(final ListeningExecutorService dataModelExecutor,
+    private void createBindings(
                                 final ViewBindingMeta bindingMeta) {
 
         //if there are property slots
@@ -208,7 +166,7 @@ public class ViewBinderImpl2 implements ViewBinder {
         //if there is an observable collection
         if (bindingMeta.getObservableCollection().isPresent()) {
             final CollectionBinding collectionBinding = this.collectionBindingFactory.createCollectionBinding(  bindingMeta,
-                                                                                                                dataModelExecutor,
+
                                                                                                                 bindingMeta.getObservableCollection().get());
             //bind collection binding
             bindViewBinding(collectionBinding);
@@ -217,7 +175,7 @@ public class ViewBinderImpl2 implements ViewBinder {
         //if this view emits events
         if (bindingMeta.getEventSignals().isPresent()) {
             for (final EventSignal eventSignal: bindingMeta.getEventSignals().get().value()) {
-                final EventBinding eventBinding = this.eventBindingFactory.createEventBinding(  dataModelExecutor,
+                final EventBinding eventBinding = this.eventBindingFactory.createEventBinding(
                                                                                                 bindingMeta,
                                                                                                 eventSignal);
                 bindViewBinding(eventBinding);
@@ -226,25 +184,7 @@ public class ViewBinderImpl2 implements ViewBinder {
     }
 
     @Override
-    public ListenableFuture<Void> updateViewModelBinding(@Nonnull final ListeningExecutorService dataModelExecutor,
-                                                         @Nonnull final Object parentViewModel,
-                                                         @Nonnull final String fieldName,
-                                                         @Nonnull final Optional<?> oldSubView,
-                                                         @Nonnull final Optional<?> newSubView) {
-        return dataModelExecutor.submit(new Callable<Void>() {
-            @Override
-            public Void call() {
-                updateViewModelBindingImpl( dataModelExecutor,
-                                            parentViewModel,
-                                            fieldName,
-                                            oldSubView,
-                                            newSubView);
-                return null;
-            }
-        });
-    }
-
-    private void updateViewModelBindingImpl(@Nonnull final ListeningExecutorService dataModelExecutor,
+    public void updateViewModelBinding(
                                             @Nonnull final Object parentViewModel,
                                             @Nonnull final String subViewFieldName,
                                             @Nonnull final Optional<?> oldSubView,
@@ -294,7 +234,7 @@ public class ViewBinderImpl2 implements ViewBinder {
                                                                                 newSubView.get());
 
                 //and create all bindings from this description.
-                createAllBindings(  dataModelExecutor,
+                createAllBindings(
                                     newBindingMeta);
             }
         }

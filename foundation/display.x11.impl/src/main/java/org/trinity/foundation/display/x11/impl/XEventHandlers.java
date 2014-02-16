@@ -32,10 +32,8 @@ import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
@@ -47,7 +45,6 @@ import com.google.inject.Singleton;
 
 @Bind(to = @To(IMPLEMENTATION))
 @Singleton
-@ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public final class XEventHandlers {
 
@@ -87,7 +84,7 @@ public final class XEventHandlers {
         }
 
         final Optional<? extends DisplayEvent> displayEvent = eventConversion.handle(event);
-        final Optional<? extends AsyncListenable> target = eventConversion.getTarget(event);
+        final Optional<? extends Listenable> target = eventConversion.getTarget(event);
 
         if (displayEvent.isPresent() && target.isPresent()) {
             target.get().post(displayEvent.get());

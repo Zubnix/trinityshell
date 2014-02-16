@@ -22,14 +22,11 @@ package org.trinity.shell.api.surface;
 import javax.annotation.Nonnull;
 
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 
 /***************************************
  * Creates shell surfaces from a display surface.
  ***************************************
  */
-@ExecutionContext(ShellExecutor.class)
 public interface ShellSurfaceFactory {
 	/***************************************
 	 * Create a new shell surface that is backed by the given display surface.

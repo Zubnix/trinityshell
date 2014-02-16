@@ -31,8 +31,6 @@ import javax.inject.Singleton;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.display.Display;
-import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.plugin.ShellPlugin;
 
 import com.google.common.util.concurrent.AbstractIdleService;
@@ -41,17 +39,14 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 @Bind(to = @To(value = CUSTOM, customs = ShellPlugin.class), multiple = true)
 @Singleton
 @NotThreadSafe
-@ExecutionContext(ShellExecutor.class)
 public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlugin {
 
 	private final Display display;
-	private final ListeningExecutorService shellExecutor;
 
 	@Inject
-	ShellSurfacePlugin(	@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor,
+	ShellSurfacePlugin(
 						@Nonnull final Display display) {
 		this.display = display;
-		this.shellExecutor = shellExecutor;
 	}
 
 	@Override
@@ -60,15 +55,6 @@ public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlug
 
 	@Override
 	protected void shutDown() throws Exception {
-		this.display.quit().get(2,
-								TimeUnit.SECONDS);
-		this.shellExecutor.shutdown();
-		this.shellExecutor.awaitTermination(2,
-											TimeUnit.SECONDS);
-	}
-
-	@Override
-	public int runlevel() {
-		return 1;
+		this.display.quit();
 	}
 }

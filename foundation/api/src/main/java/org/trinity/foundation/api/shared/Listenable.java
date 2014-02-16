@@ -33,7 +33,7 @@ import java.util.concurrent.ExecutorService;
  * think it's a good idea to *not* separate implementation (a class) from api
  * (an interface)...
  */
-public interface AsyncListenable {
+public interface Listenable {
 	/**
 	 * Immediately register a listener who's {@link Subscribe}d methods will be
 	 * invoked by the {@link MoreExecutors#sameThreadExecutor()}, ie the thread
@@ -50,24 +50,6 @@ public interface AsyncListenable {
 	void register(@Nonnull Object listener);
 
 	/**
-	 * Immediately register a listener who's {@link Subscribe}d methods will be
-	 * invoked by the given {@link ExecutorService}.
-	 * <p>
-	 * This method should be used if the calling executor service is the same as
-	 * than the one that owns this object.
-	 *
-	 * @see EventBus#register(Object)
-	 * @param listener
-	 *            An object with a public, single argument, {@link Subscribe}
-	 *            method.
-	 * @param executor
-	 *            The executor that will call the listener when an event
-	 *            arrives.
-	 */
-	void register(	@Nonnull Object listener,
-					@Nonnull ExecutorService executor);
-
-	/**
 	 * @see EventBus#unregister(Object)
 	 * @param listener
 	 *            An previously registered listener.
@@ -82,37 +64,4 @@ public interface AsyncListenable {
 	 *            The even to post.
 	 */
 	void post(@Nonnull Object event);
-
-	/**
-	 * Same as {@link #register(Object)} but the registration task is delegated
-	 * to the executor service that handle's the posting of events. Ie the
-	 * executor service that 'owns' this object.
-	 * <p>
-	 * This method should be used if the calling executor service is different
-	 * than the one that owns this object.
-	 *
-	 * @param listener
-	 *            An object with a public, single argument, {@link Subscribe}
-	 *            method.
-	 */
-	void scheduleRegister(@Nonnull Object listener);
-
-	/**
-	 * Same as {@link #register(Object, java.util.concurrent.ExecutorService)}
-	 * but the registration task is delegated to the executor service that
-	 * handle's the posting of events. Ie the executor service that 'owns' this
-	 * object.
-	 * <p>
-	 * This method should be used if the calling executor service is different
-	 * than the one that owns this object.
-	 *
-	 * @param listener
-	 *            An object with a public, single argument, {@link Subscribe}
-	 *            method.
-	 * @param listenerActivationExecutor
-	 *            The executor that will call the listener when an event
-	 *            arrives.
-	 */
-	void scheduleRegister(	@Nonnull Object listener,
-							@Nonnull ExecutorService listenerActivationExecutor);
 }

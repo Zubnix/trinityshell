@@ -26,10 +26,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
 import org.trinity.foundation.api.shared.Size;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
@@ -58,7 +56,6 @@ import com.google.inject.assistedinject.AssistedInject;
 // TODO refactor to reuse code and for cleaner reading
 // =>rewrite this sh*t...
 @NotThreadSafe
-@ExecutionContext(ShellExecutor.class)
 public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
 
 	private static final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(	1,
@@ -94,7 +91,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 		int newWidthSize = 0;
 		int fixedHeightSize = 0;
-		final Size size = ((AbstractShellNode) containerNode).getSizeImpl();
+		final Size size = containerNode.getSize();
 		newWidthSize = size.getWidth();
 		fixedHeightSize = size.getHeight();
 
@@ -110,7 +107,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 			// we don't want to include children with 0 weight in the scale
 			// calculation since they are treated as constants
 			if (childWeight == 0) {
-				newWidthSize -= ((AbstractShellNode) child).toGeoTransformationImpl().getRect1().getSize().getWidth();
+				newWidthSize -=  child.toGeoTransformation().getRect1().getSize().getWidth();
 			}
 			totalWeightedChildSizes += childWeight;
 		}
@@ -125,7 +122,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		// new place of the next child
 		int newPlace = 0;
 		if (this.inverseDirection) {
-			newPlace = ((AbstractShellNode) containerNode).getSizeImpl().getWidth();
+			newPlace =  containerNode.getSize().getWidth();
 		}
 
 		final List<ShellNode> children = getChildren();
@@ -140,7 +137,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 			if (childWeight == 0) {
 				resizeFactor = 1;
-				childWeight = ((AbstractShellNode) child).toGeoTransformationImpl().getRect1().getSize().getWidth();
+				childWeight =  child.toGeoTransformation().getRect1().getSize().getWidth();
 			}
 
 			final int vMargins = layoutProperty.getMargins().getTop() + layoutProperty.getMargins().getBottom();
@@ -150,18 +147,18 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 			final int hMargins = layoutProperty.getMargins().getLeft() + layoutProperty.getMargins().getRight();
 
-			((AbstractShellNode) child).setSizeImpl(newChildWidth - hMargins,
-													fixedHeightSize - vMargins);
+			 child.setSize(newChildWidth - hMargins,
+                     fixedHeightSize - vMargins);
 
 			final int leftMargin = layoutProperty.getMargins().getLeft();
 			final int topMargin = layoutProperty.getMargins().getTop();
 			if (this.inverseDirection) {
 				newPlace -= newChildWidth;
-				((AbstractShellNode) child).setPositionImpl(newPlace + leftMargin,
-															topMargin);
+				 child.setPosition(newPlace + leftMargin,
+                         topMargin);
 			} else {
-				((AbstractShellNode) child).setPositionImpl(newPlace + leftMargin,
-															topMargin);
+				 child.setPosition(newPlace + leftMargin,
+                         topMargin);
 				// calculate next child's position
 				newPlace += newChildWidth;
 			}
@@ -174,8 +171,8 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		int newHeightSize = 0;
 		int fixedWidthSize = 0;
 
-		newHeightSize = ((AbstractShellNode) containerNode).getSizeImpl().getHeight();
-		fixedWidthSize = ((AbstractShellNode) containerNode).getSizeImpl().getWidth();
+		newHeightSize = containerNode.getSize().getHeight();
+		fixedWidthSize = containerNode.getSize().getWidth();
 
 		if (newHeightSize == 0) {
 			return;
@@ -189,7 +186,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 			// we don't want to include children with 0 weight in the scale
 			// calculation since they are treated as constants
 			if (childWeight == 0) {
-				newHeightSize -= ((AbstractShellNode) child).toGeoTransformationImpl().getRect1().getSize().getHeight();
+				newHeightSize -= child.toGeoTransformation().getRect1().getSize().getHeight();
 			}
 			totalWeightedChildSizes += childWeight;
 		}
@@ -204,7 +201,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		// new place of the next child
 		int newPlace = 0;
 		if (this.inverseDirection) {
-			newPlace = ((AbstractShellNode) containerNode).getSizeImpl().getHeight();
+			newPlace = containerNode.getSize().getHeight();
 		}
 
 		final List<ShellNode> children = getChildren();
@@ -219,7 +216,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 			if (childWeight == 0) {
 				resizeFactor = 1;
-				childWeight = ((AbstractShellNode) child).toGeoTransformationImpl().getRect1().getSize().getHeight();
+				childWeight =  child.toGeoTransformation().getRect1().getSize().getHeight();
 			}
 			final int hMargins = layoutProperty.getMargins().getLeft() + layoutProperty.getMargins().getRight();
 			// calculate new height
@@ -229,18 +226,18 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 			final int vMargins = layoutProperty.getMargins().getTop() + layoutProperty.getMargins().getBottom();
 
-			((AbstractShellNode) child).setSizeImpl(fixedWidthSize - hMargins,
-													newChildHeight - vMargins);
+			child.setSize(fixedWidthSize - hMargins,
+                    newChildHeight - vMargins);
 
 			final int topMargin = layoutProperty.getMargins().getTop();
 			final int leftMargin = layoutProperty.getMargins().getLeft();
 			if (this.inverseDirection) {
 				newPlace -= newChildHeight;
-				((AbstractShellNode) child).setPositionImpl(leftMargin,
-															newPlace + topMargin);
+				child.setPosition(leftMargin,
+                        newPlace + topMargin);
 			} else {
-				((AbstractShellNode) child).setPositionImpl(leftMargin,
-															newPlace + topMargin);
+				 child.setPosition(leftMargin,
+                         newPlace + topMargin);
 				newPlace += newChildHeight;
 			}
 			child.doMoveResize();

@@ -19,12 +19,9 @@
  ******************************************************************************/
 package org.trinity.shell.api.scene;
 
-import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.List;
 
@@ -40,7 +37,6 @@ import java.util.List;
  *
  ***************************************
  */
-@ExecutionContext(ShellExecutor.class)
 public interface ShellNodeParent extends ShellNode {
 
 	/***************************************
@@ -50,7 +46,7 @@ public interface ShellNodeParent extends ShellNode {
 	 * @return A {@link ShellLayoutManager}.
 	 ***************************************
 	 */
-	ListenableFuture<Optional<ShellLayoutManager>> getLayoutManager();
+	Optional<ShellLayoutManager> getLayoutManager();
 
 	/***************************************
 	 * Layout all child <code>ShellNode</code>s.
@@ -58,7 +54,7 @@ public interface ShellNodeParent extends ShellNode {
      * @return null
 	 ***************************************
 	 */
-	ListenableFuture<Void> layout();
+	void layout();
 
 	/***************************************
 	 * Change the layout manager of this parent to the desired layout manager.
@@ -69,7 +65,7 @@ public interface ShellNodeParent extends ShellNode {
      * @return null
 	 ***************************************
 	 */
-	ListenableFuture<Void> setLayoutManager(ShellLayoutManager shellLayoutManager);
+	void setLayoutManager(ShellLayoutManager shellLayoutManager);
 
 	/***************************************
 	 * The direct child nodes of this parent.
@@ -77,5 +73,5 @@ public interface ShellNodeParent extends ShellNode {
 	 * @return an array of {@link ShellNode}s
 	 ***************************************
 	 */
-	ListenableFuture<List<ShellNode>> getChildren();
+	List<ShellNode> getChildren();
 }

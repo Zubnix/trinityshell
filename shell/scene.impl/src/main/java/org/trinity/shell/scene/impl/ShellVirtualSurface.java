@@ -19,15 +19,11 @@
  ******************************************************************************/
 package org.trinity.shell.scene.impl;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
-import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.bindingkey.ShellVirtualNode;
-import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
@@ -53,26 +49,23 @@ import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
  */
 @Bind(to = @To(value = CUSTOM, customs = { ShellNode.class, ShellNodeParent.class }))
 @ShellVirtualNode
-@ExecutionContext(ShellExecutor.class)
 public class ShellVirtualSurface extends AbstractShellNodeParent {
 
 	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellVirtualSurfaceExecutor(this);
 
 	@Inject
-	protected ShellVirtualSurface(	@Nonnull @ShellScene final AsyncListenable shellScene,
-									@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	shellScene,
-				shellExecutor);
+	protected ShellVirtualSurface(	@Nonnull @ShellScene final Listenable shellScene) {
+		super(	shellScene);
 	}
 
 	@Override
-	public Void doDestroyImpl() {
-		for (final AbstractShellNode child : getChildrenImpl()) {
-			if (!child.isDestroyedImpl()) {
+	public void doDestroy() {
+		for (final ShellNode child : getChildren()) {
+			if (!child.isDestroyed()) {
 				child.doDestroy();
 			}
 		}
-		return super.doDestroyImpl();
+		super.doDestroy();
 	}
 
 	@Override

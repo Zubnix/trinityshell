@@ -30,9 +30,7 @@ import org.trinity.foundation.api.display.DisplaySurfaceCreator;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DestroyNotify;
-import org.trinity.foundation.api.shared.ExecutionContext;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.HashMap;
@@ -40,7 +38,6 @@ import java.util.Map;
 
 @Bind
 @Singleton
-@ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public class XWindowPoolImpl implements DisplaySurfacePool {
 

@@ -22,8 +22,6 @@ package org.trinity.shell.api.scene.event;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeTransformation;
 
@@ -33,7 +31,6 @@ import org.trinity.shell.api.scene.ShellNodeTransformation;
  ***************************************
  */
 @Immutable
-@ExecutionContext(ShellExecutor.class)
 public class ShellNodeMoveResizeRequestEvent extends ShellNodeEvent {
 
 	/**

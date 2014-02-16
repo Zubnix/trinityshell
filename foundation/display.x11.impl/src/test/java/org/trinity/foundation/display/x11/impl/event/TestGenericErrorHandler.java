@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.Listenable;
 
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.isA;
@@ -57,7 +57,7 @@ public class TestGenericErrorHandler {
 
         //when
         //the target of the xcb_generic_event_t event is requested
-        final Optional<AsyncListenable> target = genericErrorHandler.getTarget(xcb_generic_event);
+        final Optional<Listenable> target = genericErrorHandler.getTarget(xcb_generic_event);
 
         //then
         //an absent target is returned

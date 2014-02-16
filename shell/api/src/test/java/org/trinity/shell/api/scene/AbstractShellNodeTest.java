@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.event.*;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 public class AbstractShellNodeTest {
 
 	@Mock
-	private AsyncListenable          shellScene;
+	private Listenable shellScene;
 	@Mock
 	private ListeningExecutorService shellExecutor;
 

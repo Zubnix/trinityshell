@@ -23,8 +23,8 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.eventbus.Subscribe;
 import org.trinity.foundation.api.display.event.ShowRequest;
-import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
+import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
@@ -52,13 +52,13 @@ import java.util.Map.Entry;
 public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	private final Map<ShellNode, ShellLayoutProperty> childrenWithLayoutProperty = new LinkedHashMap<>();
-    private final AbstractShellNodeParent shellNodeParent;
+    private final ShellNodeParent shellNodeParent;
 
-    protected AbstractShellLayoutManager(final AbstractShellNodeParent shellNodeParent) {
+    protected AbstractShellLayoutManager(final ShellNodeParent shellNodeParent) {
         this.shellNodeParent = shellNodeParent;
     }
 
-    public AbstractShellNodeParent getShellNodeParent() {
+    public ShellNodeParent getShellNodeParent() {
 		return this.shellNodeParent;
     }
 

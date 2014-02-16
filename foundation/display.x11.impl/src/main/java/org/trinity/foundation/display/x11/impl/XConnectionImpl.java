@@ -32,15 +32,12 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 
 import com.google.inject.Singleton;
 
 @Bind
 @Singleton
-@ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public class XConnectionImpl implements XConnection {
 

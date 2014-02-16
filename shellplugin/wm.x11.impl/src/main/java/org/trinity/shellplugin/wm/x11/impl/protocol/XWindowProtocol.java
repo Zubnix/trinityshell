@@ -20,8 +20,6 @@
 
 package org.trinity.shellplugin.wm.x11.impl.protocol;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -31,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
@@ -39,7 +36,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.nio.ByteBuffer;
-import java.util.concurrent.Callable;
 
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
@@ -51,30 +47,21 @@ import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANG
 @ThreadSafe
 @Bind(to = @To(IMPLEMENTATION))
 @Singleton
-@ExecutionContext(DisplayExecutor.class)
 public class XWindowProtocol {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XWindowProtocol.class);
 	private static final ByteBuffer PROPERTY_MASK = allocateDirect(4).order(nativeOrder());
-	private final ListeningExecutorService displayExecutor;
 	private final XConnection xConnection;
 
 	@Inject
-	XWindowProtocol(@DisplayExecutor final ListeningExecutorService displayExecutor,
+	XWindowProtocol(
 					final XConnection xConnection) {
-		this.displayExecutor = displayExecutor;
 		this.xConnection = xConnection;
 	}
 
-	public ListenableFuture<Void> register(final DisplaySurface xWindow) {
-		return this.displayExecutor.submit(new Callable<Void>() {
-            @Override
-            public Void call() {
+	public void register(final DisplaySurface xWindow) {
                 final Integer xWindowId = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
                 listenForXProtocol(xWindowId);
-                return null;
-            }
-        });
 	}
 
 	private void listenForXProtocol(final Integer xWindowId) {

@@ -5,9 +5,6 @@ import com.google.inject.name.Names;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.apache.onami.autobind.annotations.GuiceModule;
-import org.trinity.foundation.api.render.ViewBuilder;
-import org.trinity.foundation.render.javafx.api.FXViewBuilder;
-import org.trinity.shellplugin.wm.api.viewkey.DesktopView;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -28,10 +25,6 @@ public class Module extends Application implements com.google.inject.Module {
     public void configure(final Binder guiceBinder) {
         GUICE_BINDER = guiceBinder;
         startFxApp();
-
-        FXViewBuilder desktopViewBuilder = new FXViewBuilder(DesktopViewImpl.class);
-        guiceBinder.requestInjection(desktopViewBuilder);
-        guiceBinder.bind(ViewBuilder.class).annotatedWith(DesktopView.class).toInstance(desktopViewBuilder);
     }
 
     private void startFxApp() {

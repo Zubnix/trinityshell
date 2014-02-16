@@ -40,14 +40,6 @@ public class ShellPluginsRunnerImpl implements ShellPluginsRunner {
     @Inject
     ShellPluginsRunnerImpl(final Set<ShellPlugin> shellPlugins) {
         this.shellPlugins = new ArrayList<>(shellPlugins);
-        Collections.sort(this.shellPlugins,
-                new Comparator<ShellPlugin>() {
-                    @Override
-                    public int compare(final ShellPlugin o1,
-                                       final ShellPlugin o2) {
-                        return o1.runlevel() - o2.runlevel();
-                    }
-                });
     }
 
     @Override

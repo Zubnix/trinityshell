@@ -22,9 +22,7 @@ package org.trinity.shell.api.scene.manager;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.ShellNode;
 
 /***************************************
@@ -32,7 +30,6 @@ import org.trinity.shell.api.scene.ShellNode;
  *
  ***************************************
  */
-@ExecutionContext(ShellExecutor.class)
 @Immutable
 public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 

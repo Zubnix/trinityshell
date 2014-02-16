@@ -41,10 +41,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.ShowRequest;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
@@ -58,7 +56,6 @@ import com.google.inject.Singleton;
 
 @Bind(multiple = true)
 @Singleton
-@ExecutionContext(DisplayExecutor.class)
 @Immutable
 public class MapRequestHandler implements XEventHandler {
 

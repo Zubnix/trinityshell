@@ -20,7 +20,6 @@
 package org.trinity.foundation.display.x11.impl;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.apache.onami.autobind.annotations.Bind;
@@ -28,8 +27,6 @@ import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
@@ -45,28 +42,21 @@ import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 
 @Bind(to = @To(IMPLEMENTATION))
 @Singleton
-@ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public class XEventPump implements Callable<Void> {
 
     private static final Logger LOG = LoggerFactory.getLogger(XEventPump.class);
     private final XConnection connection;
     private final EventBus xEventBus;
-    private final ListeningExecutorService xExecutor;
-    private final ExecutorService xEventPumpExecutor;
 
     private final Semaphore waitForExternal = new Semaphore(1);
 
     @Inject
     XEventPump(final XConnection connection,
                @XEventBus final EventBus xEventBus,
-               @DisplayExecutor final ListeningExecutorService xExecutor,
                @Named("XEventPumpExecutor") ExecutorService xEventPumpExecutor) {
         this.connection = connection;
         this.xEventBus = xEventBus;
-        this.xExecutor = xExecutor;
-        this.xEventPumpExecutor = xEventPumpExecutor;
-        this.xEventPumpExecutor.submit(this);
     }
 
     @Override
@@ -82,7 +72,7 @@ public class XEventPump implements Callable<Void> {
 
         try {
             waitForExternal.acquireUninterruptibly();
-            // pass x event from x-event-pump thread to x-executor thread.
+            //TODO pass x event from x-event-pump thread to x-executor thread.
             this.xExecutor.submit(new Callable<Void>() {
                 @Override
                 public Void call() {

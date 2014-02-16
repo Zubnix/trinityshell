@@ -6,7 +6,7 @@ import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.junit.Test;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 
 import java.util.HashSet;
@@ -28,7 +28,7 @@ public class TestXEventHandlers {
 
         final XEventHandler xEventHandler0 = mock(XEventHandler.class);
         final XEventHandler xEventHandler1 = mock(XEventHandler.class);
-        final AsyncListenable target = mock(AsyncListenable.class);
+        final Listenable target = mock(Listenable.class);
         final DisplayEvent displayEvent = mock(DisplayEvent.class);
 
         when(xEventHandler0.getEventCode()).thenReturn(0);

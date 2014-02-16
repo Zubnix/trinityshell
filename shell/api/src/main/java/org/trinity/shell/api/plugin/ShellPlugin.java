@@ -37,12 +37,4 @@ import com.google.common.util.concurrent.Service;
  *
  ****************************************/
 public interface ShellPlugin extends Service {
-	/**
-	 * The order in which a shellplugin is started is determined by the
-	 * runlevel. A lower runlevel plugin will start before a higher one. If no
-	 * order is desired a default runlevel of 10 is advised.
-	 *
-	 * @return the weight of the shell plugin.
-	 */
-	int runlevel();
 }

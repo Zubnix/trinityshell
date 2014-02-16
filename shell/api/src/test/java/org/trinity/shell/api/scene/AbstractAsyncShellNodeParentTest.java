@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 public class AbstractAsyncShellNodeParentTest {
 
 	@Mock
-	private AsyncListenable          shellScene;
+	private Listenable shellScene;
 	@Mock
 	private ListeningExecutorService shellExecutor;
 

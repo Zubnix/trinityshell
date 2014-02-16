@@ -23,7 +23,6 @@ import javax.annotation.concurrent.Immutable;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
 
 /****************************************
  * Indicates when a pointer device has crossed the boundary of a

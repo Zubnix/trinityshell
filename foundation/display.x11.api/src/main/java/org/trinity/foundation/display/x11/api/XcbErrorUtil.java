@@ -24,13 +24,11 @@ import javax.annotation.concurrent.Immutable;
 
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
 
 /**
  * Translates an {@link xcb_generic_error_t} to a human readable String. This
  * util class is mostly used for logging purposes.
  */
-@ExecutionContext(DisplayExecutor.class)
 @Immutable
 public class XcbErrorUtil {
 	public static final int SUCCESS = 0;

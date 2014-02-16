@@ -19,8 +19,6 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.view.delegate;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
 /**
  * ************************************
  * A convenience service to call a method used as an event signal slot based on
@@ -29,5 +27,5 @@ import com.google.common.util.concurrent.ListenableFuture;
  */
 public interface Signal {
 
-    ListenableFuture<Void> fire();
+    void fire();
 }

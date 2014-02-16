@@ -21,31 +21,24 @@ package org.trinity.foundation.api.display;
 
 import javax.annotation.concurrent.ThreadSafe;
 
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.api.shared.Rectangle;
 
-import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * Represents a native isolated graphical area. A {@code DisplaySurface}
  * maps to a native window from the native display system.
  *
  */
-@ExecutionContext(DisplayExecutor.class)
 @ThreadSafe
-public interface DisplaySurface extends AsyncListenable {
+public interface DisplaySurface extends Listenable {
 
 	/***************************************
 	 * Destroy this DisplaySurface. A destroyed DisplaySurface
 	 * should be disposed and should not accept any calls.
-	 *
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> destroy();
+	void destroy();
 
 	/***************************************
 	 * Set the input focus to this DisplaySurface. Generated input
@@ -53,13 +46,10 @@ public interface DisplaySurface extends AsyncListenable {
 	 * <p>
 	 * The effects of giving focus to a hidden or destroyed DisplaySurface
 	 * is implementation dependent.
-	 *
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
 	 ***************************************
 	 */
     @Deprecated
-	ListenableFuture<Void> setInputFocus();
+	void setInputFocus();
 
 	/***************************************
 	 * Move this DisplaySurface to the given coordinates.
@@ -70,11 +60,9 @@ public interface DisplaySurface extends AsyncListenable {
 	 * @param y
 	 *            The Y coordinate. Usually in pixels but can be implementation
 	 *            dependent.
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> move(int x,
+	void move(int x,
 	                            int y);
 
 	/***************************************
@@ -93,14 +81,12 @@ public interface DisplaySurface extends AsyncListenable {
 	 * @param height
 	 *            The height. Usually in pixels but can be implementation
 	 *            dependent.
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
 	 * @see #move(int, int)
 	 * @see #resize(int, int)
 	 *
 	 ***************************************
 	 */
-	ListenableFuture<Void> moveResize(	int x,
+	void moveResize(	int x,
 	                                      int y,
 	                                      int width,
 	                                      int height);
@@ -114,11 +100,9 @@ public interface DisplaySurface extends AsyncListenable {
 	 * @param height
 	 *            The width. Usually in pixels but can be implementation
 	 *            dependent.
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> resize(	int width,
+	void resize(	int width,
 	                                  int height);
 
 	/***************************************
@@ -129,7 +113,7 @@ public interface DisplaySurface extends AsyncListenable {
 	 *          position, width and a height.
 	 ***************************************
 	 */
-	ListenableFuture<Rectangle> getGeometry();
+	Rectangle getGeometry();
 
 	/***************************************
 	 * Return the handle of the underlying native resource.
@@ -141,11 +125,11 @@ public interface DisplaySurface extends AsyncListenable {
 
 
 	@Deprecated
-	ListenableFuture<Void> show();
+	void show();
 
 	@Deprecated
-	ListenableFuture<Void> hide();
+	void hide();
 
 	@Deprecated
-	ListenableFuture<Void> raise();
+	void raise();
 }

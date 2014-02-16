@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(MoreExecutors.class)
-public class AsyncListenableEventBusTest {
+public class ListenableEventBusTest {
 
 	public static class Listener {
 		@Subscribe
@@ -37,7 +37,7 @@ public class AsyncListenableEventBusTest {
 	@Mock
 	private ExecutorService         postingExecutorService;
 	@InjectMocks
-	private AsyncListenableEventBus asyncListenableEventBus;
+	private ListenableEventBus listenableEventBus;
 
 	@Before
 	public void setUp() {
@@ -62,8 +62,8 @@ public class AsyncListenableEventBusTest {
 		//a listener is registered
 		//an event is posted
 		final Object event = new Object();
-		this.asyncListenableEventBus.register(this.listener);
-		this.asyncListenableEventBus.post(event);
+		this.listenableEventBus.register(this.listener);
+		this.listenableEventBus.post(event);
 
 		//then
 		//the listener is registered by the thread that performs the register call
@@ -86,9 +86,9 @@ public class AsyncListenableEventBusTest {
 		//a listener is registered with it's own event handler executor service.
 		//an event is posted
 		final Object event = new Object();
-		this.asyncListenableEventBus.register(this.listener,
+		this.listenableEventBus.register(this.listener,
 											  eventHandlerExecutorService);
-		this.asyncListenableEventBus.post(event);
+		this.listenableEventBus.post(event);
 
 		//then
 		//the listener is registered by the thread that performs the register call
@@ -109,8 +109,8 @@ public class AsyncListenableEventBusTest {
 		//a listener is registered
 		//an event is posted
 		final Object event = new Object();
-		this.asyncListenableEventBus.scheduleRegister(this.listener);
-		this.asyncListenableEventBus.post(event);
+		this.listenableEventBus.scheduleRegister(this.listener);
+		this.listenableEventBus.post(event);
 
 		//then
 		//the listener is registered by the eventbus' executor service
@@ -133,9 +133,9 @@ public class AsyncListenableEventBusTest {
 		//the listener is registered by the eventbus' executor service
 		//an event is posted
 		final Object event = new Object();
-		this.asyncListenableEventBus.scheduleRegister(this.listener,
+		this.listenableEventBus.scheduleRegister(this.listener,
 													  eventHandlerExecutorService);
-		this.asyncListenableEventBus.post(event);
+		this.listenableEventBus.post(event);
 
 		//then
 		//the listener is registered by the eventbus' executor service
@@ -161,23 +161,23 @@ public class AsyncListenableEventBusTest {
 		final ExecutorService eventHandlerExecutorService3 = mock(ExecutorService.class);
 		final Listener listener3 = spy(new Listener());
 
-		this.asyncListenableEventBus.register(listener0);
-		this.asyncListenableEventBus.register(listener1,
+		this.listenableEventBus.register(listener0);
+		this.listenableEventBus.register(listener1,
 											  eventHandlerExecutorService1);
-		this.asyncListenableEventBus.scheduleRegister(listener2);
-		this.asyncListenableEventBus.scheduleRegister(listener3,
+		this.listenableEventBus.scheduleRegister(listener2);
+		this.listenableEventBus.scheduleRegister(listener3,
 													  eventHandlerExecutorService3);
 
 		//when
 		//all listeners are unregistered
 		//an event is posted
-		this.asyncListenableEventBus.unregister(listener0);
-		this.asyncListenableEventBus.unregister(listener1);
-		this.asyncListenableEventBus.unregister(listener2);
-		this.asyncListenableEventBus.unregister(listener3);
+		this.listenableEventBus.unregister(listener0);
+		this.listenableEventBus.unregister(listener1);
+		this.listenableEventBus.unregister(listener2);
+		this.listenableEventBus.unregister(listener3);
 
 		final Object event = new Object();
-		this.asyncListenableEventBus.post(event);
+		this.listenableEventBus.post(event);
 
 		//then
 		//no event will reach the listeners

@@ -1,8 +1,6 @@
 package org.trinity.foundation.display.x11.impl;
 
 import org.freedesktop.xcb.xcb_screen_t;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.foundation.display.x11.api.XScreen;
 
@@ -14,7 +12,6 @@ import javax.annotation.concurrent.Immutable;
  * this template use File | Settings | File Templates.
  */
 @Immutable
-@ExecutionContext(DisplayExecutor.class)
 public class XScreenImpl implements XScreen {
 
 	private final xcb_screen_t screen;

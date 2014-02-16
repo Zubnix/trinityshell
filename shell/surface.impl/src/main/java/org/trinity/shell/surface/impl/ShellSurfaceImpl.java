@@ -20,9 +20,6 @@
 package org.trinity.shell.surface.impl;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.assistedinject.Assisted;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DestroyNotify;
@@ -31,21 +28,17 @@ import org.trinity.foundation.api.display.event.GeometryRequest;
 import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.api.display.event.ShowRequest;
-import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.foundation.api.shared.Rectangle;
-import org.trinity.foundation.api.shared.Size;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.foundation.api.shared.*;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.shell.api.bindingkey.ShellScene;
+import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeMovedResizedEvent;
-import org.trinity.shell.api.surface.AbstractAsyncShellSurface;
+import org.trinity.shell.api.surface.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.util.concurrent.Futures.addCallback;
 
 // TODO documentation
 /**
@@ -57,8 +50,7 @@ import static com.google.common.util.concurrent.Futures.addCallback;
  * of the <code>PlatformRenderArea</code> it wraps.
  */
 @NotThreadSafe
-@ExecutionContext(ShellExecutor.class)
-public final class ShellSurfaceImpl extends AbstractAsyncShellSurface {
+public final class ShellSurfaceImpl extends AbstractShellNodeParent implements ShellSurface {
 
     public static final boolean DEFAULT_IS_RESIZABLE = true;
     public static final boolean DEFAULT_IS_MOVABLE = true;
@@ -79,106 +71,102 @@ public final class ShellSurfaceImpl extends AbstractAsyncShellSurface {
     private int heightIncrement = DEFAULT_HEIGHT_INC;
 
 	private final ShellSurfaceGeometryDelegate shellSurfaceGeometryDelegateImpl;
-	@Nonnull
-	private final ListeningExecutorService shellExecutor;
+    private DisplaySurface displaySurface;
 
-	// created by a custom factory so inject annotations are not needed.
+    // created by a custom factory so inject annotations are not needed.
 	ShellSurfaceImpl(	@Nonnull @Assisted final DisplaySurface displaySurface,
-						@Nonnull @ShellScene final AsyncListenable shellScene,
-						@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	displaySurface,
-				shellScene,
-				shellExecutor);
-		this.shellExecutor = shellExecutor;
-		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegate(this);
+						@Nonnull @ShellScene final Listenable shellScene) {
+		super(
+				shellScene);
+        this.displaySurface = displaySurface;
+        this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegate(this);
 		syncGeoToDisplaySurface();
-        displaySurface.register(this,shellExecutor);
+        displaySurface.register(this);
 	}
 
     @Override
-    public Void doDestroyImpl() {
+    public void doDestroy() {
         getDisplaySurface().destroy();
-        return super.doDestroyImpl();
+        super.doDestroy();
     }
 
     @Override
-    public Void doShowImpl() {
+    public void doShow() {
         getDisplaySurface().show();
-        return super.doShowImpl();
+        super.doShow();
     }
 
     @Override
-    public Void doHideImpl() {
+    public void doHide() {
         getDisplaySurface().hide();
-        return super.doHideImpl();
+        super.doHide();
     }
 
     @Override
-    public Size getMaxSizeImpl() {
+    public Size getMaxSize() {
         return this.maxSize;
     }
 
     @Override
-    public Void setMaxSizeImpl(@Nonnull final Size maxSize) {
+    public void setMaxSize(@Nonnull final Size maxSize) {
         this.maxSize = maxSize;
-        return null;
     }
 
     @Override
-    public Size getMinSizeImpl() {
+    public Size getMinSize() {
         return this.minSize;
     }
 
     @Override
-    public Void setMinSizeImpl(@Nonnull final Size maxSize) {
-        this.maxSize = maxSize;
-        return null;
+    public DisplaySurface getDisplaySurface() {
+        return this.displaySurface;
     }
 
     @Override
-    public Integer getWidthIncrementImpl() {
+    public void setMinSize(@Nonnull final Size maxSize) {
+        this.maxSize = maxSize;
+    }
+
+    @Override
+    public Integer getWidthIncrement() {
         return this.widthIncrement;
     }
 
     @Override
-    public Void setWidthIncrementImpl(final int widthIncrement) {
+    public void setWidthIncrement(final int widthIncrement) {
         checkArgument(widthIncrement > 0);
         this.widthIncrement = widthIncrement;
-        return null;
     }
 
     @Override
-    public Void setHeightIncrementImpl(final int heightIncrement) {
+    public void setHeightIncrement(final int heightIncrement) {
         checkArgument(heightIncrement > 0);
         this.heightIncrement = heightIncrement;
-        return null;
     }
 
     @Override
-    public Integer getHeightIncrementImpl() {
+    public Integer getHeightIncrement() {
         return this.heightIncrement;
     }
 
     @Override
-    public Boolean isMovableImpl() {
+    public Boolean isMovable() {
         return this.movable;
     }
 
     @Override
-    public Boolean isResizableImpl() {
+    public Boolean isResizable() {
         return this.resizable;
     }
 
     @Override
-    public Void setMovableImpl(final boolean movable) {
+    public void setMovable(final boolean movable) {
         this.movable = movable;
-        return null;
     }
 
     @Override
-    public Void setResizableImpl(final boolean isResizable) {
+    public void setResizable(final boolean isResizable) {
         this.resizable = isResizable;
-        return null;
     }
 
     protected Size normalizedSize(@Nonnull final Size newSize) {
@@ -186,46 +174,44 @@ public final class ShellSurfaceImpl extends AbstractAsyncShellSurface {
         final int newWidth = newSize.getWidth();
         final int newHeight = newSize.getHeight();
 
-        final Size minSize = getMinSizeImpl();
+        final Size minSize = getMinSize();
         final int minWidth = minSize.getWidth();
         final int minHeight = minSize.getHeight();
 
-        final Size maxSize = getMaxSizeImpl();
+        final Size maxSize = getMaxSize();
         final int maxWidth = maxSize.getWidth();
         final int maxHeight = maxSize.getHeight();
 
-        final Size currentSize = getSizeImpl();
+        final Size currentSize = getSize();
         final int currentWidth = currentSize.getWidth();
         final int currentHeight = currentSize.getHeight();
 
         int normalizedWidth = newWidth < minWidth ? minWidth : newWidth > maxWidth ? maxWidth : newWidth;
-        normalizedWidth -= (normalizedWidth - currentWidth) % getWidthIncrementImpl();
+        normalizedWidth -= (normalizedWidth - currentWidth) % getWidthIncrement();
 
         int normalizedHeight = newHeight < minHeight ? minHeight : newHeight > maxHeight ? maxHeight : newHeight;
-        normalizedHeight -= (normalizedHeight - currentHeight) % getHeightIncrementImpl();
+        normalizedHeight -= (normalizedHeight - currentHeight) % getHeightIncrement();
 
         return new Size(normalizedWidth,
                 normalizedHeight);
     }
 
     @Override
-    public Void setSizeImpl(final int width,
+    public void setSize(final int width,
                             final int height) {
-        if (isResizableImpl()) {
-            super.setSizeImpl(	width,
+        if (isResizable()) {
+            super.setSize(width,
                     height);
         }
-        return null;
     }
 
     @Override
-    public Void setPositionImpl(final int x,
+    public void setPosition(final int x,
                                 final int y) {
-        if (isMovableImpl()) {
-            super.setPositionImpl(	x,
+        if (isMovable()) {
+            super.setPosition(x,
                     y);
         }
-        return null;
     }
 
     @Override
@@ -254,15 +240,15 @@ public final class ShellSurfaceImpl extends AbstractAsyncShellSurface {
         final Coordinate newPosition = newGeometry.getPosition();
         final Size newSize = newGeometry.getSize();
 
-        final Rectangle currentGeometry = getGeometryImpl();
+        final Rectangle currentGeometry = getGeometry();
         final Coordinate currentPosition = currentGeometry.getPosition();
         final Size currentSize = currentGeometry.getSize();
 
-        setPositionImpl(configureX ? newPosition.getX() : currentPosition.getX(),
+        setPosition(configureX ? newPosition.getX() : currentPosition.getX(),
                 configureY ? newPosition.getY() : currentPosition.getY());
-        setSizeImpl(configureWidth ? newSize.getWidth() : currentSize.getWidth(),
+        setSize(configureWidth ? newSize.getWidth() : currentSize.getWidth(),
                 configureHeight ? newSize.getHeight() : currentSize.getHeight());
-        requestMoveResizeImpl();
+        requestMoveResize();
     }
 
     /**
@@ -276,12 +262,12 @@ public final class ShellSurfaceImpl extends AbstractAsyncShellSurface {
     @Subscribe
     public void handleGeometryNotifyEvent(final GeometryNotify geometryNotify) {
         final Rectangle geometry = geometryNotify.getGeometry();
-        setPositionImpl(geometry.getPosition());
-        setSizeImpl(geometry.getSize());
+        setPosition(geometry.getPosition());
+        setSize(geometry.getSize());
 
 		flushSizePlaceValues();
 		final ShellNodeMovedResizedEvent geoEvent = new ShellNodeMovedResizedEvent(	this,
-																					   toGeoTransformationImpl());
+																					   toGeoTransformation());
 		post(geoEvent);
 
 		updateChildrenPosition();
@@ -290,7 +276,7 @@ public final class ShellSurfaceImpl extends AbstractAsyncShellSurface {
 
     @Subscribe
     public void handleDestroyedNotifyEvent(final DestroyNotify destroyNotify){
-        super.doDestroyImpl();
+        super.doDestroy();
     }
 
     /**
@@ -303,7 +289,7 @@ public final class ShellSurfaceImpl extends AbstractAsyncShellSurface {
      */
     @Subscribe
     public void handleHideNotifyEvent(final HideNotify hideNotify) {
-        doHideImpl();
+        doHide();
     }
 
     /**
@@ -316,36 +302,19 @@ public final class ShellSurfaceImpl extends AbstractAsyncShellSurface {
      */
     @Subscribe
     public void handleShowNotifyEvent(final ShowNotify showNotify) {
-        doShowImpl();
+        doShow();
     }
 
 	private void syncGeoToDisplaySurface() {
-		final ListenableFuture<Rectangle> geometryFuture = getDisplaySurface().getGeometry();
-		addCallback(geometryFuture,
-					new FutureCallback<Rectangle>() {
-						@Override
-						public void onSuccess(final Rectangle displaySurfaceGeo) {
-							setPositionImpl(displaySurfaceGeo.getPosition());
-							setSizeImpl(displaySurfaceGeo.getSize());
+        Rectangle displaySurfaceGeo = getDisplaySurface().getGeometry();
+
+							setPosition(displaySurfaceGeo.getPosition());
+							setSize(displaySurfaceGeo.getSize());
 							flushSizePlaceValues();
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-
-						}
-					},
-					this.shellExecutor);
 	}
 
 	@Override
 	public ShellSurfaceGeometryDelegate getShellNodeGeometryDelegate() {
 		return this.shellSurfaceGeometryDelegateImpl;
 	}
-
-	// repeated for package level visibility
-//	@Override
-//	protected void doMoveResize(final boolean execute) {
-//		super.doMoveResize(execute);
-//	}
 }

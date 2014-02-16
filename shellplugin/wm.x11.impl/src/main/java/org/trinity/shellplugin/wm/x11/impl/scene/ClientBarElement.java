@@ -22,8 +22,6 @@ package org.trinity.shellplugin.wm.x11.impl.scene;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
@@ -38,9 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shellplugin.wm.api.HasText;
 import org.trinity.shellplugin.wm.api.ReceivesPointerInput;
@@ -51,7 +47,6 @@ import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmProtocols;
 
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
-import java.util.concurrent.Callable;
 
 import static com.google.common.util.concurrent.Futures.addCallback;
 import static org.freedesktop.xcb.LibXcb.xcb_flush;
@@ -59,11 +54,9 @@ import static org.freedesktop.xcb.LibXcb.xcb_send_event;
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CURRENT_TIME;
 
-@ExecutionContext(ShellExecutor.class)
 public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ClientBarElement.class);
-	private final ListeningExecutorService shellExecutor;
 	private final WmName wmName;
 	private final WmProtocols wmProtocols;
 	private final ReceivesPointerInput closeButton = new ReceivesPointerInput() {
@@ -73,7 +66,6 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 			handleClientCloseRequest();
 		}
 	};
-	private final ListeningExecutorService displayExecutor;
 	private final XConnection xConnection;
 	private final int wmDeleteWindowAtomId;
 	private final int wmProtocolsAtomId;
@@ -82,18 +74,15 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	private boolean canSendWmDeleteMsg;
 
 	@AssistedInject
-	ClientBarElement(	@ShellExecutor final ListeningExecutorService shellExecutor,
-						@DisplayExecutor final ListeningExecutorService displayExecutor,
+	ClientBarElement(
 						final XConnection xConnection,
 						final WmName wmName,
 						final WmProtocols wmProtocols,
 						final XAtomCache xAtomCache,
 						@Assisted final ShellSurface client) {
-		this.displayExecutor = displayExecutor;
 		this.xConnection = xConnection;
 		this.wmName = wmName;
 		this.wmProtocols = wmProtocols;
-		this.shellExecutor = shellExecutor;
 
 		this.wmDeleteWindowAtomId = xAtomCache.getAtom("WM_DELETE_WINDOW");
 		this.wmProtocolsAtomId = xAtomCache.getAtom("WM_PROTOCOLS");
@@ -114,8 +103,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 											public void onProtocolChanged(final Optional<xcb_icccm_get_text_property_reply_t> protocol) {
 												updateClientName(protocol);
 											}
-										},
-                                        this.shellExecutor);
+										});
 		queryClientName(clientXWindow);
 
 		// client close request handling
@@ -126,27 +114,14 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 													public void onProtocolChanged(final Optional<xcb_icccm_get_wm_protocols_reply_t> protocol) {
 														updateCanSendWmDeleteMsg(protocol);
 													}
-												},
-                                                this.shellExecutor);
+												});
 		queryCanSendWmDeleteMsg(clientXWindow);
 	}
 
 	private void queryCanSendWmDeleteMsg(final DisplaySurface clientXWindow) {
-		final ListenableFuture<Optional<xcb_icccm_get_wm_protocols_reply_t>> wmProtocolFuture = this.wmProtocols
+		Optional<xcb_icccm_get_wm_protocols_reply_t> wmProtocol = this.wmProtocols
 				.get(clientXWindow);
-		addCallback(wmProtocolFuture,
-					new FutureCallback<Optional<xcb_icccm_get_wm_protocols_reply_t>>() {
-						@Override
-						public void onSuccess(final Optional<xcb_icccm_get_wm_protocols_reply_t> result) {
-							updateCanSendWmDeleteMsg(result);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							LOG.error(	"Failed to get wm_protocols protocol",
-										t);
-						}
-					});
+							updateCanSendWmDeleteMsg(wmProtocol);
 	}
 
 	private void updateCanSendWmDeleteMsg(final Optional<xcb_icccm_get_wm_protocols_reply_t> optionalWmProtocolReply) {
@@ -169,22 +144,9 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	// called by shell executor
 	public void queryClientName(final DisplaySurface clientXWindow) {
-		final ListenableFuture<Optional<xcb_icccm_get_text_property_reply_t>> wmNameFuture = this.wmName
+		Optional<xcb_icccm_get_text_property_reply_t> wmName = this.wmName
 				.get(clientXWindow);
-		addCallback(wmNameFuture,
-					new FutureCallback<Optional<xcb_icccm_get_text_property_reply_t>>() {
-						@Override
-						public void onSuccess(final Optional<xcb_icccm_get_text_property_reply_t> optionalTextProperty) {
-							updateClientName(optionalTextProperty);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							LOG.error(	"Failed to get wm name protocol",
-										t);
-						}
-					},
-                    this.shellExecutor);
+							updateClientName(wmName);
 	}
 
 	// called by shell executor
@@ -204,17 +166,12 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	// called by shell executor.
 	private void handleClientCloseRequest() {
-		this.displayExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
+
 				if (ClientBarElement.this.canSendWmDeleteMsg) {
 					sendWmDeleteMessage(ClientBarElement.this.clientXWindow);
 				} else {
 					ClientBarElement.this.clientXWindow.destroy();
 				}
-				return null;
-			}
-		});
 	}
 
 	// called by display executor
@@ -247,7 +204,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 		return this.clientName;
 	}
 
-	@PropertyChanged(value = "text", executor = ShellExecutor.class)
+	@PropertyChanged(value = "text")
 	public void setText(final String text) {
 		this.clientName = text;
 	}

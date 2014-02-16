@@ -27,7 +27,6 @@ import javax.inject.Singleton;
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
 
 /**
  * Signals the {@link Display} {@link Singleton} that a new

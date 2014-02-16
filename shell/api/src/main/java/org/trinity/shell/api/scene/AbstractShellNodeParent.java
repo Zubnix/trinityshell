@@ -20,11 +20,8 @@
 package org.trinity.shell.api.scene;
 
 import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
@@ -43,16 +40,13 @@ import static com.google.common.base.Preconditions.checkArgument;
  * An abstract base implementation of a {@link ShellNodeParent}.
  * **************************************
  */
-@ExecutionContext(ShellExecutor.class)
-public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodeParent {
+public abstract class AbstractShellNodeParent extends AbstractShellNode implements ShellNodeParent {
 
-	private final LinkedList<AbstractShellNode> children = new LinkedList<>();
+	private final LinkedList<ShellNode> children = new LinkedList<>();
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-	protected AbstractShellNodeParent(	@Nonnull @ShellScene final AsyncListenable shellScene,
-										@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(	shellScene,
-				shellExecutor);
+	protected AbstractShellNodeParent(	@Nonnull @ShellScene final Listenable shellScene) {
+		super(	shellScene);
 	}
 
 	/**
@@ -61,7 +55,7 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	 * The returned array is a copy of the internal array.
 	 */
 	@Override
-	public List<AbstractShellNode> getChildrenImpl() {
+	public List<ShellNode> getChildren() {
 		return new ArrayList<>(this.children);
 	}
 
@@ -69,46 +63,42 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	 * Refresh the on-screen position of this node's children.
 	 */
 	protected void updateChildrenPosition() {
-		for (final AbstractShellNode child : getChildrenImpl()) {
-			final Coordinate childPosition = child.getPositionImpl();
+		for (final ShellNode child : getChildren()) {
+			final Coordinate childPosition = child.getPosition();
 			child.getShellNodeGeometryDelegate().move(childPosition);
 		}
 	}
 
 	@Override
-	public Optional<ShellLayoutManager> getLayoutManagerImpl() {
+	public Optional<ShellLayoutManager> getLayoutManager() {
 		return this.optionalLayoutManager;
 	}
 
 	@Override
-	public Void setLayoutManagerImpl(@Nullable final ShellLayoutManager shellLayoutManager) {
+	public void setLayoutManager(@Nullable final ShellLayoutManager shellLayoutManager) {
 		this.optionalLayoutManager = Optional.of(shellLayoutManager);
 		if (this.optionalLayoutManager.isPresent()) {
 			register(shellLayoutManager);
 		}
-		return null;
 	}
 
 	@Override
-	public Void doMoveImpl() {
-		super.doMoveImpl();
+	public void doMove() {
+		super.doMove();
 		updateChildrenPosition();
-		return null;
 	}
 
 	@Override
-	public Void doMoveResizeImpl() {
-		super.doMoveResizeImpl();
+	public void doMoveResize() {
+		super.doMoveResize();
 		updateChildrenPosition();
-		layoutImpl();
-		return null;
+		layout();
 	}
 
 	@Override
-	public Void doResizeImpl() {
-		super.doResizeImpl();
-		layoutImpl();
-		return null;
+	public void doResize() {
+		super.doResize();
+		layout();
 	}
 
 	protected void handleChildReparent(@Nonnull final ShellNode child) {
@@ -117,11 +107,11 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 		final ShellNodeEvent shellNodeEvent;
 		if (this.children.remove(child)) {
 			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
-															toGeoTransformationImpl());
+															toGeoTransformation());
 		} else {
 			this.children.addLast((AbstractShellNode) child);
 			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
-															toGeoTransformationImpl());
+															toGeoTransformation());
 		}
 		post(shellNodeEvent);
 	}
@@ -146,11 +136,10 @@ public abstract class AbstractShellNodeParent extends AbstractAsyncShellNodePare
 	 * node.
 	 */
 	@Override
-	public Void layoutImpl() {
-		final Optional<ShellLayoutManager> optionalLayoutManager = getLayoutManagerImpl();
+	public void layout() {
+		final Optional<ShellLayoutManager> optionalLayoutManager = getLayoutManager();
 		if (optionalLayoutManager.isPresent()) {
 			optionalLayoutManager.get().layout(this);
 		}
-		return null;
 	}
 }

@@ -19,9 +19,6 @@
  ******************************************************************************/
 package org.trinity.foundation.api.display;
 
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
-
 import javax.annotation.concurrent.NotThreadSafe;
 
 /***************************************
@@ -32,7 +29,6 @@ import javax.annotation.concurrent.NotThreadSafe;
  *
  ***************************************
  */
-@ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public interface DisplaySurfaceFactory {
 

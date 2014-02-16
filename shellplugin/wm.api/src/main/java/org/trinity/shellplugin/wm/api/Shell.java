@@ -24,9 +24,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 public interface Shell {
 
-	ListenableFuture<Void> addStatusElement(Object element);
+	void addStatusElement(Object element);
 
-    ListenableFuture<Void> removeStatusElement(Object element);
+    void removeStatusElement(Object element);
 
     void start();
 

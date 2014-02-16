@@ -21,16 +21,12 @@
 package org.trinity.foundation.api.display;
 
 import javax.annotation.concurrent.ThreadSafe;
-import javax.inject.Singleton;
 
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
 
 /**
  * The logical screen of a {@link Display}.
  */
-@ExecutionContext(DisplayExecutor.class)
 @ThreadSafe
 public interface Screen {
 

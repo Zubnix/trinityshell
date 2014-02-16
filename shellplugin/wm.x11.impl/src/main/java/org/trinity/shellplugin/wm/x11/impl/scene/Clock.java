@@ -31,8 +31,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.onami.autobind.annotations.Bind;
 import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
-import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shellplugin.wm.api.Shell;
 import org.trinity.shellplugin.wm.api.HasText;
 
@@ -41,7 +39,6 @@ import com.google.inject.Singleton;
 
 @Singleton
 @Bind(to = @To(IMPLEMENTATION))
-@ExecutionContext(ShellExecutor.class)
 public class Clock implements HasText, Runnable {
 
 	private final ScheduledExecutorService clockExecutor = Executors.newScheduledThreadPool(1);
@@ -62,7 +59,7 @@ public class Clock implements HasText, Runnable {
 		return this.text;
 	}
 
-	@PropertyChanged(value = "text", executor = ShellExecutor.class)
+	@PropertyChanged(value = "text")
 	public void setText(final String text) {
 		this.text = text;
 	}

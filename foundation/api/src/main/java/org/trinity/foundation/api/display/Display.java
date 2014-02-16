@@ -21,11 +21,8 @@ package org.trinity.foundation.api.display;
 
 import java.util.List;
 
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.foundation.api.shared.Listenable;
 
-import com.google.common.util.concurrent.ListenableFuture;
 
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -33,15 +30,14 @@ import javax.annotation.concurrent.ThreadSafe;
 /**
  *
  */
-@ExecutionContext(DisplayExecutor.class)
 @ThreadSafe
-public interface Display extends AsyncListenable {
+public interface Display extends Listenable {
 
 	/**
 	 * The logical representation of the physical screen.
 	 * @return The screen object.
 	 */
-	ListenableFuture<Screen> getScreen();
+	Screen getScreen();
 
 	/**
 	 * A "snapshot" of client display surfaces. This collection does not
@@ -52,15 +48,12 @@ public interface Display extends AsyncListenable {
 	 *
 	 * @return A collection of client {@link DisplaySurface}s.
 	 */
-	ListenableFuture<List<DisplaySurface>> getDisplaySurfaces();
+	List<DisplaySurface> getDisplaySurfaces();
 
 	/***************************************
      * Orderly shut down this {@code Display}. All resources living on this
      * {@code Display} will be shut down as well.
-     *
-     * @return A {@link ListenableFuture} that indicates when the operation is
-     *         done.
      ***************************************
      */
-	ListenableFuture<Void> quit();
+	void quit();
 }

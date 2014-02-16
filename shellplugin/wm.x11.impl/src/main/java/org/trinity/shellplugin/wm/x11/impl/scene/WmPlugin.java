@@ -32,9 +32,4 @@ public class WmPlugin extends AbstractIdleService implements ShellPlugin {
 	protected void shutDown() {
 		this.shell.stop();
 	}
-
-	@Override
-	public int runlevel() {
-		return 5;
-	}
 }

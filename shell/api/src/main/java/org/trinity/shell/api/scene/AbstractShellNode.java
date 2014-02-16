@@ -20,29 +20,20 @@
 package org.trinity.shell.api.scene;
 
 import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.AsyncListenableEventBus;
-import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.ExecutionContext;
-import org.trinity.foundation.api.shared.ImmutableRectangle;
-import org.trinity.foundation.api.shared.Rectangle;
-import org.trinity.foundation.api.shared.Size;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
+import org.trinity.foundation.api.shared.*;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.event.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.concurrent.ExecutorService;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 @NotThreadSafe
-@ExecutionContext(ShellExecutor.class)
-public abstract class AbstractShellNode extends AbstractAsyncShellNode {
+public abstract class AbstractShellNode implements ShellNode {
 
-	private final AsyncListenableEventBus nodeEventBus;
+	private final ListenableEventBus nodeEventBus;
 	private Coordinate position = new Coordinate(	0,
 													0);
 	private Coordinate desiredPosition = new Coordinate(0,
@@ -52,63 +43,57 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	private Size desiredSize = new Size(5,
 										5);
 	private boolean visible;
-	private Optional<AbstractShellNodeParent> optionalParent = Optional.absent();
-	private Optional<AbstractShellNodeParent> optionalDesiredParent = Optional.absent();
+	private Optional<ShellNodeParent> optionalParent = Optional.absent();
+	private Optional<ShellNodeParent> optionalDesiredParent = Optional.absent();
 	private boolean destroyed;
 
-	protected AbstractShellNode(@Nonnull @ShellScene final AsyncListenable shellScene,
-								@Nonnull @ShellExecutor final ListeningExecutorService shellExecutor) {
-		super(shellExecutor);
-		this.nodeEventBus = new AsyncListenableEventBus(shellExecutor);
+	protected AbstractShellNode(@Nonnull @ShellScene final Listenable shellScene) {
+		this.nodeEventBus = new ListenableEventBus();
 
 		register(shellScene);
 	}
 
 	@Override
-	public ShellNodeTransformation toGeoTransformationImpl() {
-		return new ShellNodeTransformation(	getGeometryImpl(),
-											Optional.<ShellNodeParent> fromNullable(getParentImpl().orNull()),
+	public ShellNodeTransformation toGeoTransformation() {
+		return new ShellNodeTransformation(	getGeometry (),
+											Optional.fromNullable(getParent().orNull()),
 											new ImmutableRectangle(	getDesiredPosition(),
 																	getDesiredSize()),
 											Optional.<ShellNodeParent> fromNullable(getDesiredParent().orNull()));
 	}
 
 	@Override
-	public Boolean isDestroyedImpl() {
+	public Boolean isDestroyed() {
 		return this.destroyed;
 	}
 
 	@Override
-	public Optional<ShellNodeParent> getParentImpl() {
+	public Optional<ShellNodeParent> getParent() {
 		return Optional.<ShellNodeParent> fromNullable(this.optionalParent.orNull());
 	}
 
 	@Override
-	public Void setParentImpl(final Optional<? extends ShellNodeParent> parent) {
-		if (parent.isPresent()) {
-			checkArgument(parent.get() instanceof AbstractAsyncShellNodeParent);
-		}
-		this.optionalDesiredParent = Optional.fromNullable((AbstractShellNodeParent) parent.orNull());
-		return null;
+	public void setParent(final Optional<ShellNodeParent> parent) {
+
+		this.optionalDesiredParent = parent;
 	}
 
 	@Override
-	public Void requestReparentImpl() {
+	public void requestReparent() {
 		// update parent to new parent
 		final ShellNodeEvent event = new ShellNodeReparentRequestEvent(	this,
-																		toGeoTransformationImpl());
+																		toGeoTransformation ());
 		post(event);
-		return null;
 	}
 
 	@Override
-	public Rectangle getGeometryImpl() {
-		return new ImmutableRectangle(	getPositionImpl(),
-										getSizeImpl());
+	public Rectangle getGeometry() {
+		return new ImmutableRectangle(	getPosition (),
+										getSize ());
 	}
 
 	@Override
-	public Void setSizeImpl(final int width,
+	public void setSize(final int width,
 							final int height) {
 		checkArgument(	width > 0,
 						"Argument was %s but expected nonzero nonnegative value",
@@ -120,15 +105,13 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 		this.desiredSize = new Size(width,
 									height);
 
-		return null;
 	}
 
 	@Override
-	public Void setPositionImpl(final int x,
+	public void setPosition(final int x,
 								final int y) {
 		this.desiredPosition = new Coordinate(	x,
 												y);
-		return null;
 	}
 
 	/**
@@ -138,68 +121,62 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * all of its parents in the hierarchy are visible as well.
 	 */
 	@Override
-	public Boolean isVisibleImpl() {
+	public Boolean isVisible() {
 		if (!this.visible) {
 			return false;
 		}
 		// we're in the visible state.
 
 		// check if our parent is visible.
-		if (getParentImpl().isPresent()) {
-			return ((AbstractAsyncShellNodeParent) getParentImpl().get()).isVisibleImpl();
+		if (getParent().isPresent()) {
+			return (getParent().get()).isVisible();
 		} else {
 			return true;
 		}
 	}
 
 	@Override
-	public Void requestMoveImpl() {
+	public void requestMove() {
 		final ShellNodeMoveRequestEvent event = new ShellNodeMoveRequestEvent(	this,
-																				toGeoTransformationImpl());
+																				toGeoTransformation());
 		post(event);
-		return null;
 	}
 
 	@Override
-	public Void requestResizeImpl() {
+	public void requestResize() {
 		final ShellNodeEvent event = new ShellNodeResizeRequestEvent(	this,
-																		toGeoTransformationImpl());
+																		toGeoTransformation());
 		post(event);
-		return null;
 	}
 
 	@Override
-	public Void requestMoveResizeImpl() {
+	public void requestMoveResize() {
 		final ShellNodeMoveResizeRequestEvent event = new ShellNodeMoveResizeRequestEvent(	this,
-																							toGeoTransformationImpl());
+																							toGeoTransformation());
 		post(event);
-		return null;
 	}
 
 	@Override
-	public Void requestRaiseImpl() {
+	public void requestRaise() {
 		final ShellNodeEvent event = new ShellNodeRaiseRequestEvent(this,
-																	toGeoTransformationImpl());
+																	toGeoTransformation());
 		post(event);
-		return null;
 	}
 
 	@Override
-	public Void requestLowerImpl() {
+	public void requestLower() {
 		final ShellNodeLowerRequestEvent event = new ShellNodeLowerRequestEvent(this,
-																				toGeoTransformationImpl());
+																				toGeoTransformation());
 		post(event);
-		return null;
 	}
 
 	@Override
-	public Void doMoveImpl() {
+	public void doMove() {
 		flushPlaceValues();
-		getShellNodeGeometryDelegate().move(getPositionImpl());
+		getShellNodeGeometryDelegate().move(getPosition ());
 		final ShellNodeMovedEvent geoEvent = new ShellNodeMovedEvent(this,
-																	 toGeoTransformationImpl());
+																	 toGeoTransformation());
 		post(geoEvent);
-		return null;
 	}
 
 	/**
@@ -210,87 +187,84 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	}
 
 	@Override
-	public Void doResizeImpl() {
+	public void doResize() {
 		flushSizeValues();
-		getShellNodeGeometryDelegate().resize(getSizeImpl());
+		getShellNodeGeometryDelegate().resize(getSize ());
 		final ShellNodeResizedEvent geoEvent = new ShellNodeResizedEvent(	this,
-																			 toGeoTransformationImpl());
+																			 toGeoTransformation());
 		post(geoEvent);
-		return null;
 	}
 
 	/**
 	 * Make the desired dimensions the current dimension.
 	 */
-	protected Void flushSizeValues() {
+	protected void flushSizeValues() {
 		this.size = getDesiredSize();
-		return null;
 	}
 
 	@Override
-	public Void doMoveResizeImpl() {
+	public void doMoveResize() {
 		flushSizePlaceValues();
 		getShellNodeGeometryDelegate().moveResize(	getDesiredPosition(),
 													  getDesiredSize());
 		final ShellNodeMovedResizedEvent geoEvent = new ShellNodeMovedResizedEvent(	this,
-																					   toGeoTransformationImpl());
+																					   toGeoTransformation());
 		post(geoEvent);
-		return null;
 	}
 
 	/**
 	 * Make both the desired position and the desired dimension, the current
 	 * position and dimension.
 	 */
-	protected Void flushSizePlaceValues() {
+	protected void flushSizePlaceValues() {
 		flushPlaceValues();
 		flushSizeValues();
-		return null;
+		 
 	}
 
 	@Override
-	public Void doDestroyImpl() {
+	public void doDestroy () {
 		this.destroyed = true;
 		final ShellNodeDestroyedEvent geoEvent = new ShellNodeDestroyedEvent(	this,
-																				toGeoTransformationImpl());
+																				toGeoTransformation ());
 		post(geoEvent);
-		return null;
+		 
 	}
 
 	@Override
-	public Void doRaiseImpl() {
-		if (getParentImpl().isPresent()) {
-			((AbstractShellNodeParent) getParentImpl().get()).handleChildStacking(	this,
+	public void doRaise () {
+		if (getParent ().isPresent()) {
+			((AbstractShellNodeParent) getParent ().get()).handleChildStacking(	this,
 																					true);
 		}
 		final ShellNodeRaisedEvent geoEvent = new ShellNodeRaisedEvent(	this,
-																		toGeoTransformationImpl());
+																		toGeoTransformation ());
 		post(geoEvent);
-		return null;
+		 
 	}
 
 	@Override
-	public Void doLowerImpl() {
-		if (getParentImpl().isPresent()) {
-			((AbstractShellNodeParent) getParentImpl().get()).handleChildStacking(	this,
+	public void doLower () {
+		if (getParent ().isPresent()) {
+			((AbstractShellNodeParent) getParent ().get()).handleChildStacking(	this,
 																					false);
 		}
 		final ShellNodeLoweredEvent geoEvent = new ShellNodeLoweredEvent(	this,
-																			toGeoTransformationImpl());
+																			toGeoTransformation ());
 		post(geoEvent);
-		return null;
+		 
 	}
 
 	@Override
-	public Void doReparentImpl() {
+	public void doReparent () {
 		flushParentValue();
-		if (getParentImpl().isPresent()) {
-			((AbstractShellNodeParent) getParentImpl().get()).handleChildReparent(this);
+		if (getParent ().isPresent()) {
+			((AbstractShellNodeParent) getParent ().get()).handleChildReparent(this);
 		}
 		final ShellNodeReparentedEvent geoEvent = new ShellNodeReparentedEvent(	this,
-																				toGeoTransformationImpl());
+																				toGeoTransformation ());
 		post(geoEvent);
-		return null;
+		 
 	}
 
 	protected void flushParentValue() {
@@ -298,15 +272,15 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	}
 
 	@Override
-	public Void cancelPendingMoveImpl() {
-		setPositionImpl(this.position);
-		return null;
+	public void cancelPendingMove () {
+		setPosition(this.position);
+		 
 	}
 
 	@Override
-	public Void cancelPendingResizeImpl() {
-		setSizeImpl(this.size);
-		return null;
+	public void cancelPendingResize () {
+		setSize(this.size);
+		 
 	}
 
 	public Coordinate getDesiredPosition() {
@@ -323,90 +297,71 @@ public abstract class AbstractShellNode extends AbstractAsyncShellNode {
 	 * @return a {@link ShellNodeParent}.
 	 ***************************************
 	 */
-	public Optional<AbstractShellNodeParent> getDesiredParent() {
+	public Optional<ShellNodeParent> getDesiredParent() {
 		return this.optionalDesiredParent;
 	}
 
 	@Override
-	public Void doShowImpl() {
+	public void doShow () {
 		this.visible = true;
 
 		final ShellNodeShowedEvent geoEvent = new ShellNodeShowedEvent(	this,
-																		toGeoTransformationImpl());
+																		toGeoTransformation ());
 		post(geoEvent);
-		return null;
+		 
 	}
 
 	@Override
-	public Void doHideImpl() {
+	public void doHide () {
 		this.visible = false;
 
 		final ShellNodeHiddenEvent geoEvent = new ShellNodeHiddenEvent(	this,
-																		toGeoTransformationImpl());
+																		toGeoTransformation ());
 		post(geoEvent);
-		return null;
+		 
 	}
 
 	@Override
-	public Void requestShowImpl() {
+	public void requestShow () {
 		final ShellNodeShowRequestEvent event = new ShellNodeShowRequestEvent(	this,
-																				toGeoTransformationImpl());
+																				toGeoTransformation ());
 		post(event);
-		return null;
+		 
 	}
 
 	@Override
-	public Void requestHideImpl() {
+	public void requestHide () {
 		final ShellNodeHideRequestEvent event = new ShellNodeHideRequestEvent(	this,
-																				toGeoTransformationImpl());
+																				toGeoTransformation ());
 		post(event);
-		return null;
+		 
 	}
 
 	@Override
-	public Coordinate getPositionImpl() {
+	public Coordinate getPosition () {
 		return this.position;
 	}
 
 	@Override
-	public Size getSizeImpl() {
+	public Size getSize () {
 		return this.size;
 	}
 
 	@Override
-	public Void setPositionImpl(@Nonnull final Coordinate position) {
+	public void setPosition(@Nonnull final Coordinate position) {
 		this.desiredPosition = position;
-		return null;
+		 
 	}
 
 	@Override
-	public Void setSizeImpl(@Nonnull final Size size) {
+	public void setSize(@Nonnull final Size size) {
 		this.desiredSize = size;
-		return null;
+		 
 	}
 
 	@Override
 	public void register(@Nonnull final Object listener) {
 		this.nodeEventBus.register(listener);
-	}
-
-	@Override
-	public void scheduleRegister(@Nonnull final Object listener) {
-		this.nodeEventBus.scheduleRegister(listener);
-	}
-
-	@Override
-	public void scheduleRegister(	@Nonnull final Object listener,
-									@Nonnull final ExecutorService listenerActivationExecutor) {
-		this.nodeEventBus.scheduleRegister(	listener,
-											listenerActivationExecutor);
-	}
-
-	@Override
-	public void register(	@Nonnull final Object listener,
-							@Nonnull final ExecutorService executor) {
-		this.nodeEventBus.register(	listener,
-									executor);
 	}
 
 	@Override

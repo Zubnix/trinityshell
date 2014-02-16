@@ -29,9 +29,7 @@ import org.freedesktop.xcb.xcb_map_notify_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.ShowNotify;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
@@ -44,7 +42,6 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_MAP_NOTIFY;
 
 @Bind(multiple = true)
 @Singleton
-@ExecutionContext(DisplayExecutor.class)
 @Immutable
 public class MapNotifyHandler implements XEventHandler {
 

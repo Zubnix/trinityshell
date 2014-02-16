@@ -21,8 +21,6 @@ package org.trinity.foundation.api.display;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
 @NotThreadSafe
 public interface DisplaySurfacePool {
 

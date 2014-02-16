@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
@@ -36,7 +36,7 @@ public class AbstractShellNodeParentTest {
 	private AbstractShellNode         child1;
 
 	@Mock
-	private AsyncListenable           shellScene;
+	private Listenable shellScene;
 	@Mock
 	private ListeningExecutorService  shellExecutor;
 	@Mock

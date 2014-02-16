@@ -24,14 +24,14 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.AbstractShellNode;
+import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.ShellNodeParent;
 
 import com.google.common.base.Optional;
+import org.trinity.shell.api.surface.ShellSurface;
 
 /***************************************
  * A {@link ShellNodeGeometryDelegate} for use with an
@@ -40,18 +40,17 @@ import com.google.common.base.Optional;
  ***************************************
  */
 @NotThreadSafe
-@ExecutionContext(ShellExecutor.class)
 public class ShellSurfaceGeometryDelegate implements ShellNodeGeometryDelegate {
 
-	private final ShellSurfaceImpl abstractShellSurface;
+	private final ShellSurface shellSurface;
 
-	public ShellSurfaceGeometryDelegate(final ShellSurfaceImpl abstractShellSurface) {
-		this.abstractShellSurface = abstractShellSurface;
+	public ShellSurfaceGeometryDelegate(final ShellSurface shellSurface) {
+		this.shellSurface = shellSurface;
 	}
 
 	@Override
-	public ShellSurfaceImpl getShellNode() {
-		return this.abstractShellSurface;
+	public ShellSurface getShellNode() {
+		return this.shellSurface;
 	}
 
 	public DisplaySurface getShellNodeManipulator() {
@@ -85,9 +84,9 @@ public class ShellSurfaceGeometryDelegate implements ShellNodeGeometryDelegate {
 									size.getHeight());
 	}
 
-	private Coordinate getAbsolutePosition(@Nonnull final AbstractShellNode node) {
-		final Coordinate nodePosition = node.getPositionImpl();
-		final Optional<ShellNodeParent> optionalParent = node.getParentImpl();
+	private Coordinate getAbsolutePosition(@Nonnull final ShellNode node) {
+		final Coordinate nodePosition = node.getPosition();
+		final Optional<ShellNodeParent> optionalParent = node.getParent();
 
 		if ((!optionalParent.isPresent())) {
 			return nodePosition;

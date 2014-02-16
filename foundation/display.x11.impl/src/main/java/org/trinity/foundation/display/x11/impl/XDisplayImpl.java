@@ -20,8 +20,6 @@
 package org.trinity.foundation.display.x11.impl;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -36,11 +34,9 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.Screen;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
-import org.trinity.foundation.api.shared.AsyncListenableEventBus;
-import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.foundation.api.shared.ListenableEventBus;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XScreen;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
@@ -53,9 +49,7 @@ import javax.inject.Singleton;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
@@ -67,7 +61,6 @@ import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 @Bind
 @Singleton
 @ThreadSafe
-@ExecutionContext(DisplayExecutor.class)
 public class XDisplayImpl implements Display {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XDisplayImpl.class);
@@ -78,21 +71,18 @@ public class XDisplayImpl implements Display {
 	private final List<DisplaySurface> clientDisplaySurfaces = new ArrayList<>();
 	private final XConnection xConnection;
 	private final XWindowPoolImpl xWindowCache;
-	private final ListeningExecutorService xExecutor;
-	private final AsyncListenableEventBus displayEventBus;
+	private final ListenableEventBus displayEventBus;
 	private final ByteBuffer rootWindowAttributes = allocateDirect(4).order(nativeOrder())
 			.putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
 	private XScreen screen;
 
 	@Inject
 	XDisplayImpl(	final XConnection xConnection,
-					final XWindowPoolImpl xWindowCache,
-					@DisplayExecutor final ListeningExecutorService xExecutor) throws ExecutionException,
+					final XWindowPoolImpl xWindowCache) throws ExecutionException,
 			InterruptedException {
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
-		this.xExecutor = xExecutor;
-		this.displayEventBus = new AsyncListenableEventBus(this.xExecutor);
+		this.displayEventBus = new ListenableEventBus();
 		// register to ourself so we can track newly created clients in the
 		// "Display" thread. See onCreationNotify(...).
         this.displayEventBus.register(this);
@@ -100,21 +90,12 @@ public class XDisplayImpl implements Display {
 	}
 
 	@Override
-	public ListenableFuture<Void> quit() {
-		return this.xExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
-				XDisplayImpl.this.xConnection.close();
-				return null;
-			}
-		});
+	public void quit() {
+				this.xConnection.close();
 	}
 
-	private ListenableFuture<Void> open() {
+	private void open() {
 
-		return this.xExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
 				if (xcb_connection_has_error(XDisplayImpl.this.xConnection.getConnectionReference()) != 0) {
 					throw new Error("Cannot open display\n");
 				}
@@ -133,9 +114,6 @@ public class XDisplayImpl implements Display {
 				}
 
 				findClientDisplaySurfaces();
-				return null;
-			}
-		});
 	}
 
 	private void configureRootEvents(final xcb_screen_t xcb_screen) {
@@ -217,26 +195,7 @@ public class XDisplayImpl implements Display {
 
 	@Override
 	public void register(@Nonnull final Object listener) {
-		this.displayEventBus.scheduleRegister(listener);
-	}
-
-	@Override
-	public void register(	@Nonnull final Object listener,
-							@Nonnull final ExecutorService executor) {
-		this.displayEventBus.register(	listener,
-										executor);
-	}
-
-	@Override
-	public void scheduleRegister(@Nonnull final Object listener) {
-		this.displayEventBus.scheduleRegister(listener);
-	}
-
-	@Override
-	public void scheduleRegister(	@Nonnull final Object listener,
-									@Nonnull final ExecutorService listenerActivationExecutor) {
-		this.displayEventBus.scheduleRegister(	listener,
-												listenerActivationExecutor);
+		this.displayEventBus.register(listener);
 	}
 
 	@Override
@@ -268,23 +227,13 @@ public class XDisplayImpl implements Display {
 	}
 
 	@Override
-	public ListenableFuture<List<DisplaySurface>> getDisplaySurfaces() {
-		return this.xExecutor.submit(new Callable<List<DisplaySurface>>() {
-			@Override
-			public List<DisplaySurface> call() throws Exception {
+	public List<DisplaySurface>getDisplaySurfaces() {
 				// we return a copy
 				return new ArrayList<>(XDisplayImpl.this.clientDisplaySurfaces);
-			}
-		});
 	}
 
 	@Override
-	public ListenableFuture<Screen> getScreen() {
-		return this.xExecutor.submit(new Callable<Screen>() {
-			@Override
-			public Screen call() throws Exception {
+	public Screen getScreen() {
 				return screen;
-			}
-		});
 	}
 }

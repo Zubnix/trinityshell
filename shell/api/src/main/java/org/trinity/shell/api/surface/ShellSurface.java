@@ -54,7 +54,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #setHeightIncrement(int)
 	 ***************************************
 	 */
-	ListenableFuture<Integer> getHeightIncrement();
+	Integer getHeightIncrement();
 
 	/***************************************
 	 * The maximum height and width.
@@ -63,7 +63,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #setMaxSize(Size)
 	 ***************************************
 	 */
-	ListenableFuture<Size> getMaxSize();
+	Size getMaxSize();
 
 	/***************************************
 	 * The minimum height and width.
@@ -72,7 +72,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #setMinSize(Size)
 	 ***************************************
 	 */
-	ListenableFuture<Size> getMinSize();
+	Size getMinSize();
 
 	/***************************************
 	 * The underlying, {@code DisplaySurface} that this shell surface will use
@@ -93,7 +93,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #setWidthIncrement(int)
 	 ***************************************
 	 */
-	ListenableFuture<Integer> getWidthIncrement();
+	Integer getWidthIncrement();
 
 	/***************************************
 	 * Indicates if this surface can be moved.
@@ -102,7 +102,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 *         not.
 	 ***************************************
 	 */
-	ListenableFuture<Boolean> isMovable();
+	Boolean isMovable();
 
 	/***************************************
 	 * Indicates if this surface can be resized.
@@ -111,7 +111,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 *         not.
 	 ***************************************
 	 */
-	ListenableFuture<Boolean> isResizable();
+	Boolean isResizable();
 
 	/***************************************
 	 * Set the height delta when the height is changed.
@@ -124,7 +124,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #getHeightIncrement()
 	 ***************************************
 	 */
-	ListenableFuture<Void> setHeightIncrement(@Nonnegative final int heightIncrement);
+	void setHeightIncrement(@Nonnegative final int heightIncrement);
 
 	/***************************************
 	 * Change the maximum size. Attempts to change to size of this node beyond
@@ -136,7 +136,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #getMaxSize()
 	 ***************************************
 	 */
-	ListenableFuture<Void> setMaxSize(@Nonnull final Size size);
+	void setMaxSize(@Nonnull final Size size);
 
 	/***************************************
 	 *
@@ -146,7 +146,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #getMinSize()
 	 ***************************************
 	 */
-	ListenableFuture<Void> setMinSize(@Nonnull final Size size);
+	void setMinSize(@Nonnull final Size size);
 
 	/***************************************
 	 * Indicate if this surface is movable.
@@ -158,7 +158,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #isMovable()
 	 ***************************************
 	 */
-	ListenableFuture<Void> setMovable(final boolean movable);
+	void setMovable(final boolean movable);
 
 	/***************************************
 	 * Indicate if this surface is resizable.
@@ -170,7 +170,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #isResizable()
 	 ***************************************
 	 */
-	ListenableFuture<Void> setResizable(final boolean isResizable);
+	void setResizable(final boolean isResizable);
 
 	/***************************************
 	 * Set the width delta when the width is changed.
@@ -182,5 +182,5 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #getWidthIncrement()
 	 ***************************************
 	 */
-	ListenableFuture<Void> setWidthIncrement(@Nonnegative final int widthIncrement);
+	void setWidthIncrement(@Nonnegative final int widthIncrement);
 }

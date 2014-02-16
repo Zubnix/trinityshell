@@ -24,9 +24,6 @@ import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Singleton;
 import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
@@ -34,12 +31,9 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
-import org.trinity.foundation.api.render.ViewBuilder;
-import org.trinity.foundation.api.render.ViewBuilderResult;
+import org.trinity.foundation.api.render.View;
 import org.trinity.foundation.api.render.binding.ViewBinder;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Margins;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
@@ -55,16 +49,12 @@ import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import static com.google.common.collect.Iterables.removeAll;
-import static com.google.common.util.concurrent.Futures.addCallback;
 
 // TODO split up this class
 @Bind
 @Singleton
-@ExecutionContext(ShellExecutor.class)
 @NotThreadSafe
 public class ShellImpl implements Shell {
 
@@ -75,30 +65,27 @@ public class ShellImpl implements Shell {
 	private final EventList<Object> clientsBar = new BasicEventList<>();
 	private final EventList<Object> bottomBar = new BasicEventList<>();
 	private final Display display;
-	private final ListeningExecutorService shellExecutor;
 	private final ViewBinder viewBinder;
 	private final ShellSurfaceFactory shellSurfaceFactory;
 	private final ShellLayoutManagerFactory shellLayoutManagerFactory;
 	private final ClientBarElementFactory clientBarElementFactory;
-    private ViewBuilder viewBuilder;
+    private final View view;
 
     private final Set<DisplaySurface> nonClientDisplaySurfaces = Sets.newHashSet();
 
     @Inject
     ShellImpl(final Display display,
-              @ShellExecutor final ListeningExecutorService shellExecutor,
               final ViewBinder viewBinder,
               final ShellSurfaceFactory shellSurfaceFactory,
 				final ShellLayoutManagerFactory shellLayoutManagerFactory,
 				final ClientBarElementFactory clientBarElementFactory,
-                @DesktopView final ViewBuilder viewBuilder) {
+                @DesktopView final View view) {
         this.display = display;
-        this.shellExecutor = shellExecutor;
         this.viewBinder = viewBinder;
         this.shellSurfaceFactory = shellSurfaceFactory;
         this.shellLayoutManagerFactory = shellLayoutManagerFactory;
         this.clientBarElementFactory = clientBarElementFactory;
-        this.viewBuilder = viewBuilder;
+        this.view = view;
     }
 
     public EventList<Object> getNotificationsBar() {
@@ -114,49 +101,27 @@ public class ShellImpl implements Shell {
 	}
 
 	@Override
-	public ListenableFuture<Void> addStatusElement(final Object element) {
-		return this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
+	public void addStatusElement(final Object element) {
 				ShellImpl.this.notificationsBar.add(element);
-				return null;
-			}
-		});
 	}
 
 	@Override
-	public ListenableFuture<Void> removeStatusElement(final Object element) {
-		return this.shellExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() {
+	public void removeStatusElement(final Object element) {
 				ShellImpl.this.notificationsBar.remove(element);
-				return null;
-			}
-		});
 	}
 
 	@Override
 	public void start() {
 
-        try {
-            this.viewBuilder.build(new ViewBuilderResult() {
-                @Override
-                public void onResult(final Object bindableView,
-                                     final DisplaySurface viewDisplaySurface) {
-                    ShellImpl.this.viewBinder.bind(ShellImpl.this.shellExecutor,
-                                                   ShellImpl.this,
-                                                   bindableView);
+                    ShellImpl.this.viewBinder.bind(
+                                                   this,
+                                                   this.view.getBindableView());
 
-                    ShellImpl.this.nonClientDisplaySurfaces.add(viewDisplaySurface);
+                    ShellImpl.this.nonClientDisplaySurfaces.add(this.view.getViewDisplaySurface());
                     final ShellSurface desktopShellSurface = ShellImpl.this.shellSurfaceFactory
-                            .createShellSurface(viewDisplaySurface);
+                            .createShellSurface(this.view.getViewDisplaySurface());
                     configureDesktopShellSurfaceBehavior(desktopShellSurface);
                     handleDesktopShellSurface(desktopShellSurface);
-                }
-            }).get();
-        } catch(InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
     }
 
     // called by display thread so we avoid missing any display methods.
@@ -201,14 +166,9 @@ public class ShellImpl implements Shell {
 		this.display.unregister(this);
 	}
 
-	// called by display executor
 	private void find(final ShellLayoutManagerLine shellLayoutManagerLine) {
-		final ListenableFuture<List<DisplaySurface>> clientDisplaySurfaces = this.display.getDisplaySurfaces();
-		// called by display thread
-		addCallback(clientDisplaySurfaces,
-					new FutureCallback<List<DisplaySurface>>() {
-						@Override
-						public void onSuccess(final List<DisplaySurface> displaySurfaces) {
+		final List<DisplaySurface> displaySurfaces = this.display.getDisplaySurfaces();
+
 							removeAll(	displaySurfaces,
 										ShellImpl.this.nonClientDisplaySurfaces);
 							for (final DisplaySurface displaySurface : displaySurfaces) {
@@ -219,21 +179,12 @@ public class ShellImpl implements Shell {
 							}
 						}
 
-						@Override
-						public void onFailure(final Throwable t) {
-							LOG.error(	"Unable to query for existing display surfaces.",
-										t);
-						}
-					});
-	}
 
 	private void handleClientShellSurface(	final ShellSurface clientShellSurface,
 											final ShellLayoutManagerLine shellLayoutManagerLine) {
         //check if we haven't missed any destroy event.
-        addCallback(clientShellSurface.isDestroyed(),
-                    new FutureCallback<Boolean>() {
-                        @Override
-                        public void onSuccess(final Boolean destroyed) {
+        Boolean destroyed = clientShellSurface.isDestroyed();
+
                             if(!destroyed) {
                                 //if not then we manage it.
                                 shellLayoutManagerLine.addChildNode(clientShellSurface,
@@ -253,12 +204,5 @@ public class ShellImpl implements Shell {
                                 });
                                 ShellImpl.this.clientsBar.add(clientTopBarItem);
                             }
-                        }
-
-                        @Override
-                        public void onFailure(final Throwable t) {
-                            //TODO
-                        }
-                    });
     }
 }

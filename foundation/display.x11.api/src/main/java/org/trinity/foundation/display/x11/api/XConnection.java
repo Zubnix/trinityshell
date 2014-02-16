@@ -22,7 +22,6 @@ package org.trinity.foundation.display.x11.api;
 
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
 
 import javax.annotation.concurrent.NotThreadSafe;
 
@@ -30,7 +29,6 @@ import javax.annotation.concurrent.NotThreadSafe;
  * A connection to an X display server.
  */
 @NotThreadSafe
-@ExecutionContext(DisplayExecutor.class)
 public interface XConnection {
 	/**
 	 * The XCB connection reference. The optional reference will be absent if no

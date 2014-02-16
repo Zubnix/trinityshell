@@ -20,9 +20,7 @@
 package org.trinity.shell.api.scene;
 
 import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 
 /***************************************
  * Executes the actual geometry changes for a {@link ShellNode}. A
@@ -37,7 +35,6 @@ import org.trinity.shell.api.bindingkey.ShellExecutor;
  * requester (a node) has the correct and desired on-screen effect.
  ***************************************
  */
-@ExecutionContext(ShellExecutor.class)
 public interface ShellNodeGeometryDelegate {
 
 	/***************************************

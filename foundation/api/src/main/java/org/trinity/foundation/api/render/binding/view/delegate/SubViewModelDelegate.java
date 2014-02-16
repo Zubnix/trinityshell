@@ -19,17 +19,11 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.view.delegate;
 
-import org.trinity.foundation.api.render.bindkey.RenderExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
-
-import com.google.common.util.concurrent.ListenableFuture;
-
 /***************************************
  * A delegate to handle the life cycle of a child view element. This delegate
  * should be implemented for a specific widget toolkit.
  ***************************************
  */
-@ExecutionContext(RenderExecutor.class)
 public interface SubViewModelDelegate {
 	/***************************************
 	 * Create a new view element.
@@ -45,7 +39,7 @@ public interface SubViewModelDelegate {
      *
 	 ***************************************
 	 */
-	<T> ListenableFuture<T> newView(Object parentView,
+	<T>T newView(Object parentView,
 									Class<T> childViewType,
 									int position);
 
@@ -58,11 +52,9 @@ public interface SubViewModelDelegate {
 	 *            The view that should be destroyed.
 	 * @param deletedPosition
 	 *            The index of the view that should be destroyed.
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> destroyView(	Object parentView,
+	void destroyView(	Object parentView,
 										Object deletedChildView,
 										int deletedPosition);
 
@@ -77,11 +69,9 @@ public interface SubViewModelDelegate {
 	 *            The old position.
 	 * @param newPosition
 	 *            The new position.
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> updateChildViewPosition(	Object parentView,
+	void updateChildViewPosition(	Object parentView,
 													Object childView,
 													int oldPosition,
 													int newPosition);

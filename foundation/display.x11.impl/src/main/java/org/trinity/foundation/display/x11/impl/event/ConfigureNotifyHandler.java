@@ -31,9 +31,7 @@ import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.GeometryNotify;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XEventHandler;
@@ -47,7 +45,6 @@ import com.google.inject.Singleton;
 
 @Bind(multiple = true)
 @Singleton
-@ExecutionContext(DisplayExecutor.class)
 @Immutable
 public class ConfigureNotifyHandler implements XEventHandler {
 

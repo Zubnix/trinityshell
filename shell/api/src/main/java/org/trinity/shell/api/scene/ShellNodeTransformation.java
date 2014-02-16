@@ -21,10 +21,8 @@ package org.trinity.shell.api.scene;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -34,7 +32,6 @@ import javax.annotation.concurrent.Immutable;
  * value.
  ***************************************
  */
-@ExecutionContext(ShellExecutor.class)
 @Immutable
 public class ShellNodeTransformation {
 	private final Rectangle rect0;

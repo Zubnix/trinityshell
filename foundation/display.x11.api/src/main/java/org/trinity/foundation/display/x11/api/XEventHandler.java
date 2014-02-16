@@ -25,8 +25,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.shared.AsyncListenable;
-import org.trinity.foundation.api.shared.ExecutionContext;
+import org.trinity.foundation.api.shared.Listenable;
 
 import com.google.common.base.Optional;
 
@@ -41,7 +40,6 @@ import com.google.common.base.Optional;
  * are both present then the display event will be posted to the target in the display
  * execution context.
  */
-@ExecutionContext(DisplayExecutor.class)
 @NotThreadSafe
 public interface XEventHandler {
 	/**
@@ -58,7 +56,7 @@ public interface XEventHandler {
 	 * @param event The xcb event to handle
 	 * @return An optional object that is the target of the given xcb event.
 	 */
-	Optional<? extends AsyncListenable> getTarget(@Nonnull xcb_generic_event_t event);
+	Optional<? extends Listenable> getTarget(@Nonnull xcb_generic_event_t event);
 
 	/**
 	 * The code of the X event to handle.

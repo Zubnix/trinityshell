@@ -39,7 +39,6 @@ import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_intern_atom_cookie_t;
 import org.freedesktop.xcb.xcb_intern_atom_reply_t;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.display.x11.api.XConnection;
 
 import com.google.common.cache.Cache;
@@ -48,7 +47,6 @@ import com.google.common.cache.CacheBuilder;
 @Bind(to = @To(IMPLEMENTATION))
 @Singleton
 @NotThreadSafe
-@ExecutionContext(DisplayExecutor.class)
 public class XAtomCache {
 
 	private final Map<Integer, String> atomNameCodes = new HashMap<>();

@@ -20,12 +20,10 @@
 package org.trinity.shell.api.scene;
 
 import com.google.common.base.Optional;
-import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
 import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
 import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
@@ -41,8 +39,7 @@ import com.google.common.util.concurrent.ListenableFuture;
  * The super interface of all nodes that live in the shell scene.
  ***************************************
  */
-@ExecutionContext(ShellExecutor.class)
-public interface ShellNode extends AsyncListenable {
+public interface ShellNode extends Listenable {
 
 	/***************************************
 	 * The shell geometry of the node. The relation between the on screen
@@ -53,7 +50,7 @@ public interface ShellNode extends AsyncListenable {
 	 * @see #getShellNodeGeometryDelegate()
 	 ***************************************
 	 */
-	ListenableFuture<Rectangle> getGeometry();
+	Rectangle getGeometry();
 
 	/***************************************
 	 * Change the node's shell size. The relation between the on screen size and
@@ -70,7 +67,7 @@ public interface ShellNode extends AsyncListenable {
 	 * @see #setSize(Size)
 	 ***************************************
 	 */
-	ListenableFuture<Void> setSize(	int width,
+	void setSize(	int width,
 									int height);
 
 	/***************************************
@@ -85,7 +82,7 @@ public interface ShellNode extends AsyncListenable {
 	 * @see #setSize(int, int)
 	 ***************************************
 	 */
-	ListenableFuture<Void> setSize(Size size);
+	void setSize(Size size);
 
 	/***************************************
 	 * Change the node's shell position. A node's position is relative to its
@@ -102,7 +99,7 @@ public interface ShellNode extends AsyncListenable {
 	 * @see #setPosition(Coordinate)
 	 ***************************************
 	 */
-	ListenableFuture<Void> setPosition(	int x,
+	void setPosition(	int x,
 										int y);
 
 	/***************************************
@@ -117,7 +114,7 @@ public interface ShellNode extends AsyncListenable {
 	 * @see #getShellNodeGeometryDelegate()
 	 ***************************************
 	 */
-	ListenableFuture<Void> setPosition(Coordinate position);
+	void setPosition(Coordinate position);
 
 	/***************************************
 	 * The shell position of the node. A node's position is relative to its
@@ -127,7 +124,7 @@ public interface ShellNode extends AsyncListenable {
 	 * @return a future {@link Coordinate}.
 	 ***************************************
 	 */
-	ListenableFuture<Coordinate> getPosition();
+	Coordinate getPosition();
 
 	/***************************************
 	 * The shell size of the node. The relation between the on screen size and
@@ -136,7 +133,7 @@ public interface ShellNode extends AsyncListenable {
 	 * @return a future {@link Size}.
 	 ***************************************
 	 */
-	ListenableFuture<Size> getSize();
+	Size getSize();
 
 	/****************************************
 	 * Indicates if this node is visible. This is implementation dependent. A
@@ -148,7 +145,7 @@ public interface ShellNode extends AsyncListenable {
 	 * @return future true if visible, future false if not
 	 ***************************************
 	 */
-	ListenableFuture<Boolean> isVisible();
+	Boolean isVisible();
 
 	/***************************************
 	 * Reset any value set by {@link #setPosition(Coordinate)} to this
@@ -158,7 +155,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> cancelPendingMove();
+	void cancelPendingMove();
 
 	/***************************************
 	 * Reset any value set by {@link #setSize(int, int)}
@@ -168,7 +165,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> cancelPendingResize();
+	void cancelPendingResize();
 
 	/***************************************
 	 * Destroy this node and all its children.
@@ -177,7 +174,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> doDestroy();
+	void doDestroy();
 
 	/***************************************
 	 * Lower this node.
@@ -186,7 +183,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> doLower();
+	void doLower();
 
 	/***************************************
 	 * Change the parent of this node to the parent that was specified in
@@ -196,7 +193,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> doReparent();
+	void doReparent();
 
 	/***************************************
 	 * Move this node to the coordinate that was specified in
@@ -206,7 +203,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> doMove();
+	void doMove();
 
 	/***************************************
 	 * Raise this node to the top of the stack. A node at the top will be drawn
@@ -216,7 +213,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> doRaise();
+	void doRaise();
 
 	/***************************************
 	 * Move this node to the coordinate that was specified in
@@ -227,7 +224,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> doMoveResize();
+	void doMoveResize();
 
 	/***************************************
 	 * Resize this node to the size that was specified in {@link #setSize(Size)}
@@ -237,7 +234,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> doResize();
+	void doResize();
 
 	/***************************************
 	 * Show this node.
@@ -246,7 +243,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> doShow();
+	void doShow();
 
 	/***************************************
 	 * Hide this node.
@@ -255,7 +252,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> doHide();
+	void doHide();
 
 	/***************************************
 	 * The geometry executor that is responsible for correctly executing all
@@ -273,7 +270,7 @@ public interface ShellNode extends AsyncListenable {
 	 * @return a future true if destroyed, a future false if not.
 	 ***************************************
 	 */
-	ListenableFuture<Boolean> isDestroyed();
+	Boolean isDestroyed();
 
 	/***************************************
 	 * Request that this node is lowered. This will cause any subscribed node
@@ -285,7 +282,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> requestLower();
+	void requestLower();
 
 	/***************************************
 	 * Request that this node is moved. This will cause any subscribed node
@@ -297,7 +294,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> requestMove();
+	void requestMove();
 
 	/***************************************
 	 * Request that this node is moved and resized. This will cause any
@@ -310,7 +307,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> requestMoveResize();
+	void requestMoveResize();
 
 	/***************************************
 	 * Request that this node is raised. This will cause any subscribed node
@@ -322,7 +319,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> requestRaise();
+	void requestRaise();
 
 	/***************************************
 	 * Request that this node is reparented. This will cause any subscribed node
@@ -335,7 +332,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> requestReparent();
+	void requestReparent();
 
 	/***************************************
 	 * Request that this node is resized. This will cause any subscribed node
@@ -348,7 +345,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> requestResize();
+	void requestResize();
 
 	/***************************************
 	 * Request that this node is shown. This will cause any subscribed node
@@ -360,7 +357,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> requestShow();
+	void requestShow();
 
 	/***************************************
 	 * Request that this node is hidden. This will cause any subscribed node
@@ -372,7 +369,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> requestHide();
+	void requestHide();
 
 	/***************************************
 	 * Set the desired shell parent of this node. Actually reparenting is done
@@ -385,7 +382,7 @@ public interface ShellNode extends AsyncListenable {
 	 *         done.
 	 ***************************************
 	 */
-	ListenableFuture<Void> setParent(final Optional<? extends ShellNodeParent> parent);
+	void setParent(final Optional<ShellNodeParent> parent);
 
 	/***************************************
 	 * The shell parent of this node.
@@ -393,7 +390,7 @@ public interface ShellNode extends AsyncListenable {
 	 * @return a future {@link ShellNodeParent}.
 	 ***************************************
 	 */
-	ListenableFuture<Optional<ShellNodeParent>> getParent();
+	Optional<ShellNodeParent> getParent();
 
 	/**
 	 * The desired transformation of this node. The "0" named properties match
@@ -402,5 +399,5 @@ public interface ShellNode extends AsyncListenable {
 	 *
 	 * @return A future {@link ShellNodeTransformation}.
 	 */
-	ListenableFuture<ShellNodeTransformation> toGeoTransformation();
+	ShellNodeTransformation toGeoTransformation();
 }

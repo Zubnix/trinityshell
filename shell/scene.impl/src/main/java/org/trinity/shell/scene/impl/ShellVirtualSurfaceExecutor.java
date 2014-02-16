@@ -20,10 +20,8 @@
 package org.trinity.shell.scene.impl;
 
 import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.ExecutionContext;
 import org.trinity.foundation.api.shared.Size;
-import org.trinity.shell.api.bindingkey.ShellExecutor;
-import org.trinity.shell.api.scene.AbstractShellNode;
+import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.ShellNodeTransformation;
 
@@ -38,7 +36,6 @@ import javax.annotation.concurrent.NotThreadSafe;
  *
  */
 @NotThreadSafe
-@ExecutionContext(ShellExecutor.class)
 public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
 
     private final ShellVirtualSurface shellVirtualSurface;
@@ -55,12 +52,12 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
     @Override
     public void move(@Nonnull final Coordinate position) {
         final ShellVirtualSurface shellNode = getShellNode();
-        final ShellNodeTransformation shellNodeTransformation = shellNode.toGeoTransformationImpl();
+        final ShellNodeTransformation shellNodeTransformation = shellNode.toGeoTransformation();
 
         final Coordinate deltaPosition = shellNodeTransformation.getDeltaRect().getPosition();
 
-        for (final AbstractShellNode child : shellNode.getChildrenImpl()) {
-            final Coordinate oldRelPosition = child.getPositionImpl();
+        for (final ShellNode child : shellNode.getChildren()) {
+            final Coordinate oldRelPosition = child.getPosition();
 
             final Coordinate newRelPosition = oldRelPosition.add(deltaPosition);
 

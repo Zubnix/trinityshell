@@ -2,7 +2,6 @@ package org.trinity.foundation.render.javafx.api;
 
 
 import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Control;
@@ -21,7 +20,7 @@ public class FXView extends Control {
 	public Skin<?> skin;
 
 	@Inject
-	protected FXView(@Nonnull final ListeningExecutorService modelExecutor,
+	protected FXView(
 					 @Nonnull final ViewBinder viewBinder) {
 		skinProperty().addListener(new ChangeListener<Skin<?>>() {
 			@Override
@@ -29,7 +28,7 @@ public class FXView extends Control {
 								final Skin<?> oldSkin,
 								final Skin<?> newSkin) {
 				FXView.this.skin = newSkin;
-				viewBinder.updateViewModelBinding(modelExecutor,
+				viewBinder.updateViewModelBinding(
 												  FXView.this,
 												  "skin",
 												  Optional.fromNullable(oldSkin),

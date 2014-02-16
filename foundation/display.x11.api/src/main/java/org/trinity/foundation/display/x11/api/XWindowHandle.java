@@ -21,14 +21,12 @@ package org.trinity.foundation.display.x11.api;
 
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@ExecutionContext(DisplayExecutor.class)
 @Immutable
 public class XWindowHandle implements DisplaySurfaceHandle {
 

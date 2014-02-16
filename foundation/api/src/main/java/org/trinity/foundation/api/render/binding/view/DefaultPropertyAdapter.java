@@ -19,9 +19,6 @@
  ******************************************************************************/
 package org.trinity.foundation.api.render.binding.view;
 
-import org.trinity.foundation.api.render.bindkey.RenderExecutor;
-import org.trinity.foundation.api.shared.ExecutionContext;
-
 import javax.annotation.Nullable;
 
 /***************************************
@@ -31,7 +28,6 @@ import javax.annotation.Nullable;
  *
  ***************************************
  */
-@ExecutionContext(RenderExecutor.class)
 public class DefaultPropertyAdapter implements PropertyAdapter<Object> {
 
 	@Override

@@ -31,7 +31,7 @@ import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.shared.AsyncListenable;
+import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 
 import com.google.common.base.Optional;
@@ -61,7 +61,7 @@ public class XPropertyChangedHandler implements XEventHandler {
 	}
 
 	@Override
-	public Optional<AsyncListenable> getTarget(@Nonnull final xcb_generic_event_t event) {
+	public Optional<Listenable> getTarget(@Nonnull final xcb_generic_event_t event) {
 		// no conversion so no target needed
 		return Optional.absent();
 	}
