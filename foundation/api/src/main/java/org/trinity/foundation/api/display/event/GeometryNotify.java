@@ -20,7 +20,6 @@
 package org.trinity.foundation.api.display.event;
 
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.Rectangle;
 
 import javax.annotation.Nonnull;
@@ -32,7 +31,6 @@ import javax.annotation.concurrent.Immutable;
  *
  */
 @Immutable
-@ExecutionContext(DisplayExecutor.class)
 public class GeometryNotify extends DisplayEvent {
 
 	private final Rectangle geometry;

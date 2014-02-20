@@ -19,8 +19,6 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_geometry_cookie_t;
@@ -66,10 +64,11 @@ public class XWindow implements DisplaySurface {
     private final XTime xTime;
     private final ListenableEventBus xWindowEventBus;
 
-    @AssistedInject
+
     XWindow(final XTime xTime,
             final XConnection xConnection,
-            @Nonnull @Assisted final DisplaySurfaceHandle resourceHandle) {
+            @Nonnull//TODO autofactory
+			final DisplaySurfaceHandle resourceHandle) {
         checkNotNull(resourceHandle);
 
         this.xTime = xTime;
@@ -169,7 +168,7 @@ public class XWindow implements DisplaySurface {
         // introduces an extra roundtrip to the X server. -_-
 
         final int winId = getWindowId();
-        xcb_get_geometry_cookie_t cookie_t = xcb_get_geometry(getConnectionRef(),
+        final xcb_get_geometry_cookie_t cookie_t = xcb_get_geometry(getConnectionRef(),
                                 winId);
 
 
@@ -179,7 +178,7 @@ public class XWindow implements DisplaySurface {
                                 e);
 
                         checkError(e);
-        Integer border=  reply.getBorder_width();
+        final Integer border=  reply.getBorder_width();
 
 
                         final int borderAdjust = 2 * border;
@@ -223,7 +222,7 @@ public class XWindow implements DisplaySurface {
         // introduces an extra roundtrip to the X server. -_-
 
         final int winId = getWindowId();
-        xcb_get_geometry_cookie_t cookie_t = xcb_get_geometry(getConnectionRef(),
+        final xcb_get_geometry_cookie_t cookie_t = xcb_get_geometry(getConnectionRef(),
                                 winId);
 
 
@@ -233,7 +232,7 @@ public class XWindow implements DisplaySurface {
                                 e);
 
                         checkError(e);
-        Integer border = reply.getBorder_width();
+        final Integer border = reply.getBorder_width();
 
                         final int borderAdjust = 2 * border;
                         final int adjustedWidth = width - borderAdjust;

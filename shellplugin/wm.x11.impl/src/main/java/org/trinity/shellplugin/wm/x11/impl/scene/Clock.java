@@ -20,25 +20,21 @@
 
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 
+import org.trinity.foundation.api.render.binding.model.PropertyChanged;
+import org.trinity.shellplugin.wm.api.HasText;
+import org.trinity.shellplugin.wm.api.Shell;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
-import org.trinity.foundation.api.render.binding.model.PropertyChanged;
-import org.trinity.shellplugin.wm.api.Shell;
-import org.trinity.shellplugin.wm.api.HasText;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
-@Bind(to = @To(IMPLEMENTATION))
 public class Clock implements HasText, Runnable {
 
 	private final ScheduledExecutorService clockExecutor = Executors.newScheduledThreadPool(1);

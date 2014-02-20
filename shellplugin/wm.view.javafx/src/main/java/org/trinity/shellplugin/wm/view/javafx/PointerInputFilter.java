@@ -4,17 +4,13 @@ import com.google.common.base.Objects;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
 import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 
 import javax.annotation.Nonnull;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 
-@Bind(to=@To(IMPLEMENTATION))
 public class PointerInputFilter implements EventSignalFilter {
 
     public static class MouseEventHandler implements EventHandler<MouseEvent>{

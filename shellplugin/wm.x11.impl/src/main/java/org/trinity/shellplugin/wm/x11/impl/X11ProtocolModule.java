@@ -18,18 +18,17 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
 
-package org.trinity.foundation.display.x11.api;
+package org.trinity.shellplugin.wm.x11.impl;
 
-import org.apache.onami.autobind.annotations.GuiceModule;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
+import dagger.Module;
 
-import com.google.common.eventbus.EventBus;
-import com.google.inject.AbstractModule;
+@Module
+class X11ProtocolModule {
 
-@GuiceModule
-class Module extends AbstractModule {
-	@Override
+
 	protected void configure() {
-		bind(EventBus.class).annotatedWith(XEventBus.class).toInstance(new EventBus());
+		//TODO
+//        install(new FactoryModuleBuilder().implement(ClientBarElement.class,
+//                ClientBarElement.class).build(ClientBarElementFactory.class));
 	}
 }

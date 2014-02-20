@@ -3,7 +3,6 @@ package org.trinity.foundation.render.javafx.impl.binding.view.delegate;
 import com.google.inject.Injector;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
-import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.foundation.api.render.binding.view.delegate.SubViewModelDelegate;
 import org.trinity.foundation.render.javafx.api.FXView;
 
@@ -16,7 +15,6 @@ import static java.lang.String.format;
 /**
  *
  */
-@Bind
 @Singleton
 public class SubViewDelegateImpl implements SubViewModelDelegate {
 

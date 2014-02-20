@@ -132,10 +132,10 @@ public class CollectionBindingTest {
 												  (Class) ChildViewModel.class,
 												  1);
 
-		verify(this.viewBinder).bind(this.dataModelExecutor,
+		verify(this.viewBinder).bind(
 									 element0,
 									 this.subViewModel0);
-		verify(this.viewBinder).bind(this.dataModelExecutor,
+		verify(this.viewBinder).bind(
 									 element1,
 									 this.subViewModel1);
 	}
@@ -151,10 +151,6 @@ public class CollectionBindingTest {
 		this.eventList.add(element0);
 		this.eventList.add(element1);
 
-		when(this.viewBinder.unbind(this.dataModelExecutor,
-									element0,
-									this.subViewModel0)).thenReturn(Futures.<Void>immediateFuture(null));
-
 		this.collectionBinding.bind();
 
 
@@ -167,7 +163,7 @@ public class CollectionBindingTest {
 		verify(this.subViewModelDelegate).destroyView(this.viewModel,
 													  this.subViewModel0,
 													  0);
-		verify(this.viewBinder).unbind(this.dataModelExecutor,
+		verify(this.viewBinder).unbind(
 									   element0,
 									   this.subViewModel0);
 	}
@@ -183,12 +179,6 @@ public class CollectionBindingTest {
 		this.eventList.add(element0);
 		this.eventList.add(element1);
 
-		when(this.viewBinder.unbind(this.dataModelExecutor,
-									element0,
-									this.subViewModel0)).thenReturn(Futures.<Void>immediateFuture(null));
-		when(this.viewBinder.unbind(this.dataModelExecutor,
-									element1,
-									this.subViewModel1)).thenReturn(Futures.<Void>immediateFuture(null));
 
 		this.collectionBinding.bind();
 
@@ -198,17 +188,17 @@ public class CollectionBindingTest {
 
 		//then
 		//the viewable collection is updated
-		verify(this.viewBinder).unbind(this.dataModelExecutor,
+		verify(this.viewBinder).unbind(
 									   element0,
 									   this.subViewModel0);
-		verify(this.viewBinder).bind(this.dataModelExecutor,
+		verify(this.viewBinder).bind(
 									   element1,
 									   this.subViewModel0);
 
-		verify(this.viewBinder).unbind(this.dataModelExecutor,
+		verify(this.viewBinder).unbind(
 									   element1,
 									   this.subViewModel1);
-		verify(this.viewBinder).bind(this.dataModelExecutor,
+		verify(this.viewBinder).bind(
 									 element0,
 									 this.subViewModel1);
 	}

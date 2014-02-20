@@ -20,7 +20,6 @@
 package org.trinity.foundation.display.x11.impl;
 
 import com.google.common.eventbus.Subscribe;
-import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_window_attributes_cookie_t;
@@ -49,7 +48,6 @@ import javax.inject.Singleton;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
@@ -58,7 +56,6 @@ import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
 import static org.freedesktop.xcb.xcb_event_mask_t.*;
 import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 
-@Bind
 @Singleton
 @ThreadSafe
 public class XDisplayImpl implements Display {
@@ -78,8 +75,7 @@ public class XDisplayImpl implements Display {
 
 	@Inject
 	XDisplayImpl(	final XConnection xConnection,
-					final XWindowPoolImpl xWindowCache) throws ExecutionException,
-			InterruptedException {
+					final XWindowPoolImpl xWindowCache) {
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
 		this.displayEventBus = new ListenableEventBus();
@@ -122,7 +118,7 @@ public class XDisplayImpl implements Display {
 		xcb_change_window_attributes(	this.xConnection.getConnectionReference(),
 										rootId,
 										XCB_CW_EVENT_MASK,
-                                        rootWindowAttributes);
+										this.rootWindowAttributes);
 		xcb_flush(this.xConnection.getConnectionReference());
 	}
 
@@ -130,7 +126,7 @@ public class XDisplayImpl implements Display {
 		// find client display surfaces that are already
 		// active on the X server and track them
 
-		final int root = screen.getScreenReference().getRoot();
+		final int root = this.screen.getScreenReference().getRoot();
 		final SWIGTYPE_p_xcb_connection_t connection = this.xConnection.getConnectionReference();
 		final xcb_query_tree_cookie_t query_tree_cookie = xcb_query_tree(	connection,
 																			root);
@@ -234,6 +230,6 @@ public class XDisplayImpl implements Display {
 
 	@Override
 	public Screen getScreen() {
-				return screen;
+				return this.screen;
 	}
 }

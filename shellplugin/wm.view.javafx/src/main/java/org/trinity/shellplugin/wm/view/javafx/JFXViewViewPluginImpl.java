@@ -2,26 +2,25 @@ package org.trinity.shellplugin.wm.view.javafx;
 
 import com.google.inject.Binder;
 import com.google.inject.name.Names;
-import javafx.application.Application;
+import dagger.Module;
 import javafx.stage.Stage;
-import org.apache.onami.autobind.annotations.GuiceModule;
 
 import java.util.concurrent.CountDownLatch;
 
-@GuiceModule
-public class Module extends Application implements com.google.inject.Module {
+@Module
+public class JFXViewViewPluginImpl {
 
     private static final CountDownLatch START_FX_APP_LATCH = new CountDownLatch(1);
     private static Binder GUICE_BINDER;
     private static Thread FX_APP_THREAD;
 
-    @Override
+    //TODO
     public void start(final Stage primaryStage) throws Exception {
         GUICE_BINDER.bind(Stage.class).annotatedWith(Names.named("Primary")).toInstance(primaryStage);
         START_FX_APP_LATCH.countDown();
     }
 
-    @Override
+	//TODO
     public void configure(final Binder guiceBinder) {
         GUICE_BINDER = guiceBinder;
         startFxApp();
@@ -33,8 +32,9 @@ public class Module extends Application implements com.google.inject.Module {
                 @Override
                 public void run() {
                     try {
-                        Application.launch(Module.class);
-                    } catch(Throwable t) {
+						//TODO
+                        //Application.launch(JFXViewViewPluginImpl.class);
+                    } catch(final Throwable t) {
                         t.printStackTrace();
                     }
                 }
@@ -44,7 +44,7 @@ public class Module extends Application implements com.google.inject.Module {
 
         try {
             START_FX_APP_LATCH.await();
-        } catch(InterruptedException e) {
+        } catch(final InterruptedException e) {
             throw new Error(e);
         }
     }

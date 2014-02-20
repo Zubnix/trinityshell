@@ -19,24 +19,20 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.freedesktop.xcb.LibXcb.xcb_connect;
-import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
+import org.trinity.foundation.display.x11.api.XConnection;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Singleton;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
-import org.apache.onami.autobind.annotations.Bind;
-import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
-import org.trinity.foundation.display.x11.api.XConnection;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.freedesktop.xcb.LibXcb.xcb_connect;
+import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
 
-import com.google.inject.Singleton;
-
-@Bind
 @Singleton
 @NotThreadSafe
 public class XConnectionImpl implements XConnection {

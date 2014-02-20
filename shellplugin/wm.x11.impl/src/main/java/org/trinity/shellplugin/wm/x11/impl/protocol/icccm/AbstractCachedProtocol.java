@@ -26,7 +26,6 @@ import org.freedesktop.xcb.xcb_property_notify_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.api.shared.ListenableEventBus;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
@@ -35,9 +34,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import static com.google.common.util.concurrent.Futures.addCallback;
-import static com.google.common.util.concurrent.Futures.transform;
 
 @ThreadSafe
 public abstract class AbstractCachedProtocol<P> {
@@ -71,7 +67,7 @@ public abstract class AbstractCachedProtocol<P> {
 
 	public Optional<P> get(@Nonnull final DisplaySurface xWindow) {
 
-		Optional<P> protocol =  AbstractCachedProtocol.this.protocolCache.get(xWindow);
+		final Optional<P> protocol =  AbstractCachedProtocol.this.protocolCache.get(xWindow);
 
 									if (protocol == null) {
 										trackProtocol(xWindow);
@@ -92,7 +88,7 @@ public abstract class AbstractCachedProtocol<P> {
 	}
 
 	protected void updateProtocolCache(final DisplaySurface xWindow) {
-		Optional<P> protocol = queryProtocol(xWindow);
+		final Optional<P> protocol = queryProtocol(xWindow);
 							AbstractCachedProtocol.this.protocolCache.put(	xWindow,
 																			protocol);
 							notifyProtocolListeners(xWindow,

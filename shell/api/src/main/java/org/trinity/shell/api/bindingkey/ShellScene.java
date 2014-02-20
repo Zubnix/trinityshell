@@ -20,24 +20,19 @@
 
 package org.trinity.shell.api.bindingkey;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
+import javax.inject.Qualifier;
+import javax.inject.Singleton;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.google.inject.BindingAnnotation;
-
-import javax.inject.Singleton;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Used for the {@link org.trinity.foundation.api.shared.Listenable} shell scene
  * {@link Singleton}. Instance provided by the org.trinity.shell.api package.
  */
-@BindingAnnotation
+@Qualifier
 @Target({ TYPE, FIELD, PARAMETER, METHOD })
 @Retention(RUNTIME)
 public @interface ShellScene {

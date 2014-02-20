@@ -19,20 +19,14 @@
  ******************************************************************************/
 package org.trinity.shell.scene.impl;
 
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.shell.api.bindingkey.ShellScene;
-import org.trinity.shell.api.bindingkey.ShellVirtualNode;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
-import org.trinity.shell.api.scene.ShellNodeParent;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
 
 // TODO documentation
 /**
@@ -47,8 +41,6 @@ import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
  * geometry requests if necessary.
  *
  */
-@Bind(to = @To(value = CUSTOM, customs = { ShellNode.class, ShellNodeParent.class }))
-@ShellVirtualNode
 public class ShellVirtualSurface extends AbstractShellNodeParent {
 
 	private final ShellNodeGeometryDelegate shellNodeGeometryDelegate = new ShellVirtualSurfaceExecutor(this);

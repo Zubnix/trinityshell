@@ -24,8 +24,6 @@ import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
-import com.google.inject.Singleton;
-import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Display;
@@ -47,13 +45,13 @@ import org.trinity.shellplugin.wm.api.viewkey.DesktopView;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.Set;
 
 import static com.google.common.collect.Iterables.removeAll;
 
 // TODO split up this class
-@Bind
 @Singleton
 @NotThreadSafe
 public class ShellImpl implements Shell {
@@ -183,7 +181,7 @@ public class ShellImpl implements Shell {
 	private void handleClientShellSurface(	final ShellSurface clientShellSurface,
 											final ShellLayoutManagerLine shellLayoutManagerLine) {
         //check if we haven't missed any destroy event.
-        Boolean destroyed = clientShellSurface.isDestroyed();
+        final Boolean destroyed = clientShellSurface.isDestroyed();
 
                             if(!destroyed) {
                                 //if not then we manage it.

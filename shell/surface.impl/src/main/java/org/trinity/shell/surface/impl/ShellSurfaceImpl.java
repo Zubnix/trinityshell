@@ -20,7 +20,6 @@
 package org.trinity.shell.surface.impl;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.inject.assistedinject.Assisted;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.GeometryNotify;
@@ -52,133 +51,134 @@ import static com.google.common.base.Preconditions.checkArgument;
 @NotThreadSafe
 public final class ShellSurfaceImpl extends AbstractShellNodeParent implements ShellSurface {
 
-    public static final boolean DEFAULT_IS_RESIZABLE = true;
-    public static final boolean DEFAULT_IS_MOVABLE = true;
-    public static final int DEFAULT_MIN_WIDTH = 4;
-    public static final int DEFAULT_MIN_HEIGHT = 4;
-    public static final int DEFAULT_MAX_WIDTH = 16384;
-    public static final int DEFAULT_MAX_HEIGHT = 16384;
-    public static final int DEFAULT_WIDTH_INC = 1;
-    public static final int DEFAULT_HEIGHT_INC = 1;
+	public static final boolean DEFAULT_IS_RESIZABLE = true;
+	public static final boolean DEFAULT_IS_MOVABLE   = true;
+	public static final int     DEFAULT_MIN_WIDTH    = 4;
+	public static final int     DEFAULT_MIN_HEIGHT   = 4;
+	public static final int     DEFAULT_MAX_WIDTH    = 16384;
+	public static final int     DEFAULT_MAX_HEIGHT   = 16384;
+	public static final int     DEFAULT_WIDTH_INC    = 1;
+	public static final int     DEFAULT_HEIGHT_INC   = 1;
 
-    private final Size minSize = new Size(	DEFAULT_MIN_WIDTH,
-            DEFAULT_MIN_HEIGHT);
-    private boolean movable = DEFAULT_IS_MOVABLE;
-    private boolean resizable = DEFAULT_IS_RESIZABLE;
-    private Size maxSize = new Size(DEFAULT_MAX_WIDTH,
-            DEFAULT_MAX_HEIGHT);
-    private int widthIncrement = DEFAULT_WIDTH_INC;
-    private int heightIncrement = DEFAULT_HEIGHT_INC;
+	private final Size    minSize         = new Size(DEFAULT_MIN_WIDTH,
+													 DEFAULT_MIN_HEIGHT);
+	private       boolean movable         = DEFAULT_IS_MOVABLE;
+	private       boolean resizable       = DEFAULT_IS_RESIZABLE;
+	private       Size    maxSize         = new Size(DEFAULT_MAX_WIDTH,
+													 DEFAULT_MAX_HEIGHT);
+	private       int     widthIncrement  = DEFAULT_WIDTH_INC;
+	private       int     heightIncrement = DEFAULT_HEIGHT_INC;
 
 	private final ShellSurfaceGeometryDelegate shellSurfaceGeometryDelegateImpl;
-    private DisplaySurface displaySurface;
+	private final DisplaySurface               displaySurface;
 
-    // created by a custom factory so inject annotations are not needed.
-	ShellSurfaceImpl(	@Nonnull @Assisted final DisplaySurface displaySurface,
-						@Nonnull @ShellScene final Listenable shellScene) {
+	// created by a custom factory so inject annotations are not needed.
+	ShellSurfaceImpl(@Nonnull //TODO with autofactory
+					 final DisplaySurface displaySurface,
+					 @Nonnull @ShellScene final Listenable shellScene) {
 		super(
 				shellScene);
-        this.displaySurface = displaySurface;
-        this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegate(this);
+		this.displaySurface = displaySurface;
+		this.shellSurfaceGeometryDelegateImpl = new ShellSurfaceGeometryDelegate(this);
 		syncGeoToDisplaySurface();
-        displaySurface.register(this);
+		displaySurface.register(this);
 	}
 
-    @Override
-    public void doDestroy() {
-        getDisplaySurface().destroy();
-        super.doDestroy();
-    }
+	@Override
+	public void doDestroy() {
+		getDisplaySurface().destroy();
+		super.doDestroy();
+	}
 
-    @Override
-    public void doShow() {
-        getDisplaySurface().show();
-        super.doShow();
-    }
+	@Override
+	public void doShow() {
+		getDisplaySurface().show();
+		super.doShow();
+	}
 
-    @Override
-    public void doHide() {
-        getDisplaySurface().hide();
-        super.doHide();
-    }
+	@Override
+	public void doHide() {
+		getDisplaySurface().hide();
+		super.doHide();
+	}
 
-    @Override
-    public Size getMaxSize() {
-        return this.maxSize;
-    }
+	@Override
+	public Size getMaxSize() {
+		return this.maxSize;
+	}
 
-    @Override
-    public void setMaxSize(@Nonnull final Size maxSize) {
-        this.maxSize = maxSize;
-    }
+	@Override
+	public void setMaxSize(@Nonnull final Size maxSize) {
+		this.maxSize = maxSize;
+	}
 
-    @Override
-    public Size getMinSize() {
-        return this.minSize;
-    }
+	@Override
+	public Size getMinSize() {
+		return this.minSize;
+	}
 
-    @Override
-    public DisplaySurface getDisplaySurface() {
-        return this.displaySurface;
-    }
+	@Override
+	public DisplaySurface getDisplaySurface() {
+		return this.displaySurface;
+	}
 
-    @Override
-    public void setMinSize(@Nonnull final Size maxSize) {
-        this.maxSize = maxSize;
-    }
+	@Override
+	public void setMinSize(@Nonnull final Size maxSize) {
+		this.maxSize = maxSize;
+	}
 
-    @Override
-    public Integer getWidthIncrement() {
-        return this.widthIncrement;
-    }
+	@Override
+	public Integer getWidthIncrement() {
+		return this.widthIncrement;
+	}
 
-    @Override
-    public void setWidthIncrement(final int widthIncrement) {
-        checkArgument(widthIncrement > 0);
-        this.widthIncrement = widthIncrement;
-    }
+	@Override
+	public void setWidthIncrement(final int widthIncrement) {
+		checkArgument(widthIncrement > 0);
+		this.widthIncrement = widthIncrement;
+	}
 
-    @Override
-    public void setHeightIncrement(final int heightIncrement) {
-        checkArgument(heightIncrement > 0);
-        this.heightIncrement = heightIncrement;
-    }
+	@Override
+	public void setHeightIncrement(final int heightIncrement) {
+		checkArgument(heightIncrement > 0);
+		this.heightIncrement = heightIncrement;
+	}
 
-    @Override
-    public Integer getHeightIncrement() {
-        return this.heightIncrement;
-    }
+	@Override
+	public Integer getHeightIncrement() {
+		return this.heightIncrement;
+	}
 
-    @Override
-    public Boolean isMovable() {
-        return this.movable;
-    }
+	@Override
+	public Boolean isMovable() {
+		return this.movable;
+	}
 
-    @Override
-    public Boolean isResizable() {
-        return this.resizable;
-    }
+	@Override
+	public Boolean isResizable() {
+		return this.resizable;
+	}
 
-    @Override
-    public void setMovable(final boolean movable) {
-        this.movable = movable;
-    }
+	@Override
+	public void setMovable(final boolean movable) {
+		this.movable = movable;
+	}
 
-    @Override
-    public void setResizable(final boolean isResizable) {
-        this.resizable = isResizable;
-    }
+	@Override
+	public void setResizable(final boolean isResizable) {
+		this.resizable = isResizable;
+	}
 
-    protected Size normalizedSize(@Nonnull final Size newSize) {
+	protected Size normalizedSize(@Nonnull final Size newSize) {
 
-        final int newWidth = newSize.getWidth();
-        final int newHeight = newSize.getHeight();
+		final int newWidth = newSize.getWidth();
+		final int newHeight = newSize.getHeight();
 
-        final Size minSize = getMinSize();
-        final int minWidth = minSize.getWidth();
-        final int minHeight = minSize.getHeight();
+		final Size minSize = getMinSize();
+		final int minWidth = minSize.getWidth();
+		final int minHeight = minSize.getHeight();
 
-        final Size maxSize = getMaxSize();
+		final Size maxSize = getMaxSize();
         final int maxWidth = maxSize.getWidth();
         final int maxHeight = maxSize.getHeight();
 
@@ -306,7 +306,7 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
     }
 
 	private void syncGeoToDisplaySurface() {
-        Rectangle displaySurfaceGeo = getDisplaySurface().getGeometry();
+        final Rectangle displaySurfaceGeo = getDisplaySurface().getGeometry();
 
 							setPosition(displaySurfaceGeo.getPosition());
 							setSize(displaySurfaceGeo.getSize());

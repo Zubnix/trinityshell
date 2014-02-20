@@ -21,9 +21,6 @@ package org.trinity.foundation.display.x11.impl.event;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.apache.onami.autobind.annotations.Bind;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
@@ -36,8 +33,9 @@ import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-@Bind(multiple = true)
 @Singleton
 @Immutable
 public class GenericErrorHandler implements XEventHandler {

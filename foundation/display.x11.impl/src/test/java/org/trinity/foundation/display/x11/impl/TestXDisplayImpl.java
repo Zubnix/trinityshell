@@ -1,7 +1,6 @@
 package org.trinity.foundation.display.x11.impl;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
@@ -16,10 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -31,10 +27,8 @@ import org.trinity.foundation.display.x11.api.XWindowHandle;
 
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
 import static org.freedesktop.xcb.LibXcb.*;
@@ -60,20 +54,9 @@ public class TestXDisplayImpl {
     private XConnection xConnection;
     @Mock
     private XWindowPoolImpl xWindowPool;
-    @Mock
-    private ListeningExecutorService xExecutor;
 
     @Before
     public void setup() {
-		when(this.xExecutor.submit(Matchers.<Callable>any())).thenAnswer(new Answer<Object>() {
-			@Override
-            public Object answer(final InvocationOnMock invocation) throws Throwable {
-                final Object arg0 = invocation.getArguments()[0];
-                final Callable<?> submittedCallable = (Callable<?>) arg0;
-                final Object result = submittedCallable.call();
-                return immediateFuture(result);
-            }
-        });
 
 		when(this.xConnection.getConnectionReference()).thenReturn(this.xcb_connection);
 	}
@@ -87,8 +70,7 @@ public class TestXDisplayImpl {
 		//when
         //a new XDisplay is created
 		new XDisplayImpl(this.xConnection,
-						 this.xWindowPool,
-						 this.xExecutor);
+						 this.xWindowPool);
 		//then
         //the XDisplay object throws an Error
     }
@@ -164,8 +146,7 @@ public class TestXDisplayImpl {
         //a new XDisplay is created
         //a client is created
 		final XDisplayImpl xDisplay = new XDisplayImpl(this.xConnection,
-													   this.xWindowPool,
-													   this.xExecutor);
+													   this.xWindowPool);
 		xDisplay.post(displaySurfaceCreationNotify);
 
         //then
@@ -185,7 +166,7 @@ public class TestXDisplayImpl {
         final XWindowHandle clientHandle = new XWindowHandle(6);
 		verify(this.xWindowPool).getDisplaySurface(eq(clientHandle));
 		verifyNoMoreInteractions(this.xWindowPool);
-		assertTrue(xDisplay.getDisplaySurfaces().get().get(0) == clientWindow);
+		assertTrue(xDisplay.getDisplaySurfaces().get(0) == clientWindow);
 
         final int CLIENT_EVENT_MASK = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
                 | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
@@ -210,6 +191,6 @@ public class TestXDisplayImpl {
         }
         assertNotNull(listenerMethod);
 
-        assertTrue(xDisplay.getDisplaySurfaces().get().get(1) == newClient);
+        assertTrue(xDisplay.getDisplaySurfaces().get(1) == newClient);
     }
 }

@@ -20,7 +20,6 @@
 package org.trinity.foundation.display.x11.api;
 
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;

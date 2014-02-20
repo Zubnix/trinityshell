@@ -17,29 +17,53 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
+package org.trinity.foundation.display.x11.impl;
 
-package org.trinity.foundation.api.display.event;
-
+import dagger.Module;
+import dagger.Provides;
 import org.trinity.foundation.api.display.Display;
-import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.DisplaySurfaceFactory;
+import org.trinity.foundation.api.display.DisplaySurfacePool;
+import org.trinity.foundation.display.x11.api.XConnection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 import javax.inject.Singleton;
 
-/**
- * Signals the {@link Display} {@link Singleton} that a new
- * {@link DisplaySurface} is created.
- */
-@Immutable
-public class DisplaySurfaceCreationNotify extends DisplayEvent {
-	private final DisplaySurface displaySurface;
+@Module(
+		injects = {
+				//display api
+				DisplaySurfaceFactory.class,
+				DisplaySurfacePool.class,
+				Display.class,
 
-	public DisplaySurfaceCreationNotify(@Nonnull final DisplaySurface displaySurface) {
-		this.displaySurface = displaySurface;
+				//x11 display api
+				XConnection.class,
+		},
+		complete = true,
+		library = true
+)
+class DisplayX11ImplModule {
+
+	@Provides
+	@Singleton
+	DisplaySurfacePool provideDisplaySurfacePool(final XWindowPoolImpl xWindowPool) {
+		return xWindowPool;
 	}
 
-	public DisplaySurface getDisplaySurface() {
-		return this.displaySurface;
+	@Provides
+	@Singleton
+	Display provideDisplay(final XDisplayImpl xDisplay) {
+		return xDisplay;
+	}
+
+	@Provides
+	@Singleton
+	DisplaySurfaceFactory provideDisplaySurfaceFactory() {
+		return null;
+	}
+
+	@Provides
+	@Singleton
+	XConnection provideXConnection(final XConnectionImpl xConnection) {
+		return xConnection;
 	}
 }

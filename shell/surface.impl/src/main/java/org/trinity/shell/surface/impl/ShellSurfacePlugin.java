@@ -19,24 +19,15 @@
  ******************************************************************************/
 package org.trinity.shell.surface.impl;
 
-import static org.apache.onami.autobind.annotations.To.Type.CUSTOM;
-
-import java.util.concurrent.TimeUnit;
+import com.google.common.util.concurrent.AbstractIdleService;
+import org.trinity.foundation.api.display.Display;
+import org.trinity.shell.api.plugin.ShellPlugin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
-import org.trinity.foundation.api.display.Display;
-import org.trinity.shell.api.plugin.ShellPlugin;
-
-import com.google.common.util.concurrent.AbstractIdleService;
-import com.google.common.util.concurrent.ListeningExecutorService;
-
-@Bind(to = @To(value = CUSTOM, customs = ShellPlugin.class), multiple = true)
 @Singleton
 @NotThreadSafe
 public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlugin {

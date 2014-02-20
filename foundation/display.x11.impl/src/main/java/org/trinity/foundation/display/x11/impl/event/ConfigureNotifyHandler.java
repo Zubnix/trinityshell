@@ -19,13 +19,8 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl.event;
 
-import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_NOTIFY;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
 import com.google.common.base.Optional;
-import org.apache.onami.autobind.annotations.Bind;
+import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.xcb_configure_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
@@ -35,15 +30,17 @@ import org.trinity.foundation.api.display.event.GeometryNotify;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XEventHandler;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-@Bind(multiple = true)
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_NOTIFY;
+
 @Singleton
 @Immutable
 public class ConfigureNotifyHandler implements XEventHandler {

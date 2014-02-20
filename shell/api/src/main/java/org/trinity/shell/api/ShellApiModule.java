@@ -20,20 +20,9 @@
 
 package org.trinity.shell.api;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-
-import org.apache.onami.autobind.annotations.GuiceModule;
-import org.trinity.foundation.api.shared.Listenable;
-import org.trinity.foundation.api.shared.ListenableEventBus;
-import org.trinity.shell.api.bindingkey.ShellScene;
-import org.trinity.shell.api.plugin.ShellPlugin;
-
 import com.google.common.eventbus.EventBus;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.inject.AbstractModule;
-import com.google.inject.name.Named;
+import dagger.Module;
+import org.trinity.shell.api.plugin.ShellPlugin;
 
 /***************************************
  * Registers useful objects in the Guice injection framework. The following
@@ -49,22 +38,7 @@ import com.google.inject.name.Named;
  *
  ***************************************
  */
-@GuiceModule
-class Module extends AbstractModule {
-
-	@Override
-	protected void configure() {
-		ListeningExecutorService shellExecutor = MoreExecutors.listeningDecorator(Executors
-				.newSingleThreadExecutor(new ThreadFactory() {
-					@Override
-					public Thread newThread(final Runnable r) {
-						return new Thread(	r,
-											"shell-executor");
-					}
-				}));
-		bind(ListeningExecutorService.class).annotatedWith(ShellExecutor.class).toInstance(shellExecutor);
-		bind(Listenable.class).annotatedWith(ShellScene.class)
-				.toInstance(new ListenableEventBus(shellExecutor));
-
-	}
+@Module
+class ShellApiModule {
+//TODO
 }

@@ -2,8 +2,6 @@ package org.trinity.foundation.api.render.binding;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.TreeTraverser;
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
 import org.trinity.foundation.api.render.binding.view.SubView;
 
 import java.lang.reflect.Field;
@@ -11,9 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
-
-@Bind(to = @To(IMPLEMENTATION))
 public class ViewBindingsTraverser extends TreeTraverser<ViewBindingMeta> {
 
     private static final Map<Class<?>, Field[]> FIELDS_CACHE = Maps.newHashMap();

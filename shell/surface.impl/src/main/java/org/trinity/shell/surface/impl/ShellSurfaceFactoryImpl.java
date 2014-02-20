@@ -20,7 +20,6 @@
 
 package org.trinity.shell.surface.impl;
 
-import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
@@ -34,7 +33,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-@Bind
 @Singleton
 @ThreadSafe
 public class ShellSurfaceFactoryImpl implements ShellSurfaceFactory {

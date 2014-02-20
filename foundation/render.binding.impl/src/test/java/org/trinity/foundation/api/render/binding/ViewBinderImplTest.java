@@ -116,8 +116,8 @@ public class ViewBinderImplTest {
         final PropertyBinding propertyBinding = mock(PropertyBinding.class);
 
         //created bindings for root view binding meta
-        when(this.collectionBindingFactory.createCollectionBinding(rootViewBindingMeta,dataModelExecutor,observableCollection)).thenReturn(collectionBinding);
-        when(this.eventBindingFactory.createEventBinding(dataModelExecutor, rootViewBindingMeta, eventSignal)).thenReturn(eventBinding);
+        when(this.collectionBindingFactory.createCollectionBinding(rootViewBindingMeta,observableCollection)).thenReturn(collectionBinding);
+        when(this.eventBindingFactory.createEventBinding(rootViewBindingMeta, eventSignal)).thenReturn(eventBinding);
         when(this.propertyBindingFactory.createPropertyBinding(rootViewBindingMeta, propertySlot)).thenReturn(propertyBinding);
 
         //created nested bindings
@@ -126,8 +126,8 @@ public class ViewBinderImplTest {
         final PropertyBinding nestedPropertyBinding = mock(PropertyBinding.class);
 
         //created bindings for nested view binding meta
-        when(this.collectionBindingFactory.createCollectionBinding(nestedViewBindingMeta,dataModelExecutor,observableCollection)).thenReturn(nestedCollectionBinding);
-        when(this.eventBindingFactory.createEventBinding(dataModelExecutor, nestedViewBindingMeta, eventSignal)).thenReturn(nestedEventBinding);
+        when(this.collectionBindingFactory.createCollectionBinding(nestedViewBindingMeta,observableCollection)).thenReturn(nestedCollectionBinding);
+        when(this.eventBindingFactory.createEventBinding(nestedViewBindingMeta, eventSignal)).thenReturn(nestedEventBinding);
         when(this.propertyBindingFactory.createPropertyBinding(nestedViewBindingMeta, propertySlot)).thenReturn(nestedPropertyBinding);
 
         //created deep nested bindings
@@ -136,8 +136,8 @@ public class ViewBinderImplTest {
         final PropertyBinding deepNestedPropertyBinding = mock(PropertyBinding.class);
 
         //created bindings for deep nested view binding meta
-        when(this.collectionBindingFactory.createCollectionBinding(deepNestedViewBindingMeta,dataModelExecutor,observableCollection)).thenReturn(deepNestedCollectionBinding);
-        when(this.eventBindingFactory.createEventBinding(dataModelExecutor, deepNestedViewBindingMeta, eventSignal)).thenReturn(deepNestedEventBinding);
+        when(this.collectionBindingFactory.createCollectionBinding(deepNestedViewBindingMeta, observableCollection)).thenReturn(deepNestedCollectionBinding);
+        when(this.eventBindingFactory.createEventBinding(deepNestedViewBindingMeta, eventSignal)).thenReturn(deepNestedEventBinding);
         when(this.propertyBindingFactory.createPropertyBinding(deepNestedViewBindingMeta, propertySlot)).thenReturn(deepNestedPropertyBinding);
 
         //view binding meta discovery
@@ -158,20 +158,20 @@ public class ViewBinderImplTest {
 
         //when
         //the view model is bound to the data model
-        this.viewBinderImpl.bind(dataModelExecutor, dataModel, viewModel);
+        this.viewBinderImpl.bind(dataModel, viewModel);
 
         //then
         //all defined bindings in the view model are created and bound to the data model
-        verify(this.collectionBindingFactory).createCollectionBinding(rootViewBindingMeta,dataModelExecutor,observableCollection);
-        verify(this.eventBindingFactory).createEventBinding(dataModelExecutor, rootViewBindingMeta, eventSignal);
+        verify(this.collectionBindingFactory).createCollectionBinding(rootViewBindingMeta, observableCollection);
+        verify(this.eventBindingFactory).createEventBinding(rootViewBindingMeta, eventSignal);
         verify(this.propertyBindingFactory).createPropertyBinding(rootViewBindingMeta, propertySlot);
 
-        verify(this.collectionBindingFactory).createCollectionBinding(rootViewBindingMeta,dataModelExecutor,observableCollection);
-        verify(this.eventBindingFactory).createEventBinding(dataModelExecutor, rootViewBindingMeta, eventSignal);
+        verify(this.collectionBindingFactory).createCollectionBinding(rootViewBindingMeta, observableCollection);
+        verify(this.eventBindingFactory).createEventBinding(rootViewBindingMeta, eventSignal);
         verify(this.propertyBindingFactory).createPropertyBinding(nestedViewBindingMeta, propertySlot);
 
-        verify(this.collectionBindingFactory).createCollectionBinding(rootViewBindingMeta,dataModelExecutor,observableCollection);
-        verify(this.eventBindingFactory).createEventBinding(dataModelExecutor, rootViewBindingMeta, eventSignal);
+        verify(this.collectionBindingFactory).createCollectionBinding(rootViewBindingMeta, observableCollection);
+        verify(this.eventBindingFactory).createEventBinding(rootViewBindingMeta, eventSignal);
         verify(this.propertyBindingFactory).createPropertyBinding(deepNestedViewBindingMeta, propertySlot);
 
         verify(collectionBinding).bind();
@@ -271,8 +271,8 @@ public class ViewBinderImplTest {
         when(rootPropertyBinding.bind()).thenReturn(rootPropertiesOnBind, rootPropertiesOnUpdate);
 
         //created bindings for root view binding meta
-        when(this.collectionBindingFactory.createCollectionBinding(rootViewBindingMeta,dataModelExecutor,observableCollection)).thenReturn(rootCollectionBinding);
-        when(this.eventBindingFactory.createEventBinding(dataModelExecutor, rootViewBindingMeta, eventSignal)).thenReturn(rootEventBinding);
+        when(this.collectionBindingFactory.createCollectionBinding(rootViewBindingMeta, observableCollection)).thenReturn(rootCollectionBinding);
+        when(this.eventBindingFactory.createEventBinding(rootViewBindingMeta, eventSignal)).thenReturn(rootEventBinding);
         when(this.propertyBindingFactory.createPropertyBinding(rootViewBindingMeta, propertySlot)).thenReturn(rootPropertyBinding);
 
         //created nested bindings
@@ -287,8 +287,8 @@ public class ViewBinderImplTest {
         when(nestedPropertyBinding.bind()).thenReturn(nestedPropertiesOnBind, nestedPropertiesOnUpdate);
 
         //created bindings for nested view binding meta
-        when(this.collectionBindingFactory.createCollectionBinding(nestedViewBindingMeta,dataModelExecutor,observableCollection)).thenReturn(nestedCollectionBinding);
-        when(this.eventBindingFactory.createEventBinding(dataModelExecutor, nestedViewBindingMeta, eventSignal)).thenReturn(nestedEventBinding);
+        when(this.collectionBindingFactory.createCollectionBinding(nestedViewBindingMeta,observableCollection)).thenReturn(nestedCollectionBinding);
+        when(this.eventBindingFactory.createEventBinding(nestedViewBindingMeta, eventSignal)).thenReturn(nestedEventBinding);
         when(this.propertyBindingFactory.createPropertyBinding(nestedViewBindingMeta, propertySlot)).thenReturn(nestedPropertyBinding);
 
         //created deep nested bindings
@@ -303,8 +303,8 @@ public class ViewBinderImplTest {
         when(deepNestedPropertyBinding.bind()).thenReturn(deepNestedPropertiesOnBind, deepNestedPropertiesOnUpdate);
 
         //created bindings for deep nested view binding meta
-        when(this.collectionBindingFactory.createCollectionBinding(deepNestedViewBindingMeta, dataModelExecutor,observableCollection)).thenReturn(deepNestedCollectionBinding);
-        when(this.eventBindingFactory.createEventBinding(dataModelExecutor, deepNestedViewBindingMeta, eventSignal)).thenReturn(deepNestedEventBinding);
+        when(this.collectionBindingFactory.createCollectionBinding(deepNestedViewBindingMeta, observableCollection)).thenReturn(deepNestedCollectionBinding);
+        when(this.eventBindingFactory.createEventBinding(deepNestedViewBindingMeta, eventSignal)).thenReturn(deepNestedEventBinding);
         when(this.propertyBindingFactory.createPropertyBinding(deepNestedViewBindingMeta, propertySlot)).thenReturn(deepNestedPropertyBinding);
 
         //view binding meta discovery
@@ -324,11 +324,11 @@ public class ViewBinderImplTest {
             }
         });
 
-        this.viewBinderImpl.bind(dataModelExecutor, dataModel, viewModel);
+        this.viewBinderImpl.bind(dataModel, viewModel);
 
         //when
         //a property of the data model is updated
-        this.viewBinderImpl.updateDataModelBinding(dataModelExecutor, dataModel, "foo", Optional.absent(), Optional.of(fooValue));
+        this.viewBinderImpl.updateDataModelBinding(dataModel, "foo", Optional.absent(), Optional.of(fooValue));
 
         //then
         //the impacted view bindings are refreshed (unbind+bind)
@@ -446,8 +446,8 @@ public class ViewBinderImplTest {
         final PropertyBinding propertyBinding = mock(PropertyBinding.class);
 
         //created bindings for root view binding meta
-        when(this.collectionBindingFactory.createCollectionBinding(rootViewBindingMeta,dataModelExecutor,observableCollection)).thenReturn(collectionBinding);
-        when(this.eventBindingFactory.createEventBinding(dataModelExecutor, rootViewBindingMeta, eventSignal)).thenReturn(eventBinding);
+        when(this.collectionBindingFactory.createCollectionBinding(rootViewBindingMeta, observableCollection)).thenReturn(collectionBinding);
+        when(this.eventBindingFactory.createEventBinding(rootViewBindingMeta, eventSignal)).thenReturn(eventBinding);
         when(this.propertyBindingFactory.createPropertyBinding(rootViewBindingMeta, propertySlot)).thenReturn(propertyBinding);
 
         //created nested bindings
@@ -456,8 +456,8 @@ public class ViewBinderImplTest {
         final PropertyBinding nestedPropertyBinding = mock(PropertyBinding.class);
 
         //created bindings for nested view binding meta
-        when(this.collectionBindingFactory.createCollectionBinding(nestedViewBindingMeta, dataModelExecutor,observableCollection)).thenReturn(nestedCollectionBinding);
-        when(this.eventBindingFactory.createEventBinding(dataModelExecutor, nestedViewBindingMeta, eventSignal)).thenReturn(nestedEventBinding);
+        when(this.collectionBindingFactory.createCollectionBinding(nestedViewBindingMeta,observableCollection)).thenReturn(nestedCollectionBinding);
+        when(this.eventBindingFactory.createEventBinding( nestedViewBindingMeta, eventSignal)).thenReturn(nestedEventBinding);
         when(this.propertyBindingFactory.createPropertyBinding(nestedViewBindingMeta, propertySlot)).thenReturn(nestedPropertyBinding);
 
         //created deep nested bindings
@@ -466,8 +466,8 @@ public class ViewBinderImplTest {
         final PropertyBinding deepNestedPropertyBinding = mock(PropertyBinding.class);
 
         //created bindings for deep nested view binding meta
-        when(this.collectionBindingFactory.createCollectionBinding(deepNestedViewBindingMeta, dataModelExecutor,observableCollection)).thenReturn(deepNestedCollectionBinding);
-        when(this.eventBindingFactory.createEventBinding(dataModelExecutor, deepNestedViewBindingMeta, eventSignal)).thenReturn(deepNestedEventBinding);
+        when(this.collectionBindingFactory.createCollectionBinding(deepNestedViewBindingMeta, observableCollection)).thenReturn(deepNestedCollectionBinding);
+        when(this.eventBindingFactory.createEventBinding(deepNestedViewBindingMeta, eventSignal)).thenReturn(deepNestedEventBinding);
         when(this.propertyBindingFactory.createPropertyBinding(deepNestedViewBindingMeta, propertySlot)).thenReturn(deepNestedPropertyBinding);
 
         //view binding meta discovery

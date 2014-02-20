@@ -21,7 +21,6 @@
 package org.trinity.foundation.display.x11.api;
 
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 
 import javax.annotation.concurrent.NotThreadSafe;
 

@@ -7,9 +7,9 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.trinity.foundation.api.display.DisplaySurfaceCreator;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.foundation.api.display.DisplaySurfaceReferencer;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -32,10 +32,10 @@ public class TestXWindowPoolImpl {
     @Before
     public void setup() {
         final int nativeHandle = 123;
-        when(displaySurfaceHandle.getNativeHandle()).thenReturn(nativeHandle);
-        when(displaySurfaceFactory.createDisplaySurface(displaySurfaceHandle)).thenReturn(xWindow);
-        when(xWindow.getDisplaySurfaceHandle()).thenReturn(displaySurfaceHandle);
-    }
+		when(this.displaySurfaceHandle.getNativeHandle()).thenReturn(nativeHandle);
+		when(this.displaySurfaceFactory.createDisplaySurface(this.displaySurfaceHandle)).thenReturn(this.xWindow);
+		when(this.xWindow.getDisplaySurfaceHandle()).thenReturn(this.displaySurfaceHandle);
+	}
 
     @Test
     public void testLazyPooling() {
@@ -44,14 +44,14 @@ public class TestXWindowPoolImpl {
 
         //when
         //a window is requested more than once
-        xWindowPool.getDisplaySurface(displaySurfaceHandle);
-        xWindowPool.getDisplaySurface(displaySurfaceHandle);
+		this.xWindowPool.getDisplaySurface(this.displaySurfaceHandle);
+		this.xWindowPool.getDisplaySurface(this.displaySurfaceHandle);
 
-        //then
+		//then
         //it is lazily created and cached if not present
-        verify(displaySurfaceFactory,
-               times(1)).createDisplaySurface(displaySurfaceHandle);
-    }
+		verify(this.displaySurfaceFactory,
+			   times(1)).createDisplaySurface(this.displaySurfaceHandle);
+	}
 
     @Test
     public void testPoolPresence() {
@@ -60,11 +60,11 @@ public class TestXWindowPoolImpl {
 
         //when
         //a windows pool presence is requested
-        final boolean present0 = xWindowPool.isPresent(displaySurfaceHandle);
-        xWindowPool.getDisplaySurface(displaySurfaceHandle);
-        final boolean present1 = xWindowPool.isPresent(displaySurfaceHandle);
+		final boolean present0 = this.xWindowPool.isPresent(this.displaySurfaceHandle);
+		this.xWindowPool.getDisplaySurface(this.displaySurfaceHandle);
+		final boolean present1 = this.xWindowPool.isPresent(this.displaySurfaceHandle);
 
-        //then
+		//then
         //the pool reports if the window is cached
         assertFalse(present0);
         assertTrue(present1);
@@ -77,16 +77,17 @@ public class TestXWindowPoolImpl {
 
         //when
         //a new serverside window is requested
-        try(DisplaySurfaceCreator displaySurfaceCreator = xWindowPool.getDisplaySurfaceCreator()){
-            displaySurfaceCreator.reference(displaySurfaceHandle);
-        }
+		try(DisplaySurfaceReferencer displaySurfaceReferencer = this.xWindowPool.getDisplaySurfaceCreator()) {
+			displaySurfaceReferencer.reference(this.displaySurfaceHandle);
+		}
 
         //then
         //event processing is halted until the window is cached
-        final InOrder inOrder = inOrder(xEventPump,displaySurfaceFactory);
+		final InOrder inOrder = inOrder(this.xEventPump,
+										this.displaySurfaceFactory);
 
-        inOrder.verify(xEventPump).stop();
-        inOrder.verify(displaySurfaceFactory).createDisplaySurface(displaySurfaceHandle);
-        inOrder.verify(xEventPump).start();
-    }
+		inOrder.verify(this.xEventPump).stop();
+		inOrder.verify(this.displaySurfaceFactory).createDisplaySurface(this.displaySurfaceHandle);
+		inOrder.verify(this.xEventPump).start();
+	}
 }

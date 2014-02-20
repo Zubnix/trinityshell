@@ -24,7 +24,6 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 import org.freedesktop.xcb.xcb_screen_t;
 import org.trinity.foundation.api.display.Screen;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 
 @NotThreadSafe
 public interface XScreen extends Screen {

@@ -20,29 +20,23 @@
 
 package org.trinity.shellplugin.wm.x11.impl.protocol.icccm;
 
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
-import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name;
-import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
-
-import javax.annotation.concurrent.ThreadSafe;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
+import com.google.common.base.Optional;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_property_cookie_t;
 import org.freedesktop.xcb.xcb_icccm_get_text_property_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 
-import com.google.common.base.Optional;
+import javax.annotation.concurrent.ThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-@Bind(to = @To(IMPLEMENTATION))
+import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name;
+import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
+
 @Singleton
 @ThreadSafe
 public class WmName extends AbstractCachedProtocol<xcb_icccm_get_text_property_reply_t> {
@@ -52,7 +46,7 @@ public class WmName extends AbstractCachedProtocol<xcb_icccm_get_text_property_r
 
 	@Inject
 	WmName(	final XConnection xConnection,
-			final XAtomCache xAtomCache,
+			final XAtomCache xAtomCache
 			) {
 		super(
 				xAtomCache,

@@ -2,23 +2,17 @@ package org.trinity.foundation.display.x11.impl;
 
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.display.x11.api.XConnection;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -36,8 +30,6 @@ public class TestXEventPump {
     @Mock
     private EventBus xEventBus;
     @Mock
-    private ListeningExecutorService xExecutor;
-    @Mock
     private XConnection xConnection;
     @Mock
     private ExecutorService xEventPumpExecutor;
@@ -46,18 +38,9 @@ public class TestXEventPump {
 
     @Before
     public void setup() {
-        when(xExecutor.submit(Matchers.<Callable>any())).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(final InvocationOnMock invocation) throws Throwable {
-                final Object arg0 = invocation.getArguments()[0];
-                final Callable<?> submittedCallable = (Callable<?>) arg0;
-                final Object result = submittedCallable.call();
-                return Futures.immediateFuture(result);
-            }
-        });
 
 
-        when(xConnection.getConnectionReference()).thenReturn(xcb_connection);
+        when(this.xConnection.getConnectionReference()).thenReturn(this.xcb_connection);
     }
 
     @Test
@@ -68,20 +51,18 @@ public class TestXEventPump {
 
         final xcb_generic_event_t xcb_generic_event = mock(xcb_generic_event_t.class);
 
-        when(xcb_connection_has_error(xcb_connection)).thenReturn(0);
+        when(xcb_connection_has_error(this.xcb_connection)).thenReturn(0);
 
-        when(xcb_wait_for_event(xcb_connection)).thenReturn(xcb_generic_event);
+        when(xcb_wait_for_event(this.xcb_connection)).thenReturn(xcb_generic_event);
 
         //when
         //an event arrives
-        new XEventPump(xConnection,
-                       xEventBus,
-                       xExecutor,
-                       xEventPumpExecutor).call();
+        new XEventPump(this.xConnection,
+					   this.xEventBus).call();
 
         //then
         //the event is passed on to the x event bus
-        verify(xEventBus).post(xcb_generic_event);
+        verify(this.xEventBus).post(xcb_generic_event);
     }
 
     @Test(expected = Throwable.class)
@@ -89,14 +70,12 @@ public class TestXEventPump {
         //given
         //an X server with errors
         mockStatic(LibXcb.class);
-        when(xcb_connection_has_error(xcb_connection)).thenReturn(1);
+        when(xcb_connection_has_error(this.xcb_connection)).thenReturn(1);
 
         //when
         //the event pump tries to wait for an event
-        new XEventPump(xConnection,
-                       xEventBus,
-                       xExecutor,
-                       xEventPumpExecutor).call();
+        new XEventPump(this.xConnection,
+					   this.xEventBus).call();
         //then
         //an error is thrown
     }
@@ -109,17 +88,15 @@ public class TestXEventPump {
 
         final xcb_generic_event_t xcb_generic_event = mock(xcb_generic_event_t.class);
 
-        when(xcb_connection_has_error(xcb_connection)).thenReturn(0);
+        when(xcb_connection_has_error(this.xcb_connection)).thenReturn(0);
 
-        when(xcb_wait_for_event(xcb_connection)).thenReturn(xcb_generic_event);
+        when(xcb_wait_for_event(this.xcb_connection)).thenReturn(xcb_generic_event);
 
         //when
         //the x event pump is stopped
         //an event arrives
-        final XEventPump xEventPump = new XEventPump(xConnection,
-                                                     xEventBus,
-                                                     xExecutor,
-                                                     xEventPumpExecutor);
+        final XEventPump xEventPump = new XEventPump(this.xConnection,
+													 this.xEventBus);
         xEventPump.stop();
 
         final CountDownLatch waitForEvent = new CountDownLatch(1);
@@ -134,7 +111,7 @@ public class TestXEventPump {
 
         //then
         //the event is passed on to the x event bus after the x event pump is started
-        verify(xEventBus,
+        verify(this.xEventBus,
                never()).post(xcb_generic_event);
         xEventPump.start();
         final boolean timeout = !waitForEvent.await(1,
@@ -142,7 +119,7 @@ public class TestXEventPump {
         if(timeout) {
             throw new TimeoutException("Timeout while waiting 1 second for X event to arrive.");
         } else {
-            verify(xEventBus).post(xcb_generic_event);
+            verify(this.xEventBus).post(xcb_generic_event);
         }
     }
 
@@ -152,16 +129,14 @@ public class TestXEventPump {
         //given
         //an X server with errors
         mockStatic(LibXcb.class);
-        when(xcb_connection_has_error(xcb_connection)).thenReturn(1);
+        when(xcb_connection_has_error(this.xcb_connection)).thenReturn(1);
 
         //when
         //the x event pump is stopped
         //an X server with errors
         //the x event pump is started
-        final XEventPump xEventPump = new XEventPump(xConnection,
-                                                     xEventBus,
-                                                     xExecutor,
-                                                     xEventPumpExecutor);
+        final XEventPump xEventPump = new XEventPump(this.xConnection,
+													 this.xEventBus);
         xEventPump.stop();
         xEventPump.call();
 

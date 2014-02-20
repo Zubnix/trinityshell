@@ -20,10 +20,6 @@
 package org.trinity.foundation.display.x11.impl;
 
 import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,16 +27,14 @@ import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
 import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Named;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
 
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
 import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 
-@Bind(to = @To(IMPLEMENTATION))
 @Singleton
 @NotThreadSafe
 public class XEventPump implements Callable<Void> {
@@ -53,8 +47,7 @@ public class XEventPump implements Callable<Void> {
 
     @Inject
     XEventPump(final XConnection connection,
-               @XEventBus final EventBus xEventBus,
-               @Named("XEventPumpExecutor") ExecutorService xEventPumpExecutor) {
+               @XEventBus final EventBus xEventBus) {
         this.connection = connection;
         this.xEventBus = xEventBus;
     }
@@ -71,30 +64,30 @@ public class XEventPump implements Callable<Void> {
         final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.connection.getConnectionReference());
 
         try {
-            waitForExternal.acquireUninterruptibly();
-            //TODO pass x event from x-event-pump thread to x-executor thread.
-            this.xExecutor.submit(new Callable<Void>() {
-                @Override
-                public Void call() {
-                    XEventPump.this.xEventBus.post(xcb_generic_event);
-                    xcb_generic_event.delete();
-                    return null;
-                }
-            });
+			this.waitForExternal.acquireUninterruptibly();
+            //TODO use channel
+//            this.xExecutor.submit(new Callable<Void>() {
+//                @Override
+//                public Void call() {
+//                    XEventPump.this.xEventBus.post(xcb_generic_event);
+//                    xcb_generic_event.delete();
+//                    return null;
+//                }
+//            });
 
             // schedule next event retrieval
-            this.xEventPumpExecutor.submit(this);
+          //  this.xEventPumpExecutor.submit(this);
         } finally {
-            waitForExternal.release();
+			this.waitForExternal.release();
         }
         return null;
     }
 
     public synchronized void start() {
-        waitForExternal.release();
+		this.waitForExternal.release();
     }
 
     public synchronized void stop() {
-        waitForExternal.acquireUninterruptibly();
+		this.waitForExternal.acquireUninterruptibly();
     }
 }

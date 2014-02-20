@@ -1,18 +1,15 @@
 package org.trinity.shellplugin.wm.x11.impl.scene;
 
-import javax.inject.Inject;
-
-import org.apache.onami.autobind.annotations.Bind;
+import com.google.common.util.concurrent.AbstractIdleService;
 import org.trinity.shell.api.plugin.ShellPlugin;
 import org.trinity.shellplugin.wm.api.Shell;
 
-import com.google.common.util.concurrent.AbstractIdleService;
-import com.google.inject.Singleton;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  *
  */
-@Bind(multiple = true)
 @Singleton
 public class WmPlugin extends AbstractIdleService implements ShellPlugin {
 

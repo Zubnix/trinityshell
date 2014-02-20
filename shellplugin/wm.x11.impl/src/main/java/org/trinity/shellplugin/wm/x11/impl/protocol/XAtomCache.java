@@ -19,32 +19,25 @@
  ******************************************************************************/
 package org.trinity.shellplugin.wm.x11.impl.protocol;
 
-import static java.lang.String.format;
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
-import static org.freedesktop.xcb.LibXcb.xcb_intern_atom;
-import static org.freedesktop.xcb.LibXcb.xcb_intern_atom_reply;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import org.freedesktop.xcb.xcb_generic_error_t;
+import org.freedesktop.xcb.xcb_intern_atom_cookie_t;
+import org.freedesktop.xcb.xcb_intern_atom_reply_t;
+import org.trinity.foundation.display.x11.api.XConnection;
 
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import static java.lang.String.format;
+import static org.freedesktop.xcb.LibXcb.xcb_intern_atom;
+import static org.freedesktop.xcb.LibXcb.xcb_intern_atom_reply;
 
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
-import org.freedesktop.xcb.xcb_generic_error_t;
-import org.freedesktop.xcb.xcb_intern_atom_cookie_t;
-import org.freedesktop.xcb.xcb_intern_atom_reply_t;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.display.x11.api.XConnection;
-
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-
-@Bind(to = @To(IMPLEMENTATION))
 @Singleton
 @NotThreadSafe
 public class XAtomCache {

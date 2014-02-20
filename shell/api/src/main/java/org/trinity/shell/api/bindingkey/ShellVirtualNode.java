@@ -20,23 +20,20 @@
 
 package org.trinity.shell.api.bindingkey;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.trinity.shell.api.scene.ShellNodeParent;
 
+import javax.inject.Qualifier;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.google.inject.BindingAnnotation;
-import org.trinity.shell.api.scene.ShellNodeParent;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Used when a 'virtual' {@link ShellNodeParent} non-singleton instance is required. This node acts like
  * any other node in the scene but has no visual appearance. Implementation <b>not</b> provided by the api.
  */
-@BindingAnnotation
+@Qualifier
 @Target({ TYPE, FIELD, PARAMETER, METHOD })
 @Retention(RUNTIME)
 public @interface ShellVirtualNode {

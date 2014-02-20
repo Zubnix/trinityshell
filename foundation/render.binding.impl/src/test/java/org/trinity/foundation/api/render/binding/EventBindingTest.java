@@ -1,7 +1,7 @@
 package org.trinity.foundation.api.render.binding;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Injector;
+import dagger.ObjectGraph;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +38,7 @@ public class EventBindingTest {
 	private final String signalMethodName = "onFoo";
 
 	@Mock
-	private Injector                 injector;
+	private ObjectGraph              injector;
 	@Mock
 	private SignalFactory            signalFactor;
 	@Mock
@@ -77,7 +77,7 @@ public class EventBindingTest {
 		when(this.eventSignal.filter()).thenReturn((Class) EventSignal.class);
 		when(this.eventSignal.name()).thenReturn(this.signalMethodName);
 
-		when(this.injector.getInstance((Class) EventSignal.class)).thenReturn(this.eventSignalFilter);
+		when(this.injector.get((Class) EventSignal.class)).thenReturn(this.eventSignalFilter);
 
 		when(this.signalFactor.createSignal(this.dataModelExecutor,
 											this.dataModel,

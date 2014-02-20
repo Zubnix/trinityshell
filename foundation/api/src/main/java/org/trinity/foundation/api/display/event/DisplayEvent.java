@@ -21,13 +21,10 @@ package org.trinity.foundation.api.display.event;
 
 import javax.annotation.concurrent.Immutable;
 
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-
 /**
  * The general superclass for all display related events.
  */
 @Immutable
-@ExecutionContext(DisplayExecutor.class)
 public class DisplayEvent {
 
 }

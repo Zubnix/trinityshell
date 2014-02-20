@@ -6,16 +6,12 @@ import ca.odell.glazedlists.event.ListEventListener;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.assistedinject.Assisted;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.view.delegate.SubViewModelDelegate;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +20,6 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.util.concurrent.Futures.addCallback;
 import static java.lang.String.format;
 
 public class CollectionBinding implements ViewBinding {
@@ -44,9 +39,12 @@ public class CollectionBinding implements ViewBinding {
 	@Inject
 	CollectionBinding(final ViewBinder viewBinder,
 					  final SubViewModelDelegate subViewModelDelegate,
-					  @Assisted final ViewBindingMeta viewBindingMeta,
-					  @Assisted final ListeningExecutorService dataModelExecutor,
-					  @Assisted final ObservableCollection observableCollection) {
+					  //TODO autofactory
+					  final ViewBindingMeta viewBindingMeta,
+					  //TODO autofactory
+					  final ListeningExecutorService dataModelExecutor,
+					  //TODO autofactory
+					  final ObservableCollection observableCollection) {
 		this.viewBindingMeta = viewBindingMeta;
 		this.viewBinder = viewBinder;
 		this.subViewModelDelegate = subViewModelDelegate;
@@ -179,26 +177,14 @@ public class CollectionBinding implements ViewBinding {
 		final Object removedChildViewModel = this.dataModelElementToViewModelElement.remove(removedChildDataModel,
 																							sourceIndex);
 
-		final ListenableFuture<Void> unbindFuture = this.viewBinder.unbind(this.dataModelExecutor,
+		this.viewBinder.unbind(
 																		   removedChildDataModel,
 																		   removedChildViewModel);
-		addCallback(unbindFuture,
-					new FutureCallback<Void>() {
-						@Override
-						public void onSuccess(@Nullable final Void result) {
+
 							CollectionBinding.this.subViewModelDelegate.destroyView(CollectionBinding.this.getViewBindingMeta().getViewModel(),
 																					removedChildViewModel,
 																					sourceIndex);
-						}
 
-						@Override
-						public void onFailure(final Throwable t) {
-							// TODO explanation
-							LOG.error("",
-									  t);
-						}
-					},
-					this.dataModelExecutor);
 	}
 
 	private void handleListEventInsert(final List<Object> changeList,
@@ -216,28 +202,13 @@ public class CollectionBinding implements ViewBinding {
 
 	private void createCollectionElementView(final Object elementDataModel,
 											 final int elementIndex) {
-		final ListenableFuture<?> futureChildView = this.subViewModelDelegate.newView(this.getViewBindingMeta().getViewModel(),
+		final  Object childViewModel = this.subViewModelDelegate.newView(this.getViewBindingMeta().getViewModel(),
 																					  this.observableCollection.view(),
 																					  elementIndex);
-		addCallback(futureChildView,
-					new FutureCallback<Object>() {
-						@Override
-						public void onSuccess(final Object childViewModel) {
-							CollectionBinding.this.viewBinder.bind(CollectionBinding.this.dataModelExecutor,
+
+							CollectionBinding.this.viewBinder.bind(
 																   elementDataModel,
 																   childViewModel);
-							CollectionBinding.this.dataModelElementToViewModelElement.put(elementDataModel,
-																						  elementIndex,
-																						  childViewModel);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							LOG.error("Error while creating new child viewModel.",
-									  t);
-						}
-					},
-					this.dataModelExecutor);
 	}
 
 	private void handleListEventUpdate(final List<Object> shadowChildDataModelList,
@@ -277,10 +248,10 @@ public class CollectionBinding implements ViewBinding {
 														sourceIndex,
 														changedChildViewModel);
 
-			this.viewBinder.unbind(this.dataModelExecutor,
+			this.viewBinder.unbind(
 								   oldChildDataModel,
 								   changedChildViewModel);
-			this.viewBinder.bind(this.dataModelExecutor,
+			this.viewBinder.bind(
 								 newChildDataModel,
 								 changedChildViewModel);
 		}

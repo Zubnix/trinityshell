@@ -19,12 +19,8 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl.event;
 
-import static org.freedesktop.xcb.LibXcbConstants.XCB_CIRCULATE_NOTIFY;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
-import org.apache.onami.autobind.annotations.Bind;
+import com.google.common.base.Optional;
+import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.xcb_circulate_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
@@ -32,16 +28,17 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.StackingChangedNotify;
 import org.trinity.foundation.display.x11.api.XEventHandler;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
 
-import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-@Bind(multiple = true)
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CIRCULATE_NOTIFY;
+
 @Singleton
 @Immutable
 public class CirculateNotifyHandler implements XEventHandler {

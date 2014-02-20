@@ -7,18 +7,15 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Table;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.EventSignal;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.concurrent.Callable;
 
 public class ViewBinderImpl2 implements ViewBinder {
 

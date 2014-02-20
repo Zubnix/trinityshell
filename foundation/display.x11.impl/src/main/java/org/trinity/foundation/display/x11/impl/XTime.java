@@ -19,26 +19,20 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.annotation.concurrent.NotThreadSafe;
-
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import org.freedesktop.xcb.xcb_button_press_event_t;
 import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.concurrent.atomic.AtomicInteger;
 
-@Bind(to = @To(IMPLEMENTATION))
 @Singleton
 @NotThreadSafe
 public class XTime {

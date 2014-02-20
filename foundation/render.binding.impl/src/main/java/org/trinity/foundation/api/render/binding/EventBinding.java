@@ -2,8 +2,7 @@ package org.trinity.foundation.api.render.binding;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Injector;
-import com.google.inject.assistedinject.Assisted;
+import dagger.ObjectGraph;
 import org.trinity.foundation.api.render.binding.view.EventSignal;
 import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
 import org.trinity.foundation.api.render.binding.view.delegate.Signal;
@@ -13,7 +12,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 public class EventBinding implements ViewBinding {
-	private final Injector                 injector;
+	private final ObjectGraph              injector;
 	private final SignalFactory            signalFactory;
 	private final ListeningExecutorService dataModelExecutor;
 	private final ViewBindingMeta          viewBindingMeta;
@@ -22,11 +21,14 @@ public class EventBinding implements ViewBinding {
 	private Optional<Signal> optionalSignal = Optional.absent();
 
 	@Inject
-	EventBinding(final Injector injector,
+	EventBinding(final ObjectGraph injector,
 				 final SignalFactory signalFactory,
-				 @Assisted final ListeningExecutorService dataModelExecutor,
-				 @Assisted final ViewBindingMeta viewBindingMeta,
-				 @Assisted final EventSignal eventSignal) {
+				 //TODO autofactory
+				 final ListeningExecutorService dataModelExecutor,
+				 //TODO autofactory
+				 final ViewBindingMeta viewBindingMeta,
+				 //TODO autofactory
+				 final EventSignal eventSignal) {
 		this.injector = injector;
 		this.signalFactory = signalFactory;
 		this.dataModelExecutor = dataModelExecutor;
@@ -67,7 +69,7 @@ public class EventBinding implements ViewBinding {
     }
 
     private void bindEventSignal(final Object eventReceiver) {
-        final EventSignalFilter eventSignalFilter = this.injector.getInstance(this.eventSignal.filter());
+        final EventSignalFilter eventSignalFilter = this.injector.get(this.eventSignal.filter());
 		final Signal signal = this.signalFactory.createSignal(this.dataModelExecutor,
 															  eventReceiver,
 															  this.eventSignal.name());
@@ -79,7 +81,7 @@ public class EventBinding implements ViewBinding {
 	@Override
 	public void unbind() {
         if(this.optionalSignal.isPresent()){
-			final EventSignalFilter eventSignalFilter = this.injector.getInstance(this.eventSignal.filter());
+			final EventSignalFilter eventSignalFilter = this.injector.get(this.eventSignal.filter());
 			eventSignalFilter.uninstallFilter(this.viewBindingMeta.getViewModel(),
 											  this.optionalSignal.get());
 		}

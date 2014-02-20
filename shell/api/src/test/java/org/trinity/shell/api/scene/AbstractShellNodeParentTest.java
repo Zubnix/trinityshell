@@ -63,8 +63,7 @@ public class AbstractShellNodeParentTest {
 	public void testDoMoveImpl() {
 		//given
 		//an abstract shell node parent with children
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene,
-																   this.shellExecutor) {
+		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
@@ -75,7 +74,7 @@ public class AbstractShellNodeParentTest {
 
 		//when
 		//the abstract shell node parent is moved
-		this.abstractShellNodeParent.doMoveImpl();
+		this.abstractShellNodeParent.doMove();
 
 		//then
 		//the children's position is refreshed
@@ -88,8 +87,7 @@ public class AbstractShellNodeParentTest {
 		//given
 		//an abstract shell node parent with children and a layout manager
 		final ShellLayoutManager shellLayoutManager = mock(ShellLayoutManager.class);
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene,
-																   this.shellExecutor) {
+		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
@@ -101,7 +99,7 @@ public class AbstractShellNodeParentTest {
 
 		//when
 		//the abstract shell node parent is moved and resized
-		this.abstractShellNodeParent.doMoveResizeImpl();
+		this.abstractShellNodeParent.doMoveResize();
 
 		//then
 		//the children's position is updated and the children are layed out.
@@ -115,8 +113,7 @@ public class AbstractShellNodeParentTest {
 		//given
 		//an abstract shell node parent with children and a layout manager
 		final ShellLayoutManager shellLayoutManager = mock(ShellLayoutManager.class);
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene,
-																   this.shellExecutor) {
+		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
@@ -128,7 +125,7 @@ public class AbstractShellNodeParentTest {
 
 		//when
 		//the abstract shell node parent is resized
-		this.abstractShellNodeParent.doResizeImpl();
+		this.abstractShellNodeParent.doResize();
 
 		//then
 		//the children are layed out.
@@ -140,8 +137,7 @@ public class AbstractShellNodeParentTest {
 		//given
 		//an abstract shell node parent with a layout manager
 		final ShellLayoutManager shellLayoutManager = mock(ShellLayoutManager.class);
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene,
-																   this.shellExecutor) {
+		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
@@ -151,7 +147,7 @@ public class AbstractShellNodeParentTest {
 
 		//when
 		//the abstract shell node parent is doing a layout
-		this.abstractShellNodeParent.layoutImpl();
+		this.abstractShellNodeParent.layout();
 
 		//then
 		//the layout manager is called for the abstract shell node parent
@@ -163,8 +159,7 @@ public class AbstractShellNodeParentTest {
 		//given
 		//an abstract shell node parent with children
 		//a ShellNodeChildLeftEvent listener
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene,
-																   this.shellExecutor) {
+		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
@@ -183,7 +178,7 @@ public class AbstractShellNodeParentTest {
 		//the parents children list is updated
 		//the ShellNodeChildLeftEvent listener is notified
 		assertEquals(1,
-					 this.abstractShellNodeParent.getChildrenImpl().size());
+					 this.abstractShellNodeParent.getChildren().size());
 		//TODO assert event contents
 		verify(childLeftListener).handle((ShellNodeChildLeftEvent) any());
 	}
@@ -194,8 +189,7 @@ public class AbstractShellNodeParentTest {
 		//an abstract shell node parent
 		//a new child
 		//a ShellNodeChildAddedEvent listener
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene,
-																   this.shellExecutor) {
+		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
@@ -212,7 +206,7 @@ public class AbstractShellNodeParentTest {
 		//the parents children list is updated
 		//the ShellNodeChildAddedEvent listener is notified
 		assertEquals(1,
-					 this.abstractShellNodeParent.getChildrenImpl().size());
+					 this.abstractShellNodeParent.getChildren().size());
 		//TODO assert event contents
 		verify(childAddedListener).handle((ShellNodeChildAddedEvent) any());
 	}
@@ -221,8 +215,7 @@ public class AbstractShellNodeParentTest {
 	public void testHandleChildStackingForChildRaised() {
 		//given
 		//an abstract shell node parent with children
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene,
-																   this.shellExecutor) {
+		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
@@ -239,17 +232,16 @@ public class AbstractShellNodeParentTest {
 		//then
 		//the order of the children is updated
 		assertEquals(1,
-					 this.abstractShellNodeParent.getChildrenImpl().indexOf(this.child0));
+					 this.abstractShellNodeParent.getChildren().indexOf(this.child0));
 		assertEquals(0,
-					 this.abstractShellNodeParent.getChildrenImpl().indexOf(this.child1));
+					 this.abstractShellNodeParent.getChildren().indexOf(this.child1));
 	}
 
 	@Test
 	public void testHandleChildStackingForChildLowered() {
 		//given
 		//an abstract shell node parent with children
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene,
-																   this.shellExecutor) {
+		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
@@ -266,9 +258,9 @@ public class AbstractShellNodeParentTest {
 		//then
 		//the order of the children is updated
 		assertEquals(1,
-					 this.abstractShellNodeParent.getChildrenImpl().indexOf(this.child0));
+					 this.abstractShellNodeParent.getChildren().indexOf(this.child0));
 		assertEquals(0,
-					 this.abstractShellNodeParent.getChildrenImpl().indexOf(this.child1));
+					 this.abstractShellNodeParent.getChildren().indexOf(this.child1));
 	}
 }
 

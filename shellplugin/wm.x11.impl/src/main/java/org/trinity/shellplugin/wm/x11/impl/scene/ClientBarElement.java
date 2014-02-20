@@ -22,9 +22,6 @@ package org.trinity.shellplugin.wm.x11.impl.scene;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 import org.freedesktop.xcb.IntArray;
 import org.freedesktop.xcb.xcb_client_message_event_t;
 import org.freedesktop.xcb.xcb_event_mask_t;
@@ -34,7 +31,6 @@ import org.freedesktop.xcb.xcb_icccm_get_wm_protocols_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.shell.api.surface.ShellSurface;
@@ -45,10 +41,10 @@ import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.ProtocolListener;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmName;
 import org.trinity.shellplugin.wm.x11.impl.protocol.icccm.WmProtocols;
 
+import javax.inject.Inject;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
-import static com.google.common.util.concurrent.Futures.addCallback;
 import static org.freedesktop.xcb.LibXcb.xcb_flush;
 import static org.freedesktop.xcb.LibXcb.xcb_send_event;
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
@@ -73,13 +69,14 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	private String clientName = "I rock!";
 	private boolean canSendWmDeleteMsg;
 
-	@AssistedInject
+	@Inject
 	ClientBarElement(
 						final XConnection xConnection,
 						final WmName wmName,
 						final WmProtocols wmProtocols,
 						final XAtomCache xAtomCache,
-						@Assisted final ShellSurface client) {
+						//TODO autofactory
+						final ShellSurface client) {
 		this.xConnection = xConnection;
 		this.wmName = wmName;
 		this.wmProtocols = wmProtocols;
@@ -119,7 +116,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	}
 
 	private void queryCanSendWmDeleteMsg(final DisplaySurface clientXWindow) {
-		Optional<xcb_icccm_get_wm_protocols_reply_t> wmProtocol = this.wmProtocols
+		final Optional<xcb_icccm_get_wm_protocols_reply_t> wmProtocol = this.wmProtocols
 				.get(clientXWindow);
 							updateCanSendWmDeleteMsg(wmProtocol);
 	}
@@ -144,7 +141,7 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	// called by shell executor
 	public void queryClientName(final DisplaySurface clientXWindow) {
-		Optional<xcb_icccm_get_text_property_reply_t> wmName = this.wmName
+		final Optional<xcb_icccm_get_text_property_reply_t> wmName = this.wmName
 				.get(clientXWindow);
 							updateClientName(wmName);
 	}

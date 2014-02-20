@@ -20,23 +20,21 @@
 package org.trinity.foundation.display.x11.impl;
 
 import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import org.apache.onami.autobind.annotations.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.DisplaySurfaceCreator;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
+import org.trinity.foundation.api.display.DisplaySurfaceReferencer;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 
-@Bind
 @Singleton
 @NotThreadSafe
 public class XWindowPoolImpl implements DisplaySurfacePool {
@@ -56,18 +54,18 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
     @Override
     public DisplaySurface getDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
 
-        int windowHash = displaySurfaceHandle.getNativeHandle().hashCode();
-        XWindow window = windows.get(windowHash);
-        if(window == null) {
+		final int windowHash = displaySurfaceHandle.getNativeHandle().hashCode();
+		XWindow window = this.windows.get(windowHash);
+		if(window == null) {
             LOG.debug("Xwindow={} added to cache.",
                       displaySurfaceHandle);
 
             window = (XWindow) XWindowPoolImpl.this.displaySurfaceFactory
                     .createDisplaySurface(displaySurfaceHandle);
             window.register(new DestroyListener(window));
-            windows.put(windowHash,
-                        window);
-        }
+			this.windows.put(windowHash,
+							 window);
+		}
         return window;
     }
 
@@ -77,19 +75,19 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
     }
 
     @Override
-    public DisplaySurfaceCreator getDisplaySurfaceCreator() {
-        this.xEventPump.stop();
+	public DisplaySurfaceReferencer getDisplaySurfaceCreator() {
+		this.xEventPump.stop();
 
-        return new DisplaySurfaceCreator() {
-            @Override
+		return new DisplaySurfaceReferencer() {
+			@Override
             public DisplaySurface reference(final DisplaySurfaceHandle displaySurfaceHandle) {
                 return getDisplaySurface(displaySurfaceHandle);
             }
 
             @Override
             public void close() {
-                xEventPump.start();
-            }
+				XWindowPoolImpl.this.xEventPump.start();
+			}
         };
     }
 

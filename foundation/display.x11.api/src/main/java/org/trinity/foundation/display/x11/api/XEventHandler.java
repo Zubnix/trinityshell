@@ -19,15 +19,13 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.api;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
+import com.google.common.base.Optional;
 import org.freedesktop.xcb.xcb_generic_event_t;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.Listenable;
 
-import com.google.common.base.Optional;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * Handles and optionally converts X events to trinity display events.

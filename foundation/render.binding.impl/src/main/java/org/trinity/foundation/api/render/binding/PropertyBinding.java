@@ -1,8 +1,7 @@
 package org.trinity.foundation.api.render.binding;
 
 import com.google.common.base.Optional;
-import com.google.inject.Injector;
-import com.google.inject.assistedinject.Assisted;
+import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.PropertyAdapter;
@@ -18,16 +17,18 @@ public class PropertyBinding implements ViewBinding {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyBinding.class);
 
-	private final Injector                       injector;
+	private final ObjectGraph                    injector;
 	private final PropertySlotInvocationDelegate propertySlotInvocationDelegate;
 	private final ViewBindingMeta                viewBindingMeta;
 	private final PropertySlot                   propertySlot;
 
 	@Inject
-	PropertyBinding(final Injector injector,
+	PropertyBinding(final ObjectGraph injector,
 					final PropertySlotInvocationDelegate propertySlotInvocationDelegate,
-					@Assisted final ViewBindingMeta viewBindingMeta,
-					@Assisted final PropertySlot propertySlot) {
+					//TODO autofactory
+					final ViewBindingMeta viewBindingMeta,
+					//TODO autofactory
+					final PropertySlot propertySlot) {
 		this.injector = injector;
 		this.propertySlotInvocationDelegate = propertySlotInvocationDelegate;
 		this.viewBindingMeta = viewBindingMeta;
@@ -85,7 +86,7 @@ public class PropertyBinding implements ViewBinding {
 			final Method targetViewMethod = viewModel.getClass().getMethod(viewModelMethodName,
 																		   viewMethodArgumentTypes);
 			final Class<? extends PropertyAdapter<?>> propertyAdapterType = this.propertySlot.adapter();
-			final PropertyAdapter propertyAdapter = this.injector.getInstance(propertyAdapterType);
+			final PropertyAdapter propertyAdapter = this.injector.get(propertyAdapterType);
 
 			final Object argument = propertyAdapter.adapt(propertyValue);
 

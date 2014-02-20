@@ -21,15 +21,12 @@
 package org.trinity.shellplugin.wm.x11.impl.protocol.icccm;
 
 import com.google.common.base.Optional;
-import org.apache.onami.autobind.annotations.Bind;
-import org.apache.onami.autobind.annotations.To;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_property_cookie_t;
 import org.freedesktop.xcb.xcb_icccm_wm_hints_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
@@ -37,14 +34,11 @@ import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.concurrent.Callable;
 
-import static org.apache.onami.autobind.annotations.To.Type.IMPLEMENTATION;
 import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_hints;
 import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_hints_reply;
 
 @Singleton
-@Bind(to = @To(IMPLEMENTATION))
 @NotThreadSafe
 public class WmHints extends AbstractCachedProtocol<xcb_icccm_wm_hints_t> {
 
@@ -69,9 +63,7 @@ public class WmHints extends AbstractCachedProtocol<xcb_icccm_wm_hints_t> {
                                                                                                  .getConnectionReference(),
                                                                                          winId);
 
-        return this.displayExecutor.submit(new Callable<Optional<xcb_icccm_wm_hints_t>>() {
-			@Override
-			public Optional<xcb_icccm_wm_hints_t> call() throws Exception {
+
 				final xcb_icccm_wm_hints_t hints = new xcb_icccm_wm_hints_t();
 				final xcb_generic_error_t e = new xcb_generic_error_t();
 
@@ -92,7 +84,5 @@ public class WmHints extends AbstractCachedProtocol<xcb_icccm_wm_hints_t> {
 				}
 
 				return Optional.of(hints);
-			}
-		});
 	}
 }

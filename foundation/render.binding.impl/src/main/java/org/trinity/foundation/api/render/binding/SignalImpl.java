@@ -25,18 +25,16 @@ import com.google.common.base.Optional;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.assistedinject.Assisted;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 
 import javax.inject.Inject;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 public class SignalImpl implements Signal {
 
@@ -49,9 +47,12 @@ public class SignalImpl implements Signal {
 	private final Optional<Method>         slot;
 
 	@Inject
-	SignalImpl(@Assisted final ListeningExecutorService dataModelExecutor,
-			   @Assisted final Object eventSignalReceiver,
-			   @Assisted final String inputSlotName) {
+	SignalImpl(//TODO autofactory
+			final ListeningExecutorService dataModelExecutor,
+			//TODO autofactory
+			 final Object eventSignalReceiver,
+			 //TODO autofactory
+			 final String inputSlotName) {
 		this.dataModelExecutor = dataModelExecutor;
 		this.eventSignalReceiver = eventSignalReceiver;
 
@@ -117,17 +118,19 @@ public class SignalImpl implements Signal {
 	}
 
 	@Override
-	public ListenableFuture<Void> fire() {
-		return this.dataModelExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				if(SignalImpl.this.slot.isPresent()) {
-					final Method method = SignalImpl.this.slot.get();
-					method.setAccessible(true);
-					method.invoke(SignalImpl.this.eventSignalReceiver);
-				}
-				return null;
+	public void fire() {
+		if(SignalImpl.this.slot.isPresent()) {
+			final Method method = SignalImpl.this.slot.get();
+			method.setAccessible(true);
+			try {
+				method.invoke(SignalImpl.this.eventSignalReceiver);
 			}
-		});
+			catch(final IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			catch(final InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

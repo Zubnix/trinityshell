@@ -19,18 +19,16 @@
  ******************************************************************************/
 package org.trinity.foundation.api.display.event;
 
+import org.trinity.foundation.api.shared.Rectangle;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-
-import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
-import org.trinity.foundation.api.shared.Rectangle;
 
 /**
  * A request from a display resource for a new geometry (size, place).
  *
  */
 @Immutable
-@ExecutionContext(DisplayExecutor.class)
 public class GeometryRequest extends DisplayEvent {
 
 	private final Rectangle geometry;

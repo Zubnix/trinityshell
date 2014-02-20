@@ -1,6 +1,6 @@
 package org.trinity.foundation.api.render.binding;
 
-import com.google.inject.Injector;
+import dagger.ObjectGraph;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,9 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PropertyBindingTest {
@@ -62,7 +60,7 @@ public class PropertyBindingTest {
 
 	//mocks needed for property binding
 	@Mock
-	private Injector                       injector;
+	private ObjectGraph                    injector;
 	@Mock
 	private PropertySlotInvocationDelegate propertySlotInvocationDelegate;
 	@Mock
@@ -79,7 +77,7 @@ public class PropertyBindingTest {
 		when(this.propertyAdapter.adapt(this.bazValue)).thenReturn(new Object[]{this.arg0Val,
 																				this.arg1Val});
 
-		when(this.injector.getInstance(PropertyAdapter.class)).thenReturn(this.propertyAdapter);
+		when(this.injector.get(PropertyAdapter.class)).thenReturn(this.propertyAdapter);
 		when(this.viewBindingMeta.getViewModel()).thenReturn(this.viewModel);
 		when(this.propertySlot.dataModelContext()).thenReturn(this.propertySlotDataContext);
 		when(this.propertySlot.propertyName()).thenReturn(this.propertyName);

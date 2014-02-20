@@ -19,13 +19,7 @@
  ******************************************************************************/
 package org.trinity.shell.scene.impl.manager;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
+import com.google.common.eventbus.Subscribe;
 import org.trinity.foundation.api.shared.Margins;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.AbstractShellNode;
@@ -45,9 +39,11 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
 import org.trinity.shell.api.scene.manager.ShellLayoutProperty;
 import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 
-import com.google.common.eventbus.Subscribe;
-import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 // TODO try to avoid castings
 // TODO refactor/rewrite
@@ -64,8 +60,8 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	private boolean horizontalDirection = true;
 	private boolean inverseDirection = false;
 
-	@AssistedInject
-	ShellLayoutManagerLineImpl(@Assisted final ShellNodeParent shellNodeParent) {
+	ShellLayoutManagerLineImpl(//TODO with autofactory
+							   final ShellNodeParent shellNodeParent) {
 		super((AbstractShellNodeParent) shellNodeParent);
 	}
 

@@ -5,7 +5,7 @@
 //import com.google.common.util.concurrent.ListenableFutureTask;
 //import com.google.common.util.concurrent.ListeningExecutorService;
 //import org.trinity.foundation.api.display.DisplaySurface;
-//import org.trinity.foundation.api.display.DisplaySurfaceCreator;
+//import org.trinity.foundation.api.display.DisplaySurfaceReferencer;
 //import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 //import org.trinity.foundation.api.display.DisplaySurfacePool;
 //import org.trinity.foundation.api.display.bindkey.DisplayExecutor;
@@ -36,7 +36,7 @@
 //		return this.displayExecutor.submit(new Callable<Object[]>() {
 //			@Override
 //			public Object[] call() throws ExecutionException, InterruptedException {
-//				try(DisplaySurfaceCreator displaySurfaceCreator = AbstractViewBuilder.this.displaySurfacePool.getDisplaySurfaceCreator()) {
+//				try(DisplaySurfaceReferencer displaySurfaceCreator = AbstractViewBuilder.this.displaySurfacePool.getDisplaySurfaceCreator()) {
 //					invokeViewBuild(AbstractViewBuilder.this.viewFuture);
 //					final Object createdViewObject = AbstractViewBuilder.this.viewFuture.get();
 //					final DisplaySurfaceHandle createdDisplaySurfaceHandle = createDisplaySurfaceHandle(createdViewObject);

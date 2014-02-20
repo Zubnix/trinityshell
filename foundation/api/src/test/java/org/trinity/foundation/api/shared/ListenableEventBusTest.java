@@ -86,8 +86,7 @@ public class ListenableEventBusTest {
 		//a listener is registered with it's own event handler executor service.
 		//an event is posted
 		final Object event = new Object();
-		this.listenableEventBus.register(this.listener,
-											  eventHandlerExecutorService);
+		this.listenableEventBus.register(this.listener);
 		this.listenableEventBus.post(event);
 
 		//then
@@ -109,7 +108,7 @@ public class ListenableEventBusTest {
 		//a listener is registered
 		//an event is posted
 		final Object event = new Object();
-		this.listenableEventBus.scheduleRegister(this.listener);
+		this.listenableEventBus.register(this.listener);
 		this.listenableEventBus.post(event);
 
 		//then
@@ -133,8 +132,7 @@ public class ListenableEventBusTest {
 		//the listener is registered by the eventbus' executor service
 		//an event is posted
 		final Object event = new Object();
-		this.listenableEventBus.scheduleRegister(this.listener,
-													  eventHandlerExecutorService);
+		this.listenableEventBus.register(this.listener);
 		this.listenableEventBus.post(event);
 
 		//then
@@ -162,11 +160,9 @@ public class ListenableEventBusTest {
 		final Listener listener3 = spy(new Listener());
 
 		this.listenableEventBus.register(listener0);
-		this.listenableEventBus.register(listener1,
-											  eventHandlerExecutorService1);
-		this.listenableEventBus.scheduleRegister(listener2);
-		this.listenableEventBus.scheduleRegister(listener3,
-													  eventHandlerExecutorService3);
+		this.listenableEventBus.register(listener1);
+		this.listenableEventBus.register(listener2);
+		this.listenableEventBus.register(listener3);
 
 		//when
 		//all listeners are unregistered

@@ -19,19 +19,15 @@
  ******************************************************************************/
 package org.trinity.shell.plugin.impl;
 
-import org.apache.onami.autobind.annotations.Bind;
 import org.trinity.shell.api.plugin.ShellPlugin;
 import org.trinity.shell.api.plugin.ShellPluginsRunner;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-@Bind
 @Singleton
 public class ShellPluginsRunnerImpl implements ShellPluginsRunner {
 

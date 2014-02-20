@@ -12,27 +12,31 @@
  */
 package org.trinity.bootstrap;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import org.apache.onami.autobind.configuration.StartupModule;
-import org.apache.onami.autobind.scanner.PackageFilter;
-import org.apache.onami.autobind.scanner.asm.ASMClasspathScanner;
+import dagger.ObjectGraph;
 import org.trinity.shell.api.plugin.ShellPluginsRunner;
 import xcb4j.LibXcbLoader;
 
-import static com.google.inject.Stage.PRODUCTION;
-
-
 public class EntryPoint {
 
-    public static void main(final String[] args) {
-        LibXcbLoader.load();
-        final StartupModule startupModule = StartupModule.create(ASMClasspathScanner.class,
-                                                                 PackageFilter.create("org.trinity"));
-        final Injector injector = Guice.createInjector(PRODUCTION,
-                                                       startupModule);
+	private final ShellPluginsRunner shellPluginsRunner;
 
-        final ShellPluginsRunner instance = injector.getInstance(ShellPluginsRunner.class);
-        instance.startAll();
+	public EntryPoint(final ShellPluginsRunner shellPluginsRunner) {
+
+		this.shellPluginsRunner = shellPluginsRunner;
+	}
+
+	public void startShellPlugins(){
+		this.shellPluginsRunner.startAll();
+	}
+
+	public static void main(final String[] args) {
+        LibXcbLoader.load();
+
+		final TrinityShellModule trinityShellModule = new TrinityShellModule();
+		final ObjectGraph objectGraph = ObjectGraph.create(trinityShellModule);
+		trinityShellModule.setObjectGraph(objectGraph);
+
+		final EntryPoint entryPoint = objectGraph.get(EntryPoint.class);
+		entryPoint.startShellPlugins();
     }
 }
