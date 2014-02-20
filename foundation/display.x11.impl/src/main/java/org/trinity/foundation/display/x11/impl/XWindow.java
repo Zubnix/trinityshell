@@ -19,6 +19,8 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_geometry_cookie_t;
@@ -26,301 +28,297 @@ import org.freedesktop.xcb.xcb_get_geometry_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.shared.ListenableEventBus;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
-import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.api.shared.ListenableEventBus;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-import java.nio.ByteBuffer;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
-import static org.freedesktop.xcb.LibXcb.*;
-import static org.freedesktop.xcb.xcb_config_window_t.*;
-import static org.freedesktop.xcb.xcb_input_focus_t.XCB_INPUT_FOCUS_NONE;
 import static org.freedesktop.xcb.xcb_stack_mode_t.XCB_STACK_MODE_ABOVE;
 
 @ThreadSafe
+@AutoFactory(
+		implementing = DisplaySurfaceFactory.class,
+		className = "org.trinity.foundation.display.x11.impl.XDisplaySurfaceFactory"
+)
 public class XWindow implements DisplaySurface {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
-    private static final ByteBuffer MOVE_VALUE_LIST_BUFFER = allocateDirect(8).order(nativeOrder());
-    private static final int MOVE_RESIZE_VALUE_MASK = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y
-            | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    private static final ByteBuffer MOVE_RESIZE_VALUE_LIST_BUFFER = allocateDirect(16).order(nativeOrder());
-    private static final int RESIZE_VALUE_MASK = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    private static final ByteBuffer RESIZE_VALUE_LIST = allocateDirect(8).order(nativeOrder());
-    private static final int RAISE_VALUE_MASK = XCB_CONFIG_WINDOW_STACK_MODE;
-    private static final ByteBuffer RAISE_VALUE_LIST_BUFFER = allocateDirect(4).order(nativeOrder())
-            .putInt(XCB_STACK_MODE_ABOVE);
-    private static final int MOVE_VALUE_MASK = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
-    private final DisplaySurfaceHandle resourceHandle;
-    private final XConnection xConnection;
-    private final XTime xTime;
-    private final ListenableEventBus xWindowEventBus;
+	private static final Logger     LOG                           = LoggerFactory.getLogger(XWindow.class);
+	private static final ByteBuffer MOVE_VALUE_LIST_BUFFER        = allocateDirect(8).order(nativeOrder());
+	private static final int        MOVE_RESIZE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y
+			| XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
+	private static final ByteBuffer MOVE_RESIZE_VALUE_LIST_BUFFER = allocateDirect(16).order(nativeOrder());
+	private static final int        RESIZE_VALUE_MASK             = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
+	private static final ByteBuffer RESIZE_VALUE_LIST             = allocateDirect(8).order(nativeOrder());
+	private static final int        RAISE_VALUE_MASK              = XCB_CONFIG_WINDOW_STACK_MODE;
+	private static final ByteBuffer RAISE_VALUE_LIST_BUFFER       = allocateDirect(4).order(nativeOrder())
+																					 .putInt(XCB_STACK_MODE_ABOVE);
+	private static final int        MOVE_VALUE_MASK               = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
+	private final DisplaySurfaceHandle resourceHandle;
+	private final XConnection          xConnection;
+	private final XTime                xTime;
+	private final ListenableEventBus   xWindowEventBus;
+
+	XWindow(final XTime xTime,
+			final XConnection xConnection,
+			@Nonnull @Provided final DisplaySurfaceHandle resourceHandle) {
+		checkNotNull(resourceHandle);
+
+		this.xTime = xTime;
+		this.xConnection = xConnection;
+		this.resourceHandle = resourceHandle;
+		this.xWindowEventBus = new ListenableEventBus();
+	}
+
+	@Override
+	public void register(@Nonnull final Object listener) {
+		this.xWindowEventBus.register(listener);
+	}
+
+	@Override
+	public void post(@Nonnull final Object event) {
+		this.xWindowEventBus.post(event);
+	}
+
+	@Override
+	public void unregister(@Nonnull final Object listener) {
+		this.xWindowEventBus.unregister(listener);
+	}
+
+	@Override
+	public DisplaySurfaceHandle getDisplaySurfaceHandle() {
+		return this.resourceHandle;
+	}
+
+	@Override
+	public void destroy() {
+		final int winId = getWindowId();
+		LOG.debug("[winId={}] destroy.",
+				  winId);
+		xcb_destroy_window(getConnectionRef(),
+						   winId);
+		xcb_flush(getConnectionRef());
+	}
+
+	private int getWindowId() {
+		return ((Number) this.resourceHandle.getNativeHandle()).intValue();
+	}
+
+	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
+		return this.xConnection.getConnectionReference();
+	}
+
+	@Override
+	public void setInputFocus() {
+
+		final int winId = getWindowId();
+		final int time = this.xTime.getTime();
+		LOG.debug("[winId={}] set input focus.",
+				  winId);
+		xcb_set_input_focus(getConnectionRef(),
+							(short) XCB_INPUT_FOCUS_NONE,
+							winId,
+							time);
+		xcb_flush(getConnectionRef());
+	}
+
+	@Override
+	public void show() {
+		final int winId = getWindowId();
+
+		LOG.debug("[winId={}] show.",
+				  winId);
+		xcb_map_window(getConnectionRef(),
+					   winId);
+		xcb_flush(getConnectionRef());
+	}
+
+	@Override
+	public void move(final int x,
+					 final int y) {
+
+		XWindow.MOVE_VALUE_LIST_BUFFER.clear();
+		XWindow.MOVE_VALUE_LIST_BUFFER.putInt(x).putInt(y);
+		final int winId = getWindowId();
+
+		LOG.debug("[winId={}] move x={}, y={}.",
+				  x,
+				  y,
+				  winId);
+		xcb_configure_window(getConnectionRef(),
+							 winId,
+							 XWindow.MOVE_VALUE_MASK,
+							 XWindow.MOVE_VALUE_LIST_BUFFER);
+		xcb_flush(getConnectionRef());
+	}
+
+	@Override
+	public void moveResize(final int x,
+						   final int y,
+						   final int width,
+						   final int height) {
+		// we have to adjust the size with the X border. This sucks because it
+		// introduces an extra roundtrip to the X server. -_-
+
+		final int winId = getWindowId();
+		final xcb_get_geometry_cookie_t cookie_t = xcb_get_geometry(getConnectionRef(),
+																	winId);
 
 
-    XWindow(final XTime xTime,
-            final XConnection xConnection,
-            @Nonnull//TODO autofactory
-			final DisplaySurfaceHandle resourceHandle) {
-        checkNotNull(resourceHandle);
+		final xcb_generic_error_t e = new xcb_generic_error_t();
+		final xcb_get_geometry_reply_t reply = xcb_get_geometry_reply(getConnectionRef(),
+																	  cookie_t,
+																	  e);
 
-        this.xTime = xTime;
-        this.xConnection = xConnection;
-        this.resourceHandle = resourceHandle;
-        this.xWindowEventBus = new ListenableEventBus();
-    }
-
-    @Override
-    public void register(@Nonnull final Object listener) {
-        this.xWindowEventBus.register(listener);
-    }
-
-    @Override
-    public void post(@Nonnull final Object event) {
-        this.xWindowEventBus.post(event);
-    }
-
-    @Override
-    public void unregister(@Nonnull final Object listener) {
-        this.xWindowEventBus.unregister(listener);
-    }
-
-    @Override
-    public DisplaySurfaceHandle getDisplaySurfaceHandle() {
-        return this.resourceHandle;
-    }
-
-    @Override
-    public void destroy() {
-        final int winId = getWindowId();
-                LOG.debug("[winId={}] destroy.",
-                        winId);
-                xcb_destroy_window(getConnectionRef(),
-                        winId);
-                xcb_flush(getConnectionRef());
-    }
-
-    private int getWindowId() {
-        return ((Number) this.resourceHandle.getNativeHandle()).intValue();
-    }
-
-    private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-        return this.xConnection.getConnectionReference();
-    }
-
-    @Override
-    public void setInputFocus() {
-
-        final int winId = getWindowId();
-        final int time = this.xTime.getTime();
-                LOG.debug("[winId={}] set input focus.",
-                        winId);
-                xcb_set_input_focus(getConnectionRef(),
-                        (short) XCB_INPUT_FOCUS_NONE,
-                        winId,
-                        time);
-                xcb_flush(getConnectionRef());
-    }
-
-    @Override
-    public void show() {
-        final int winId = getWindowId();
-
-                LOG.debug("[winId={}] show.",
-                        winId);
-                xcb_map_window(getConnectionRef(),
-                        winId);
-                xcb_flush(getConnectionRef());
-    }
-
-    @Override
-    public void move(final int x,
-                                       final int y) {
-
-                XWindow.MOVE_VALUE_LIST_BUFFER.clear();
-                XWindow.MOVE_VALUE_LIST_BUFFER.putInt(x).putInt(y);
-                final int winId = getWindowId();
-
-                LOG.debug("[winId={}] move x={}, y={}.",
-                        x,
-                        y,
-                        winId);
-                xcb_configure_window(getConnectionRef(),
-                        winId,
-                        XWindow.MOVE_VALUE_MASK,
-                        XWindow.MOVE_VALUE_LIST_BUFFER);
-                xcb_flush(getConnectionRef());
-    }
-
-    @Override
-    public void moveResize(final int x,
-                                             final int y,
-                                             final int width,
-                                             final int height) {
-        // we have to adjust the size with the X border. This sucks because it
-        // introduces an extra roundtrip to the X server. -_-
-
-        final int winId = getWindowId();
-        final xcb_get_geometry_cookie_t cookie_t = xcb_get_geometry(getConnectionRef(),
-                                winId);
+		checkError(e);
+		final Integer border = reply.getBorder_width();
 
 
-                        final xcb_generic_error_t e = new xcb_generic_error_t();
-                        final xcb_get_geometry_reply_t reply = xcb_get_geometry_reply(getConnectionRef(),
-                                cookie_t,
-                                e);
+		final int borderAdjust = 2 * border;
+		final int adjustedWidth = width - borderAdjust;
+		final int adjustedHeight = height - borderAdjust;
 
-                        checkError(e);
-        final Integer border=  reply.getBorder_width();
+		MOVE_RESIZE_VALUE_LIST_BUFFER.clear();
+		MOVE_RESIZE_VALUE_LIST_BUFFER.putInt(x).putInt(y).putInt(adjustedWidth)
+									 .putInt(adjustedHeight);
 
+		LOG.debug("[winId={}] move resize x={}, y={}, width={}, height={}.",
+				  winId,
+				  x,
+				  y,
+				  adjustedWidth,
+				  adjustedHeight);
+		xcb_configure_window(getConnectionRef(),
+							 winId,
+							 XWindow.MOVE_RESIZE_VALUE_MASK,
+							 XWindow.MOVE_RESIZE_VALUE_LIST_BUFFER);
+		xcb_flush(getConnectionRef());
+	}
 
-                        final int borderAdjust = 2 * border;
-                        final int adjustedWidth = width - borderAdjust;
-                        final int adjustedHeight = height - borderAdjust;
+	@Override
+	public void raise() {
+		final int winId = getWindowId();
 
-                        MOVE_RESIZE_VALUE_LIST_BUFFER.clear();
-                        MOVE_RESIZE_VALUE_LIST_BUFFER.putInt(x).putInt(y).putInt(adjustedWidth)
-                                .putInt(adjustedHeight);
+		LOG.debug("[winId={}] raise.",
+				  winId);
+		xcb_configure_window(getConnectionRef(),
+							 winId,
+							 XWindow.RAISE_VALUE_MASK,
+							 XWindow.RAISE_VALUE_LIST_BUFFER);
+		xcb_flush(getConnectionRef());
+	}
 
-                        LOG.debug("[winId={}] move resize x={}, y={}, width={}, height={}.",
-                                winId,
-                                x,
-                                y,
-                                adjustedWidth,
-                                adjustedHeight);
-                        xcb_configure_window(getConnectionRef(),
-                                winId,
-                                XWindow.MOVE_RESIZE_VALUE_MASK,
-                                XWindow.MOVE_RESIZE_VALUE_LIST_BUFFER);
-                        xcb_flush(getConnectionRef());
-    }
+	@Override
+	public void resize(final int width,
+					   final int height) {
+		// we have to adjust the size with the X border. This sucks because it
+		// introduces an extra roundtrip to the X server. -_-
 
-    @Override
-    public void raise() {
-        final int winId = getWindowId();
-
-                LOG.debug("[winId={}] raise.",
-                        winId);
-                xcb_configure_window(getConnectionRef(),
-                        winId,
-                        XWindow.RAISE_VALUE_MASK,
-                        XWindow.RAISE_VALUE_LIST_BUFFER);
-                xcb_flush(getConnectionRef());
-    }
-
-    @Override
-    public void resize(final int width,
-                                         final int height) {
-        // we have to adjust the size with the X border. This sucks because it
-        // introduces an extra roundtrip to the X server. -_-
-
-        final int winId = getWindowId();
-        final xcb_get_geometry_cookie_t cookie_t = xcb_get_geometry(getConnectionRef(),
-                                winId);
+		final int winId = getWindowId();
+		final xcb_get_geometry_cookie_t cookie_t = xcb_get_geometry(getConnectionRef(),
+																	winId);
 
 
-                        final xcb_generic_error_t e = new xcb_generic_error_t();
-                        final xcb_get_geometry_reply_t reply = xcb_get_geometry_reply(getConnectionRef(),
-                                cookie_t,
-                                e);
+		final xcb_generic_error_t e = new xcb_generic_error_t();
+		final xcb_get_geometry_reply_t reply = xcb_get_geometry_reply(getConnectionRef(),
+																	  cookie_t,
+																	  e);
 
-                        checkError(e);
-        final Integer border = reply.getBorder_width();
+		checkError(e);
+		final Integer border = reply.getBorder_width();
 
-                        final int borderAdjust = 2 * border;
-                        final int adjustedWidth = width - borderAdjust;
-                        final int adjustedHeight = height - borderAdjust;
+		final int borderAdjust = 2 * border;
+		final int adjustedWidth = width - borderAdjust;
+		final int adjustedHeight = height - borderAdjust;
 
-                        LOG.debug("[winId={}] resize width={}, height={}.",
-                                adjustedWidth,
-                                adjustedHeight,
-                                winId);
+		LOG.debug("[winId={}] resize width={}, height={}.",
+				  adjustedWidth,
+				  adjustedHeight,
+				  winId);
 
-                        RESIZE_VALUE_LIST.clear();
-                        RESIZE_VALUE_LIST.putInt(adjustedWidth).putInt(adjustedHeight);
-                        xcb_configure_window(getConnectionRef(),
-                                winId,
-                                RESIZE_VALUE_MASK,
-                                RESIZE_VALUE_LIST);
-                        xcb_flush(getConnectionRef());
-    }
+		RESIZE_VALUE_LIST.clear();
+		RESIZE_VALUE_LIST.putInt(adjustedWidth).putInt(adjustedHeight);
+		xcb_configure_window(getConnectionRef(),
+							 winId,
+							 RESIZE_VALUE_MASK,
+							 RESIZE_VALUE_LIST);
+		xcb_flush(getConnectionRef());
+	}
 
-    @Override
-    @Deprecated
-    public void hide() {
-        final int winId = getWindowId();
-                XWindow.LOG.debug("[winId={}] hide.",
-                        winId);
+	@Override
+	@Deprecated
+	public void hide() {
+		final int winId = getWindowId();
+		XWindow.LOG.debug("[winId={}] hide.",
+						  winId);
 
-                xcb_unmap_window(getConnectionRef(),
-                        winId);
-                xcb_flush(getConnectionRef());
-    }
+		xcb_unmap_window(getConnectionRef(),
+						 winId);
+		xcb_flush(getConnectionRef());
+	}
 
-    @Override
-    public Rectangle getGeometry(){
-        final int winId = getWindowId();
+	@Override
+	public Rectangle getGeometry() {
+		final int winId = getWindowId();
 
-        final xcb_get_geometry_cookie_t geometryRequest =  xcb_get_geometry(getConnectionRef(),
-                                winId);
+		final xcb_get_geometry_cookie_t geometryRequest = xcb_get_geometry(getConnectionRef(),
+																		   winId);
 
-        return getGeometryReply(geometryRequest );
-    }
+		return getGeometryReply(geometryRequest);
+	}
 
-    protected Rectangle getGeometryReply(final xcb_get_geometry_cookie_t cookie_t) {
+	protected Rectangle getGeometryReply(final xcb_get_geometry_cookie_t cookie_t) {
 
-                LOG.debug("get geometry reply.");
+		LOG.debug("get geometry reply.");
 
-                final xcb_generic_error_t e = new xcb_generic_error_t();
-                final xcb_get_geometry_reply_t get_geometry_reply = xcb_get_geometry_reply(getConnectionRef(),
-                        cookie_t,
-                        e);
+		final xcb_generic_error_t e = new xcb_generic_error_t();
+		final xcb_get_geometry_reply_t get_geometry_reply = xcb_get_geometry_reply(getConnectionRef(),
+																				   cookie_t,
+																				   e);
 
-                checkError(e);
-                final int width = get_geometry_reply.getWidth() + (2 * get_geometry_reply.getBorder_width());
-                final int height = get_geometry_reply.getHeight() + (2 * get_geometry_reply.getBorder_width());
-                final int x = get_geometry_reply.getX();
-                final int y = get_geometry_reply.getY();
+		checkError(e);
+		final int width = get_geometry_reply.getWidth() + (2 * get_geometry_reply.getBorder_width());
+		final int height = get_geometry_reply.getHeight() + (2 * get_geometry_reply.getBorder_width());
+		final int x = get_geometry_reply.getX();
+		final int y = get_geometry_reply.getY();
 
-                return new ImmutableRectangle(x,
-                        y,
-                        width,
-                        height);
-    }
+		return new ImmutableRectangle(x,
+									  y,
+									  width,
+									  height);
+	}
 
-    private void checkError(final xcb_generic_error_t e) {
-        if (xcb_generic_error_t.getCPtr(e) != 0) {
-            LOG.error("X error: {}.",
-                    XcbErrorUtil.toString(e));
-        }
-    }
+	private void checkError(final xcb_generic_error_t e) {
+		if(xcb_generic_error_t.getCPtr(e) != 0) {
+			LOG.error("X error: {}.",
+					  XcbErrorUtil.toString(e));
+		}
+	}
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj instanceof XWindow) {
-            final XWindow otherWindow = (XWindow) obj;
-            return otherWindow.getDisplaySurfaceHandle().getNativeHandle()
-                    .equals(getDisplaySurfaceHandle().getNativeHandle());
-        }
-        return false;
-    }
+	@Override
+	public boolean equals(final Object obj) {
+		if(obj instanceof XWindow) {
+			final XWindow otherWindow = (XWindow) obj;
+			return otherWindow.getDisplaySurfaceHandle().getNativeHandle()
+							  .equals(getDisplaySurfaceHandle().getNativeHandle());
+		}
+		return false;
+	}
 
-    @Override
-    public int hashCode() {
-        return getDisplaySurfaceHandle().getNativeHandle().hashCode();
-    }
+	@Override
+	public int hashCode() {
+		return getDisplaySurfaceHandle().getNativeHandle().hashCode();
+	}
 
-    @Override
-    public String toString() {
-        return String.format("%s=%s",
-                getClass().getSimpleName(),
-                getDisplaySurfaceHandle().getNativeHandle());
-    }
+	@Override
+	public String toString() {
+		return String.format("%s=%s",
+							 getClass().getSimpleName(),
+							 getDisplaySurfaceHandle().getNativeHandle());
+	}
 }

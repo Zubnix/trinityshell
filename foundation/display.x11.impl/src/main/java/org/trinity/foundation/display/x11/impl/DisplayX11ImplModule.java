@@ -41,7 +41,7 @@ import javax.inject.Singleton;
 		complete = true,
 		library = true
 )
-class DisplayX11ImplModule {
+public class DisplayX11ImplModule {
 
 	@Provides
 	@Singleton

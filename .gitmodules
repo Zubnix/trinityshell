@@ -10,3 +10,6 @@
 [submodule "externals/fx-guice"]
 	path = externals/fx-guice
 	url = https://github.com/cathive/fx-guice.git
+[submodule "externals/auto"]
+	path = externals/auto
+	url = https://github.com/google/auto.git
