@@ -33,7 +33,7 @@ import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -61,13 +61,13 @@ public class MapRequestHandler implements XEventHandler {
 	private static final Integer EVENT_CODE = XCB_MAP_REQUEST;
 	private final EventBus xEventBus;
 	private final XConnection xConnection;
-	private final XWindowPoolImpl xWindowCache;
+	private final DisplaySurfacePoolImpl xWindowCache;
 	private final Display display;
 
 	@Inject
 	MapRequestHandler(	@XEventBus final EventBus xEventBus,
 						final XConnection xConnection,
-						final XWindowPoolImpl xWindowCache,
+						final DisplaySurfacePoolImpl xWindowCache,
 						final Display display) {
 		this.xEventBus = xEventBus;
 		this.xConnection = xConnection;

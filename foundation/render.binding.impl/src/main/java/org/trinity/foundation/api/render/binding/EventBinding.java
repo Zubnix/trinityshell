@@ -70,9 +70,9 @@ public class EventBinding implements ViewBinding {
 
     private void bindEventSignal(final Object eventReceiver) {
         final EventSignalFilter eventSignalFilter = this.injector.get(this.eventSignal.filter());
-		final Signal signal = this.signalFactory.createSignal(this.dataModelExecutor,
-															  eventReceiver,
-															  this.eventSignal.name());
+		final Signal signal = this.signalFactory.create(this.dataModelExecutor,
+                eventReceiver,
+                this.eventSignal.name());
 		this.optionalSignal = Optional.of(signal);
 		eventSignalFilter.installFilter(this.viewBindingMeta.getViewModel(),
 										signal);

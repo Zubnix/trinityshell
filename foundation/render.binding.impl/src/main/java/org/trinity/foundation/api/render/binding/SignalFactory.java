@@ -5,7 +5,7 @@ import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 
 public interface SignalFactory {
 
-	Signal createSignal(ListeningExecutorService modelExecutor,
-						Object eventSignalReceiver,
-						String inputSlotName);
+    Signal create(ListeningExecutorService modelExecutor,
+                  Object eventSignalReceiver,
+                  String inputSlotName);
 }

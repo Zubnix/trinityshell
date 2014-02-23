@@ -8,7 +8,6 @@ import org.trinity.foundation.api.render.binding.view.ObservableCollection;
  */
 public interface CollectionBindingFactory {
 
-    CollectionBinding createCollectionBinding(ViewBindingMeta viewBindingMeta,
-
-                                              ObservableCollection observableCollection);
+    CollectionBinding create(ViewBindingMeta viewBindingMeta,
+                             ObservableCollection observableCollection);
 }

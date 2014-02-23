@@ -53,7 +53,7 @@ public class TestXDisplayImpl {
     @Mock
     private XConnection xConnection;
     @Mock
-    private XWindowPoolImpl xWindowPool;
+    private DisplaySurfacePoolImpl xWindowPool;
 
     @Before
     public void setup() {

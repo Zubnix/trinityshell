@@ -30,7 +30,7 @@ import org.trinity.foundation.api.display.event.FocusLostNotify;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -46,11 +46,11 @@ public class FocusOutHandler implements XEventHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(FocusOutHandler.class);
 	private static final Integer EVENT_CODE = XCB_FOCUS_OUT;
 	private final EventBus xEventBus;
-	private final XWindowPoolImpl xWindowCache;
+	private final DisplaySurfacePoolImpl xWindowCache;
 
 	@Inject
 	FocusOutHandler(@XEventBus final EventBus xEventBus,
-					final XWindowPoolImpl xWindowCache) {
+					final DisplaySurfacePoolImpl xWindowCache) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}

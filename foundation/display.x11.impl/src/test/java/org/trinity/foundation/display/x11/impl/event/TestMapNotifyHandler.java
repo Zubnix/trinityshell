@@ -18,7 +18,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
-import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import static org.freedesktop.xcb.LibXcbJNI.xcb_map_notify_event_t_window_get;
 import static org.junit.Assert.assertEquals;
@@ -38,7 +38,7 @@ public class TestMapNotifyHandler {
     @Mock
     private EventBus xEventBus;
     @Mock
-    private XWindowPoolImpl xWindowPool;
+    private DisplaySurfacePoolImpl xWindowPool;
     @InjectMocks
     private MapNotifyHandler mapNotifyHandler;
     @Mock

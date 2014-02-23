@@ -20,25 +20,38 @@
 package org.trinity.foundation.display.x11.impl;
 
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
+import org.freedesktop.xcb.xcb_generic_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.shared.ListenableEventBus;
 import org.trinity.foundation.display.x11.api.XConnection;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.concurrent.Semaphore;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.freedesktop.xcb.LibXcb.xcb_connect;
+import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
 import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
+import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
 
 @Singleton
 @NotThreadSafe
-public class XConnectionImpl implements XConnection {
+public class XConnectionImpl extends ListenableEventBus implements XConnection {
+
+    private static final Logger LOG = LoggerFactory.getLogger(XConnectionImpl.class);
 
     private SWIGTYPE_p_xcb_connection_t xcb_connection;
 
+    private final Semaphore waitForExternal = new Semaphore(1);
+
+    @Inject
     XConnectionImpl() {
 	    // FIXME from config?
 	    final String displayName = System.getenv("DISPLAY");
@@ -47,7 +60,8 @@ public class XConnectionImpl implements XConnection {
 	    open(displayName,targetScreen);
     }
 
-    private void open(@Nonnull final String displayName,
+    @Override
+    public void open(@Nonnull final String displayName,
                      @Nonnegative final int screen) {
         checkNotNull(displayName);
 
@@ -65,5 +79,38 @@ public class XConnectionImpl implements XConnection {
     @Override
     public SWIGTYPE_p_xcb_connection_t getConnectionReference() {
         return this.xcb_connection;
+    }
+
+    public void receiveNextEvent() {
+
+        if (xcb_connection_has_error(getConnectionReference()) != 0) {
+            final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
+            LOG.error(errorMsg);
+            throw new Error(errorMsg);
+        }
+
+        final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(getConnectionReference());
+
+        try {
+            this.waitForExternal.acquireUninterruptibly();
+            //TODO use channel?
+            post(xcb_generic_event);
+            xcb_generic_event.delete();
+
+            // schedule next event retrieval
+            //  this.xEventPumpExecutor.submit(this);
+        } finally {
+            this.waitForExternal.release();
+        }
+    }
+
+    @Override
+    public void start() {
+        this.waitForExternal.release();
+    }
+
+    @Override
+    public void stop() {
+        this.waitForExternal.acquireUninterruptibly();
     }
 }

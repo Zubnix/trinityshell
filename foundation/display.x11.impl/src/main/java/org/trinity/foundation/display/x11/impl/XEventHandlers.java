@@ -55,7 +55,7 @@ public final class XEventHandlers {
 
     @Inject
     XEventHandlers(final Set<XEventHandler> eventConversions,
-                   @XEventBus final EventBus xEventBus) {
+                   @XEventBus final Listenable xEventBus) {
 
         for (final XEventHandler eventConversion : eventConversions) {
             this.conversionMap.put(eventConversion.getEventCode(),

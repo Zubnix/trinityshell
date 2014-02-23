@@ -153,8 +153,8 @@ public class ViewBinderImpl2 implements ViewBinder {
         //if there are property slots
         if (bindingMeta.getPropertySlots().isPresent()) {
             for (final PropertySlot propertySlot : bindingMeta.getPropertySlots().get().value()) {
-                final PropertyBinding propertyBinding = this.propertyBindingFactory.createPropertyBinding(  bindingMeta,
-                                                                                                            propertySlot);
+                final PropertyBinding propertyBinding = this.propertyBindingFactory.create(bindingMeta,
+                        propertySlot);
                 //bind property binding
                 bindViewBinding(propertyBinding);
             }
@@ -162,9 +162,9 @@ public class ViewBinderImpl2 implements ViewBinder {
 
         //if there is an observable collection
         if (bindingMeta.getObservableCollection().isPresent()) {
-            final CollectionBinding collectionBinding = this.collectionBindingFactory.createCollectionBinding(  bindingMeta,
+            final CollectionBinding collectionBinding = this.collectionBindingFactory.create(bindingMeta,
 
-                                                                                                                bindingMeta.getObservableCollection().get());
+                    bindingMeta.getObservableCollection().get());
             //bind collection binding
             bindViewBinding(collectionBinding);
         }
@@ -172,9 +172,9 @@ public class ViewBinderImpl2 implements ViewBinder {
         //if this view emits events
         if (bindingMeta.getEventSignals().isPresent()) {
             for (final EventSignal eventSignal: bindingMeta.getEventSignals().get().value()) {
-                final EventBinding eventBinding = this.eventBindingFactory.createEventBinding(
-                                                                                                bindingMeta,
-                                                                                                eventSignal);
+                final EventBinding eventBinding = this.eventBindingFactory.create(
+                        bindingMeta,
+                        eventSignal);
                 bindViewBinding(eventBinding);
             }
         }

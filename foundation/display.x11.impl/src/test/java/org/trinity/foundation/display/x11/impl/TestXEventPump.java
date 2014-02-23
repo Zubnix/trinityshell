@@ -57,8 +57,7 @@ public class TestXEventPump {
 
         //when
         //an event arrives
-        new XEventPump(this.xConnection,
-					   this.xEventBus).call();
+        new XEventPump(this.xConnection).call();
 
         //then
         //the event is passed on to the x event bus
@@ -74,8 +73,7 @@ public class TestXEventPump {
 
         //when
         //the event pump tries to wait for an event
-        new XEventPump(this.xConnection,
-					   this.xEventBus).call();
+        new XEventPump(this.xConnection).call();
         //then
         //an error is thrown
     }
@@ -95,8 +93,7 @@ public class TestXEventPump {
         //when
         //the x event pump is stopped
         //an event arrives
-        final XEventPump xEventPump = new XEventPump(this.xConnection,
-													 this.xEventBus);
+        final XEventPump xEventPump = new XEventPump(this.xConnection);
         xEventPump.stop();
 
         final CountDownLatch waitForEvent = new CountDownLatch(1);
@@ -135,8 +132,7 @@ public class TestXEventPump {
         //the x event pump is stopped
         //an X server with errors
         //the x event pump is started
-        final XEventPump xEventPump = new XEventPump(this.xConnection,
-													 this.xEventBus);
+        final XEventPump xEventPump = new XEventPump(this.xConnection);
         xEventPump.stop();
         xEventPump.call();
 

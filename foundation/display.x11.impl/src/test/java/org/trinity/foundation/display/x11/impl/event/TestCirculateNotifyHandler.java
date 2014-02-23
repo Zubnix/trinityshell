@@ -19,7 +19,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.StackingChangedNotify;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
-import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import static org.freedesktop.xcb.LibXcbJNI.xcb_circulate_notify_event_t_window_get;
 import static org.junit.Assert.assertEquals;
@@ -34,7 +34,7 @@ public class TestCirculateNotifyHandler {
     @Mock
     private EventBus xEventBus;
     @Mock
-    private XWindowPoolImpl xWindowPool;
+    private DisplaySurfacePoolImpl xWindowPool;
     @InjectMocks
     private CirculateNotifyHandler circulateNotifyHandler;
 

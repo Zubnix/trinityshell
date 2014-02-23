@@ -32,7 +32,7 @@ import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -47,11 +47,11 @@ public class ConfigureNotifyHandler implements XEventHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ConfigureNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_CONFIGURE_NOTIFY;
-	private final XWindowPoolImpl xWindowCache;
+	private final DisplaySurfacePoolImpl xWindowCache;
 	private final EventBus xEventBus;
 
 	@Inject
-	ConfigureNotifyHandler(final XWindowPoolImpl xWindowCache,
+	ConfigureNotifyHandler(final DisplaySurfacePoolImpl xWindowCache,
 	                       @XEventBus final EventBus xEventBus) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;

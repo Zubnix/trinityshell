@@ -8,7 +8,6 @@ import org.trinity.foundation.api.render.binding.view.EventSignal;
  */
 public interface EventBindingFactory {
 
-    EventBinding createEventBinding(
-                                    ViewBindingMeta viewBindingMeta,
-                                    EventSignal eventSignal);
+    EventBinding create(ViewBindingMeta viewBindingMeta,
+                        EventSignal eventSignal);
 }

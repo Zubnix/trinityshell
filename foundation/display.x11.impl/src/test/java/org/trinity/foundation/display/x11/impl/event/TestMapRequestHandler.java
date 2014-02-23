@@ -25,7 +25,7 @@ import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
-import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import java.nio.ByteBuffer;
 
@@ -55,7 +55,7 @@ public class TestMapRequestHandler {
     @Mock
     private XConnection xConnection;
     @Mock
-    private XWindowPoolImpl xWindowPool;
+    private DisplaySurfacePoolImpl xWindowPool;
     @Mock
     private Display display;
     @InjectMocks

@@ -32,19 +32,37 @@ import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.ListenableEventBus;
+import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+import java.nio.ByteBuffer;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
+import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
+import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
+import static org.freedesktop.xcb.LibXcb.xcb_map_window;
+import static org.freedesktop.xcb.LibXcb.xcb_set_input_focus;
+import static org.freedesktop.xcb.LibXcb.xcb_unmap_window;
 import static org.freedesktop.xcb.xcb_stack_mode_t.XCB_STACK_MODE_ABOVE;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
+import static org.freedesktop.xcb.xcb_input_focus_t.XCB_INPUT_FOCUS_NONE;
 
 @ThreadSafe
 @AutoFactory(
 		implementing = DisplaySurfaceFactory.class,
-		className = "org.trinity.foundation.display.x11.impl.XDisplaySurfaceFactory"
+		className = "XDisplaySurfaceFactory"
 )
 public class XWindow implements DisplaySurface {
 
@@ -64,9 +82,9 @@ public class XWindow implements DisplaySurface {
 	private final XTime                xTime;
 	private final ListenableEventBus   xWindowEventBus;
 
-	XWindow(final XTime xTime,
-			final XConnection xConnection,
-			@Nonnull @Provided final DisplaySurfaceHandle resourceHandle) {
+	XWindow(@Provided final XTime xTime,
+			@Provided final XConnection xConnection,
+			@Nonnull final DisplaySurfaceHandle resourceHandle) {
 		checkNotNull(resourceHandle);
 
 		this.xTime = xTime;
@@ -142,8 +160,8 @@ public class XWindow implements DisplaySurface {
 	public void move(final int x,
 					 final int y) {
 
-		XWindow.MOVE_VALUE_LIST_BUFFER.clear();
-		XWindow.MOVE_VALUE_LIST_BUFFER.putInt(x).putInt(y);
+		MOVE_VALUE_LIST_BUFFER.clear();
+		MOVE_VALUE_LIST_BUFFER.putInt(x).putInt(y);
 		final int winId = getWindowId();
 
 		LOG.debug("[winId={}] move x={}, y={}.",

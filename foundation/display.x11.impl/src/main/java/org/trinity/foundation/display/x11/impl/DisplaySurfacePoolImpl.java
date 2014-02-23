@@ -28,6 +28,7 @@ import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.api.display.DisplaySurfaceReferencer;
 import org.trinity.foundation.api.display.event.DestroyNotify;
+import org.trinity.foundation.display.x11.api.XConnection;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
@@ -37,35 +38,34 @@ import java.util.Map;
 
 @Singleton
 @NotThreadSafe
-public class XWindowPoolImpl implements DisplaySurfacePool {
+public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XWindowPoolImpl.class);
-    public final Map<Integer, XWindow> windows = new HashMap<>();
-    private final XEventPump xEventPump;
+    private static final Logger LOG = LoggerFactory.getLogger(DisplaySurfacePoolImpl.class);
+    public final Map<Integer, DisplaySurface> windows = new HashMap<>();
+    private final XConnection xConnection;
     private final DisplaySurfaceFactory displaySurfaceFactory;
 
     @Inject
-    XWindowPoolImpl(final XEventPump xEventPump,
-                    final DisplaySurfaceFactory displaySurfaceFactory) {
-        this.xEventPump = xEventPump;
+    DisplaySurfacePoolImpl(final XConnection xConnection,
+                           final DisplaySurfaceFactory displaySurfaceFactory) {
+        this.xConnection = xConnection;
         this.displaySurfaceFactory = displaySurfaceFactory;
     }
 
     @Override
     public DisplaySurface getDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
 
-		final int windowHash = displaySurfaceHandle.getNativeHandle().hashCode();
-		XWindow window = this.windows.get(windowHash);
-		if(window == null) {
-            LOG.debug("Xwindow={} added to cache.",
-                      displaySurfaceHandle);
+        final int windowHash = displaySurfaceHandle.getNativeHandle().hashCode();
+        DisplaySurface window = this.windows.get(windowHash);
+        if (window == null) {
+            LOG.debug(  "Xwindow={} added to cache.",
+                        displaySurfaceHandle);
 
-            window = (XWindow) XWindowPoolImpl.this.displaySurfaceFactory
-                    .createDisplaySurface(displaySurfaceHandle);
+            window = this.displaySurfaceFactory.create(displaySurfaceHandle);
             window.register(new DestroyListener(window));
-			this.windows.put(windowHash,
-							 window);
-		}
+            this.windows.put(   windowHash,
+                                window);
+        }
         return window;
     }
 
@@ -75,33 +75,33 @@ public class XWindowPoolImpl implements DisplaySurfacePool {
     }
 
     @Override
-	public DisplaySurfaceReferencer getDisplaySurfaceCreator() {
-		this.xEventPump.stop();
+    public DisplaySurfaceReferencer getDisplaySurfaceCreator() {
+        this.xConnection.stop();
 
-		return new DisplaySurfaceReferencer() {
-			@Override
+        return new DisplaySurfaceReferencer() {
+            @Override
             public DisplaySurface reference(final DisplaySurfaceHandle displaySurfaceHandle) {
                 return getDisplaySurface(displaySurfaceHandle);
             }
 
             @Override
             public void close() {
-				XWindowPoolImpl.this.xEventPump.start();
-			}
+                DisplaySurfacePoolImpl.this.xConnection.start();
+            }
         };
     }
 
     private class DestroyListener {
-        private final XWindow window;
+        private final DisplaySurface window;
 
-        public DestroyListener(final XWindow window) {
+        public DestroyListener(final DisplaySurface window) {
             this.window = window;
         }
 
         @Subscribe
         public void destroyed(final DestroyNotify destroyNotify) {
 
-            XWindowPoolImpl.this.windows.remove(this.window.getDisplaySurfaceHandle().getNativeHandle().hashCode());
+            DisplaySurfacePoolImpl.this.windows.remove(this.window.getDisplaySurfaceHandle().getNativeHandle().hashCode());
             this.window.unregister(this);
         }
     }

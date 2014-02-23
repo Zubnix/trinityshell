@@ -25,45 +25,47 @@ import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
 import javax.inject.Singleton;
 
 @Module(
-		injects = {
-				//display api
-				DisplaySurfaceFactory.class,
-				DisplaySurfacePool.class,
-				Display.class,
+        injects = {
+                //display api
+                DisplaySurfaceFactory.class,
+                DisplaySurfacePool.class,
+                Display.class,
 
-				//x11 display api
-				XConnection.class,
-		},
-		complete = true,
-		library = true
+                //x11 display api
+                XConnection.class,
+        },
+        complete = true,
+        library = true
 )
 public class DisplayX11ImplModule {
 
-	@Provides
-	@Singleton
-	DisplaySurfacePool provideDisplaySurfacePool(final XWindowPoolImpl xWindowPool) {
-		return xWindowPool;
-	}
+    @Provides
+    @Singleton
+    DisplaySurfacePool provideDisplaySurfacePool(final DisplaySurfacePoolImpl xWindowPool) {
+        return xWindowPool;
+    }
 
-	@Provides
-	@Singleton
-	Display provideDisplay(final XDisplayImpl xDisplay) {
-		return xDisplay;
-	}
+    @Provides
+    @Singleton
+    Display provideDisplay(final XDisplayImpl xDisplay) {
+        return xDisplay;
+    }
 
-	@Provides
-	@Singleton
-	DisplaySurfaceFactory provideDisplaySurfaceFactory() {
-		return null;
-	}
+    @Provides
+    @Singleton
+    DisplaySurfaceFactory provideDisplaySurfaceFactory(final XDisplaySurfaceFactory xDisplaySurfaceFactory) {
+        return xDisplaySurfaceFactory;
+    }
 
-	@Provides
-	@Singleton
-	XConnection provideXConnection(final XConnectionImpl xConnection) {
-		return xConnection;
-	}
+    @Provides
+    @Singleton
+    @XEventBus
+    XConnection provideXConnection(final XConnectionImpl xConnection) {
+        return xConnection;
+    }
 }

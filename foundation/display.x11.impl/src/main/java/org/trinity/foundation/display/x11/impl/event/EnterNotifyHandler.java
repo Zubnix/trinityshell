@@ -30,7 +30,7 @@ import org.trinity.foundation.api.display.event.PointerEnterNotify;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
-import org.trinity.foundation.display.x11.impl.XWindowPoolImpl;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -46,11 +46,11 @@ public class EnterNotifyHandler implements XEventHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(EnterNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_ENTER_NOTIFY;
 	private final EventBus xEventBus;
-	private final XWindowPoolImpl xWindowPool;
+	private final DisplaySurfacePoolImpl xWindowPool;
 
 	@Inject
 	EnterNotifyHandler(	@XEventBus final EventBus xEventBus,
-						final XWindowPoolImpl xWindowPool) {
+						final DisplaySurfacePoolImpl xWindowPool) {
 		this.xEventBus = xEventBus;
 		this.xWindowPool = xWindowPool;
 	}

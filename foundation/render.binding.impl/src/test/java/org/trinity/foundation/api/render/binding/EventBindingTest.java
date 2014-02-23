@@ -79,9 +79,9 @@ public class EventBindingTest {
 
 		when(this.injector.get((Class) EventSignal.class)).thenReturn(this.eventSignalFilter);
 
-		when(this.signalFactor.createSignal(this.dataModelExecutor,
-											this.dataModel,
-											this.signalMethodName)).thenReturn(this.signal);
+		when(this.signalFactor.create(this.dataModelExecutor,
+                this.dataModel,
+                this.signalMethodName)).thenReturn(this.signal);
 	}
 
 	@Test

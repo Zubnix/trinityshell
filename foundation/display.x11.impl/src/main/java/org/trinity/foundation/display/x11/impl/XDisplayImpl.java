@@ -67,7 +67,7 @@ public class XDisplayImpl implements Display {
 			.putInt(CLIENT_EVENT_MASK);
 	private final List<DisplaySurface> clientDisplaySurfaces = new ArrayList<>();
 	private final XConnection xConnection;
-	private final XWindowPoolImpl xWindowCache;
+	private final DisplaySurfacePoolImpl xWindowCache;
 	private final ListenableEventBus displayEventBus;
 	private final ByteBuffer rootWindowAttributes = allocateDirect(4).order(nativeOrder())
 			.putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
@@ -75,7 +75,7 @@ public class XDisplayImpl implements Display {
 
 	@Inject
 	XDisplayImpl(	final XConnection xConnection,
-					final XWindowPoolImpl xWindowCache) {
+					final DisplaySurfacePoolImpl xWindowCache) {
 		this.xWindowCache = xWindowCache;
 		this.xConnection = xConnection;
 		this.displayEventBus = new ListenableEventBus();
