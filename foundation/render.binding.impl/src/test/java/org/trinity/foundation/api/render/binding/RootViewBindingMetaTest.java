@@ -47,7 +47,7 @@ public class RootViewBindingMetaTest {
 	private Optional<EventSignals>        eventSignals;
 	@Mock
 	private Optional<PropertySlots>       propertySlots;
-	//@InjectMocks for some reason mockito is totally confused as what to inject so we create the object manually
+	//@InjectMocks for some reason mockito is totally confused as what to inject so we construct the object manually
 	private RootViewBindingMeta            rootViewBindingMeta;
 
 	@Test

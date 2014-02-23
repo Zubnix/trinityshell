@@ -97,7 +97,7 @@ public class TestXEventPump {
         xEventPump.stop();
 
         final CountDownLatch waitForEvent = new CountDownLatch(1);
-        //create a new thread else we might block indefinitely.
+        //construct a new thread else we might block indefinitely.
         new Thread() {
             @Override
             public void run() {

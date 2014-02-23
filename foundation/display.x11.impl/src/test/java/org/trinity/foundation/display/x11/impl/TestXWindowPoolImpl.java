@@ -33,7 +33,7 @@ public class TestXWindowPoolImpl {
     public void setup() {
         final int nativeHandle = 123;
 		when(this.displaySurfaceHandle.getNativeHandle()).thenReturn(nativeHandle);
-		when(this.displaySurfaceFactory.create(this.displaySurfaceHandle)).thenReturn(this.xWindow);
+		when(this.displaySurfaceFactory.construct(this.displaySurfaceHandle)).thenReturn(this.xWindow);
 		when(this.xWindow.getDisplaySurfaceHandle()).thenReturn(this.displaySurfaceHandle);
 	}
 
@@ -50,7 +50,7 @@ public class TestXWindowPoolImpl {
 		//then
         //it is lazily created and cached if not present
 		verify(this.displaySurfaceFactory,
-			   times(1)).create(this.displaySurfaceHandle);
+			   times(1)).construct(this.displaySurfaceHandle);
 	}
 
     @Test
@@ -59,7 +59,7 @@ public class TestXWindowPoolImpl {
         //a pool
 
         //when
-        //a windows pool presence is requested
+        //a displaySurfaces pool presence is requested
 		final boolean present0 = this.xWindowPool.isPresent(this.displaySurfaceHandle);
 		this.xWindowPool.getDisplaySurface(this.displaySurfaceHandle);
 		final boolean present1 = this.xWindowPool.isPresent(this.displaySurfaceHandle);
@@ -87,7 +87,7 @@ public class TestXWindowPoolImpl {
 										this.displaySurfaceFactory);
 
 		inOrder.verify(this.xEventPump).stop();
-		inOrder.verify(this.displaySurfaceFactory).create(this.displaySurfaceHandle);
+		inOrder.verify(this.displaySurfaceFactory).construct(this.displaySurfaceHandle);
 		inOrder.verify(this.xEventPump).start();
 	}
 }

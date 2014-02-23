@@ -117,7 +117,7 @@ public class CollectionBinding implements ViewBinding {
 		//listen for collection changes
 		registerEventListener(collectionModel);
 
-		//for each element, create a new child view & bind it to the element
+		//for each element, construct a new child view & bind it to the element
 		for(int i = 0; i < collectionModel.size(); i++) {
 			final Object childDataModel = collectionModel.get(i);
 			createCollectionElementView(childDataModel,

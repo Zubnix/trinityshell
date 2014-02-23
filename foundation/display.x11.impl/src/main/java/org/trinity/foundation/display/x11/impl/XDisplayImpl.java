@@ -163,7 +163,7 @@ public class XDisplayImpl implements Display {
 				final short override_redirect = get_window_attributes_reply.getOverride_redirect();
 				final short map_state = get_window_attributes_reply.getMap_state();
 				// Check for override redirect flag and ignore the window if
-				// it's set. Ignore unmapped windows, we'll see them as soon as
+				// it's set. Ignore unmapped displaySurfaces, we'll see them as soon as
 				// they reconfigure/map themselves
 				if ((map_state != XCB_MAP_STATE_VIEWABLE) || (override_redirect != 0)) {
 					continue;

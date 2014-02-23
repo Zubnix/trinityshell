@@ -14,7 +14,7 @@
 //import java.util.concurrent.Callable;
 //import java.util.concurrent.ExecutionException;
 //
-//import static com.google.common.util.concurrent.ListenableFutureTask.create;
+//import static com.google.common.util.concurrent.ListenableFutureTask.construct;
 //
 //public abstract class AbstractViewBuilder implements ViewBuilder {
 //
@@ -24,7 +24,7 @@
 //    @Inject
 //    private DisplaySurfacePool displaySurfacePool;
 //
-//    private final ListenableFutureTask<Object> viewFuture = create(new Callable<Object>() {
+//    private final ListenableFutureTask<Object> viewFuture = construct(new Callable<Object>() {
 //        @Override
 //        public Object call() {
 //            return createViewObject();

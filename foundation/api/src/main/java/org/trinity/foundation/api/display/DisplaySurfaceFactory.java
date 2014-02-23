@@ -23,7 +23,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 /***************************************
  * Creates {@link DisplaySurface}s based on their {@link DisplaySurfaceHandle}.
- * Multiple calls to {@link #create(DisplaySurfaceHandle)}
+ * Multiple calls to {@link #construct(DisplaySurfaceHandle)}
  * with the same {@link DisplaySurfaceHandle} arguments do not necessarily return the same
  * {@link DisplaySurface} instances.
  *
@@ -42,5 +42,5 @@ public interface DisplaySurfaceFactory {
 	 * @return a {@link DisplaySurface}.
 	 ***************************************
 	 */
-	DisplaySurface create(DisplaySurfaceHandle displaySurfaceHandle);
+	DisplaySurface construct(DisplaySurfaceHandle displaySurfaceHandle);
 }

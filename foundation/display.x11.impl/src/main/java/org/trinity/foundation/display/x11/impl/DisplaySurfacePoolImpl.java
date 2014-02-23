@@ -41,7 +41,7 @@ import java.util.Map;
 public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 
     private static final Logger LOG = LoggerFactory.getLogger(DisplaySurfacePoolImpl.class);
-    public final Map<Integer, DisplaySurface> windows = new HashMap<>();
+    public final Map<Integer, DisplaySurface> displaySurfaces = new HashMap<>();
     private final XConnection xConnection;
     private final DisplaySurfaceFactory displaySurfaceFactory;
 
@@ -56,22 +56,22 @@ public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
     public DisplaySurface getDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
 
         final int windowHash = displaySurfaceHandle.getNativeHandle().hashCode();
-        DisplaySurface window = this.windows.get(windowHash);
+        DisplaySurface window = this.displaySurfaces.get(windowHash);
         if (window == null) {
             LOG.debug(  "Xwindow={} added to cache.",
                         displaySurfaceHandle);
 
-            window = this.displaySurfaceFactory.create(displaySurfaceHandle);
+            window = this.displaySurfaceFactory.construct(displaySurfaceHandle);
             window.register(new DestroyListener(window));
-            this.windows.put(   windowHash,
-                                window);
+            this.displaySurfaces.put(windowHash,
+                    window);
         }
         return window;
     }
 
     public boolean isPresent(final DisplaySurfaceHandle displaySurfaceHandle) {
 
-        return this.windows.containsKey(displaySurfaceHandle.getNativeHandle().hashCode());
+        return this.displaySurfaces.containsKey(displaySurfaceHandle.getNativeHandle().hashCode());
     }
 
     @Override
@@ -101,7 +101,7 @@ public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
         @Subscribe
         public void destroyed(final DestroyNotify destroyNotify) {
 
-            DisplaySurfacePoolImpl.this.windows.remove(this.window.getDisplaySurfaceHandle().getNativeHandle().hashCode());
+            DisplaySurfacePoolImpl.this.displaySurfaces.remove(this.window.getDisplaySurfaceHandle().getNativeHandle().hashCode());
             this.window.unregister(this);
         }
     }
