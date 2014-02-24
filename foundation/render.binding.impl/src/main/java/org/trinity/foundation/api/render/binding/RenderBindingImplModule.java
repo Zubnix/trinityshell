@@ -22,9 +22,19 @@ package org.trinity.foundation.api.render.binding;
 
 import dagger.Module;
 
-@Module
-class RenderBindingImplModule {
+@Module(
+        injects = {
+                ViewBinder.class,
 
+                CollectionBindingFactory.class,
+                EventBindingFactory.class,
+                PropertyBindingFactory.class,
+                SignalFactory.class,
+                ViewBindingsTraverser.class
+        },
+        library = true,
+        complete = false
+)
+public final class RenderBindingImplModule {
 
-//TODO
 }

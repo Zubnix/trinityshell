@@ -51,8 +51,7 @@ public class SignalImplTest {
 	public void testFire() {
 		//given
 		//a signal with a valid slot
-        final SignalImpl signal = new SignalImpl(this.dataModelExecutor,
-									             this.eventSignalReceiver,
+        final SignalImpl signal = new SignalImpl(this.eventSignalReceiver,
 									             "onFoo");
 
 		//when
@@ -68,8 +67,7 @@ public class SignalImplTest {
 	public void testFireNoSlot() {
 		//given
 		//a signal with an invalid slot
-        final SignalImpl signal = new SignalImpl(this.dataModelExecutor,
-									             this.eventSignalReceiver,
+        final SignalImpl signal = new SignalImpl(this.eventSignalReceiver,
 									             "onBar");
 
 		//when
@@ -86,11 +84,9 @@ public class SignalImplTest {
     public void testEquals(){
         //given
         //2 signal objects with the same receiver & the same method name
-        final SignalImpl signal0 = new SignalImpl(this.dataModelExecutor,
-                                                  this.eventSignalReceiver,
+        final SignalImpl signal0 = new SignalImpl(this.eventSignalReceiver,
                                                   "onFoo");
-        final SignalImpl signal1 = new SignalImpl(this.dataModelExecutor,
-                                                  this.eventSignalReceiver,
+        final SignalImpl signal1 = new SignalImpl(this.eventSignalReceiver,
                                                   "onFoo");
 
         //when
@@ -108,11 +104,9 @@ public class SignalImplTest {
     public void testHashCode(){
         //given
         //2 signal objects with the same receiver & the same method name
-        final SignalImpl signal0 = new SignalImpl(this.dataModelExecutor,
-                                                  this.eventSignalReceiver,
+        final SignalImpl signal0 = new SignalImpl(this.eventSignalReceiver,
                                                   "onFoo");
-        final SignalImpl signal1 = new SignalImpl(this.dataModelExecutor,
-                                                  this.eventSignalReceiver,
+        final SignalImpl signal1 = new SignalImpl(this.eventSignalReceiver,
                                                   "onFoo");
 
         //when

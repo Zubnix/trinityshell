@@ -20,15 +20,14 @@
 package org.trinity.foundation.display.x11.impl;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XEventHandler;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
@@ -55,7 +54,7 @@ public final class XEventHandlers {
 
     @Inject
     XEventHandlers(final Set<XEventHandler> eventConversions,
-                   @XEventBus final Listenable xEventBus) {
+                   final XConnection xEventBus) {
 
         for (final XEventHandler eventConversion : eventConversions) {
             this.conversionMap.put(eventConversion.getEventCode(),

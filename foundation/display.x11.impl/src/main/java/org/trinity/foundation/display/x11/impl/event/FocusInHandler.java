@@ -20,16 +20,15 @@
 package org.trinity.foundation.display.x11.impl.event;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.xcb_focus_in_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.FocusGainNotify;
+import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import javax.annotation.Nonnull;
@@ -45,11 +44,11 @@ public class FocusInHandler implements XEventHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FocusInHandler.class);
 	private static final Integer EVENT_CODE = XCB_FOCUS_IN;
-	private final EventBus xEventBus;
+	private final XConnection xEventBus;
 	private final DisplaySurfacePoolImpl xWindowCache;
 
 	@Inject
-	FocusInHandler(	@XEventBus final EventBus xEventBus,
+	FocusInHandler(	final XConnection xEventBus,
 					final DisplaySurfacePoolImpl xWindowPool) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowPool;

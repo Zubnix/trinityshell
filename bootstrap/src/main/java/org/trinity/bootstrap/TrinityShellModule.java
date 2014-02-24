@@ -3,6 +3,7 @@ package org.trinity.bootstrap;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
+import org.trinity.foundation.api.render.binding.RenderBindingImplModule;
 import org.trinity.foundation.display.x11.impl.DisplayX11ImplModule;
 
 import javax.inject.Singleton;
@@ -13,7 +14,8 @@ import javax.inject.Singleton;
 				ObjectGraph.class
 		},
 		includes = {
-				DisplayX11ImplModule.class
+				DisplayX11ImplModule.class,
+                RenderBindingImplModule.class
 		},
 		complete = true,
 		library = false

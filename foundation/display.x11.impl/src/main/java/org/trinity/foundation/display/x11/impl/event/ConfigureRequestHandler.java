@@ -20,7 +20,6 @@
 package org.trinity.foundation.display.x11.impl.event;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.xcb_configure_request_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
@@ -34,7 +33,6 @@ import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import javax.annotation.Nonnull;
@@ -64,15 +62,12 @@ public class ConfigureRequestHandler implements XEventHandler {
     private static final Integer EVENT_CODE = XCB_CONFIGURE_REQUEST;
     private final XConnection xConnection;
     private final DisplaySurfacePoolImpl xWindowCache;
-    private final EventBus xEventBus;
     private final Display display;
 
     @Inject
-    ConfigureRequestHandler(@XEventBus final EventBus xEventBus,
-                            final XConnection xConnection,
+    ConfigureRequestHandler(final XConnection xConnection,
                             final DisplaySurfacePoolImpl xWindowPool,
                             final Display display) {
-        this.xEventBus = xEventBus;
         this.xConnection = xConnection;
         this.xWindowCache = xWindowPool;
         this.display = display;
@@ -85,7 +80,7 @@ public class ConfigureRequestHandler implements XEventHandler {
         LOG.debug("Received X event={}",
                 request_event.getClass().getSimpleName());
 
-        this.xEventBus.post(request_event);
+        this.xConnection.post(request_event);
 
         final int x = request_event.getX();
         final int y = request_event.getY();

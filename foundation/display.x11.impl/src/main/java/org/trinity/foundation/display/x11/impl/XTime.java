@@ -24,8 +24,7 @@ import org.freedesktop.xcb.xcb_button_press_event_t;
 import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
-import org.trinity.foundation.api.shared.Listenable;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
+import org.trinity.foundation.display.x11.api.XConnection;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
@@ -39,7 +38,7 @@ public class XTime {
     private final AtomicInteger time = new AtomicInteger();
 
     @Inject
-    XTime(@XEventBus final Listenable listenable) {
+    XTime(final XConnection listenable) {
         listenable.register(this);
     }
 

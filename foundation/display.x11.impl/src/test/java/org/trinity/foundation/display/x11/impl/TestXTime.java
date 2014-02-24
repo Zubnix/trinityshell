@@ -1,12 +1,12 @@
 package org.trinity.foundation.display.x11.impl;
 
 
-import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.xcb_button_press_event_t;
 import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
 import org.junit.Test;
+import org.trinity.foundation.display.x11.api.XConnection;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -22,8 +22,8 @@ public class TestXTime {
         //a property notify event with its own X time
         //an enter notify event with its own X time
         //an xtime object
-        final EventBus xEventBus = mock(EventBus.class);
-        final XTime xTime = new XTime();
+        final XConnection xEventBus = mock(XConnection.class);
+        final XTime xTime = new XTime(xEventBus);
 
         final xcb_button_press_event_t button_press_event = mock(xcb_button_press_event_t.class);
         final xcb_key_press_event_t key_press_event = mock(xcb_key_press_event_t.class);

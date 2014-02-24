@@ -20,6 +20,8 @@
 
 package org.trinity.foundation.api.render.binding;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.hash.HashCode;
@@ -30,32 +32,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+@AutoFactory(
+        className = "SignalFactory"
+)
 public class SignalImpl implements Signal {
 
 	private static final Logger                          LOG                 = LoggerFactory.getLogger(SignalImpl.class);
 	private static final Map<HashCode, Optional<Method>> EVENT_SLOTS_BY_HASH = new HashMap<>();
 	private static final HashFunction                    HASH_FUNCTION       = Hashing.goodFastHash(16);
 
-	private final ListeningExecutorService dataModelExecutor;
 	private final Object                   eventSignalReceiver;
 	private final Optional<Method>         slot;
 
-	@Inject
-	SignalImpl(//TODO autofactory
-			final ListeningExecutorService dataModelExecutor,
-			//TODO autofactory
-			 final Object eventSignalReceiver,
-			 //TODO autofactory
-			 final String inputSlotName) {
-		this.dataModelExecutor = dataModelExecutor;
-		this.eventSignalReceiver = eventSignalReceiver;
+	SignalImpl(@Nonnull final Object eventSignalReceiver,
+			   @Nonnull final String inputSlotName) {
+        checkNotNull(eventSignalReceiver);
+        checkNotNull(inputSlotName);
 
+		this.eventSignalReceiver = eventSignalReceiver;
 		this.slot = findSlot(this.eventSignalReceiver.getClass(),
 							 inputSlotName);
 	}

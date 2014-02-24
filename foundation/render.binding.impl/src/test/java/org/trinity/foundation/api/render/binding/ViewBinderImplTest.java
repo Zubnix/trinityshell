@@ -46,7 +46,7 @@ public class ViewBinderImplTest {
     @Mock
     private PropertyBindingFactory propertyBindingFactory;
     @InjectMocks
-    private ViewBinderImpl2 viewBinderImpl;
+    private ViewBinderImpl viewBinderImpl;
 
     @Test
     public void testBind() {

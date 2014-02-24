@@ -4,8 +4,6 @@ import ca.odell.glazedlists.DebugList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.event.ListEventListener;
 import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +52,6 @@ public class CollectionBindingTest {
 	@Mock
 	private ViewBindingMeta      viewBindingMeta;
 
-	private final ListeningExecutorService dataModelExecutor = MoreExecutors.sameThreadExecutor();
 	@Mock
 	private ObservableCollection observableCollection;
 
@@ -86,7 +83,6 @@ public class CollectionBindingTest {
 		this.collectionBinding = new CollectionBinding(this.viewBinder,
 													   this.subViewModelDelegate,
 													   this.viewBindingMeta,
-													   this.dataModelExecutor,
 													   this.observableCollection);
 	}
 

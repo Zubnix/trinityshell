@@ -20,16 +20,15 @@
 package org.trinity.foundation.display.x11.impl.event;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -43,10 +42,10 @@ public class GenericErrorHandler implements XEventHandler {
     private static final Logger LOG = LoggerFactory.getLogger(GenericErrorHandler.class);
 
     private final Integer eventCode = 0;
-    private final EventBus xEventBus;
+    private final XConnection xEventBus;
 
     @Inject
-    GenericErrorHandler(@XEventBus final EventBus xEventBus) {
+    GenericErrorHandler(final XConnection xEventBus) {
 		this.xEventBus = xEventBus;
 	}
 

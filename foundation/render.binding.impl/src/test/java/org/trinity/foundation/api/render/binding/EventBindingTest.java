@@ -1,24 +1,18 @@
 package org.trinity.foundation.api.render.binding;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
 import dagger.ObjectGraph;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.trinity.foundation.api.render.binding.view.EventSignal;
 import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
-import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 
 import java.util.LinkedList;
-import java.util.concurrent.Callable;
-
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static java.lang.Boolean.TRUE;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -34,15 +28,13 @@ public class EventBindingTest {
 	@Mock
 	private EventSignalFilter eventSignalFilter;
 	@Mock
-	private Signal            signal;
+	private SignalImpl            signal;
 	private final String signalMethodName = "onFoo";
 
 	@Mock
 	private ObjectGraph              injector;
 	@Mock
 	private SignalFactory            signalFactor;
-	@Mock
-	private ListeningExecutorService dataModelExecutor;
 	@Mock
 	private ViewBindingMeta          viewBindingMeta;
 	@Mock
@@ -52,16 +44,6 @@ public class EventBindingTest {
 
 	@Before
 	public void setUp() {
-		when(this.dataModelExecutor.submit(Matchers.<Callable>any())).thenAnswer(new Answer<Object>() {
-			@Override
-			public Object answer(final InvocationOnMock invocation) throws Throwable {
-				final Object arg0 = invocation.getArguments()[0];
-				final Callable<?> submittedCallable = (Callable<?>) arg0;
-				final Object result = submittedCallable.call();
-				return immediateFuture(result);
-			}
-		});
-
 		when(this.viewBindingMeta.resolveDataModelChain((LinkedList<DataModelProperty>) any())).thenAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(final InvocationOnMock invocation) throws Throwable {
@@ -79,7 +61,7 @@ public class EventBindingTest {
 
 		when(this.injector.get((Class) EventSignal.class)).thenReturn(this.eventSignalFilter);
 
-		when(this.signalFactor.create(this.dataModelExecutor,
+		when(this.signalFactor.create(
                 this.dataModel,
                 this.signalMethodName)).thenReturn(this.signal);
 	}

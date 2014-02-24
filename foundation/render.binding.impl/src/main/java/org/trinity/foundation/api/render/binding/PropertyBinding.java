@@ -1,5 +1,7 @@
 package org.trinity.foundation.api.render.binding;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.base.Optional;
 import dagger.ObjectGraph;
 import org.slf4j.Logger;
@@ -8,11 +10,13 @@ import org.trinity.foundation.api.render.binding.view.PropertyAdapter;
 import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocationDelegate;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedList;
 
+@AutoFactory
 public class PropertyBinding implements ViewBinding {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PropertyBinding.class);
@@ -22,13 +26,10 @@ public class PropertyBinding implements ViewBinding {
 	private final ViewBindingMeta                viewBindingMeta;
 	private final PropertySlot                   propertySlot;
 
-	@Inject
-	PropertyBinding(final ObjectGraph injector,
-					final PropertySlotInvocationDelegate propertySlotInvocationDelegate,
-					//TODO autofactory
-					final ViewBindingMeta viewBindingMeta,
-					//TODO autofactory
-					final PropertySlot propertySlot) {
+	PropertyBinding(@Provided final ObjectGraph injector,
+					@Provided final PropertySlotInvocationDelegate propertySlotInvocationDelegate,
+					@Nonnull final ViewBindingMeta viewBindingMeta,
+					@Nonnull final PropertySlot propertySlot) {
 		this.injector = injector;
 		this.propertySlotInvocationDelegate = propertySlotInvocationDelegate;
 		this.viewBindingMeta = viewBindingMeta;

@@ -20,7 +20,6 @@
 package org.trinity.foundation.display.x11.impl.event;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.xcb_configure_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
@@ -29,9 +28,9 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.GeometryNotify;
 import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import javax.annotation.Nonnull;
@@ -48,11 +47,11 @@ public class ConfigureNotifyHandler implements XEventHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(ConfigureNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_CONFIGURE_NOTIFY;
 	private final DisplaySurfacePoolImpl xWindowCache;
-	private final EventBus xEventBus;
+	private final XConnection xEventBus;
 
 	@Inject
 	ConfigureNotifyHandler(final DisplaySurfacePoolImpl xWindowCache,
-	                       @XEventBus final EventBus xEventBus) {
+                           final XConnection xEventBus) {
 		this.xEventBus = xEventBus;
 		this.xWindowCache = xWindowCache;
 	}

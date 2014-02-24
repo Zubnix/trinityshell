@@ -10,6 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.DisplaySurfaceReferencer;
+import org.trinity.foundation.display.x11.api.XConnection;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.*;
 public class TestXWindowPoolImpl {
 
     @Mock
-    private XEventPump xEventPump;
+    private XConnection xEventPump;
     @Mock
     private DisplaySurfaceFactory displaySurfaceFactory;
     @Mock

@@ -20,7 +20,6 @@
 package org.trinity.foundation.display.x11.impl.event;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_map_request_event_t;
 import org.slf4j.Logger;
@@ -32,7 +31,6 @@ import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import javax.annotation.Nonnull;
@@ -59,17 +57,15 @@ public class MapRequestHandler implements XEventHandler {
 			.putInt(CLIENT_EVENT_MASK);
 	private static final Logger LOG = LoggerFactory.getLogger(MapRequestHandler.class);
 	private static final Integer EVENT_CODE = XCB_MAP_REQUEST;
-	private final EventBus xEventBus;
+
 	private final XConnection xConnection;
 	private final DisplaySurfacePoolImpl xWindowCache;
 	private final Display display;
 
 	@Inject
-	MapRequestHandler(	@XEventBus final EventBus xEventBus,
-						final XConnection xConnection,
+	MapRequestHandler(final XConnection xConnection,
 						final DisplaySurfacePoolImpl xWindowCache,
 						final Display display) {
-		this.xEventBus = xEventBus;
 		this.xConnection = xConnection;
 		this.xWindowCache = xWindowCache;
 		this.display = display;
@@ -83,7 +79,7 @@ public class MapRequestHandler implements XEventHandler {
 		LOG.debug(	"Received X event={}",
 					map_request_event.getClass().getSimpleName());
 
-		this.xEventBus.post(map_request_event);
+		this.xConnection.post(map_request_event);
 
 		return Optional.of(new ShowRequest());
 	}

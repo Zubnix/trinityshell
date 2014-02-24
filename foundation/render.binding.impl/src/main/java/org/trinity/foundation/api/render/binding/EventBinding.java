@@ -1,45 +1,45 @@
 package org.trinity.foundation.api.render.binding;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import dagger.ObjectGraph;
 import org.trinity.foundation.api.render.binding.view.EventSignal;
 import org.trinity.foundation.api.render.binding.view.EventSignalFilter;
 import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 
-import javax.inject.Inject;
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+@AutoFactory
 public class EventBinding implements ViewBinding {
-	private final ObjectGraph              injector;
-	private final SignalFactory            signalFactory;
-	private final ListeningExecutorService dataModelExecutor;
-	private final ViewBindingMeta          viewBindingMeta;
-	private final EventSignal              eventSignal;
+    private final ObjectGraph injector;
+    private final SignalFactory signalFactory;
+    private final ViewBindingMeta viewBindingMeta;
+    private final EventSignal eventSignal;
 
-	private Optional<Signal> optionalSignal = Optional.absent();
+    private Optional<Signal> optionalSignal = Optional.absent();
 
-	@Inject
-	EventBinding(final ObjectGraph injector,
-				 final SignalFactory signalFactory,
-				 //TODO autofactory
-				 final ListeningExecutorService dataModelExecutor,
-				 //TODO autofactory
-				 final ViewBindingMeta viewBindingMeta,
-				 //TODO autofactory
-				 final EventSignal eventSignal) {
-		this.injector = injector;
-		this.signalFactory = signalFactory;
-		this.dataModelExecutor = dataModelExecutor;
-		this.viewBindingMeta = viewBindingMeta;
-		this.eventSignal = eventSignal;
-	}
+    EventBinding(@Provided final ObjectGraph injector,
+                 @Provided final SignalFactory signalFactory,
+                 @Nonnull final ViewBindingMeta viewBindingMeta,
+                 @Nonnull final EventSignal eventSignal) {
+        checkNotNull(viewBindingMeta);
+        checkNotNull(eventSignal);
 
-	@Override
-	public ViewBindingMeta getViewBindingMeta() {
-		return this.viewBindingMeta;
-	}
+        this.injector = injector;
+        this.signalFactory = signalFactory;
+        this.viewBindingMeta = viewBindingMeta;
+        this.eventSignal = eventSignal;
+    }
+
+    @Override
+    public ViewBindingMeta getViewBindingMeta() {
+        return this.viewBindingMeta;
+    }
 
     @Override
     public Collection<DataModelProperty> bind() {
@@ -70,20 +70,18 @@ public class EventBinding implements ViewBinding {
 
     private void bindEventSignal(final Object eventReceiver) {
         final EventSignalFilter eventSignalFilter = this.injector.get(this.eventSignal.filter());
-		final Signal signal = this.signalFactory.create(this.dataModelExecutor,
-                eventReceiver,
-                this.eventSignal.name());
-		this.optionalSignal = Optional.of(signal);
-		eventSignalFilter.installFilter(this.viewBindingMeta.getViewModel(),
-										signal);
-	}
+        final Signal signal = this.signalFactory.create(eventReceiver, this.eventSignal.name());
+        this.optionalSignal = Optional.of(signal);
+        eventSignalFilter.installFilter(this.viewBindingMeta.getViewModel(),
+                signal);
+    }
 
-	@Override
-	public void unbind() {
-        if(this.optionalSignal.isPresent()){
-			final EventSignalFilter eventSignalFilter = this.injector.get(this.eventSignal.filter());
-			eventSignalFilter.uninstallFilter(this.viewBindingMeta.getViewModel(),
-											  this.optionalSignal.get());
-		}
-	}
+    @Override
+    public void unbind() {
+        if (this.optionalSignal.isPresent()) {
+            final EventSignalFilter eventSignalFilter = this.injector.get(this.eventSignal.filter());
+            eventSignalFilter.uninstallFilter(this.viewBindingMeta.getViewModel(),
+                    this.optionalSignal.get());
+        }
+    }
 }

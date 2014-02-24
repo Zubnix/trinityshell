@@ -10,6 +10,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.nio.ByteBuffer;
+import java.util.concurrent.TimeoutException;
 
 import static org.freedesktop.xcb.LibXcb.xcb_connect;
 import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
@@ -76,5 +77,106 @@ public class TestXConnectionImpl {
         //the underlying connection to the X server should be closed
         verifyStatic();
         xcb_disconnect(connection);
+    }
+
+    @Test
+    public void testEventFetchHappy() {
+        //TODO
+//        //given
+//        //an X server with no errors
+//        mockStatic(LibXcb.class);
+//
+//        final xcb_generic_event_t xcb_generic_event = mock(xcb_generic_event_t.class);
+//
+//        when(xcb_connection_has_error(this.xcb_connection)).thenReturn(0);
+//
+//        when(xcb_wait_for_event(this.xcb_connection)).thenReturn(xcb_generic_event);
+//
+//        //when
+//        //an event arrives
+//        new XEventPump(this.xConnection).call();
+//
+//        //then
+//        //the event is passed on to the x event bus
+//        verify(this.xEventBus).post(xcb_generic_event);
+    }
+
+    @Test(expected = Throwable.class)
+    public void testEventFetchXError() {
+        //TODO
+//        //given
+//        //an X server with errors
+//        mockStatic(LibXcb.class);
+//        when(xcb_connection_has_error(this.xcb_connection)).thenReturn(1);
+//
+//        //when
+//        //the event pump tries to wait for an event
+//        new XEventPump(this.xConnection).call();
+//        //then
+//        //an error is thrown
+    }
+
+    @Test
+    public void testEventFetchStartStopHappy() throws InterruptedException, TimeoutException {
+        //TODO
+//        //given
+//        //an X server with no errors
+//        mockStatic(LibXcb.class);
+//
+//        final xcb_generic_event_t xcb_generic_event = mock(xcb_generic_event_t.class);
+//
+//        when(xcb_connection_has_error(this.xcb_connection)).thenReturn(0);
+//
+//        when(xcb_wait_for_event(this.xcb_connection)).thenReturn(xcb_generic_event);
+//
+//        //when
+//        //the x event pump is stopped
+//        //an event arrives
+//        final XEventPump xEventPump = new XEventPump(this.xConnection);
+//        xEventPump.stop();
+//
+//        final CountDownLatch waitForEvent = new CountDownLatch(1);
+//        //construct a new thread else we might block indefinitely.
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                xEventPump.call();
+//                waitForEvent.countDown();
+//            }
+//        }.start();
+//
+//        //then
+//        //the event is passed on to the x event bus after the x event pump is started
+//        verify(this.xEventBus,
+//                never()).post(xcb_generic_event);
+//        xEventPump.start();
+//        final boolean timeout = !waitForEvent.await(1,
+//                TimeUnit.SECONDS);
+//        if(timeout) {
+//            throw new TimeoutException("Timeout while waiting 1 second for X event to arrive.");
+//        } else {
+//            verify(this.xEventBus).post(xcb_generic_event);
+//        }
+    }
+
+    @Test(timeout = 5000,
+            expected = Throwable.class)
+    public void testEventFetchStartStopXError() {
+        //TODO
+//        //given
+//        //an X server with errors
+//        mockStatic(LibXcb.class);
+//        when(xcb_connection_has_error(this.xcb_connection)).thenReturn(1);
+//
+//        //when
+//        //the x event pump is stopped
+//        //an X server with errors
+//        //the x event pump is started
+//        final XEventPump xEventPump = new XEventPump(this.xConnection);
+//        xEventPump.stop();
+//        xEventPump.call();
+//
+//        //then
+//        //an error is thrown
     }
 }

@@ -4,6 +4,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.TreeTraverser;
 import org.trinity.foundation.api.render.binding.view.SubView;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +14,10 @@ import java.util.Map;
 public class ViewBindingsTraverser extends TreeTraverser<ViewBindingMeta> {
 
     private static final Map<Class<?>, Field[]> FIELDS_CACHE = Maps.newHashMap();
+
+    @Inject
+    ViewBindingsTraverser() {
+    }
 
     @Override
     public Iterable<ViewBindingMeta> children(final ViewBindingMeta root) {

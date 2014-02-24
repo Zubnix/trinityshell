@@ -25,7 +25,6 @@ import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.api.XConnection;
-import org.trinity.foundation.display.x11.api.bindkey.XEventBus;
 
 import javax.inject.Singleton;
 
@@ -64,7 +63,6 @@ public class DisplayX11ImplModule {
 
     @Provides
     @Singleton
-    @XEventBus
     XConnection provideXConnection(final XConnectionImpl xConnection) {
         return xConnection;
     }
