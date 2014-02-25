@@ -32,6 +32,7 @@
 
     <properties>
         <!-- dep versions -->
+        <quasar.version>0.4.0</quasar.version>
         <auto.factory.version>1.0-SNAPSHOT</auto.factory.version>
         <auto.value.version>1.0-rc1</auto.value.version>
         <dagger.version>1.2.0</dagger.version>

@@ -6,7 +6,7 @@ import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
 import org.junit.Test;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -22,7 +22,7 @@ public class TestXTime {
         //a property notify event with its own X time
         //an enter notify event with its own X time
         //an xtime object
-        final XConnection xEventBus = mock(XConnection.class);
+        final XEventChannel xEventBus = mock(XEventChannel.class);
         final XTime xTime = new XTime(xEventBus);
 
         final xcb_button_press_event_t button_press_event = mock(xcb_button_press_event_t.class);

@@ -22,7 +22,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 
 import java.lang.reflect.Method;
@@ -48,67 +48,67 @@ import static org.powermock.api.mockito.PowerMockito.verifyNoMoreInteractions;
 @PrepareForTest(LibXcb.class)
 public class TestXDisplayImpl {
 
-    @Mock
-    private SWIGTYPE_p_xcb_connection_t xcb_connection;
-    @Mock
-    private XConnection xConnection;
-    @Mock
-    private DisplaySurfacePoolImpl xWindowPool;
+	@Mock
+	private SWIGTYPE_p_xcb_connection_t xcb_connection;
+	@Mock
+	private XEventChannel               xEventChannel;
+	@Mock
+	private DisplaySurfacePoolImpl      xWindowPool;
 
-    @Before
-    public void setup() {
+	@Before
+	public void setup() {
 
-		when(this.xConnection.getConnectionReference()).thenReturn(this.xcb_connection);
+		when(this.xEventChannel.getConnectionReference()).thenReturn(this.xcb_connection);
 	}
 
-    @Test(expected = Error.class)
-    public void testXDisplayConstructionXError() throws ExecutionException, InterruptedException {
-        //given
-        //an underlying X server with errors
-        mockStatic(LibXcb.class);
+	@Test(expected = Error.class)
+	public void testXDisplayConstructionXError() throws ExecutionException, InterruptedException {
+		//given
+		//an underlying X server with errors
+		mockStatic(LibXcb.class);
 		when(xcb_connection_has_error(this.xcb_connection)).thenReturn(1);
 		//when
-        //a new XDisplay is created
-		new XDisplayImpl(this.xConnection,
+		//a new XDisplay is created
+		new XDisplayImpl(this.xEventChannel,
 						 this.xWindowPool);
 		//then
-        //the XDisplay object throws an Error
-    }
+		//the XDisplay object throws an Error
+	}
 
-    @Test
-    public void testXDisplayConstructionHappy() throws ExecutionException, InterruptedException {
-        //given
-        //an underlying X server without errors
-        //an underlying X server with a single screen
-        //an underlying X server with several clients
-        mockStatic(LibXcb.class);
+	@Test
+	public void testXDisplayConstructionHappy() throws ExecutionException, InterruptedException {
+		//given
+		//an underlying X server without errors
+		//an underlying X server with a single screen
+		//an underlying X server with several clients
+		mockStatic(LibXcb.class);
 
-        final xcb_setup_t xcb_setup = mock(xcb_setup_t.class);
-        final xcb_screen_iterator_t xcb_screen_iterator = mock(xcb_screen_iterator_t.class);
-        final xcb_screen_t xcb_screen = mock(xcb_screen_t.class);
-        final int rootWindowId = 123;
+		final xcb_setup_t xcb_setup = mock(xcb_setup_t.class);
+		final xcb_screen_iterator_t xcb_screen_iterator = mock(xcb_screen_iterator_t.class);
+		final xcb_screen_t xcb_screen = mock(xcb_screen_t.class);
+		final int rootWindowId = 123;
 
 		when(xcb_connection_has_error(this.xcb_connection)).thenReturn(0);
 		when(xcb_get_setup(this.xcb_connection)).thenReturn(xcb_setup);
 		when(xcb_setup_roots_iterator(xcb_setup)).thenReturn(xcb_screen_iterator);
-        when(xcb_screen_iterator.getData()).thenReturn(xcb_screen);
-        when(xcb_screen_iterator.getRem()).thenReturn(1,
-                                                      0);
-        when(xcb_screen.getRoot()).thenReturn(rootWindowId);
+		when(xcb_screen_iterator.getData()).thenReturn(xcb_screen);
+		when(xcb_screen_iterator.getRem()).thenReturn(1,
+													  0);
+		when(xcb_screen.getRoot()).thenReturn(rootWindowId);
 
-        final xcb_query_tree_cookie_t xcb_query_tree_cookie = mock(xcb_query_tree_cookie_t.class);
-        final xcb_query_tree_reply_t xcb_query_tree_reply = mock(xcb_query_tree_reply_t.class);
-        final ByteBuffer treeChildren = mock(ByteBuffer.class);
-        final int nroChildren = 3;
-        final int childId0 = 2;
-        final int childId1 = 4;
-        final int childId2 = 6;
+		final xcb_query_tree_cookie_t xcb_query_tree_cookie = mock(xcb_query_tree_cookie_t.class);
+		final xcb_query_tree_reply_t xcb_query_tree_reply = mock(xcb_query_tree_reply_t.class);
+		final ByteBuffer treeChildren = mock(ByteBuffer.class);
+		final int nroChildren = 3;
+		final int childId0 = 2;
+		final int childId1 = 4;
+		final int childId2 = 6;
 
 		when(xcb_query_tree(this.xcb_connection,
 							rootWindowId)).thenReturn(xcb_query_tree_cookie);
 		when(xcb_query_tree_reply(eq(this.xcb_connection),
 								  eq(xcb_query_tree_cookie),
-                (xcb_generic_error_t) any())).thenReturn(xcb_query_tree_reply);
+								  (xcb_generic_error_t) any())).thenReturn(xcb_query_tree_reply);
         when(xcb_query_tree_children(xcb_query_tree_reply)).thenReturn(treeChildren);
         when(xcb_query_tree_children_length(xcb_query_tree_reply)).thenReturn(nroChildren);
         when(treeChildren.getInt()).thenReturn(childId0,
@@ -145,7 +145,7 @@ public class TestXDisplayImpl {
         //when
         //a new XDisplay is created
         //a client is created
-		final XDisplayImpl xDisplay = new XDisplayImpl(this.xConnection,
+		final XDisplayImpl xDisplay = new XDisplayImpl(this.xEventChannel,
 													   this.xWindowPool);
 		xDisplay.post(displaySurfaceCreationNotify);
 

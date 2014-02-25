@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.ShowNotify;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
@@ -40,15 +40,15 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_MAP_NOTIFY;
 @Immutable
 public class MapNotifyHandler implements XEventHandler {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MapNotifyHandler.class);
+	private static final Logger  LOG        = LoggerFactory.getLogger(MapNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_MAP_NOTIFY;
-	private final XConnection xEventBus;
+	private final XEventChannel          xEventChannel;
 	private final DisplaySurfacePoolImpl xWindowPool;
 
 	@Inject
-	MapNotifyHandler(	final XConnection xEventBus,
-						final DisplaySurfacePoolImpl xWindowPool) {
-		this.xEventBus = xEventBus;
+	MapNotifyHandler(final XEventChannel xEventChannel,
+					 final DisplaySurfacePoolImpl xWindowPool) {
+		this.xEventChannel = xEventChannel;
 		this.xWindowPool = xWindowPool;
 	}
 
@@ -56,17 +56,17 @@ public class MapNotifyHandler implements XEventHandler {
 	public Optional<ShowNotify> handle(@Nonnull final xcb_generic_event_t event) {
 		final xcb_map_notify_event_t map_notify_event = cast(event);
 
-		LOG.debug(	"Received X event={}",
-					map_notify_event.getClass().getSimpleName());
+		LOG.debug("Received X event={}",
+				  map_notify_event.getClass().getSimpleName());
 
-		this.xEventBus.post(map_notify_event);
+		this.xEventChannel.post(map_notify_event);
 
 		return Optional.of(new ShowNotify());
 	}
 
 	public xcb_map_notify_event_t cast(final xcb_generic_event_t event) {
-		return new xcb_map_notify_event_t(	xcb_generic_event_t.getCPtr(event),
-											false);
+		return new xcb_map_notify_event_t(xcb_generic_event_t.getCPtr(event),
+										  false);
 	}
 
 	@Override

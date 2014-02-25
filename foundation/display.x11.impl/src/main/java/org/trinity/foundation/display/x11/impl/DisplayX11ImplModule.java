@@ -24,7 +24,7 @@ import dagger.Provides;
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 
 import javax.inject.Singleton;
 
@@ -36,7 +36,7 @@ import javax.inject.Singleton;
                 Display.class,
 
                 //x11 display api
-                XConnection.class,
+                XEventChannel.class,
         },
         complete = true,
         library = true
@@ -63,7 +63,7 @@ public class DisplayX11ImplModule {
 
     @Provides
     @Singleton
-    XConnection provideXConnection(final XConnectionImpl xConnection) {
+	XEventChannel provideXConnection(final XEventChannelImpl xConnection) {
         return xConnection;
     }
 }

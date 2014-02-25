@@ -24,7 +24,7 @@ import com.google.common.cache.CacheBuilder;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_intern_atom_cookie_t;
 import org.freedesktop.xcb.xcb_intern_atom_reply_t;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
@@ -42,45 +42,46 @@ import static org.freedesktop.xcb.LibXcb.xcb_intern_atom_reply;
 @NotThreadSafe
 public class XAtomCache {
 
-	private final Map<Integer, String> atomNameCodes = new HashMap<>();
+	private final Map<Integer, String>   atomNameCodes = new HashMap<>();
 	private final Cache<String, Integer> atomCodeNames = CacheBuilder.newBuilder().concurrencyLevel(1).build();
-	private final XConnection xConnection;
+	private final XEventChannel xEventChannel;
 
 	@Inject
-	XAtomCache(final XConnection xConnection) {
-		this.xConnection = xConnection;
+	XAtomCache(final XEventChannel xEventChannel) {
+		this.xEventChannel = xEventChannel;
 	}
 
 	public int getAtom(final String atomName) {
 
 		try {
-			return this.atomCodeNames.get(	atomName,
-											new Callable<Integer>() {
-												@Override
-												public Integer call() {
-													final Integer atomId = internAtom(atomName);
-													XAtomCache.this.atomNameCodes.put(	atomId,
-																						atomName);
-													return atomId;
-												}
-											});
-		} catch (final ExecutionException e) {
+			return this.atomCodeNames.get(atomName,
+										  new Callable<Integer>() {
+											  @Override
+											  public Integer call() {
+												  final Integer atomId = internAtom(atomName);
+												  XAtomCache.this.atomNameCodes.put(atomId,
+																					atomName);
+												  return atomId;
+											  }
+										  });
+		}
+		catch(final ExecutionException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	private Integer internAtom(final String atomName) {
-		final xcb_intern_atom_cookie_t cookie_t = xcb_intern_atom(	XAtomCache.this.xConnection
-																			.getConnectionReference(),
-																	(short) 0,
-																	atomName.length(),
-																	atomName);
+		final xcb_intern_atom_cookie_t cookie_t = xcb_intern_atom(XAtomCache.this.xEventChannel
+																		  .getConnectionReference(),
+																  (short) 0,
+																  atomName.length(),
+																  atomName);
 
 		final xcb_generic_error_t e = new xcb_generic_error_t();
-		final xcb_intern_atom_reply_t reply_t = xcb_intern_atom_reply(	this.xConnection.getConnectionReference(),
-																		cookie_t,
-																		e);
-		if (xcb_generic_error_t.getCPtr(e) != 0) {
+		final xcb_intern_atom_reply_t reply_t = xcb_intern_atom_reply(this.xEventChannel.getConnectionReference(),
+																	  cookie_t,
+																	  e);
+		if(xcb_generic_error_t.getCPtr(e) != 0) {
 			throw new RuntimeException("xcb error");
 		}
 		return reply_t.getAtom();
@@ -89,9 +90,9 @@ public class XAtomCache {
 	public String getAtomName(final int atomId) {
 
 		final String atomName = this.atomNameCodes.get(atomId);
-		if (atomName == null) {
-			throw new NullPointerException(format(	"Atom with id %d was not interned.",
-													atomId));
+		if(atomName == null) {
+			throw new NullPointerException(format("Atom with id %d was not interned.",
+												  atomId));
 		}
 		return atomName;
 	}

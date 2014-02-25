@@ -32,7 +32,7 @@ import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.ListenableEventBus;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
 import javax.annotation.Nonnull;
@@ -76,17 +76,17 @@ public class XWindow implements DisplaySurface {
 																					 .putInt(XCB_STACK_MODE_ABOVE);
 	private static final int        MOVE_VALUE_MASK               = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
 	private final DisplaySurfaceHandle resourceHandle;
-	private final XConnection          xConnection;
+	private final XEventChannel        xEventChannel;
 	private final XTime                xTime;
 	private final ListenableEventBus   xWindowEventBus;
 
 	XWindow(@Provided final XTime xTime,
-			@Provided final XConnection xConnection,
+			@Provided final XEventChannel xEventChannel,
 			@Nonnull final DisplaySurfaceHandle resourceHandle) {
 		checkNotNull(resourceHandle);
 
 		this.xTime = xTime;
-		this.xConnection = xConnection;
+		this.xEventChannel = xEventChannel;
 		this.resourceHandle = resourceHandle;
 		this.xWindowEventBus = new ListenableEventBus();
 	}
@@ -126,7 +126,7 @@ public class XWindow implements DisplaySurface {
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-		return this.xConnection.getConnectionReference();
+		return this.xEventChannel.getConnectionReference();
 	}
 
 	@Override

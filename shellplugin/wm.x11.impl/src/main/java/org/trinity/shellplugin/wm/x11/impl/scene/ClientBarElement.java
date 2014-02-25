@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shellplugin.wm.api.HasText;
 import org.trinity.shellplugin.wm.api.ReceivesPointerInput;
@@ -53,7 +53,7 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_CURRENT_TIME;
 public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ClientBarElement.class);
-	private final WmName wmName;
+	private final WmName      wmName;
 	private final WmProtocols wmProtocols;
 	private final ReceivesPointerInput closeButton = new ReceivesPointerInput() {
 		// called by shell executor.
@@ -62,22 +62,22 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 			handleClientCloseRequest();
 		}
 	};
-	private final XConnection xConnection;
-	private final int wmDeleteWindowAtomId;
-	private final int wmProtocolsAtomId;
-	private DisplaySurface clientXWindow;
+	private final XEventChannel  xEventChannel;
+	private final int            wmDeleteWindowAtomId;
+	private final int            wmProtocolsAtomId;
+	private       DisplaySurface clientXWindow;
 	private String clientName = "I rock!";
 	private boolean canSendWmDeleteMsg;
 
 	@Inject
 	ClientBarElement(
-						final XConnection xConnection,
-						final WmName wmName,
-						final WmProtocols wmProtocols,
-						final XAtomCache xAtomCache,
-						//TODO autofactory
-						final ShellSurface client) {
-		this.xConnection = xConnection;
+			final XEventChannel xEventChannel,
+			final WmName wmName,
+			final WmProtocols wmProtocols,
+			final XAtomCache xAtomCache,
+			//TODO autofactory
+			final ShellSurface client) {
+		this.xEventChannel = xEventChannel;
 		this.wmName = wmName;
 		this.wmProtocols = wmProtocols;
 
@@ -104,37 +104,38 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 		queryClientName(clientXWindow);
 
 		// client close request handling
-		this.wmProtocols.addProtocolListener(	clientXWindow,
-												new ProtocolListener<xcb_icccm_get_wm_protocols_reply_t>() {
-													@Override
-													@Subscribe
-													public void onProtocolChanged(final Optional<xcb_icccm_get_wm_protocols_reply_t> protocol) {
-														updateCanSendWmDeleteMsg(protocol);
-													}
-												});
+		this.wmProtocols.addProtocolListener(clientXWindow,
+											 new ProtocolListener<xcb_icccm_get_wm_protocols_reply_t>() {
+												 @Override
+												 @Subscribe
+												 public void onProtocolChanged(final Optional<xcb_icccm_get_wm_protocols_reply_t> protocol) {
+													 updateCanSendWmDeleteMsg(protocol);
+												 }
+											 });
 		queryCanSendWmDeleteMsg(clientXWindow);
 	}
 
 	private void queryCanSendWmDeleteMsg(final DisplaySurface clientXWindow) {
 		final Optional<xcb_icccm_get_wm_protocols_reply_t> wmProtocol = this.wmProtocols
 				.get(clientXWindow);
-							updateCanSendWmDeleteMsg(wmProtocol);
+		updateCanSendWmDeleteMsg(wmProtocol);
 	}
 
 	private void updateCanSendWmDeleteMsg(final Optional<xcb_icccm_get_wm_protocols_reply_t> optionalWmProtocolReply) {
-		if (optionalWmProtocolReply.isPresent()) {
+		if(optionalWmProtocolReply.isPresent()) {
 			final xcb_icccm_get_wm_protocols_reply_t wm_protocols_reply = optionalWmProtocolReply.get();
 			final IntBuffer wmProtocolsBuffer = wm_protocols_reply.getAtoms().order(ByteOrder.nativeOrder())
-					.asIntBuffer();
+																  .asIntBuffer();
 			int nroWmProtocols = wm_protocols_reply.getAtoms_len();
-			while (nroWmProtocols > 0) {
+			while(nroWmProtocols > 0) {
 				this.canSendWmDeleteMsg = wmProtocolsBuffer.get() == this.wmDeleteWindowAtomId;
-				if (this.canSendWmDeleteMsg) {
+				if(this.canSendWmDeleteMsg) {
 					break;
 				}
 				nroWmProtocols--;
 			}
-		} else {
+		}
+		else {
 			this.canSendWmDeleteMsg = false;
 		}
 	}
@@ -188,12 +189,12 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 		final xcb_generic_event_t generic_event = new xcb_generic_event_t(	xcb_client_message_event_t.getCPtr(client_message_event),
 																			false);
-        xcb_send_event(this.xConnection.getConnectionReference(),
+        xcb_send_event(this.xEventChannel.getConnectionReference(),
                        (short) 0,
 						winId,
 						xcb_event_mask_t.XCB_EVENT_MASK_NO_EVENT,
 						generic_event);
-        xcb_flush(this.xConnection.getConnectionReference());
+        xcb_flush(this.xEventChannel.getConnectionReference());
     }
 
 	@Override

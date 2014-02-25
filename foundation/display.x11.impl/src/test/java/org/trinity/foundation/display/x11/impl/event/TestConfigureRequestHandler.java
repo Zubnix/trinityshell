@@ -23,7 +23,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.GeometryRequest;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
@@ -46,67 +46,67 @@ import static org.powermock.api.mockito.PowerMockito.when;
                  LibXcbJNI.class})
 public class TestConfigureRequestHandler {
 
-    @Mock
-    private EventBus xEventBus;
-    @Mock
-    private XConnection xConnection;
-    @Mock
-    private DisplaySurfacePoolImpl xWindowPool;
-    @Mock
-    private Display display;
-    @InjectMocks
-    private ConfigureRequestHandler configureRequestHandler;
+	@Mock
+	private EventBus                xEventBus;
+	@Mock
+	private XEventChannel           xEventChannel;
+	@Mock
+	private DisplaySurfacePoolImpl  xWindowPool;
+	@Mock
+	private Display                 display;
+	@InjectMocks
+	private ConfigureRequestHandler configureRequestHandler;
 
-    @Mock
-    private xcb_generic_event_t xcb_generic_event;
-    @Mock
-    private SWIGTYPE_p_xcb_connection_t xcb_connection;
+	@Mock
+	private xcb_generic_event_t         xcb_generic_event;
+	@Mock
+	private SWIGTYPE_p_xcb_connection_t xcb_connection;
 
-    private final int targetWindowId = 123;
+	private final int targetWindowId = 123;
 
-    @Before
-    public void setup() {
-        when(xConnection.getConnectionReference()).thenReturn(xcb_connection);
-    }
+	@Before
+	public void setup() {
+		when(xEventChannel.getConnectionReference()).thenReturn(xcb_connection);
+	}
 
-    @Test
-    public void testEventHandling() {
-        //given
-        //a ConfigureRequestHandler
-        //an xcb_generic_event_t
-        mockStatic(LibXcbJNI.class);
-        mockStatic(LibXcb.class);
+	@Test
+	public void testEventHandling() {
+		//given
+		//a ConfigureRequestHandler
+		//an xcb_generic_event_t
+		mockStatic(LibXcbJNI.class);
+		mockStatic(LibXcb.class);
 
-        final Short x = 5;
-        final Short y = 10;
-        final Integer width = 15;
-        final Integer height = 30;
-        final Integer border = 3;
+		final Short x = 5;
+		final Short y = 10;
+		final Integer width = 15;
+		final Integer height = 30;
+		final Integer border = 3;
 
-        final int valueMask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH;
+		final int valueMask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH;
 
-        when(xcb_configure_request_event_t_x_get(anyLong(),
-                                                 (xcb_configure_request_event_t) any())).thenReturn(x);
-        when(xcb_configure_request_event_t_y_get(anyLong(),
-                                                 (xcb_configure_request_event_t) any())).thenReturn(y);
-        when(xcb_configure_request_event_t_width_get(anyLong(),
-                                                     (xcb_configure_request_event_t) any())).thenReturn(width);
-        when(xcb_configure_request_event_t_height_get(anyLong(),
-                                                      (xcb_configure_request_event_t) any())).thenReturn(height);
-        when(xcb_configure_request_event_t_border_width_get(anyLong(),
-                                                            (xcb_configure_request_event_t) any())).thenReturn(border);
-        when(xcb_configure_request_event_t_value_mask_get(anyLong(),
-                                                          (xcb_configure_request_event_t) any())).thenReturn(valueMask);
+		when(xcb_configure_request_event_t_x_get(anyLong(),
+												 (xcb_configure_request_event_t) any())).thenReturn(x);
+		when(xcb_configure_request_event_t_y_get(anyLong(),
+												 (xcb_configure_request_event_t) any())).thenReturn(y);
+		when(xcb_configure_request_event_t_width_get(anyLong(),
+													 (xcb_configure_request_event_t) any())).thenReturn(width);
+		when(xcb_configure_request_event_t_height_get(anyLong(),
+													  (xcb_configure_request_event_t) any())).thenReturn(height);
+		when(xcb_configure_request_event_t_border_width_get(anyLong(),
+															(xcb_configure_request_event_t) any())).thenReturn(border);
+		when(xcb_configure_request_event_t_value_mask_get(anyLong(),
+														  (xcb_configure_request_event_t) any())).thenReturn(valueMask);
 
-        //when
-        //an xcb_generic_event_t event arrives
-        final Optional<GeometryRequest> geometryRequestOptional = this.configureRequestHandler.handle(this.xcb_generic_event);
+		//when
+		//an xcb_generic_event_t event arrives
+		final Optional<GeometryRequest> geometryRequestOptional = this.configureRequestHandler.handle(this.xcb_generic_event);
 
-        //then
-        //the xcb_configure_notify_event_t is posted on the x event bus
-        //the event is converted to a GeometryRequest
+		//then
+		//the xcb_configure_notify_event_t is posted on the x event bus
+		//the event is converted to a GeometryRequest
 
-        verify(xEventBus).post(isA(xcb_configure_request_event_t.class));
+		verify(xEventBus).post(isA(xcb_configure_request_event_t.class));
         assertTrue(geometryRequestOptional.isPresent());
         assertEquals(x,
                      geometryRequestOptional.get().getGeometry().getPosition().getX());

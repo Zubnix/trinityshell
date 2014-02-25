@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.StackingChangedNotify;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
@@ -34,22 +34,21 @@ import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CIRCULATE_NOTIFY;
 
 @Immutable
 public class CirculateNotifyHandler implements XEventHandler {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CirculateNotifyHandler.class);
+	private static final Logger  LOG        = LoggerFactory.getLogger(CirculateNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_CIRCULATE_NOTIFY;
-	private final XConnection xEventBus;
+	private final XEventChannel          xEventChannel;
 	private final DisplaySurfacePoolImpl xWindowCache;
 
 	@Inject
-	CirculateNotifyHandler(	final XConnection xEventBus,
-							final DisplaySurfacePoolImpl xWindowCache) {
-		this.xEventBus = xEventBus;
+	CirculateNotifyHandler(final XEventChannel xEventChannel,
+						   final DisplaySurfacePoolImpl xWindowCache) {
+		this.xEventChannel = xEventChannel;
 		this.xWindowCache = xWindowCache;
 	}
 
@@ -58,10 +57,10 @@ public class CirculateNotifyHandler implements XEventHandler {
 
 		final xcb_circulate_notify_event_t circulate_notify_event = cast(event_t);
 		// TODO logging
-		LOG.debug(	"Received X event={}",
-					circulate_notify_event.getClass().getSimpleName());
+		LOG.debug("Received X event={}",
+				  circulate_notify_event.getClass().getSimpleName());
 
-		this.xEventBus.post(circulate_notify_event);
+		this.xEventChannel.post(circulate_notify_event);
 
 		return Optional.of(new StackingChangedNotify());
 	}

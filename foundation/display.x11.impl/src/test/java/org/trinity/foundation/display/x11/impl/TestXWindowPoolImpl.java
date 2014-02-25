@@ -10,7 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.DisplaySurfaceReferencer;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -19,37 +19,37 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class TestXWindowPoolImpl {
 
-    @Mock
-    private XConnection xEventPump;
-    @Mock
-    private DisplaySurfaceFactory displaySurfaceFactory;
-    @Mock
-    private XWindow xWindow;
-    @Mock
-    private DisplaySurfaceHandle displaySurfaceHandle;
-    @InjectMocks
-    private DisplaySurfacePoolImpl xWindowPool;
+	@Mock
+	private XEventChannel          xEventPump;
+	@Mock
+	private DisplaySurfaceFactory  displaySurfaceFactory;
+	@Mock
+	private XWindow                xWindow;
+	@Mock
+	private DisplaySurfaceHandle   displaySurfaceHandle;
+	@InjectMocks
+	private DisplaySurfacePoolImpl xWindowPool;
 
-    @Before
-    public void setup() {
-        final int nativeHandle = 123;
+	@Before
+	public void setup() {
+		final int nativeHandle = 123;
 		when(this.displaySurfaceHandle.getNativeHandle()).thenReturn(nativeHandle);
 		when(this.displaySurfaceFactory.construct(this.displaySurfaceHandle)).thenReturn(this.xWindow);
 		when(this.xWindow.getDisplaySurfaceHandle()).thenReturn(this.displaySurfaceHandle);
 	}
 
-    @Test
-    public void testLazyPooling() {
-        //given
-        //a pool
+	@Test
+	public void testLazyPooling() {
+		//given
+		//a pool
 
-        //when
-        //a window is requested more than once
+		//when
+		//a window is requested more than once
 		this.xWindowPool.getDisplaySurface(this.displaySurfaceHandle);
 		this.xWindowPool.getDisplaySurface(this.displaySurfaceHandle);
 
 		//then
-        //it is lazily created and cached if not present
+		//it is lazily created and cached if not present
 		verify(this.displaySurfaceFactory,
 			   times(1)).construct(this.displaySurfaceHandle);
 	}

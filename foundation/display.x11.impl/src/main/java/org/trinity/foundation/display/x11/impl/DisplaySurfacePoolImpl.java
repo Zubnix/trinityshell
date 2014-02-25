@@ -28,7 +28,7 @@ import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.api.display.DisplaySurfaceReferencer;
 import org.trinity.foundation.api.display.event.DestroyNotify;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
@@ -40,68 +40,68 @@ import java.util.Map;
 @NotThreadSafe
 public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DisplaySurfacePoolImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DisplaySurfacePoolImpl.class);
 
-    private final Map<Integer, DisplaySurface> displaySurfaces = new HashMap<>();
-    private final XConnection xConnection;
-    private final DisplaySurfaceFactory displaySurfaceFactory;
+	private final Map<Integer, DisplaySurface> displaySurfaces = new HashMap<>();
+	private final XEventChannel         xEventChannel;
+	private final DisplaySurfaceFactory displaySurfaceFactory;
 
-    @Inject
-    DisplaySurfacePoolImpl(final XConnection xConnection,
-                           final DisplaySurfaceFactory displaySurfaceFactory) {
-        this.xConnection = xConnection;
-        this.displaySurfaceFactory = displaySurfaceFactory;
-    }
+	@Inject
+	DisplaySurfacePoolImpl(final XEventChannel xEventChannel,
+						   final DisplaySurfaceFactory displaySurfaceFactory) {
+		this.xEventChannel = xEventChannel;
+		this.displaySurfaceFactory = displaySurfaceFactory;
+	}
 
-    @Override
-    public DisplaySurface getDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
+	@Override
+	public DisplaySurface getDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
 
-        final int windowHash = displaySurfaceHandle.getNativeHandle().hashCode();
-        DisplaySurface window = this.displaySurfaces.get(windowHash);
-        if (window == null) {
-            LOG.debug("Xwindow={} added to cache.",
-                    displaySurfaceHandle);
+		final int windowHash = displaySurfaceHandle.getNativeHandle().hashCode();
+		DisplaySurface window = this.displaySurfaces.get(windowHash);
+		if(window == null) {
+			LOG.debug("Xwindow={} added to cache.",
+					  displaySurfaceHandle);
 
-            window = this.displaySurfaceFactory.construct(displaySurfaceHandle);
-            window.register(new DestroyListener(window));
-            this.displaySurfaces.put(windowHash,
-                    window);
-        }
-        return window;
-    }
+			window = this.displaySurfaceFactory.construct(displaySurfaceHandle);
+			window.register(new DestroyListener(window));
+			this.displaySurfaces.put(windowHash,
+									 window);
+		}
+		return window;
+	}
 
-    @Override
-    public Boolean isPresent(final DisplaySurfaceHandle displaySurfaceHandle) {
+	@Override
+	public Boolean isPresent(final DisplaySurfaceHandle displaySurfaceHandle) {
 
-        return this.displaySurfaces.containsKey(displaySurfaceHandle.getNativeHandle().hashCode());
-    }
+		return this.displaySurfaces.containsKey(displaySurfaceHandle.getNativeHandle().hashCode());
+	}
 
-    @Override
-    public DisplaySurfaceReferencer getDisplaySurfaceCreator() {
-        this.xConnection.stop();
+	@Override
+	public DisplaySurfaceReferencer getDisplaySurfaceCreator() {
+		this.xEventChannel.stop();
 
-        return new DisplaySurfaceReferencer() {
-            @Override
-            public DisplaySurface reference(final DisplaySurfaceHandle displaySurfaceHandle) {
-                return getDisplaySurface(displaySurfaceHandle);
-            }
+		return new DisplaySurfaceReferencer() {
+			@Override
+			public DisplaySurface reference(final DisplaySurfaceHandle displaySurfaceHandle) {
+				return getDisplaySurface(displaySurfaceHandle);
+			}
 
-            @Override
-            public void close() {
-                DisplaySurfacePoolImpl.this.xConnection.start();
-            }
-        };
-    }
+			@Override
+			public void close() {
+				DisplaySurfacePoolImpl.this.xEventChannel.start();
+			}
+		};
+	}
 
-    private class DestroyListener {
-        private final DisplaySurface window;
+	private class DestroyListener {
+		private final DisplaySurface window;
 
-        public DestroyListener(final DisplaySurface window) {
-            this.window = window;
-        }
+		public DestroyListener(final DisplaySurface window) {
+			this.window = window;
+		}
 
-        @Subscribe
-        public void destroyed(final DestroyNotify destroyNotify) {
+		@Subscribe
+		public void destroyed(final DestroyNotify destroyNotify) {
 
             DisplaySurfacePoolImpl.this.displaySurfaces.remove(this.window.getDisplaySurfaceHandle().getNativeHandle().hashCode());
             this.window.unregister(this);

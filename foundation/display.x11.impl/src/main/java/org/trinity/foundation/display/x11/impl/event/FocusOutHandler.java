@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.FocusLostNotify;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
@@ -40,15 +40,15 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_FOCUS_OUT;
 @Immutable
 public class FocusOutHandler implements XEventHandler {
 
-	private static final Logger LOG = LoggerFactory.getLogger(FocusOutHandler.class);
+	private static final Logger  LOG        = LoggerFactory.getLogger(FocusOutHandler.class);
 	private static final Integer EVENT_CODE = XCB_FOCUS_OUT;
-	private final XConnection xEventBus;
+	private final XEventChannel          xEventChannel;
 	private final DisplaySurfacePoolImpl xWindowCache;
 
 	@Inject
-	FocusOutHandler(final XConnection xEventBus,
+	FocusOutHandler(final XEventChannel xEventChannel,
 					final DisplaySurfacePoolImpl xWindowCache) {
-		this.xEventBus = xEventBus;
+		this.xEventChannel = xEventChannel;
 		this.xWindowCache = xWindowCache;
 	}
 
@@ -57,10 +57,10 @@ public class FocusOutHandler implements XEventHandler {
 		// focus in structure is the same as focus out.
 		final xcb_focus_in_event_t focus_out_event = cast(event_t);
 
-		LOG.debug(	"Received X event={}",
-					focus_out_event.getClass().getSimpleName());
+		LOG.debug("Received X event={}",
+				  focus_out_event.getClass().getSimpleName());
 
-		this.xEventBus.post(focus_out_event);
+		this.xEventChannel.post(focus_out_event);
 
 		return Optional.of(new FocusLostNotify());
 	}

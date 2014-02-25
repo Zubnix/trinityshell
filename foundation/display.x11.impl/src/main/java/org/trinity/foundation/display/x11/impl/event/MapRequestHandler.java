@@ -29,7 +29,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.ShowRequest;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
@@ -50,22 +50,22 @@ import static org.freedesktop.xcb.xcb_event_mask_t.*;
 @Immutable
 public class MapRequestHandler implements XEventHandler {
 
-	private static final int CLIENT_EVENT_MASK = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
+	private static final int        CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
 			| XCB_EVENT_MASK_STRUCTURE_NOTIFY;
 	private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
-			.putInt(CLIENT_EVENT_MASK);
-	private static final Logger LOG = LoggerFactory.getLogger(MapRequestHandler.class);
-	private static final Integer EVENT_CODE = XCB_MAP_REQUEST;
+																				   .putInt(CLIENT_EVENT_MASK);
+	private static final Logger     LOG                         = LoggerFactory.getLogger(MapRequestHandler.class);
+	private static final Integer    EVENT_CODE                  = XCB_MAP_REQUEST;
 
-	private final XConnection xConnection;
+	private final XEventChannel          xEventChannel;
 	private final DisplaySurfacePoolImpl xWindowCache;
-	private final Display display;
+	private final Display                display;
 
 	@Inject
-	MapRequestHandler(final XConnection xConnection,
-						final DisplaySurfacePoolImpl xWindowCache,
-						final Display display) {
-		this.xConnection = xConnection;
+	MapRequestHandler(final XEventChannel xEventChannel,
+					  final DisplaySurfacePoolImpl xWindowCache,
+					  final Display display) {
+		this.xEventChannel = xEventChannel;
 		this.xWindowCache = xWindowCache;
 		this.display = display;
 	}
@@ -75,17 +75,17 @@ public class MapRequestHandler implements XEventHandler {
 
 		final xcb_map_request_event_t map_request_event = cast(event);
 
-		LOG.debug(	"Received X event={}",
-					map_request_event.getClass().getSimpleName());
+		LOG.debug("Received X event={}",
+				  map_request_event.getClass().getSimpleName());
 
-		this.xConnection.post(map_request_event);
+		this.xEventChannel.post(map_request_event);
 
 		return Optional.of(new ShowRequest());
 	}
 
 	private xcb_map_request_event_t cast(final xcb_generic_event_t event) {
-		return new xcb_map_request_event_t(	xcb_generic_event_t.getCPtr(event),
-											false);
+		return new xcb_map_request_event_t(xcb_generic_event_t.getCPtr(event),
+										   false);
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class MapRequestHandler implements XEventHandler {
 		final DisplaySurfaceHandle xWindowHandle = XWindowHandle.create(windowId);
 		final boolean present = this.xWindowCache.isPresent(xWindowHandle);
 		final DisplaySurface displayEventTarget = this.xWindowCache.getDisplaySurface(xWindowHandle);
-		if (!present) {
+		if(!present) {
 			configureClientEvents(displayEventTarget);
 			// this is a bit of a dirty hack to work around X's model of client
 			// discovery.
@@ -108,14 +108,14 @@ public class MapRequestHandler implements XEventHandler {
 	private void configureClientEvents(final DisplaySurface window) {
 		final int winId = (Integer) window.getDisplaySurfaceHandle().getNativeHandle();
 
-		LOG.debug(	"[winId={}] configure client evens.",
-					winId);
+		LOG.debug("[winId={}] configure client evens.",
+				  winId);
 
-		xcb_change_window_attributes(	this.xConnection.getConnectionReference(),
-										winId,
-										XCB_CW_EVENT_MASK,
-										CLIENT_EVENTS_CONFIG_BUFFER);
-		xcb_flush(this.xConnection.getConnectionReference());
+		xcb_change_window_attributes(this.xEventChannel.getConnectionReference(),
+									 winId,
+									 XCB_CW_EVENT_MASK,
+									 CLIENT_EVENTS_CONFIG_BUFFER);
+		xcb_flush(this.xEventChannel.getConnectionReference());
 	}
 
 	@Override

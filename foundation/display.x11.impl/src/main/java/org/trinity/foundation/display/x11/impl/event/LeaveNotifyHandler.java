@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.PointerLeaveNotify;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
@@ -40,15 +40,15 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_LEAVE_NOTIFY;
 @Immutable
 public class LeaveNotifyHandler implements XEventHandler {
 
-	private static final Logger LOG = LoggerFactory.getLogger(LeaveNotifyHandler.class);
+	private static final Logger  LOG        = LoggerFactory.getLogger(LeaveNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_LEAVE_NOTIFY;
-	private final XConnection xEventBus;
+	private final XEventChannel          xEventChannel;
 	private final DisplaySurfacePoolImpl xWindowPool;
 
 	@Inject
-	LeaveNotifyHandler(	final XConnection xEventBus,
-						final DisplaySurfacePoolImpl xWindowPool) {
-		this.xEventBus = xEventBus;
+	LeaveNotifyHandler(final XEventChannel xEventChannel,
+					   final DisplaySurfacePoolImpl xWindowPool) {
+		this.xEventChannel = xEventChannel;
 		this.xWindowPool = xWindowPool;
 	}
 
@@ -57,10 +57,10 @@ public class LeaveNotifyHandler implements XEventHandler {
 		// enter has same structure as leave
 		final xcb_enter_notify_event_t enter_notify_event = cast(event);
 
-		LOG.debug(	"Received X event={}",
-					enter_notify_event.getClass().getSimpleName());
+		LOG.debug("Received X event={}",
+				  enter_notify_event.getClass().getSimpleName());
 
-		this.xEventBus.post(enter_notify_event);
+		this.xEventChannel.post(enter_notify_event);
 
 		return Optional.of(new PointerLeaveNotify());
 	}

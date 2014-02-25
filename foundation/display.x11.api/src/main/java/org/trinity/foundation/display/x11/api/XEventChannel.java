@@ -23,15 +23,13 @@ package org.trinity.foundation.display.x11.api;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.trinity.foundation.api.shared.Listenable;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 /**
  * A connection to an X display server.
  */
 @NotThreadSafe
-public interface XConnection extends Listenable {
+public interface XEventChannel extends Listenable {
     /**
      * The XCB connection reference. The optional reference will be absent if no
      * connection is present.
@@ -39,9 +37,6 @@ public interface XConnection extends Listenable {
      * @return The underlying native X connection.
      */
     SWIGTYPE_p_xcb_connection_t getConnectionReference();
-
-    void open(@Nonnull String display,
-              @Nonnegative Integer screen);
 
     /**
      * Close the connection to the underlying X display server.

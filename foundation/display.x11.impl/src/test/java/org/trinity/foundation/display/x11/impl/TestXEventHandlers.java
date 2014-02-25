@@ -6,7 +6,7 @@ import org.freedesktop.xcb.xcb_generic_event_t;
 import org.junit.Test;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.Listenable;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 
 import java.util.HashSet;
@@ -36,7 +36,7 @@ public class TestXEventHandlers {
         when(xEventHandler1.getTarget(xcb_generic_event_0)).thenReturn((Optional) Optional.of(target));
         when(xEventHandler1.handle(xcb_generic_event_0)).thenReturn((Optional) Optional.of(displayEvent));
 
-        final XConnection eventBus = mock(XConnection.class);
+        final XEventChannel eventBus = mock(XEventChannel.class);
 
         final XEventHandlers xEventHandlers = new XEventHandlers(new HashSet() {{add(xEventHandler0); add(xEventHandler1);}},
                                                            eventBus);

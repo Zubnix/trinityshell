@@ -27,7 +27,7 @@ import org.freedesktop.xcb.xcb_icccm_get_text_property_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 
 import javax.annotation.concurrent.ThreadSafe;
@@ -42,38 +42,38 @@ import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
 public class WmName extends AbstractCachedProtocol<xcb_icccm_get_text_property_reply_t> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WmName.class);
-	private final XConnection xConnection;
+	private final XEventChannel xEventChannel;
 
 	@Inject
-	WmName(	final XConnection xConnection,
-			final XAtomCache xAtomCache
-			) {
+	WmName(final XEventChannel xEventChannel,
+		   final XAtomCache xAtomCache
+		  ) {
 		super(
 				xAtomCache,
 				"WM_NAME");
 
-		this.xConnection = xConnection;
+		this.xEventChannel = xEventChannel;
 	}
 
 	@Override
 	protected Optional<xcb_icccm_get_text_property_reply_t> queryProtocol(final DisplaySurface xWindow) {
 		final int window = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
-		final xcb_get_property_cookie_t get_property_cookie = xcb_icccm_get_wm_name(this.xConnection
+		final xcb_get_property_cookie_t get_property_cookie = xcb_icccm_get_wm_name(this.xEventChannel
 																							.getConnectionReference(),
 																					window);
 		final xcb_generic_error_t e = new xcb_generic_error_t();
 		final xcb_icccm_get_text_property_reply_t prop = new xcb_icccm_get_text_property_reply_t();
 
-        final short stat = xcb_icccm_get_wm_name_reply(	WmName.this.xConnection.getConnectionReference(),
-                get_property_cookie,
-                prop,
-                e);
-        if (stat == 0) {
-            LOG.error(	"Error retrieving wm_name reply from client={}",
-                    window);
-            return Optional.absent();
-        }
+		final short stat = xcb_icccm_get_wm_name_reply(WmName.this.xEventChannel.getConnectionReference(),
+													   get_property_cookie,
+													   prop,
+													   e);
+		if(stat == 0) {
+			LOG.error("Error retrieving wm_name reply from client={}",
+					  window);
+			return Optional.absent();
+		}
 
-        return Optional.of(prop);
+		return Optional.of(prop);
 	}
 }

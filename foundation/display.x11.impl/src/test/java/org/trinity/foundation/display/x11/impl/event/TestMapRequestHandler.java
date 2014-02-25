@@ -23,7 +23,7 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.ShowRequest;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
@@ -50,81 +50,81 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({LibXcb.class,
         LibXcbJNI.class})
 public class TestMapRequestHandler {
-    @Mock
-    private EventBus xEventBus;
-    @Mock
-    private XConnection xConnection;
-    @Mock
-    private DisplaySurfacePoolImpl xWindowPool;
-    @Mock
-    private Display display;
-    @InjectMocks
-    private MapRequestHandler mapRequestHandler;
+	@Mock
+	private EventBus               xEventBus;
+	@Mock
+	private XEventChannel          xEventChannel;
+	@Mock
+	private DisplaySurfacePoolImpl xWindowPool;
+	@Mock
+	private Display                display;
+	@InjectMocks
+	private MapRequestHandler      mapRequestHandler;
 
-    @Mock
-    private xcb_generic_event_t xcb_generic_event;
-    @Mock
-    private SWIGTYPE_p_xcb_connection_t xcb_connection;
+	@Mock
+	private xcb_generic_event_t         xcb_generic_event;
+	@Mock
+	private SWIGTYPE_p_xcb_connection_t xcb_connection;
 
-    private final int targetWindowId = 123;
+	private final int targetWindowId = 123;
 
-    @Before
-    public void setup() {
-        when(xConnection.getConnectionReference()).thenReturn(xcb_connection);
-    }
+	@Before
+	public void setup() {
+		when(xEventChannel.getConnectionReference()).thenReturn(xcb_connection);
+	}
 
-    @Test
-    public void testEventHandling() {
-        //given
-        //a MapRequestHandler
-        //an xcb_generic_event_t
-        mockStatic(LibXcbJNI.class);
-        mockStatic(LibXcb.class);
+	@Test
+	public void testEventHandling() {
+		//given
+		//a MapRequestHandler
+		//an xcb_generic_event_t
+		mockStatic(LibXcbJNI.class);
+		mockStatic(LibXcb.class);
 
-        //when
-        //an xcb_generic_event_t event arrives
-        final Optional<ShowRequest> showRequestOptional = mapRequestHandler.handle(xcb_generic_event);
+		//when
+		//an xcb_generic_event_t event arrives
+		final Optional<ShowRequest> showRequestOptional = mapRequestHandler.handle(xcb_generic_event);
 
-        //then
-        //the xcb_map_request_event_t is posted on the x event bus
-        //the event is converted to a ShowRequest
-        verify(xEventBus).post(isA(xcb_map_request_event_t.class));
-        assertTrue(showRequestOptional.isPresent());
-    }
+		//then
+		//the xcb_map_request_event_t is posted on the x event bus
+		//the event is converted to a ShowRequest
+		verify(xEventBus).post(isA(xcb_map_request_event_t.class));
+		assertTrue(showRequestOptional.isPresent());
+	}
 
-    @Test
-    public void testGetTargetClientKnown() {
-        //given
-        //a MapRequestHandler
-        //an xcb_generic_event_t from an known client
-        mockStatic(LibXcbJNI.class);
-        when(xcb_map_request_event_t_window_get(anyLong(),
-                (xcb_map_request_event_t) any()))
-                .thenReturn(this.targetWindowId);
-        when(this.xWindowPool.isPresent((DisplaySurfaceHandle) any())).thenReturn(TRUE);
+	@Test
+	public void testGetTargetClientKnown() {
+		//given
+		//a MapRequestHandler
+		//an xcb_generic_event_t from an known client
+		mockStatic(LibXcbJNI.class);
+		when(xcb_map_request_event_t_window_get(anyLong(),
+												(xcb_map_request_event_t) any()))
+				.thenReturn(this.targetWindowId);
+		when(this.xWindowPool.isPresent((DisplaySurfaceHandle) any())).thenReturn(TRUE);
 
-        final DisplaySurface displaySurface = mock(DisplaySurface.class);
-        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
-        when(this.xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(final InvocationOnMock invocation) throws Throwable {
-                final Object arg0 = invocation.getArguments()[0];
-                final XWindowHandle xWindowHandle = (XWindowHandle) arg0;
-                if (xWindowHandle != null && xWindowHandle.getNativeHandle().equals(targetWindowId)) {
-                    return displaySurface;
-                }
-                return null;
-            }
-        });
+		final DisplaySurface displaySurface = mock(DisplaySurface.class);
+		when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
+		when(this.xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
+			@Override
+			public Object answer(final InvocationOnMock invocation) throws Throwable {
+				final Object arg0 = invocation.getArguments()[0];
+				final XWindowHandle xWindowHandle = (XWindowHandle) arg0;
+				if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(targetWindowId)) {
+					return displaySurface;
+				}
+				return null;
+			}
+		});
 
-        //when
-        //the target of the xcb_generic_event_t event is requested
-        final Optional<DisplaySurface> target = mapRequestHandler.getTarget(xcb_generic_event);
+		//when
+		//the target of the xcb_generic_event_t event is requested
+		final Optional<DisplaySurface> target = mapRequestHandler.getTarget(xcb_generic_event);
 
-        //then
-        //the correct DisplaySurface is returned
-        //no display surface creation notify is fired
-        final ArgumentCaptor<XWindowHandle> windowHandleArgumentCaptor = ArgumentCaptor.forClass(XWindowHandle.class);
+		//then
+		//the correct DisplaySurface is returned
+		//no display surface creation notify is fired
+		final ArgumentCaptor<XWindowHandle> windowHandleArgumentCaptor = ArgumentCaptor.forClass(XWindowHandle.class);
         verify(this.xWindowPool).getDisplaySurface(windowHandleArgumentCaptor.capture());
         assertEquals((Integer) this.targetWindowId,
                 windowHandleArgumentCaptor.getValue().getNativeHandle());

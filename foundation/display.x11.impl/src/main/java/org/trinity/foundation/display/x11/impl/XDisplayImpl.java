@@ -36,7 +36,7 @@ import org.trinity.foundation.api.display.Screen;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.shared.ListenableEventBus;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XScreen;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
@@ -60,66 +60,66 @@ import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 @ThreadSafe
 public class XDisplayImpl implements Display {
 
-	private static final Logger LOG = LoggerFactory.getLogger(XDisplayImpl.class);
-	private static final int CLIENT_EVENT_MASK = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
+	private static final Logger               LOG                         = LoggerFactory.getLogger(XDisplayImpl.class);
+	private static final int                  CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
 			| XCB_EVENT_MASK_STRUCTURE_NOTIFY;
-	private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
-			.putInt(CLIENT_EVENT_MASK);
-	private final List<DisplaySurface> clientDisplaySurfaces = new ArrayList<>();
-	private final XConnection xConnection;
+	private static final ByteBuffer           CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
+																							 .putInt(CLIENT_EVENT_MASK);
+	private final        List<DisplaySurface> clientDisplaySurfaces       = new ArrayList<>();
+	private final XEventChannel          xEventChannel;
 	private final DisplaySurfacePoolImpl xWindowCache;
-	private final ListenableEventBus displayEventBus;
+	private final ListenableEventBus     displayEventBus;
 	private final ByteBuffer rootWindowAttributes = allocateDirect(4).order(nativeOrder())
-			.putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
+																	 .putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
 	private XScreen screen;
 
 	@Inject
-	XDisplayImpl(	final XConnection xConnection,
-					final DisplaySurfacePoolImpl xWindowCache) {
+	XDisplayImpl(final XEventChannel xEventChannel,
+				 final DisplaySurfacePoolImpl xWindowCache) {
 		this.xWindowCache = xWindowCache;
-		this.xConnection = xConnection;
+		this.xEventChannel = xEventChannel;
 		this.displayEventBus = new ListenableEventBus();
 		// register to ourself so we can track newly created clients in the
 		// "Display" thread. See onCreationNotify(...).
-        this.displayEventBus.register(this);
-        open();
+		this.displayEventBus.register(this);
+		open();
 	}
 
 	@Override
 	public void quit() {
-				this.xConnection.close();
+		this.xEventChannel.close();
 	}
 
 	private void open() {
 
-				if (xcb_connection_has_error(XDisplayImpl.this.xConnection.getConnectionReference()) != 0) {
-					throw new Error("Cannot open display\n");
-				}
-				// FIXME from config?
-				final int targetScreen = 0;
-				final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(XDisplayImpl.this.xConnection
-						.getConnectionReference()));
-				int screenNr;
-				for (; iter.getRem() != 0; --screenNr, xcb_screen_next(iter)) {
-					if (targetScreen == 0) {
-						final xcb_screen_t xcb_screen = iter.getData();
-						configureRootEvents(xcb_screen);
-                        XDisplayImpl.this.screen = new XScreenImpl(xcb_screen);
-                        break;
-					}
-				}
+		if(xcb_connection_has_error(XDisplayImpl.this.xEventChannel.getConnectionReference()) != 0) {
+			throw new Error("Cannot open display\n");
+		}
+		// FIXME from config?
+		final int targetScreen = 0;
+		final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(XDisplayImpl.this.xEventChannel
+																						  .getConnectionReference()));
+		int screenNr;
+		for(; iter.getRem() != 0; --screenNr, xcb_screen_next(iter)) {
+			if(targetScreen == 0) {
+				final xcb_screen_t xcb_screen = iter.getData();
+				configureRootEvents(xcb_screen);
+				XDisplayImpl.this.screen = new XScreenImpl(xcb_screen);
+				break;
+			}
+		}
 
-				findClientDisplaySurfaces();
+		findClientDisplaySurfaces();
 	}
 
 	private void configureRootEvents(final xcb_screen_t xcb_screen) {
 		final int rootId = xcb_screen.getRoot();
 
-		xcb_change_window_attributes(	this.xConnection.getConnectionReference(),
-										rootId,
-										XCB_CW_EVENT_MASK,
-										this.rootWindowAttributes);
-		xcb_flush(this.xConnection.getConnectionReference());
+		xcb_change_window_attributes(this.xEventChannel.getConnectionReference(),
+									 rootId,
+									 XCB_CW_EVENT_MASK,
+									 this.rootWindowAttributes);
+		xcb_flush(this.xEventChannel.getConnectionReference());
 	}
 
 	private void findClientDisplaySurfaces() {
@@ -127,25 +127,25 @@ public class XDisplayImpl implements Display {
 		// active on the X server and track them
 
 		final int root = this.screen.getScreenReference().getRoot();
-		final SWIGTYPE_p_xcb_connection_t connection = this.xConnection.getConnectionReference();
-		final xcb_query_tree_cookie_t query_tree_cookie = xcb_query_tree(	connection,
-																			root);
+		final SWIGTYPE_p_xcb_connection_t connection = this.xEventChannel.getConnectionReference();
+		final xcb_query_tree_cookie_t query_tree_cookie = xcb_query_tree(connection,
+																		 root);
 		final xcb_generic_error_t e = new xcb_generic_error_t();
 		// this is a one time call, no need to make it
 		// async.
-		final xcb_query_tree_reply_t query_tree_reply = xcb_query_tree_reply(	connection,
-																				query_tree_cookie,
-																				e);
-		if (xcb_generic_error_t.getCPtr(e) != 0) {
-			XDisplayImpl.LOG.error(	"X error while doing query tree: {}.",
-									XcbErrorUtil.toString(e));
+		final xcb_query_tree_reply_t query_tree_reply = xcb_query_tree_reply(connection,
+																			 query_tree_cookie,
+																			 e);
+		if(xcb_generic_error_t.getCPtr(e) != 0) {
+			XDisplayImpl.LOG.error("X error while doing query tree: {}.",
+								   XcbErrorUtil.toString(e));
 			return;
 		}
 
 		final ByteBuffer tree_children = xcb_query_tree_children(query_tree_reply).order(nativeOrder());
 		int tree_children_length = xcb_query_tree_children_length(query_tree_reply);
-		while (tree_children_length > 0) {
-            tree_children_length--;
+		while(tree_children_length > 0) {
+			tree_children_length--;
 
 			final int tree_child = tree_children.getInt();
 
@@ -182,11 +182,11 @@ public class XDisplayImpl implements Display {
 		LOG.debug(	"[winId={}] configure client evens.",
 					winId);
 
-		xcb_change_window_attributes(	this.xConnection.getConnectionReference(),
+		xcb_change_window_attributes(	this.xEventChannel.getConnectionReference(),
 										winId,
 										XCB_CW_EVENT_MASK,
 										CLIENT_EVENTS_CONFIG_BUFFER);
-		xcb_flush(this.xConnection.getConnectionReference());
+		xcb_flush(this.xEventChannel.getConnectionReference());
 	}
 
 	@Override

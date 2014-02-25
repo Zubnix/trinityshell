@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.GeometryNotify;
 import org.trinity.foundation.api.shared.Rectangle;
-import org.trinity.foundation.display.x11.api.XConnection;
+import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
@@ -35,22 +35,21 @@ import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_NOTIFY;
 
 @Immutable
 public class ConfigureNotifyHandler implements XEventHandler {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ConfigureNotifyHandler.class);
+	private static final Logger  LOG        = LoggerFactory.getLogger(ConfigureNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_CONFIGURE_NOTIFY;
 	private final DisplaySurfacePoolImpl xWindowCache;
-	private final XConnection xEventBus;
+	private final XEventChannel          xEventChannel;
 
 	@Inject
 	ConfigureNotifyHandler(final DisplaySurfacePoolImpl xWindowCache,
-                           final XConnection xEventBus) {
-		this.xEventBus = xEventBus;
+						   final XEventChannel xEventChannel) {
+		this.xEventChannel = xEventChannel;
 		this.xWindowCache = xWindowCache;
 	}
 
@@ -59,9 +58,9 @@ public class ConfigureNotifyHandler implements XEventHandler {
 		final xcb_configure_notify_event_t configure_notify_event = cast(event_t);
 
 		LOG.debug("Received X event={}",
-                configure_notify_event.getClass().getSimpleName());
+				  configure_notify_event.getClass().getSimpleName());
 
-		this.xEventBus.post(configure_notify_event);
+		this.xEventChannel.post(configure_notify_event);
 
 		final int x = configure_notify_event.getX();
 		final int y = configure_notify_event.getY();
@@ -69,9 +68,9 @@ public class ConfigureNotifyHandler implements XEventHandler {
 		final int height = configure_notify_event.getHeight() + (2 * configure_notify_event.getBorder_width());
 
 		final Rectangle geometry = Rectangle.create(x,
-                y,
-                width,
-                height);
+													y,
+													width,
+													height);
 
 		return Optional.of(new GeometryNotify(geometry));
 	}
