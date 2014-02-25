@@ -27,13 +27,23 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import static org.freedesktop.xcb.LibXcb.*;
-import static org.freedesktop.xcb.xcb_config_window_t.*;
+import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
+import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
+import static org.freedesktop.xcb.LibXcb.xcb_set_input_focus;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 import static org.freedesktop.xcb.xcb_input_focus_t.XCB_INPUT_FOCUS_NONE;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
@@ -256,11 +266,11 @@ public class TestXWindow {
         mockStatic(LibXcb.class);
         final xcb_get_geometry_cookie_t geo_cookie = mock(xcb_get_geometry_cookie_t.class);
         final xcb_get_geometry_reply_t geo_reply = mock(xcb_get_geometry_reply_t.class);
-        final int borderWidth = 5;
-        final int givenX = 321;
-        final int givenY = 112;
-        final int givenWidth = 987;
-        final int givenHeight = 654;
+        final Integer borderWidth = 5;
+        final Integer givenX = 321;
+        final Integer givenY = 112;
+        final Integer givenWidth = 987;
+        final Integer givenHeight = 654;
 
         when(xcb_get_geometry(this.xcb_connection,
 							  this.nativeHandle)).thenReturn(geo_cookie);
@@ -268,8 +278,8 @@ public class TestXWindow {
                 eq(geo_cookie),
                 (xcb_generic_error_t) any())).thenReturn(geo_reply);
         when(geo_reply.getBorder_width()).thenReturn(borderWidth);
-        when(geo_reply.getX()).thenReturn((short) givenX);
-        when(geo_reply.getY()).thenReturn((short) givenY);
+        when(geo_reply.getX()).thenReturn(givenX.shortValue());
+        when(geo_reply.getY()).thenReturn(givenY.shortValue());
         when(geo_reply.getWidth()).thenReturn(givenWidth);
         when(geo_reply.getHeight()).thenReturn(givenHeight);
 
@@ -289,9 +299,9 @@ public class TestXWindow {
                 rectangle.getPosition().getX());
         assertEquals(givenY,
                 rectangle.getPosition().getY());
-        assertEquals(givenWidth + 2 * borderWidth,
+        assertEquals((Integer)(givenWidth + 2 * borderWidth),
                 rectangle.getSize().getWidth());
-        assertEquals(givenHeight + 2 * borderWidth,
+        assertEquals((Integer)(givenHeight + 2 * borderWidth),
                 rectangle.getSize().getHeight());
 
 

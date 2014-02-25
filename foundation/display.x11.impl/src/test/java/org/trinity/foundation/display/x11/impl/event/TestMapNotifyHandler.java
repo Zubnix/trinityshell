@@ -73,7 +73,7 @@ public class TestMapNotifyHandler {
                 (xcb_map_notify_event_t) any())).thenReturn(targetWindowId);
 
         final DisplaySurface displaySurface = mock(DisplaySurface.class);
-        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(new XWindowHandle(targetWindowId));
+        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(targetWindowId));
         when(xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {

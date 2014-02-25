@@ -24,9 +24,6 @@ import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 import static org.freedesktop.xcb.LibXcbJNI.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
@@ -53,22 +50,22 @@ public class TestConfigureNotifyHandler {
         //an xcb_generic_event_t
         mockStatic(LibXcbJNI.class);
 
-        final short x = 2;
-        final short y = 4;
-        final int width = 10;
-        final int height = 20;
-        final int border = 7;
+        final Short x = 2;
+        final Short y = 4;
+        final Integer width = 10;
+        final Integer height = 20;
+        final Integer border = 7;
         when(xcb_configure_notify_event_t_x_get(anyLong(),
-                                                (xcb_configure_notify_event_t) any())).thenReturn(x);
+                (xcb_configure_notify_event_t) any())).thenReturn(x);
         when(xcb_configure_notify_event_t_y_get(anyLong(),
-                                                (xcb_configure_notify_event_t) any())).thenReturn(y);
+                (xcb_configure_notify_event_t) any())).thenReturn(y);
         when(xcb_configure_notify_event_t_width_get(anyLong(),
-                                                    (xcb_configure_notify_event_t) any())).thenReturn(width);
+                (xcb_configure_notify_event_t) any())).thenReturn(width);
         when(xcb_configure_notify_event_t_height_get(anyLong(),
-                                                     (xcb_configure_notify_event_t) any()))
+                (xcb_configure_notify_event_t) any()))
                 .thenReturn(height);
         when(xcb_configure_notify_event_t_border_width_get(anyLong(),
-                                                           (xcb_configure_notify_event_t) any()))
+                (xcb_configure_notify_event_t) any()))
                 .thenReturn(border);
 
         //when
@@ -82,13 +79,13 @@ public class TestConfigureNotifyHandler {
         verify(xEventBus).post(isA(xcb_configure_notify_event_t.class));
         assertTrue(stackingChangedNotifyOptional.isPresent());
         assertEquals(x,
-                     stackingChangedNotifyOptional.get().getGeometry().getPosition().getX());
+                stackingChangedNotifyOptional.get().getGeometry().getPosition().getX());
         assertEquals(y,
-                     stackingChangedNotifyOptional.get().getGeometry().getPosition().getY());
-        assertEquals(width + 2 * border,
-                     stackingChangedNotifyOptional.get().getGeometry().getSize().getWidth());
-        assertEquals(height + 2 * border,
-                     stackingChangedNotifyOptional.get().getGeometry().getSize().getHeight());
+                stackingChangedNotifyOptional.get().getGeometry().getPosition().getY());
+        assertEquals((Integer) (width + 2 * border),
+                stackingChangedNotifyOptional.get().getGeometry().getSize().getWidth());
+        assertEquals((Integer) (height + 2 * border),
+                stackingChangedNotifyOptional.get().getGeometry().getSize().getHeight());
     }
 
     @Test
@@ -98,10 +95,10 @@ public class TestConfigureNotifyHandler {
         //an xcb_generic_event_t
         mockStatic(LibXcbJNI.class);
         when(xcb_configure_notify_event_t_window_get(anyLong(),
-                                                     (xcb_configure_notify_event_t) any())).thenReturn(targetWindowId);
+                (xcb_configure_notify_event_t) any())).thenReturn(targetWindowId);
 
         final DisplaySurface displaySurface = mock(DisplaySurface.class);
-        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(new XWindowHandle(targetWindowId));
+        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(targetWindowId));
         when(xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {
@@ -123,7 +120,7 @@ public class TestConfigureNotifyHandler {
         final ArgumentCaptor<XWindowHandle> windowHandleArgumentCaptor = ArgumentCaptor.forClass(XWindowHandle.class);
         verify(xWindowPool).getDisplaySurface(windowHandleArgumentCaptor.capture());
         assertEquals((Integer) targetWindowId,
-                     windowHandleArgumentCaptor.getValue().getNativeHandle());
+                windowHandleArgumentCaptor.getValue().getNativeHandle());
         assertTrue(target.isPresent());
     }
 }

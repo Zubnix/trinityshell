@@ -34,11 +34,9 @@ import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_MAP_NOTIFY;
 
-@Singleton
 @Immutable
 public class MapNotifyHandler implements XEventHandler {
 
@@ -75,7 +73,7 @@ public class MapNotifyHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_map_notify_event_t map_notify_event_t = cast(event_t);
 		final int windowId = map_notify_event_t.getWindow();
-		return Optional.of(this.xWindowPool.getDisplaySurface(new XWindowHandle(windowId)));
+		return Optional.of(this.xWindowPool.getDisplaySurface(XWindowHandle.create(windowId)));
 	}
 
 	@Override

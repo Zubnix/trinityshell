@@ -19,9 +19,11 @@
  ******************************************************************************/
 package org.trinity.foundation.api.shared;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.base.Objects;
 
 import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /**
@@ -30,128 +32,88 @@ import javax.annotation.concurrent.Immutable;
  *
  */
 @Immutable
-public class Margins {
+@AutoValue(cacheHashCode = true)
+public abstract class Margins {
 
 	/**
 	 * Short for {@code new Margins(0,0,0,0)}
 	 */
-	public static final Margins NO_MARGINS = new Margins(0);
+	public static final Margins NO_MARGINS = Margins.create(0);
 
-	private final int bottom, left, right, top;
+    /**
+     * Create new {@code Margins} with a given left, right, bottom and top
+     * distance.
+     *
+     * @param left
+     *            The distance on the left between the object and it's neighbor.
+     * @param right
+     *            The distance to the right between the object and it's
+     *            neighbor.
+     * @param bottom
+     *            The distance at the bottom between the object and it's
+     *            neighbor.
+     * @param top
+     *            The distance at the top between the object and it's neighbor.
+     */
+    public static Margins create(@Nonnull @Nonnegative	final Integer left,
+                                 @Nonnull @Nonnegative	final Integer right,
+                                 @Nonnull @Nonnegative	final Integer bottom,
+                                 @Nonnull @Nonnegative	final Integer top){
+        return new AutoValue_Margins(left, right, bottom, top);
+    }
 
-	/**
-	 * Short for {@code new Margins(m,m,m,m)}
-	 *
-	 * @param m
-	 *            margin size to use for all borders (left, right,bottom,top).
-	 */
-	public Margins(@Nonnegative final int m) {
-		this(	m,
-				m);
-	}
+    /**
+     * Short for {@code new Margins(h,h,v,v)}
+     *
+     * @param h
+     *            horizontal size to use for horizontal borders (left,right)
+     * @param v
+     *            vertical size to use for vertical borders (bottom,top)
+     */
+    public static Margins create(@Nonnull @Nonnegative final Integer h,
+                                 @Nonnull @Nonnegative final Integer v){
+        return create(	h,
+                        h,
+                        v,
+                        v);
+    }
 
-	/**
-	 * Short for {@code new Margins(h,h,v,v)}
-	 *
-	 * @param h
-	 *            horizontal size to use for horizontal borders (left,right)
-	 * @param v
-	 *            vertical size to use for vertical borders (bottom,top)
-	 */
-	public Margins(@Nonnegative	final int h,
-                   @Nonnegative final int v) {
-		this(	h,
-				h,
-				v,
-				v);
-	}
-
-	/**
-	 * Create new {@code Margins} with a given left, right, bottom and top
-	 * distance.
-	 *
-	 * @param left
-	 *            The distance on the left between the object and it's neighbor.
-	 * @param right
-	 *            The distance to the right between the object and it's
-	 *            neighbor.
-	 * @param bottom
-	 *            The distance at the bottom between the object and it's
-	 *            neighbor.
-	 * @param top
-	 *            The distance at the top between the object and it's neighbor.
-	 */
-	public Margins(@Nonnegative	final int left,
-                   @Nonnegative	final int right,
-                   @Nonnegative	final int bottom,
-                   @Nonnegative	final int top) {
-		this.bottom = bottom;
-		this.right = right;
-		this.left = left;
-		this.top = top;
-	}
+    /**
+     * Short for {@code new Margins(m,m,m,m)}
+     *
+     * @param m
+     *            margin size to use for all borders (left, right,bottom,top).
+     */
+    public static Margins create(@Nonnull @Nonnegative final Integer m){
+        return create(m,
+                m);
+    }
 
 	/**
 	 * The distance at the bottom between the object and it's neighbor.
 	 *
 	 * @return a distance
 	 */
-	public int getBottom() {
-		return this.bottom;
-	}
+	public abstract Integer getBottom();
 
 	/**
 	 * The distance on the left between the object and it's neighbor.
 	 *
 	 * @return a distance
 	 */
-	public int getLeft() {
-		return this.left;
-	}
+	public abstract Integer getLeft();
 
 	/**
 	 * The distance to the right between the object and it's neighbor.
 	 *
 	 * @return a distance
 	 */
-	public int getRight() {
-		return this.right;
-	}
+	public abstract Integer getRight();
 
 	/**
 	 * The distance at the top between the object and it's neighbor.
 	 *
 	 * @return a distance
 	 */
-	public int getTop() {
-		return this.top;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if(obj == null) {
-			return false;
-		}
-		if(getClass() != obj.getClass()) {
-			return false;
-		}
-		final Margins other = (Margins) obj;
-
-		return Objects.equal(this.top,
-							 other.top)
-				&& Objects.equal(this.right,
-								 other.right)
-				&& Objects.equal(this.bottom,
-								 other.bottom)
-				&& Objects.equal(this.left,
-								 other.left);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(this.top,
-								this.right,
-								this.bottom,
-								this.left);
-	}
+	public abstract Integer getTop();
 }

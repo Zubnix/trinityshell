@@ -163,7 +163,7 @@ public class TestXDisplayImpl {
                                      eq(XCB_CW_EVENT_MASK),
                                      eq(rootWindowAttributes));
 
-        final XWindowHandle clientHandle = new XWindowHandle(6);
+        final DisplaySurfaceHandle clientHandle = XWindowHandle.create(6);
 		verify(this.xWindowPool).getDisplaySurface(eq(clientHandle));
 		verifyNoMoreInteractions(this.xWindowPool);
 		assertTrue(xDisplay.getDisplaySurfaces().get(0) == clientWindow);

@@ -29,7 +29,7 @@ public class RootViewBindingMeta extends ViewBindingMeta {
 			  propertySlots);
 		this.viewModel = viewModel;
 		this.dataModel = dataModel;
-		this.rootDataModelProperty = new ConstantDataModelProperty(this.dataModel);
+		this.rootDataModelProperty = ConstantDataModelProperty.create(this.dataModel);
 		this.dataContextPath = dataModelContext.isPresent() ? dataModelContext.get().value() : "";
 	}
 

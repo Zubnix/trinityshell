@@ -169,7 +169,7 @@ public class XDisplayImpl implements Display {
 					continue;
 				}
 
-				final DisplaySurface clientWindow = this.xWindowCache.getDisplaySurface(new XWindowHandle(tree_child));
+				final DisplaySurface clientWindow = this.xWindowCache.getDisplaySurface(XWindowHandle.create(tree_child));
 				configureClientEvents(clientWindow);
 				trackClient(clientWindow);
 			}

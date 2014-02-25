@@ -62,7 +62,7 @@ public class XConnectionImpl extends ListenableEventBus implements XConnection {
 
     @Override
     public void open(@Nonnull final String displayName,
-                     @Nonnegative final int screen) {
+                     @Nonnegative final Integer screen) {
         checkNotNull(displayName);
 
         final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());

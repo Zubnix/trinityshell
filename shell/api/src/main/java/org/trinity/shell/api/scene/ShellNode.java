@@ -22,7 +22,6 @@ package org.trinity.shell.api.scene;
 import com.google.common.base.Optional;
 import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
 import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;

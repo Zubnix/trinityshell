@@ -34,11 +34,9 @@ import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_LEAVE_NOTIFY;
 
-@Singleton
 @Immutable
 public class LeaveNotifyHandler implements XEventHandler {
 
@@ -76,7 +74,7 @@ public class LeaveNotifyHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_enter_notify_event_t enter_notify_event_t = cast(event_t);
 		final int windowId = enter_notify_event_t.getEvent();
-		return Optional.of(this.xWindowPool.getDisplaySurface(new XWindowHandle(windowId)));
+		return Optional.of(this.xWindowPool.getDisplaySurface(XWindowHandle.create(windowId)));
 	}
 
 	@Override

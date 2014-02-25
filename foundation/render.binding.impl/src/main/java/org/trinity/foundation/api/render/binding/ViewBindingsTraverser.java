@@ -5,7 +5,6 @@ import com.google.common.collect.TreeTraverser;
 import org.trinity.foundation.api.render.binding.view.SubView;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;

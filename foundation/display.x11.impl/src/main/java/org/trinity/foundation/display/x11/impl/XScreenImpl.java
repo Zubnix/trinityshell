@@ -27,7 +27,7 @@ public class XScreenImpl implements XScreen {
 
 	@Override
 	public Size getSize() {
-		return new Size(this.screen.getWidth_in_pixels(),
+		return Size.create(this.screen.getWidth_in_pixels(),
 						this.screen.getHeight_in_pixels());
 	}
 }

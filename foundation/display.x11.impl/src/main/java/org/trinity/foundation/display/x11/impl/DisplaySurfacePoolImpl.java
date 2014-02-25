@@ -41,7 +41,8 @@ import java.util.Map;
 public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 
     private static final Logger LOG = LoggerFactory.getLogger(DisplaySurfacePoolImpl.class);
-    public final Map<Integer, DisplaySurface> displaySurfaces = new HashMap<>();
+
+    private final Map<Integer, DisplaySurface> displaySurfaces = new HashMap<>();
     private final XConnection xConnection;
     private final DisplaySurfaceFactory displaySurfaceFactory;
 
@@ -58,8 +59,8 @@ public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
         final int windowHash = displaySurfaceHandle.getNativeHandle().hashCode();
         DisplaySurface window = this.displaySurfaces.get(windowHash);
         if (window == null) {
-            LOG.debug(  "Xwindow={} added to cache.",
-                        displaySurfaceHandle);
+            LOG.debug("Xwindow={} added to cache.",
+                    displaySurfaceHandle);
 
             window = this.displaySurfaceFactory.construct(displaySurfaceHandle);
             window.register(new DestroyListener(window));
@@ -69,7 +70,8 @@ public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
         return window;
     }
 
-    public boolean isPresent(final DisplaySurfaceHandle displaySurfaceHandle) {
+    @Override
+    public Boolean isPresent(final DisplaySurfaceHandle displaySurfaceHandle) {
 
         return this.displaySurfaces.containsKey(displaySurfaceHandle.getNativeHandle().hashCode());
     }

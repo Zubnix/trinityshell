@@ -21,19 +21,16 @@
 package org.trinity.foundation.api.render.binding;
 
 import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.delegate.Signal;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;

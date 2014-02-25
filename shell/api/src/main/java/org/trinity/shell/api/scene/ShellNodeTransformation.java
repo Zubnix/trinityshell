@@ -21,7 +21,6 @@ package org.trinity.shell.api.scene;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 
 import javax.annotation.concurrent.Immutable;
@@ -54,7 +53,7 @@ public class ShellNodeTransformation {
 		final int deltaY = rect1.getPosition().getY() - rect0.getPosition().getY();
 		final int deltaWidth = rect1.getSize().getWidth() - rect0.getSize().getWidth();
 		final int deltaHeight = rect1.getSize().getWidth() - rect0.getSize().getHeight();
-		this.deltaRect = new ImmutableRectangle(deltaX,
+		this.deltaRect = new Rectangle(deltaX,
 												deltaY,
 												deltaWidth,
 												deltaHeight);

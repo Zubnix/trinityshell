@@ -11,7 +11,6 @@ import org.trinity.foundation.api.render.binding.view.PropertySlot;
 import org.trinity.foundation.api.render.binding.view.delegate.PropertySlotInvocationDelegate;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -64,7 +63,7 @@ public class PropertyBinding implements ViewBinding {
 
 			if(parentDataModelPropertyValue.isPresent()) {
 				final String propertyName = this.propertySlot.propertyName();
-				final DataModelProperty dataModelProperty = new RelativeDataModelProperty(parentDataModelPropertyValue.get(),
+				final DataModelProperty dataModelProperty = RelativeDataModelProperty.create(parentDataModelPropertyValue.get(),
 																						  propertyName);
 				dataModelProperties.add(dataModelProperty);
 				final Optional<Object> propertyValue = dataModelProperty.getPropertyValue();

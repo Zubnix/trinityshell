@@ -19,6 +19,7 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.api;
 
+import com.google.auto.value.AutoValue;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 
 import javax.annotation.Nonnull;
@@ -27,33 +28,13 @@ import javax.annotation.concurrent.Immutable;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @Immutable
-public class XWindowHandle implements DisplaySurfaceHandle {
+@AutoValue(cacheHashCode = true)
+public abstract class XWindowHandle implements DisplaySurfaceHandle {
 
-    private final Integer nativeHandle;
-
-    public XWindowHandle(@Nonnull final Integer nativeHandle) {
-        this.nativeHandle = checkNotNull(nativeHandle);
+    public static DisplaySurfaceHandle create(@Nonnull final Integer nativeHandle){
+        return new AutoValue_XWindowHandle(nativeHandle);
     }
 
     @Override
-    public Integer getNativeHandle() {
-        return this.nativeHandle;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj instanceof DisplaySurfaceHandle) {
-            final DisplaySurfaceHandle otherObj = (DisplaySurfaceHandle) obj;
-            return otherObj.getNativeHandle().equals(getNativeHandle());
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return getNativeHandle().intValue();
-    }
+    public abstract Integer getNativeHandle();
 }

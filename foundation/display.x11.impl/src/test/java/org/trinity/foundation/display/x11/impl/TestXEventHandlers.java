@@ -2,7 +2,6 @@ package org.trinity.foundation.display.x11.impl;
 
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.junit.Test;
 import org.trinity.foundation.api.display.event.DisplayEvent;

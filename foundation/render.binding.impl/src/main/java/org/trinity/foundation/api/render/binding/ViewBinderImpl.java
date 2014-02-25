@@ -52,7 +52,7 @@ public class ViewBinderImpl implements ViewBinder {
             return;
         }
 
-        final DataModelProperty dataModelProperty = new RelativeDataModelProperty(dataModel,
+        final DataModelProperty dataModelProperty = RelativeDataModelProperty.create(dataModel,
                 propertyName);
 
         //find all impacted view bindings

@@ -264,8 +264,8 @@ public class ViewBinderImplTest {
         final EventBinding rootEventBinding = mock(EventBinding.class);
         final PropertyBinding rootPropertyBinding = mock(PropertyBinding.class);
 
-        final List<DataModelProperty> rootPropertiesOnBind = Arrays.asList(new ConstantDataModelProperty(dataModel), new RelativeDataModelProperty(dataModel, "foo"));
-        final List<DataModelProperty> rootPropertiesOnUpdate = Arrays.asList(new ConstantDataModelProperty(dataModel), new RelativeDataModelProperty(dataModel, "foo"), new RelativeDataModelProperty(fooValue, "bar"));
+        final List<DataModelProperty> rootPropertiesOnBind = Arrays.asList(ConstantDataModelProperty.create(dataModel), RelativeDataModelProperty.create(dataModel, "foo"));
+        final List<DataModelProperty> rootPropertiesOnUpdate = Arrays.asList(ConstantDataModelProperty.create(dataModel), RelativeDataModelProperty.create(dataModel, "foo"), RelativeDataModelProperty.create(fooValue, "bar"));
         when(rootCollectionBinding.bind()).thenReturn(rootPropertiesOnBind, rootPropertiesOnUpdate);
         when(rootEventBinding.bind()).thenReturn(rootPropertiesOnBind, rootPropertiesOnUpdate);
         when(rootPropertyBinding.bind()).thenReturn(rootPropertiesOnBind, rootPropertiesOnUpdate);
@@ -280,8 +280,8 @@ public class ViewBinderImplTest {
         final EventBinding nestedEventBinding = mock(EventBinding.class);
         final PropertyBinding nestedPropertyBinding = mock(PropertyBinding.class);
 
-        final List<DataModelProperty> nestedPropertiesOnBind = Arrays.asList(new ConstantDataModelProperty(dataModel), new RelativeDataModelProperty(dataModel, "foo"));
-        final List<DataModelProperty> nestedPropertiesOnUpdate = Arrays.asList(new ConstantDataModelProperty(dataModel), new RelativeDataModelProperty(dataModel, "foo"), new RelativeDataModelProperty(fooValue, "bar"));
+        final List<DataModelProperty> nestedPropertiesOnBind = Arrays.asList(ConstantDataModelProperty.create(dataModel), RelativeDataModelProperty.create(dataModel, "foo"));
+        final List<DataModelProperty> nestedPropertiesOnUpdate = Arrays.asList(ConstantDataModelProperty.create(dataModel), RelativeDataModelProperty.create(dataModel, "foo"), RelativeDataModelProperty.create(fooValue, "bar"));
         when(nestedCollectionBinding.bind()).thenReturn(nestedPropertiesOnBind, nestedPropertiesOnUpdate);
         when(nestedEventBinding.bind()).thenReturn(nestedPropertiesOnBind, nestedPropertiesOnUpdate);
         when(nestedPropertyBinding.bind()).thenReturn(nestedPropertiesOnBind, nestedPropertiesOnUpdate);
@@ -296,8 +296,8 @@ public class ViewBinderImplTest {
         final EventBinding deepNestedEventBinding = mock(EventBinding.class);
         final PropertyBinding deepNestedPropertyBinding = mock(PropertyBinding.class);
 
-        final List<DataModelProperty> deepNestedPropertiesOnBind = Arrays.asList(new ConstantDataModelProperty(dataModel), new RelativeDataModelProperty(dataModel, "foo"));
-        final List<DataModelProperty> deepNestedPropertiesOnUpdate = Arrays.asList(new ConstantDataModelProperty(dataModel), new RelativeDataModelProperty(dataModel, "foo"), new RelativeDataModelProperty(fooValue, "bar"));
+        final List<DataModelProperty> deepNestedPropertiesOnBind = Arrays.asList(ConstantDataModelProperty.create(dataModel), RelativeDataModelProperty.create(dataModel, "foo"));
+        final List<DataModelProperty> deepNestedPropertiesOnUpdate = Arrays.asList(ConstantDataModelProperty.create(dataModel), RelativeDataModelProperty.create(dataModel, "foo"), RelativeDataModelProperty.create(fooValue, "bar"));
         when(deepNestedCollectionBinding.bind()).thenReturn(deepNestedPropertiesOnBind, deepNestedPropertiesOnUpdate);
         when(deepNestedEventBinding.bind()).thenReturn(deepNestedPropertiesOnBind, deepNestedPropertiesOnUpdate);
         when(deepNestedPropertyBinding.bind()).thenReturn(deepNestedPropertiesOnBind, deepNestedPropertiesOnUpdate);

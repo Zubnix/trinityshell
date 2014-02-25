@@ -77,11 +77,11 @@ public class TestConfigureRequestHandler {
         mockStatic(LibXcbJNI.class);
         mockStatic(LibXcb.class);
 
-        final short x = 5;
-        final short y = 10;
-        final int width = 15;
-        final int height = 30;
-        final int border = 3;
+        final Short x = 5;
+        final Short y = 10;
+        final Integer width = 15;
+        final Integer height = 30;
+        final Integer border = 3;
 
         final int valueMask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH;
 
@@ -112,9 +112,9 @@ public class TestConfigureRequestHandler {
                      geometryRequestOptional.get().getGeometry().getPosition().getX());
         assertEquals(y,
                      geometryRequestOptional.get().getGeometry().getPosition().getY());
-        assertEquals(width + 2 * border,
+        assertEquals((Integer)(width + 2 * border),
                      geometryRequestOptional.get().getGeometry().getSize().getWidth());
-        assertEquals(height + 2 * border,
+        assertEquals((Integer)(height + 2 * border),
                      geometryRequestOptional.get().getGeometry().getSize().getHeight());
         assertTrue(geometryRequestOptional.get().configureX());
         assertTrue(geometryRequestOptional.get().configureY());
@@ -134,7 +134,7 @@ public class TestConfigureRequestHandler {
         when(this.xWindowPool.isPresent((DisplaySurfaceHandle) any())).thenReturn(TRUE);
 
         final DisplaySurface displaySurface = mock(DisplaySurface.class);
-        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(new XWindowHandle(this.targetWindowId));
+        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
         when(this.xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {
@@ -176,7 +176,7 @@ public class TestConfigureRequestHandler {
         when(this.xWindowPool.isPresent((DisplaySurfaceHandle) any())).thenReturn(FALSE);
 
         final DisplaySurface displaySurface = mock(DisplaySurface.class);
-        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(new XWindowHandle(this.targetWindowId));
+        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
         when(this.xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {

@@ -8,8 +8,6 @@ import com.google.auto.factory.Provided;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.view.delegate.SubViewModelDelegate;
 
@@ -25,8 +23,6 @@ import static java.lang.String.format;
 
 @AutoFactory
 public class CollectionBinding implements ViewBinding {
-
-    private static final Logger LOG = LoggerFactory.getLogger(CollectionBinding.class);
 
     //Table<DataModel,Index,ChildViewModel>
     private final Table<Object, Integer, Object> dataModelElementToViewModelElement = HashBasedTable.create();
@@ -79,7 +75,7 @@ public class CollectionBinding implements ViewBinding {
             return properties;
         }
 
-        final DataModelProperty collectionProperty = new RelativeDataModelProperty(lastPropertyValue.get(),
+        final DataModelProperty collectionProperty = RelativeDataModelProperty.create(lastPropertyValue.get(),
                 collectionPropertyName);
         properties.add(collectionProperty);
         final Optional<Object> collectionPropertyValue = collectionProperty.getPropertyValue();

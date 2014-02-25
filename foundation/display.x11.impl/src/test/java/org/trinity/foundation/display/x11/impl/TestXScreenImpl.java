@@ -15,8 +15,8 @@ public class TestXScreenImpl {
         //an X screen with a given width and height in pixels
         final xcb_screen_t xcb_screen = mock(xcb_screen_t.class);
 
-        final int width = 100;
-        final int height = 100;
+        final Integer width = 100;
+        final Integer height = 100;
         when(xcb_screen.getWidth_in_pixels()).thenReturn(width);
         when(xcb_screen.getHeight_in_pixels()).thenReturn(height);
 

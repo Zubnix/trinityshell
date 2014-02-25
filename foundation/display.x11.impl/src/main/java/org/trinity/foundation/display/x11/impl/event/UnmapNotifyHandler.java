@@ -34,11 +34,9 @@ import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_UNMAP_NOTIFY;
 
-@Singleton
 @Immutable
 public class UnmapNotifyHandler implements XEventHandler {
 
@@ -78,7 +76,7 @@ public class UnmapNotifyHandler implements XEventHandler {
 		if (windowId != reportWindowId) {
 			return Optional.absent();
 		}
-		return Optional.of(this.xWindowPool.getDisplaySurface(new XWindowHandle(windowId)));
+		return Optional.of(this.xWindowPool.getDisplaySurface(XWindowHandle.create(windowId)));
 	}
 
 	@Override

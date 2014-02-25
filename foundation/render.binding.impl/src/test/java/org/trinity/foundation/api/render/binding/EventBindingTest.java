@@ -49,7 +49,7 @@ public class EventBindingTest {
 			public Object answer(final InvocationOnMock invocation) throws Throwable {
 				final Object arg0 = invocation.getArguments()[0];
 				final LinkedList<DataModelProperty> properties = (LinkedList<DataModelProperty>) arg0;
-				properties.add(new ConstantDataModelProperty(EventBindingTest.this.dataModel));
+				properties.add(ConstantDataModelProperty.create(EventBindingTest.this.dataModel));
 				return TRUE;
 			}
 		});

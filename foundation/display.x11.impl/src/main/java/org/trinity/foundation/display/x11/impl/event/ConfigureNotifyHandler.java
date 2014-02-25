@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.GeometryNotify;
-import org.trinity.foundation.api.shared.ImmutableRectangle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XEventHandler;
@@ -40,7 +39,6 @@ import javax.inject.Singleton;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_NOTIFY;
 
-@Singleton
 @Immutable
 public class ConfigureNotifyHandler implements XEventHandler {
 
@@ -70,10 +68,10 @@ public class ConfigureNotifyHandler implements XEventHandler {
 		final int width = configure_notify_event.getWidth() + (2 * configure_notify_event.getBorder_width());
 		final int height = configure_notify_event.getHeight() + (2 * configure_notify_event.getBorder_width());
 
-		final Rectangle geometry = new ImmutableRectangle(	x,
-															y,
-															width,
-															height);
+		final Rectangle geometry = Rectangle.create(x,
+                y,
+                width,
+                height);
 
 		return Optional.of(new GeometryNotify(geometry));
 	}
@@ -87,7 +85,7 @@ public class ConfigureNotifyHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_configure_notify_event_t configure_notify_event_t = cast(event_t);
 		final int windowId = configure_notify_event_t.getWindow();
-		return Optional.of(this.xWindowCache.getDisplaySurface(new XWindowHandle(windowId)));
+		return Optional.of(this.xWindowCache.getDisplaySurface(XWindowHandle.create(windowId)));
 	}
 
 	@Override

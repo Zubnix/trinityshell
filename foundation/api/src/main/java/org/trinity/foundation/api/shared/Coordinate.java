@@ -19,83 +19,53 @@
  ******************************************************************************/
 package org.trinity.foundation.api.shared;
 
-import com.google.common.base.Objects;
+import com.google.auto.value.AutoValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-/***************************************
+/**
+ * ************************************
  * A coordinate in 2D space, in natural numbers.
- ***************************************
+ * **************************************
  */
 @Immutable
-public class Coordinate {
+@AutoValue(cacheHashCode = true)
+public abstract class Coordinate {
 
-	private final int x, y;
+    /**
+     * Create a new {@code Coordinate} with the given X and Y value.
+     *
+     * @param x an int, depicting the horizontal position on the screen.
+     * @param y an int, depicting the vertical position on the screen.
+     */
+    public static Coordinate create(@Nonnull final Integer x,
+                                    @Nonnull final Integer y) {
+        return new AutoValue_Coordinate(x, y);
+    }
 
-	/**
-	 * Create a new {@code Coordinate} with the given X and Y value.
-	 *
-	 * @param x
-	 *            an int, depicting the horizontal position on the screen.
-	 * @param y
-	 *            an int, depicting the vertical position on the screen.
-	 */
-	public Coordinate(	final int x,
-						final int y) {
-		this.x = x;
-		this.y = y;
-	}
+    /**
+     * Create a new {@code Coordinate} with the same values as the given
+     * {@code Coordinate}.
+     *
+     * @param coordinates The {@link Coordinate} who's values to copy.
+     */
+    public static Coordinate create(@Nonnull final Coordinate coordinates){
+        return create(coordinates.getX(),
+                coordinates.getY());
+    }
 
-	/**
-	 * Create a new {@code Coordinate} with the same values as the given
-	 * {@code Coordinate}.
-	 *
-	 * @param coordinates
-	 *            The {@link Coordinate} who's values to copy.
-	 */
-	public Coordinate(@Nonnull final Coordinate coordinates) {
-		this(	coordinates.getX(),
-				coordinates.getY());
-	}
+    public abstract Integer getX();
 
-	public int getX() {
-		return this.x;
-	}
+    public abstract Integer getY();
 
-	public int getY() {
-		return this.y;
-	}
+    public Coordinate add(final Coordinate coordinate) {
+        return create(getX() + coordinate.getX(),
+                getY() + coordinate.getY());
+    }
 
-	public Coordinate add(final Coordinate coordinate) {
-		return new Coordinate(	getX() + coordinate.getX(),
-								getY() + coordinate.getY());
-	}
-
-	public Coordinate subtract(final Coordinate coordinate) {
-		return new Coordinate(	getX() - coordinate.getX(),
-								getY() - coordinate.getY());
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if(obj == null) {
-			return false;
-		}
-		if(getClass() != obj.getClass()) {
-			return false;
-		}
-		final Coordinate other = (Coordinate) obj;
-
-		return Objects.equal(this.x,
-							 other.x)
-				&& Objects.equal(this.y,
-								 other.y);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(this.x,
-								this.y);
-	}
+    public Coordinate subtract(final Coordinate coordinate) {
+        return create(getX() - coordinate.getX(),
+                getY() - coordinate.getY());
+    }
 }

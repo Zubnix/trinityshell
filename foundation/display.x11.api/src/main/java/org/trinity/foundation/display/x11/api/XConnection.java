@@ -32,21 +32,21 @@ import javax.annotation.concurrent.NotThreadSafe;
  */
 @NotThreadSafe
 public interface XConnection extends Listenable {
-	/**
-	 * The XCB connection reference. The optional reference will be absent if no
-	 * connection is present.
-	 *
-	 * @return The underlying native X connection.
-	 */
-	SWIGTYPE_p_xcb_connection_t getConnectionReference();
+    /**
+     * The XCB connection reference. The optional reference will be absent if no
+     * connection is present.
+     *
+     * @return The underlying native X connection.
+     */
+    SWIGTYPE_p_xcb_connection_t getConnectionReference();
 
     void open(@Nonnull String display,
-              @Nonnegative int screen);
+              @Nonnegative Integer screen);
 
-	/**
-	 * Close the connection to the underlying X display server.
-	 */
-	void close();
+    /**
+     * Close the connection to the underlying X display server.
+     */
+    void close();
 
     void start();
 

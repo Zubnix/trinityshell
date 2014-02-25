@@ -34,11 +34,9 @@ import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_FOCUS_IN;
 
-@Singleton
 @Immutable
 public class FocusInHandler implements XEventHandler {
 
@@ -81,6 +79,6 @@ public class FocusInHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_focus_in_event_t focus_in_event_t = cast(event_t);
 		final int windowId = focus_in_event_t.getEvent();
-		return Optional.of(this.xWindowCache.getDisplaySurface(new XWindowHandle(windowId)));
+		return Optional.of(this.xWindowCache.getDisplaySurface(XWindowHandle.create(windowId)));
 	}
 }

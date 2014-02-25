@@ -1,13 +1,15 @@
 package org.trinity.foundation.api.render.binding;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.base.CaseFormat;
-import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
@@ -15,7 +17,9 @@ import java.text.MessageFormat;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
-public class RelativeDataModelProperty implements DataModelProperty {
+@Immutable
+@AutoValue
+public abstract class RelativeDataModelProperty implements DataModelProperty {
 
     private static final Logger LOG = LoggerFactory.getLogger(RelativeDataModelProperty.class);
 
@@ -23,55 +27,33 @@ public class RelativeDataModelProperty implements DataModelProperty {
     private static final String GET_BOOLEAN_PREFIX = "is";
     private static final String GET_PREFIX         = "get";
 
-    private final Object dataModel;
-    private final String propertyName;
-
-    public RelativeDataModelProperty(final Object dataModel,
-                                     final String propertyName) {
-        this.dataModel = dataModel;
-        this.propertyName = propertyName;
+    public static DataModelProperty create( @Nonnull final Object dataModel,
+                                            @Nonnull final String propertyName){
+        return new AutoValue_RelativeDataModelProperty(dataModel, propertyName);
     }
+
+    abstract Object getDataModel();
+
+    abstract String getPropertyName();
 
     @Override
     public Optional<Object> getPropertyValue() {
-		final Optional<Method> getterMethod = getGetterMethod(this.dataModel.getClass(),
-																			   this.propertyName);
+		final Optional<Method> getterMethod = getGetterMethod(getDataModel().getClass(),
+																			   getPropertyName());
 		Optional<Object> propertyValue = Optional.absent();
         if(getterMethod.isPresent()) {
             try {
-                final Object property = getterMethod.get().invoke(this.dataModel);
+                final Object property = getterMethod.get().invoke(getDataModel());
                 propertyValue = Optional.fromNullable(property);
             } catch(IllegalAccessException | InvocationTargetException e) {
                 LOG.error(MessageFormat.format("Unable to retrieve property {0} from {1}",
-                                               this.propertyName,
-                                               this.dataModel),
+                                               getPropertyName(),
+                        getDataModel()),
                                                 e);
             }
         }
 
         return propertyValue;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if(obj == null) {
-            return false;
-        }
-        if(getClass() != obj.getClass()) {
-            return false;
-        }
-        final RelativeDataModelProperty other = (RelativeDataModelProperty) obj;
-
-		return Objects.equal(this.dataModel,
-							 other.dataModel)
-				&& Objects.equal(this.propertyName,
-								 other.propertyName);
-	}
-
-    @Override
-    public int hashCode() {
-		return Objects.hashCode(this.dataModel,
-								this.propertyName);
     }
 
     public Optional<Method> getGetterMethod(final Class<?> dataModelClass,

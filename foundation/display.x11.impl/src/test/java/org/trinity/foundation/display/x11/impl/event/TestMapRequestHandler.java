@@ -104,7 +104,7 @@ public class TestMapRequestHandler {
         when(this.xWindowPool.isPresent((DisplaySurfaceHandle) any())).thenReturn(TRUE);
 
         final DisplaySurface displaySurface = mock(DisplaySurface.class);
-        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(new XWindowHandle(this.targetWindowId));
+        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
         when(this.xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {
@@ -147,7 +147,7 @@ public class TestMapRequestHandler {
         when(this.xWindowPool.isPresent((DisplaySurfaceHandle) any())).thenReturn(FALSE);
 
         final DisplaySurface displaySurface = mock(DisplaySurface.class);
-        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(new XWindowHandle(this.targetWindowId));
+        when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
         when(this.xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {

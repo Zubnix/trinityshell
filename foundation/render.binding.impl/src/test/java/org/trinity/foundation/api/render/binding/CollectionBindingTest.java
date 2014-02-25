@@ -68,7 +68,7 @@ public class CollectionBindingTest {
 			public Object answer(final InvocationOnMock invocation) throws Throwable {
 				final Object arg0 = invocation.getArguments()[0];
 				final LinkedList<DataModelProperty> propertyChain = (LinkedList<DataModelProperty>) arg0;
-				propertyChain.add(new ConstantDataModelProperty(CollectionBindingTest.this.dataModel));
+				propertyChain.add(ConstantDataModelProperty.create(CollectionBindingTest.this.dataModel));
 				return TRUE;
 			}
 		});

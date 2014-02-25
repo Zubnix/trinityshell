@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.ShowRequest;
 import org.trinity.foundation.display.x11.api.XConnection;
@@ -36,7 +37,6 @@ import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.nio.ByteBuffer;
 
 import static java.nio.ByteBuffer.allocateDirect;
@@ -47,7 +47,6 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_MAP_REQUEST;
 import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
 import static org.freedesktop.xcb.xcb_event_mask_t.*;
 
-@Singleton
 @Immutable
 public class MapRequestHandler implements XEventHandler {
 
@@ -93,7 +92,7 @@ public class MapRequestHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_map_request_event_t map_request_event_t = cast(event_t);
 		final int windowId = map_request_event_t.getWindow();
-		final XWindowHandle xWindowHandle = new XWindowHandle(windowId);
+		final DisplaySurfaceHandle xWindowHandle = XWindowHandle.create(windowId);
 		final boolean present = this.xWindowCache.isPresent(xWindowHandle);
 		final DisplaySurface displayEventTarget = this.xWindowCache.getDisplaySurface(xWindowHandle);
 		if (!present) {

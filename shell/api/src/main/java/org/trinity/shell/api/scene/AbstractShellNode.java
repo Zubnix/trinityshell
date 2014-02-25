@@ -57,7 +57,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	public ShellNodeTransformation toGeoTransformation() {
 		return new ShellNodeTransformation(	getGeometry (),
 											Optional.fromNullable(getParent().orNull()),
-											new ImmutableRectangle(	getDesiredPosition(),
+											new Rectangle(	getDesiredPosition(),
 																	getDesiredSize()),
 											Optional.<ShellNodeParent> fromNullable(getDesiredParent().orNull()));
 	}
@@ -88,7 +88,7 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	@Override
 	public Rectangle getGeometry() {
-		return new ImmutableRectangle(	getPosition (),
+		return new Rectangle(	getPosition (),
 										getSize ());
 	}
 
@@ -219,7 +219,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	protected void flushSizePlaceValues() {
 		flushPlaceValues();
 		flushSizeValues();
-		 
+
 	}
 
 	@Override
@@ -228,7 +228,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		final ShellNodeDestroyedEvent geoEvent = new ShellNodeDestroyedEvent(	this,
 																				toGeoTransformation ());
 		post(geoEvent);
-		 
+
 	}
 
 	@Override
@@ -240,7 +240,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		final ShellNodeRaisedEvent geoEvent = new ShellNodeRaisedEvent(	this,
 																		toGeoTransformation ());
 		post(geoEvent);
-		 
+
 	}
 
 	@Override
@@ -252,7 +252,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		final ShellNodeLoweredEvent geoEvent = new ShellNodeLoweredEvent(	this,
 																			toGeoTransformation ());
 		post(geoEvent);
-		 
+
 	}
 
 	@Override
@@ -264,7 +264,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		final ShellNodeReparentedEvent geoEvent = new ShellNodeReparentedEvent(	this,
 																				toGeoTransformation ());
 		post(geoEvent);
-		 
+
 	}
 
 	protected void flushParentValue() {
@@ -274,13 +274,13 @@ public abstract class AbstractShellNode implements ShellNode {
 	@Override
 	public void cancelPendingMove () {
 		setPosition(this.position);
-		 
+
 	}
 
 	@Override
 	public void cancelPendingResize () {
 		setSize(this.size);
-		 
+
 	}
 
 	public Coordinate getDesiredPosition() {
@@ -308,7 +308,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		final ShellNodeShowedEvent geoEvent = new ShellNodeShowedEvent(	this,
 																		toGeoTransformation ());
 		post(geoEvent);
-		 
+
 	}
 
 	@Override
@@ -318,7 +318,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		final ShellNodeHiddenEvent geoEvent = new ShellNodeHiddenEvent(	this,
 																		toGeoTransformation ());
 		post(geoEvent);
-		 
+
 	}
 
 	@Override
@@ -326,7 +326,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		final ShellNodeShowRequestEvent event = new ShellNodeShowRequestEvent(	this,
 																				toGeoTransformation ());
 		post(event);
-		 
+
 	}
 
 	@Override
@@ -334,7 +334,7 @@ public abstract class AbstractShellNode implements ShellNode {
 		final ShellNodeHideRequestEvent event = new ShellNodeHideRequestEvent(	this,
 																				toGeoTransformation ());
 		post(event);
-		 
+
 	}
 
 	@Override
@@ -350,13 +350,13 @@ public abstract class AbstractShellNode implements ShellNode {
 	@Override
 	public void setPosition(@Nonnull final Coordinate position) {
 		this.desiredPosition = position;
-		 
+
 	}
 
 	@Override
 	public void setSize(@Nonnull final Size size) {
 		this.desiredSize = size;
-		 
+
 	}
 
 	@Override

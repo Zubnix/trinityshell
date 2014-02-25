@@ -30,9 +30,8 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.shared.ImmutableRectangle;
-import org.trinity.foundation.api.shared.ListenableEventBus;
 import org.trinity.foundation.api.shared.Rectangle;
+import org.trinity.foundation.api.shared.ListenableEventBus;
 import org.trinity.foundation.display.x11.api.XConnection;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
@@ -68,8 +67,7 @@ public class XWindow implements DisplaySurface {
 
 	private static final Logger     LOG                           = LoggerFactory.getLogger(XWindow.class);
 	private static final ByteBuffer MOVE_VALUE_LIST_BUFFER        = allocateDirect(8).order(nativeOrder());
-	private static final int        MOVE_RESIZE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y
-			| XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
+	private static final int        MOVE_RESIZE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
 	private static final ByteBuffer MOVE_RESIZE_VALUE_LIST_BUFFER = allocateDirect(16).order(nativeOrder());
 	private static final int        RESIZE_VALUE_MASK             = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
 	private static final ByteBuffer RESIZE_VALUE_LIST             = allocateDirect(8).order(nativeOrder());
@@ -305,10 +303,10 @@ public class XWindow implements DisplaySurface {
 		final int x = get_geometry_reply.getX();
 		final int y = get_geometry_reply.getY();
 
-		return new ImmutableRectangle(x,
-									  y,
-									  width,
-									  height);
+		return Rectangle.create(x,
+                y,
+                width,
+                height);
 	}
 
 	private void checkError(final xcb_generic_error_t e) {

@@ -182,7 +182,7 @@ public abstract class ViewBindingMeta {
 
 			if(propertyValue.isPresent()) {
 				final Object nextDataModel = propertyValue.get();
-				dataModelProperty = new RelativeDataModelProperty(nextDataModel,
+				dataModelProperty = RelativeDataModelProperty.create(nextDataModel,
 																  propertyName);
 				appendedDataModelChain.add(dataModelProperty);
 			}

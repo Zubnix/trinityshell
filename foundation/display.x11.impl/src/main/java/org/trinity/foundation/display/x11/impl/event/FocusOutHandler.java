@@ -34,11 +34,9 @@ import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_FOCUS_OUT;
 
-@Singleton
 @Immutable
 public class FocusOutHandler implements XEventHandler {
 
@@ -77,7 +75,7 @@ public class FocusOutHandler implements XEventHandler {
 		// focus in structure is the same as focus out.
 		final xcb_focus_in_event_t focus_out_event_t = cast(event_t);
 
-		return Optional.of(this.xWindowCache.getDisplaySurface(new XWindowHandle(focus_out_event_t.getEvent())));
+		return Optional.of(this.xWindowCache.getDisplaySurface(XWindowHandle.create(focus_out_event_t.getEvent())));
 	}
 
 	@Override

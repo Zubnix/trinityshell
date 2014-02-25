@@ -35,7 +35,6 @@ import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-@Singleton
 @Immutable
 public class GenericErrorHandler implements XEventHandler {
 
