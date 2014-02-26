@@ -1,65 +1,71 @@
 package org.trinity.foundation.api.render.binding;
 
-import com.google.common.base.Objects;
+import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
 import org.trinity.foundation.api.render.binding.view.DataModelContext;
 import org.trinity.foundation.api.render.binding.view.EventSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.LinkedList;
 
-public class RootViewBindingMeta extends ViewBindingMeta {
+@Immutable
+@AutoValue
+public abstract class RootViewBindingMeta extends ViewBindingMeta {
 
-	private final DataModelProperty rootDataModelProperty;
-	private final Object            viewModel;
-	private final Object            dataModel;
-	private final String            dataContextPath;
+    private DataModelProperty rootDataModelProperty;
+	private String            dataContextPath;
+    private Optional<ObservableCollection> observableCollection;
+    private Optional<DataModelContext> dataModelContext;
+    private Optional<EventSignals> eventSignals;
+    private Optional<PropertySlots> propertySlots;
 
-	RootViewBindingMeta(final Object viewModel,
-						final Object dataModel,
-						final Optional<ObservableCollection> observableCollection,
-						final Optional<DataModelContext> dataModelContext,
-						final Optional<EventSignals> eventSignals,
-						final Optional<PropertySlots> propertySlots) {
-		super(viewModel,
-			  observableCollection,
-			  dataModelContext,
-			  eventSignals,
-			  propertySlots);
-		this.viewModel = viewModel;
-		this.dataModel = dataModel;
-		this.rootDataModelProperty = ConstantDataModelProperty.create(this.dataModel);
-		this.dataContextPath = dataModelContext.isPresent() ? dataModelContext.get().value() : "";
-	}
+    public static ViewBindingMeta create(final Object dataModel,
+                                         final Object viewModel) {
 
-	@Override
+        return new AutoValue_RootViewBindingMeta(viewModel, dataModel).scan();
+    }
+
+    public abstract Object getDataModel();
+
+    ViewBindingMeta scan(){
+        final Class<?> subviewClass = getViewModel().getClass();
+
+        this.observableCollection = ViewBindingMetaUtil.scanClassObservableCollection(subviewClass);
+        this.dataModelContext = ViewBindingMetaUtil.scanClassDataModelContext(subviewClass);
+        this.eventSignals = ViewBindingMetaUtil.scanClassEventSignals(subviewClass);
+        this.propertySlots = ViewBindingMetaUtil.scanClassPropertySlots(subviewClass);
+
+        this.rootDataModelProperty = ConstantDataModelProperty.create(getDataModel());
+        this.dataContextPath = dataModelContext.isPresent() ? dataModelContext.get().value() : "";
+
+        return this;
+    }
+
+    @Override
+    public Optional<ObservableCollection> getObservableCollection() {
+        return this.observableCollection;
+    }
+
+    @Override
+    public Optional<DataModelContext> getDataModelContext() {
+        return this.dataModelContext;
+    }
+
+    @Override
+    public Optional<EventSignals> getEventSignals() {
+        return this.eventSignals;
+    }
+
+    @Override
+    public Optional<PropertySlots> getPropertySlots() {
+        return this.propertySlots;
+    }
+
+    @Override
 	public boolean resolveDataModelChain(final LinkedList<DataModelProperty> dataModelChain) {
 		dataModelChain.add(this.rootDataModelProperty);
-		return appendDataModelPropertyChain(dataModelChain,
-															 this.dataContextPath);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		if(obj == null) {
-			return false;
-		}
-		if(getClass() != obj.getClass()) {
-			return false;
-		}
-		final RootViewBindingMeta other = (RootViewBindingMeta) obj;
-
-		return Objects.equal(this.dataModel,
-							 other.dataModel)
-				&& Objects.equal(this.viewModel,
-								 other.viewModel);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(this.viewModel,
-								this.dataModel);
+		return appendDataModelPropertyChain(dataModelChain,this.dataContextPath);
 	}
 }

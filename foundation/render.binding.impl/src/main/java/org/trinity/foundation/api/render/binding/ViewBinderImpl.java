@@ -101,7 +101,7 @@ public class ViewBinderImpl implements ViewBinder {
     @Override
     public void unbind(@Nonnull final Object dataModel,
                        @Nonnull final Object viewModel) {
-        final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create(dataModel,
+        final ViewBindingMeta viewBindingMeta = RootViewBindingMeta.create(dataModel,
                 viewModel);
         removeAllBindings(viewBindingMeta);
     }
@@ -130,7 +130,7 @@ public class ViewBinderImpl implements ViewBinder {
     public void bind(
             @Nonnull final Object dataModel,
             @Nonnull final Object viewModel) {
-        final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create(dataModel,
+        final ViewBindingMeta viewBindingMeta = RootViewBindingMeta.create(dataModel,
                 viewModel);
         createAllBindings(
                 viewBindingMeta);
@@ -208,7 +208,7 @@ public class ViewBinderImpl implements ViewBinder {
             for (final ViewBindingMeta parentViewBindingMeta : parentViewBindingMetas) {
 
                 //recreate the old subview binding description
-                final ViewBindingMeta oldBindingMeta = ViewBindingMeta.create(parentViewBindingMeta,
+                final ViewBindingMeta oldBindingMeta = SubViewBindingMeta.create(parentViewBindingMeta,
                         field.get(),
                         oldSubView.get());
 
@@ -224,13 +224,12 @@ public class ViewBinderImpl implements ViewBinder {
             for (final ViewBindingMeta parentViewBindingMeta : parentViewBindingMetas) {
 
                 //construct a new subview binding description
-                final ViewBindingMeta newBindingMeta = ViewBindingMeta.create(parentViewBindingMeta,
+                final ViewBindingMeta newBindingMeta = SubViewBindingMeta.create(parentViewBindingMeta,
                         field.get(),
                         newSubView.get());
 
                 //and construct all bindings from this description.
-                createAllBindings(
-                        newBindingMeta);
+                createAllBindings(newBindingMeta);
             }
         }
     }

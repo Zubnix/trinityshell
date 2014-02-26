@@ -22,8 +22,6 @@ package org.trinity.foundation.display.x11.impl;
 import com.google.common.base.Optional;
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.xcb.xcb_generic_event_t;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.foundation.display.x11.api.XConnection;
@@ -40,16 +38,8 @@ import java.util.Set;
 @NotThreadSafe
 public final class XEventHandlers {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XEventHandlers.class);
     private static final int EVENT_CODE_MASK = 0x7f;
 
-    /*
-     * Singletons are eagerly created in Guice by default. So even though nobody
-     * needs an instance, it's still created anyway. In the case of
-     * XEventHandlers, when Guice creates it (at binding time at startup), it
-     * immediately subscribes itself to the XEventBus and starts processing x
-     * events in it's @Subscribe method as soon as events arrive.
-     */
     private final Map<Integer, XEventHandler> conversionMap = new HashMap<>();
 
     @Inject

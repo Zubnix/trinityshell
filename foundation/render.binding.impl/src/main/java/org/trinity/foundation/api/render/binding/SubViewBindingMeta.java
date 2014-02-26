@@ -1,75 +1,83 @@
 package org.trinity.foundation.api.render.binding;
 
-import com.google.common.base.Objects;
+import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
 import org.trinity.foundation.api.render.binding.view.DataModelContext;
 import org.trinity.foundation.api.render.binding.view.EventSignals;
 import org.trinity.foundation.api.render.binding.view.ObservableCollection;
 import org.trinity.foundation.api.render.binding.view.PropertySlots;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 
-public class SubViewBindingMeta extends ViewBindingMeta {
+@Immutable
+@AutoValue
+public abstract class SubViewBindingMeta extends ViewBindingMeta {
 
+    private Optional<ObservableCollection> observableCollection;
+    private Optional<DataModelContext> dataModelContext;
+    private Optional<EventSignals> eventSignals;
+    private Optional<PropertySlots> propertySlots;
+    private String          dataContextPath;
 
+    public static ViewBindingMeta create(@Nonnull final ViewBindingMeta parentViewBindingMeta,
+                                         @Nonnull final Field subviewField,
+                                         @Nonnull final Object subviewValue) {
 
-	private final String          dataContextPath;
-	private final Object          viewModel;
-	private final ViewBindingMeta parentViewBindingMeta;
-	private final Field           subViewField;
+        return new AutoValue_SubViewBindingMeta(subviewValue,
+                parentViewBindingMeta,
+                subviewField).scan();
+    }
 
-	SubViewBindingMeta(final Object viewModel,
-					   final ViewBindingMeta parentViewBindingMeta,
-					   final Field subViewField,
-					   final Optional<ObservableCollection> observableCollection,
-					   final Optional<DataModelContext> dataModelContext,
-					   final Optional<EventSignals> eventSignals,
-					   final Optional<PropertySlots> propertySlots) {
-		super(viewModel,
-			  observableCollection,
-			  dataModelContext,
-			  eventSignals,
-			  propertySlots);
-		this.viewModel = viewModel;
-		this.parentViewBindingMeta = parentViewBindingMeta;
-		this.subViewField = subViewField;
-		this.dataContextPath = dataModelContext.isPresent() ? dataModelContext.get().value() : "";
-	}
+    ViewBindingMeta scan(){
 
-	@Override
+        final Class<?> subviewClass = getViewModel().getClass();
+
+        this.observableCollection = ViewBindingMetaUtil.scanFieldObservableCollection(getSubViewField()).or(ViewBindingMetaUtil.scanClassObservableCollection(subviewClass));
+        this.dataModelContext = ViewBindingMetaUtil.scanFieldDataModelContext(getSubViewField()).or(ViewBindingMetaUtil.scanClassDataModelContext(subviewClass));
+        this.eventSignals = ViewBindingMetaUtil.scanFieldEventSignals(getSubViewField()).or(ViewBindingMetaUtil.scanClassEventSignals(subviewClass));
+        this.propertySlots = ViewBindingMetaUtil.scanFieldPropertySlots(getSubViewField()).or(ViewBindingMetaUtil.scanClassPropertySlots(subviewClass));
+
+        this.dataContextPath = dataModelContext.isPresent() ? dataModelContext.get().value() : "";
+
+        return this;
+    }
+
+    public abstract Object getViewModel();
+
+    public abstract ViewBindingMeta getParentViewBindingMeta();
+
+    public abstract Field getSubViewField();
+
+    @Override
+    public Optional<ObservableCollection> getObservableCollection() {
+        return this.observableCollection;
+    }
+
+    @Override
+    public Optional<DataModelContext> getDataModelContext() {
+        return this.dataModelContext;
+    }
+
+    @Override
+    public Optional<EventSignals> getEventSignals() {
+        return this.eventSignals;
+    }
+
+    @Override
+    public Optional<PropertySlots> getPropertySlots() {
+        return this.propertySlots;
+    }
+
+    @Override
 	public boolean resolveDataModelChain(final LinkedList<DataModelProperty> dataModelChain) {
-		final Boolean parentSuccess = this.parentViewBindingMeta.resolveDataModelChain(dataModelChain);
+		final Boolean parentSuccess = getParentViewBindingMeta().resolveDataModelChain(dataModelChain);
 		Boolean success = Boolean.FALSE;
 		if(parentSuccess) {
-			success = appendDataModelPropertyChain(dataModelChain,
-																	this.dataContextPath);
+			success = appendDataModelPropertyChain(dataModelChain, this.dataContextPath);
 		}
 		return parentSuccess && success;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if(obj == null) {
-			return false;
-		}
-		if(getClass() != obj.getClass()) {
-			return false;
-		}
-		final SubViewBindingMeta other = (SubViewBindingMeta) obj;
-
-		return Objects.equal(this.viewModel,
-							 other.viewModel)
-				&& Objects.equal(this.parentViewBindingMeta,
-								 other.parentViewBindingMeta)
-				&& Objects.equal(this.subViewField,
-								 other.subViewField);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(this.viewModel,
-								this.parentViewBindingMeta,
-								this.subViewField);
 	}
 }

@@ -48,7 +48,7 @@ public class RootViewBindingMetaTest {
 	@Mock
 	private Optional<PropertySlots>       propertySlots;
 	//@InjectMocks for some reason mockito is totally confused as what to inject so we construct the object manually
-	private RootViewBindingMeta            rootViewBindingMeta;
+	private ViewBindingMeta            rootViewBindingMeta;
 
 	@Test
 	public void testResolveDataModelChainNoDataContextSuccess() {
@@ -56,12 +56,8 @@ public class RootViewBindingMetaTest {
 		//a root view binding meta with no relative dataContext
 		when(this.dataModelContext.isPresent()).thenReturn(FALSE);
 
-		this.rootViewBindingMeta = new RootViewBindingMeta(this.viewModel,
-														   this.dataModel,
-														   this.observableCollection,
-														   this.dataModelContext,
-														   this.eventSignals,
-														   this.propertySlots);
+		this.rootViewBindingMeta = RootViewBindingMeta.create(this.viewModel,
+														   this.dataModel);
 
 		//when
 		//a data model context path is requested to be resolved
@@ -87,12 +83,8 @@ public class RootViewBindingMetaTest {
 		when(this.dataModelContext.isPresent()).thenReturn(TRUE);
 		when(this.dataModelContext.get()).thenReturn(dataModelContextValue);
 
-		this.rootViewBindingMeta = new RootViewBindingMeta(this.viewModel,
-														   this.dataModel,
-														   this.observableCollection,
-														   this.dataModelContext,
-														   this.eventSignals,
-														   this.propertySlots);
+		this.rootViewBindingMeta = RootViewBindingMeta.create(this.viewModel,
+														   this.dataModel);
 
 		//when
 		//a data model context path is requested to be resolved
@@ -119,12 +111,8 @@ public class RootViewBindingMetaTest {
 		when(this.dataModelContext.isPresent()).thenReturn(TRUE);
 		when(this.dataModelContext.get()).thenReturn(dataModelContextValue);
 
-		this.rootViewBindingMeta = new RootViewBindingMeta(this.viewModel,
-														   this.dataModel,
-														   this.observableCollection,
-														   this.dataModelContext,
-														   this.eventSignals,
-														   this.propertySlots);
+		this.rootViewBindingMeta = RootViewBindingMeta.create(this.viewModel,
+														   this.dataModel);
 
 		//when
 		// a data model context path is requested to be resolved
@@ -147,19 +135,11 @@ public class RootViewBindingMetaTest {
 	public void testHash() {
 		//given
 		//2 root view binding metas constructed with the same data model and view model
-		final RootViewBindingMeta rootViewBindingMeta0 = new RootViewBindingMeta(this.viewModel,
-																				 this.dataModel,
-																				 this.observableCollection,
-																				 this.dataModelContext,
-																				 this.eventSignals,
-																				 this.propertySlots);
+		final ViewBindingMeta rootViewBindingMeta0 = RootViewBindingMeta.create(this.viewModel,
+																				 this.dataModel);
 
-		final RootViewBindingMeta rootViewBindingMeta1 = new RootViewBindingMeta(this.viewModel,
-																				 this.dataModel,
-																				 this.observableCollection,
-																				 this.dataModelContext,
-																				 this.eventSignals,
-																				 this.propertySlots);
+		final ViewBindingMeta rootViewBindingMeta1 = RootViewBindingMeta.create(this.viewModel,
+																				 this.dataModel);
 
 		//when
 		//there hashes are calculated
@@ -176,19 +156,11 @@ public class RootViewBindingMetaTest {
 	public void testEquals() {
 		//given
 		//2 root view binding metas constructed with the same data model and view model
-		final RootViewBindingMeta rootViewBindingMeta0 = new RootViewBindingMeta(this.viewModel,
-																				 this.dataModel,
-																				 this.observableCollection,
-																				 this.dataModelContext,
-																				 this.eventSignals,
-																				 this.propertySlots);
+		final ViewBindingMeta rootViewBindingMeta0 = RootViewBindingMeta.create(this.viewModel,
+																				 this.dataModel);
 
-		final RootViewBindingMeta rootViewBindingMeta1 = new RootViewBindingMeta(this.viewModel,
-																				 this.dataModel,
-																				 this.observableCollection,
-																				 this.dataModelContext,
-																				 this.eventSignals,
-																				 this.propertySlots);
+		final ViewBindingMeta rootViewBindingMeta1 = RootViewBindingMeta.create(this.viewModel,
+																				 this.dataModel);
 
 		//when
 		//they are compared for equality

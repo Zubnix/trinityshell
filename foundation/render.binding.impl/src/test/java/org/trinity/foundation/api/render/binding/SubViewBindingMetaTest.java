@@ -69,13 +69,9 @@ public class SubViewBindingMetaTest {
 		//a parent relative datacontext
 		//no own relative dataContext
 		when(this.parentViewBindingMeta.resolveDataModelChain((LinkedList<DataModelProperty>) any())).thenReturn(TRUE);
-		final SubViewBindingMeta subViewBindingMeta = new SubViewBindingMeta(this.viewModel,
-																			 this.parentViewBindingMeta,
+		final ViewBindingMeta subViewBindingMeta = SubViewBindingMeta.create(this.parentViewBindingMeta,
 																			 this.subViewField,
-																			 this.observableCollection,
-																			 this.dataModelContext,
-																			 this.eventSignals,
-																			 this.propertySlot);
+                                                                             this.viewModel);
 
 		//when
 		//a data model context path is requested to be resolved
@@ -109,13 +105,9 @@ public class SubViewBindingMetaTest {
 		final DataModel dataModel = spy(new DataModel());
 		when(currentContext.getPropertyValue()).thenReturn(Optional.<Object>of(dataModel));
 
-		final SubViewBindingMeta subViewBindingMeta = new SubViewBindingMeta(this.viewModel,
-																			 this.parentViewBindingMeta,
-																			 this.subViewField,
-																			 this.observableCollection,
-																			 this.dataModelContext,
-																			 this.eventSignals,
-																			 this.propertySlot);
+		final ViewBindingMeta subViewBindingMeta = SubViewBindingMeta.create(this.parentViewBindingMeta,
+                this.subViewField,
+                this.viewModel);
 
 		//when
 		//a data model context path is requested to be resolved
@@ -150,13 +142,9 @@ public class SubViewBindingMetaTest {
 		final DataModel dataModel = spy(new DataModel());
 		when(currentContext.getPropertyValue()).thenReturn(Optional.<Object>of(dataModel));
 
-		final SubViewBindingMeta subViewBindingMeta = new SubViewBindingMeta(this.viewModel,
-																			 this.parentViewBindingMeta,
-																			 this.subViewField,
-																			 this.observableCollection,
-																			 this.dataModelContext,
-																			 this.eventSignals,
-																			 this.propertySlot);
+		final ViewBindingMeta subViewBindingMeta = SubViewBindingMeta.create(this.parentViewBindingMeta,
+                this.subViewField,
+                this.viewModel);
 
 
 		//when
@@ -180,21 +168,13 @@ public class SubViewBindingMetaTest {
 	public void testHash() {
 		//given
 		//2 sub view binding metas, constructed with the same arguments
-		final SubViewBindingMeta subViewBindingMeta0 = new SubViewBindingMeta(this.viewModel,
-																			  this.parentViewBindingMeta,
-																			  this.subViewField,
-																			  this.observableCollection,
-																			  this.dataModelContext,
-																			  this.eventSignals,
-																			  this.propertySlot);
+		final ViewBindingMeta subViewBindingMeta0 = SubViewBindingMeta.create(this.parentViewBindingMeta,
+                this.subViewField,
+                this.viewModel);
 
-		final SubViewBindingMeta subViewBindingMeta1 = new SubViewBindingMeta(this.viewModel,
-																			  this.parentViewBindingMeta,
-																			  this.subViewField,
-																			  this.observableCollection,
-																			  this.dataModelContext,
-																			  this.eventSignals,
-																			  this.propertySlot);
+		final ViewBindingMeta subViewBindingMeta1 = SubViewBindingMeta.create(this.parentViewBindingMeta,
+                this.subViewField,
+                this.viewModel);
 
 		//when
 		//there hashes are calculated
@@ -211,21 +191,13 @@ public class SubViewBindingMetaTest {
 	public void testEquals() {
 		//given
 		//2 sub view binding metas, constructed with the same arguments
-		final SubViewBindingMeta subViewBindingMeta0 = new SubViewBindingMeta(this.viewModel,
-																			  this.parentViewBindingMeta,
-																			  this.subViewField,
-																			  this.observableCollection,
-																			  this.dataModelContext,
-																			  this.eventSignals,
-																			  this.propertySlot);
+		final ViewBindingMeta subViewBindingMeta0 = SubViewBindingMeta.create(this.parentViewBindingMeta,
+                this.subViewField,
+                this.viewModel);
 
-		final SubViewBindingMeta subViewBindingMeta1 = new SubViewBindingMeta(this.viewModel,
-																			  this.parentViewBindingMeta,
-																			  this.subViewField,
-																			  this.observableCollection,
-																			  this.dataModelContext,
-																			  this.eventSignals,
-																			  this.propertySlot);
+		final ViewBindingMeta subViewBindingMeta1 = SubViewBindingMeta.create(this.parentViewBindingMeta,
+                this.subViewField,
+                this.viewModel);
 
 		//when
 		//the sub view binding metas are checked for equality
