@@ -320,15 +320,15 @@ public class XWindow implements DisplaySurface {
 	public boolean equals(final Object obj) {
 		if(obj instanceof XWindow) {
 			final XWindow otherWindow = (XWindow) obj;
-			return otherWindow.getDisplaySurfaceHandle().getNativeHandle()
-							  .equals(getDisplaySurfaceHandle().getNativeHandle());
+			return otherWindow.getDisplaySurfaceHandle()
+							  .equals(getDisplaySurfaceHandle());
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return getDisplaySurfaceHandle().getNativeHandle().hashCode();
+		return getDisplaySurfaceHandle().hashCode();
 	}
 
 	@Override

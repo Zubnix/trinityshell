@@ -38,7 +38,7 @@ public class ViewBindingsTraverser extends TreeTraverser<ViewBindingMeta> {
 					continue;
 				}
 
-				final ViewBindingMeta viewBindingMeta = ViewBindingMeta.create(root,
+				final ViewBindingMeta viewBindingMeta = SubViewBindingMeta.create(root,
 																			   declaredField,
 																			   subViewValue);
 				viewBindingMetas.add(viewBindingMeta);

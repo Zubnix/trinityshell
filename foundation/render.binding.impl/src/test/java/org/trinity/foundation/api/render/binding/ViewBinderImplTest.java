@@ -108,7 +108,7 @@ public class ViewBinderImplTest {
 
         //root view binding meta creation
         mockStatic(ViewBindingMeta.class);
-        when(ViewBindingMeta.create(dataModel, viewModel)).thenReturn(rootViewBindingMeta);
+        when(RootViewBindingMeta.create(dataModel, viewModel)).thenReturn(rootViewBindingMeta);
 
         //created root bindings
         final CollectionBinding collectionBinding = mock(CollectionBinding.class);
@@ -254,7 +254,7 @@ public class ViewBinderImplTest {
 
         //root view binding meta creation
         mockStatic(ViewBindingMeta.class);
-        when(ViewBindingMeta.create(dataModel, viewModel)).thenReturn(rootViewBindingMeta);
+        when(RootViewBindingMeta.create(dataModel, viewModel)).thenReturn(rootViewBindingMeta);
 
         //updated foo value
         final Object fooValue = new Object();
@@ -438,7 +438,7 @@ public class ViewBinderImplTest {
 
         //root view binding meta creation
         mockStatic(ViewBindingMeta.class);
-        when(ViewBindingMeta.create(dataModel, viewModel)).thenReturn(rootViewBindingMeta);
+        when(RootViewBindingMeta.create(dataModel, viewModel)).thenReturn(rootViewBindingMeta);
 
         //created root bindings
         final CollectionBinding collectionBinding = mock(CollectionBinding.class);

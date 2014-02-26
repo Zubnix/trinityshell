@@ -40,13 +40,6 @@ public final class XEventHandlers {
 
     private static final int EVENT_CODE_MASK = 0x7f;
 
-    /*
-     * Singletons are eagerly created in Guice by default. So even though nobody
-     * needs an instance, it's still created anyway. In the case of
-     * XEventHandlers, when Guice creates it (at binding time at startup), it
-     * immediately subscribes itself to the XEventBus and starts processing x
-     * events in it's @Subscribe method as soon as events arrive.
-     */
     private final Map<Integer, XEventHandler> conversionMap = new HashMap<>();
 
     @Inject

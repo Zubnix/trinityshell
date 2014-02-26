@@ -3,9 +3,12 @@ package org.trinity.foundation.display.x11.impl;
 import org.freedesktop.xcb.xcb_screen_t;
 import org.junit.Test;
 import org.trinity.foundation.api.shared.Size;
+import org.trinity.foundation.display.x11.api.XScreen;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class TestXScreenImpl {
 
@@ -22,7 +25,7 @@ public class TestXScreenImpl {
 
         //when
         //the screen pixel size is requested
-        final XScreenImpl xScreen = new XScreenImpl(xcb_screen);
+        final XScreen xScreen = XScreenImpl.create(xcb_screen);
         final Size size = xScreen.getSize();
 
         //then

@@ -1,5 +1,6 @@
 package org.trinity.foundation.display.x11.impl;
 
+import com.google.auto.value.AutoValue;
 import org.freedesktop.xcb.xcb_screen_t;
 import org.trinity.foundation.api.shared.Size;
 import org.trinity.foundation.display.x11.api.XScreen;
@@ -12,22 +13,16 @@ import javax.annotation.concurrent.Immutable;
  * this template use File | Settings | File Templates.
  */
 @Immutable
-public class XScreenImpl implements XScreen {
+@AutoValue
+public abstract class XScreenImpl implements XScreen {
 
-	private final xcb_screen_t screen;
-
-	public XScreenImpl(@Nonnull final xcb_screen_t screen) {
-		this.screen = screen;
-	}
-
-	@Override
-	public xcb_screen_t getScreenReference() {
-		return screen;
-	}
+    public static XScreen create(@Nonnull final xcb_screen_t screen){
+        return new AutoValue_XScreenImpl(screen);
+    }
 
 	@Override
 	public Size getSize() {
-		return Size.create(this.screen.getWidth_in_pixels(),
-						this.screen.getHeight_in_pixels());
+		return Size.create(getScreenReference().getWidth_in_pixels(),
+                getScreenReference().getHeight_in_pixels());
 	}
 }
