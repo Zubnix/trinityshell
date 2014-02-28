@@ -30,6 +30,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -39,6 +41,8 @@ import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
 @Singleton
 @NotThreadSafe
 public class XEventChannelImpl extends ListenableEventBus implements XEventChannel {
+
+    private final ExecutorService eventPumpThread = Executors.newSingleThreadExecutor();
 
 	private SWIGTYPE_p_xcb_connection_t xcb_connection;
 
@@ -62,6 +66,7 @@ public class XEventChannelImpl extends ListenableEventBus implements XEventChann
 		screenBuf.putInt(screen);
 		this.xcb_connection = xcb_connect(displayName,
 										  screenBuf);
+        pump();
 	}
 
 	@Override
@@ -83,4 +88,29 @@ public class XEventChannelImpl extends ListenableEventBus implements XEventChann
 	public void stop() {
 		this.postLock.acquireUninterruptibly();
 	}
+
+    private void pump() {
+        this.eventPumpThread.submit(new Runnable() {
+            @Override
+            public void run() {
+                if(xcb_connection_has_error(this.xEventChannel.getConnectionReference()) != 0) {
+                    final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
+                    LOG.error(errorMsg);
+                    throw new Error(errorMsg);
+                }
+
+                final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(this.xEventChannel.getConnectionReference());
+
+                 //acquire permit
+                 stop();
+
+                 post(xcb_generic_event);
+                 xcb_generic_event.delete();
+
+                 //release permit
+                 start();
+                 pump();
+            }
+        });
+    }
 }
