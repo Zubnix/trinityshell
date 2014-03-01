@@ -92,19 +92,19 @@ public class XDisplayImpl implements Display {
 
 	private void open() {
 
-		if(xcb_connection_has_error(XDisplayImpl.this.xEventChannel.getConnectionReference()) != 0) {
+		if(xcb_connection_has_error(this.xEventChannel.getConnectionReference()) != 0) {
 			throw new Error("Cannot open display\n");
 		}
 		// FIXME from config?
 		final int targetScreen = 0;
-		final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(XDisplayImpl.this.xEventChannel
+		final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(this.xEventChannel
 																						  .getConnectionReference()));
 		int screenNr;
 		for(; iter.getRem() != 0; --screenNr, xcb_screen_next(iter)) {
 			if(targetScreen == 0) {
 				final xcb_screen_t xcb_screen = iter.getData();
 				configureRootEvents(xcb_screen);
-				XDisplayImpl.this.screen = new XScreenImpl(xcb_screen);
+				this.screen = XScreenImpl.create(xcb_screen);
 				break;
 			}
 		}
