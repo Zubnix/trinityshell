@@ -97,14 +97,14 @@ public class XDisplayImpl implements Display {
 		}
 		// FIXME from config?
 		final int targetScreen = 0;
-		final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(XDisplayImpl.this.xEventChannel
+		final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(this.xEventChannel
 																						  .getConnectionReference()));
 		int screenNr;
 		for(; iter.getRem() != 0; --screenNr, xcb_screen_next(iter)) {
 			if(targetScreen == 0) {
 				final xcb_screen_t xcb_screen = iter.getData();
 				configureRootEvents(xcb_screen);
-				XDisplayImpl.this.screen = new XScreenImpl(xcb_screen);
+				this.screen = XScreenImpl.create(xcb_screen);
 				break;
 			}
 		}
@@ -157,7 +157,7 @@ public class XDisplayImpl implements Display {
 																													e);
 
 			if (xcb_generic_error_t.getCPtr(e) != 0) {
-				XDisplayImpl.LOG.error(	"X error while doing get window attributes: {}.",
+				LOG.error(	"X error while doing get window attributes: {}.",
 										XcbErrorUtil.toString(e));
 			} else {
 				final short override_redirect = get_window_attributes_reply.getOverride_redirect();

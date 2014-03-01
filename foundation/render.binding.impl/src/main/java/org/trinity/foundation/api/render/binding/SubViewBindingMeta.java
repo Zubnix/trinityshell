@@ -40,7 +40,7 @@ public abstract class SubViewBindingMeta extends ViewBindingMeta {
         this.eventSignals = ViewBindingMetaUtil.scanFieldEventSignals(getSubViewField()).or(ViewBindingMetaUtil.scanClassEventSignals(subviewClass));
         this.propertySlots = ViewBindingMetaUtil.scanFieldPropertySlots(getSubViewField()).or(ViewBindingMetaUtil.scanClassPropertySlots(subviewClass));
 
-        this.dataContextPath = dataModelContext.isPresent() ? dataModelContext.get().value() : "";
+        this.dataContextPath = this.dataModelContext.isPresent() ? this.dataModelContext.get().value() : "";
 
         return this;
     }
