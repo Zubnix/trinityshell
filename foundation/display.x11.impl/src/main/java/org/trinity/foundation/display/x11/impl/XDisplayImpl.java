@@ -92,7 +92,7 @@ public class XDisplayImpl implements Display {
 
 	private void open() {
 
-		if(xcb_connection_has_error(XDisplayImpl.this.xEventChannel.getConnectionReference()) != 0) {
+		if(xcb_connection_has_error(this.xEventChannel.getConnectionReference()) != 0) {
 			throw new Error("Cannot open display\n");
 		}
 		// FIXME from config?
