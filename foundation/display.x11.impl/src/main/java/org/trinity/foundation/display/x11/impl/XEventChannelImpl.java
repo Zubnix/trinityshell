@@ -35,7 +35,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.freedesktop.xcb.LibXcb.*;
@@ -44,13 +43,11 @@ import static org.freedesktop.xcb.LibXcb.*;
 @NotThreadSafe
 public class XEventChannelImpl extends ListenableEventBus implements XEventChannel {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XEventChannelImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XEventChannelImpl.class);
 
-    private final ExecutorService eventPumpThread = Executors.newSingleThreadExecutor();
+	private final ExecutorService eventPumpThread = Executors.newSingleThreadExecutor();
 
 	private SWIGTYPE_p_xcb_connection_t xcb_connection;
-
-	private final Semaphore postLock = new Semaphore(1);
 
 	@Inject
 	XEventChannelImpl() {
@@ -70,7 +67,7 @@ public class XEventChannelImpl extends ListenableEventBus implements XEventChann
 		screenBuf.putInt(screen);
 		this.xcb_connection = xcb_connect(displayName,
 										  screenBuf);
-        pump();
+		pump();
 	}
 
 	@Override
@@ -83,36 +80,23 @@ public class XEventChannelImpl extends ListenableEventBus implements XEventChann
 		return this.xcb_connection;
 	}
 
-	@Override
-	public void start() {
-		this.postLock.release();
+	private void pump() {
+		this.eventPumpThread.submit(new Runnable() {
+			@Override
+			public void run() {
+				if(xcb_connection_has_error(getConnectionReference()) != 0) {
+					final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
+					LOG.error(errorMsg);
+					throw new Error(errorMsg);
+				}
+
+				final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(getConnectionReference());
+
+				post(xcb_generic_event);
+				xcb_generic_event.delete();
+
+				pump();
+			}
+		});
 	}
-
-	@Override
-	public void stop() {
-		this.postLock.acquireUninterruptibly();
-	}
-
-    private void pump() {
-        this.eventPumpThread.submit(new Runnable() {
-            @Override
-            public void run() {
-                if(xcb_connection_has_error(getConnectionReference()) != 0) {
-                    final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
-                    LOG.error(errorMsg);
-                    throw new Error(errorMsg);
-                }
-
-                final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(getConnectionReference());
-                XEventChannelImpl.this.postLock.acquireUninterruptibly();
-
-                 post(xcb_generic_event);
-                 xcb_generic_event.delete();
-
-                 //release permit
-                XEventChannelImpl.this.postLock.release();
-                 pump();
-            }
-        });
-    }
 }

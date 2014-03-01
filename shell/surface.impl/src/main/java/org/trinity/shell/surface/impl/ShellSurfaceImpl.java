@@ -60,11 +60,11 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
 	public static final int     DEFAULT_WIDTH_INC    = 1;
 	public static final int     DEFAULT_HEIGHT_INC   = 1;
 
-	private final Size    minSize         = new Size(DEFAULT_MIN_WIDTH,
+	private final Size    minSize         = Size.create(DEFAULT_MIN_WIDTH,
 													 DEFAULT_MIN_HEIGHT);
 	private       boolean movable         = DEFAULT_IS_MOVABLE;
 	private       boolean resizable       = DEFAULT_IS_RESIZABLE;
-	private       Size    maxSize         = new Size(DEFAULT_MAX_WIDTH,
+	private       Size    maxSize         = Size.create(DEFAULT_MAX_WIDTH,
 													 DEFAULT_MAX_HEIGHT);
 	private       int     widthIncrement  = DEFAULT_WIDTH_INC;
 	private       int     heightIncrement = DEFAULT_HEIGHT_INC;
@@ -192,7 +192,7 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
         int normalizedHeight = newHeight < minHeight ? minHeight : newHeight > maxHeight ? maxHeight : newHeight;
         normalizedHeight -= (normalizedHeight - currentHeight) % getHeightIncrement();
 
-        return new Size(normalizedWidth,
+        return Size.create(normalizedWidth,
                 normalizedHeight);
     }
 

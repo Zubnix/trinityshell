@@ -34,16 +34,16 @@ import static com.google.common.base.Preconditions.checkArgument;
 public abstract class AbstractShellNode implements ShellNode {
 
 	private final ListenableEventBus nodeEventBus;
-	private Coordinate position = new Coordinate(	0,
-													0);
-	private Coordinate desiredPosition = new Coordinate(0,
-														0);
-	private Size size = new Size(	5,
-									5);
-	private Size desiredSize = new Size(5,
-										5);
+	private Coordinate position        = Coordinate.create(0,
+														   0);
+	private Coordinate desiredPosition = Coordinate.create(0,
+														   0);
+	private Size       size            = Size.create(5,
+													 5);
+	private Size       desiredSize     = Size.create(5,
+													 5);
 	private boolean visible;
-	private Optional<ShellNodeParent> optionalParent = Optional.absent();
+	private Optional<ShellNodeParent> optionalParent        = Optional.absent();
 	private Optional<ShellNodeParent> optionalDesiredParent = Optional.absent();
 	private boolean destroyed;
 
@@ -55,11 +55,11 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	@Override
 	public ShellNodeTransformation toGeoTransformation() {
-		return new ShellNodeTransformation(	getGeometry (),
-											Optional.fromNullable(getParent().orNull()),
-											new Rectangle(	getDesiredPosition(),
-																	getDesiredSize()),
-											Optional.<ShellNodeParent> fromNullable(getDesiredParent().orNull()));
+		return new ShellNodeTransformation(getGeometry(),
+										   Optional.fromNullable(getParent().orNull()),
+										   Rectangle.create(getDesiredPosition(),
+															getDesiredSize()),
+										   Optional.<ShellNodeParent>fromNullable(getDesiredParent().orNull()));
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	@Override
 	public Optional<ShellNodeParent> getParent() {
-		return Optional.<ShellNodeParent> fromNullable(this.optionalParent.orNull());
+		return Optional.<ShellNodeParent>fromNullable(this.optionalParent.orNull());
 	}
 
 	@Override
@@ -81,37 +81,37 @@ public abstract class AbstractShellNode implements ShellNode {
 	@Override
 	public void requestReparent() {
 		// update parent to new parent
-		final ShellNodeEvent event = new ShellNodeReparentRequestEvent(	this,
-																		toGeoTransformation ());
+		final ShellNodeEvent event = new ShellNodeReparentRequestEvent(this,
+																	   toGeoTransformation());
 		post(event);
 	}
 
 	@Override
 	public Rectangle getGeometry() {
-		return new Rectangle(	getPosition (),
-										getSize ());
+		return Rectangle.create(getPosition(),
+								getSize());
 	}
 
 	@Override
 	public void setSize(final int width,
-							final int height) {
-		checkArgument(	width > 0,
-						"Argument was %s but expected nonzero nonnegative value",
-						width);
-		checkArgument(	height > 0,
-						"Argument was %s but expected nonzero nonnegative value",
-						height);
+						final int height) {
+		checkArgument(width > 0,
+					  "Argument was %s but expected nonzero nonnegative value",
+					  width);
+		checkArgument(height > 0,
+					  "Argument was %s but expected nonzero nonnegative value",
+					  height);
 
-		this.desiredSize = new Size(width,
-									height);
+		this.desiredSize = Size.create(width,
+									   height);
 
 	}
 
 	@Override
 	public void setPosition(final int x,
 								final int y) {
-		this.desiredPosition = new Coordinate(	x,
-												y);
+		this.desiredPosition = Coordinate.create(x,
+												 y);
 	}
 
 	/**

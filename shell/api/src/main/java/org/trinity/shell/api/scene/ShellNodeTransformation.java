@@ -53,7 +53,7 @@ public class ShellNodeTransformation {
 		final int deltaY = rect1.getPosition().getY() - rect0.getPosition().getY();
 		final int deltaWidth = rect1.getSize().getWidth() - rect0.getSize().getWidth();
 		final int deltaHeight = rect1.getSize().getWidth() - rect0.getSize().getHeight();
-		this.deltaRect = new Rectangle(deltaX,
+		this.deltaRect = Rectangle.create(deltaX,
 												deltaY,
 												deltaWidth,
 												deltaHeight);

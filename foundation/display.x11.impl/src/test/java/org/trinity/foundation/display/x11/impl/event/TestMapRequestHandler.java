@@ -105,7 +105,7 @@ public class TestMapRequestHandler {
 
 		final DisplaySurface displaySurface = mock(DisplaySurface.class);
 		when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
-		when(this.xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
+		when(this.xWindowPool.get((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(final InvocationOnMock invocation) throws Throwable {
 				final Object arg0 = invocation.getArguments()[0];
@@ -125,7 +125,7 @@ public class TestMapRequestHandler {
 		//the correct DisplaySurface is returned
 		//no display surface creation notify is fired
 		final ArgumentCaptor<XWindowHandle> windowHandleArgumentCaptor = ArgumentCaptor.forClass(XWindowHandle.class);
-        verify(this.xWindowPool).getDisplaySurface(windowHandleArgumentCaptor.capture());
+        verify(this.xWindowPool).get(windowHandleArgumentCaptor.capture());
         assertEquals((Integer) this.targetWindowId,
                 windowHandleArgumentCaptor.getValue().getNativeHandle());
         assertTrue(target.isPresent());
@@ -148,7 +148,7 @@ public class TestMapRequestHandler {
 
         final DisplaySurface displaySurface = mock(DisplaySurface.class);
         when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
-        when(this.xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
+        when(this.xWindowPool.get((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {
                 final Object arg0 = invocation.getArguments()[0];

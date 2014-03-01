@@ -56,7 +56,7 @@ public class PropertyBinding implements ViewBinding {
 
 		if(resolvable) {
 
-			//construct the property that we will use to update the view
+			//build the property that we will use to update the view
 
 			final DataModelProperty parentDataModelProperty = dataModelProperties.getLast();
 			final Optional<Object> parentDataModelPropertyValue = parentDataModelProperty.getPropertyValue();

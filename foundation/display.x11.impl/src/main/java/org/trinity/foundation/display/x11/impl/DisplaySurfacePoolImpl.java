@@ -19,76 +19,100 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
+import co.paralleluniverse.strands.concurrent.Semaphore;
 import com.google.common.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.DisplaySurfaceFactory;
+import org.trinity.foundation.api.display.DisplaySurfaceBuilder;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
-import org.trinity.foundation.api.display.DisplaySurfaceReferencer;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.display.x11.api.XEventChannel;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 
 @Singleton
-@NotThreadSafe
+@ThreadSafe
 public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DisplaySurfacePoolImpl.class);
 
-	private final Map<Integer, DisplaySurface> displaySurfaces = new HashMap<>();
-	private final XEventChannel         xEventChannel;
-	private final DisplaySurfaceFactory displaySurfaceFactory;
+	private final Semaphore                                 cacheSemaphore  = new Semaphore(1);
+	private final Map<DisplaySurfaceHandle, DisplaySurface> displaySurfaces = new HashMap<>();
+
+	private final XEventChannel  xEventChannel;
+	private final XWindowFactory xWindowFactory;
 
 	@Inject
 	DisplaySurfacePoolImpl(final XEventChannel xEventChannel,
-						   final DisplaySurfaceFactory displaySurfaceFactory) {
+						   final XWindowFactory xWindowFactory) {
 		this.xEventChannel = xEventChannel;
-		this.displaySurfaceFactory = displaySurfaceFactory;
+		this.xWindowFactory = xWindowFactory;
 	}
 
 	@Override
-	public DisplaySurface getDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
+	public DisplaySurface get(final DisplaySurfaceHandle displaySurfaceHandle) {
 
-		final int windowHash = displaySurfaceHandle.getNativeHandle().hashCode();
-		DisplaySurface window = this.displaySurfaces.get(windowHash);
-		if(window == null) {
-			LOG.debug("Xwindow={} added to cache.",
-					  displaySurfaceHandle);
-
-			window = this.displaySurfaceFactory.construct(displaySurfaceHandle);
-			window.register(new DestroyListener(window));
-			this.displaySurfaces.put(windowHash,
-									 window);
+		try {
+			this.cacheSemaphore.acquireUninterruptibly();
+			DisplaySurface window = this.displaySurfaces.get(displaySurfaceHandle);
+			if(window == null) {
+				window = registerNewDisplaySurface(displaySurfaceHandle);
+			}
+			return window;
 		}
+		finally {
+			this.cacheSemaphore.release();
+		}
+	}
+
+	private DisplaySurface registerNewDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
+		LOG.debug("Xwindow={} added to cache.",
+				  displaySurfaceHandle);
+
+		final DisplaySurface window = this.xWindowFactory.create(displaySurfaceHandle);
+		window.register(new DestroyListener(window));
+		this.displaySurfaces.put(displaySurfaceHandle,
+								 window);
 		return window;
+	}
+
+	private void unregisterDisplaySurface(final DisplaySurface displaySurface) {
+		this.displaySurfaces.remove(displaySurface.getDisplaySurfaceHandle().getNativeHandle().hashCode());
+		displaySurface.unregister(this);
 	}
 
 	@Override
 	public Boolean isPresent(final DisplaySurfaceHandle displaySurfaceHandle) {
-
-		return this.displaySurfaces.containsKey(displaySurfaceHandle.getNativeHandle().hashCode());
+		try {
+			this.cacheSemaphore.acquireUninterruptibly();
+			return this.displaySurfaces.containsKey(displaySurfaceHandle.getNativeHandle().hashCode());
+		}
+		finally {
+			this.cacheSemaphore.release();
+		}
 	}
 
 	@Override
-	public DisplaySurfaceReferencer getDisplaySurfaceCreator() {
-		this.xEventChannel.stop();
+	public DisplaySurfaceBuilder openDisplaySurfaceBuilder() {
 
-		return new DisplaySurfaceReferencer() {
+		this.cacheSemaphore.acquireUninterruptibly();
+
+		return new DisplaySurfaceBuilder() {
 			@Override
-			public DisplaySurface reference(final DisplaySurfaceHandle displaySurfaceHandle) {
-				return getDisplaySurface(displaySurfaceHandle);
+			public void build(final DisplaySurfaceHandle displaySurfaceHandle) {
+
+				registerNewDisplaySurface(displaySurfaceHandle);
 			}
 
 			@Override
 			public void close() {
-				DisplaySurfacePoolImpl.this.xEventChannel.start();
+				DisplaySurfacePoolImpl.this.cacheSemaphore.release();
 			}
 		};
 	}
@@ -96,15 +120,19 @@ public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 	private class DestroyListener {
 		private final DisplaySurface window;
 
-		public DestroyListener(final DisplaySurface window) {
-			this.window = window;
+		public DestroyListener(final DisplaySurface displaySurface) {
+			this.window = displaySurface;
 		}
 
 		@Subscribe
 		public void destroyed(final DestroyNotify destroyNotify) {
-
-            DisplaySurfacePoolImpl.this.displaySurfaces.remove(this.window.getDisplaySurfaceHandle().getNativeHandle().hashCode());
-            this.window.unregister(this);
-        }
-    }
+			try {
+				DisplaySurfacePoolImpl.this.cacheSemaphore.acquireUninterruptibly();
+				unregisterDisplaySurface(this.window);
+			}
+			finally {
+				DisplaySurfacePoolImpl.this.cacheSemaphore.release();
+			}
+		}
+	}
 }

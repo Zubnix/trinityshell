@@ -7,9 +7,8 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.trinity.foundation.api.display.DisplaySurfaceFactory;
+import org.trinity.foundation.api.display.DisplaySurfaceBuilder;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.display.DisplaySurfaceReferencer;
 import org.trinity.foundation.display.x11.api.XEventChannel;
 
 import static org.junit.Assert.assertFalse;
@@ -22,7 +21,7 @@ public class TestXWindowPoolImpl {
 	@Mock
 	private XEventChannel          xEventPump;
 	@Mock
-	private DisplaySurfaceFactory  displaySurfaceFactory;
+	private XWindowFactory  displaySurfaceFactory;
 	@Mock
 	private XWindow                xWindow;
 	@Mock
@@ -34,7 +33,7 @@ public class TestXWindowPoolImpl {
 	public void setup() {
 		final int nativeHandle = 123;
 		when(this.displaySurfaceHandle.getNativeHandle()).thenReturn(nativeHandle);
-		when(this.displaySurfaceFactory.construct(this.displaySurfaceHandle)).thenReturn(this.xWindow);
+		when(this.displaySurfaceFactory.create(this.displaySurfaceHandle)).thenReturn(this.xWindow);
 		when(this.xWindow.getDisplaySurfaceHandle()).thenReturn(this.displaySurfaceHandle);
 	}
 
@@ -45,13 +44,13 @@ public class TestXWindowPoolImpl {
 
 		//when
 		//a window is requested more than once
-		this.xWindowPool.getDisplaySurface(this.displaySurfaceHandle);
-		this.xWindowPool.getDisplaySurface(this.displaySurfaceHandle);
+		this.xWindowPool.get(this.displaySurfaceHandle);
+		this.xWindowPool.get(this.displaySurfaceHandle);
 
 		//then
 		//it is lazily created and cached if not present
 		verify(this.displaySurfaceFactory,
-			   times(1)).construct(this.displaySurfaceHandle);
+			   times(1)).create(this.displaySurfaceHandle);
 	}
 
     @Test
@@ -62,7 +61,7 @@ public class TestXWindowPoolImpl {
         //when
         //a displaySurfaces pool presence is requested
 		final boolean present0 = this.xWindowPool.isPresent(this.displaySurfaceHandle);
-		this.xWindowPool.getDisplaySurface(this.displaySurfaceHandle);
+		this.xWindowPool.get(this.displaySurfaceHandle);
 		final boolean present1 = this.xWindowPool.isPresent(this.displaySurfaceHandle);
 
 		//then
@@ -78,8 +77,8 @@ public class TestXWindowPoolImpl {
 
         //when
         //a new serverside window is requested
-		try(DisplaySurfaceReferencer displaySurfaceReferencer = this.xWindowPool.getDisplaySurfaceCreator()) {
-			displaySurfaceReferencer.reference(this.displaySurfaceHandle);
+		try(DisplaySurfaceBuilder displaySurfaceReferencer = this.xWindowPool.openDisplaySurfaceBuilder()) {
+			displaySurfaceReferencer.build(this.displaySurfaceHandle);
 		}
 
         //then
@@ -88,7 +87,7 @@ public class TestXWindowPoolImpl {
 										this.displaySurfaceFactory);
 
 		inOrder.verify(this.xEventPump).stop();
-		inOrder.verify(this.displaySurfaceFactory).construct(this.displaySurfaceHandle);
+		inOrder.verify(this.displaySurfaceFactory).create(this.displaySurfaceHandle);
 		inOrder.verify(this.xEventPump).start();
 	}
 }

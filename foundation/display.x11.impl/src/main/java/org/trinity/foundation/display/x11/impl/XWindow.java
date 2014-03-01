@@ -28,7 +28,6 @@ import org.freedesktop.xcb.xcb_get_geometry_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.ListenableEventBus;
@@ -59,10 +58,7 @@ import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MO
 import static org.freedesktop.xcb.xcb_input_focus_t.XCB_INPUT_FOCUS_NONE;
 
 @ThreadSafe
-@AutoFactory(
-		implementing = DisplaySurfaceFactory.class,
-		className = "XDisplaySurfaceFactory"
-)
+@AutoFactory
 public class XWindow implements DisplaySurface {
 
 	private static final Logger     LOG                           = LoggerFactory.getLogger(XWindow.class);

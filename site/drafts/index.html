@@ -638,7 +638,7 @@ sub { top:0.4em; }
     This tutorial is mainly aimed at those that are interested in using Composite
     for providing thumbnails in a desktop pager, or for those working on Exposé
     like features. But the concepts introduced here are applicable to Composite
-    managers as well. This tutorial is not meant to be the one and only reference
+    managers as well. This tutorial is not meant to be the one and only build
     you'll ever need for everything having to do with the Composite extension
     however, but I've tried to cover all aspects of its usage for the above
     mentioned purposes. It should also help you avoid all the pitfalls you're
@@ -815,7 +815,7 @@ int height                = attr.height;
     tutorial. But the errors are harmless and will only result in an error message being
     printed on the console. When your application returns to the event loop you'll
     recieve a message about the window having been deleted.</p>
-  <pre class="code">// Create a Render picture so we can reference the window contents.
+  <pre class="code">// Create a Render picture so we can build the window contents.
 // We need to set the subwindow mode to IncludeInferiors, otherwise child widgets
 // in the window won't be included when we draw it, which is not what we want.
 XRenderPictureAttributes pa;
@@ -1099,7 +1099,7 @@ XTransform xform = {{
     For this function to be useful you must call it before XRenderCreatePicture(), and
     substitute the wId parameter with windowPix in that call.</p>
   <p>
-    It's important to keep in mind that after doing this the picture will reference this
+    It's important to keep in mind that after doing this the picture will build this
     particular backing pixmap, rather than whatever the current backing pixmap is for
     the window (which can always be referred to by the window ID). </p>
   <p>

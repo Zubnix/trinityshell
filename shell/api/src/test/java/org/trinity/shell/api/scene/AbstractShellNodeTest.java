@@ -66,7 +66,7 @@ public class AbstractShellNodeTest {
 
 		//then
 		//the desired position is reset to the previous position
-		assertEquals(new Coordinate(0,
+		assertEquals(Coordinate.create(0,
 									0),
 					 this.abstractShellNode.getDesiredPosition());
 	}
@@ -91,7 +91,7 @@ public class AbstractShellNodeTest {
 
 		//then
 		//the desired size is reset to the previous size
-		assertEquals(new Size(5,
+		assertEquals(Size.create(5,
 							  5),
 					 this.abstractShellNode.getDesiredSize());
 	}
@@ -206,10 +206,10 @@ public class AbstractShellNodeTest {
 		//it's position is updated
 		//the geometry delegate is notified
 		//the move listener is notified
-		assertEquals(new Coordinate(123,
+		assertEquals(Coordinate.create(123,
 									456),
 					 this.abstractShellNode.getPosition());
-		verify(shellNodeGeometryDelegate).move(eq(new Coordinate(123,
+		verify(shellNodeGeometryDelegate).move(eq(Coordinate.create(123,
 																 456)));
 		//TODO verify event contents
 		verify(moveListener).handle((ShellNodeMovedEvent) any());
@@ -244,15 +244,15 @@ public class AbstractShellNodeTest {
 		//tis position is updated
 		//the geometry delegate is notified
 		//the move resize listener is notified
-		assertEquals(new Coordinate(123,
+		assertEquals(Coordinate.create(123,
 									456),
 					 this.abstractShellNode.getPosition());
-		assertEquals(new Size(100,
+		assertEquals(Size.create(100,
 							  200),
 					 this.abstractShellNode.getSize());
-		verify(shellNodeGeometryDelegate).moveResize(eq(new Coordinate(123,
+		verify(shellNodeGeometryDelegate).moveResize(eq(Coordinate.create(123,
 																	   456)),
-													 eq(new Size(100,
+													 eq(Size.create(100,
 																 200)));
 		//TODO verify event contents
 		verify(moveResizeListener).handle((ShellNodeMovedResizedEvent) any());
@@ -350,10 +350,10 @@ public class AbstractShellNodeTest {
 		//the abstract shell node's size is updated
 		//the geometry delegate is notified
 		//the resize listener is notified
-		assertEquals(new Size(100,
+		assertEquals(Size.create(100,
 							  200),
 					 this.abstractShellNode.getSize());
-		verify(shellNodeGeometryDelegate).resize(eq(new Size(100,
+		verify(shellNodeGeometryDelegate).resize(eq(Size.create(100,
 															 200)));
 		//TODO verify event contents
 		verify(resizeListener).handle((ShellNodeResizedEvent) any());

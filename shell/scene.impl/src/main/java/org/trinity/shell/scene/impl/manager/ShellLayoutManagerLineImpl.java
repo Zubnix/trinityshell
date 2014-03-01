@@ -55,7 +55,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
 
 	private static final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(	1,
-																										new Margins(0));
+																										Margins.NO_MARGINS);
 	private final ChildGeoListener childGeoListener = new ChildGeoListener();
 	private boolean horizontalDirection = true;
 	private boolean inverseDirection = false;

@@ -24,9 +24,9 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotThreadSafe
 public interface DisplaySurfacePool {
 
-	DisplaySurface getDisplaySurface(DisplaySurfaceHandle displaySurfaceHandle);
+	DisplaySurface get(DisplaySurfaceHandle displaySurfaceHandle);
 
 	Boolean isPresent(DisplaySurfaceHandle displaySurfaceHandle);
 
-    DisplaySurfaceReferencer getDisplaySurfaceCreator();
+    DisplaySurfaceBuilder openDisplaySurfaceBuilder();
 }

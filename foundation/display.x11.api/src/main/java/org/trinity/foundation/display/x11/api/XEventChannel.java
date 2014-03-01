@@ -31,7 +31,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 @NotThreadSafe
 public interface XEventChannel extends Listenable {
     /**
-     * The XCB connection reference. The optional reference will be absent if no
+     * The XCB connection build. The optional build will be absent if no
      * connection is present.
      *
      * @return The underlying native X connection.
@@ -42,8 +42,4 @@ public interface XEventChannel extends Listenable {
      * Close the connection to the underlying X display server.
      */
     void close();
-
-    void start();
-
-    void stop();
 }

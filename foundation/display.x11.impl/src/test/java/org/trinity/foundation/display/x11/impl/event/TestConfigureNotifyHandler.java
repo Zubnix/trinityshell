@@ -99,7 +99,7 @@ public class TestConfigureNotifyHandler {
 
         final DisplaySurface displaySurface = mock(DisplaySurface.class);
         when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(targetWindowId));
-        when(xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
+        when(xWindowPool.get((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {
                 final Object arg0 = invocation.getArguments()[0];
@@ -118,7 +118,7 @@ public class TestConfigureNotifyHandler {
         //then
         //the correct DisplaySurface is returned
         final ArgumentCaptor<XWindowHandle> windowHandleArgumentCaptor = ArgumentCaptor.forClass(XWindowHandle.class);
-        verify(xWindowPool).getDisplaySurface(windowHandleArgumentCaptor.capture());
+        verify(xWindowPool).get(windowHandleArgumentCaptor.capture());
         assertEquals((Integer) targetWindowId,
                 windowHandleArgumentCaptor.getValue().getNativeHandle());
         assertTrue(target.isPresent());

@@ -75,7 +75,7 @@ public class FocusOutHandler implements XEventHandler {
 		// focus in structure is the same as focus out.
 		final xcb_focus_in_event_t focus_out_event_t = cast(event_t);
 
-		return Optional.of(this.xWindowCache.getDisplaySurface(XWindowHandle.create(focus_out_event_t.getEvent())));
+		return Optional.of(this.xWindowCache.get(XWindowHandle.create(focus_out_event_t.getEvent())));
 	}
 
 	@Override

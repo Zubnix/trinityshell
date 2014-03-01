@@ -76,7 +76,7 @@ public class UnmapNotifyHandler implements XEventHandler {
 		if(windowId != reportWindowId) {
 			return Optional.absent();
 		}
-		return Optional.of(this.xWindowPool.getDisplaySurface(XWindowHandle.create(windowId)));
+		return Optional.of(this.xWindowPool.get(XWindowHandle.create(windowId)));
 	}
 
 	@Override

@@ -133,7 +133,7 @@ public class TestXDisplayImpl {
         final DisplaySurface clientWindow = mock(DisplaySurface.class);
         final DisplaySurfaceHandle displaySurfaceHandle = mock(DisplaySurfaceHandle.class);
 
-		when(this.xWindowPool.getDisplaySurface((DisplaySurfaceHandle) any())).thenReturn(clientWindow);
+		when(this.xWindowPool.get((DisplaySurfaceHandle) any())).thenReturn(clientWindow);
 		when(clientWindow.getDisplaySurfaceHandle()).thenReturn(displaySurfaceHandle);
         when(displaySurfaceHandle.getNativeHandle()).thenReturn(6);
 
@@ -164,7 +164,7 @@ public class TestXDisplayImpl {
                                      eq(rootWindowAttributes));
 
         final DisplaySurfaceHandle clientHandle = XWindowHandle.create(6);
-		verify(this.xWindowPool).getDisplaySurface(eq(clientHandle));
+		verify(this.xWindowPool).get(eq(clientHandle));
 		verifyNoMoreInteractions(this.xWindowPool);
 		assertTrue(xDisplay.getDisplaySurfaces().get(0) == clientWindow);
 

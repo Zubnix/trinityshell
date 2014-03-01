@@ -107,6 +107,18 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- concurrency tools -->
+        <dependency>
+            <groupId>co.paralleluniverse</groupId>
+            <artifactId>quasar-core</artifactId>
+            <version>${quasar.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>co.paralleluniverse</groupId>
+            <artifactId>quasar-actors</artifactId>
+            <version>${quasar.version}</version>
+        </dependency>
+
         <!-- misc. program aids (not the disease) -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>

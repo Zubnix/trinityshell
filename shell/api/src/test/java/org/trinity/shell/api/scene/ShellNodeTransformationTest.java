@@ -3,6 +3,7 @@ package org.trinity.shell.api.scene;
 import com.google.common.base.Optional;
 import org.junit.Test;
 import org.trinity.foundation.api.shared.Coordinate;
+import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.Size;
 
 import static org.junit.Assert.assertEquals;

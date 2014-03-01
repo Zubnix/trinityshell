@@ -22,7 +22,6 @@ package org.trinity.foundation.display.x11.impl;
 import dagger.Module;
 import dagger.Provides;
 import org.trinity.foundation.api.display.Display;
-import org.trinity.foundation.api.display.DisplaySurfaceFactory;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.api.XEventChannel;
 
@@ -31,7 +30,6 @@ import javax.inject.Singleton;
 @Module(
         injects = {
                 //display api
-                DisplaySurfaceFactory.class,
                 DisplaySurfacePool.class,
                 Display.class,
 
@@ -53,12 +51,6 @@ public class DisplayX11ImplModule {
     @Singleton
     Display provideDisplay(final XDisplayImpl xDisplay) {
         return xDisplay;
-    }
-
-    @Provides
-    @Singleton
-    DisplaySurfaceFactory provideDisplaySurfaceFactory(final XDisplaySurfaceFactory xDisplaySurfaceFactory) {
-        return xDisplaySurfaceFactory;
     }
 
     @Provides

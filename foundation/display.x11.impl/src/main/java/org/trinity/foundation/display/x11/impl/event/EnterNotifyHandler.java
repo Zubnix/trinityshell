@@ -73,7 +73,7 @@ public class EnterNotifyHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_enter_notify_event_t enter_notify_event_t = cast(event_t);
 		final int windowId = enter_notify_event_t.getEvent();
-		return Optional.of(this.xWindowPool.getDisplaySurface(XWindowHandle.create(windowId)));
+		return Optional.of(this.xWindowPool.get(XWindowHandle.create(windowId)));
 	}
 
 	@Override

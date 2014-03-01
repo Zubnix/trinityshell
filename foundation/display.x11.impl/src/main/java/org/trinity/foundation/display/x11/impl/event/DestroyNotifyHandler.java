@@ -73,7 +73,7 @@ public class DestroyNotifyHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_destroy_notify_event_t destroy_notify_event_t = cast(event_t);
 		final int eventWindow = destroy_notify_event_t.getWindow();
-		return Optional.of(this.xWindowPool.getDisplaySurface(XWindowHandle.create(eventWindow)));
+		return Optional.of(this.xWindowPool.get(XWindowHandle.create(eventWindow)));
 	}
 
 	@Override

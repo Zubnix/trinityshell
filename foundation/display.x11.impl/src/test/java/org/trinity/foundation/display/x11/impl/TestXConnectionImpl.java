@@ -136,7 +136,7 @@ public class TestXConnectionImpl {
 //        xEventPump.stop();
 //
 //        final CountDownLatch waitForEvent = new CountDownLatch(1);
-//        //construct a new thread else we might block indefinitely.
+//        //build a new thread else we might block indefinitely.
 //        new Thread() {
 //            @Override
 //            public void run() {

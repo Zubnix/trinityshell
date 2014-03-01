@@ -223,12 +223,12 @@ public class ViewBinderImpl implements ViewBinder {
             //then for each of the parent binding descriptions
             for (final ViewBindingMeta parentViewBindingMeta : parentViewBindingMetas) {
 
-                //construct a new subview binding description
+                //build a new subview binding description
                 final ViewBindingMeta newBindingMeta = SubViewBindingMeta.create(parentViewBindingMeta,
                         field.get(),
                         newSubView.get());
 
-                //and construct all bindings from this description.
+                //and build all bindings from this description.
                 createAllBindings(newBindingMeta);
             }
         }

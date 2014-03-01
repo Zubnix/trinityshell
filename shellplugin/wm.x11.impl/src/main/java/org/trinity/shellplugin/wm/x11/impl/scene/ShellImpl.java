@@ -187,7 +187,7 @@ public class ShellImpl implements Shell {
                                 //if not then we manage it.
                                 shellLayoutManagerLine.addChildNode(clientShellSurface,
                                                                     new ShellLayoutPropertyLine(1,
-                                                                                                new Margins(2,
+                                                                                                Margins.create(2,
                                                                                                             2,
                                                                                                             35,
                                                                                                             45)));

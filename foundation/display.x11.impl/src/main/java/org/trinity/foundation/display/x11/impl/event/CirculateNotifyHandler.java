@@ -74,7 +74,7 @@ public class CirculateNotifyHandler implements XEventHandler {
 	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		final xcb_circulate_notify_event_t circulate_notify_event_t = cast(event_t);
 		final int windowId = circulate_notify_event_t.getWindow();
-		return Optional.of(this.xWindowCache.getDisplaySurface(XWindowHandle.create(windowId)));
+		return Optional.of(this.xWindowCache.get(XWindowHandle.create(windowId)));
 	}
 
 	@Override

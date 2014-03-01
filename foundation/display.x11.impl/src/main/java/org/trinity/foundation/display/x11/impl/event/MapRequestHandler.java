@@ -94,7 +94,7 @@ public class MapRequestHandler implements XEventHandler {
 		final int windowId = map_request_event_t.getWindow();
 		final DisplaySurfaceHandle xWindowHandle = XWindowHandle.create(windowId);
 		final boolean present = this.xWindowCache.isPresent(xWindowHandle);
-		final DisplaySurface displayEventTarget = this.xWindowCache.getDisplaySurface(xWindowHandle);
+		final DisplaySurface displayEventTarget = this.xWindowCache.get(xWindowHandle);
 		if(!present) {
 			configureClientEvents(displayEventTarget);
 			// this is a bit of a dirty hack to work around X's model of client
