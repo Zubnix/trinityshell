@@ -32,7 +32,6 @@ import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.render.View;
 import org.trinity.foundation.api.render.binding.ViewBinder;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerFactory;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
@@ -187,9 +186,9 @@ public class ShellImpl implements Shell {
                                 shellLayoutManagerLine.addChildNode(clientShellSurface,
                                                                     new ShellLayoutPropertyLine(1,
                                                                                                 Margins.create(2,
-                                                                                                            2,
-                                                                                                            35,
-                                                                                                            45)));
+																											   2,
+																											   35,
+																											   45)));
                                 final ClientBarElement clientTopBarItem = ShellImpl.this.clientBarElementFactory
                                         .createClientTopBarItem(clientShellSurface);
 

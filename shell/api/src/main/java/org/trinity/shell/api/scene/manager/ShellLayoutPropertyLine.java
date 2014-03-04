@@ -19,10 +19,11 @@
  ******************************************************************************/
 package org.trinity.shell.api.scene.manager;
 
+import org.trinity.shell.api.scene.ShellNode;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-
-import org.trinity.shell.api.scene.ShellNode;
+import javax.media.nativewindow.util.Insets;
 
 /***************************************
  * Layout property to be used with a {@link ShellLayoutManagerLine}.
@@ -32,8 +33,8 @@ import org.trinity.shell.api.scene.ShellNode;
 @Immutable
 public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 
-	private final int weight;
-	private final Margins margins;
+	private final int    weight;
+	private final Insets margins;
 
 	/***************************************
 	 * Create a new {@code ShellLayoutPropertyLine} with the given weight and
@@ -45,11 +46,11 @@ public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 	 * @param weight
 	 *            a weight, 0 for a statically sized child.
 	 * @param margins
-	 *            {@link Margins}
+	 *            {@link Insets}
 	 ***************************************
 	 */
-	public ShellLayoutPropertyLine(	final int weight,
-									@Nonnull final Margins margins) {
+	public ShellLayoutPropertyLine(final int weight,
+								   @Nonnull final Insets margins) {
 		this.weight = weight;
 		this.margins = margins;
 	}
@@ -61,12 +62,15 @@ public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 	 *
 	 * @param weight
 	 *            a weight, 0 for a statically sized child.
-	 * @see #ShellLayoutPropertyLine(int, Margins)
+	 * @see #ShellLayoutPropertyLine(int, Insets)
 	 ***************************************
 	 */
 	public ShellLayoutPropertyLine(final int weight) {
-		this(	weight,
-				Margins.NO_MARGINS);
+		this(weight,
+			 new Insets(0,
+						0,
+						0,
+						0));
 	}
 
 	/***************************************
@@ -83,10 +87,10 @@ public class ShellLayoutPropertyLine implements ShellLayoutProperty {
 	 * The {@code Margins} that will be subtracted from the calculated
 	 * dimensions of the child {@code ShellNode}.
 	 *
-	 * @return {@link Margins}
+	 * @return {@link Insets}
 	 ***************************************
 	 */
-	public Margins getMargins() {
+	public Insets getMargins() {
 		return this.margins;
 	}
 }

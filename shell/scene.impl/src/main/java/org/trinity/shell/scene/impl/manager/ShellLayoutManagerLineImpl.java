@@ -20,6 +20,7 @@
 package org.trinity.shell.scene.impl.manager;
 
 import com.google.common.eventbus.Subscribe;
+import com.sun.javafx.scene.layout.region.Margins;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
@@ -27,7 +28,6 @@ import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeMovedResizedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
@@ -52,11 +52,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 @NotThreadSafe
 public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
 
-	private static final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(	1,
-																										Margins.NO_MARGINS);
-	private final ChildGeoListener childGeoListener = new ChildGeoListener();
-	private boolean horizontalDirection = true;
-	private boolean inverseDirection = false;
+	private static final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(1,
+																									   Margins.NO_MARGINS);
+	private final        ChildGeoListener        childGeoListener        = new ChildGeoListener();
+	private              boolean                 horizontalDirection     = true;
+	private              boolean                 inverseDirection        = false;
 
 	ShellLayoutManagerLineImpl(//TODO with autofactory
 							   final ShellNodeParent shellNodeParent) {
@@ -89,25 +89,25 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		newWidthSize = size.getWidth();
 		fixedHeightSize = size.getHeight();
 
-		if (newWidthSize == 0) {
+		if(newWidthSize == 0) {
 			return;
 		}
 
 		// total size of all children
 		double totalWeightedChildSizes = 0;
 
-		for (final ShellNode child : getChildren()) {
+		for(final ShellNode child : getChildren()) {
 			final int childWeight = getLayoutProperty(child).getWeight();
 			// we don't want to include children with 0 weight in the scale
 			// calculation since they are treated as constants
-			if (childWeight == 0) {
-				newWidthSize -=  child.toGeoTransformation().getRect1().getSize().getWidth();
+			if(childWeight == 0) {
+				newWidthSize -= child.toGeoTransformation().getRect1().getSize().getWidth();
 			}
 			totalWeightedChildSizes += childWeight;
 		}
 
 		// calculate scale to apply to the desired new size of a child
-		if (totalWeightedChildSizes == 0) {
+		if(totalWeightedChildSizes == 0) {
 			// make scale = 1
 			totalWeightedChildSizes = newWidthSize;
 		}
@@ -115,23 +115,23 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 		// new place of the next child
 		int newPlace = 0;
-		if (this.inverseDirection) {
-			newPlace =  containerNode.getSize().getWidth();
+		if(this.inverseDirection) {
+			newPlace = containerNode.getSize().getWidth();
 		}
 
 		final List<ShellNode> children = getChildren();
-		for (final ShellNode child : children) {
+		for(final ShellNode child : children) {
 			final ShellLayoutPropertyLine layoutProperty = getLayoutProperty(child);
 			int childWeight = layoutProperty.getWeight();
 
 			double resizeFactor = scale;
-			if (resizeFactor == 0) {
+			if(resizeFactor == 0) {
 				resizeFactor = 1;
 			}
 
-			if (childWeight == 0) {
+			if(childWeight == 0) {
 				resizeFactor = 1;
-				childWeight =  child.toGeoTransformation().getRect1().getSize().getWidth();
+				childWeight = child.toGeoTransformation().getRect1().getSize().getWidth();
 			}
 
 			final int vMargins = layoutProperty.getMargins().getTop() + layoutProperty.getMargins().getBottom();

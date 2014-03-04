@@ -3,11 +3,9 @@ package org.trinity.foundation.display.x11.impl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.trinity.foundation.api.display.DisplaySurfaceBuilder;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.display.x11.api.XEventChannel;
 
@@ -69,25 +67,4 @@ public class TestXWindowPoolImpl {
         assertFalse(present0);
         assertTrue(present1);
     }
-
-    @Test
-    public void testSynchronizedReferencing() {
-        //given
-        //a pool
-
-        //when
-        //a new serverside window is requested
-		try(DisplaySurfaceBuilder displaySurfaceReferencer = this.xWindowPool.openDisplaySurfaceBuilder()) {
-			displaySurfaceReferencer.build(this.displaySurfaceHandle);
-		}
-
-        //then
-        //event processing is halted until the window is cached
-		final InOrder inOrder = inOrder(this.xEventPump,
-										this.displaySurfaceFactory);
-
-		inOrder.verify(this.xEventPump).stop();
-		inOrder.verify(this.displaySurfaceFactory).create(this.displaySurfaceHandle);
-		inOrder.verify(this.xEventPump).start();
-	}
 }

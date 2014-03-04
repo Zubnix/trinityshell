@@ -15,6 +15,7 @@ import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
+import javax.media.nativewindow.util.Point;
 import java.util.concurrent.Callable;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
@@ -77,34 +78,8 @@ public class AbstractShellNodeParentTest {
 
 		//then
 		//the children's position is refreshed
-		verify(this.childShellNodeGeometryDelegate0).move((Coordinate) any());
-		verify(this.childShellNodeGeometryDelegate1).move((Coordinate) any());
-	}
-
-	@Test
-	public void testDoMoveResizeImpl() {
-		//given
-		//an abstract shell node parent with children and a layout manager
-		final ShellLayoutManager shellLayoutManager = mock(ShellLayoutManager.class);
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
-			@Override
-			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
-				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
-			}
-		};
-		this.abstractShellNodeParent.setLayoutManager(shellLayoutManager);
-		this.abstractShellNodeParent.handleChildReparent(this.child0);
-		this.abstractShellNodeParent.handleChildReparent(this.child1);
-
-		//when
-		//the abstract shell node parent is moved and resized
-		this.abstractShellNodeParent.doMoveResize();
-
-		//then
-		//the children's position is updated and the children are layed out.
-		verify(this.childShellNodeGeometryDelegate0).move((Coordinate) any());
-		verify(this.childShellNodeGeometryDelegate1).move((Coordinate) any());
-		verify(shellLayoutManager).layout(this.abstractShellNodeParent);
+		verify(this.childShellNodeGeometryDelegate0).move((Point) any());
+		verify(this.childShellNodeGeometryDelegate1).move((Point) any());
 	}
 
 	@Test

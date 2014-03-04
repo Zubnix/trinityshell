@@ -35,39 +35,29 @@ import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+import javax.media.nativewindow.util.Rectangle;
 import java.nio.ByteBuffer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
-import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
-import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
-import static org.freedesktop.xcb.LibXcb.xcb_flush;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
-import static org.freedesktop.xcb.LibXcb.xcb_map_window;
-import static org.freedesktop.xcb.LibXcb.xcb_set_input_focus;
-import static org.freedesktop.xcb.LibXcb.xcb_unmap_window;
-import static org.freedesktop.xcb.xcb_stack_mode_t.XCB_STACK_MODE_ABOVE;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_STACK_MODE;
+import static org.freedesktop.xcb.LibXcb.*;
+import static org.freedesktop.xcb.xcb_config_window_t.*;
 import static org.freedesktop.xcb.xcb_input_focus_t.XCB_INPUT_FOCUS_NONE;
+import static org.freedesktop.xcb.xcb_stack_mode_t.XCB_STACK_MODE_ABOVE;
 
 @ThreadSafe
 @AutoFactory
 public class XWindow implements DisplaySurface {
 
-	private static final Logger     LOG                           = LoggerFactory.getLogger(XWindow.class);
-	private static final ByteBuffer MOVE_VALUE_LIST_BUFFER        = allocateDirect(8).order(nativeOrder());
-	private static final int        RESIZE_VALUE_MASK             = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-	private static final ByteBuffer RESIZE_VALUE_LIST             = allocateDirect(8).order(nativeOrder());
-	private static final int        RAISE_VALUE_MASK              = XCB_CONFIG_WINDOW_STACK_MODE;
-	private static final ByteBuffer RAISE_VALUE_LIST_BUFFER       = allocateDirect(4).order(nativeOrder())
-																					 .putInt(XCB_STACK_MODE_ABOVE);
-	private static final int        MOVE_VALUE_MASK               = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
+	private static final Logger     LOG                     = LoggerFactory.getLogger(XWindow.class);
+	private static final ByteBuffer MOVE_VALUE_LIST_BUFFER  = allocateDirect(8).order(nativeOrder());
+	private static final int        RESIZE_VALUE_MASK       = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
+	private static final ByteBuffer RESIZE_VALUE_LIST       = allocateDirect(8).order(nativeOrder());
+	private static final int        RAISE_VALUE_MASK        = XCB_CONFIG_WINDOW_STACK_MODE;
+	private static final ByteBuffer RAISE_VALUE_LIST_BUFFER = allocateDirect(4).order(nativeOrder())
+																			   .putInt(XCB_STACK_MODE_ABOVE);
+	private static final int        MOVE_VALUE_MASK         = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
 	private final DisplaySurfaceHandle resourceHandle;
 	private final XEventChannel        xEventChannel;
 	private final XTime                xTime;
@@ -253,10 +243,10 @@ public class XWindow implements DisplaySurface {
 		final int x = get_geometry_reply.getX();
 		final int y = get_geometry_reply.getY();
 
-		return Rectangle.create(x,
-                y,
-                width,
-                height);
+		return new Rectangle(x,
+							 y,
+							 width,
+							 height);
 	}
 
 	private void checkError(final xcb_generic_error_t e) {

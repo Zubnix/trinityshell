@@ -37,6 +37,7 @@ import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
+import javax.media.nativewindow.util.Rectangle;
 import java.nio.ByteBuffer;
 
 import static java.nio.ByteBuffer.allocateDirect;
@@ -83,10 +84,10 @@ public class ConfigureRequestHandler implements XEventHandler {
 		final int y = request_event.getY();
 		final int width = request_event.getWidth() + (2 * request_event.getBorder_width());
 		final int height = request_event.getHeight() + (2 * request_event.getBorder_width());
-		final Rectangle geometry = Rectangle.create(x,
-													y,
-													width,
-													height);
+		final Rectangle geometry = new Rectangle(x,
+												 y,
+												 width,
+												 height);
 
 		final int valueMask = request_event.getValue_mask();
 

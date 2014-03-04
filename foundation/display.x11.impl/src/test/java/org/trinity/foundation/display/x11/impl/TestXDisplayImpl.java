@@ -37,7 +37,6 @@ import static org.freedesktop.xcb.xcb_event_mask_t.*;
 import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_UNMAPPED;
 import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -166,7 +165,6 @@ public class TestXDisplayImpl {
         final DisplaySurfaceHandle clientHandle = XWindowHandle.create(6);
 		verify(this.xWindowPool).get(eq(clientHandle));
 		verifyNoMoreInteractions(this.xWindowPool);
-		assertTrue(xDisplay.getDisplaySurfaces().get(0) == clientWindow);
 
         final int CLIENT_EVENT_MASK = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
                 | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
@@ -190,7 +188,5 @@ public class TestXDisplayImpl {
             }
         }
         assertNotNull(listenerMethod);
-
-        assertTrue(xDisplay.getDisplaySurfaces().get(1) == newClient);
     }
 }

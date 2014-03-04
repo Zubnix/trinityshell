@@ -21,21 +21,23 @@ package org.trinity.foundation.api.display;
 
 import javax.annotation.concurrent.ThreadSafe;
 
-/***************************************
+/**
+ * ************************************
  * Wraps a native handle to an underlying native display resource. Access to the
  * native handle is done by calling {@link #getNativeHandle()}.
- *
- ***************************************
+ * <p/>
+ * **************************************
  */
 @ThreadSafe
 public interface DisplaySurfaceHandle {
 
-	/***************************************
+	/**
+	 * ************************************
 	 * The wrapped native display resource handle.
 	 *
 	 * @return An object, implementation dependent but usually an
-	 *         {@link Integer} .
-	 ***************************************
+	 * {@link Integer} .
+	 * **************************************
 	 */
 	Object getNativeHandle();
 }

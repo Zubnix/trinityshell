@@ -19,12 +19,10 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
-import co.paralleluniverse.strands.concurrent.Semaphore;
 import com.google.common.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.DisplaySurfaceBuilder;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.api.display.event.DestroyNotify;
@@ -42,7 +40,6 @@ public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DisplaySurfacePoolImpl.class);
 
-	private final Semaphore                                 cacheSemaphore  = new Semaphore(1);
 	private final Map<DisplaySurfaceHandle, DisplaySurface> displaySurfaces = new HashMap<>();
 
 	private final XEventChannel  xEventChannel;
@@ -58,17 +55,11 @@ public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 	@Override
 	public DisplaySurface get(final DisplaySurfaceHandle displaySurfaceHandle) {
 
-		try {
-			this.cacheSemaphore.acquireUninterruptibly();
-			DisplaySurface window = this.displaySurfaces.get(displaySurfaceHandle);
-			if(window == null) {
-				window = registerNewDisplaySurface(displaySurfaceHandle);
-			}
-			return window;
+		DisplaySurface window = this.displaySurfaces.get(displaySurfaceHandle);
+		if(window == null) {
+			window = registerNewDisplaySurface(displaySurfaceHandle);
 		}
-		finally {
-			this.cacheSemaphore.release();
-		}
+		return window;
 	}
 
 	private DisplaySurface registerNewDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
@@ -89,32 +80,7 @@ public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 
 	@Override
 	public Boolean isPresent(final DisplaySurfaceHandle displaySurfaceHandle) {
-		try {
-			this.cacheSemaphore.acquireUninterruptibly();
-			return this.displaySurfaces.containsKey(displaySurfaceHandle.getNativeHandle().hashCode());
-		}
-		finally {
-			this.cacheSemaphore.release();
-		}
-	}
-
-	@Override
-	public DisplaySurfaceBuilder openDisplaySurfaceBuilder() {
-
-		this.cacheSemaphore.acquireUninterruptibly();
-
-		return new DisplaySurfaceBuilder() {
-			@Override
-			public void build(final DisplaySurfaceHandle displaySurfaceHandle) {
-
-				registerNewDisplaySurface(displaySurfaceHandle);
-			}
-
-			@Override
-			public void close() {
-				DisplaySurfacePoolImpl.this.cacheSemaphore.release();
-			}
-		};
+		return this.displaySurfaces.containsKey(displaySurfaceHandle.getNativeHandle().hashCode());
 	}
 
 	private class DestroyListener {
@@ -126,13 +92,7 @@ public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 
 		@Subscribe
 		public void destroyed(final DestroyNotify destroyNotify) {
-			try {
-				DisplaySurfacePoolImpl.this.cacheSemaphore.acquireUninterruptibly();
 				unregisterDisplaySurface(this.window);
-			}
-			finally {
-				DisplaySurfacePoolImpl.this.cacheSemaphore.release();
-			}
 		}
 	}
 }

@@ -27,6 +27,4 @@ public interface DisplaySurfacePool {
 	DisplaySurface get(DisplaySurfaceHandle displaySurfaceHandle);
 
 	Boolean isPresent(DisplaySurfaceHandle displaySurfaceHandle);
-
-    DisplaySurfaceBuilder openDisplaySurfaceBuilder();
 }

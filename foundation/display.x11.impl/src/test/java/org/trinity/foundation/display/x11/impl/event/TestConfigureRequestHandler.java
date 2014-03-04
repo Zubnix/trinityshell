@@ -66,7 +66,7 @@ public class TestConfigureRequestHandler {
 
 	@Before
 	public void setup() {
-		when(xEventChannel.getConnectionReference()).thenReturn(xcb_connection);
+		when(this.xEventChannel.getConnectionReference()).thenReturn(this.xcb_connection);
 	}
 
 	@Test
@@ -106,17 +106,17 @@ public class TestConfigureRequestHandler {
 		//the xcb_configure_notify_event_t is posted on the x event bus
 		//the event is converted to a GeometryRequest
 
-		verify(xEventBus).post(isA(xcb_configure_request_event_t.class));
-        assertTrue(geometryRequestOptional.isPresent());
-        assertEquals(x,
-                     geometryRequestOptional.get().getGeometry().getPosition().getX());
-        assertEquals(y,
-                     geometryRequestOptional.get().getGeometry().getPosition().getY());
-        assertEquals((Integer)(width + 2 * border),
-                     geometryRequestOptional.get().getGeometry().getSize().getWidth());
-        assertEquals((Integer)(height + 2 * border),
-                     geometryRequestOptional.get().getGeometry().getSize().getHeight());
-        assertTrue(geometryRequestOptional.get().configureX());
+		verify(this.xEventBus).post(isA(xcb_configure_request_event_t.class));
+		assertTrue(geometryRequestOptional.isPresent());
+		assertEquals((int) x,
+					 geometryRequestOptional.get().getGeometry().getX());
+		assertEquals((int) y,
+					 geometryRequestOptional.get().getGeometry().getY());
+		assertEquals((int) (width + 2 * border),
+					 geometryRequestOptional.get().getGeometry().getWidth());
+		assertEquals((int) (height + 2 * border),
+					 geometryRequestOptional.get().getGeometry().getHeight());
+		assertTrue(geometryRequestOptional.get().configureX());
         assertTrue(geometryRequestOptional.get().configureY());
         assertTrue(geometryRequestOptional.get().configureWidth());
         assertFalse(geometryRequestOptional.get().configureHeight());
@@ -140,8 +140,8 @@ public class TestConfigureRequestHandler {
             public Object answer(final InvocationOnMock invocation) throws Throwable {
                 final Object arg0 = invocation.getArguments()[0];
                 final XWindowHandle xWindowHandle = (XWindowHandle) arg0;
-                if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(targetWindowId)) {
-                    return displaySurface;
+				if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(TestConfigureRequestHandler.this.targetWindowId)) {
+					return displaySurface;
                 }
                 return null;
             }

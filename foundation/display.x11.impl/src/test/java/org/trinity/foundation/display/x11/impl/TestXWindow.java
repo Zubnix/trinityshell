@@ -22,27 +22,16 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.display.x11.api.XEventChannel;
 
+import javax.media.nativewindow.util.Rectangle;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
-import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
-import static org.freedesktop.xcb.LibXcb.xcb_flush;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
-import static org.freedesktop.xcb.LibXcb.xcb_set_input_focus;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+import static org.freedesktop.xcb.LibXcb.*;
+import static org.freedesktop.xcb.xcb_config_window_t.*;
 import static org.freedesktop.xcb.xcb_input_focus_t.XCB_INPUT_FOCUS_NONE;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
@@ -160,61 +149,6 @@ public class TestXWindow {
     }
 
     @Test
-    public void testMoveResizeWithXWindowBorder() {
-        //given
-        //an XWindow with a border width
-        mockStatic(LibXcb.class);
-        final xcb_get_geometry_cookie_t geo_cookie = mock(xcb_get_geometry_cookie_t.class);
-        final xcb_get_geometry_reply_t geo_reply = mock(xcb_get_geometry_reply_t.class);
-        final int borderWidth = 3;
-
-        when(xcb_get_geometry(this.xcb_connection,
-							  this.nativeHandle)).thenReturn(geo_cookie);
-        when(xcb_get_geometry_reply(eq(this.xcb_connection),
-                eq(geo_cookie),
-                (xcb_generic_error_t) any())).thenReturn(geo_reply);
-        when(geo_reply.getBorder_width()).thenReturn(borderWidth);
-
-        //when
-        //the XWindow is moved and resized
-        final int width = 123;
-        final int height = 456;
-        final int x = 789;
-        final int y = 1011;
-
-		this.xWindow.moveResize(x,
-								y,
-								width,
-								height);
-
-        //then
-        //the native X server window is moved and resized
-        final int MOVE_RESIZE_VALUE_MASK = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y
-                | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-        final ArgumentCaptor<ByteBuffer> byteBufferArgumentCaptor = ArgumentCaptor.forClass(ByteBuffer.class);
-        verifyStatic();
-        xcb_configure_window(eq(this.xcb_connection),
-                eq(this.nativeHandle),
-                eq(MOVE_RESIZE_VALUE_MASK),
-                byteBufferArgumentCaptor.capture());
-        xcb_flush(this.xcb_connection);
-        final ByteBuffer value = byteBufferArgumentCaptor.getValue();
-        final int passedX = value.getInt(0);
-        final int passedY = value.getInt(4);
-        final int passedWidth = value.getInt(8);
-        final int passedHeight = value.getInt(12);
-
-        assertEquals(x,
-                passedX);
-        assertEquals(y,
-                passedY);
-        assertEquals(width - (2 * borderWidth),
-                passedWidth);
-        assertEquals(height - (2 * borderWidth),
-                passedHeight);
-    }
-
-    @Test
     public void testResizeWithXWindowBorder() {
         //given
         //an XWindow
@@ -294,15 +228,13 @@ public class TestXWindow {
                 (xcb_generic_error_t) any());
 
         final Rectangle rectangle = geometry;
-        assertEquals(givenX,
-                rectangle.getPosition().getX());
-        assertEquals(givenY,
-                rectangle.getPosition().getY());
-        assertEquals((Integer)(givenWidth + 2 * borderWidth),
-                rectangle.getSize().getWidth());
-        assertEquals((Integer)(givenHeight + 2 * borderWidth),
-                rectangle.getSize().getHeight());
-
-
-    }
+		assertEquals((int) givenX,
+					 rectangle.getX());
+		assertEquals((int) givenY,
+					 rectangle.getY());
+		assertEquals((int) (givenWidth + 2 * borderWidth),
+					 rectangle.getWidth());
+		assertEquals((int) (givenHeight + 2 * borderWidth),
+					 rectangle.getHeight());
+	}
 }

@@ -28,7 +28,6 @@ import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
@@ -157,18 +156,6 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	@Subscribe
 	public void onMoveRequest(final ShellNodeMoveRequestEvent geoEvent) {
 		geoEvent.getSource().doMove();
-	}
-
-	/***************************************
-	 * Called when a child {@link ShellNode} requests to be moved and resized.
-	 *
-	 * @param geoEvent
-	 *            The child {@link ShellNodeMoveResizeRequestEvent}.
-	 ***************************************
-	 */
-	@Subscribe
-	public void onMoveResizeRequest(final ShellNodeMoveResizeRequestEvent geoEvent) {
-		geoEvent.getSource().doMoveResize();
 	}
 
 	/***************************************

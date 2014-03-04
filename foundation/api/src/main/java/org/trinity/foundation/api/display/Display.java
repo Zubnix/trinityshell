@@ -19,14 +19,10 @@
  ******************************************************************************/
 package org.trinity.foundation.api.display;
 
-import java.util.List;
-
 import org.trinity.foundation.api.shared.Listenable;
-
 
 import javax.annotation.concurrent.ThreadSafe;
 
-//TODO documentation
 /**
  *
  */
@@ -34,20 +30,10 @@ import javax.annotation.concurrent.ThreadSafe;
 public interface Display extends Listenable {
 
 	/**
-	 * A "snapshot" of client display surfaces. This collection does not
-	 * include the root display area. The returned array only includes the
-	 * client display surfaces at the time of the call. Any future creation or
-	 * deletion of client display surfaces will not be reflected by the returned
-	 * array.
-	 *
-	 * @return A collection of client {@link DisplaySurface}s.
+	 * ************************************
+	 * Orderly shut down this {@code Display}. All resources living on this
+	 * {@code Display} will be shut down as well.
+	 * **************************************
 	 */
-	List<DisplaySurface> getDisplaySurfaces();
-
-	/***************************************
-     * Orderly shut down this {@code Display}. All resources living on this
-     * {@code Display} will be shut down as well.
-     ***************************************
-     */
 	void quit();
 }

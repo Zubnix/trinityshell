@@ -34,6 +34,7 @@ import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
+import javax.media.nativewindow.util.Rectangle;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_NOTIFY;
 
@@ -66,10 +67,10 @@ public class ConfigureNotifyHandler implements XEventHandler {
 		final int width = configure_notify_event.getWidth() + (2 * configure_notify_event.getBorder_width());
 		final int height = configure_notify_event.getHeight() + (2 * configure_notify_event.getBorder_width());
 
-		final Rectangle geometry = Rectangle.create(x,
-													y,
-													width,
-													height);
+		final Rectangle geometry = new Rectangle(x,
+												 y,
+												 width,
+												 height);
 
 		return Optional.of(new GeometryNotify(geometry));
 	}

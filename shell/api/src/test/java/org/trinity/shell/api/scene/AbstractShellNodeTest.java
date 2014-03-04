@@ -14,6 +14,8 @@ import org.mockito.stubbing.Answer;
 import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.shell.api.scene.event.*;
 
+import javax.media.nativewindow.util.Dimension;
+import javax.media.nativewindow.util.Point;
 import java.util.concurrent.Callable;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
@@ -64,8 +66,8 @@ public class AbstractShellNodeTest {
 
 		//then
 		//the desired position is reset to the previous position
-		assertEquals(Coordinate.create(0,
-									0),
+		assertEquals(new Point(0,
+							   0),
 					 this.abstractShellNode.getDesiredPosition());
 	}
 
@@ -89,8 +91,8 @@ public class AbstractShellNodeTest {
 
 		//then
 		//the desired size is reset to the previous size
-		assertEquals(Size.create(5,
-							  5),
+		assertEquals(new Dimension(5,
+								   5),
 					 this.abstractShellNode.getDesiredSize());
 	}
 
@@ -204,56 +206,13 @@ public class AbstractShellNodeTest {
 		//it's position is updated
 		//the geometry delegate is notified
 		//the move listener is notified
-		assertEquals(Coordinate.create(123,
-									456),
+		assertEquals(new Point(123,
+							   456),
 					 this.abstractShellNode.getPosition());
-		verify(shellNodeGeometryDelegate).move(eq(Coordinate.create(123,
-																 456)));
+		verify(shellNodeGeometryDelegate).move(eq(new Point(123,
+															456)));
 		//TODO verify event contents
 		verify(moveListener).handle((ShellNodeMovedEvent) any());
-	}
-
-	@Test
-	public void testDoMoveResize() {
-		//given
-		//an abstract shell node with a geometry delegate
-		//a move resize listener
-		final ShellNodeGeometryDelegate shellNodeGeometryDelegate = mock(ShellNodeGeometryDelegate.class);
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
-			@Override
-			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
-				return shellNodeGeometryDelegate;
-			}
-		};
-		final MoveResizeListener moveResizeListener = spy(new MoveResizeListener());
-		this.abstractShellNode.register(moveResizeListener);
-
-		//when
-		//it's size an position is updated
-
-		this.abstractShellNode.setSize(100,
-										   200);
-		this.abstractShellNode.setPosition(123,
-											   456);
-		this.abstractShellNode.doMoveResize();
-
-		//then
-		//its size is updated
-		//tis position is updated
-		//the geometry delegate is notified
-		//the move resize listener is notified
-		assertEquals(Coordinate.create(123,
-									456),
-					 this.abstractShellNode.getPosition());
-		assertEquals(Size.create(100,
-							  200),
-					 this.abstractShellNode.getSize());
-		verify(shellNodeGeometryDelegate).moveResize(eq(Coordinate.create(123,
-																	   456)),
-													 eq(Size.create(100,
-																 200)));
-		//TODO verify event contents
-		verify(moveResizeListener).handle((ShellNodeMovedResizedEvent) any());
 	}
 
 	@Test
@@ -341,18 +300,18 @@ public class AbstractShellNodeTest {
 		//when
 		//the abstract shell node is resized
 		this.abstractShellNode.setSize(100,
-										   200);
+									   200);
 		this.abstractShellNode.doResize();
 
 		//then
 		//the abstract shell node's size is updated
 		//the geometry delegate is notified
 		//the resize listener is notified
-		assertEquals(Size.create(100,
-							  200),
+		assertEquals(new Dimension(100,
+								   200),
 					 this.abstractShellNode.getSize());
-		verify(shellNodeGeometryDelegate).resize(eq(Size.create(100,
-															 200)));
+		verify(shellNodeGeometryDelegate).resize(eq(new Dimension(100,
+																  200)));
 		//TODO verify event contents
 		verify(resizeListener).handle((ShellNodeResizedEvent) any());
 	}
@@ -453,30 +412,6 @@ public class AbstractShellNodeTest {
 		//the request move listener is notified
 		//TODO verify event contents
 		verify(requestMoveListener).handle((ShellNodeMoveRequestEvent) any());
-	}
-
-	@Test
-	public void testRequestMoveResize() {
-		//given
-		//an abstract shell node
-		//a request move resize listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
-			@Override
-			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
-				return null;
-			}
-		};
-		final RequestMoveResizeListener requestMoveResizeListener = spy(new RequestMoveResizeListener());
-		this.abstractShellNode.register(requestMoveResizeListener);
-
-		//when
-		//the abstract shell node is requested to be moved and resized
-		this.abstractShellNode.requestMoveResize();
-
-		//then
-		//the request move resize listener is notified
-		//TODO verify event contents
-		verify(requestMoveResizeListener).handle((ShellNodeMoveResizeRequestEvent) any());
 	}
 
 	@Test
@@ -656,13 +591,6 @@ class RequestLowerListener {
 class RequestMoveListener {
 	@Subscribe
 	public void handle(final ShellNodeMoveRequestEvent shellNodeMoveRequestEvent) {
-
-	}
-}
-
-class RequestMoveResizeListener {
-	@Subscribe
-	public void handle(final ShellNodeMoveResizeRequestEvent shellNodeMoveResizeRequestEvent) {
 
 	}
 }

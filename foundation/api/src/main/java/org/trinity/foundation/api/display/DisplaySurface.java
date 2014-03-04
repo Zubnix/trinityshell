@@ -19,81 +19,82 @@
  ******************************************************************************/
 package org.trinity.foundation.api.display;
 
+import org.trinity.foundation.api.shared.Listenable;
+
 import javax.annotation.concurrent.ThreadSafe;
 import javax.media.nativewindow.util.Rectangle;
-
-import org.trinity.foundation.api.shared.Listenable;
 
 
 /**
  * Represents a native isolated graphical area. A {@code DisplaySurface}
  * maps to a native window from the native display system.
- *
  */
 @ThreadSafe
 public interface DisplaySurface extends Listenable {
 
-	/***************************************
+	/**
+	 * ************************************
 	 * Destroy this DisplaySurface. A destroyed DisplaySurface
 	 * should be disposed and should not accept any calls.
-	 ***************************************
+	 * **************************************
 	 */
 	void destroy();
 
-	/***************************************
+	/**
+	 * ************************************
 	 * Set the input focus to this DisplaySurface. Generated input
 	 * evens will have their source set as coming from this DisplaySurface.
-	 * <p>
+	 * <p/>
 	 * The effects of giving focus to a hidden or destroyed DisplaySurface
 	 * is implementation dependent.
-	 ***************************************
+	 * **************************************
 	 */
-    @Deprecated
+	@Deprecated
 	void setInputFocus();
 
-	/***************************************
+	/**
+	 * ************************************
 	 * Move this DisplaySurface to the given coordinates.
 	 *
-	 * @param x
-	 *            The X coordinate. Usually in pixels but can be implementation
-	 *            dependent.
-	 * @param y
-	 *            The Y coordinate. Usually in pixels but can be implementation
-	 *            dependent.
-	 ***************************************
+	 * @param x The X coordinate. Usually in pixels but can be implementation
+	 *          dependent.
+	 * @param y The Y coordinate. Usually in pixels but can be implementation
+	 *          dependent.
+	 *          **************************************
 	 */
 	void move(int x,
-	                            int y);
+			  int y);
 
-	/***************************************
+	/**
+	 * ************************************
 	 * Set the size of this DisplaySurface.
 	 *
-	 * @param width
-	 *            The width. Usually in pixels but can be implementation
-	 *            dependent.
-	 * @param height
-	 *            The width. Usually in pixels but can be implementation
-	 *            dependent.
-	 ***************************************
+	 * @param width  The width. Usually in pixels but can be implementation
+	 *               dependent.
+	 * @param height The width. Usually in pixels but can be implementation
+	 *               dependent.
+	 *               **************************************
 	 */
-	void resize(	int width,
-	                                  int height);
+	void resize(int width,
+				int height);
 
-	/***************************************
+	/**
+	 * ************************************
 	 * Query geometry information. The values of the returned {@link Rectangle}
 	 * are display server dependent but are usually in pixels.
 	 *
 	 * @return a future {@link Rectangle} corresponding to this
-	 *          position, width and a height.
-	 ***************************************
+	 * position, width and a height.
+	 * **************************************
 	 */
 	Rectangle getGeometry();
 
-	/***************************************
+	/**
+	 * ************************************
 	 * Return the handle of the underlying native resource.
 	 *
 	 * @return a {@link DisplaySurfaceHandle}
-	 ***************************************
+	 * **************************************
 	 */
 	DisplaySurfaceHandle getDisplaySurfaceHandle();
 

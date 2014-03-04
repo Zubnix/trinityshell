@@ -20,8 +20,8 @@
 package org.trinity.shell.api.scene;
 
 import com.google.common.base.Optional;
-import org.trinity.foundation.api.shared.*;
 import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.api.shared.ListenableEventBus;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.event.*;
 
@@ -60,11 +60,13 @@ public abstract class AbstractShellNode implements ShellNode {
 	public ShellNodeTransformation toGeoTransformation() {
         final Point desiredPosition = getDesiredPosition();
         final Dimension desiredSize = getDesiredSize();
-        return new ShellNodeTransformation(getGeometry(),
-										   Optional.fromNullable(getParent().orNull()),
-										   new Rectangle(desiredPosition.getX(),desiredPosition.getY(),desiredSize.getWidth(),desiredSize.getHeight()
-															),
-										   Optional.<ShellNodeParent>fromNullable(getDesiredParent().orNull()));
+		return ShellNodeTransformation.create(getGeometry(),
+											  new Rectangle(desiredPosition.getX(),
+															desiredPosition.getY(),
+															desiredSize.getWidth(),
+															desiredSize.getHeight()),
+											  Optional.fromNullable(getParent().orNull()),
+											  Optional.<ShellNodeParent>fromNullable(getDesiredParent().orNull()));
 	}
 
 	@Override
@@ -153,13 +155,6 @@ public abstract class AbstractShellNode implements ShellNode {
 	public void requestResize() {
 		final ShellNodeEvent event = new ShellNodeResizeRequestEvent(	this,
 																		toGeoTransformation());
-		post(event);
-	}
-
-	@Override
-	public void requestMoveResize() {
-		final ShellNodeMoveResizeRequestEvent event = new ShellNodeMoveResizeRequestEvent(	this,
-																							toGeoTransformation());
 		post(event);
 	}
 
