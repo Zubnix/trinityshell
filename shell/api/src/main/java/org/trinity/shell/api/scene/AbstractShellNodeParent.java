@@ -21,7 +21,6 @@ package org.trinity.shell.api.scene;
 
 import com.google.common.base.Optional;
 import org.trinity.foundation.api.shared.Listenable;
-import org.trinity.foundation.api.shared.Coordinate;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
@@ -30,6 +29,7 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.media.nativewindow.util.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -64,7 +64,7 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 	 */
 	protected void updateChildrenPosition() {
 		for (final ShellNode child : getChildren()) {
-			final Coordinate childPosition = child.getPosition();
+			final Point childPosition = child.getPosition();
 			child.getShellNodeGeometryDelegate().move(childPosition);
 		}
 	}
@@ -86,13 +86,6 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 	public void doMove() {
 		super.doMove();
 		updateChildrenPosition();
-	}
-
-	@Override
-	public void doMoveResize() {
-		super.doMoveResize();
-		updateChildrenPosition();
-		layout();
 	}
 
 	@Override

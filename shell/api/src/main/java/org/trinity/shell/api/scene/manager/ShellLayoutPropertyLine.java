@@ -22,7 +22,6 @@ package org.trinity.shell.api.scene.manager;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import org.trinity.foundation.api.shared.Margins;
 import org.trinity.shell.api.scene.ShellNode;
 
 /***************************************

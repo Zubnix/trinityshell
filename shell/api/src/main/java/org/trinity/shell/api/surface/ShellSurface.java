@@ -21,7 +21,6 @@ package org.trinity.shell.api.surface;
 
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
@@ -30,6 +29,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.media.nativewindow.util.Dimension;
 
 /***************************************
  * Wraps a {@link DisplaySurface} and provides additional basic functionality
@@ -59,20 +59,20 @@ public interface ShellSurface extends ShellNodeParent {
 	/***************************************
 	 * The maximum height and width.
 	 *
-	 * @return a future {@link Size}.
-	 * @see #setMaxSize(Size)
+	 * @return a future {@link Dimension}.
+	 * @see #setMaxSize(Dimension)
 	 ***************************************
 	 */
-	Size getMaxSize();
+	Dimension getMaxSize();
 
 	/***************************************
 	 * The minimum height and width.
 	 *
-	 * @return a future {@link Size}
-	 * @see #setMinSize(Size)
+	 * @return a future {@link Dimension}
+	 * @see #setMinSize(Dimension)
 	 ***************************************
 	 */
-	Size getMinSize();
+	Dimension getMinSize();
 
 	/***************************************
 	 * The underlying, {@code DisplaySurface} that this shell surface will use
@@ -130,23 +130,23 @@ public interface ShellSurface extends ShellNodeParent {
 	 * Change the maximum size. Attempts to change to size of this node beyond
 	 * the maximum size are silently ignored.
 	 *
-	 * @param size a {@link Size}
+	 * @param size a {@link Dimension}
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #getMaxSize()
 	 ***************************************
 	 */
-	void setMaxSize(@Nonnull final Size size);
+	void setMaxSize(@Nonnull final Dimension size);
 
 	/***************************************
 	 *
-	 * @param size a {@link Size}
+	 * @param size a {@link Dimension}
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #getMinSize()
 	 ***************************************
 	 */
-	void setMinSize(@Nonnull final Size size);
+	void setMinSize(@Nonnull final Dimension size);
 
 	/***************************************
 	 * Indicate if this surface is movable.

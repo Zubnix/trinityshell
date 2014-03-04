@@ -2,8 +2,6 @@ package org.trinity.foundation.display.x11.impl;
 
 import org.freedesktop.xcb.xcb_screen_t;
 import org.junit.Test;
-import org.trinity.foundation.api.shared.Size;
-import org.trinity.foundation.display.x11.api.XScreen;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;

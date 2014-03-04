@@ -36,6 +36,9 @@ import org.trinity.shell.api.surface.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.media.nativewindow.util.Dimension;
+import javax.media.nativewindow.util.Point;
+import javax.media.nativewindow.util.Rectangle;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -60,11 +63,11 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
 	public static final int     DEFAULT_WIDTH_INC    = 1;
 	public static final int     DEFAULT_HEIGHT_INC   = 1;
 
-	private final Size    minSize         = Size.create(DEFAULT_MIN_WIDTH,
+	private final Dimension minSize         = new Dimension(DEFAULT_MIN_WIDTH,
 													 DEFAULT_MIN_HEIGHT);
 	private       boolean movable         = DEFAULT_IS_MOVABLE;
 	private       boolean resizable       = DEFAULT_IS_RESIZABLE;
-	private       Size    maxSize         = Size.create(DEFAULT_MAX_WIDTH,
+	private       Dimension    maxSize         = new Dimension(DEFAULT_MAX_WIDTH,
 													 DEFAULT_MAX_HEIGHT);
 	private       int     widthIncrement  = DEFAULT_WIDTH_INC;
 	private       int     heightIncrement = DEFAULT_HEIGHT_INC;
@@ -103,17 +106,17 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
 	}
 
 	@Override
-	public Size getMaxSize() {
+	public Dimension getMaxSize() {
 		return this.maxSize;
 	}
 
 	@Override
-	public void setMaxSize(@Nonnull final Size maxSize) {
+	public void setMaxSize(@Nonnull final Dimension maxSize) {
 		this.maxSize = maxSize;
 	}
 
 	@Override
-	public Size getMinSize() {
+	public Dimension getMinSize() {
 		return this.minSize;
 	}
 
@@ -123,7 +126,7 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
 	}
 
 	@Override
-	public void setMinSize(@Nonnull final Size maxSize) {
+	public void setMinSize(@Nonnull final Dimension maxSize) {
 		this.maxSize = maxSize;
 	}
 
@@ -169,20 +172,20 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
 		this.resizable = isResizable;
 	}
 
-	protected Size normalizedSize(@Nonnull final Size newSize) {
+	protected Dimension normalizedSize(@Nonnull final Dimension newSize) {
 
 		final int newWidth = newSize.getWidth();
 		final int newHeight = newSize.getHeight();
 
-		final Size minSize = getMinSize();
+		final Dimension minSize = getMinSize();
 		final int minWidth = minSize.getWidth();
 		final int minHeight = minSize.getHeight();
 
-		final Size maxSize = getMaxSize();
+		final Dimension maxSize = getMaxSize();
         final int maxWidth = maxSize.getWidth();
         final int maxHeight = maxSize.getHeight();
 
-        final Size currentSize = getSize();
+        final Dimension currentSize = getSize();
         final int currentWidth = currentSize.getWidth();
         final int currentHeight = currentSize.getHeight();
 
@@ -192,7 +195,7 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
         int normalizedHeight = newHeight < minHeight ? minHeight : newHeight > maxHeight ? maxHeight : newHeight;
         normalizedHeight -= (normalizedHeight - currentHeight) % getHeightIncrement();
 
-        return Size.create(normalizedWidth,
+        return new Dimension(normalizedWidth,
                 normalizedHeight);
     }
 
@@ -215,7 +218,7 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
     }
 
     @Override
-    public Size getDesiredSize() {
+    public Dimension getDesiredSize() {
         return normalizedSize(super.getDesiredSize());
     }
 
@@ -237,17 +240,12 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
         final boolean configureY = geometryRequest.configureY();
 
         final Rectangle newGeometry = geometryRequest.getGeometry();
-        final Coordinate newPosition = newGeometry.getPosition();
-        final Size newSize = newGeometry.getSize();
-
         final Rectangle currentGeometry = getGeometry();
-        final Coordinate currentPosition = currentGeometry.getPosition();
-        final Size currentSize = currentGeometry.getSize();
 
-        setPosition(configureX ? newPosition.getX() : currentPosition.getX(),
-                configureY ? newPosition.getY() : currentPosition.getY());
-        setSize(configureWidth ? newSize.getWidth() : currentSize.getWidth(),
-                configureHeight ? newSize.getHeight() : currentSize.getHeight());
+        setPosition(configureX ? newGeometry.getX() : currentGeometry.getX(),
+                configureY ? newGeometry.getY() : currentGeometry.getY());
+        setSize(configureWidth ? newGeometry.getWidth() : currentGeometry.getWidth(),
+                configureHeight ? newGeometry.getHeight() : currentGeometry.getHeight());
         requestMoveResize();
     }
 

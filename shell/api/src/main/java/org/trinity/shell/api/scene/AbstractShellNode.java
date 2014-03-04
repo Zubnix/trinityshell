@@ -27,6 +27,9 @@ import org.trinity.shell.api.scene.event.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.media.nativewindow.util.Dimension;
+import javax.media.nativewindow.util.Point;
+import javax.media.nativewindow.util.Rectangle;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -34,13 +37,13 @@ import static com.google.common.base.Preconditions.checkArgument;
 public abstract class AbstractShellNode implements ShellNode {
 
 	private final ListenableEventBus nodeEventBus;
-	private Coordinate position        = Coordinate.create(0,
+	private Point position        = new Point(0,
 														   0);
-	private Coordinate desiredPosition = Coordinate.create(0,
+	private Point desiredPosition = new Point(0,
 														   0);
-	private Size       size            = Size.create(5,
+	private Dimension       size            = new Dimension(5,
 													 5);
-	private Size       desiredSize     = Size.create(5,
+	private Dimension       desiredSize     = new Dimension(5,
 													 5);
 	private boolean visible;
 	private Optional<ShellNodeParent> optionalParent        = Optional.absent();
@@ -55,10 +58,12 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	@Override
 	public ShellNodeTransformation toGeoTransformation() {
-		return new ShellNodeTransformation(getGeometry(),
+        final Point desiredPosition = getDesiredPosition();
+        final Dimension desiredSize = getDesiredSize();
+        return new ShellNodeTransformation(getGeometry(),
 										   Optional.fromNullable(getParent().orNull()),
-										   Rectangle.create(getDesiredPosition(),
-															getDesiredSize()),
+										   new Rectangle(desiredPosition.getX(),desiredPosition.getY(),desiredSize.getWidth(),desiredSize.getHeight()
+															),
 										   Optional.<ShellNodeParent>fromNullable(getDesiredParent().orNull()));
 	}
 
@@ -88,8 +93,10 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	@Override
 	public Rectangle getGeometry() {
-		return Rectangle.create(getPosition(),
-								getSize());
+        final Point position = getPosition();
+        final Dimension size = getSize();
+
+        return new Rectangle(position.getX(),position.getY(),size.getWidth(),size.getHeight());
 	}
 
 	@Override
@@ -102,7 +109,7 @@ public abstract class AbstractShellNode implements ShellNode {
 					  "Argument was %s but expected nonzero nonnegative value",
 					  height);
 
-		this.desiredSize = Size.create(width,
+		this.desiredSize = new Dimension(width,
 									   height);
 
 	}
@@ -110,7 +117,7 @@ public abstract class AbstractShellNode implements ShellNode {
 	@Override
 	public void setPosition(final int x,
 								final int y) {
-		this.desiredPosition = Coordinate.create(x,
+		this.desiredPosition = new Point(x,
 												 y);
 	}
 
@@ -202,16 +209,6 @@ public abstract class AbstractShellNode implements ShellNode {
 		this.size = getDesiredSize();
 	}
 
-	@Override
-	public void doMoveResize() {
-		flushSizePlaceValues();
-		getShellNodeGeometryDelegate().moveResize(	getDesiredPosition(),
-													  getDesiredSize());
-		final ShellNodeMovedResizedEvent geoEvent = new ShellNodeMovedResizedEvent(	this,
-																					   toGeoTransformation());
-		post(geoEvent);
-	}
-
 	/**
 	 * Make both the desired position and the desired dimension, the current
 	 * position and dimension.
@@ -283,11 +280,11 @@ public abstract class AbstractShellNode implements ShellNode {
 
 	}
 
-	public Coordinate getDesiredPosition() {
+	public Point getDesiredPosition() {
 		return this.desiredPosition;
 	}
 
-	public Size getDesiredSize() {
+	public Dimension getDesiredSize() {
 		return this.desiredSize;
 	}
 
@@ -338,23 +335,23 @@ public abstract class AbstractShellNode implements ShellNode {
 	}
 
 	@Override
-	public Coordinate getPosition () {
+	public Point getPosition () {
 		return this.position;
 	}
 
 	@Override
-	public Size getSize () {
+	public Dimension getSize () {
 		return this.size;
 	}
 
 	@Override
-	public void setPosition(@Nonnull final Coordinate position) {
+	public void setPosition(@Nonnull final Point position) {
 		this.desiredPosition = position;
 
 	}
 
 	@Override
-	public void setSize(@Nonnull final Size size) {
+	public void setSize(@Nonnull final Dimension size) {
 		this.desiredSize = size;
 
 	}

@@ -10,6 +10,15 @@
 	<name>Foundation API</name>
     <packaging>bundle</packaging>
 
+    <repositories>
+        <repository>
+            <id>jogamp-remote</id>
+            <name>jogamp test mirror</name>
+            <url>http://www.jogamp.org/deployment/maven/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- logging implementation for test log output -->
         <dependency>

@@ -20,10 +20,10 @@
 package org.trinity.foundation.api.display.event;
 
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.shared.Rectangle;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import javax.media.nativewindow.util.Rectangle;
 
 /**
  * Notifies that the geometry (size, place) of a {@link DisplaySurface} has

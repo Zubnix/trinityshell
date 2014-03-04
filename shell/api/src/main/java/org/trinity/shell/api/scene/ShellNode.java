@@ -21,9 +21,6 @@ package org.trinity.shell.api.scene;
 
 import com.google.common.base.Optional;
 import org.trinity.foundation.api.shared.Listenable;
-import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.Rectangle;
-import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.event.ShellNodeHiddenEvent;
 import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
@@ -34,6 +31,10 @@ import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 
 import com.google.common.util.concurrent.ListenableFuture;
+
+import javax.media.nativewindow.util.Dimension;
+import javax.media.nativewindow.util.Point;
+import javax.media.nativewindow.util.Rectangle;
 
 /***************************************
  * The super interface of all nodes that live in the shell scene.
@@ -46,7 +47,7 @@ public interface ShellNode extends Listenable {
 	 * geometry and the shell geometry is implementation dependent but is
 	 * usually in pixels.
 	 *
-	 * @return a future {@link Rectangle}.
+	 * @return a {@link }.
 	 * @see #getShellNodeGeometryDelegate()
 	 ***************************************
 	 */
@@ -64,7 +65,7 @@ public interface ShellNode extends Listenable {
 	 *         done.
 	 * @see #getShellNodeGeometryDelegate()
 	 * @see #getGeometry()
-	 * @see #setSize(Size)
+	 * @see #setSize(Dimension)
 	 ***************************************
 	 */
 	void setSize(	int width,
@@ -75,14 +76,14 @@ public interface ShellNode extends Listenable {
 	 * the shell size is implementation dependent but is usually in pixels.
 	 *
 	 * @param size
-	 *            a shell {@link Size}
+	 *            a shell {@link Dimension}
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #getShellNodeGeometryDelegate()
 	 * @see #setSize(int, int)
 	 ***************************************
 	 */
-	void setSize(Size size);
+	void setSize(Dimension size);
 
 	/***************************************
 	 * Change the node's shell position. A node's position is relative to its
@@ -96,7 +97,7 @@ public interface ShellNode extends Listenable {
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #getShellNodeGeometryDelegate()
-	 * @see #setPosition(Coordinate)
+	 * @see #setPosition(Point)
 	 ***************************************
 	 */
 	void setPosition(	int x,
@@ -108,32 +109,32 @@ public interface ShellNode extends Listenable {
 	 * position is implementation dependent but is usually in pixels.
 	 *
 	 * @param position
-	 *            a shell {@link Coordinate}
+	 *            a shell {@link Point}
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
 	 * @see #getShellNodeGeometryDelegate()
 	 ***************************************
 	 */
-	void setPosition(Coordinate position);
+	void setPosition(Point position);
 
 	/***************************************
 	 * The shell position of the node. A node's position is relative to its
 	 * parent. The relation between the on screen position and the shell
 	 * position is implementation dependent but is usually in pixels.
 	 *
-	 * @return a future {@link Coordinate}.
+	 * @return a future {@link Point}.
 	 ***************************************
 	 */
-	Coordinate getPosition();
+	Point getPosition();
 
 	/***************************************
 	 * The shell size of the node. The relation between the on screen size and
 	 * the shell size is implementation dependent but is usually in pixels.
 	 *
-	 * @return a future {@link Size}.
+	 * @return a {@link Dimension}.
 	 ***************************************
 	 */
-	Size getSize();
+	Dimension getSize();
 
 	/****************************************
 	 * Indicates if this node is visible. This is implementation dependent. A
@@ -148,7 +149,7 @@ public interface ShellNode extends Listenable {
 	Boolean isVisible();
 
 	/***************************************
-	 * Reset any value set by {@link #setPosition(Coordinate)} to this
+	 * Reset any value set by {@link #setPosition(Point)} to this
 	 * node's current position.
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
@@ -197,7 +198,7 @@ public interface ShellNode extends Listenable {
 
 	/***************************************
 	 * Move this node to the coordinate that was specified in
-	 * {@link #setPosition(Coordinate)}.
+	 * {@link #setPosition(Point)}.
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
@@ -217,8 +218,8 @@ public interface ShellNode extends Listenable {
 
 	/***************************************
 	 * Move this node to the coordinate that was specified in
-	 * {@link #setPosition(Coordinate)} and resize it to the size that was
-	 * specified in {@link #setSize(Size)}.
+	 * {@link #setPosition(Point)} and resize it to the size that was
+	 * specified in {@link #setSize(Dimension)}.
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is
 	 *         done.
@@ -227,7 +228,7 @@ public interface ShellNode extends Listenable {
 	void doMoveResize();
 
 	/***************************************
-	 * Resize this node to the size that was specified in {@link #setSize(Size)}
+	 * Resize this node to the size that was specified in {@link #setSize(Dimension)}
 	 * .
 	 *
 	 * @return A {@link ListenableFuture} that indicates when the operation is

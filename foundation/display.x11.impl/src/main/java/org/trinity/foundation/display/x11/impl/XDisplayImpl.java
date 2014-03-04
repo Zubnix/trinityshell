@@ -32,12 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.Screen;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.shared.ListenableEventBus;
 import org.trinity.foundation.display.x11.api.XEventChannel;
-import org.trinity.foundation.display.x11.api.XScreen;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
@@ -71,7 +69,6 @@ public class XDisplayImpl implements Display {
 	private final ListenableEventBus     displayEventBus;
 	private final ByteBuffer rootWindowAttributes = allocateDirect(4).order(nativeOrder())
 																	 .putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
-	private XScreen screen;
 
 	@Inject
 	XDisplayImpl(final XEventChannel xEventChannel,
@@ -226,10 +223,5 @@ public class XDisplayImpl implements Display {
 	public List<DisplaySurface>getDisplaySurfaces() {
 				// we return a copy
 				return new ArrayList<>(XDisplayImpl.this.clientDisplaySurfaces);
-	}
-
-	@Override
-	public Screen getScreen() {
-				return this.screen;
 	}
 }

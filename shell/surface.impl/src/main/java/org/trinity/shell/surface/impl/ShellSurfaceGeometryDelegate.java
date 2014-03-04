@@ -23,8 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;

@@ -19,8 +19,6 @@
  ******************************************************************************/
 package org.trinity.shell.scene.impl;
 
-import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.ShellNodeTransformation;

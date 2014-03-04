@@ -20,9 +20,9 @@
 package org.trinity.foundation.api.display;
 
 import javax.annotation.concurrent.ThreadSafe;
+import javax.media.nativewindow.util.Rectangle;
 
 import org.trinity.foundation.api.shared.Listenable;
-import org.trinity.foundation.api.shared.Rectangle;
 
 
 /**
@@ -64,32 +64,6 @@ public interface DisplaySurface extends Listenable {
 	 */
 	void move(int x,
 	                            int y);
-
-	/***************************************
-	 * Perform a move and resize operation on this DisplaySurface.
-	 *
-	 *
-	 * @param x
-	 *            The X coordinate. Usually in pixels but can be implementation
-	 *            dependent.
-	 * @param y
-	 *            The Y coordinate. Usually in pixels but can be implementation
-	 *            dependent.
-	 * @param width
-	 *            The width. Usually in pixels but can be implementation
-	 *            dependent.
-	 * @param height
-	 *            The height. Usually in pixels but can be implementation
-	 *            dependent.
-	 * @see #move(int, int)
-	 * @see #resize(int, int)
-	 *
-	 ***************************************
-	 */
-	void moveResize(	int x,
-	                                      int y,
-	                                      int width,
-	                                      int height);
 
 	/***************************************
 	 * Set the size of this DisplaySurface.

@@ -12,8 +12,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.trinity.foundation.api.shared.Listenable;
-import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.event.*;
 
 import java.util.concurrent.Callable;

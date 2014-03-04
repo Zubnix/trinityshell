@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.api.shared.ListenableEventBus;
 import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
@@ -63,8 +62,6 @@ public class XWindow implements DisplaySurface {
 
 	private static final Logger     LOG                           = LoggerFactory.getLogger(XWindow.class);
 	private static final ByteBuffer MOVE_VALUE_LIST_BUFFER        = allocateDirect(8).order(nativeOrder());
-	private static final int        MOVE_RESIZE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-	private static final ByteBuffer MOVE_RESIZE_VALUE_LIST_BUFFER = allocateDirect(16).order(nativeOrder());
 	private static final int        RESIZE_VALUE_MASK             = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
 	private static final ByteBuffer RESIZE_VALUE_LIST             = allocateDirect(8).order(nativeOrder());
 	private static final int        RAISE_VALUE_MASK              = XCB_CONFIG_WINDOW_STACK_MODE;
@@ -166,49 +163,6 @@ public class XWindow implements DisplaySurface {
 							 winId,
 							 XWindow.MOVE_VALUE_MASK,
 							 XWindow.MOVE_VALUE_LIST_BUFFER);
-		xcb_flush(getConnectionRef());
-	}
-
-	@Override
-	public void moveResize(final int x,
-						   final int y,
-						   final int width,
-						   final int height) {
-		// we have to adjust the size with the X border. This sucks because it
-		// introduces an extra roundtrip to the X server. -_-
-
-		final int winId = getWindowId();
-		final xcb_get_geometry_cookie_t cookie_t = xcb_get_geometry(getConnectionRef(),
-																	winId);
-
-
-		final xcb_generic_error_t e = new xcb_generic_error_t();
-		final xcb_get_geometry_reply_t reply = xcb_get_geometry_reply(getConnectionRef(),
-																	  cookie_t,
-																	  e);
-
-		checkError(e);
-		final Integer border = reply.getBorder_width();
-
-
-		final int borderAdjust = 2 * border;
-		final int adjustedWidth = width - borderAdjust;
-		final int adjustedHeight = height - borderAdjust;
-
-		MOVE_RESIZE_VALUE_LIST_BUFFER.clear();
-		MOVE_RESIZE_VALUE_LIST_BUFFER.putInt(x).putInt(y).putInt(adjustedWidth)
-									 .putInt(adjustedHeight);
-
-		LOG.debug("[winId={}] move resize x={}, y={}, width={}, height={}.",
-				  winId,
-				  x,
-				  y,
-				  adjustedWidth,
-				  adjustedHeight);
-		xcb_configure_window(getConnectionRef(),
-							 winId,
-							 XWindow.MOVE_RESIZE_VALUE_MASK,
-							 XWindow.MOVE_RESIZE_VALUE_LIST_BUFFER);
 		xcb_flush(getConnectionRef());
 	}
 

@@ -19,10 +19,9 @@
  ******************************************************************************/
 package org.trinity.foundation.api.display.event;
 
-import org.trinity.foundation.api.shared.Rectangle;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import javax.media.nativewindow.util.Rectangle;
 
 /**
  * A request from a display resource for a new geometry (size, place).

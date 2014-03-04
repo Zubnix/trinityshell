@@ -34,12 +34,6 @@ import javax.annotation.concurrent.ThreadSafe;
 public interface Display extends Listenable {
 
 	/**
-	 * The logical representation of the physical screen.
-	 * @return The screen object.
-	 */
-	Screen getScreen();
-
-	/**
 	 * A "snapshot" of client display surfaces. This collection does not
 	 * include the root display area. The returned array only includes the
 	 * client display surfaces at the time of the call. Any future creation or

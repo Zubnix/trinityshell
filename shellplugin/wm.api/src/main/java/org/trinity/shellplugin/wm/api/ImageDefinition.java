@@ -20,8 +20,6 @@
 
 package org.trinity.shellplugin.wm.api;
 
-import org.trinity.foundation.api.shared.Size;
-
 import javax.annotation.concurrent.Immutable;
 
 @Immutable

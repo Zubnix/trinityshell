@@ -29,7 +29,6 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.GeometryRequest;
-import org.trinity.foundation.api.shared.Rectangle;
 import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;

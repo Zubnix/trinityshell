@@ -19,8 +19,8 @@
  ******************************************************************************/
 package org.trinity.shell.api.scene;
 
-import org.trinity.foundation.api.shared.Coordinate;
-import org.trinity.foundation.api.shared.Size;
+import javax.media.nativewindow.util.Dimension;
+import javax.media.nativewindow.util.Point;
 
 /***************************************
  * Executes the actual geometry changes for a {@link ShellNode}. A
@@ -45,10 +45,7 @@ public interface ShellNodeGeometryDelegate {
 	 */
 	ShellNode getShellNode();
 
-	void move(Coordinate desiredPosition);
+	void move(Point desiredPosition);
 
-	void resize(Size desiredSize);
-
-	void moveResize(Coordinate desiredPosition,
-					Size desiredSize);
+	void resize(Dimension desiredSize);
 }

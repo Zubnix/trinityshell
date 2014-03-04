@@ -31,7 +31,6 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.render.View;
 import org.trinity.foundation.api.render.binding.ViewBinder;
-import org.trinity.foundation.api.shared.Margins;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeMoveResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;

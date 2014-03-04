@@ -21,9 +21,9 @@ package org.trinity.shell.api.scene;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import org.trinity.foundation.api.shared.Rectangle;
 
 import javax.annotation.concurrent.Immutable;
+import javax.media.nativewindow.util.Rectangle;
 
 /***************************************
  * A geometric transformation. Current geometric property names end in 0, new
@@ -35,7 +35,6 @@ import javax.annotation.concurrent.Immutable;
 public class ShellNodeTransformation {
 	private final Rectangle rect0;
 	private final Rectangle rect1;
-	private final Rectangle deltaRect;
 	private final Optional<ShellNodeParent> parent0;
 	private final Optional<ShellNodeParent> parent1;
 
@@ -48,15 +47,6 @@ public class ShellNodeTransformation {
 
 		this.parent0 = parent0;
 		this.parent1 = parent1;
-
-		final int deltaX = rect1.getPosition().getX() - rect0.getPosition().getX();
-		final int deltaY = rect1.getPosition().getY() - rect0.getPosition().getY();
-		final int deltaWidth = rect1.getSize().getWidth() - rect0.getSize().getWidth();
-		final int deltaHeight = rect1.getSize().getWidth() - rect0.getSize().getHeight();
-		this.deltaRect = Rectangle.create(deltaX,
-												deltaY,
-												deltaWidth,
-												deltaHeight);
 	}
 
 	/***************************************
@@ -67,18 +57,6 @@ public class ShellNodeTransformation {
 	 */
 	public Rectangle getRect0() {
 		return this.rect0;
-	}
-
-	/***************************************
-	 * The difference (delta) of the current ({@link #getRect0()}) and the
-	 * desired ({@link #getRect1()}) geometry, ie desired width, height, x and y
-	 * is subtracted from the current.
-	 *
-	 * @return a {@link Rectangle}
-	 ***************************************
-	 */
-	public Rectangle getDeltaRect() {
-		return this.deltaRect;
 	}
 
 	/***************************************

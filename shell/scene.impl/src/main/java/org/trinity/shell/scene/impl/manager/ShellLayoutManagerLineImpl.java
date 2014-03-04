@@ -20,8 +20,6 @@
 package org.trinity.shell.scene.impl.manager;
 
 import com.google.common.eventbus.Subscribe;
-import org.trinity.foundation.api.shared.Margins;
-import org.trinity.foundation.api.shared.Size;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
