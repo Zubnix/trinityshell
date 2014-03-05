@@ -20,7 +20,6 @@
 package org.trinity.shell.scene.impl.manager;
 
 import com.google.common.eventbus.Subscribe;
-import com.sun.javafx.scene.layout.region.Margins;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
 import org.trinity.shell.api.scene.ShellNode;
@@ -39,6 +38,8 @@ import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.media.nativewindow.util.Dimension;
+import javax.media.nativewindow.util.Insets;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -53,7 +54,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager implements ShellLayoutManagerLine {
 
 	private static final ShellLayoutPropertyLine DEFAULT_LAYOUT_PROPERTY = new ShellLayoutPropertyLine(1,
-																									   Margins.NO_MARGINS);
+            Insets.getZero());
 	private final        ChildGeoListener        childGeoListener        = new ChildGeoListener();
 	private              boolean                 horizontalDirection     = true;
 	private              boolean                 inverseDirection        = false;
@@ -85,7 +86,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 		int newWidthSize = 0;
 		int fixedHeightSize = 0;
-		final Size size = containerNode.getSize();
+		final Dimension size = containerNode.getSize();
 		newWidthSize = size.getWidth();
 		fixedHeightSize = size.getHeight();
 
@@ -101,7 +102,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 			// we don't want to include children with 0 weight in the scale
 			// calculation since they are treated as constants
 			if(childWeight == 0) {
-				newWidthSize -= child.toGeoTransformation().getRect1().getSize().getWidth();
+				newWidthSize -= child.toGeoTransformation().getRect1().getWidth();
 			}
 			totalWeightedChildSizes += childWeight;
 		}
@@ -131,21 +132,21 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 			if(childWeight == 0) {
 				resizeFactor = 1;
-				childWeight = child.toGeoTransformation().getRect1().getSize().getWidth();
+				childWeight = child.toGeoTransformation().getRect1().getWidth();
 			}
 
-			final int vMargins = layoutProperty.getMargins().getTop() + layoutProperty.getMargins().getBottom();
+			final int vMargins = layoutProperty.getMargins().getTopHeight() + layoutProperty.getMargins().getBottomHeight();
 			// calculate new width
 			final double desiredChildWidth = childWeight * resizeFactor;
 			final int newChildWidth = (int) Math.round(desiredChildWidth);
 
-			final int hMargins = layoutProperty.getMargins().getLeft() + layoutProperty.getMargins().getRight();
+			final int hMargins = layoutProperty.getMargins().getLeftWidth() + layoutProperty.getMargins().getRightWidth();
 
 			 child.setSize(newChildWidth - hMargins,
                      fixedHeightSize - vMargins);
 
-			final int leftMargin = layoutProperty.getMargins().getLeft();
-			final int topMargin = layoutProperty.getMargins().getTop();
+			final int leftMargin = layoutProperty.getMargins().getLeftWidth();
+			final int topMargin = layoutProperty.getMargins().getTopHeight();
 			if (this.inverseDirection) {
 				newPlace -= newChildWidth;
 				 child.setPosition(newPlace + leftMargin,
@@ -157,7 +158,8 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 				newPlace += newChildWidth;
 			}
 
-			child.doMoveResize();
+			child.doMove();
+            child.doResize();
 		}
 	}
 
@@ -180,7 +182,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 			// we don't want to include children with 0 weight in the scale
 			// calculation since they are treated as constants
 			if (childWeight == 0) {
-				newHeightSize -= child.toGeoTransformation().getRect1().getSize().getHeight();
+				newHeightSize -= child.toGeoTransformation().getRect1().getHeight();
 			}
 			totalWeightedChildSizes += childWeight;
 		}
@@ -210,21 +212,21 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 			if (childWeight == 0) {
 				resizeFactor = 1;
-				childWeight =  child.toGeoTransformation().getRect1().getSize().getHeight();
+				childWeight =  child.toGeoTransformation().getRect1().getHeight();
 			}
-			final int hMargins = layoutProperty.getMargins().getLeft() + layoutProperty.getMargins().getRight();
+			final int hMargins = layoutProperty.getMargins().getLeftWidth() + layoutProperty.getMargins().getRightWidth();
 			// calculate new height
 			final double desiredChildHeight = childWeight * resizeFactor;
 
 			final int newChildHeight = (int) Math.round(desiredChildHeight);
 
-			final int vMargins = layoutProperty.getMargins().getTop() + layoutProperty.getMargins().getBottom();
+			final int vMargins = layoutProperty.getMargins().getTopHeight() + layoutProperty.getMargins().getBottomHeight();
 
 			child.setSize(fixedWidthSize - hMargins,
                     newChildHeight - vMargins);
 
-			final int topMargin = layoutProperty.getMargins().getTop();
-			final int leftMargin = layoutProperty.getMargins().getLeft();
+			final int topMargin = layoutProperty.getMargins().getTopHeight();
+			final int leftMargin = layoutProperty.getMargins().getLeftWidth();
 			if (this.inverseDirection) {
 				newPlace -= newChildHeight;
 				child.setPosition(leftMargin,
@@ -234,7 +236,8 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
                          newPlace + topMargin);
 				newPlace += newChildHeight;
 			}
-			child.doMoveResize();
+			child.doMove();
+            child.doResize();
 		}
 	}
 
@@ -283,18 +286,6 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 	private class ChildGeoListener {
 		// unused methods are used by guava's eventbus.
-
-		@SuppressWarnings("unused")
-		@Subscribe
-		public void handleChildMoveResizeRequest(final ShellNodeMoveResizeRequestEvent shellNodeMoveResizeRequestEvent) {
-			final ShellNode child = shellNodeMoveResizeRequestEvent.getSource();
-			if (getLayoutProperty(child).getWeight() == 0) {
-				child.doResize();
-				layout(getShellNodeParent());
-			} else {
-				cancelMoveResize(child);
-			}
-		}
 
 		@SuppressWarnings("unused")
 		@Subscribe

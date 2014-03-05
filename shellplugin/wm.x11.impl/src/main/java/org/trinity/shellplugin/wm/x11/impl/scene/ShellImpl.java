@@ -32,6 +32,8 @@ import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.render.View;
 import org.trinity.foundation.api.render.binding.ViewBinder;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
+import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
+import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerFactory;
 import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
@@ -44,10 +46,8 @@ import org.trinity.shellplugin.wm.api.viewkey.DesktopView;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
+import javax.media.nativewindow.util.Insets;
 import java.util.Set;
-
-import static com.google.common.collect.Iterables.removeAll;
 
 // TODO split up this class
 @Singleton
@@ -124,9 +124,14 @@ public class ShellImpl implements Shell {
     private void configureDesktopShellSurfaceBehavior(final ShellSurface desktopShellSurface) {
 		desktopShellSurface.register(new Object() {
 			@Subscribe
-			public void handleMoveResizeRequest(final ShellNodeMoveResizeRequestEvent event) {
-				desktopShellSurface.doMoveResize();
+			public void handleMoveRequest(final ShellNodeMoveRequestEvent event) {
+				desktopShellSurface.doMove();
 			}
+
+            @Subscribe
+            public void handleResizeRequest(final ShellNodeResizeRequestEvent event) {
+                desktopShellSurface.doResize();
+            }
 
 			@Subscribe
 			public void handleShowRequest(final ShellNodeShowRequestEvent event) {
@@ -142,18 +147,16 @@ public class ShellImpl implements Shell {
 		// means our listener (@Subscribe method) will be
 		// called by the "Display" thread.
 		this.display.register(new Object() {
-			// called by display executor
-			@Subscribe
-			public void handleCreationNotify(final DisplaySurfaceCreationNotify displaySurfaceCreationNotify) {
-				final DisplaySurface displaySurface = displaySurfaceCreationNotify.getDisplaySurface();
-				final ShellSurface clientShellSurface = ShellImpl.this.shellSurfaceFactory
-						.createShellSurface(displaySurface);
-				handleClientShellSurface(	clientShellSurface,
-											clientShellLayoutManagerLine);
-			}
-		});
-		// search & manage existing clients on the display server.
-		find(clientShellLayoutManagerLine);
+            // called by display executor
+            @Subscribe
+            public void handleCreationNotify(final DisplaySurfaceCreationNotify displaySurfaceCreationNotify) {
+                final DisplaySurface displaySurface = displaySurfaceCreationNotify.getDisplaySurface();
+                final ShellSurface clientShellSurface = ShellImpl.this.shellSurfaceFactory
+                        .createShellSurface(displaySurface);
+                handleClientShellSurface(clientShellSurface,
+                        clientShellLayoutManagerLine);
+            }
+        });
 	}
 
 	// called by shell executor.
@@ -161,20 +164,6 @@ public class ShellImpl implements Shell {
 	public void stop() {
 		this.display.unregister(this);
 	}
-
-	private void find(final ShellLayoutManagerLine shellLayoutManagerLine) {
-		final List<DisplaySurface> displaySurfaces = this.display.getDisplaySurfaces();
-
-							removeAll(	displaySurfaces,
-										ShellImpl.this.nonClientDisplaySurfaces);
-							for (final DisplaySurface displaySurface : displaySurfaces) {
-								final ShellSurface clientShellSurface = ShellImpl.this.shellSurfaceFactory
-										.createShellSurface(displaySurface);
-								handleClientShellSurface(	clientShellSurface,
-															shellLayoutManagerLine);
-							}
-						}
-
 
 	private void handleClientShellSurface(	final ShellSurface clientShellSurface,
 											final ShellLayoutManagerLine shellLayoutManagerLine) {
@@ -185,10 +174,10 @@ public class ShellImpl implements Shell {
                                 //if not then we manage it.
                                 shellLayoutManagerLine.addChildNode(clientShellSurface,
                                                                     new ShellLayoutPropertyLine(1,
-                                                                                                Margins.create(2,
-																											   2,
-																											   35,
-																											   45)));
+                                                                                                new Insets(2,
+                                                                                                        2,
+                                                                                                        35,
+                                                                                                        45)));
                                 final ClientBarElement clientTopBarItem = ShellImpl.this.clientBarElementFactory
                                         .createClientTopBarItem(clientShellSurface);
 

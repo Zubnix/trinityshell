@@ -25,6 +25,9 @@ import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.media.nativewindow.util.Dimension;
+import javax.media.nativewindow.util.Point;
+import javax.media.nativewindow.util.Rectangle;
 
 // TODO documentation
 
@@ -48,16 +51,21 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
     }
 
     @Override
-    public void move(@Nonnull final Coordinate position) {
+    public void move(@Nonnull final Point position) {
         final ShellVirtualSurface shellNode = getShellNode();
         final ShellNodeTransformation shellNodeTransformation = shellNode.toGeoTransformation();
+        final Rectangle rect0 = shellNodeTransformation.getRect0();
+        final Rectangle rect1 = shellNodeTransformation.getRect1();
 
-        final Coordinate deltaPosition = shellNodeTransformation.getDeltaRect().getPosition();
+        final int dX = rect1.getX()-rect0.getX();
+        final int dY = rect1.getY()-rect0.getY();
+
+        final Point deltaPosition = new Point(dX,dY);
 
         for (final ShellNode child : shellNode.getChildren()) {
-            final Coordinate oldRelPosition = child.getPosition();
+            final Point oldRelPosition = child.getPosition();
 
-            final Coordinate newRelPosition = oldRelPosition.add(deltaPosition);
+            final Point newRelPosition = oldRelPosition.translate(deltaPosition);
 
             // directly manipulated underlying platform specific geometry of the
             // child
@@ -66,13 +74,7 @@ public class ShellVirtualSurfaceExecutor implements ShellNodeGeometryDelegate {
     }
 
     @Override
-    public void resize(@Nonnull final Size size) {
+    public void resize(@Nonnull final Dimension size) {
         // do nothing
-    }
-
-    @Override
-    public void moveResize(@Nonnull final Coordinate position,
-                           @Nonnull final Size size) {
-        move(position);
     }
 }

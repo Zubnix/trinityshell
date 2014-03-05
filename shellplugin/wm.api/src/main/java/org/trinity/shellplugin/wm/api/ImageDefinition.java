@@ -21,16 +21,17 @@
 package org.trinity.shellplugin.wm.api;
 
 import javax.annotation.concurrent.Immutable;
+import javax.media.nativewindow.util.Dimension;
 
 @Immutable
 public class ImageDefinition {
 
     private final byte[] imageData;
-    private final Size imageSize;
+    private final Dimension imageSize;
     private final String colorModel;
 
     public ImageDefinition(final byte[] imageData,
-                           final Size imageSize,
+                           final Dimension imageSize,
                            final String colorModel) {
         this.imageData = imageData;
         this.imageSize = imageSize;
@@ -48,7 +49,7 @@ public class ImageDefinition {
         return imageDataCopy;
     }
 
-    public Size getImageSize() {
+    public Dimension getImageSize() {
         return this.imageSize;
     }
 

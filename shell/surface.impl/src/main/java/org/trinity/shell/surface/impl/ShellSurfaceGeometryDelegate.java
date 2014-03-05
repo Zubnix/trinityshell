@@ -19,17 +19,18 @@
  ******************************************************************************/
 package org.trinity.shell.surface.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-
+import com.google.common.base.Optional;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.shell.api.scene.AbstractShellNode;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeGeometryDelegate;
 import org.trinity.shell.api.scene.ShellNodeParent;
-
-import com.google.common.base.Optional;
 import org.trinity.shell.api.surface.ShellSurface;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.media.nativewindow.util.Dimension;
+import javax.media.nativewindow.util.Point;
 
 /***************************************
  * A {@link ShellNodeGeometryDelegate} for use with an
@@ -56,42 +57,29 @@ public class ShellSurfaceGeometryDelegate implements ShellNodeGeometryDelegate {
 	}
 
 	@Override
-	public void resize(@Nonnull final Size size) {
+	public void resize(@Nonnull final Dimension size) {
 		getShellNodeManipulator().resize(size.getWidth(),
 				size.getHeight());
 	}
 	@Override
-	public void move(@Nonnull final Coordinate position) {
+	public void move(@Nonnull final Point position) {
 
-		final Coordinate absolutePosition = getAbsolutePosition(getShellNode());
+		final Point absolutePosition = getAbsolutePosition(getShellNode());
 
 		getShellNodeManipulator().move(	absolutePosition.getX(),
 										absolutePosition.getY());
 	}
 
-	@Override
-	public void moveResize(	@Nonnull final Coordinate position,
-							@Nonnull final Size size) {
-
-		final Coordinate absolutePosition = getAbsolutePosition(getShellNode());
-
-		final DisplaySurface areaManipulator = getShellNodeManipulator();
-		areaManipulator.moveResize(	absolutePosition.getX(),
-									absolutePosition.getY(),
-									size.getWidth(),
-									size.getHeight());
-	}
-
-	private Coordinate getAbsolutePosition(@Nonnull final ShellNode node) {
-		final Coordinate nodePosition = node.getPosition();
+	private Point getAbsolutePosition(@Nonnull final ShellNode node) {
+		final Point nodePosition = node.getPosition();
 		final Optional<ShellNodeParent> optionalParent = node.getParent();
 
 		if ((!optionalParent.isPresent())) {
 			return nodePosition;
 		}
 
-		final Coordinate absoluteParentPosition = getAbsolutePosition((AbstractShellNode) optionalParent.get());
-		final Coordinate absolutePosition = nodePosition.add(absoluteParentPosition);
+		final Point absoluteParentPosition = getAbsolutePosition((AbstractShellNode) optionalParent.get());
+		final Point absolutePosition = nodePosition.translate(absoluteParentPosition);
 
 		return absolutePosition;
 	}

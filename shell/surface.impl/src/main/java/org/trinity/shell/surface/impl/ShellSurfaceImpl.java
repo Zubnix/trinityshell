@@ -27,7 +27,6 @@ import org.trinity.foundation.api.display.event.GeometryRequest;
 import org.trinity.foundation.api.display.event.HideNotify;
 import org.trinity.foundation.api.display.event.ShowNotify;
 import org.trinity.foundation.api.display.event.ShowRequest;
-import org.trinity.foundation.api.shared.*;
 import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.AbstractShellNodeParent;
@@ -37,7 +36,6 @@ import org.trinity.shell.api.surface.ShellSurface;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.media.nativewindow.util.Dimension;
-import javax.media.nativewindow.util.Point;
 import javax.media.nativewindow.util.Rectangle;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -246,7 +244,8 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
                 configureY ? newGeometry.getY() : currentGeometry.getY());
         setSize(configureWidth ? newGeometry.getWidth() : currentGeometry.getWidth(),
                 configureHeight ? newGeometry.getHeight() : currentGeometry.getHeight());
-        requestMoveResize();
+        requestMove();
+        requestResize();
     }
 
     /**
@@ -260,8 +259,8 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
     @Subscribe
     public void handleGeometryNotifyEvent(final GeometryNotify geometryNotify) {
         final Rectangle geometry = geometryNotify.getGeometry();
-        setPosition(geometry.getPosition());
-        setSize(geometry.getSize());
+        setPosition(geometry.getX(),geometry.getY());
+        setSize(geometry.getWidth(),geometry.getHeight());
 
 		flushSizePlaceValues();
 		final ShellNodeMovedResizedEvent geoEvent = new ShellNodeMovedResizedEvent(	this,
@@ -306,8 +305,8 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
 	private void syncGeoToDisplaySurface() {
         final Rectangle displaySurfaceGeo = getDisplaySurface().getGeometry();
 
-							setPosition(displaySurfaceGeo.getPosition());
-							setSize(displaySurfaceGeo.getSize());
+							setPosition(displaySurfaceGeo.getX(),displaySurfaceGeo.getY());
+							setSize(displaySurfaceGeo.getWidth(),displaySurfaceGeo.getHeight());
 							flushSizePlaceValues();
 	}
 

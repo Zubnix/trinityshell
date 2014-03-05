@@ -32,6 +32,7 @@
 
     <properties>
         <!-- dep versions -->
+        <jogamp.version>2.1.4</jogamp.version>
         <quasar.version>0.4.0</quasar.version>
         <auto.factory.version>1.0-SNAPSHOT</auto.factory.version>
         <auto.value.version>1.0-rc1</auto.value.version>
@@ -123,7 +124,12 @@
         <dependency>
             <groupId>org.jogamp.jogl</groupId>
             <artifactId>jogl-all-noawt</artifactId>
-            <version>2.1.4</version>
+            <version>${jogamp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jogamp.gluegen</groupId>
+            <artifactId>gluegen</artifactId>
+            <version>${jogamp.version}</version>
         </dependency>
 
         <!-- misc. program aids (not the disease) -->
