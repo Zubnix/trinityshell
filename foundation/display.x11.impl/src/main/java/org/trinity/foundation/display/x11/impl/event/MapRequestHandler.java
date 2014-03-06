@@ -24,14 +24,12 @@ import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_map_request_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.Display;
+import org.trinity.foundation.api.display.Compositor;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.ShowRequest;
-import org.trinity.foundation.display.x11.api.XEventChannel;
-import org.trinity.foundation.display.x11.api.XEventHandler;
-import org.trinity.foundation.display.x11.api.XWindowHandle;
+import org.trinity.foundation.display.x11.impl.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import javax.annotation.Nonnull;
@@ -59,15 +57,15 @@ public class MapRequestHandler implements XEventHandler {
 
 	private final XEventChannel          xEventChannel;
 	private final DisplaySurfacePoolImpl xWindowCache;
-	private final Display                display;
+	private final Compositor             compositor;
 
 	@Inject
 	MapRequestHandler(final XEventChannel xEventChannel,
 					  final DisplaySurfacePoolImpl xWindowCache,
-					  final Display display) {
+					  final Compositor compositor) {
 		this.xEventChannel = xEventChannel;
 		this.xWindowCache = xWindowCache;
-		this.display = display;
+		this.compositor = compositor;
 	}
 
 	@Override
@@ -100,7 +98,7 @@ public class MapRequestHandler implements XEventHandler {
 			// this is a bit of a dirty hack to work around X's model of client
 			// discovery.
 			final DisplaySurfaceCreationNotify displaySurfaceCreationNotify = new DisplaySurfaceCreationNotify(displayEventTarget);
-			this.display.post(displaySurfaceCreationNotify);
+			this.compositor.post(displaySurfaceCreationNotify);
 		}
 		return Optional.of(displayEventTarget);
 	}

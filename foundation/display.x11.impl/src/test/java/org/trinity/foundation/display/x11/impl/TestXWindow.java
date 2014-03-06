@@ -20,7 +20,6 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.display.x11.api.XEventChannel;
 
 import javax.media.nativewindow.util.Rectangle;
 import java.nio.ByteBuffer;
@@ -218,7 +217,7 @@ public class TestXWindow {
 
         //when
         //the XWindow's geometry is requested
-        final Rectangle geometry = this.xWindow.getGeometry();
+        final Rectangle geometry = this.xWindow.getShape();
 
         //then
         //the native X server window's geometry is returned.

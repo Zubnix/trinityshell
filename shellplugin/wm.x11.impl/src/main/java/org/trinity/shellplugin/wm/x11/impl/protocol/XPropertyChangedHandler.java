@@ -23,10 +23,8 @@ package org.trinity.shellplugin.wm.x11.impl.protocol;
 import com.google.common.base.Optional;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
-import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.Listenable;
-import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.api.XWindowHandle;
 
 import javax.annotation.Nonnull;

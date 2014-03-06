@@ -26,7 +26,6 @@ import org.freedesktop.xcb.xcb_get_window_attributes_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
 import javax.annotation.concurrent.ThreadSafe;

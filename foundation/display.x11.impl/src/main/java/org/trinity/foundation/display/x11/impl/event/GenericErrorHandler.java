@@ -26,9 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.Listenable;
-import org.trinity.foundation.display.x11.api.XEventChannel;
-import org.trinity.foundation.display.x11.api.XEventHandler;
-import org.trinity.foundation.display.x11.api.XcbErrorUtil;
+import org.trinity.foundation.display.x11.impl.XcbErrorUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;

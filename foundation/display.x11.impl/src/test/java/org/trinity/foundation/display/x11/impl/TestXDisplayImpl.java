@@ -22,8 +22,6 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
-import org.trinity.foundation.display.x11.api.XEventChannel;
-import org.trinity.foundation.display.x11.api.XWindowHandle;
 
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
@@ -68,7 +66,7 @@ public class TestXDisplayImpl {
 		when(xcb_connection_has_error(this.xcb_connection)).thenReturn(1);
 		//when
 		//a new XDisplay is created
-		new XDisplayImpl(this.xEventChannel,
+		new XCompositor(this.xEventChannel,
 						 this.xWindowPool);
 		//then
 		//the XDisplay object throws an Error
@@ -144,7 +142,7 @@ public class TestXDisplayImpl {
         //when
         //a new XDisplay is created
         //a client is created
-		final XDisplayImpl xDisplay = new XDisplayImpl(this.xEventChannel,
+		final XCompositor xDisplay = new XCompositor(this.xEventChannel,
 													   this.xWindowPool);
 		xDisplay.post(displaySurfaceCreationNotify);
 

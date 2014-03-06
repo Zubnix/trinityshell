@@ -26,7 +26,7 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.Display;
+import org.trinity.foundation.api.display.Compositor;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.render.View;
@@ -58,38 +58,38 @@ public class ShellImpl implements Shell {
 
 	// (view)listenable lists
 	private final EventList<Object> notificationsBar = new BasicEventList<>();
-	private final EventList<Object> clientsBar = new BasicEventList<>();
-	private final EventList<Object> bottomBar = new BasicEventList<>();
-	private final Display display;
-	private final ViewBinder viewBinder;
-	private final ShellSurfaceFactory shellSurfaceFactory;
+	private final EventList<Object> clientsBar       = new BasicEventList<>();
+	private final EventList<Object> bottomBar        = new BasicEventList<>();
+	private final Compositor                compositor;
+	private final ViewBinder                viewBinder;
+	private final ShellSurfaceFactory       shellSurfaceFactory;
 	private final ShellLayoutManagerFactory shellLayoutManagerFactory;
-	private final ClientBarElementFactory clientBarElementFactory;
-    private final View view;
+	private final ClientBarElementFactory   clientBarElementFactory;
+	private final View                      view;
 
-    private final Set<DisplaySurface> nonClientDisplaySurfaces = Sets.newHashSet();
+	private final Set<DisplaySurface> nonClientDisplaySurfaces = Sets.newHashSet();
 
-    @Inject
-    ShellImpl(final Display display,
-              final ViewBinder viewBinder,
-              final ShellSurfaceFactory shellSurfaceFactory,
-				final ShellLayoutManagerFactory shellLayoutManagerFactory,
-				final ClientBarElementFactory clientBarElementFactory,
-                @DesktopView final View view) {
-        this.display = display;
-        this.viewBinder = viewBinder;
-        this.shellSurfaceFactory = shellSurfaceFactory;
-        this.shellLayoutManagerFactory = shellLayoutManagerFactory;
-        this.clientBarElementFactory = clientBarElementFactory;
-        this.view = view;
-    }
+	@Inject
+	ShellImpl(final Compositor compositor,
+			  final ViewBinder viewBinder,
+			  final ShellSurfaceFactory shellSurfaceFactory,
+			  final ShellLayoutManagerFactory shellLayoutManagerFactory,
+			  final ClientBarElementFactory clientBarElementFactory,
+			  @DesktopView final View view) {
+		this.compositor = compositor;
+		this.viewBinder = viewBinder;
+		this.shellSurfaceFactory = shellSurfaceFactory;
+		this.shellLayoutManagerFactory = shellLayoutManagerFactory;
+		this.clientBarElementFactory = clientBarElementFactory;
+		this.view = view;
+	}
 
-    public EventList<Object> getNotificationsBar() {
-        return this.notificationsBar;
-    }
+	public EventList<Object> getNotificationsBar() {
+		return this.notificationsBar;
+	}
 
-    public EventList<Object> getClientsBar() {
-        return this.clientsBar;
+	public EventList<Object> getClientsBar() {
+		return this.clientsBar;
 	}
 
 	public EventList<Object> getBottomBar() {
@@ -98,40 +98,40 @@ public class ShellImpl implements Shell {
 
 	@Override
 	public void addStatusElement(final Object element) {
-				ShellImpl.this.notificationsBar.add(element);
+		ShellImpl.this.notificationsBar.add(element);
 	}
 
 	@Override
 	public void removeStatusElement(final Object element) {
-				ShellImpl.this.notificationsBar.remove(element);
+		ShellImpl.this.notificationsBar.remove(element);
 	}
 
 	@Override
 	public void start() {
 
-                    ShellImpl.this.viewBinder.bind(
-                                                   this,
-                                                   this.view.getBindableView());
+		ShellImpl.this.viewBinder.bind(
+				this,
+				this.view.getBindableView());
 
-                    ShellImpl.this.nonClientDisplaySurfaces.add(this.view.getViewDisplaySurface());
-                    final ShellSurface desktopShellSurface = ShellImpl.this.shellSurfaceFactory
-                            .createShellSurface(this.view.getViewDisplaySurface());
-                    configureDesktopShellSurfaceBehavior(desktopShellSurface);
-                    handleDesktopShellSurface(desktopShellSurface);
-    }
+		ShellImpl.this.nonClientDisplaySurfaces.add(this.view.getViewDisplaySurface());
+		final ShellSurface desktopShellSurface = ShellImpl.this.shellSurfaceFactory
+				.createShellSurface(this.view.getViewDisplaySurface());
+		configureDesktopShellSurfaceBehavior(desktopShellSurface);
+		handleDesktopShellSurface(desktopShellSurface);
+	}
 
-    // called by display thread so we avoid missing any display methods.
-    private void configureDesktopShellSurfaceBehavior(final ShellSurface desktopShellSurface) {
+	// called by compositor thread so we avoid missing any compositor methods.
+	private void configureDesktopShellSurfaceBehavior(final ShellSurface desktopShellSurface) {
 		desktopShellSurface.register(new Object() {
 			@Subscribe
 			public void handleMoveRequest(final ShellNodeMoveRequestEvent event) {
 				desktopShellSurface.doMove();
 			}
 
-            @Subscribe
-            public void handleResizeRequest(final ShellNodeResizeRequestEvent event) {
-                desktopShellSurface.doResize();
-            }
+			@Subscribe
+			public void handleResizeRequest(final ShellNodeResizeRequestEvent event) {
+				desktopShellSurface.doResize();
+			}
 
 			@Subscribe
 			public void handleShowRequest(final ShellNodeShowRequestEvent event) {
@@ -145,24 +145,24 @@ public class ShellImpl implements Shell {
 				.createShellLayoutManagerLine(desktopShellSurface);
 		// We register without specifying an executor. This
 		// means our listener (@Subscribe method) will be
-		// called by the "Display" thread.
-		this.display.register(new Object() {
-            // called by display executor
-            @Subscribe
-            public void handleCreationNotify(final DisplaySurfaceCreationNotify displaySurfaceCreationNotify) {
-                final DisplaySurface displaySurface = displaySurfaceCreationNotify.getDisplaySurface();
-                final ShellSurface clientShellSurface = ShellImpl.this.shellSurfaceFactory
-                        .createShellSurface(displaySurface);
-                handleClientShellSurface(clientShellSurface,
-                        clientShellLayoutManagerLine);
-            }
-        });
+		// called by the "Compositor" thread.
+		this.compositor.register(new Object() {
+			// called by display executor
+			@Subscribe
+			public void handleCreationNotify(final DisplaySurfaceCreationNotify displaySurfaceCreationNotify) {
+				final DisplaySurface displaySurface = displaySurfaceCreationNotify.getDisplaySurface();
+				final ShellSurface clientShellSurface = ShellImpl.this.shellSurfaceFactory
+						.createShellSurface(displaySurface);
+				handleClientShellSurface(clientShellSurface,
+										 clientShellLayoutManagerLine);
+			}
+		});
 	}
 
 	// called by shell executor.
 	@Override
 	public void stop() {
-		this.display.unregister(this);
+		this.compositor.unregister(this);
 	}
 
 	private void handleClientShellSurface(	final ShellSurface clientShellSurface,

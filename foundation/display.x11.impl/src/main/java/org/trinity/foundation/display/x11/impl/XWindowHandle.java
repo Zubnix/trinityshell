@@ -17,29 +17,25 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
+package org.trinity.foundation.display.x11.impl;
 
-package org.trinity.foundation.display.x11.api;
+import com.google.auto.value.AutoValue;
+import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.foundation.display.x11.api.AutoValue_XWindowHandle;
 
-import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
-import org.trinity.foundation.api.shared.Listenable;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * A connection to an X display server.
- */
-@NotThreadSafe
-public interface XEventChannel extends Listenable {
-    /**
-     * The XCB connection build. The optional build will be absent if no
-     * connection is present.
-     *
-     * @return The underlying native X connection.
-     */
-    SWIGTYPE_p_xcb_connection_t getConnectionReference();
+@Immutable
+@AutoValue(cacheHashCode = true)
+public abstract class XWindowHandle implements DisplaySurfaceHandle {
 
-    /**
-     * Close the connection to the underlying X display server.
-     */
-    void close();
+    public static DisplaySurfaceHandle create(@Nonnull final Integer nativeHandle){
+        return new AutoValue_XWindowHandle(nativeHandle);
+    }
+
+    @Override
+    public abstract Integer getNativeHandle();
 }

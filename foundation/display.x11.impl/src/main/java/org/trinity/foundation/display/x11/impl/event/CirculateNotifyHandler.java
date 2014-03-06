@@ -28,8 +28,8 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.StackingChangedNotify;
 import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.foundation.display.x11.api.XEventHandler;
-import org.trinity.foundation.display.x11.api.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
+import org.trinity.foundation.display.x11.impl.XWindowHandle;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;

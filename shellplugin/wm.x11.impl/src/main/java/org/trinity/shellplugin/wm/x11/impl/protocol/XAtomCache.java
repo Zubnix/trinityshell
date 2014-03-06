@@ -24,7 +24,6 @@ import com.google.common.cache.CacheBuilder;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_intern_atom_cookie_t;
 import org.freedesktop.xcb.xcb_intern_atom_reply_t;
-import org.trinity.foundation.display.x11.api.XEventChannel;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;

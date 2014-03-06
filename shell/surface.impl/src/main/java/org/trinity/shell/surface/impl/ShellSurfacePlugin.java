@@ -20,7 +20,7 @@
 package org.trinity.shell.surface.impl;
 
 import com.google.common.util.concurrent.AbstractIdleService;
-import org.trinity.foundation.api.display.Display;
+import org.trinity.foundation.api.display.Compositor;
 import org.trinity.shell.api.plugin.ShellPlugin;
 
 import javax.annotation.Nonnull;
@@ -32,12 +32,12 @@ import javax.inject.Singleton;
 @NotThreadSafe
 public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlugin {
 
-	private final Display display;
+	private final Compositor compositor;
 
 	@Inject
 	ShellSurfacePlugin(
-						@Nonnull final Display display) {
-		this.display = display;
+			@Nonnull final Compositor compositor) {
+		this.compositor = compositor;
 	}
 
 	@Override
@@ -46,6 +46,6 @@ public class ShellSurfacePlugin extends AbstractIdleService implements ShellPlug
 
 	@Override
 	protected void shutDown() throws Exception {
-		this.display.quit();
+		this.compositor.quit();
 	}
 }

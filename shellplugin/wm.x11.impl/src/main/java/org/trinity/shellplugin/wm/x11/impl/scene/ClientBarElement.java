@@ -32,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.render.binding.model.PropertyChanged;
-import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.shell.api.surface.ShellSurface;
 import org.trinity.shellplugin.wm.api.HasText;
 import org.trinity.shellplugin.wm.api.ReceivesPointerInput;

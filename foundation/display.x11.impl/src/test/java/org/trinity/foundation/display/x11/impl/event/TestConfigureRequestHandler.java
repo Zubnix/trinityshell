@@ -18,13 +18,12 @@ import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.trinity.foundation.api.display.Display;
+import org.trinity.foundation.api.display.Compositor;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.GeometryRequest;
-import org.trinity.foundation.display.x11.api.XEventChannel;
-import org.trinity.foundation.display.x11.api.XWindowHandle;
+import org.trinity.foundation.display.x11.impl.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import java.nio.ByteBuffer;
@@ -53,7 +52,7 @@ public class TestConfigureRequestHandler {
 	@Mock
 	private DisplaySurfacePoolImpl  xWindowPool;
 	@Mock
-	private Display                 display;
+	private Compositor              compositor;
 	@InjectMocks
 	private ConfigureRequestHandler configureRequestHandler;
 
@@ -153,13 +152,13 @@ public class TestConfigureRequestHandler {
 
         //then
         //the correct DisplaySurface is returned
-        //no display surface creation notify is fired
+        //no compositor surface creation notify is fired
         final ArgumentCaptor<XWindowHandle> windowHandleArgumentCaptor = ArgumentCaptor.forClass(XWindowHandle.class);
         verify(this.xWindowPool).get(windowHandleArgumentCaptor.capture());
         assertEquals((Integer) this.targetWindowId,
                      windowHandleArgumentCaptor.getValue().getNativeHandle());
         assertTrue(target.isPresent());
-        verify(this.display,
+        verify(this.compositor,
                never()).post(isA(DisplaySurfaceCreationNotify.class));
     }
 
@@ -196,7 +195,7 @@ public class TestConfigureRequestHandler {
         //then
         //the correct DisplaySurface is returned
         //the client's event signaling is configured
-        //a client creation notify is fired on the display object
+        //a client creation notify is fired on the compositor object
         assertTrue(target.isPresent());
 
         final ArgumentCaptor<ByteBuffer> argumentCaptor = ArgumentCaptor.forClass(ByteBuffer.class);
@@ -211,6 +210,6 @@ public class TestConfigureRequestHandler {
                              | XCB_EVENT_MASK_STRUCTURE_NOTIFY,
                      value.getInt());
 
-        verify(this.display).post(isA(DisplaySurfaceCreationNotify.class));
+        verify(this.compositor).post(isA(DisplaySurfaceCreationNotify.class));
     }
 }

@@ -17,23 +17,33 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.api.display;
+package org.trinity.foundation.display.x11.impl;
 
-import org.trinity.foundation.api.shared.Listenable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.display.Compositor;
+import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.foundation.api.shared.ListenableEventBus;
 
 import javax.annotation.concurrent.ThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-/**
- *
- */
+@Singleton
 @ThreadSafe
-public interface Display extends Listenable {
+public class XCompositor extends ListenableEventBus implements Compositor {
 
-	/**
-	 * ************************************
-	 * Orderly shut down this {@code Display}. All resources living on this
-	 * {@code Display} will be shut down as well.
-	 * **************************************
-	 */
-	void quit();
+	private static final Logger               LOG                   = LoggerFactory.getLogger(XCompositor.class);
+	private final DisplaySurfacePoolImpl xWindowCache;
+
+	@Inject
+	XCompositor(final DisplaySurfacePoolImpl xWindowCache) {
+		this.xWindowCache = xWindowCache;
+	}
+
+	@Override
+	public DisplaySurface createDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
+		return this.xWindowCache.get(displaySurfaceHandle);
+	}
 }

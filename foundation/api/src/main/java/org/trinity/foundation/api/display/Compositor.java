@@ -17,24 +17,16 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.display.x11.api;
+package org.trinity.foundation.api.display;
 
-import com.google.auto.value.AutoValue;
-import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.foundation.api.shared.Listenable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-@Immutable
-@AutoValue(cacheHashCode = true)
-public abstract class XWindowHandle implements DisplaySurfaceHandle {
-
-    public static DisplaySurfaceHandle create(@Nonnull final Integer nativeHandle){
-        return new AutoValue_XWindowHandle(nativeHandle);
-    }
-
-    @Override
-    public abstract Integer getNativeHandle();
+/**
+ *
+ */
+@ThreadSafe
+public interface Compositor extends Listenable {
+	DisplaySurface createDisplaySurface(DisplaySurfaceHandle displaySurfaceHandle);
 }

@@ -243,7 +243,7 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
         setPosition(configureX ? newGeometry.getX() : currentGeometry.getX(),
                 configureY ? newGeometry.getY() : currentGeometry.getY());
         setSize(configureWidth ? newGeometry.getWidth() : currentGeometry.getWidth(),
-                configureHeight ? newGeometry.getHeight() : currentGeometry.getHeight());
+				configureHeight ? newGeometry.getHeight() : currentGeometry.getHeight());
         requestMove();
         requestResize();
     }
@@ -303,7 +303,7 @@ public final class ShellSurfaceImpl extends AbstractShellNodeParent implements S
     }
 
 	private void syncGeoToDisplaySurface() {
-        final Rectangle displaySurfaceGeo = getDisplaySurface().getGeometry();
+        final Rectangle displaySurfaceGeo = getDisplaySurface().getShape();
 
 							setPosition(displaySurfaceGeo.getX(),displaySurfaceGeo.getY());
 							setSize(displaySurfaceGeo.getWidth(),displaySurfaceGeo.getHeight());

@@ -42,31 +42,6 @@ public interface DisplaySurface extends Listenable {
 
 	/**
 	 * ************************************
-	 * Set the input focus to this DisplaySurface. Generated input
-	 * evens will have their source set as coming from this DisplaySurface.
-	 * <p/>
-	 * The effects of giving focus to a hidden or destroyed DisplaySurface
-	 * is implementation dependent.
-	 * **************************************
-	 */
-	@Deprecated
-	void setInputFocus();
-
-	/**
-	 * ************************************
-	 * Move this DisplaySurface to the given coordinates.
-	 *
-	 * @param x The X coordinate. Usually in pixels but can be implementation
-	 *          dependent.
-	 * @param y The Y coordinate. Usually in pixels but can be implementation
-	 *          dependent.
-	 *          **************************************
-	 */
-	void move(int x,
-			  int y);
-
-	/**
-	 * ************************************
 	 * Set the size of this DisplaySurface.
 	 *
 	 * @param width  The width. Usually in pixels but can be implementation
@@ -75,8 +50,10 @@ public interface DisplaySurface extends Listenable {
 	 *               dependent.
 	 *               **************************************
 	 */
-	void resize(int width,
-				int height);
+	void configure(int x,
+				   int y,
+				   int width,
+				   int height);
 
 	/**
 	 * ************************************
@@ -87,7 +64,9 @@ public interface DisplaySurface extends Listenable {
 	 * position, width and a height.
 	 * **************************************
 	 */
-	Rectangle getGeometry();
+	Rectangle getShape();
+
+	Rectangle getInputRegion();
 
 	/**
 	 * ************************************
@@ -97,14 +76,4 @@ public interface DisplaySurface extends Listenable {
 	 * **************************************
 	 */
 	DisplaySurfaceHandle getDisplaySurfaceHandle();
-
-
-	@Deprecated
-	void show();
-
-	@Deprecated
-	void hide();
-
-	@Deprecated
-	void raise();
 }

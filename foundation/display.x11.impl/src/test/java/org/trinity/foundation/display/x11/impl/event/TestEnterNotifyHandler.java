@@ -17,7 +17,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.PointerEnterNotify;
-import org.trinity.foundation.display.x11.api.XWindowHandle;
+import org.trinity.foundation.display.x11.impl.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import static org.freedesktop.xcb.LibXcbJNI.xcb_enter_notify_event_t_event_get;

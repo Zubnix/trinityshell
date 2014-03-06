@@ -24,21 +24,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.display.DisplaySurfacePool;
 import org.trinity.foundation.api.display.event.DestroyNotify;
 import org.trinity.foundation.display.x11.api.XEventChannel;
 
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.nio.ByteBuffer.allocateDirect;
+import static java.nio.ByteOrder.nativeOrder;
+import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
+import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
+import static org.freedesktop.xcb.xcb_event_mask_t.*;
+
 @Singleton
 @ThreadSafe
-public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
+public class DisplaySurfacePoolImpl {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DisplaySurfacePoolImpl.class);
+
+	private static final int        CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW |
+			XCB_EVENT_MASK_LEAVE_WINDOW |
+			XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+	private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder()).putInt(CLIENT_EVENT_MASK);
+
 
 	private final Map<DisplaySurfaceHandle, DisplaySurface> displaySurfaces = new HashMap<>();
 
@@ -52,12 +65,12 @@ public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 		this.xWindowFactory = xWindowFactory;
 	}
 
-	@Override
 	public DisplaySurface get(final DisplaySurfaceHandle displaySurfaceHandle) {
 
 		DisplaySurface window = this.displaySurfaces.get(displaySurfaceHandle);
 		if(window == null) {
 			window = registerNewDisplaySurface(displaySurfaceHandle);
+			configureClientEvents(window);
 		}
 		return window;
 	}
@@ -73,14 +86,22 @@ public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 		return window;
 	}
 
+	private void configureClientEvents(final DisplaySurface window) {
+		final int winId = (Integer) window.getDisplaySurfaceHandle().getNativeHandle();
+
+		LOG.debug("[winId={}] configure client evens.",
+				  winId);
+
+		xcb_change_window_attributes(this.xEventChannel.getConnectionReference(),
+									 winId,
+									 XCB_CW_EVENT_MASK,
+									 CLIENT_EVENTS_CONFIG_BUFFER);
+		xcb_flush(this.xEventChannel.getConnectionReference());
+	}
+
 	private void unregisterDisplaySurface(final DisplaySurface displaySurface) {
 		this.displaySurfaces.remove(displaySurface.getDisplaySurfaceHandle().getNativeHandle().hashCode());
 		displaySurface.unregister(this);
-	}
-
-	@Override
-	public Boolean isPresent(final DisplaySurfaceHandle displaySurfaceHandle) {
-		return this.displaySurfaces.containsKey(displaySurfaceHandle.getNativeHandle().hashCode());
 	}
 
 	private class DestroyListener {
@@ -92,7 +113,7 @@ public class DisplaySurfacePoolImpl implements DisplaySurfacePool {
 
 		@Subscribe
 		public void destroyed(final DestroyNotify destroyNotify) {
-				unregisterDisplaySurface(this.window);
+			unregisterDisplaySurface(this.window);
 		}
 	}
 }

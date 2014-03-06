@@ -20,7 +20,6 @@
 
 package org.trinity.foundation.api.display.event;
 
-import org.trinity.foundation.api.display.Display;
 import org.trinity.foundation.api.display.DisplaySurface;
 
 import javax.annotation.Nonnull;
@@ -28,7 +27,7 @@ import javax.annotation.concurrent.Immutable;
 import javax.inject.Singleton;
 
 /**
- * Signals the {@link Display} {@link Singleton} that a new
+ * Signals the {@link org.trinity.foundation.api.display.Compositor} {@link Singleton} that a new
  * {@link DisplaySurface} is created.
  */
 @Immutable

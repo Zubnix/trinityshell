@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.display.x11.api.XEventChannel;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

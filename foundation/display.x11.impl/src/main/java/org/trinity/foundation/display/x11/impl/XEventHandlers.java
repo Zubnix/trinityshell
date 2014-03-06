@@ -38,38 +38,38 @@ import java.util.Set;
 @NotThreadSafe
 public final class XEventHandlers {
 
-    private static final int EVENT_CODE_MASK = 0x7f;
+	private static final int EVENT_CODE_MASK = 0x7f;
 
-    private final Map<Integer, XEventHandler> conversionMap = new HashMap<>();
+	private final Map<Integer, XEventHandler> conversionMap = new HashMap<>();
 
-    @Inject
-    XEventHandlers(final Set<XEventHandler> eventConversions,
-                   final XEventChannel xEventChannel) {
+	@Inject
+	XEventHandlers(final Set<XEventHandler> eventConversions,
+				   final XEventChannel xEventChannel) {
 
-        for (final XEventHandler eventConversion : eventConversions) {
-            this.conversionMap.put(eventConversion.getEventCode(),
-                    eventConversion);
-        }
-        xEventChannel.register(this);
-    }
+		for(final XEventHandler eventConversion : eventConversions) {
+			this.conversionMap.put(eventConversion.getEventCode(),
+								   eventConversion);
+		}
+		xEventChannel.register(this);
+	}
 
-    @Subscribe
-    public void handleXEvent(final xcb_generic_event_t event) {
-        final short response_type = event.getResponse_type();
+	@Subscribe
+	public void handleXEvent(final xcb_generic_event_t event) {
+		final short response_type = event.getResponse_type();
 
-        // TODO handle error cases
-        final int eventCode = response_type & EVENT_CODE_MASK;
+		// TODO handle error cases
+		final int eventCode = response_type & EVENT_CODE_MASK;
 
-        final XEventHandler eventConversion = this.conversionMap.get(Integer.valueOf(eventCode));
-        if (eventConversion == null) {
-            return;
-        }
+		final XEventHandler eventConversion = this.conversionMap.get(Integer.valueOf(eventCode));
+		if(eventConversion == null) {
+			return;
+		}
 
-        final Optional<? extends DisplayEvent> displayEvent = eventConversion.handle(event);
-        final Optional<? extends Listenable> target = eventConversion.getTarget(event);
+		final Optional<? extends DisplayEvent> displayEvent = eventConversion.handle(event);
+		final Optional<? extends Listenable> target = eventConversion.getTarget(event);
 
-        if (displayEvent.isPresent() && target.isPresent()) {
-            target.get().post(displayEvent.get());
-        }
-    }
+		if(displayEvent.isPresent() && target.isPresent()) {
+			target.get().post(displayEvent.get());
+		}
+	}
 }

@@ -27,7 +27,6 @@ import org.freedesktop.xcb.xcb_icccm_get_text_property_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.display.x11.api.XEventChannel;
 import org.trinity.shellplugin.wm.x11.impl.protocol.XAtomCache;
 
 import javax.annotation.concurrent.ThreadSafe;

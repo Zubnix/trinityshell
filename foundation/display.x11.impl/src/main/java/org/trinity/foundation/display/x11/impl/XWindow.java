@@ -31,7 +31,6 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.shared.ListenableEventBus;
 import org.trinity.foundation.display.x11.api.XEventChannel;
-import org.trinity.foundation.display.x11.api.XcbErrorUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -219,7 +218,7 @@ public class XWindow implements DisplaySurface {
 	}
 
 	@Override
-	public Rectangle getGeometry() {
+	public Rectangle getShape() {
 		final int winId = getWindowId();
 
 		final xcb_get_geometry_cookie_t geometryRequest = xcb_get_geometry(getConnectionRef(),
