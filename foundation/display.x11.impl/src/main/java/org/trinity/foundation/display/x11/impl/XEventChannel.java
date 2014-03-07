@@ -31,8 +31,6 @@ import org.freedesktop.xcb.xcb_screen_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.shared.ListenableEventBus;
-import org.trinity.foundation.display.x11.api.XEventChannel;
-import org.trinity.foundation.display.x11.api.XEventHandler;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -51,12 +49,13 @@ import static org.freedesktop.xcb.LibXcb.*;
 import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
+import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 
 @Singleton
 @NotThreadSafe
-public class XEventChannelImpl extends ListenableEventBus implements XEventChannel {
+public class XEventChannel extends ListenableEventBus {
 
-	private static final Logger LOG = LoggerFactory.getLogger(XEventChannelImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XEventChannel.class);
 
 	private final ExecutorService eventPumpThread = Executors.newSingleThreadExecutor();
 	private final ByteBuffer rootWindowAttributes = allocateDirect(4).order(nativeOrder())
@@ -66,15 +65,15 @@ public class XEventChannelImpl extends ListenableEventBus implements XEventChann
 	private SWIGTYPE_p_xcb_connection_t xcb_connection;
 
 	@Inject
-	XEventChannelImpl(final XEventHandler xEventHandler,
-					  final XCompositor xCompositor) {
+    XEventChannel(final XEventHandlers xEventHandlers,
+                  final XCompositor xCompositor) {
 		this.xCompositor = xCompositor;
 
 		// FIXME from config?
 		final String displayName = System.getenv("DISPLAY");
 		final int targetScreen = 0;
 
-		register(xEventHandler);
+		register(xEventHandlers);
 		open(displayName,
 			 targetScreen);
 	}
@@ -115,15 +114,12 @@ public class XEventChannelImpl extends ListenableEventBus implements XEventChann
 									 XCB_CW_EVENT_MASK,
 									 this.rootWindowAttributes);
 		xcb_flush(getConnectionReference());
-
 	}
 
-	@Override
 	public void close() {
 		xcb_disconnect(this.xcb_connection);
 	}
 
-	@Override
 	public SWIGTYPE_p_xcb_connection_t getConnectionReference() {
 		return this.xcb_connection;
 	}
@@ -196,7 +192,7 @@ public class XEventChannelImpl extends ListenableEventBus implements XEventChann
 					continue;
 				}
 
-				this.xCompositor.createDisplaySurface(XWindowHandle.create(tree_child));
+				this.xCompositor.getDisplaySurface(XWindowHandle.create(tree_child));
 			}
 		}
 	}

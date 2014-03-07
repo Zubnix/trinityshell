@@ -21,9 +21,10 @@ package org.trinity.shell.api.scene.event;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import javax.media.nativewindow.util.Point;
+import javax.media.nativewindow.util.PointImmutable;
 
 import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 /***************************************
  * Informs that the {@link ShellNode} that emits this event, is moved.
@@ -33,7 +34,10 @@ import org.trinity.shell.api.scene.ShellNodeTransformation;
 @Immutable
 public class ShellNodeMovedEvent extends ShellNodeEvent {
 
-	/**
+    @Nonnull
+    private final PointImmutable position;
+
+    /**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
@@ -41,12 +45,17 @@ public class ShellNodeMovedEvent extends ShellNodeEvent {
 	 *
 	 * @param shellNode
 	 *            the emitting {@link ShellNode}
-	 * @param shellNodeTransformation
-	 *            a {@link ShellNodeTransformation}
+	 * @param position
+	 *            a top left {@link Point} of the shell node
 	 */
 	public ShellNodeMovedEvent(@Nonnull final ShellNode shellNode,
-                               @Nonnull final ShellNodeTransformation shellNodeTransformation) {
-		super(	shellNode,
-				shellNodeTransformation);
-	}
+                               @Nonnull final PointImmutable position) {
+		super(	shellNode);
+        this.position = position;
+    }
+
+    @Nonnull
+    public PointImmutable getPosition() {
+        return this.position;
+    }
 }

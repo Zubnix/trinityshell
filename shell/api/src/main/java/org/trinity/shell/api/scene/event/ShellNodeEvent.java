@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 /***************************************
  * General event for all {@link ShellNode} operations.
@@ -34,7 +33,6 @@ import org.trinity.shell.api.scene.ShellNodeTransformation;
 public class ShellNodeEvent {
 
 	private final ShellNode shellNode;
-	private final ShellNodeTransformation shellNodeTransformation;
 
 	/**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
@@ -44,13 +42,9 @@ public class ShellNodeEvent {
 	 *
 	 * @param shellNode
 	 *            the emitting {@link ShellNode}
-	 * @param shellNodeTransformation
-	 *            a {@link ShellNodeTransformation}
 	 */
-	public ShellNodeEvent(@Nonnull final ShellNode shellNode,
-                          @Nonnull final ShellNodeTransformation shellNodeTransformation) {
+	public ShellNodeEvent(@Nonnull final ShellNode shellNode) {
 		this.shellNode = shellNode;
-		this.shellNodeTransformation = shellNodeTransformation;
 	}
 
 	/***************************************
@@ -61,16 +55,5 @@ public class ShellNodeEvent {
 	 */
 	public ShellNode getSource() {
 		return this.shellNode;
-	}
-
-	/***************************************
-	 * The transformation of the source {@link ShellNode} at the time of
-	 * creation of this event.
-	 *
-	 * @return a {@link ShellNodeTransformation}.
-	 ***************************************
-	 */
-	public ShellNodeTransformation getSourceTransformation() {
-		return this.shellNodeTransformation;
 	}
 }

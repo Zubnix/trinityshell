@@ -50,8 +50,6 @@ public interface ShellNodeParent extends ShellNode {
 
 	/***************************************
 	 * Layout all child <code>ShellNode</code>s.
-     *
-     * @return null
 	 ***************************************
 	 */
 	void layout();
@@ -61,11 +59,11 @@ public interface ShellNodeParent extends ShellNode {
 	 *
 	 * @param shellLayoutManager
 	 *            A {@link ShellLayoutManager}.
-     *
-     * @return null
 	 ***************************************
 	 */
 	void setLayoutManager(ShellLayoutManager shellLayoutManager);
+
+    void removeLayoutManager();
 
 	/***************************************
 	 * The direct child nodes of this parent.

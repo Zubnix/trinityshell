@@ -21,9 +21,10 @@ package org.trinity.shell.api.scene.event;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import javax.media.nativewindow.util.Dimension;
+import javax.media.nativewindow.util.DimensionImmutable;
 
 import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 /***************************************
  * Informs that the {@link ShellNode} that emitted this event, is resized.
@@ -33,7 +34,10 @@ import org.trinity.shell.api.scene.ShellNodeTransformation;
 @Immutable
 public class ShellNodeResizedEvent extends ShellNodeEvent {
 
-	/**
+    @Nonnull
+    private final DimensionImmutable size;
+
+    /**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
@@ -41,12 +45,17 @@ public class ShellNodeResizedEvent extends ShellNodeEvent {
 	 *
 	 * @param shellNode
 	 *            the emitting {@link ShellNode}
-	 * @param shellNodeTransformation
-	 *            a {@link ShellNodeTransformation}
+	 * @param size
+	 *            a size {@link Dimension}
 	 */
 	public ShellNodeResizedEvent(@Nonnull final ShellNode shellNode,
-                                 @Nonnull final ShellNodeTransformation shellNodeTransformation) {
-		super(	shellNode,
-				shellNodeTransformation);
-	}
+                                 @Nonnull final DimensionImmutable size) {
+		super(shellNode);
+        this.size = size;
+    }
+
+    @Nonnull
+    public DimensionImmutable getSize() {
+        return size;
+    }
 }

@@ -23,6 +23,7 @@ import org.trinity.foundation.api.shared.Listenable;
 
 import javax.annotation.concurrent.ThreadSafe;
 import javax.media.nativewindow.util.Rectangle;
+import javax.media.nativewindow.util.RectangleImmutable;
 
 
 /**
@@ -64,9 +65,9 @@ public interface DisplaySurface extends Listenable {
 	 * position, width and a height.
 	 * **************************************
 	 */
-	Rectangle getShape();
+	RectangleImmutable getShape();
 
-	Rectangle getInputRegion();
+	RectangleImmutable getInputRegion();
 
 	/**
 	 * ************************************

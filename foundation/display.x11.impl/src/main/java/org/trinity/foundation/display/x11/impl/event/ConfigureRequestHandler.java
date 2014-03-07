@@ -27,45 +27,34 @@ import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Compositor;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.GeometryRequest;
+import org.trinity.foundation.display.x11.impl.XEventChannel;
+import org.trinity.foundation.display.x11.impl.XEventHandler;
 import org.trinity.foundation.display.x11.impl.XWindowHandle;
-import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 import javax.media.nativewindow.util.Rectangle;
-import java.nio.ByteBuffer;
 
-import static java.nio.ByteBuffer.allocateDirect;
-import static java.nio.ByteOrder.nativeOrder;
-import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
-import static org.freedesktop.xcb.LibXcb.xcb_flush;
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_REQUEST;
-import static org.freedesktop.xcb.xcb_config_window_t.*;
-import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
-import static org.freedesktop.xcb.xcb_event_mask_t.*;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 
 @Immutable
 public class ConfigureRequestHandler implements XEventHandler {
 
-	private static final int        CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
-			| XCB_EVENT_MASK_STRUCTURE_NOTIFY;
-	private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
-																				   .putInt(CLIENT_EVENT_MASK);
 	private static final Logger     LOG                         = LoggerFactory.getLogger(ConfigureRequestHandler.class);
 	private static final Integer    EVENT_CODE                  = XCB_CONFIGURE_REQUEST;
-	private final XEventChannel          xEventChannel;
-	private final DisplaySurfacePoolImpl xWindowCache;
+	private final XEventChannel xEventChannel;
 	private final Compositor             compositor;
 
 	@Inject
 	ConfigureRequestHandler(final XEventChannel xEventChannel,
-							final DisplaySurfacePoolImpl xWindowPool,
 							final Compositor compositor) {
 		this.xEventChannel = xEventChannel;
-		this.xWindowCache = xWindowPool;
 		this.compositor = compositor;
 	}
 
@@ -116,27 +105,9 @@ public class ConfigureRequestHandler implements XEventHandler {
 		final xcb_configure_request_event_t request_event_t = cast(event_t);
 		final int windowId = request_event_t.getWindow();
 		final DisplaySurfaceHandle xWindowHandle = XWindowHandle.create(windowId);
-		final DisplaySurface displayEventTarget = this.xWindowCache.get(xWindowHandle);
-		configureClientEvents(displayEventTarget);
-		// this is a bit of a dirty hack to work around X's model of client
-		// discovery.
-		final DisplaySurfaceCreationNotify displaySurfaceCreationNotify = new DisplaySurfaceCreationNotify(displayEventTarget);
-		this.compositor.post(displaySurfaceCreationNotify);
+		final DisplaySurface displayEventTarget = this.compositor.getDisplaySurface(xWindowHandle);
 
 		return Optional.of(displayEventTarget);
-	}
-
-	private void configureClientEvents(final DisplaySurface window) {
-		final int winId = (Integer) window.getDisplaySurfaceHandle().getNativeHandle();
-
-		LOG.debug("[winId={}] configure client evens.",
-				  winId);
-
-		xcb_change_window_attributes(this.xEventChannel.getConnectionReference(),
-									 winId,
-									 XCB_CW_EVENT_MASK,
-									 CLIENT_EVENTS_CONFIG_BUFFER);
-		xcb_flush(this.xEventChannel.getConnectionReference());
 	}
 
 	@Override

@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 /***************************************
  * General event to inform about child {@link ShellNode} (added, removed)
@@ -34,7 +33,10 @@ import org.trinity.shell.api.scene.ShellNodeTransformation;
 @Immutable
 public class ShellNodeChildEvent extends ShellNodeEvent {
 
-	/**
+    @Nonnull
+    private final ShellNode child;
+
+    /**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
@@ -46,9 +48,13 @@ public class ShellNodeChildEvent extends ShellNodeEvent {
 	 *            a {@link ShellNodeTransformation}
 	 */
 	public ShellNodeChildEvent(@Nonnull final ShellNode shellNode,
-                               @Nonnull final ShellNodeTransformation shellNodeTransformation) {
-		super(	shellNode,
-				shellNodeTransformation);
-	}
+                               @Nonnull final ShellNode child) {
+		super(	shellNode);
+        this.child = child;
+    }
 
+    @Nonnull
+    public ShellNode getChild() {
+        return this.child;
+    }
 }

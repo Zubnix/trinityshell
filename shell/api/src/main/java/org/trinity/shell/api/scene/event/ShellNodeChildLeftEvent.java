@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 /***************************************
  * Informs that a child {@link ShellNode} was removed from the node that emitted
@@ -42,12 +41,11 @@ public class ShellNodeChildLeftEvent extends ShellNodeChildEvent {
 	 *
 	 * @param shellNode
 	 *            the emitting {@link ShellNode}
-	 * @param shellNodeTransformation
-	 *            a {@link ShellNodeTransformation}
+	 * @param child
+	 *            a child {@link ShellNode}
 	 */
 	public ShellNodeChildLeftEvent(@Nonnull final ShellNode shellNode,
-                                   @Nonnull final ShellNodeTransformation shellNodeTransformation) {
-		super(	shellNode,
-				shellNodeTransformation);
+                                   @Nonnull final ShellNode child) {
+		super(	shellNode, child);
 	}
 }

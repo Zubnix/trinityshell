@@ -22,7 +22,6 @@ package org.trinity.shell.api.surface;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -30,6 +29,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.Dimension;
+import javax.media.nativewindow.util.DimensionImmutable;
 
 /***************************************
  * Wraps a {@link DisplaySurface} and provides additional basic functionality
@@ -43,7 +43,7 @@ import javax.media.nativewindow.util.Dimension;
  *
  ***************************************
  */
-public interface ShellSurface extends ShellNodeParent {
+public interface ShellSurface extends ShellNode {
 
 	/***************************************
 	 * The desired delta of the old and new height when this surface's height
@@ -63,7 +63,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #setMaxSize(Dimension)
 	 ***************************************
 	 */
-	Dimension getMaxSize();
+	DimensionImmutable getMaxSize();
 
 	/***************************************
 	 * The minimum height and width.
@@ -72,7 +72,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #setMinSize(Dimension)
 	 ***************************************
 	 */
-	Dimension getMinSize();
+	DimensionImmutable getMinSize();
 
 	/***************************************
 	 * The underlying, {@code DisplaySurface} that this shell surface will use
@@ -94,24 +94,6 @@ public interface ShellSurface extends ShellNodeParent {
 	 ***************************************
 	 */
 	Integer getWidthIncrement();
-
-	/***************************************
-	 * Indicates if this surface can be moved.
-	 *
-	 * @return a future True if this surface can be moved, a future false if
-	 *         not.
-	 ***************************************
-	 */
-	Boolean isMovable();
-
-	/***************************************
-	 * Indicates if this surface can be resized.
-	 *
-	 * @return a future True if this surface can be resized, a future false if
-	 *         not.
-	 ***************************************
-	 */
-	Boolean isResizable();
 
 	/***************************************
 	 * Set the height delta when the height is changed.
@@ -136,7 +118,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #getMaxSize()
 	 ***************************************
 	 */
-	void setMaxSize(@Nonnull final Dimension size);
+	void setMaxSize(@Nonnull final DimensionImmutable size);
 
 	/***************************************
 	 *
@@ -146,31 +128,7 @@ public interface ShellSurface extends ShellNodeParent {
 	 * @see #getMinSize()
 	 ***************************************
 	 */
-	void setMinSize(@Nonnull final Dimension size);
-
-	/***************************************
-	 * Indicate if this surface is movable.
-	 *
-	 * @param movable
-	 *            True if this surface should be movable, false if not.
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
-	 * @see #isMovable()
-	 ***************************************
-	 */
-	void setMovable(final boolean movable);
-
-	/***************************************
-	 * Indicate if this surface is resizable.
-	 *
-	 * @param isResizable
-	 *            True if this surface should be resizable, false if not.
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
-	 * @see #isResizable()
-	 ***************************************
-	 */
-	void setResizable(final boolean isResizable);
+	void setMinSize(@Nonnull final DimensionImmutable size);
 
 	/***************************************
 	 * Set the width delta when the width is changed.

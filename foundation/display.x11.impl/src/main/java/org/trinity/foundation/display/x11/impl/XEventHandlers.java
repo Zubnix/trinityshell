@@ -24,8 +24,6 @@ import com.google.common.eventbus.Subscribe;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.Listenable;
-import org.trinity.foundation.display.x11.api.XEventChannel;
-import org.trinity.foundation.display.x11.api.XEventHandler;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;

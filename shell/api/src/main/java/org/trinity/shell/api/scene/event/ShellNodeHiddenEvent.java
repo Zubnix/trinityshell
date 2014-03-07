@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 /***************************************
  * Informs that the {@link ShellNode} that emitted this event is hidden.
@@ -41,12 +40,8 @@ public class ShellNodeHiddenEvent extends ShellNodeVisibilityEvent {
 	 *
 	 * @param shellNode
 	 *            the emitting {@link ShellNode}
-	 * @param shellNodeTransformation
-	 *            a {@link ShellNodeTransformation}
 	 */
-	public ShellNodeHiddenEvent(@Nonnull final ShellNode shellNode,
-                                @Nonnull final ShellNodeTransformation shellNodeTransformation) {
-		super(	shellNode,
-				shellNodeTransformation);
+	public ShellNodeHiddenEvent(@Nonnull final ShellNode shellNode) {
+		super(shellNode);
 	}
 }

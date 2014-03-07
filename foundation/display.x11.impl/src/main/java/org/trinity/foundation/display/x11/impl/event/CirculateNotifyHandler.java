@@ -26,9 +26,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.StackingChangedNotify;
-import org.trinity.foundation.display.x11.api.XEventChannel;
-import org.trinity.foundation.display.x11.api.XEventHandler;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
+import org.trinity.foundation.display.x11.impl.XEventChannel;
+import org.trinity.foundation.display.x11.impl.XEventHandler;
 import org.trinity.foundation.display.x11.impl.XWindowHandle;
 
 import javax.annotation.Nonnull;
@@ -42,7 +42,7 @@ public class CirculateNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(CirculateNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_CIRCULATE_NOTIFY;
-	private final XEventChannel          xEventChannel;
+	private final XEventChannel xEventChannel;
 	private final DisplaySurfacePoolImpl xWindowCache;
 
 	@Inject

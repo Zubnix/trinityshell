@@ -28,7 +28,6 @@ import javax.annotation.concurrent.Immutable;
  *
  */
 @Immutable
-@Deprecated
 public class HideNotify extends DisplayEvent {
 
 }

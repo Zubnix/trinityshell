@@ -15,9 +15,14 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.trinity</groupId>
-			<artifactId>foundation.display.x11.api</artifactId>
+			<artifactId>foundation.api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.trinity</groupId>
+            <artifactId>XCB4J</artifactId>
+            <version>0.0.1</version>
+        </dependency>
 
         <!-- logging implementation for test log output -->
         <dependency>

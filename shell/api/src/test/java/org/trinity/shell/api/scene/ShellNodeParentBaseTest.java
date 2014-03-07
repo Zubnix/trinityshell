@@ -24,16 +24,16 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AbstractShellNodeParentTest {
+public class ShellNodeParentBaseTest {
 
 	@Mock
 	private ShellNodeGeometryDelegate childShellNodeGeometryDelegate0;
 	@Mock
 	private ShellNodeGeometryDelegate childShellNodeGeometryDelegate1;
 	@Mock
-	private AbstractShellNode         child0;
+	private ShellNodeBase child0;
 	@Mock
-	private AbstractShellNode         child1;
+	private ShellNodeBase child1;
 
 	@Mock
 	private Listenable shellScene;
@@ -41,7 +41,7 @@ public class AbstractShellNodeParentTest {
 	private ListeningExecutorService  shellExecutor;
 	@Mock
 	private ShellNodeGeometryDelegate parentShellNodeGeometryDelegate;
-	private AbstractShellNodeParent   abstractShellNodeParent;
+	private ShellNodeParentBase abstractShellNodeParent;
 
 	@Before
 	public void setUp() {
@@ -63,10 +63,10 @@ public class AbstractShellNodeParentTest {
 	public void testDoMoveImpl() {
 		//given
 		//an abstract shell node parent with children
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
+		this.abstractShellNodeParent = new ShellNodeParentBase(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
-				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
+				return ShellNodeParentBaseTest.this.parentShellNodeGeometryDelegate;
 			}
 		};
 		this.abstractShellNodeParent.handleChildReparent(this.child0);
@@ -87,10 +87,10 @@ public class AbstractShellNodeParentTest {
 		//given
 		//an abstract shell node parent with children and a layout manager
 		final ShellLayoutManager shellLayoutManager = mock(ShellLayoutManager.class);
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
+		this.abstractShellNodeParent = new ShellNodeParentBase(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
-				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
+				return ShellNodeParentBaseTest.this.parentShellNodeGeometryDelegate;
 			}
 		};
 		this.abstractShellNodeParent.setLayoutManager(shellLayoutManager);
@@ -111,10 +111,10 @@ public class AbstractShellNodeParentTest {
 		//given
 		//an abstract shell node parent with a layout manager
 		final ShellLayoutManager shellLayoutManager = mock(ShellLayoutManager.class);
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
+		this.abstractShellNodeParent = new ShellNodeParentBase(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
-				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
+				return ShellNodeParentBaseTest.this.parentShellNodeGeometryDelegate;
 			}
 		};
 		this.abstractShellNodeParent.setLayoutManager(shellLayoutManager);
@@ -133,10 +133,10 @@ public class AbstractShellNodeParentTest {
 		//given
 		//an abstract shell node parent with children
 		//a ShellNodeChildLeftEvent listener
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
+		this.abstractShellNodeParent = new ShellNodeParentBase(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
-				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
+				return ShellNodeParentBaseTest.this.parentShellNodeGeometryDelegate;
 			}
 		};
 		final ChildLeftListener childLeftListener = spy(new ChildLeftListener());
@@ -163,10 +163,10 @@ public class AbstractShellNodeParentTest {
 		//an abstract shell node parent
 		//a new child
 		//a ShellNodeChildAddedEvent listener
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
+		this.abstractShellNodeParent = new ShellNodeParentBase(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
-				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
+				return ShellNodeParentBaseTest.this.parentShellNodeGeometryDelegate;
 			}
 		};
 		final ChildAddedListener childAddedListener = spy(new ChildAddedListener());
@@ -189,10 +189,10 @@ public class AbstractShellNodeParentTest {
 	public void testHandleChildStackingForChildRaised() {
 		//given
 		//an abstract shell node parent with children
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
+		this.abstractShellNodeParent = new ShellNodeParentBase(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
-				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
+				return ShellNodeParentBaseTest.this.parentShellNodeGeometryDelegate;
 			}
 		};
 		this.abstractShellNodeParent.handleChildReparent(this.child0);
@@ -215,10 +215,10 @@ public class AbstractShellNodeParentTest {
 	public void testHandleChildStackingForChildLowered() {
 		//given
 		//an abstract shell node parent with children
-		this.abstractShellNodeParent = new AbstractShellNodeParent(this.shellScene) {
+		this.abstractShellNodeParent = new ShellNodeParentBase(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
-				return AbstractShellNodeParentTest.this.parentShellNodeGeometryDelegate;
+				return ShellNodeParentBaseTest.this.parentShellNodeGeometryDelegate;
 			}
 		};
 		this.abstractShellNodeParent.handleChildReparent(this.child0);

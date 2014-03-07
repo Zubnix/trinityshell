@@ -20,8 +20,6 @@
 
 package org.trinity.shellplugin.wm.api;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
 public interface Shell {
 
 	void addStatusElement(Object element);

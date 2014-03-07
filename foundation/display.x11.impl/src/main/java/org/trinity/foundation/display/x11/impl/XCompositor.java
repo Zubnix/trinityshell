@@ -43,7 +43,7 @@ public class XCompositor extends ListenableEventBus implements Compositor {
 	}
 
 	@Override
-	public DisplaySurface createDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
+	public DisplaySurface getDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
 		return this.xWindowCache.get(displaySurfaceHandle);
 	}
 }

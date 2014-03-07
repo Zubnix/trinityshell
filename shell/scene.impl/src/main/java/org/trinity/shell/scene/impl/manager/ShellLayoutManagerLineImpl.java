@@ -20,14 +20,13 @@
 package org.trinity.shell.scene.impl.manager;
 
 import com.google.common.eventbus.Subscribe;
-import org.trinity.shell.api.scene.AbstractShellNode;
-import org.trinity.shell.api.scene.AbstractShellNodeParent;
+import org.trinity.shell.scene.impl.ShellNodeBase;
+import org.trinity.shell.scene.impl.ShellNodeParentBase;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMovedResizedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
 import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
@@ -61,7 +60,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 	ShellLayoutManagerLineImpl(//TODO with autofactory
 							   final ShellNodeParent shellNodeParent) {
-		super((AbstractShellNodeParent) shellNodeParent);
+		super((ShellNodeParentBase) shellNodeParent);
 	}
 
 	@Override
@@ -82,7 +81,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 	protected void layoutHorizontal(@Nonnull final ShellNode containerNode) {
 		// total available size of the container
-		checkArgument(containerNode instanceof AbstractShellNode);
+		checkArgument(containerNode instanceof ShellNodeBase);
 
 		int newWidthSize = 0;
 		int fixedHeightSize = 0;

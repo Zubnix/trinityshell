@@ -24,8 +24,11 @@ import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplayEvent;
 import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.foundation.display.x11.impl.XEventChannel;
+import org.trinity.foundation.display.x11.impl.XEventHandler;
 import org.trinity.foundation.display.x11.impl.XcbErrorUtil;
 
 import javax.annotation.Nonnull;
@@ -56,7 +59,7 @@ public class GenericErrorHandler implements XEventHandler {
 	}
 
 	@Override
-	public Optional<Listenable> getTarget(@Nonnull final xcb_generic_event_t event_t) {
+	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
 		// TODO return display server?
 		return Optional.absent();
 	}

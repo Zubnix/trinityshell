@@ -19,14 +19,12 @@
  ******************************************************************************/
 package org.trinity.foundation.api.display;
 
-import org.trinity.foundation.api.shared.Listenable;
-
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
  *
  */
 @ThreadSafe
-public interface Compositor extends Listenable {
-	DisplaySurface createDisplaySurface(DisplaySurfaceHandle displaySurfaceHandle);
+public interface Compositor {
+	DisplaySurface getDisplaySurface(DisplaySurfaceHandle displaySurfaceHandle);
 }

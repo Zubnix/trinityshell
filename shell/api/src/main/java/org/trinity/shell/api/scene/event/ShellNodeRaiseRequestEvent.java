@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 /***************************************
  * Request to raise the {@link ShellNode} that emits this event.
@@ -41,12 +40,8 @@ public class ShellNodeRaiseRequestEvent extends ShellNodeStackingRequestEvent {
 	 *
 	 * @param shellNode
 	 *            the emitting {@link ShellNode}
-	 * @param shellNodeTransformation
-	 *            a {@link ShellNodeTransformation}
 	 */
-	public ShellNodeRaiseRequestEvent(@Nonnull final ShellNode shellNode,
-                                      @Nonnull final ShellNodeTransformation shellNodeTransformation) {
-		super(	shellNode,
-				shellNodeTransformation);
+	public ShellNodeRaiseRequestEvent(@Nonnull final ShellNode shellNode) {
+		super(shellNode);
 	}
 }

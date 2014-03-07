@@ -53,7 +53,7 @@ public class DisplayX11ImplModule {
 
     @Provides
     @Singleton
-	XEventChannel provideXConnection(final XEventChannelImpl xEventChannel) {
+	XEventChannel provideXConnection(final XEventChannel xEventChannel) {
         return xEventChannel;
     }
 }

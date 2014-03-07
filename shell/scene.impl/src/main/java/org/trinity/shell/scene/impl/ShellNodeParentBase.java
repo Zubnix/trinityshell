@@ -17,11 +17,13 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.shell.api.scene;
+package org.trinity.shell.scene.impl;
 
 import com.google.common.base.Optional;
 import org.trinity.foundation.api.shared.Listenable;
 import org.trinity.shell.api.bindingkey.ShellScene;
+import org.trinity.shell.api.scene.ShellNode;
+import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.api.scene.event.ShellNodeEvent;
@@ -29,6 +31,7 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,16 +39,17 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * An abstract base implementation of a {@link ShellNodeParent}.
+ * An abstract base implementation of a {@link org.trinity.shell.api.scene.ShellNodeParent}.
  * **************************************
  */
-public abstract class AbstractShellNodeParent extends AbstractShellNode implements ShellNodeParent {
+public class ShellNodeParentBase extends ShellNodeBase implements ShellNodeParent {
 
 	private final LinkedList<ShellNode> children = new LinkedList<>();
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-	protected AbstractShellNodeParent(	@Nonnull @ShellScene final Listenable shellScene) {
-		super(	shellScene);
+    @Inject
+	ShellNodeParentBase(@Nonnull @ShellScene final Listenable shellScene) {
+		super(shellScene);
 	}
 
 	/**
@@ -71,30 +75,35 @@ public abstract class AbstractShellNodeParent extends AbstractShellNode implemen
 		}
 	}
 
-	protected void handleChildReparent(@Nonnull final ShellNode child) {
-		checkArgument(child instanceof AbstractShellNode);
+    @Override
+    public void removeLayoutManager() {
+        this.optionalLayoutManager = Optional.absent();
+    }
+
+    protected void handleChildReparent(@Nonnull final ShellNode child) {
+		checkArgument(child instanceof ShellNodeBase);
 
 		final ShellNodeEvent shellNodeEvent;
 		if (this.children.remove(child)) {
 			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
-															toGeoTransformation());
+															child);
 		} else {
-			this.children.addLast((AbstractShellNode) child);
+			this.children.addLast(child);
 			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
-															toGeoTransformation());
+															child);
 		}
 		post(shellNodeEvent);
 	}
 
 	protected void handleChildStacking(	@Nonnull final ShellNode child,
 										final boolean raised) {
-		checkArgument(child instanceof AbstractShellNode);
+		checkArgument(child instanceof ShellNodeBase);
 		checkArgument(this.children.remove(child));
 
 		if (raised) {
-			this.children.addLast((AbstractShellNode) child);
+			this.children.addLast(child);
 		} else {
-			this.children.addFirst((AbstractShellNode) child);
+			this.children.addFirst(child);
 		}
 		// TODO fire a specific event?
 	}

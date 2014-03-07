@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeTransformation;
 
 /***************************************
  * Informs that the {@link ShellNode} that emitted this event, is reparented.
@@ -33,7 +32,10 @@ import org.trinity.shell.api.scene.ShellNodeTransformation;
 @Immutable
 public class ShellNodeReparentedEvent extends ShellNodeEvent {
 
-	/**
+    @Nonnull
+    private final ShellNode parent;
+
+    /**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
@@ -41,12 +43,17 @@ public class ShellNodeReparentedEvent extends ShellNodeEvent {
 	 *
 	 * @param shellNode
 	 *            the emitting {@link ShellNode}
-	 * @param shellNodeTransformation
-	 *            a {@link ShellNodeTransformation}
+	 * @param parent
+	 *            a parent {@link ShellNode}
 	 */
 	public ShellNodeReparentedEvent(@Nonnull final ShellNode shellNode,
-                                    @Nonnull final ShellNodeTransformation shellNodeTransformation) {
-		super(	shellNode,
-				shellNodeTransformation);
-	}
+                                    @Nonnull final ShellNode parent) {
+		super( shellNode);
+        this.parent = parent;
+    }
+
+    @Nonnull
+    public ShellNode getParent() {
+        return this.parent;
+    }
 }

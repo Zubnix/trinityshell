@@ -24,14 +24,14 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AbstractShellNodeTest {
+public class ShellNodeBaseTest {
 
 	@Mock
 	private Listenable shellScene;
 	@Mock
 	private ListeningExecutorService shellExecutor;
 
-	private AbstractShellNode abstractShellNode;
+	private ShellNodeBase shellNodeBase;
 
 	@Before
 	public void setUp() {
@@ -51,24 +51,24 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node
 		//a desired position
-		this.abstractShellNode = new AbstractShellNode(this.shellScene) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
-		this.abstractShellNode.setPosition(120,
+		this.shellNodeBase.setPosition(120,
 										   130);
 
 		//when
 		//the move is canceled
-		this.abstractShellNode.cancelPendingMove();
+		this.shellNodeBase.cancelPendingMove();
 
 		//then
 		//the desired position is reset to the previous position
 		assertEquals(new Point(0,
 							   0),
-					 this.abstractShellNode.getDesiredPosition());
+					 this.shellNodeBase.getDesiredPosition());
 	}
 
 	@Test
@@ -76,24 +76,24 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node
 		//a desired size
-		this.abstractShellNode = new AbstractShellNode(this.shellScene) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
-		this.abstractShellNode.setSize(100,
+		this.shellNodeBase.setSize(100,
 									   200);
 
 		//when
 		//the resize is canceled
-		this.abstractShellNode.cancelPendingResize();
+		this.shellNodeBase.cancelPendingResize();
 
 		//then
 		//the desired size is reset to the previous size
 		assertEquals(new Dimension(5,
 								   5),
-					 this.abstractShellNode.getDesiredSize());
+					 this.shellNodeBase.getDesiredSize());
 	}
 
 
@@ -102,24 +102,24 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node
 		//a destroy listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
 		final DestroyListener destroyListener = spy(new DestroyListener());
-		this.abstractShellNode.register(destroyListener);
+		this.shellNodeBase.register(destroyListener);
 
 
 		//when
 		//the abstract shell node is marked as destroyed
-		this.abstractShellNode.doDestroy();
+		this.shellNodeBase.doDestroy();
 
 		//then
 		//subsequent calls to isDestroyed return true
 		//the destroy listener is notified
-		assertTrue(this.abstractShellNode.isDestroyed());
+		assertTrue(this.shellNodeBase.isDestroyed());
 		//TODO verify event contents
 		verify(destroyListener).handle((ShellNodeDestroyedEvent) any());
 	}
@@ -129,23 +129,23 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node
 		//a hide listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
 		final HideListener hideListener = spy(new HideListener());
-		this.abstractShellNode.register(hideListener);
+		this.shellNodeBase.register(hideListener);
 
 		//when
 		//the abstract shell node is made invisible
-		this.abstractShellNode.doHide();
+		this.shellNodeBase.doHide();
 
 		//then
 		//subsequent calls to isVisible return false
 		//the hide listener is notified
-		assertFalse(this.abstractShellNode.isVisible());
+		assertFalse(this.shellNodeBase.isVisible());
 		//TODO verify event contents
 		verify(hideListener).handle((ShellNodeHiddenEvent) any());
 	}
@@ -155,26 +155,26 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node with a parent
 		//a lower listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
-		final AbstractShellNodeParent abstractShellNodeParent = mock(AbstractShellNodeParent.class);
-		this.abstractShellNode.setParent(Optional.<ShellNodeParent>of(abstractShellNodeParent));
-		this.abstractShellNode.doReparent();
+		final ShellNodeParentBase abstractShellNodeParent = mock(ShellNodeParentBase.class);
+		this.shellNodeBase.setParent(Optional.<ShellNodeParent>of(abstractShellNodeParent));
+		this.shellNodeBase.doReparent();
 		final LowerListener lowerListener = spy(new LowerListener());
-		this.abstractShellNode.register(lowerListener);
+		this.shellNodeBase.register(lowerListener);
 
 		//when
 		//the abstract shell node is lowered
-		this.abstractShellNode.doLower();
+		this.shellNodeBase.doLower();
 
 		//then
 		//its parent is notified
 		//the lower listener is notified
-		verify(abstractShellNodeParent).handleChildStacking(this.abstractShellNode,
+		verify(abstractShellNodeParent).handleChildStacking(this.shellNodeBase,
 															false);
 		//TODO verify event contents
 		verify(lowerListener).handle((ShellNodeLoweredEvent) any());
@@ -186,21 +186,21 @@ public class AbstractShellNodeTest {
 		//an abstract shell node with a geometry delegate
 		//a move listener
 		final ShellNodeGeometryDelegate shellNodeGeometryDelegate = mock(ShellNodeGeometryDelegate.class);
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return shellNodeGeometryDelegate;
 			}
 		};
 		final MoveListener moveListener = spy(new MoveListener());
-		this.abstractShellNode.register(moveListener);
+		this.shellNodeBase.register(moveListener);
 
 
 		//when
 		//the abstract shell node is moved
-		this.abstractShellNode.setPosition(123,
+		this.shellNodeBase.setPosition(123,
 										   456);
-		this.abstractShellNode.doMove();
+		this.shellNodeBase.doMove();
 
 		//then
 		//it's position is updated
@@ -208,7 +208,7 @@ public class AbstractShellNodeTest {
 		//the move listener is notified
 		assertEquals(new Point(123,
 							   456),
-					 this.abstractShellNode.getPosition());
+					 this.shellNodeBase.getPosition());
 		verify(shellNodeGeometryDelegate).move(eq(new Point(123,
 															456)));
 		//TODO verify event contents
@@ -220,26 +220,26 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node with a parent
 		//a raise listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
-		final AbstractShellNodeParent abstractShellNodeParent = mock(AbstractShellNodeParent.class);
-		this.abstractShellNode.setParent(Optional.<ShellNodeParent>of(abstractShellNodeParent));
-		this.abstractShellNode.doReparent();
+		final ShellNodeParentBase abstractShellNodeParent = mock(ShellNodeParentBase.class);
+		this.shellNodeBase.setParent(Optional.<ShellNodeParent>of(abstractShellNodeParent));
+		this.shellNodeBase.doReparent();
 		final RaiseListener raiseListener = spy(new RaiseListener());
-		this.abstractShellNode.register(raiseListener);
+		this.shellNodeBase.register(raiseListener);
 
 		//when
 		//the abstract shell node is raised
-		this.abstractShellNode.doRaise();
+		this.shellNodeBase.doRaise();
 
 		//then
 		//the parent is notified
 		//the raise listener is notified
-		verify(abstractShellNodeParent).handleChildStacking(this.abstractShellNode,
+		verify(abstractShellNodeParent).handleChildStacking(this.shellNodeBase,
 															true);
 		//TODO verify event contents
 		verify(raiseListener).handle((ShellNodeRaisedEvent) any());
@@ -251,23 +251,23 @@ public class AbstractShellNodeTest {
 		//an abstract shell node with a parent
 		//a new parent
 		//a reparent listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
-		final AbstractShellNodeParent oldAbstractShellNodeParent = mock(AbstractShellNodeParent.class);
-		this.abstractShellNode.setParent(Optional.<ShellNodeParent>of(oldAbstractShellNodeParent));
-		this.abstractShellNode.doReparent();
-		final AbstractShellNodeParent newAbstractShellNodeParent = mock(AbstractShellNodeParent.class);
+		final ShellNodeParentBase oldAbstractShellNodeParent = mock(ShellNodeParentBase.class);
+		this.shellNodeBase.setParent(Optional.<ShellNodeParent>of(oldAbstractShellNodeParent));
+		this.shellNodeBase.doReparent();
+		final ShellNodeParentBase newAbstractShellNodeParent = mock(ShellNodeParentBase.class);
 		final ReparentListener reparentListener = spy(new ReparentListener());
-		this.abstractShellNode.register(reparentListener);
+		this.shellNodeBase.register(reparentListener);
 
 		//when
 		//the abstract shell node is reparented
-		this.abstractShellNode.setParent(Optional.<ShellNodeParent>of(newAbstractShellNodeParent));
-		this.abstractShellNode.doReparent();
+		this.shellNodeBase.setParent(Optional.<ShellNodeParent>of(newAbstractShellNodeParent));
+		this.shellNodeBase.doReparent();
 
 		//then
 		//the abstract shell node's parent is updated
@@ -275,9 +275,9 @@ public class AbstractShellNodeTest {
 		//the new parent is notified
 		//the reparent listener is notified
 		assertEquals(newAbstractShellNodeParent,
-					 this.abstractShellNode.getParent().get());
-		verify(oldAbstractShellNodeParent).handleChildReparent(this.abstractShellNode);
-		verify(newAbstractShellNodeParent).handleChildReparent(this.abstractShellNode);
+					 this.shellNodeBase.getParent().get());
+		verify(oldAbstractShellNodeParent).handleChildReparent(this.shellNodeBase);
+		verify(newAbstractShellNodeParent).handleChildReparent(this.shellNodeBase);
 		//TODO verify event contents
 		verify(reparentListener).handle((ShellNodeReparentedEvent) any());
 	}
@@ -288,20 +288,20 @@ public class AbstractShellNodeTest {
 		//an abstract shell node with a geometry delegate
 		//a resize listener
 		final ShellNodeGeometryDelegate shellNodeGeometryDelegate = mock(ShellNodeGeometryDelegate.class);
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return shellNodeGeometryDelegate;
 			}
 		};
 		final ResizeListener resizeListener = spy(new ResizeListener());
-		this.abstractShellNode.register(resizeListener);
+		this.shellNodeBase.register(resizeListener);
 
 		//when
 		//the abstract shell node is resized
-		this.abstractShellNode.setSize(100,
+		this.shellNodeBase.setSize(100,
 									   200);
-		this.abstractShellNode.doResize();
+		this.shellNodeBase.doResize();
 
 		//then
 		//the abstract shell node's size is updated
@@ -309,7 +309,7 @@ public class AbstractShellNodeTest {
 		//the resize listener is notified
 		assertEquals(new Dimension(100,
 								   200),
-					 this.abstractShellNode.getSize());
+					 this.shellNodeBase.getSize());
 		verify(shellNodeGeometryDelegate).resize(eq(new Dimension(100,
 																  200)));
 		//TODO verify event contents
@@ -321,23 +321,23 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node
 		//a show listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
 		final ShowListener showListener = spy(new ShowListener());
-		this.abstractShellNode.register(showListener);
+		this.shellNodeBase.register(showListener);
 
 		//when
 		//the abstract shell node is made visible
-		this.abstractShellNode.doShow();
+		this.shellNodeBase.doShow();
 
 		//then
 		//the abstract shell node is updated
 		//the show listener is notified
-		assertTrue(this.abstractShellNode.isVisible());
+		assertTrue(this.shellNodeBase.isVisible());
 		//TODO verify event contents
 		verify(showListener).handle((ShellNodeShowedEvent) any());
 	}
@@ -347,18 +347,18 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node
 		//a request hide listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
 		final RequestHideListener requestHideListener = spy(new RequestHideListener());
-		this.abstractShellNode.register(requestHideListener);
+		this.shellNodeBase.register(requestHideListener);
 
 		//when
 		//the abstract shell node is requested to be made invisible
-		this.abstractShellNode.requestHide();
+		this.shellNodeBase.requestHide();
 
 		//then
 		//the request hide listener is notified
@@ -371,18 +371,18 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node
 		//a request lower listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
 		final RequestLowerListener requestLowerListener = spy(new RequestLowerListener());
-		this.abstractShellNode.register(requestLowerListener);
+		this.shellNodeBase.register(requestLowerListener);
 
 		//when
 		//the abstract shell node is requested to be lowered
-		this.abstractShellNode.requestLower();
+		this.shellNodeBase.requestLower();
 
 		//then
 		//the request lower listener is notified
@@ -395,18 +395,18 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node
 		//a request move listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
 		final RequestMoveListener requestMoveListener = spy(new RequestMoveListener());
-		this.abstractShellNode.register(requestMoveListener);
+		this.shellNodeBase.register(requestMoveListener);
 
 		//when
 		//the abstract shell node is requested to be moved
-		this.abstractShellNode.requestMove();
+		this.shellNodeBase.requestMove();
 
 		//then
 		//the request move listener is notified
@@ -419,18 +419,18 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node
 		//a request raise listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
 		final RequestRaiseListener requestRaiseListener = spy(new RequestRaiseListener());
-		this.abstractShellNode.register(requestRaiseListener);
+		this.shellNodeBase.register(requestRaiseListener);
 
 		//when
 		//the abstract shell node is requested to be raised
-		this.abstractShellNode.requestRaise();
+		this.shellNodeBase.requestRaise();
 
 		//then
 		//the request raise listener is notified
@@ -443,18 +443,18 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node
 		//a request reparent listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
 		final RequestReparentListener requestReparentListener = spy(new RequestReparentListener());
-		this.abstractShellNode.register(requestReparentListener);
+		this.shellNodeBase.register(requestReparentListener);
 
 		//when
 		//the abstract shell node is requested to be reparented
-		this.abstractShellNode.requestReparent();
+		this.shellNodeBase.requestReparent();
 
 		//then
 		//the request reparent listener is notified
@@ -467,18 +467,18 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node
 		//a request resize listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
 		final RequestResizeListener requestResizeListener = spy(new RequestResizeListener());
-		this.abstractShellNode.register(requestResizeListener);
+		this.shellNodeBase.register(requestResizeListener);
 
 		//when
 		//the abstract shell node is requested to be resized
-		this.abstractShellNode.requestResize();
+		this.shellNodeBase.requestResize();
 
 		//then
 		//the request resize listener is notified
@@ -491,18 +491,18 @@ public class AbstractShellNodeTest {
 		//given
 		//an abstract shell node
 		//a request show listener
-		this.abstractShellNode = new AbstractShellNode(this.shellScene ) {
+		this.shellNodeBase = new ShellNodeBase(this.shellScene ) {
 			@Override
 			public ShellNodeGeometryDelegate getShellNodeGeometryDelegate() {
 				return null;
 			}
 		};
 		final RequestShowListener requestShowListener = spy(new RequestShowListener());
-		this.abstractShellNode.register(requestShowListener);
+		this.shellNodeBase.register(requestShowListener);
 
 		//when
 		//the abstract shell node is requested to be made visible
-		this.abstractShellNode.requestShow();
+		this.shellNodeBase.requestShow();
 
 		//then
 		//the request show listener is notified
