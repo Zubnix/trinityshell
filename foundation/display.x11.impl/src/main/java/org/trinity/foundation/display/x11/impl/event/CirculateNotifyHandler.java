@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.StackingChangedNotify;
-import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
 import org.trinity.foundation.display.x11.impl.XWindowHandle;
@@ -42,12 +42,12 @@ public class CirculateNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(CirculateNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_CIRCULATE_NOTIFY;
-	private final XEventChannel xEventChannel;
-	private final DisplaySurfacePoolImpl xWindowCache;
+	private final XEventChannel      xEventChannel;
+	private final DisplaySurfacePool xWindowCache;
 
 	@Inject
 	CirculateNotifyHandler(final XEventChannel xEventChannel,
-						   final DisplaySurfacePoolImpl xWindowCache) {
+						   final DisplaySurfacePool xWindowCache) {
 		this.xEventChannel = xEventChannel;
 		this.xWindowCache = xWindowCache;
 	}
@@ -56,7 +56,7 @@ public class CirculateNotifyHandler implements XEventHandler {
 	public Optional<StackingChangedNotify> handle(@Nonnull final xcb_generic_event_t event_t) {
 
 		final xcb_circulate_notify_event_t circulate_notify_event = cast(event_t);
-		// TODO logging
+
 		LOG.debug("Received X event={}",
 				  circulate_notify_event.getClass().getSimpleName());
 

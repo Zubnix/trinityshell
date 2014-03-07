@@ -23,8 +23,8 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.ShowRequest;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XWindowHandle;
-import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import java.nio.ByteBuffer;
 
@@ -50,15 +50,15 @@ import static org.powermock.api.mockito.PowerMockito.when;
         LibXcbJNI.class})
 public class TestMapRequestHandler {
 	@Mock
-	private EventBus               xEventBus;
+	private EventBus           xEventBus;
 	@Mock
-	private XEventChannel          xEventChannel;
+	private XEventChannel      xEventChannel;
 	@Mock
-	private DisplaySurfacePoolImpl xWindowPool;
+	private DisplaySurfacePool xWindowPool;
 	@Mock
-	private Compositor             compositor;
+	private Compositor         compositor;
 	@InjectMocks
-	private MapRequestHandler      mapRequestHandler;
+	private MapRequestHandler  mapRequestHandler;
 
 	@Mock
 	private xcb_generic_event_t         xcb_generic_event;
@@ -130,10 +130,10 @@ public class TestMapRequestHandler {
 		assertTrue(target.isPresent());
 		verify(this.compositor,
 			   never()).post(isA(DisplaySurfaceCreationNotify.class));
-    }
+	}
 
-    @Test
-    public void testGetTargetClientUnknown() {
+	@Test
+	public void testGetTargetClientUnknown() {
         //given
         //a MapRequestHandler
         //an xcb_generic_event_t from an unknown client

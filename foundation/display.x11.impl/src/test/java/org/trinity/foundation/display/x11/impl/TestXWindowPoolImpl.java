@@ -16,15 +16,15 @@ import static org.mockito.Mockito.*;
 public class TestXWindowPoolImpl {
 
 	@Mock
-	private XEventChannel          xEventPump;
+	private XEventChannel        xEventPump;
 	@Mock
-	private XWindowFactory  displaySurfaceFactory;
+	private XWindowFactory       displaySurfaceFactory;
 	@Mock
-	private XWindow                xWindow;
+	private XWindow              xWindow;
 	@Mock
-	private DisplaySurfaceHandle   displaySurfaceHandle;
+	private DisplaySurfaceHandle displaySurfaceHandle;
 	@InjectMocks
-	private DisplaySurfacePoolImpl xWindowPool;
+	private DisplaySurfacePool   xWindowPool;
 
 	@Before
 	public void setup() {

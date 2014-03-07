@@ -26,5 +26,5 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public interface Compositor {
-	DisplaySurface getDisplaySurface(DisplaySurfaceHandle displaySurfaceHandle);
+	DisplaySurface createDisplaySurface(DisplaySurfaceHandle displaySurfaceHandle);
 }

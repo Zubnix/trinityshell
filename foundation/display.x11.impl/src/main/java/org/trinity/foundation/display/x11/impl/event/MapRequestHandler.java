@@ -24,10 +24,10 @@ import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_map_request_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.Compositor;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.ShowRequest;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
 import org.trinity.foundation.display.x11.impl.XWindowHandle;
@@ -45,13 +45,13 @@ public class MapRequestHandler implements XEventHandler {
 	private static final Integer    EVENT_CODE                  = XCB_MAP_REQUEST;
 
 	private final XEventChannel xEventChannel;
-	private final Compositor    compositor;
+	private final DisplaySurfacePool displaySurfacePool;
 
 	@Inject
 	MapRequestHandler(final XEventChannel xEventChannel,
-					  final Compositor compositor) {
+					  final DisplaySurfacePool displaySurfacePool) {
 		this.xEventChannel = xEventChannel;
-		this.compositor = compositor;
+		this.displaySurfacePool = displaySurfacePool;
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class MapRequestHandler implements XEventHandler {
 		final xcb_map_request_event_t map_request_event_t = cast(event_t);
 		final int windowId = map_request_event_t.getWindow();
 		final DisplaySurfaceHandle xWindowHandle = XWindowHandle.create(windowId);
-		final DisplaySurface displayEventTarget = this.compositor.getDisplaySurface(xWindowHandle);
+		final DisplaySurface displayEventTarget = this.displaySurfacePool.get(xWindowHandle);
 
 		return Optional.of(displayEventTarget);
 	}

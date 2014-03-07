@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.HideNotify;
-import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
 import org.trinity.foundation.display.x11.impl.XWindowHandle;
@@ -42,12 +42,12 @@ public class UnmapNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(UnmapNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_UNMAP_NOTIFY;
-	private final DisplaySurfacePoolImpl xWindowPool;
-	private final XEventChannel xEventChannel;
+	private final DisplaySurfacePool xWindowPool;
+	private final XEventChannel      xEventChannel;
 
 	@Inject
 	UnmapNotifyHandler(final XEventChannel xEventChannel,
-					   final DisplaySurfacePoolImpl xWindowPool) {
+					   final DisplaySurfacePool xWindowPool) {
 		this.xEventChannel = xEventChannel;
 		this.xWindowPool = xWindowPool;
 	}

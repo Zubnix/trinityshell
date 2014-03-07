@@ -23,34 +23,34 @@ package org.trinity.foundation.display.x11.impl.event;
 import com.google.common.base.Optional;
 import org.freedesktop.xcb.xcb_client_message_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
-import org.trinity.foundation.api.display.Compositor;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
 import org.trinity.foundation.display.x11.impl.XWindowHandle;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
 
-@Singleton
-public class XClientMessageHandler implements XEventHandler {
+@Immutable
+public class ClientMessageHandler implements XEventHandler {
 
 	private static final Integer EVENT_CODE = XCB_CLIENT_MESSAGE;
-    private final Compositor compositor;
+	private final DisplaySurfacePool displaySurfacePool;
 
-    @Inject
-    XClientMessageHandler(final Compositor compositor) {
-        this.compositor = compositor;
-    }
+	@Inject
+	ClientMessageHandler(final DisplaySurfacePool displaySurfacePool) {
+		this.displaySurfacePool = displaySurfacePool;
+	}
 
 	@Override
 	public Optional<DisplayEvent> handle(@Nonnull final xcb_generic_event_t event) {
-		final xcb_client_message_event_t client_message_event_t = new xcb_client_message_event_t(	xcb_generic_event_t.getCPtr(event),
-																									false);
-        this.compositor.getDisplaySurface(XWindowHandle.create(client_message_event_t.getWindow())).post(client_message_event_t);
+		final xcb_client_message_event_t client_message_event_t = new xcb_client_message_event_t(xcb_generic_event_t.getCPtr(event),
+																								 false);
+		this.displaySurfacePool.get(XWindowHandle.create(client_message_event_t.getWindow())).post(client_message_event_t);
 		// no conversion possible
 		return Optional.absent();
 	}

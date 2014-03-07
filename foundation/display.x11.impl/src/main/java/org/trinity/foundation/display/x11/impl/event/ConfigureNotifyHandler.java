@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.GeometryNotify;
-import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
 import org.trinity.foundation.display.x11.impl.XWindowHandle;
@@ -43,11 +43,11 @@ public class ConfigureNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(ConfigureNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_CONFIGURE_NOTIFY;
-	private final DisplaySurfacePoolImpl xWindowCache;
-	private final XEventChannel xEventChannel;
+	private final DisplaySurfacePool xWindowCache;
+	private final XEventChannel      xEventChannel;
 
 	@Inject
-	ConfigureNotifyHandler(final DisplaySurfacePoolImpl xWindowCache,
+	ConfigureNotifyHandler(final DisplaySurfacePool xWindowCache,
 						   final XEventChannel xEventChannel) {
 		this.xEventChannel = xEventChannel;
 		this.xWindowCache = xWindowCache;

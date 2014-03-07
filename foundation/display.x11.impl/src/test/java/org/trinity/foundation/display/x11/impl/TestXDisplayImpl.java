@@ -50,12 +50,12 @@ public class TestXDisplayImpl {
 	@Mock
 	private XEventChannel               xEventChannel;
 	@Mock
-	private DisplaySurfacePoolImpl      xWindowPool;
+	private DisplaySurfacePool          xWindowPool;
 
 	@Before
 	public void setup() {
 
-		when(this.xEventChannel.getConnectionReference()).thenReturn(this.xcb_connection);
+		when(this.xEventChannel.getXcbConnection()).thenReturn(this.xcb_connection);
 	}
 
 	@Test(expected = Error.class)
@@ -67,7 +67,7 @@ public class TestXDisplayImpl {
 		//when
 		//a new XDisplay is created
 		new XCompositor(this.xEventChannel,
-						 this.xWindowPool);
+						this.xWindowPool);
 		//then
 		//the XDisplay object throws an Error
 	}

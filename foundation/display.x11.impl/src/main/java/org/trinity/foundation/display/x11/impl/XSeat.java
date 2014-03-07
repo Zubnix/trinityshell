@@ -33,10 +33,10 @@ public class XSeat implements Seat {
         final int time = this.xTime.getTime();
         LOG.debug("[winId={}] set input focus.",
                 winId);
-        xcb_set_input_focus(this.xEventChannel.getConnectionReference(),
+        xcb_set_input_focus(this.xEventChannel.getXcbConnection(),
                 (short) XCB_INPUT_FOCUS_NONE,
                 winId,
                 time);
-        xcb_flush(this.xEventChannel.getConnectionReference());
+        xcb_flush(this.xEventChannel.getXcbConnection());
     }
 }

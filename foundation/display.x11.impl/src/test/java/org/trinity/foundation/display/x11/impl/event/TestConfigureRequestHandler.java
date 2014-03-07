@@ -23,8 +23,8 @@ import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
 import org.trinity.foundation.api.display.event.GeometryRequest;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XWindowHandle;
-import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import java.nio.ByteBuffer;
 
@@ -50,7 +50,7 @@ public class TestConfigureRequestHandler {
 	@Mock
 	private XEventChannel           xEventChannel;
 	@Mock
-	private DisplaySurfacePoolImpl  xWindowPool;
+	private DisplaySurfacePool      xWindowPool;
 	@Mock
 	private Compositor              compositor;
 	@InjectMocks

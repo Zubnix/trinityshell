@@ -54,7 +54,7 @@ public class TestXWindow {
 
 	@Before
 	public void setup() {
-		when(this.xEventChannel.getConnectionReference()).thenReturn(this.xcb_connection);
+		when(this.xEventChannel.getXcbConnection()).thenReturn(this.xcb_connection);
 		when(this.xExecutor.submit(Matchers.<Callable>any())).thenAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(final InvocationOnMock invocation) throws Throwable {

@@ -18,8 +18,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.GeometryNotify;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XWindowHandle;
-import org.trinity.foundation.display.x11.impl.DisplaySurfacePoolImpl;
 
 import static org.freedesktop.xcb.LibXcbJNI.*;
 import static org.junit.Assert.assertEquals;
@@ -31,51 +31,51 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @PrepareForTest(LibXcbJNI.class)
 public class TestConfigureNotifyHandler {
 
-    @Mock
-    private EventBus xEventBus;
-    @Mock
-    private DisplaySurfacePoolImpl xWindowPool;
-    @InjectMocks
-    private ConfigureNotifyHandler configureNotifyHandler;
+	@Mock
+	private EventBus               xEventBus;
+	@Mock
+	private DisplaySurfacePool     xWindowPool;
+	@InjectMocks
+	private ConfigureNotifyHandler configureNotifyHandler;
 
-    @Mock
-    private xcb_generic_event_t xcb_generic_event;
+	@Mock
+	private xcb_generic_event_t xcb_generic_event;
 
-    private final int targetWindowId = 123;
+	private final int targetWindowId = 123;
 
-    @Test
-    public void testEventHandling() {
-        //given
-        //a ConfigureNotifyHandler
-        //an xcb_generic_event_t
-        mockStatic(LibXcbJNI.class);
+	@Test
+	public void testEventHandling() {
+		//given
+		//a ConfigureNotifyHandler
+		//an xcb_generic_event_t
+		mockStatic(LibXcbJNI.class);
 
-        final Short x = 2;
-        final Short y = 4;
-        final Integer width = 10;
-        final Integer height = 20;
-        final Integer border = 7;
-        when(xcb_configure_notify_event_t_x_get(anyLong(),
-                (xcb_configure_notify_event_t) any())).thenReturn(x);
-        when(xcb_configure_notify_event_t_y_get(anyLong(),
-                (xcb_configure_notify_event_t) any())).thenReturn(y);
-        when(xcb_configure_notify_event_t_width_get(anyLong(),
-                (xcb_configure_notify_event_t) any())).thenReturn(width);
-        when(xcb_configure_notify_event_t_height_get(anyLong(),
-                (xcb_configure_notify_event_t) any()))
-                .thenReturn(height);
-        when(xcb_configure_notify_event_t_border_width_get(anyLong(),
-                (xcb_configure_notify_event_t) any()))
-                .thenReturn(border);
+		final Short x = 2;
+		final Short y = 4;
+		final Integer width = 10;
+		final Integer height = 20;
+		final Integer border = 7;
+		when(xcb_configure_notify_event_t_x_get(anyLong(),
+												(xcb_configure_notify_event_t) any())).thenReturn(x);
+		when(xcb_configure_notify_event_t_y_get(anyLong(),
+												(xcb_configure_notify_event_t) any())).thenReturn(y);
+		when(xcb_configure_notify_event_t_width_get(anyLong(),
+													(xcb_configure_notify_event_t) any())).thenReturn(width);
+		when(xcb_configure_notify_event_t_height_get(anyLong(),
+													 (xcb_configure_notify_event_t) any()))
+				.thenReturn(height);
+		when(xcb_configure_notify_event_t_border_width_get(anyLong(),
+														   (xcb_configure_notify_event_t) any()))
+				.thenReturn(border);
 
-        //when
-        //an xcb_generic_event_t event arrives
+		//when
+		//an xcb_generic_event_t event arrives
 		final Optional<GeometryNotify> stackingChangedNotifyOptional = this.configureNotifyHandler
 				.handle(this.xcb_generic_event);
 
 		//then
-        //the xcb_circulate_notify_event_t is posted on the x event bus
-        //the event is converted to a StackingChangedNotify
+		//the xcb_circulate_notify_event_t is posted on the x event bus
+		//the event is converted to a StackingChangedNotify
 		verify(this.xEventBus).post(isA(xcb_configure_notify_event_t.class));
 		assertTrue(stackingChangedNotifyOptional.isPresent());
 		assertEquals((int) x,

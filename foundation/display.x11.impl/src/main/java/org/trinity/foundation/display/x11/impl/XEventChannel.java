@@ -20,12 +20,7 @@
 package org.trinity.foundation.display.x11.impl;
 
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
-import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
-import org.freedesktop.xcb.xcb_get_window_attributes_cookie_t;
-import org.freedesktop.xcb.xcb_get_window_attributes_reply_t;
-import org.freedesktop.xcb.xcb_query_tree_cookie_t;
-import org.freedesktop.xcb.xcb_query_tree_reply_t;
 import org.freedesktop.xcb.xcb_screen_iterator_t;
 import org.freedesktop.xcb.xcb_screen_t;
 import org.slf4j.Logger;
@@ -49,7 +44,6 @@ import static org.freedesktop.xcb.LibXcb.*;
 import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
-import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 
 @Singleton
 @NotThreadSafe
@@ -57,48 +51,36 @@ public class XEventChannel extends ListenableEventBus {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XEventChannel.class);
 
-	private final ExecutorService eventPumpThread = Executors.newSingleThreadExecutor();
-	private final ByteBuffer rootWindowAttributes = allocateDirect(4).order(nativeOrder())
-																	 .putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
-	private final XCompositor xCompositor;
+	private final ExecutorService eventPumpThread      = Executors.newSingleThreadExecutor();
+	private final ByteBuffer      rootWindowAttributes = allocateDirect(4).order(nativeOrder()).putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
 
-	private SWIGTYPE_p_xcb_connection_t xcb_connection;
+	private       SWIGTYPE_p_xcb_connection_t xcb_connection;
+	private       xcb_screen_t                xcb_screen;
 
 	@Inject
-    XEventChannel(final XEventHandlers xEventHandlers,
-                  final XCompositor xCompositor) {
-		this.xCompositor = xCompositor;
-
-		// FIXME from config?
-		final String displayName = System.getenv("DISPLAY");
-		final int targetScreen = 0;
-
-		register(xEventHandlers);
-		open(displayName,
-			 targetScreen);
+	XEventChannel() {
 	}
 
-	private void open(@Nonnull final String displayName,
-					  @Nonnegative final Integer screen) {
+	public void open(@Nonnull final String displayName,
+					 @Nonnegative final Integer screen) {
 		checkNotNull(displayName);
 
 		final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
 		screenBuf.putInt(screen);
 		this.xcb_connection = xcb_connect(displayName,
 										  screenBuf);
-		if(xcb_connection_has_error(getConnectionReference()) != 0) {
+		if(xcb_connection_has_error(getXcbConnection()) != 0) {
 			throw new Error("Cannot open display\n");
 		}
 		// FIXME from config?
 		final int targetScreen = 0;
 
-		final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(getConnectionReference()));
+		final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(getXcbConnection()));
 		int screenNr;
 		for(; iter.getRem() != 0; --screenNr, xcb_screen_next(iter)) {
 			if(targetScreen == 0) {
-				final xcb_screen_t xcb_screen = iter.getData();
-				configureRootEvents(xcb_screen);
-				findClientDisplaySurfaces(xcb_screen);
+				this.xcb_screen = iter.getData();
+				configureRootEvents(getXcbScreen());
 				break;
 			}
 		}
@@ -106,21 +88,25 @@ public class XEventChannel extends ListenableEventBus {
 		pump();
 	}
 
+	public xcb_screen_t getXcbScreen() {
+		return this.xcb_screen;
+	}
+
 	private void configureRootEvents(final xcb_screen_t xcb_screen) {
 		final int rootId = xcb_screen.getRoot();
 
-		xcb_change_window_attributes(getConnectionReference(),
+		xcb_change_window_attributes(getXcbConnection(),
 									 rootId,
 									 XCB_CW_EVENT_MASK,
 									 this.rootWindowAttributes);
-		xcb_flush(getConnectionReference());
+		xcb_flush(getXcbConnection());
 	}
 
 	public void close() {
 		xcb_disconnect(this.xcb_connection);
 	}
 
-	public SWIGTYPE_p_xcb_connection_t getConnectionReference() {
+	public SWIGTYPE_p_xcb_connection_t getXcbConnection() {
 		return this.xcb_connection;
 	}
 
@@ -128,13 +114,13 @@ public class XEventChannel extends ListenableEventBus {
 		this.eventPumpThread.submit(new Runnable() {
 			@Override
 			public void run() {
-				if(xcb_connection_has_error(getConnectionReference()) != 0) {
+				if(xcb_connection_has_error(getXcbConnection()) != 0) {
 					final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
 					LOG.error(errorMsg);
 					throw new Error(errorMsg);
 				}
 
-				final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(getConnectionReference());
+				final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(getXcbConnection());
 
 				post(xcb_generic_event);
 				xcb_generic_event.delete();
@@ -142,58 +128,5 @@ public class XEventChannel extends ListenableEventBus {
 				pump();
 			}
 		});
-	}
-
-	private void findClientDisplaySurfaces(final xcb_screen_t screen) {
-		// find client display surfaces that are already
-		// active on the X server and track them
-
-		final int root = screen.getRoot();
-		final SWIGTYPE_p_xcb_connection_t connection = getConnectionReference();
-		final xcb_query_tree_cookie_t query_tree_cookie = xcb_query_tree(connection,
-																		 root);
-		final xcb_generic_error_t e = new xcb_generic_error_t();
-		// this is a one time call, no need to make it
-		// async.
-		final xcb_query_tree_reply_t query_tree_reply = xcb_query_tree_reply(connection,
-																			 query_tree_cookie,
-																			 e);
-		if(xcb_generic_error_t.getCPtr(e) != 0) {
-			LOG.error("X error while doing query tree: {}.",
-					  XcbErrorUtil.toString(e));
-			return;
-		}
-
-		final ByteBuffer tree_children = xcb_query_tree_children(query_tree_reply).order(nativeOrder());
-		int tree_children_length = xcb_query_tree_children_length(query_tree_reply);
-		while(tree_children_length > 0) {
-			tree_children_length--;
-
-			final int tree_child = tree_children.getInt();
-
-			final xcb_get_window_attributes_cookie_t get_window_attributes_cookie = xcb_get_window_attributes(connection,
-																											  tree_child);
-
-			final xcb_get_window_attributes_reply_t get_window_attributes_reply = xcb_get_window_attributes_reply(connection,
-																												  get_window_attributes_cookie,
-																												  e);
-
-			if(xcb_generic_error_t.getCPtr(e) != 0) {
-				LOG.error("X error while doing get window attributes: {}.",
-						  XcbErrorUtil.toString(e));
-			}
-			else {
-				final short override_redirect = get_window_attributes_reply.getOverride_redirect();
-				final short map_state = get_window_attributes_reply.getMap_state();
-				// Check for override redirect flag and ignore the window if
-				// it's set. Ignore unmapped displaySurfaces, we'll see them as soon as
-				// they reconfigure/map themselves
-				if((map_state != XCB_MAP_STATE_VIEWABLE) || (override_redirect != 0)) {
-					continue;
-				}
-
-				this.xCompositor.getDisplaySurface(XWindowHandle.create(tree_child));
-			}
-		}
 	}
 }

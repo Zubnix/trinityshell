@@ -41,13 +41,14 @@ public final class XEventHandlers {
 	private final Map<Integer, XEventHandler> conversionMap = new HashMap<>();
 
 	@Inject
-	XEventHandlers(final Set<XEventHandler> eventConversions,
-				   final XEventChannel xEventChannel) {
+	XEventHandlers(final XEventChannel xEventChannel,
+				   final Set<XEventHandler> eventConversions) {
 
 		for(final XEventHandler eventConversion : eventConversions) {
 			this.conversionMap.put(eventConversion.getEventCode(),
 								   eventConversion);
 		}
+
 		xEventChannel.register(this);
 	}
 

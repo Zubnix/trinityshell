@@ -22,10 +22,10 @@ package org.trinity.foundation.display.x11.impl;
 import com.google.common.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.foundation.api.display.Compositor;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.DestroyNotify;
-import org.trinity.foundation.display.x11.api.XEventChannel;
 
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
@@ -43,26 +43,23 @@ import static org.freedesktop.xcb.xcb_event_mask_t.*;
 
 @Singleton
 @ThreadSafe
-public class DisplaySurfacePoolImpl {
+public class DisplaySurfacePool {
 
-	private static final Logger LOG = LoggerFactory.getLogger(DisplaySurfacePoolImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DisplaySurfacePool.class);
 
-	private static final int        CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW |
-			XCB_EVENT_MASK_LEAVE_WINDOW |
-			XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+	private static final int CLIENT_EVENT_MASK = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
 	private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder()).putInt(CLIENT_EVENT_MASK);
-
 
 	private final Map<DisplaySurfaceHandle, DisplaySurface> displaySurfaces = new HashMap<>();
 
-	private final XEventChannel  xEventChannel;
-	private final XWindowFactory xWindowFactory;
+	private final XEventChannel xEventChannel;
+	private final Compositor    compositor;
 
 	@Inject
-	DisplaySurfacePoolImpl(final XEventChannel xEventChannel,
-						   final XWindowFactory xWindowFactory) {
+	DisplaySurfacePool(final XEventChannel xEventChannel,
+					   final Compositor compositor) {
 		this.xEventChannel = xEventChannel;
-		this.xWindowFactory = xWindowFactory;
+		this.compositor = compositor;
 	}
 
 	public DisplaySurface get(final DisplaySurfaceHandle displaySurfaceHandle) {
@@ -79,7 +76,7 @@ public class DisplaySurfacePoolImpl {
 		LOG.debug("Xwindow={} added to cache.",
 				  displaySurfaceHandle);
 
-		final DisplaySurface window = this.xWindowFactory.create(displaySurfaceHandle);
+		final DisplaySurface window = this.compositor.createDisplaySurface(displaySurfaceHandle);
 		window.register(new DestroyListener(window));
 		this.displaySurfaces.put(displaySurfaceHandle,
 								 window);
@@ -92,11 +89,11 @@ public class DisplaySurfacePoolImpl {
 		LOG.debug("[winId={}] configure client evens.",
 				  winId);
 
-		xcb_change_window_attributes(this.xEventChannel.getConnectionReference(),
+		xcb_change_window_attributes(this.xEventChannel.getXcbConnection(),
 									 winId,
 									 XCB_CW_EVENT_MASK,
 									 CLIENT_EVENTS_CONFIG_BUFFER);
-		xcb_flush(this.xEventChannel.getConnectionReference());
+		xcb_flush(this.xEventChannel.getXcbConnection());
 	}
 
 	private void unregisterDisplaySurface(final DisplaySurface displaySurface) {

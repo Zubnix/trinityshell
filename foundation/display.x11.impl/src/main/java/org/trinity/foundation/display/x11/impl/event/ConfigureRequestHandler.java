@@ -24,10 +24,10 @@ import org.freedesktop.xcb.xcb_configure_request_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.Compositor;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.GeometryRequest;
+import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
 import org.trinity.foundation.display.x11.impl.XWindowHandle;
@@ -38,24 +38,22 @@ import javax.inject.Inject;
 import javax.media.nativewindow.util.Rectangle;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_REQUEST;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+import static org.freedesktop.xcb.xcb_config_window_t.*;
 
 @Immutable
 public class ConfigureRequestHandler implements XEventHandler {
 
 	private static final Logger     LOG                         = LoggerFactory.getLogger(ConfigureRequestHandler.class);
 	private static final Integer    EVENT_CODE                  = XCB_CONFIGURE_REQUEST;
-	private final XEventChannel xEventChannel;
-	private final Compositor             compositor;
+
+	private final XEventChannel      xEventChannel;
+	private final DisplaySurfacePool displaySurfacePool;
 
 	@Inject
 	ConfigureRequestHandler(final XEventChannel xEventChannel,
-							final Compositor compositor) {
+							final DisplaySurfacePool displaySurfacePool) {
 		this.xEventChannel = xEventChannel;
-		this.compositor = compositor;
+		this.displaySurfacePool = displaySurfacePool;
 	}
 
 	@Override
@@ -105,7 +103,7 @@ public class ConfigureRequestHandler implements XEventHandler {
 		final xcb_configure_request_event_t request_event_t = cast(event_t);
 		final int windowId = request_event_t.getWindow();
 		final DisplaySurfaceHandle xWindowHandle = XWindowHandle.create(windowId);
-		final DisplaySurface displayEventTarget = this.compositor.getDisplaySurface(xWindowHandle);
+		final DisplaySurface displayEventTarget = this.displaySurfacePool.get(xWindowHandle);
 
 		return Optional.of(displayEventTarget);
 	}

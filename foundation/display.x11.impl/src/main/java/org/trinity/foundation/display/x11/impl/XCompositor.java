@@ -19,8 +19,6 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trinity.foundation.api.display.Compositor;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
@@ -34,16 +32,15 @@ import javax.inject.Singleton;
 @ThreadSafe
 public class XCompositor extends ListenableEventBus implements Compositor {
 
-	private static final Logger               LOG                   = LoggerFactory.getLogger(XCompositor.class);
-	private final DisplaySurfacePoolImpl xWindowCache;
+	private final XWindowFactory xWindowFactory;
 
 	@Inject
-	XCompositor(final DisplaySurfacePoolImpl xWindowCache) {
-		this.xWindowCache = xWindowCache;
+	XCompositor(final XWindowFactory xWindowFactory) {
+		this.xWindowFactory = xWindowFactory;
 	}
 
 	@Override
-	public DisplaySurface getDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
-		return this.xWindowCache.get(displaySurfaceHandle);
+	public DisplaySurface createDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
+		return this.xWindowFactory.create(displaySurfaceHandle);
 	}
 }
