@@ -23,6 +23,7 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import com.google.common.base.Optional;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /***************************************
@@ -40,15 +41,6 @@ import java.util.List;
 public interface ShellNodeParent extends ShellNode {
 
 	/***************************************
-	 * The layout manager that his parent will use to layout it's children.
-	 * Children are not laid out automatically. See {@link #layout()}.
-	 *
-	 * @return A {@link ShellLayoutManager}.
-	 ***************************************
-	 */
-	Optional<ShellLayoutManager> getLayoutManager();
-
-	/***************************************
 	 * Layout all child <code>ShellNode</code>s.
 	 ***************************************
 	 */
@@ -61,15 +53,7 @@ public interface ShellNodeParent extends ShellNode {
 	 *            A {@link ShellLayoutManager}.
 	 ***************************************
 	 */
-	void setLayoutManager(ShellLayoutManager shellLayoutManager);
+	void setLayoutManager(@Nonnull ShellLayoutManager shellLayoutManager);
 
     void removeLayoutManager();
-
-	/***************************************
-	 * The direct child nodes of this parent.
-	 *
-	 * @return an array of {@link ShellNode}s
-	 ***************************************
-	 */
-	List<ShellNode> getChildren();
 }

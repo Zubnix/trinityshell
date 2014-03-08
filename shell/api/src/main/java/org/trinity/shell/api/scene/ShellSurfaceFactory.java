@@ -17,11 +17,11 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.shell.api.surface;
-
-import javax.annotation.Nonnull;
+package org.trinity.shell.api.scene;
 
 import org.trinity.foundation.api.display.DisplaySurface;
+
+import javax.annotation.Nonnull;
 
 /***************************************
  * Creates shell surfaces from a display surface.
@@ -32,11 +32,12 @@ public interface ShellSurfaceFactory {
 	 * Create a new shell surface that is backed by the given display surface.
 	 * The new shell surface will have the root shell surface as its parent.
 	 *
-	 * @param clientDisplaySurface
+	 * @param displaySurface
 	 *            a {@link DisplaySurface} created by an external client
 	 *            program.
 	 * @return a {@link ShellSurface}.
 	 ***************************************
 	 */
-	ShellSurface createShellSurface(@Nonnull DisplaySurface clientDisplaySurface);
+	ShellSurface construct(@Nonnull ShellNodeParent parent,
+						   @Nonnull DisplaySurface displaySurface);
 }

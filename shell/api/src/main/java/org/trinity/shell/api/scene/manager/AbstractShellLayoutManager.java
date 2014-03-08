@@ -62,8 +62,8 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
     }
 
     @Override
-	public void addChildNode(@Nonnull final ShellNode child,
-                             @Nonnull final ShellLayoutProperty layoutProperty) {
+	public void setChildLayoutConfiguration(@Nonnull final ShellNode child,
+											@Nonnull final ShellLayoutProperty layoutProperty) {
         child.setParent(Optional.of(getShellNodeParent()));
         child.doReparent();
 		this.childrenWithLayoutProperty.put(child,
@@ -74,8 +74,8 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 
 	@Override
 	public void addChildNode(@Nonnull final ShellNode child) {
-		addChildNode(	child,
-						defaultLayoutProperty());
+		setChildLayoutConfiguration(child,
+									defaultLayoutProperty());
 	}
 
 	/***************************************
@@ -87,7 +87,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	protected abstract ShellLayoutProperty defaultLayoutProperty();
 
 	@Override
-	public void removeChild(@Nonnull final ShellNode child) {
+	public void removeChildLayoutConfiguration(@Nonnull final ShellNode child) {
 		this.childrenWithLayoutProperty.remove(child);
 	}
 
@@ -101,7 +101,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 		while (it.hasNext()) {
 			final Entry<ShellNode, ShellLayoutProperty> entry = it.next();
 			if (i == index) {
-				removeChild(entry.getKey());
+				removeChildLayoutConfiguration(entry.getKey());
 				break;
 			}
 		}
@@ -129,7 +129,7 @@ public abstract class AbstractShellLayoutManager implements ShellLayoutManager {
 	}
 
 	@Override
-	public ShellLayoutProperty getLayoutProperty(@Nonnull final ShellNode child) {
+	public ShellLayoutProperty getChildLayoutConfiguration(@Nonnull final ShellNode child) {
 
 		return this.childrenWithLayoutProperty.get(child);
 	}

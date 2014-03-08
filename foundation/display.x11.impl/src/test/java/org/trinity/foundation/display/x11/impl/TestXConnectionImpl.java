@@ -22,66 +22,66 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({XEventChannel.class,
-                 LibXcb.class})
+				 LibXcb.class})
 public class TestXConnectionImpl {
 
-    @Test
-    public void testOpen() {
-        //given
-        //an X display server on :0
-        final String display = ":0";
-        final SWIGTYPE_p_xcb_connection_t connection = mock(SWIGTYPE_p_xcb_connection_t.class);
+	@Test
+	public void testOpen() {
+		//given
+		//an X display server on :0
+		final String display = ":0";
+		final SWIGTYPE_p_xcb_connection_t connection = mock(SWIGTYPE_p_xcb_connection_t.class);
 
-        mockStatic(LibXcb.class);
-        when(xcb_connect(eq(display),
-                         Matchers.<ByteBuffer>any())).thenReturn(connection);
+		mockStatic(LibXcb.class);
+		when(xcb_connect(eq(display),
+						 Matchers.<ByteBuffer>any())).thenReturn(connection);
 
-        mockStatic(System.class);
-        when(System.getenv(eq("DISPLAY"))).thenReturn(display);
+		mockStatic(System.class);
+		when(System.getenv(eq("DISPLAY"))).thenReturn(display);
 
-        //when
-        //XEventChannel is constructed
-        new XEventChannel();
+		//when
+		//XEventChannel is constructed
+		new XEventChannel();
 
-        //then
-        //a new xcb X connection should be established on ":0".
-        verifyStatic();
-        System.getenv("DISPLAY");
+		//then
+		//a new xcb X connection should be established on ":0".
+		verifyStatic();
+		System.getenv("DISPLAY");
 
-        verifyStatic();
-        xcb_connect(eq(display),
-                    Matchers.<ByteBuffer>any());
-    }
+		verifyStatic();
+		xcb_connect(eq(display),
+					Matchers.<ByteBuffer>any());
+	}
 
-    @Test
-    public void testClose() {
-        //given
-        //an open XEventChannel on ":0"
-        final String display = ":0";
-        final SWIGTYPE_p_xcb_connection_t connection = mock(SWIGTYPE_p_xcb_connection_t.class);
+	@Test
+	public void testClose() {
+		//given
+		//an open XEventChannel on ":0"
+		final String display = ":0";
+		final SWIGTYPE_p_xcb_connection_t connection = mock(SWIGTYPE_p_xcb_connection_t.class);
 
-        mockStatic(LibXcb.class);
-        when(xcb_connect(eq(display),
-                         Matchers.<ByteBuffer>any())).thenReturn(connection);
+		mockStatic(LibXcb.class);
+		when(xcb_connect(eq(display),
+						 Matchers.<ByteBuffer>any())).thenReturn(connection);
 
-        mockStatic(System.class);
-        when(System.getenv(eq("DISPLAY"))).thenReturn(display);
+		mockStatic(System.class);
+		when(System.getenv(eq("DISPLAY"))).thenReturn(display);
 
-        final XEventChannel xConnection = new XEventChannel();
+		final XEventChannel xConnection = new XEventChannel();
 
-        //when
-        //XEventChannel object is close
-        xConnection.close();
+		//when
+		//XEventChannel object is close
+		xConnection.close();
 
-        //then
-        //the underlying connection to the X server should be closed
-        verifyStatic();
-        xcb_disconnect(connection);
-    }
+		//then
+		//the underlying connection to the X server should be closed
+		verifyStatic();
+		xcb_disconnect(connection);
+	}
 
-    @Test
-    public void testEventFetchHappy() {
-        //TODO
+	@Test
+	public void testEventFetchHappy() {
+		//TODO
 //        //given
 //        //an X server with no errors
 //        mockStatic(LibXcb.class);
@@ -99,11 +99,11 @@ public class TestXConnectionImpl {
 //        //then
 //        //the event is passed on to the x event bus
 //        verify(this.xEventBus).post(xcb_generic_event);
-    }
+	}
 
-    @Test(expected = Throwable.class)
-    public void testEventFetchXError() {
-        //TODO
+	@Test(expected = Throwable.class)
+	public void testEventFetchXError() {
+		//TODO
 //        //given
 //        //an X server with errors
 //        mockStatic(LibXcb.class);
@@ -114,11 +114,11 @@ public class TestXConnectionImpl {
 //        new XEventPump(this.xConnection).call();
 //        //then
 //        //an error is thrown
-    }
+	}
 
-    @Test
-    public void testEventFetchStartStopHappy() throws InterruptedException, TimeoutException {
-        //TODO
+	@Test
+	public void testEventFetchStartStopHappy() throws InterruptedException, TimeoutException {
+		//TODO
 //        //given
 //        //an X server with no errors
 //        mockStatic(LibXcb.class);
@@ -157,12 +157,12 @@ public class TestXConnectionImpl {
 //        } else {
 //            verify(this.xEventBus).post(xcb_generic_event);
 //        }
-    }
+	}
 
-    @Test(timeout = 5000,
-            expected = Throwable.class)
-    public void testEventFetchStartStopXError() {
-        //TODO
+	@Test(timeout = 5000,
+		  expected = Throwable.class)
+	public void testEventFetchStartStopXError() {
+		//TODO
 //        //given
 //        //an X server with errors
 //        mockStatic(LibXcb.class);
@@ -178,5 +178,5 @@ public class TestXConnectionImpl {
 //
 //        //then
 //        //an error is thrown
-    }
+	}
 }

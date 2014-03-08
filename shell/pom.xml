@@ -16,6 +16,5 @@
 		<module>api</module>
 		<module>scene.impl</module>
 		<module>plugin.impl</module>
-		<module>surface.impl</module>
 	</modules>
 </project>

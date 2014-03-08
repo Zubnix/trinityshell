@@ -52,6 +52,6 @@ public interface ShellLayoutManagerLine extends ShellLayoutManager {
 	void setInverseDirection(boolean inverseDirection);
 
 	@Override
-	public ShellLayoutPropertyLine getLayoutProperty(ShellNode child);
+	public ShellLayoutPropertyLine getChildLayoutConfiguration(ShellNode child);
 
 }

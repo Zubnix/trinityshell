@@ -26,9 +26,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
@@ -53,12 +51,12 @@ public class TestLeaveNotifyHandler {
 
 		//when
 		//an xcb_generic_event_t event arrives
-		final Optional<PointerLeaveNotify> pointerLeaveNotifyOptional = leaveNotifyHandler.handle(xcb_generic_event);
+		final Optional<PointerLeaveNotify> pointerLeaveNotifyOptional = this.leaveNotifyHandler.handle(this.xcb_generic_event);
 
 		//then
 		//the xcb_enter_notify_event_t is posted on the x event bus (enter and leave are the same type in xcb)
 		//the event is converted to a PointerLeaveNotify
-		verify(xEventBus).post(isA(xcb_enter_notify_event_t.class));
+		verify(this.xEventBus).post(isA(xcb_enter_notify_event_t.class));
 		assertTrue(pointerLeaveNotifyOptional.isPresent());
 	}
 
@@ -69,16 +67,16 @@ public class TestLeaveNotifyHandler {
 		//an xcb_generic_event_t
 		mockStatic(LibXcbJNI.class);
 		when(xcb_enter_notify_event_t_event_get(anyLong(),
-												(xcb_enter_notify_event_t) any())).thenReturn(targetWindowId);
+												(xcb_enter_notify_event_t) any())).thenReturn(this.targetWindowId);
 
 		final DisplaySurface displaySurface = mock(DisplaySurface.class);
-		when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(targetWindowId));
-		when(xWindowPool.get((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
+		when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
+		when(this.xWindowPool.get((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(final InvocationOnMock invocation) throws Throwable {
 				final Object arg0 = invocation.getArguments()[0];
 				final XWindowHandle xWindowHandle = (XWindowHandle) arg0;
-				if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(targetWindowId)) {
+				if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(TestLeaveNotifyHandler.this.targetWindowId)) {
 					return displaySurface;
                 }
                 return null;
@@ -87,14 +85,14 @@ public class TestLeaveNotifyHandler {
 
         //when
         //the target of the xcb_generic_event_t event is requested
-        final Optional<DisplaySurface> target = leaveNotifyHandler.getTarget(xcb_generic_event);
+		final Optional<DisplaySurface> target = this.leaveNotifyHandler.getTarget(this.xcb_generic_event);
 
-        //then
+		//then
         //the correct DisplaySurface is returned
         final ArgumentCaptor<XWindowHandle> windowHandleArgumentCaptor = ArgumentCaptor.forClass(XWindowHandle.class);
-        verify(xWindowPool).get(windowHandleArgumentCaptor.capture());
-        assertEquals((Integer) targetWindowId,
-                windowHandleArgumentCaptor.getValue().getNativeHandle());
+		verify(this.xWindowPool).get(windowHandleArgumentCaptor.capture());
+		assertEquals((Integer) this.targetWindowId,
+					 windowHandleArgumentCaptor.getValue().getNativeHandle());
         assertTrue(target.isPresent());
     }
 }

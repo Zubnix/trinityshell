@@ -88,39 +88,39 @@ public class TestConfigureNotifyHandler {
 					 stackingChangedNotifyOptional.get().getGeometry().getHeight());
 	}
 
-    @Test
-    public void testGetTarget() {
-        //given
-        //a ConfigureNotifyHandler
-        //an xcb_generic_event_t
-        mockStatic(LibXcbJNI.class);
-        when(xcb_configure_notify_event_t_window_get(anyLong(),
+	@Test
+	public void testGetTarget() {
+		//given
+		//a ConfigureNotifyHandler
+		//an xcb_generic_event_t
+		mockStatic(LibXcbJNI.class);
+		when(xcb_configure_notify_event_t_window_get(anyLong(),
 													 (xcb_configure_notify_event_t) any())).thenReturn(this.targetWindowId);
 
 		final DisplaySurface displaySurface = mock(DisplaySurface.class);
 		when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
 		when(this.xWindowPool.get((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
 			@Override
-            public Object answer(final InvocationOnMock invocation) throws Throwable {
-                final Object arg0 = invocation.getArguments()[0];
-                final XWindowHandle xWindowHandle = (XWindowHandle) arg0;
+			public Object answer(final InvocationOnMock invocation) throws Throwable {
+				final Object arg0 = invocation.getArguments()[0];
+				final XWindowHandle xWindowHandle = (XWindowHandle) arg0;
 				if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(TestConfigureNotifyHandler.this.targetWindowId)) {
 					return displaySurface;
-                }
-                return null;
-            }
-        });
+				}
+				return null;
+			}
+		});
 
-        //when
-        //the target of the xcb_generic_event_t event is requested
+		//when
+		//the target of the xcb_generic_event_t event is requested
 		final Optional<DisplaySurface> target = this.configureNotifyHandler.getTarget(this.xcb_generic_event);
 
 		//then
-        //the correct DisplaySurface is returned
-        final ArgumentCaptor<XWindowHandle> windowHandleArgumentCaptor = ArgumentCaptor.forClass(XWindowHandle.class);
+		//the correct DisplaySurface is returned
+		final ArgumentCaptor<XWindowHandle> windowHandleArgumentCaptor = ArgumentCaptor.forClass(XWindowHandle.class);
 		verify(this.xWindowPool).get(windowHandleArgumentCaptor.capture());
 		assertEquals((Integer) this.targetWindowId,
 					 windowHandleArgumentCaptor.getValue().getNativeHandle());
-        assertTrue(target.isPresent());
-    }
+		assertTrue(target.isPresent());
+	}
 }

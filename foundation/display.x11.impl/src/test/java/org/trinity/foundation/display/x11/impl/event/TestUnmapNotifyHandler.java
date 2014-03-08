@@ -22,15 +22,11 @@ import org.trinity.foundation.display.x11.impl.XWindowHandle;
 
 import static org.freedesktop.xcb.LibXcbJNI.xcb_unmap_notify_event_t_event_get;
 import static org.freedesktop.xcb.LibXcbJNI.xcb_unmap_notify_event_t_window_get;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @Deprecated
@@ -57,12 +53,12 @@ public class TestUnmapNotifyHandler {
 
 		//when
 		//an xcb_generic_event_t event arrives
-		final Optional<HideNotify> hideNotifyOptional = unmapNotifyHandler.handle(xcb_generic_event);
+		final Optional<HideNotify> hideNotifyOptional = this.unmapNotifyHandler.handle(this.xcb_generic_event);
 
 		//then
 		//the xcb_unmap_notify_event_t is posted on the x event bus
 		//the event is converted to a HideNotify
-		verify(xEventBus).post(isA(xcb_unmap_notify_event_t.class));
+		verify(this.xEventBus).post(isA(xcb_unmap_notify_event_t.class));
 		assertTrue(hideNotifyOptional.isPresent());
 	}
 
@@ -73,18 +69,18 @@ public class TestUnmapNotifyHandler {
 		//an xcb_generic_event_t from a client
 		mockStatic(LibXcbJNI.class);
 		when(xcb_unmap_notify_event_t_event_get(anyLong(),
-												(xcb_unmap_notify_event_t) any())).thenReturn(targetWindowId);
+												(xcb_unmap_notify_event_t) any())).thenReturn(this.targetWindowId);
 		when(xcb_unmap_notify_event_t_window_get(anyLong(),
-												 (xcb_unmap_notify_event_t) any())).thenReturn(targetWindowId);
+												 (xcb_unmap_notify_event_t) any())).thenReturn(this.targetWindowId);
 
 		final DisplaySurface displaySurface = mock(DisplaySurface.class);
-		when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(targetWindowId));
-		when(xWindowPool.get((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
+		when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
+		when(this.xWindowPool.get((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(final InvocationOnMock invocation) throws Throwable {
 				final Object arg0 = invocation.getArguments()[0];
 				final XWindowHandle xWindowHandle = (XWindowHandle) arg0;
-				if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(targetWindowId)) {
+				if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(TestUnmapNotifyHandler.this.targetWindowId)) {
 					return displaySurface;
 				}
 				return null;
@@ -93,14 +89,14 @@ public class TestUnmapNotifyHandler {
 
         //when
         //the target of the xcb_generic_event_t event is requested
-        final Optional<DisplaySurface> target = unmapNotifyHandler.getTarget(xcb_generic_event);
+		final Optional<DisplaySurface> target = this.unmapNotifyHandler.getTarget(this.xcb_generic_event);
 
-        //then
+		//then
         //the correct DisplaySurface is returned
         final ArgumentCaptor<XWindowHandle> windowHandleArgumentCaptor = ArgumentCaptor.forClass(XWindowHandle.class);
-        verify(xWindowPool).get(windowHandleArgumentCaptor.capture());
-        assertEquals((Integer) targetWindowId,
-                windowHandleArgumentCaptor.getValue().getNativeHandle());
+		verify(this.xWindowPool).get(windowHandleArgumentCaptor.capture());
+		assertEquals((Integer) this.targetWindowId,
+					 windowHandleArgumentCaptor.getValue().getNativeHandle());
         assertTrue(target.isPresent());
     }
 
@@ -111,15 +107,15 @@ public class TestUnmapNotifyHandler {
         //an xcb_generic_event_t from a child of the client
         mockStatic(LibXcbJNI.class);
         when(xcb_unmap_notify_event_t_event_get(anyLong(),
-                (xcb_unmap_notify_event_t) any())).thenReturn(targetWindowId);
-        when(xcb_unmap_notify_event_t_window_get(anyLong(),
-                (xcb_unmap_notify_event_t) any())).thenReturn(childWindowId);
+												(xcb_unmap_notify_event_t) any())).thenReturn(this.targetWindowId);
+		when(xcb_unmap_notify_event_t_window_get(anyLong(),
+												 (xcb_unmap_notify_event_t) any())).thenReturn(this.childWindowId);
 
-        //when
+		//when
         //the target of the xcb_generic_event_t event is requested
-        final Optional<DisplaySurface> target = unmapNotifyHandler.getTarget(xcb_generic_event);
+		final Optional<DisplaySurface> target = this.unmapNotifyHandler.getTarget(this.xcb_generic_event);
 
-        //then
+		//then
         //no DisplaySurface is returned
         assertFalse(target.isPresent());
     }

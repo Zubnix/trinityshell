@@ -48,12 +48,12 @@ public class TestFocusInHandler {
 
 		//when
 		//an xcb_generic_event_t event arrives
-		final Optional<FocusGainNotify> focusGainNotifyOptional = focusInHandler.handle(xcb_generic_event);
+		final Optional<FocusGainNotify> focusGainNotifyOptional = this.focusInHandler.handle(this.xcb_generic_event);
 
 		//then
 		//the xcb_focus_in_event_t is posted on the x event bus
 		//the event is converted to a DestroyNotify
-		verify(xEventBus).post(isA(xcb_focus_in_event_t.class));
+		verify(this.xEventBus).post(isA(xcb_focus_in_event_t.class));
 		assertTrue(focusGainNotifyOptional.isPresent());
 	}
 
@@ -64,17 +64,17 @@ public class TestFocusInHandler {
 		//an xcb_generic_event_t
 		mockStatic(LibXcbJNI.class);
 		when(xcb_focus_in_event_t_event_get(anyLong(),
-											(xcb_focus_in_event_t) any())).thenReturn(targetWindowId);
+											(xcb_focus_in_event_t) any())).thenReturn(this.targetWindowId);
 
 		final DisplaySurface displaySurface = mock(DisplaySurface.class);
-		when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(targetWindowId));
-		when(xWindowPool.get((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
+		when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
+		when(this.xWindowPool.get((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(final InvocationOnMock invocation) throws Throwable {
 				final Object arg0 = invocation.getArguments()[0];
 				final XWindowHandle xWindowHandle = (XWindowHandle) arg0;
-				if (xWindowHandle != null && xWindowHandle.getNativeHandle().equals(targetWindowId)) {
-                    return displaySurface;
+				if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(TestFocusInHandler.this.targetWindowId)) {
+					return displaySurface;
                 }
                 return null;
             }
@@ -82,14 +82,14 @@ public class TestFocusInHandler {
 
         //when
         //the target of the xcb_generic_event_t event is requested
-        final Optional<DisplaySurface> target = focusInHandler.getTarget(xcb_generic_event);
+		final Optional<DisplaySurface> target = this.focusInHandler.getTarget(this.xcb_generic_event);
 
-        //then
+		//then
         //the correct DisplaySurface is returned
         final ArgumentCaptor<XWindowHandle> windowHandleArgumentCaptor = ArgumentCaptor.forClass(XWindowHandle.class);
-        verify(xWindowPool).get(windowHandleArgumentCaptor.capture());
-        assertEquals((Integer) targetWindowId,
-                windowHandleArgumentCaptor.getValue().getNativeHandle());
+		verify(this.xWindowPool).get(windowHandleArgumentCaptor.capture());
+		assertEquals((Integer) this.targetWindowId,
+					 windowHandleArgumentCaptor.getValue().getNativeHandle());
         assertTrue(target.isPresent());
     }
 }

@@ -60,20 +60,22 @@ public class TestXDisplayImpl {
 
 	@Test(expected = Error.class)
 	public void testXDisplayConstructionXError() throws ExecutionException, InterruptedException {
+		//FIXME move to xeventchannel
 		//given
 		//an underlying X server with errors
 		mockStatic(LibXcb.class);
 		when(xcb_connection_has_error(this.xcb_connection)).thenReturn(1);
 		//when
 		//a new XDisplay is created
-		new XCompositor(this.xEventChannel,
-						this.xWindowPool);
+		new XCompositor(null);
 		//then
 		//the XDisplay object throws an Error
 	}
 
 	@Test
 	public void testXDisplayConstructionHappy() throws ExecutionException, InterruptedException {
+		//FIXME move to xeventchannel
+
 		//given
 		//an underlying X server without errors
 		//an underlying X server with a single screen
@@ -142,8 +144,7 @@ public class TestXDisplayImpl {
         //when
         //a new XDisplay is created
         //a client is created
-		final XCompositor xDisplay = new XCompositor(this.xEventChannel,
-													   this.xWindowPool);
+		final XCompositor xDisplay = new XCompositor(null);
 		xDisplay.post(displaySurfaceCreationNotify);
 
         //then

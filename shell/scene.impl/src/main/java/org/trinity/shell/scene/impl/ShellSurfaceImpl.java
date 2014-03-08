@@ -17,15 +17,14 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.shell.surface.impl;
+package org.trinity.shell.scene.impl;
 
 import com.google.auto.factory.AutoFactory;
 import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.shared.Listenable;
-import org.trinity.shell.api.bindingkey.ShellScene;
-import org.trinity.shell.api.scene.ShellNodeBase;
-import org.trinity.shell.api.surface.ShellSurface;
+import org.trinity.shell.api.scene.ShellNodeParent;
+import org.trinity.shell.api.scene.ShellSurface;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.media.nativewindow.util.Dimension;
@@ -35,16 +34,16 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 // TODO documentation
 /**
- * A <code>ShellSurfaceImplBase</code> wraps a {@link DisplaySurface} that was
+ * A <code>ShellSurfaceImpl</code> wraps a {@link DisplaySurface} that was
  * created by an independent program. As such the visual content can not be
- * directly manipulated. A <code>ShellSurfaceImplBase</code> is the owner of the
- * <code>PlatformRenderArea</code> it wraps. A <code>ShellSurfaceImplBase</code>
+ * directly manipulated. A <code>ShellSurfaceImpl</code> is the owner of the
+ * <code>PlatformRenderArea</code> it wraps. A <code>ShellSurfaceImpl</code>
  * provides functionality to manage and manipulate the geometry and visibility
  * of the <code>PlatformRenderArea</code> it wraps.
  */
 @NotThreadSafe
 @AutoFactory
-public final class ShellSurfaceImplBase extends ShellNodeBase implements ShellSurface {
+public final class ShellSurfaceImpl extends ShellNodeImpl implements ShellSurface {
 
 	public static final int     DEFAULT_MIN_WIDTH    = 4;
 	public static final int     DEFAULT_MIN_HEIGHT   = 4;
@@ -59,14 +58,12 @@ public final class ShellSurfaceImplBase extends ShellNodeBase implements ShellSu
 	private       int     widthIncrement  = DEFAULT_WIDTH_INC;
 	private       int     heightIncrement = DEFAULT_HEIGHT_INC;
 
-	private final DisplaySurface               displaySurface;
+	private final DisplaySurface displaySurface;
 
 	// created by a custom factory so inject annotations are not needed.
-	ShellSurfaceImplBase(@Nonnull //TODO with autofactory
-                         final DisplaySurface displaySurface,
-                         @Nonnull @ShellScene final Listenable shellScene) {
-		super(
-				shellScene);
+	ShellSurfaceImpl(@Nonnull final ShellNodeParent parent,
+					 @Nonnull final DisplaySurface displaySurface) {
+		super(parent);
 		this.displaySurface = displaySurface;
 	}
 
@@ -101,14 +98,16 @@ public final class ShellSurfaceImplBase extends ShellNodeBase implements ShellSu
 	}
 
 	@Override
-	public void setWidthIncrement(final int widthIncrement) {
+	public void setWidthIncrement(@Nonnegative final int widthIncrement) {
 		checkArgument(widthIncrement > 0);
+
 		this.widthIncrement = widthIncrement;
 	}
 
 	@Override
-	public void setHeightIncrement(final int heightIncrement) {
+	public void setHeightIncrement(@Nonnegative final int heightIncrement) {
 		checkArgument(heightIncrement > 0);
+
 		this.heightIncrement = heightIncrement;
 	}
 

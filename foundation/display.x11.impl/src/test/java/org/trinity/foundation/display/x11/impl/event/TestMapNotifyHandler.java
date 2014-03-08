@@ -17,8 +17,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 import org.trinity.foundation.api.display.event.ShowNotify;
-import org.trinity.foundation.display.x11.impl.XWindowHandle;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
+import org.trinity.foundation.display.x11.impl.XWindowHandle;
 
 import static org.freedesktop.xcb.LibXcbJNI.xcb_map_notify_event_t_window_get;
 import static org.junit.Assert.assertEquals;
@@ -26,9 +26,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @Deprecated
@@ -54,12 +52,12 @@ public class TestMapNotifyHandler {
 
 		//when
 		//an xcb_generic_event_t event arrives
-		final Optional<ShowNotify> showNotifyOptional = mapNotifyHandler.handle(xcb_generic_event);
+		final Optional<ShowNotify> showNotifyOptional = this.mapNotifyHandler.handle(this.xcb_generic_event);
 
 		//then
 		//the xcb_map_notify_event_t is posted on the x event bus
 		//the event is converted to a ShowNotify
-		verify(xEventBus).post(isA(xcb_map_notify_event_t.class));
+		verify(this.xEventBus).post(isA(xcb_map_notify_event_t.class));
 		assertTrue(showNotifyOptional.isPresent());
 	}
 
@@ -70,16 +68,16 @@ public class TestMapNotifyHandler {
 		//an xcb_generic_event_t
 		mockStatic(LibXcbJNI.class);
 		when(xcb_map_notify_event_t_window_get(anyLong(),
-											   (xcb_map_notify_event_t) any())).thenReturn(targetWindowId);
+											   (xcb_map_notify_event_t) any())).thenReturn(this.targetWindowId);
 
 		final DisplaySurface displaySurface = mock(DisplaySurface.class);
-		when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(targetWindowId));
-		when(xWindowPool.get((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
+		when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
+		when(this.xWindowPool.get((DisplaySurfaceHandle) any())).thenAnswer(new Answer<Object>() {
 			@Override
 			public Object answer(final InvocationOnMock invocation) throws Throwable {
 				final Object arg0 = invocation.getArguments()[0];
 				final XWindowHandle xWindowHandle = (XWindowHandle) arg0;
-				if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(targetWindowId)) {
+				if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(TestMapNotifyHandler.this.targetWindowId)) {
 					return displaySurface;
 				}
 				return null;
@@ -88,14 +86,14 @@ public class TestMapNotifyHandler {
 
         //when
         //the target of the xcb_generic_event_t event is requested
-        final Optional<DisplaySurface> target = mapNotifyHandler.getTarget(xcb_generic_event);
+		final Optional<DisplaySurface> target = this.mapNotifyHandler.getTarget(this.xcb_generic_event);
 
-        //then
+		//then
         //the correct DisplaySurface is returned
         final ArgumentCaptor<XWindowHandle> windowHandleArgumentCaptor = ArgumentCaptor.forClass(XWindowHandle.class);
-        verify(xWindowPool).get(windowHandleArgumentCaptor.capture());
-        assertEquals((Integer) targetWindowId,
-                windowHandleArgumentCaptor.getValue().getNativeHandle());
+		verify(this.xWindowPool).get(windowHandleArgumentCaptor.capture());
+		assertEquals((Integer) this.targetWindowId,
+					 windowHandleArgumentCaptor.getValue().getNativeHandle());
         assertTrue(target.isPresent());
     }
 }

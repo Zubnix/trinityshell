@@ -19,9 +19,8 @@
  ******************************************************************************/
 package org.trinity.shell.scene.impl;
 
+import com.google.auto.factory.AutoFactory;
 import com.google.common.base.Optional;
-import org.trinity.foundation.api.shared.Listenable;
-import org.trinity.shell.api.bindingkey.ShellScene;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
@@ -31,7 +30,7 @@ import org.trinity.shell.api.scene.manager.ShellLayoutManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,14 +41,15 @@ import static com.google.common.base.Preconditions.checkArgument;
  * An abstract base implementation of a {@link org.trinity.shell.api.scene.ShellNodeParent}.
  * **************************************
  */
-public class ShellNodeParentBase extends ShellNodeBase implements ShellNodeParent {
+@NotThreadSafe
+@AutoFactory
+public class ShellNodeParentImpl extends ShellNodeImpl implements ShellNodeParent {
 
 	private final LinkedList<ShellNode> children = new LinkedList<>();
 	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-    @Inject
-	ShellNodeParentBase(@Nonnull @ShellScene final Listenable shellScene) {
-		super(shellScene);
+	ShellNodeParentImpl(@Nonnull final ShellNodeParent parent) {
+		super(parent);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class ShellNodeParentBase extends ShellNodeBase implements ShellNodeParen
     }
 
     protected void handleChildReparent(@Nonnull final ShellNode child) {
-		checkArgument(child instanceof ShellNodeBase);
+		checkArgument(child instanceof ShellNodeImpl);
 
 		final ShellNodeEvent shellNodeEvent;
 		if (this.children.remove(child)) {
@@ -97,7 +97,7 @@ public class ShellNodeParentBase extends ShellNodeBase implements ShellNodeParen
 
 	protected void handleChildStacking(	@Nonnull final ShellNode child,
 										final boolean raised) {
-		checkArgument(child instanceof ShellNodeBase);
+		checkArgument(child instanceof ShellNodeImpl);
 		checkArgument(this.children.remove(child));
 
 		if (raised) {

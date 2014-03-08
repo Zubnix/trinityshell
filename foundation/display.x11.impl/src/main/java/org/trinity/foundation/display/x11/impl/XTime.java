@@ -37,8 +37,7 @@ public class XTime {
 	private final AtomicInteger time = new AtomicInteger();
 
 	@Inject
-	XTime(final XEventChannel listenable) {
-		listenable.register(this);
+	XTime() {
 	}
 
 	public int getTime() {

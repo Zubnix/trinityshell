@@ -21,8 +21,7 @@ public class TestXTime {
         //a property notify event with its own X time
         //an enter notify event with its own X time
         //an xtime object
-        final XEventChannel xEventBus = mock(XEventChannel.class);
-        final XTime xTime = new XTime(xEventBus);
+        final XTime xTime = new XTime();
 
         final xcb_button_press_event_t button_press_event = mock(xcb_button_press_event_t.class);
         final xcb_key_press_event_t key_press_event = mock(xcb_key_press_event_t.class);

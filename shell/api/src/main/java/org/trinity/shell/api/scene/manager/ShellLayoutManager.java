@@ -19,10 +19,11 @@
  ******************************************************************************/
 package org.trinity.shell.api.scene.manager;
 
-import java.util.List;
-
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
+
+import javax.media.nativewindow.util.RectangleImmutable;
+import java.util.List;
 
 // TODO provide methods to add childs at a specific index.
 /***************************************
@@ -31,16 +32,6 @@ import org.trinity.shell.api.scene.ShellNodeParent;
  ***************************************
  */
 public interface ShellLayoutManager {
-
-	/***************************************
-	 * Register a child with no {@link ShellLayoutProperty} so it can be managed
-	 * by this layout manger.
-	 *
-	 * @param child
-	 *            A child {@link ShellNode}.
-	 ***************************************
-	 */
-	void addChildNode(ShellNode child);
 
 	/***************************************
 	 * Register a child with a specific {@code ShellLayoutProperty} so it can be
@@ -53,8 +44,8 @@ public interface ShellLayoutManager {
 	 *            a {@link ShellLayoutProperty}
 	 ***************************************
 	 */
-	void addChildNode(	final ShellNode child,
-						final ShellLayoutProperty layoutProperty);
+	void setChildLayoutConfiguration(final ShellNode child,
+									 final ShellLayoutProperty layoutProperty);
 
 	/***************************************
 	 * The {@code ShellLayoutProperty} that was registered together with the
@@ -65,25 +56,7 @@ public interface ShellLayoutManager {
 	 * @return A {@link ShellLayoutProperty}.
 	 ***************************************
 	 */
-	ShellLayoutProperty getLayoutProperty(final ShellNode child);
-
-	/***************************************
-	 * The child {@link ShellNode} at the specified index.
-	 *
-	 * @param index
-	 *            an index. Greater or equal to 0.
-	 * @return A child {@link ShellNode}.
-	 ***************************************
-	 */
-	ShellNode getChild(final int index);
-
-	/***************************************
-	 * All registered {@link ShellNode}s.
-	 *
-	 * @return A {@link List} of child {@link ShellNode}s.
-	 ***************************************
-	 */
-	List<ShellNode> getChildren();
+	ShellLayoutProperty getChildLayoutConfiguration(final ShellNode child);
 
 	/***************************************
 	 * Remove a previously registered child {@link ShellNode}.
@@ -92,24 +65,18 @@ public interface ShellLayoutManager {
 	 *            A child {@link ShellNode}.
 	 ***************************************
 	 */
-	void removeChild(final ShellNode child);
-
-	/***************************************
-	 * Remove the child {@link ShellNode} at the specified index.
-	 *
-	 * @param index
-	 *            an index. Greater or equal to 0.
-	 ***************************************
-	 */
-	void removeChild(final int index);
+	void removeChildLayoutConfiguration(final ShellNode child);
 
 	/***************************************
 	 * Layout all child {@link ShellNode}s. This method should only be called by
 	 * a {@link ShellNodeParent}.
 	 *
-	 * @param parent
-     *              The parent {@link ShellNode}.
+	 * @param layoutRegion
+     *              The region in which layout should take place
+	 * @param childNodes
+	 * 				Shell nodes that need to be layed out.
 	 ***************************************
 	 */
-	void layout(ShellNodeParent parent);
+	void layout(RectangleImmutable layoutRegion,
+				List<ShellNode> childNodes);
 }

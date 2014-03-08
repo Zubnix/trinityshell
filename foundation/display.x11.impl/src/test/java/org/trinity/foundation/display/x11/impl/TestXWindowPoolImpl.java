@@ -8,8 +8,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.trinity.foundation.api.display.DisplaySurfaceHandle;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,21 +47,4 @@ public class TestXWindowPoolImpl {
 		verify(this.displaySurfaceFactory,
 			   times(1)).create(this.displaySurfaceHandle);
 	}
-
-    @Test
-    public void testPoolPresence() {
-        //given
-        //a pool
-
-        //when
-        //a displaySurfaces pool presence is requested
-		final boolean present0 = this.xWindowPool.isPresent(this.displaySurfaceHandle);
-		this.xWindowPool.get(this.displaySurfaceHandle);
-		final boolean present1 = this.xWindowPool.isPresent(this.displaySurfaceHandle);
-
-		//then
-        //the pool reports if the window is cached
-        assertFalse(present0);
-        assertTrue(present1);
-    }
 }

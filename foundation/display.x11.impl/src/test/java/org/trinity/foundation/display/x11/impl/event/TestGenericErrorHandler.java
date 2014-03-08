@@ -12,8 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.trinity.foundation.api.display.DisplaySurface;
 import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.shared.Listenable;
 
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.isA;
@@ -39,13 +39,13 @@ public class TestGenericErrorHandler {
 
         //when
         //an xcb_generic_event_t event arrives
-        final Optional<DisplayEvent> handle = genericErrorHandler.handle(xcb_generic_event);
+		final Optional<DisplayEvent> handle = this.genericErrorHandler.handle(this.xcb_generic_event);
 
-        //then
+		//then
         //the xcb_generic_error_t is posted on the x event bus
         //the event is not converted to a DisplayEvent
-        verify(xEventBus).post(isA(xcb_generic_error_t.class));
-        assertFalse(handle.isPresent());
+		verify(this.xEventBus).post(isA(xcb_generic_error_t.class));
+		assertFalse(handle.isPresent());
     }
 
     @Test
@@ -57,9 +57,9 @@ public class TestGenericErrorHandler {
 
         //when
         //the target of the xcb_generic_event_t event is requested
-        final Optional<Listenable> target = genericErrorHandler.getTarget(xcb_generic_event);
+		final Optional<DisplaySurface> target = this.genericErrorHandler.getTarget(this.xcb_generic_event);
 
-        //then
+		//then
         //an absent target is returned
         assertFalse(target.isPresent());
     }

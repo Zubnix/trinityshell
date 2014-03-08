@@ -28,7 +28,6 @@ import java.util.concurrent.ExecutionException;
 
 import static org.freedesktop.xcb.LibXcb.*;
 import static org.freedesktop.xcb.xcb_config_window_t.*;
-import static org.freedesktop.xcb.xcb_input_focus_t.XCB_INPUT_FOCUS_NONE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -96,26 +95,6 @@ public class TestXWindow {
 	}
 
 	@Test
-	public void testGiveInputFocus() {
-		//given
-		//an XWindow
-		mockStatic(LibXcb.class);
-
-		//when
-		//the XWindow is given the focus
-		this.xWindow.setInputFocus();
-
-		//then
-		//the native X server window should receive the focus
-		verifyStatic();
-		xcb_set_input_focus(this.xcb_connection,
-							(short) XCB_INPUT_FOCUS_NONE,
-							this.nativeHandle,
-							this.xTime.getTime());
-		xcb_flush(this.xcb_connection);
-	}
-
-	@Test
 	public void testMove() {
 		//given
 		//an XWindow
@@ -125,8 +104,10 @@ public class TestXWindow {
 		//the XWindow is moved
 		final int x = 567;
 		final int y = 890;
-		this.xWindow.move(x,
-						  y);
+		this.xWindow.configure(x,
+							   y,
+							   100,
+							   100);
 
 		//then
 		//the native X server window should be moved
@@ -168,8 +149,10 @@ public class TestXWindow {
         final int width = 12;
         final int height = 34;
 
-		this.xWindow.resize(width,
-							height);
+		this.xWindow.configure(0,
+							   0,
+							   width,
+							   height);
 
         //then
         //the native X server window is resized, taking into account it's X window border.

@@ -20,8 +20,8 @@
 package org.trinity.shell.scene.impl.manager;
 
 import com.google.common.eventbus.Subscribe;
-import org.trinity.shell.scene.impl.ShellNodeBase;
-import org.trinity.shell.scene.impl.ShellNodeParentBase;
+import org.trinity.shell.scene.impl.ShellNodeImpl;
+import org.trinity.shell.scene.impl.ShellNodeParentImpl;
 import org.trinity.shell.api.scene.ShellNode;
 import org.trinity.shell.api.scene.ShellNodeParent;
 import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
@@ -60,7 +60,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 	ShellLayoutManagerLineImpl(//TODO with autofactory
 							   final ShellNodeParent shellNodeParent) {
-		super((ShellNodeParentBase) shellNodeParent);
+		super((ShellNodeParentImpl) shellNodeParent);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 	protected void layoutHorizontal(@Nonnull final ShellNode containerNode) {
 		// total available size of the container
-		checkArgument(containerNode instanceof ShellNodeBase);
+		checkArgument(containerNode instanceof ShellNodeImpl);
 
 		int newWidthSize = 0;
 		int fixedHeightSize = 0;
@@ -97,7 +97,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		double totalWeightedChildSizes = 0;
 
 		for(final ShellNode child : getChildren()) {
-			final int childWeight = getLayoutProperty(child).getWeight();
+			final int childWeight = getChildLayoutConfiguration(child).getWeight();
 			// we don't want to include children with 0 weight in the scale
 			// calculation since they are treated as constants
 			if(childWeight == 0) {
@@ -121,7 +121,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 		final List<ShellNode> children = getChildren();
 		for(final ShellNode child : children) {
-			final ShellLayoutPropertyLine layoutProperty = getLayoutProperty(child);
+			final ShellLayoutPropertyLine layoutProperty = getChildLayoutConfiguration(child);
 			int childWeight = layoutProperty.getWeight();
 
 			double resizeFactor = scale;
@@ -177,7 +177,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		double totalWeightedChildSizes = 0;
 
 		for (final ShellNode child : getChildren()) {
-			final int childWeight = getLayoutProperty(child).getWeight();
+			final int childWeight = getChildLayoutConfiguration(child).getWeight();
 			// we don't want to include children with 0 weight in the scale
 			// calculation since they are treated as constants
 			if (childWeight == 0) {
@@ -201,7 +201,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 		final List<ShellNode> children = getChildren();
 		for (final ShellNode child : children) {
-			final ShellLayoutPropertyLine layoutProperty = getLayoutProperty(child);
+			final ShellLayoutPropertyLine layoutProperty = getChildLayoutConfiguration(child);
 			int childWeight = layoutProperty.getWeight();
 
 			double resizeFactor = scale;
@@ -241,19 +241,19 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	}
 
 	@Override
-	public void addChildNode(	@Nonnull final ShellNode child,
-								@Nonnull final ShellLayoutProperty layoutProperty) {
+	public void setChildLayoutConfiguration(@Nonnull final ShellNode child,
+											@Nonnull final ShellLayoutProperty layoutProperty) {
 		checkArgument(layoutProperty instanceof ShellLayoutPropertyLine);
 
 		child.register(this.childGeoListener);
-		super.addChildNode(	child,
-							layoutProperty);
+		super.setChildLayoutConfiguration(child,
+										  layoutProperty);
 	}
 
 	@Override
-	public void removeChild(@Nonnull final ShellNode child) {
+	public void removeChildLayoutConfiguration(@Nonnull final ShellNode child) {
 		child.register(this.childGeoListener);
-		super.removeChild(child);
+		super.removeChildLayoutConfiguration(child);
 	}
 
 	@Override
@@ -269,8 +269,8 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 	}
 
 	@Override
-	public ShellLayoutPropertyLine getLayoutProperty(@Nonnull final ShellNode child) {
-		return (ShellLayoutPropertyLine) super.getLayoutProperty(child);
+	public ShellLayoutPropertyLine getChildLayoutConfiguration(@Nonnull final ShellNode child) {
+		return (ShellLayoutPropertyLine) super.getChildLayoutConfiguration(child);
 	}
 
 	@Subscribe
@@ -289,7 +289,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 		@SuppressWarnings("unused")
 		@Subscribe
 		public void handleChildDestroyed(final ShellNodeDestroyedEvent shellNodeDestroyedEvent) {
-			removeChild(shellNodeDestroyedEvent.getSource());
+			removeChildLayoutConfiguration(shellNodeDestroyedEvent.getSource());
 			layout(getShellNodeParent());
 		}
 
