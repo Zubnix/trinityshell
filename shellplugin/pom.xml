@@ -12,8 +12,6 @@
 
     <modules>
         <module>wm.api</module>
-        <module>wm.view.javafx</module>
-        <module>wm.view.javafx.skin</module>
     </modules>
 
     <dependencies>
