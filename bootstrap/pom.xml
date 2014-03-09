@@ -19,34 +19,19 @@
             <artifactId>foundation.api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- render javafx -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>foundation.render.javafx.api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
-
-        <!--foundation implementation -->
-        <!-- display X11 -->
+        <!-- X11 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>foundation.display.x11.impl</artifactId>
+            <artifactId>x11.default</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- render javafx -->
+        <!-- bindings -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>foundation.render.javafx.impl</artifactId>
+            <artifactId>binding.default</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- render bindings -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>foundation.render.binding.impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
 
         <!-- shell api -->
         <dependency>
@@ -60,45 +45,7 @@
         <!-- scene -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>shell.scene.impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!-- surface -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>shell.surface.impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!-- plugin -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>shell.plugin.impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-
-        <!-- shellplugins -->
-        <!-- widget views javafx -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>shellplugin.wm.view.javafx</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!-- widget views javafx skin-->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>shellplugin.wm.view.javafx.skin</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!-- window management -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>shellplugin.wm.api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>shellplugin.wm.x11.impl</artifactId>
+            <artifactId>shell.scene.default</artifactId>
             <version>${project.version}</version>
         </dependency>
 

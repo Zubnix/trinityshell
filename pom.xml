@@ -4,7 +4,7 @@
 
     <groupId>org.trinity</groupId>
     <artifactId>trinity</artifactId>
-   <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Trinity</name>
@@ -64,9 +64,16 @@
     </properties>
 
     <modules>
-        <module>foundation</module>
-        <module>shell</module>
-        <module>shellplugin</module>
+        <module>common</module>
+        <module>binding.api</module>
+        <module>binding.default</module>
+        <module>display.api</module>
+        <module>shell.view.api</module>
+        <module>shell.scene.api</module>
+        <module>shell.scene.default</module>
+
+        <module>x11</module>
+
         <module>bootstrap</module>
     </modules>
 
@@ -92,7 +99,7 @@
             <version>${guava.version}</version>
         </dependency>
 
-        <!-- google auto* -->
+        <!-- google auto -->
         <dependency>
             <groupId>com.google.auto.value</groupId>
             <artifactId>auto-value</artifactId>
@@ -120,7 +127,7 @@
             <version>${quasar.version}</version>
         </dependency>
 
-        <!-- render tools -->
+        <!-- rendering tools -->
         <dependency>
             <groupId>org.jogamp.jogl</groupId>
             <artifactId>jogl-all-noawt</artifactId>

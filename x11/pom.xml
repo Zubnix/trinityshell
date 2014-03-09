@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+        <groupId>org.trinity</groupId>
+        <artifactId>trinity</artifactId>
+        <version>0.0.3-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>x11.default</artifactId>
+	<name>X11 Default Implementation</name>
+	<packaging>bundle</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.trinity</groupId>
+			<artifactId>foundation.api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+        <dependency>
+            <groupId>org.trinity</groupId>
+            <artifactId>XCB4J</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
+        <!-- logging implementation for test log output -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.10</version>
+            <scope>test</scope>
+        </dependency>
+	</dependencies>
+</project>
+
