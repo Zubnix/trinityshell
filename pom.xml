@@ -67,12 +67,11 @@
         <module>common</module>
         <module>binding.api</module>
         <module>binding.default</module>
-        <module>display.api</module>
         <module>shell.view.api</module>
         <module>shell.scene.api</module>
         <module>shell.scene.default</module>
 
-        <module>x11</module>
+        <module>x11.default</module>
 
         <module>bootstrap</module>
     </modules>
