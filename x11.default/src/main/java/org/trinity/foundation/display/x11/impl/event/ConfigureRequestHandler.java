@@ -19,7 +19,6 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl.event;
 
-import com.google.common.base.Optional;
 import org.freedesktop.xcb.xcb_configure_request_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
@@ -31,22 +30,17 @@ import org.trinity.foundation.display.x11.impl.XWindowPool;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
-import javax.media.nativewindow.util.Rectangle;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_REQUEST;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 
 @Immutable
 public class ConfigureRequestHandler implements XEventHandler {
 
-	private static final Logger     LOG                         = LoggerFactory.getLogger(ConfigureRequestHandler.class);
-	private static final Integer    EVENT_CODE                  = XCB_CONFIGURE_REQUEST;
+	private static final Logger  LOG        = LoggerFactory.getLogger(ConfigureRequestHandler.class);
+	private static final Integer EVENT_CODE = XCB_CONFIGURE_REQUEST;
 
-	private final XEventChannel      xEventChannel;
-	private final XWindowPool xWindowPool;
+	private final XEventChannel xEventChannel;
+	private final XWindowPool   xWindowPool;
 
 	@Inject
 	ConfigureRequestHandler(final XEventChannel xEventChannel,
@@ -63,8 +57,8 @@ public class ConfigureRequestHandler implements XEventHandler {
 				  request_event.getClass().getSimpleName());
 
 		this.xEventChannel.post(request_event);
-        final int windowId = request_event.getWindow();
-        this.xWindowPool.get(windowId).post(request_event);
+		final int windowId = request_event.getWindow();
+		this.xWindowPool.get(windowId).post(request_event);
 
 //		final int x = request_event.getX();
 //		final int y = request_event.getY();

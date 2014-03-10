@@ -30,45 +30,44 @@ import org.trinity.foundation.display.x11.impl.XWindowPool;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
-import javax.media.nativewindow.util.Rectangle;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_NOTIFY;
 
 @Immutable
 public class ConfigureNotifyHandler implements XEventHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ConfigureNotifyHandler.class);
-    private static final Integer EVENT_CODE = XCB_CONFIGURE_NOTIFY;
-    private final XWindowPool xWindowPool;
-    private final XEventChannel xEventChannel;
+	private static final Logger  LOG        = LoggerFactory.getLogger(ConfigureNotifyHandler.class);
+	private static final Integer EVENT_CODE = XCB_CONFIGURE_NOTIFY;
+	private final XWindowPool   xWindowPool;
+	private final XEventChannel xEventChannel;
 
-    @Inject
-    ConfigureNotifyHandler(final XWindowPool xWindowPool,
-                           final XEventChannel xEventChannel) {
-        this.xEventChannel = xEventChannel;
-        this.xWindowPool = xWindowPool;
-    }
+	@Inject
+	ConfigureNotifyHandler(final XWindowPool xWindowPool,
+						   final XEventChannel xEventChannel) {
+		this.xEventChannel = xEventChannel;
+		this.xWindowPool = xWindowPool;
+	}
 
-    @Override
-    public void handle(@Nonnull final xcb_generic_event_t event_t) {
-        final xcb_configure_notify_event_t configure_notify_event = cast(event_t);
+	@Override
+	public void handle(@Nonnull final xcb_generic_event_t event_t) {
+		final xcb_configure_notify_event_t configure_notify_event = cast(event_t);
 
-        LOG.debug("Received X event={}",
-                configure_notify_event.getClass().getSimpleName());
+		LOG.debug("Received X event={}",
+				  configure_notify_event.getClass().getSimpleName());
 
-        this.xEventChannel.post(configure_notify_event);
-        final int windowId = configure_notify_event.getWindow();
-        this.xWindowPool.get(windowId).post(configure_notify_event);
-    }
+		this.xEventChannel.post(configure_notify_event);
+		final int windowId = configure_notify_event.getWindow();
+		this.xWindowPool.get(windowId).post(configure_notify_event);
+	}
 
-    private xcb_configure_notify_event_t cast(final xcb_generic_event_t event_t) {
-        return new xcb_configure_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
-                false);
-    }
+	private xcb_configure_notify_event_t cast(final xcb_generic_event_t event_t) {
+		return new xcb_configure_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
+												false);
+	}
 
-    @Override
-    public Integer getEventCode() {
-        return EVENT_CODE;
-    }
+	@Override
+	public Integer getEventCode() {
+		return EVENT_CODE;
+	}
 
 }

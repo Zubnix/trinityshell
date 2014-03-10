@@ -20,9 +20,6 @@
 package org.trinity.foundation.display.x11.impl;
 
 import org.trinity.common.ListenableEventBus;
-import org.trinity.display.api.Compositor;
-import org.trinity.display.api.DisplaySurface;
-import org.trinity.display.api.DisplaySurfaceHandle;
 
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
@@ -39,7 +36,7 @@ public class XCompositor extends ListenableEventBus {
         this.xWindowFactory = xWindowFactory;
     }
 
-    public XWindow createDisplaySurface(final Integer nativeHandle) {
-        return this.xWindowFactory.create(nativeHandle);
+	public XWindow createSurface(final Integer nativeHandle) {
+		return this.xWindowFactory.create(nativeHandle);
     }
 }

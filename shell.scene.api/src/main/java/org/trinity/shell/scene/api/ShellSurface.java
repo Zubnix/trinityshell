@@ -20,7 +20,6 @@
 package org.trinity.shell.scene.api;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import org.trinity.display.api.DisplaySurface;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -75,10 +74,10 @@ public interface ShellSurface extends ShellNode {
 	 * to display it's contents. A display surface can be 'shared', so it is
 	 * possible that multiple shell surface's use the same display surface.
 	 *
-	 * @return a future {@link DisplaySurface}.
+	 * @return a platform display buffer.
 	 ***************************************
 	 */
-	DisplaySurface getDisplaySurface();
+	Object getDisplayBuffer();
 
 	/***************************************
 	 * The desired delta of the old and new width when this surface's width

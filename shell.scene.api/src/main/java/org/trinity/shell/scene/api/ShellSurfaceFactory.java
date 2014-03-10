@@ -19,8 +19,6 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api;
 
-import org.trinity.display.api.DisplaySurface;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -40,5 +38,5 @@ public interface ShellSurfaceFactory {
      * **************************************
      */
     ShellSurface construct(@Nonnull ShellNodeParent parent,
-                           @Nonnull DisplaySurface displaySurface);
+                           @Nonnull Object displayBuffer);
 }

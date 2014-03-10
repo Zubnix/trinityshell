@@ -2,8 +2,6 @@ package org.trinity.foundation.display.x11.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.display.api.DisplaySurface;
-import org.trinity.display.api.Seat;
 
 import javax.inject.Inject;
 

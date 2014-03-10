@@ -38,8 +38,8 @@ public class CirculateNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(CirculateNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_CIRCULATE_NOTIFY;
-	private final XEventChannel      xEventChannel;
-	private final XWindowPool xWindowPool;
+	private final XEventChannel xEventChannel;
+	private final XWindowPool   xWindowPool;
 
 	@Inject
 	CirculateNotifyHandler(final XEventChannel xEventChannel,
@@ -57,8 +57,8 @@ public class CirculateNotifyHandler implements XEventHandler {
 				  circulate_notify_event.getClass().getSimpleName());
 
 		this.xEventChannel.post(circulate_notify_event);
-        final int windowId = circulate_notify_event.getWindow();
-        this.xWindowPool.get(windowId).post(circulate_notify_event);
+		final int windowId = circulate_notify_event.getWindow();
+		this.xWindowPool.get(windowId).post(circulate_notify_event);
 	}
 
 	private xcb_circulate_notify_event_t cast(final xcb_generic_event_t event_t) {

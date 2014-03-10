@@ -19,16 +19,13 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl.event;
 
-import com.google.common.base.Optional;
 import org.freedesktop.xcb.xcb_focus_in_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.display.api.DisplaySurface;
-import org.trinity.display.api.event.FocusGainNotify;
-import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
+import org.trinity.foundation.display.x11.impl.XWindowPool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -41,14 +38,14 @@ public class FocusInHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(FocusInHandler.class);
 	private static final Integer EVENT_CODE = XCB_FOCUS_IN;
-	private final XEventChannel      xEventChannel;
-	private final DisplaySurfacePool xWindowCache;
+	private final XEventChannel xEventChannel;
+	private final XWindowPool   xWindowPool;
 
 	@Inject
 	FocusInHandler(final XEventChannel xEventChannel,
-				   final DisplaySurfacePool xWindowPool) {
+				   final XWindowPool xWindowPool) {
 		this.xEventChannel = xEventChannel;
-		this.xWindowCache = xWindowPool;
+		this.xWindowPool = xWindowPool;
 	}
 
 	@Override
@@ -60,8 +57,8 @@ public class FocusInHandler implements XEventHandler {
 				  focus_in_event.getClass().getSimpleName());
 
 		this.xEventChannel.post(focus_in_event);
-
-		return Optional.of(new FocusGainNotify());
+		final int windowId = focus_in_event.getEvent();
+		this.xWindowPool.get(windowId).post(focus_in_event);
 	}
 
 	private xcb_focus_in_event_t cast(final xcb_generic_event_t event_t) {
@@ -74,10 +71,4 @@ public class FocusInHandler implements XEventHandler {
 		return EVENT_CODE;
 	}
 
-	@Override
-	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
-		final xcb_focus_in_event_t focus_in_event_t = cast(event_t);
-		final int windowId = focus_in_event_t.getEvent();
-		return Optional.of(this.xWindowCache.get(XWindowHandle.create(windowId)));
-	}
 }

@@ -75,7 +75,7 @@ public class XWindowPool {
         LOG.debug("Xwindow={} added to cache.",
                 xWindowHandle);
 
-        final XWindow window = this.compositor.createXWindow(xWindowHandle);
+        final XWindow window = this.compositor.createSurface(xWindowHandle);
         window.register(new DestroyListener(window));
         this.XWindows.put(xWindowHandle,
                 window);

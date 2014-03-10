@@ -19,16 +19,13 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl.event;
 
-import com.google.common.base.Optional;
 import org.freedesktop.xcb.xcb_focus_in_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.display.api.DisplaySurface;
-import org.trinity.display.api.event.FocusLostNotify;
-import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
+import org.trinity.foundation.display.x11.impl.XWindowPool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -39,46 +36,37 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_FOCUS_OUT;
 @Immutable
 public class FocusOutHandler implements XEventHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FocusOutHandler.class);
-    private static final Integer EVENT_CODE = XCB_FOCUS_OUT;
-    private final XEventChannel xEventChannel;
-    private final DisplaySurfacePool xWindowCache;
+	private static final Logger  LOG        = LoggerFactory.getLogger(FocusOutHandler.class);
+	private static final Integer EVENT_CODE = XCB_FOCUS_OUT;
+	private final XEventChannel xEventChannel;
+	private final XWindowPool   xWindowPool;
 
-    @Inject
-    FocusOutHandler(final XEventChannel xEventChannel,
-                    final DisplaySurfacePool xWindowCache) {
-        this.xEventChannel = xEventChannel;
-        this.xWindowCache = xWindowCache;
-    }
+	@Inject
+	FocusOutHandler(final XEventChannel xEventChannel,
+					final XWindowPool xWindowPool) {
+		this.xEventChannel = xEventChannel;
+		this.xWindowPool = xWindowPool;
+	}
 
-    @Override
-    public void handle(@Nonnull final xcb_generic_event_t event_t) {
-        // focus in structure is the same as focus out.
-        final xcb_focus_in_event_t focus_out_event = cast(event_t);
+	@Override
+	public void handle(@Nonnull final xcb_generic_event_t event_t) {
+		// focus in structure is the same as focus out.
+		final xcb_focus_in_event_t focus_out_event = cast(event_t);
 
-        LOG.debug("Received X event={}",
-                focus_out_event.getClass().getSimpleName());
+		LOG.debug("Received X event={}",
+				  focus_out_event.getClass().getSimpleName());
 
-        this.xEventChannel.post(focus_out_event);
+		this.xEventChannel.post(focus_out_event);
+		this.xWindowPool.get(focus_out_event.getEvent()).post(focus_out_event);
+	}
 
-        return Optional.of(new FocusLostNotify());
-    }
+	private xcb_focus_in_event_t cast(final xcb_generic_event_t event_t) {
+		return new xcb_focus_in_event_t(xcb_generic_event_t.getCPtr(event_t),
+										false);
+	}
 
-    private xcb_focus_in_event_t cast(final xcb_generic_event_t event_t) {
-        return new xcb_focus_in_event_t(xcb_generic_event_t.getCPtr(event_t),
-                false);
-    }
-
-    @Override
-    public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
-        // focus in structure is the same as focus out.
-        final xcb_focus_in_event_t focus_out_event_t = cast(event_t);
-
-        return Optional.of(this.xWindowCache.get(XWindowHandle.create(focus_out_event_t.getEvent())));
-    }
-
-    @Override
-    public Integer getEventCode() {
-        return EVENT_CODE;
-    }
+	@Override
+	public Integer getEventCode() {
+		return EVENT_CODE;
+	}
 }
