@@ -12,6 +12,11 @@
     <packaging>bundle</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>org.trinity</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- logging implementation for test log output -->
         <dependency>
             <groupId>ch.qos.logback</groupId>

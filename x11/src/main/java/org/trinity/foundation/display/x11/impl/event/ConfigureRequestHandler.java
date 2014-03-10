@@ -24,9 +24,9 @@ import org.freedesktop.xcb.xcb_configure_request_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.display.event.GeometryRequest;
+import org.trinity.display.api.DisplaySurface;
+import org.trinity.display.api.DisplaySurfaceHandle;
+import org.trinity.display.api.event.GeometryRequest;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
@@ -38,7 +38,10 @@ import javax.inject.Inject;
 import javax.media.nativewindow.util.Rectangle;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_REQUEST;
-import static org.freedesktop.xcb.xcb_config_window_t.*;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 
 @Immutable
 public class ConfigureRequestHandler implements XEventHandler {

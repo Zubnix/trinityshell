@@ -19,8 +19,6 @@
  ******************************************************************************/
 package org.trinity.display.api.event;
 
-import org.trinity.display.api.event.DisplayEvent;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.media.nativewindow.util.Rectangle;

@@ -20,20 +20,19 @@
 package org.trinity.shell.scene.impl.manager;
 
 import com.google.common.eventbus.Subscribe;
+import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellNodeParent;
+import org.trinity.shell.scene.api.event.ShellNodeDestroyedEvent;
+import org.trinity.shell.scene.api.event.ShellNodeHideRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeLowerRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeRaiseRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeReparentRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeShowRequestEvent;
+import org.trinity.shell.scene.api.manager.ShellLayoutManagerLine;
+import org.trinity.shell.scene.api.manager.ShellLayoutProperty;
+import org.trinity.shell.scene.api.manager.ShellLayoutPropertyLine;
 import org.trinity.shell.scene.impl.ShellNodeImpl;
 import org.trinity.shell.scene.impl.ShellNodeParentImpl;
-import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shell.api.scene.event.ShellNodeDestroyedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
-import org.trinity.shell.api.scene.manager.AbstractShellLayoutManager;
-import org.trinity.shell.api.scene.manager.ShellLayoutManagerLine;
-import org.trinity.shell.api.scene.manager.ShellLayoutProperty;
-import org.trinity.shell.api.scene.manager.ShellLayoutPropertyLine;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;

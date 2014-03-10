@@ -19,25 +19,26 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api;
 
-import org.trinity.foundation.api.display.DisplaySurface;
+import org.trinity.display.api.DisplaySurface;
 
 import javax.annotation.Nonnull;
 
-/***************************************
+/**
+ * ************************************
  * Creates shell surfaces from a display surface.
- ***************************************
+ * **************************************
  */
 public interface ShellSurfaceFactory {
-	/***************************************
-	 * Create a new shell surface that is backed by the given display surface.
-	 * The new shell surface will have the root shell surface as its parent.
-	 *
-	 * @param displaySurface
-	 *            a {@link DisplaySurface} created by an external client
-	 *            program.
-	 * @return a {@link ShellSurface}.
-	 ***************************************
-	 */
-	ShellSurface construct(@Nonnull ShellNodeParent parent,
-						   @Nonnull DisplaySurface displaySurface);
+    /**
+     * ************************************
+     * Create a new shell surface that is backed by the given display surface.
+     * The new shell surface will have the root shell surface as its parent.
+     *
+     * @param displaySurface a {@link DisplaySurface} created by an external client
+     *                       program.
+     * @return a {@link ShellSurface}.
+     * **************************************
+     */
+    ShellSurface construct(@Nonnull ShellNodeParent parent,
+                           @Nonnull DisplaySurface displaySurface);
 }

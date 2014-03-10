@@ -21,12 +21,12 @@ package org.trinity.shell.scene.impl;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.common.base.Optional;
-import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shell.api.scene.event.ShellNodeChildAddedEvent;
-import org.trinity.shell.api.scene.event.ShellNodeChildLeftEvent;
-import org.trinity.shell.api.scene.event.ShellNodeEvent;
-import org.trinity.shell.api.scene.manager.ShellLayoutManager;
+import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellNodeParent;
+import org.trinity.shell.scene.api.event.ShellNodeChildAddedEvent;
+import org.trinity.shell.scene.api.event.ShellNodeChildLeftEvent;
+import org.trinity.shell.scene.api.event.ShellNodeEvent;
+import org.trinity.shell.scene.api.manager.ShellLayoutManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,42 +38,40 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * An abstract base implementation of a {@link org.trinity.shell.api.scene.ShellNodeParent}.
+ * An abstract base implementation of a {@link org.trinity.shell.scene.api.ShellNodeParent}.
  * **************************************
  */
 @NotThreadSafe
 @AutoFactory
 public class ShellNodeParentImpl extends ShellNodeImpl implements ShellNodeParent {
 
-	private final LinkedList<ShellNode> children = new LinkedList<>();
-	private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
+    private final LinkedList<ShellNode> children = new LinkedList<>();
+    private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
 
-	ShellNodeParentImpl(@Nonnull final ShellNodeParent parent) {
-		super(parent);
-	}
+    ShellNodeParentImpl(@Nonnull final ShellNodeParent parent) {
+        super(parent);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * The returned array is a copy of the internal array.
-	 */
-	@Override
-	public List<ShellNode> getChildren() {
-		return new ArrayList<>(this.children);
-	}
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * The returned array is a copy of the internal array.
+     */
+    public List<ShellNode> getChildren() {
+        return new ArrayList<>(this.children);
+    }
 
-	@Override
-	public Optional<ShellLayoutManager> getLayoutManager() {
-		return this.optionalLayoutManager;
-	}
+    public Optional<ShellLayoutManager> getLayoutManager() {
+        return this.optionalLayoutManager;
+    }
 
-	@Override
-	public void setLayoutManager(@Nullable final ShellLayoutManager shellLayoutManager) {
-		this.optionalLayoutManager = Optional.of(shellLayoutManager);
-		if (this.optionalLayoutManager.isPresent()) {
-			register(shellLayoutManager);
-		}
-	}
+    @Override
+    public void setLayoutManager(@Nullable final ShellLayoutManager shellLayoutManager) {
+        this.optionalLayoutManager = Optional.of(shellLayoutManager);
+        if (this.optionalLayoutManager.isPresent()) {
+            register(shellLayoutManager);
+        }
+    }
 
     @Override
     public void removeLayoutManager() {
@@ -81,44 +79,44 @@ public class ShellNodeParentImpl extends ShellNodeImpl implements ShellNodeParen
     }
 
     protected void handleChildReparent(@Nonnull final ShellNode child) {
-		checkArgument(child instanceof ShellNodeImpl);
+        checkArgument(child instanceof ShellNodeImpl);
 
-		final ShellNodeEvent shellNodeEvent;
-		if (this.children.remove(child)) {
-			shellNodeEvent = new ShellNodeChildLeftEvent(	this,
-															child);
-		} else {
-			this.children.addLast(child);
-			shellNodeEvent = new ShellNodeChildAddedEvent(	this,
-															child);
-		}
-		post(shellNodeEvent);
-	}
+        final ShellNodeEvent shellNodeEvent;
+        if (this.children.remove(child)) {
+            shellNodeEvent = new ShellNodeChildLeftEvent(this,
+                    child);
+        } else {
+            this.children.addLast(child);
+            shellNodeEvent = new ShellNodeChildAddedEvent(this,
+                    child);
+        }
+        post(shellNodeEvent);
+    }
 
-	protected void handleChildStacking(	@Nonnull final ShellNode child,
-										final boolean raised) {
-		checkArgument(child instanceof ShellNodeImpl);
-		checkArgument(this.children.remove(child));
+    protected void handleChildStacking(@Nonnull final ShellNode child,
+                                       final boolean raised) {
+        checkArgument(child instanceof ShellNodeImpl);
+        checkArgument(this.children.remove(child));
 
-		if (raised) {
-			this.children.addLast(child);
-		} else {
-			this.children.addFirst(child);
-		}
-		// TODO fire a specific event?
-	}
+        if (raised) {
+            this.children.addLast(child);
+        } else {
+            this.children.addFirst(child);
+        }
+        // TODO fire a specific event?
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * This call has no effect if no {@link ShellLayoutManager} is set for this
-	 * node.
-	 */
-	@Override
-	public void layout() {
-		final Optional<ShellLayoutManager> optionalLayoutManager = getLayoutManager();
-		if (optionalLayoutManager.isPresent()) {
-			optionalLayoutManager.get().layout(this);
-		}
-	}
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * This call has no effect if no {@link ShellLayoutManager} is set for this
+     * node.
+     */
+    @Override
+    public void layout() {
+        final Optional<ShellLayoutManager> optionalLayoutManager = getLayoutManager();
+        if (optionalLayoutManager.isPresent()) {
+            optionalLayoutManager.get().layout(getShape(),getChildren());
+        }
+    }
 }

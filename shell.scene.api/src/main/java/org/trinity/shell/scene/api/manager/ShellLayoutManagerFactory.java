@@ -1,6 +1,6 @@
 package org.trinity.shell.scene.api.manager;
 
-import org.trinity.shell.api.scene.ShellNodeParent;
+import org.trinity.shell.scene.api.ShellNodeParent;
 
 /**
  *

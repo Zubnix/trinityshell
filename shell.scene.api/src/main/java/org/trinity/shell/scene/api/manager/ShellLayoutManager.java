@@ -19,15 +19,14 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.manager;
 
-import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeParent;
+import org.trinity.shell.scene.api.ShellNode;
 
 import javax.media.nativewindow.util.RectangleImmutable;
 import java.util.List;
 
 // TODO provide methods to add childs at a specific index.
 /***************************************
- * Manages child nodes in a {@link ShellNodeParent}.
+ * Manages child nodes in a {@link org.trinity.shell.scene.api.ShellNodeParent}.
  *
  ***************************************
  */
@@ -69,7 +68,7 @@ public interface ShellLayoutManager {
 
 	/***************************************
 	 * Layout all child {@link ShellNode}s. This method should only be called by
-	 * a {@link ShellNodeParent}.
+	 * a {@link org.trinity.shell.scene.api.ShellNodeParent}.
 	 *
 	 * @param layoutRegion
      *              The region in which layout should take place

@@ -19,10 +19,10 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
-import org.trinity.foundation.api.display.Compositor;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.shared.ListenableEventBus;
+import org.trinity.common.ListenableEventBus;
+import org.trinity.display.api.Compositor;
+import org.trinity.display.api.DisplaySurface;
+import org.trinity.display.api.DisplaySurfaceHandle;
 
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
@@ -32,15 +32,15 @@ import javax.inject.Singleton;
 @ThreadSafe
 public class XCompositor extends ListenableEventBus implements Compositor {
 
-	private final XWindowFactory xWindowFactory;
+    private final XWindowFactory xWindowFactory;
 
-	@Inject
-	XCompositor(final XWindowFactory xWindowFactory) {
-		this.xWindowFactory = xWindowFactory;
-	}
+    @Inject
+    XCompositor(final XWindowFactory xWindowFactory) {
+        this.xWindowFactory = xWindowFactory;
+    }
 
-	@Override
-	public DisplaySurface createDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
-		return this.xWindowFactory.create(displaySurfaceHandle);
-	}
+    @Override
+    public DisplaySurface createDisplaySurface(final DisplaySurfaceHandle displaySurfaceHandle) {
+        return this.xWindowFactory.create(displaySurfaceHandle);
+    }
 }

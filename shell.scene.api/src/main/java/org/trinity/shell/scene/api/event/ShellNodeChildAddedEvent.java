@@ -19,10 +19,10 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.event;
 
+import org.trinity.shell.scene.api.ShellNode;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-
-import org.trinity.shell.api.scene.ShellNode;
 
 /***************************************
  * Informs that a child {@link ShellNode} was added to the node that emitted

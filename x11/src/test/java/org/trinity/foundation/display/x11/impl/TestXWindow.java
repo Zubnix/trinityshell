@@ -19,17 +19,29 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.display.api.DisplaySurfaceHandle;
 
 import javax.media.nativewindow.util.Rectangle;
+import javax.media.nativewindow.util.RectangleImmutable;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-import static org.freedesktop.xcb.LibXcb.*;
-import static org.freedesktop.xcb.xcb_config_window_t.*;
+import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
+import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
@@ -45,7 +57,7 @@ public class TestXWindow {
 
 	private final Integer nativeHandle = 123;
 	@Mock
-	private DisplaySurfaceHandle     displaySurfaceHandle;
+	private DisplaySurfaceHandle displaySurfaceHandle;
 	@Mock
 	private ListeningExecutorService xExecutor;
 	@InjectMocks
@@ -200,7 +212,7 @@ public class TestXWindow {
 
         //when
         //the XWindow's geometry is requested
-        final Rectangle geometry = this.xWindow.getShape();
+        final RectangleImmutable geometry = this.xWindow.getShape();
 
         //then
         //the native X server window's geometry is returned.
@@ -209,7 +221,7 @@ public class TestXWindow {
                 eq(geo_cookie),
                 (xcb_generic_error_t) any());
 
-        final Rectangle rectangle = geometry;
+        final RectangleImmutable rectangle = geometry;
 		assertEquals((int) givenX,
 					 rectangle.getX());
 		assertEquals((int) givenY,

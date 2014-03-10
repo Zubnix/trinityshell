@@ -19,12 +19,12 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.event;
 
+import org.trinity.shell.scene.api.ShellNode;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.media.nativewindow.util.Dimension;
 import javax.media.nativewindow.util.DimensionImmutable;
-
-import org.trinity.shell.api.scene.ShellNode;
 
 /***************************************
  * Informs that the {@link ShellNode} that emitted this event, is resized.

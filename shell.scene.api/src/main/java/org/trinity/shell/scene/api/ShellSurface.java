@@ -19,11 +19,8 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api;
 
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.shell.api.scene.event.ShellNodeEvent;
-
 import com.google.common.util.concurrent.ListenableFuture;
+import org.trinity.display.api.DisplaySurface;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;

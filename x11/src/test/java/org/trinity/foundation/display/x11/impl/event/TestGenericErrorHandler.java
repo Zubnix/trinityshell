@@ -12,8 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.display.api.DisplaySurface;
+import org.trinity.display.api.event.DisplayEvent;
 
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.isA;

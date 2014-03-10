@@ -24,8 +24,8 @@ import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.PointerEnterNotify;
+import org.trinity.display.api.DisplaySurface;
+import org.trinity.display.api.event.PointerEnterNotify;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
@@ -40,44 +40,44 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_ENTER_NOTIFY;
 @Immutable
 public class EnterNotifyHandler implements XEventHandler {
 
-	private static final Logger  LOG        = LoggerFactory.getLogger(EnterNotifyHandler.class);
-	private static final Integer EVENT_CODE = XCB_ENTER_NOTIFY;
-	private final XEventChannel      xEventChannel;
-	private final DisplaySurfacePool xWindowPool;
+    private static final Logger LOG = LoggerFactory.getLogger(EnterNotifyHandler.class);
+    private static final Integer EVENT_CODE = XCB_ENTER_NOTIFY;
+    private final XEventChannel xEventChannel;
+    private final DisplaySurfacePool xWindowPool;
 
-	@Inject
-	EnterNotifyHandler(final XEventChannel xEventChannel,
-					   final DisplaySurfacePool xWindowPool) {
-		this.xEventChannel = xEventChannel;
-		this.xWindowPool = xWindowPool;
-	}
+    @Inject
+    EnterNotifyHandler(final XEventChannel xEventChannel,
+                       final DisplaySurfacePool xWindowPool) {
+        this.xEventChannel = xEventChannel;
+        this.xWindowPool = xWindowPool;
+    }
 
-	@Override
-	public Optional<PointerEnterNotify> handle(@Nonnull final xcb_generic_event_t event_t) {
-		final xcb_enter_notify_event_t enter_notify_event = cast(event_t);
+    @Override
+    public Optional<PointerEnterNotify> handle(@Nonnull final xcb_generic_event_t event_t) {
+        final xcb_enter_notify_event_t enter_notify_event = cast(event_t);
 
-		LOG.debug("Received X event={}",
-				  enter_notify_event.getClass().getSimpleName());
+        LOG.debug("Received X event={}",
+                enter_notify_event.getClass().getSimpleName());
 
-		this.xEventChannel.post(enter_notify_event);
+        this.xEventChannel.post(enter_notify_event);
 
-		return Optional.of(new PointerEnterNotify());
-	}
+        return Optional.of(new PointerEnterNotify());
+    }
 
-	private xcb_enter_notify_event_t cast(final xcb_generic_event_t event_t) {
-		return new xcb_enter_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
-											false);
-	}
+    private xcb_enter_notify_event_t cast(final xcb_generic_event_t event_t) {
+        return new xcb_enter_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
+                false);
+    }
 
-	@Override
-	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
-		final xcb_enter_notify_event_t enter_notify_event_t = cast(event_t);
-		final int windowId = enter_notify_event_t.getEvent();
-		return Optional.of(this.xWindowPool.get(XWindowHandle.create(windowId)));
-	}
+    @Override
+    public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
+        final xcb_enter_notify_event_t enter_notify_event_t = cast(event_t);
+        final int windowId = enter_notify_event_t.getEvent();
+        return Optional.of(this.xWindowPool.get(XWindowHandle.create(windowId)));
+    }
 
-	@Override
-	public Integer getEventCode() {
-		return EVENT_CODE;
-	}
+    @Override
+    public Integer getEventCode() {
+        return EVENT_CODE;
+    }
 }

@@ -20,17 +20,17 @@
 package org.trinity.shell.scene.impl;
 
 import com.google.auto.factory.AutoFactory;
-import org.trinity.foundation.api.shared.ListenableEventBus;
-import org.trinity.shell.api.scene.ShellNode;
-import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shell.api.scene.event.ShellNodeEvent;
-import org.trinity.shell.api.scene.event.ShellNodeHideRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeMoveRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeRaiseRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeReparentRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeResizeRequestEvent;
-import org.trinity.shell.api.scene.event.ShellNodeShowRequestEvent;
+import org.trinity.common.ListenableEventBus;
+import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellNodeParent;
+import org.trinity.shell.scene.api.event.ShellNodeEvent;
+import org.trinity.shell.scene.api.event.ShellNodeHideRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeLowerRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeMoveRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeRaiseRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeReparentRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeResizeRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeShowRequestEvent;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -48,17 +48,17 @@ import javax.media.nativewindow.util.RectangleImmutable;
 public class ShellNodeImpl extends ListenableEventBus implements ShellNode {
 
 	@Nonnull
-	private Point position = new Point();
+	private PointImmutable      position = new Point();
 	@Nonnull
-	private Dimension size    = new Dimension();
+	private DimensionImmutable  size    = new Dimension();
 	@Nonnull
-	private Boolean   visible = Boolean.FALSE;
+	private Boolean             visible = Boolean.FALSE;
 	@Nonnull
-	private ShellNodeParent parent;
+	private ShellNodeParent     parent;
 	@Nonnull
-	private Boolean         destroyed;
+	private Boolean             destroyed;
 
-	protected ShellNodeImpl(@Nonnull final ShellNodeParent parent) {
+	ShellNodeImpl(@Nonnull final ShellNodeParent parent) {
 		this.parent = parent;
 	}
 
@@ -67,18 +67,18 @@ public class ShellNodeImpl extends ListenableEventBus implements ShellNode {
 		return this.destroyed;
 	}
 
-	@Override
+    public void setDestroyed(@Nonnull final Boolean destroyed) {
+        this.destroyed = destroyed;
+    }
+
+    @Override
 	public ShellNodeParent getParent() {
 		return this.parent;
 	}
 
-	@Override
-	public void requestReparent(@Nonnull final ShellNodeParent parent) {
-		// update parent to new parent
-		final ShellNodeEvent event = new ShellNodeReparentRequestEvent(this,
-																	   parent);
-		post(event);
-	}
+    public void setParent(@Nonnull final ShellNodeParent parent) {
+        this.parent = parent;
+    }
 
 	@Override
 	public RectangleImmutable getShape() {
@@ -103,7 +103,37 @@ public class ShellNodeImpl extends ListenableEventBus implements ShellNode {
 		return this.visible;
 	}
 
-	@Override
+    public void setVisible(@Nonnull final Boolean visible) {
+        this.visible = visible;
+    }
+
+    @Override
+    public PointImmutable getPosition() {
+        return this.position;
+    }
+
+    public void setPosition(@Nonnull final PointImmutable position) {
+        this.position = position;
+    }
+
+    @Override
+    public DimensionImmutable getSize() {
+        return this.size;
+    }
+
+    public void setSize(@Nonnull final DimensionImmutable size) {
+        this.size = size;
+    }
+
+    @Override
+    public void requestReparent(@Nonnull final ShellNodeParent parent) {
+        // update parent to new parent
+        final ShellNodeEvent event = new ShellNodeReparentRequestEvent(this,
+                parent);
+        post(event);
+    }
+
+    @Override
 	public void requestMove(final int x,
 							final int y) {
 		post(new ShellNodeMoveRequestEvent(this,
@@ -139,15 +169,5 @@ public class ShellNodeImpl extends ListenableEventBus implements ShellNode {
 	public void requestHide() {
 		post(new ShellNodeHideRequestEvent(this));
 
-	}
-
-	@Override
-	public PointImmutable getPosition() {
-		return this.position;
-	}
-
-	@Override
-	public DimensionImmutable getSize() {
-		return this.size;
 	}
 }

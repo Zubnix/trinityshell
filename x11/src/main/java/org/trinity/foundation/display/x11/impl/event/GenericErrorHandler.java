@@ -24,8 +24,8 @@ import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.display.api.DisplaySurface;
+import org.trinity.display.api.event.DisplayEvent;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
 import org.trinity.foundation.display.x11.impl.XcbErrorUtil;
@@ -37,35 +37,35 @@ import javax.inject.Inject;
 @Immutable
 public class GenericErrorHandler implements XEventHandler {
 
-	private static final Logger LOG = LoggerFactory.getLogger(GenericErrorHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GenericErrorHandler.class);
 
-	private final Integer eventCode = 0;
-	private final XEventChannel xEventChannel;
+    private final Integer eventCode = 0;
+    private final XEventChannel xEventChannel;
 
-	@Inject
-	GenericErrorHandler(final XEventChannel xEventChannel) {
-		this.xEventChannel = xEventChannel;
-	}
+    @Inject
+    GenericErrorHandler(final XEventChannel xEventChannel) {
+        this.xEventChannel = xEventChannel;
+    }
 
-	@Override
-	public Optional<DisplayEvent> handle(@Nonnull final xcb_generic_event_t event_t) {
-		final xcb_generic_error_t request_error = new xcb_generic_error_t(xcb_generic_event_t.getCPtr(event_t),
-																		  false);
-		this.xEventChannel.post(request_error);
+    @Override
+    public Optional<DisplayEvent> handle(@Nonnull final xcb_generic_event_t event_t) {
+        final xcb_generic_error_t request_error = new xcb_generic_error_t(xcb_generic_event_t.getCPtr(event_t),
+                false);
+        this.xEventChannel.post(request_error);
 
-		LOG.error(XcbErrorUtil.toString(request_error));
-		return Optional.absent();
-	}
+        LOG.error(XcbErrorUtil.toString(request_error));
+        return Optional.absent();
+    }
 
-	@Override
-	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
-		// TODO return display server?
-		return Optional.absent();
-	}
+    @Override
+    public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
+        // TODO return display server?
+        return Optional.absent();
+    }
 
-	@Override
-	public Integer getEventCode() {
-		return this.eventCode;
-	}
+    @Override
+    public Integer getEventCode() {
+        return this.eventCode;
+    }
 
 }

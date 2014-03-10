@@ -24,8 +24,8 @@ import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_unmap_notify_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.HideNotify;
+import org.trinity.display.api.DisplaySurface;
+import org.trinity.display.api.event.HideNotify;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
@@ -40,47 +40,47 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_UNMAP_NOTIFY;
 @Immutable
 public class UnmapNotifyHandler implements XEventHandler {
 
-	private static final Logger  LOG        = LoggerFactory.getLogger(UnmapNotifyHandler.class);
-	private static final Integer EVENT_CODE = XCB_UNMAP_NOTIFY;
-	private final DisplaySurfacePool xWindowPool;
-	private final XEventChannel      xEventChannel;
+    private static final Logger LOG = LoggerFactory.getLogger(UnmapNotifyHandler.class);
+    private static final Integer EVENT_CODE = XCB_UNMAP_NOTIFY;
+    private final DisplaySurfacePool xWindowPool;
+    private final XEventChannel xEventChannel;
 
-	@Inject
-	UnmapNotifyHandler(final XEventChannel xEventChannel,
-					   final DisplaySurfacePool xWindowPool) {
-		this.xEventChannel = xEventChannel;
-		this.xWindowPool = xWindowPool;
-	}
+    @Inject
+    UnmapNotifyHandler(final XEventChannel xEventChannel,
+                       final DisplaySurfacePool xWindowPool) {
+        this.xEventChannel = xEventChannel;
+        this.xWindowPool = xWindowPool;
+    }
 
-	@Override
-	public Optional<HideNotify> handle(@Nonnull final xcb_generic_event_t event) {
-		final xcb_unmap_notify_event_t unmap_notify_event = cast(event);
+    @Override
+    public Optional<HideNotify> handle(@Nonnull final xcb_generic_event_t event) {
+        final xcb_unmap_notify_event_t unmap_notify_event = cast(event);
 
-		LOG.debug("Received X event={}",
-				  unmap_notify_event.getClass().getSimpleName());
+        LOG.debug("Received X event={}",
+                unmap_notify_event.getClass().getSimpleName());
 
-		this.xEventChannel.post(unmap_notify_event);
-		return Optional.of(new HideNotify());
-	}
+        this.xEventChannel.post(unmap_notify_event);
+        return Optional.of(new HideNotify());
+    }
 
-	private xcb_unmap_notify_event_t cast(final xcb_generic_event_t event) {
-		return new xcb_unmap_notify_event_t(xcb_generic_event_t.getCPtr(event),
-											false);
-	}
+    private xcb_unmap_notify_event_t cast(final xcb_generic_event_t event) {
+        return new xcb_unmap_notify_event_t(xcb_generic_event_t.getCPtr(event),
+                false);
+    }
 
-	@Override
-	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
-		final xcb_unmap_notify_event_t unmap_notify_event_t = cast(event_t);
-		final int windowId = unmap_notify_event_t.getWindow();
-		final int reportWindowId = unmap_notify_event_t.getEvent();
-		if(windowId != reportWindowId) {
-			return Optional.absent();
-		}
-		return Optional.of(this.xWindowPool.get(XWindowHandle.create(windowId)));
-	}
+    @Override
+    public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
+        final xcb_unmap_notify_event_t unmap_notify_event_t = cast(event_t);
+        final int windowId = unmap_notify_event_t.getWindow();
+        final int reportWindowId = unmap_notify_event_t.getEvent();
+        if (windowId != reportWindowId) {
+            return Optional.absent();
+        }
+        return Optional.of(this.xWindowPool.get(XWindowHandle.create(windowId)));
+    }
 
-	@Override
-	public Integer getEventCode() {
-		return EVENT_CODE;
-	}
+    @Override
+    public Integer getEventCode() {
+        return EVENT_CODE;
+    }
 }

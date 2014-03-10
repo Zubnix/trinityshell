@@ -19,9 +19,6 @@
  ******************************************************************************/
 package org.trinity.display.api.event;
 
-import org.trinity.display.api.event.DisplayEvent;
-import org.trinity.foundation.api.display.DisplaySurface;
-
 import javax.annotation.concurrent.Immutable;
 
 /***************************************

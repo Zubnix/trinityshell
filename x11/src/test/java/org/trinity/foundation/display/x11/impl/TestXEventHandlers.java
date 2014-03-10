@@ -4,12 +4,16 @@ package org.trinity.foundation.display.x11.impl;
 import com.google.common.base.Optional;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.junit.Test;
-import org.trinity.foundation.api.display.event.DisplayEvent;
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.common.Listenable;
+import org.trinity.display.api.event.DisplayEvent;
 
 import java.util.HashSet;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class TestXEventHandlers {
 

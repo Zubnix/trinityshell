@@ -6,10 +6,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.trinity.foundation.api.binding.view.DataModelContext;
-import org.trinity.foundation.api.binding.view.EventSignals;
-import org.trinity.foundation.api.binding.view.ObservableCollection;
-import org.trinity.foundation.api.binding.view.PropertySlots;
+import org.trinity.binding.api.view.DataModelContext;
+import org.trinity.binding.api.view.EventSignals;
+import org.trinity.binding.api.view.ObservableCollection;
+import org.trinity.binding.api.view.PropertySlots;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;

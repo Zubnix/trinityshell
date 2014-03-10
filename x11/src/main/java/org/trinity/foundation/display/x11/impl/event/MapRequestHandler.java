@@ -24,9 +24,9 @@ import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_map_request_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.display.event.ShowRequest;
+import org.trinity.display.api.DisplaySurface;
+import org.trinity.display.api.DisplaySurfaceHandle;
+import org.trinity.display.api.event.ShowRequest;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
@@ -41,49 +41,49 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_MAP_REQUEST;
 @Immutable
 public class MapRequestHandler implements XEventHandler {
 
-	private static final Logger     LOG                         = LoggerFactory.getLogger(MapRequestHandler.class);
-	private static final Integer    EVENT_CODE                  = XCB_MAP_REQUEST;
+    private static final Logger LOG = LoggerFactory.getLogger(MapRequestHandler.class);
+    private static final Integer EVENT_CODE = XCB_MAP_REQUEST;
 
-	private final XEventChannel xEventChannel;
-	private final DisplaySurfacePool displaySurfacePool;
+    private final XEventChannel xEventChannel;
+    private final DisplaySurfacePool displaySurfacePool;
 
-	@Inject
-	MapRequestHandler(final XEventChannel xEventChannel,
-					  final DisplaySurfacePool displaySurfacePool) {
-		this.xEventChannel = xEventChannel;
-		this.displaySurfacePool = displaySurfacePool;
-	}
+    @Inject
+    MapRequestHandler(final XEventChannel xEventChannel,
+                      final DisplaySurfacePool displaySurfacePool) {
+        this.xEventChannel = xEventChannel;
+        this.displaySurfacePool = displaySurfacePool;
+    }
 
-	@Override
-	public Optional<ShowRequest> handle(@Nonnull final xcb_generic_event_t event) {
+    @Override
+    public Optional<ShowRequest> handle(@Nonnull final xcb_generic_event_t event) {
 
-		final xcb_map_request_event_t map_request_event = cast(event);
+        final xcb_map_request_event_t map_request_event = cast(event);
 
-		LOG.debug("Received X event={}",
-				  map_request_event.getClass().getSimpleName());
+        LOG.debug("Received X event={}",
+                map_request_event.getClass().getSimpleName());
 
-		this.xEventChannel.post(map_request_event);
+        this.xEventChannel.post(map_request_event);
 
-		return Optional.of(new ShowRequest());
-	}
+        return Optional.of(new ShowRequest());
+    }
 
-	private xcb_map_request_event_t cast(final xcb_generic_event_t event) {
-		return new xcb_map_request_event_t(xcb_generic_event_t.getCPtr(event),
-										   false);
-	}
+    private xcb_map_request_event_t cast(final xcb_generic_event_t event) {
+        return new xcb_map_request_event_t(xcb_generic_event_t.getCPtr(event),
+                false);
+    }
 
-	@Override
-	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
-		final xcb_map_request_event_t map_request_event_t = cast(event_t);
-		final int windowId = map_request_event_t.getWindow();
-		final DisplaySurfaceHandle xWindowHandle = XWindowHandle.create(windowId);
-		final DisplaySurface displayEventTarget = this.displaySurfacePool.get(xWindowHandle);
+    @Override
+    public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
+        final xcb_map_request_event_t map_request_event_t = cast(event_t);
+        final int windowId = map_request_event_t.getWindow();
+        final DisplaySurfaceHandle xWindowHandle = XWindowHandle.create(windowId);
+        final DisplaySurface displayEventTarget = this.displaySurfacePool.get(xWindowHandle);
 
-		return Optional.of(displayEventTarget);
-	}
+        return Optional.of(displayEventTarget);
+    }
 
-	@Override
-	public Integer getEventCode() {
-		return EVENT_CODE;
-	}
+    @Override
+    public Integer getEventCode() {
+        return EVENT_CODE;
+    }
 }

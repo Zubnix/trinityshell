@@ -19,13 +19,13 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api;
 
-import org.trinity.shell.api.scene.manager.ShellLayoutManager;
-
 import com.google.common.base.Optional;
+import org.trinity.shell.scene.api.manager.ShellLayoutManager;
 
 import javax.annotation.Nonnull;
 
-/***************************************
+/**
+ * ************************************
  * A {@link ShellNode} that can have child <code>ShellNode</code>s. A node's
  * parent can be changed by calling {@link ShellNode#setParent(Optional)}
  * followed by either {@link ShellNode#doReparent()} or
@@ -34,25 +34,26 @@ import javax.annotation.Nonnull;
  * <code>requestReparent</code> delegates the reparenting to any subscribed
  * child node listener, which can be, for example, the current parent's
  * {@link ShellLayoutManager}.
- *
- ***************************************
+ * <p/>
+ * **************************************
  */
 public interface ShellNodeParent extends ShellNode {
 
-	/***************************************
-	 * Layout all child <code>ShellNode</code>s.
-	 ***************************************
-	 */
-	void layout();
+    /**
+     * ************************************
+     * Layout all child <code>ShellNode</code>s.
+     * **************************************
+     */
+    void layout();
 
-	/***************************************
-	 * Change the layout manager of this parent to the desired layout manager.
-	 *
-	 * @param shellLayoutManager
-	 *            A {@link ShellLayoutManager}.
-	 ***************************************
-	 */
-	void setLayoutManager(@Nonnull ShellLayoutManager shellLayoutManager);
+    /**
+     * ************************************
+     * Change the layout manager of this parent to the desired layout manager.
+     *
+     * @param shellLayoutManager A {@link ShellLayoutManager}.
+     *                           **************************************
+     */
+    void setLayoutManager(@Nonnull ShellLayoutManager shellLayoutManager);
 
     void removeLayoutManager();
 }

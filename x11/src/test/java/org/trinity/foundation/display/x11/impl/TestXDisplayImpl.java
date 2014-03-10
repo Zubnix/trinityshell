@@ -18,10 +18,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.display.event.DestroyNotify;
-import org.trinity.foundation.api.display.event.DisplaySurfaceCreationNotify;
+import org.trinity.display.api.DisplaySurface;
+import org.trinity.display.api.DisplaySurfaceHandle;
+import org.trinity.display.api.event.DestroyNotify;
+import org.trinity.display.api.event.DisplaySurfaceCreationNotify;
 
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
@@ -29,17 +29,34 @@ import java.util.concurrent.ExecutionException;
 
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
-import static org.freedesktop.xcb.LibXcb.*;
+import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
+import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
+import static org.freedesktop.xcb.LibXcb.xcb_get_setup;
+import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes;
+import static org.freedesktop.xcb.LibXcb.xcb_get_window_attributes_reply;
+import static org.freedesktop.xcb.LibXcb.xcb_query_tree;
+import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children;
+import static org.freedesktop.xcb.LibXcb.xcb_query_tree_children_length;
+import static org.freedesktop.xcb.LibXcb.xcb_query_tree_reply;
+import static org.freedesktop.xcb.LibXcb.xcb_setup_roots_iterator;
 import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
-import static org.freedesktop.xcb.xcb_event_mask_t.*;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
 import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_UNMAPPED;
 import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyNoMoreInteractions;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LibXcb.class)

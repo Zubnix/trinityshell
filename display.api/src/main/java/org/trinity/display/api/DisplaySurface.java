@@ -19,7 +19,7 @@
  ******************************************************************************/
 package org.trinity.display.api;
 
-import org.trinity.foundation.api.shared.Listenable;
+import org.trinity.common.Listenable;
 
 import javax.annotation.concurrent.ThreadSafe;
 import javax.media.nativewindow.util.Rectangle;

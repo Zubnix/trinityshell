@@ -14,8 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.trinity.foundation.api.display.Compositor;
-import org.trinity.foundation.api.display.event.ShowRequest;
+import org.trinity.display.api.Compositor;
+import org.trinity.display.api.event.ShowRequest;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 
@@ -36,7 +36,7 @@ public class TestMapRequestHandler {
 	@Mock
 	private DisplaySurfacePool xWindowPool;
 	@Mock
-	private Compositor         compositor;
+	private Compositor compositor;
 	@InjectMocks
 	private MapRequestHandler  mapRequestHandler;
 
@@ -44,8 +44,6 @@ public class TestMapRequestHandler {
 	private xcb_generic_event_t         xcb_generic_event;
 	@Mock
 	private SWIGTYPE_p_xcb_connection_t xcb_connection;
-
-	private final int targetWindowId = 123;
 
 	@Before
 	public void setup() {

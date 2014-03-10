@@ -20,9 +20,9 @@
 package org.trinity.shell.scene.impl;
 
 import com.google.auto.factory.AutoFactory;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.shell.api.scene.ShellNodeParent;
-import org.trinity.shell.api.scene.ShellSurface;
+import org.trinity.display.api.DisplaySurface;
+import org.trinity.shell.scene.api.ShellNodeParent;
+import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;

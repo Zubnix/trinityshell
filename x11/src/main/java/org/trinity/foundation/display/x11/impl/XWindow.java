@@ -27,24 +27,32 @@ import org.freedesktop.xcb.xcb_get_geometry_cookie_t;
 import org.freedesktop.xcb.xcb_get_geometry_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.DisplaySurfaceHandle;
-import org.trinity.foundation.api.shared.ListenableEventBus;
+import org.trinity.common.ListenableEventBus;
+import org.trinity.display.api.DisplaySurface;
+import org.trinity.display.api.DisplaySurfaceHandle;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.media.nativewindow.util.Rectangle;
+import javax.media.nativewindow.util.RectangleImmutable;
 import java.nio.ByteBuffer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
-import static org.freedesktop.xcb.LibXcb.*;
-import static org.freedesktop.xcb.xcb_config_window_t.*;
+import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
+import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 
 @ThreadSafe
 @AutoFactory
-public class XWindow implements DisplaySurface {
+public class XWindow extends ListenableEventBus implements DisplaySurface {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
 
@@ -53,7 +61,6 @@ public class XWindow implements DisplaySurface {
 
 	private final DisplaySurfaceHandle resourceHandle;
 	private final XEventChannel        xEventChannel;
-	private final ListenableEventBus   xWindowEventBus;
 
 	XWindow(@Provided final XEventChannel xEventChannel,
 			@Nonnull final DisplaySurfaceHandle resourceHandle) {
@@ -61,22 +68,6 @@ public class XWindow implements DisplaySurface {
 
 		this.xEventChannel = xEventChannel;
 		this.resourceHandle = resourceHandle;
-		this.xWindowEventBus = new ListenableEventBus();
-	}
-
-	@Override
-	public void register(@Nonnull final Object listener) {
-		this.xWindowEventBus.register(listener);
-	}
-
-	@Override
-	public void post(@Nonnull final Object event) {
-		this.xWindowEventBus.post(event);
-	}
-
-	@Override
-	public void unregister(@Nonnull final Object listener) {
-		this.xWindowEventBus.unregister(listener);
 	}
 
 	@Override
@@ -147,7 +138,7 @@ public class XWindow implements DisplaySurface {
 	}
 
 	@Override
-	public Rectangle getShape() {
+	public RectangleImmutable getShape() {
 		final int winId = getWindowId();
 
 		final xcb_get_geometry_cookie_t geometryRequest = xcb_get_geometry(getConnectionRef(),
@@ -173,7 +164,7 @@ public class XWindow implements DisplaySurface {
 	}
 
 	@Override
-	public Rectangle getInputRegion() {
+	public RectangleImmutable getInputRegion() {
 		//by default we return the entire client's shape
 		return getShape();
 	}

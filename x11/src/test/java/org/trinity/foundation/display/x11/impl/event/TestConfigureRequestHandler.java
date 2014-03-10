@@ -14,15 +14,27 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.trinity.foundation.api.display.Compositor;
-import org.trinity.foundation.api.display.event.GeometryRequest;
+import org.trinity.display.api.Compositor;
+import org.trinity.display.api.event.GeometryRequest;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 
-import static org.freedesktop.xcb.LibXcbJNI.*;
-import static org.freedesktop.xcb.xcb_config_window_t.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.freedesktop.xcb.LibXcbJNI.xcb_configure_request_event_t_border_width_get;
+import static org.freedesktop.xcb.LibXcbJNI.xcb_configure_request_event_t_height_get;
+import static org.freedesktop.xcb.LibXcbJNI.xcb_configure_request_event_t_value_mask_get;
+import static org.freedesktop.xcb.LibXcbJNI.xcb_configure_request_event_t_width_get;
+import static org.freedesktop.xcb.LibXcbJNI.xcb_configure_request_event_t_x_get;
+import static org.freedesktop.xcb.LibXcbJNI.xcb_configure_request_event_t_y_get;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.isA;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -38,7 +50,7 @@ public class TestConfigureRequestHandler {
 	@Mock
 	private DisplaySurfacePool      xWindowPool;
 	@Mock
-	private Compositor              compositor;
+	private Compositor compositor;
 	@InjectMocks
 	private ConfigureRequestHandler configureRequestHandler;
 
@@ -46,8 +58,6 @@ public class TestConfigureRequestHandler {
 	private xcb_generic_event_t         xcb_generic_event;
 	@Mock
 	private SWIGTYPE_p_xcb_connection_t xcb_connection;
-
-	private final int targetWindowId = 123;
 
 	@Before
 	public void setup() {

@@ -19,9 +19,6 @@
  ******************************************************************************/
 package org.trinity.display.api.event;
 
-import org.trinity.display.api.event.FocusNotify;
-import org.trinity.foundation.api.display.DisplaySurface;
-
 import javax.annotation.concurrent.Immutable;
 
 /***************************************

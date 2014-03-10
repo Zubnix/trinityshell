@@ -13,7 +13,12 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.trinity.binding.api.view.*;
+import org.trinity.binding.api.view.DataModelContext;
+import org.trinity.binding.api.view.EventSignal;
+import org.trinity.binding.api.view.EventSignals;
+import org.trinity.binding.api.view.ObservableCollection;
+import org.trinity.binding.api.view.PropertySlot;
+import org.trinity.binding.api.view.PropertySlots;
 
 import java.util.Arrays;
 import java.util.List;

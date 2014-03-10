@@ -20,7 +20,7 @@
 package org.trinity.foundation.display.x11.impl;
 
 import com.google.auto.value.AutoValue;
-import org.trinity.foundation.api.display.DisplaySurfaceHandle;
+import org.trinity.display.api.DisplaySurfaceHandle;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -29,7 +29,7 @@ import javax.annotation.concurrent.Immutable;
 @AutoValue(cacheHashCode = true)
 public abstract class XWindowHandle implements DisplaySurfaceHandle {
 
-    public static DisplaySurfaceHandle create(@Nonnull final Integer nativeHandle){
+    public static DisplaySurfaceHandle create(@Nonnull final Integer nativeHandle) {
         return new AutoValue_XWindowHandle(nativeHandle);
     }
 

@@ -19,10 +19,10 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.event;
 
+import org.trinity.shell.scene.api.ShellNode;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-
-import org.trinity.shell.api.scene.ShellNode;
 
 /***************************************
  * Request to lower the {@link ShellNode} that emits this event.

@@ -24,8 +24,8 @@ import org.freedesktop.xcb.xcb_configure_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.GeometryNotify;
+import org.trinity.display.api.DisplaySurface;
+import org.trinity.display.api.event.GeometryNotify;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
@@ -41,55 +41,55 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_NOTIFY;
 @Immutable
 public class ConfigureNotifyHandler implements XEventHandler {
 
-	private static final Logger  LOG        = LoggerFactory.getLogger(ConfigureNotifyHandler.class);
-	private static final Integer EVENT_CODE = XCB_CONFIGURE_NOTIFY;
-	private final DisplaySurfacePool xWindowCache;
-	private final XEventChannel      xEventChannel;
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigureNotifyHandler.class);
+    private static final Integer EVENT_CODE = XCB_CONFIGURE_NOTIFY;
+    private final DisplaySurfacePool xWindowCache;
+    private final XEventChannel xEventChannel;
 
-	@Inject
-	ConfigureNotifyHandler(final DisplaySurfacePool xWindowCache,
-						   final XEventChannel xEventChannel) {
-		this.xEventChannel = xEventChannel;
-		this.xWindowCache = xWindowCache;
-	}
+    @Inject
+    ConfigureNotifyHandler(final DisplaySurfacePool xWindowCache,
+                           final XEventChannel xEventChannel) {
+        this.xEventChannel = xEventChannel;
+        this.xWindowCache = xWindowCache;
+    }
 
-	@Override
-	public Optional<GeometryNotify> handle(@Nonnull final xcb_generic_event_t event_t) {
-		final xcb_configure_notify_event_t configure_notify_event = cast(event_t);
+    @Override
+    public Optional<GeometryNotify> handle(@Nonnull final xcb_generic_event_t event_t) {
+        final xcb_configure_notify_event_t configure_notify_event = cast(event_t);
 
-		LOG.debug("Received X event={}",
-				  configure_notify_event.getClass().getSimpleName());
+        LOG.debug("Received X event={}",
+                configure_notify_event.getClass().getSimpleName());
 
-		this.xEventChannel.post(configure_notify_event);
+        this.xEventChannel.post(configure_notify_event);
 
-		final int x = configure_notify_event.getX();
-		final int y = configure_notify_event.getY();
-		final int width = configure_notify_event.getWidth() + (2 * configure_notify_event.getBorder_width());
-		final int height = configure_notify_event.getHeight() + (2 * configure_notify_event.getBorder_width());
+        final int x = configure_notify_event.getX();
+        final int y = configure_notify_event.getY();
+        final int width = configure_notify_event.getWidth() + (2 * configure_notify_event.getBorder_width());
+        final int height = configure_notify_event.getHeight() + (2 * configure_notify_event.getBorder_width());
 
-		final Rectangle geometry = new Rectangle(x,
-												 y,
-												 width,
-												 height);
+        final Rectangle geometry = new Rectangle(x,
+                y,
+                width,
+                height);
 
-		return Optional.of(new GeometryNotify(geometry));
-	}
+        return Optional.of(new GeometryNotify(geometry));
+    }
 
-	private xcb_configure_notify_event_t cast(final xcb_generic_event_t event_t) {
-		return new xcb_configure_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
-												false);
-	}
+    private xcb_configure_notify_event_t cast(final xcb_generic_event_t event_t) {
+        return new xcb_configure_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
+                false);
+    }
 
-	@Override
-	public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
-		final xcb_configure_notify_event_t configure_notify_event_t = cast(event_t);
-		final int windowId = configure_notify_event_t.getWindow();
-		return Optional.of(this.xWindowCache.get(XWindowHandle.create(windowId)));
-	}
+    @Override
+    public Optional<DisplaySurface> getTarget(@Nonnull final xcb_generic_event_t event_t) {
+        final xcb_configure_notify_event_t configure_notify_event_t = cast(event_t);
+        final int windowId = configure_notify_event_t.getWindow();
+        return Optional.of(this.xWindowCache.get(XWindowHandle.create(windowId)));
+    }
 
-	@Override
-	public Integer getEventCode() {
-		return EVENT_CODE;
-	}
+    @Override
+    public Integer getEventCode() {
+        return EVENT_CODE;
+    }
 
 }

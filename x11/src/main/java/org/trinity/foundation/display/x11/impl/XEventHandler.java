@@ -2,8 +2,8 @@ package org.trinity.foundation.display.x11.impl;
 
 import com.google.common.base.Optional;
 import org.freedesktop.xcb.xcb_generic_event_t;
-import org.trinity.foundation.api.display.DisplaySurface;
-import org.trinity.foundation.api.display.event.DisplayEvent;
+import org.trinity.display.api.DisplaySurface;
+import org.trinity.display.api.event.DisplayEvent;
 
 import javax.annotation.Nonnull;
 
