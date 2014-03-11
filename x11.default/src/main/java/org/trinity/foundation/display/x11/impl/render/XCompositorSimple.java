@@ -21,6 +21,7 @@ package org.trinity.foundation.display.x11.impl.render;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.common.Listenable;
 import org.trinity.foundation.display.x11.impl.XCompositor;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XWindow;
@@ -62,9 +63,15 @@ public class XCompositorSimple implements XCompositor {
     }
 
     @Override
-	public XWindow createSurface(final Integer nativeHandle) {
+	public Listenable createSurface(final Integer nativeHandle) {
         configureClientEvents(nativeHandle);
-		return this.xWindowFactory.create(nativeHandle);
+        final XWindow xWindow = this.xWindowFactory.create(nativeHandle);
+        addToScene(xWindow);
+        return xWindow;
+    }
+
+    private void addToScene(final XWindow xWindow) {
+        //TODO implement
     }
 
     private void configureClientEvents(final Integer nativeHandle) {
