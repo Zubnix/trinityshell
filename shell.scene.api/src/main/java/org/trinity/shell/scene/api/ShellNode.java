@@ -32,37 +32,16 @@ import javax.media.nativewindow.util.RectangleImmutable;
  */
 public interface ShellNode extends Listenable {
 
+    void accept(ShellNodeConfiguration shellNodeConfiguration);
+
     /**
      * ************************************
-     * The shell geometry of the node. The relation between the on screen
-     * geometry and the shell geometry is implementation dependent but is
-     * usually in pixels.
+     * The shell geometry of the node.
      *
      * @return a {@link RectangleImmutable} shape.
      * **************************************
      */
     RectangleImmutable getShape();
-
-    /**
-     * ************************************
-     * The shell position of the node. A node's position is relative to its
-     * parent. The relation between the on screen position and the shell
-     * position is implementation dependent but is usually in pixels.
-     *
-     * @return a {@link PointImmutable} position.
-     * **************************************
-     */
-    PointImmutable getPosition();
-
-    /**
-     * ************************************
-     * The shell size of the node. The relation between the on screen size and
-     * the shell size is implementation dependent but is usually in pixels.
-     *
-     * @return a {@link DimensionImmutable} size.
-     * **************************************
-     */
-    DimensionImmutable getSize();
 
     /**
      * *************************************

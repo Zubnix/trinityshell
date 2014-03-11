@@ -30,7 +30,7 @@ import javax.annotation.concurrent.Immutable;
  ***************************************
  */
 @Immutable
-public class ShellNodeShowRequestEvent extends ShellNodeVisibilityRequestEvent {
+public class ShellNodeShowRequestEvent extends ShellNodeVisibleRequestEvent {
 
 	/**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given

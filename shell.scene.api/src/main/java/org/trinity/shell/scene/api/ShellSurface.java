@@ -19,10 +19,6 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
-import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.Dimension;
 import javax.media.nativewindow.util.DimensionImmutable;
 
@@ -39,17 +35,6 @@ import javax.media.nativewindow.util.DimensionImmutable;
  ***************************************
  */
 public interface ShellSurface extends ShellNode {
-
-	/***************************************
-	 * The desired delta of the old and new height when this surface's height
-	 * changes.
-	 *
-	 * @return A future height delta, implementation dependent but usually in
-	 *         pixels.
-	 * @see #setHeightIncrement(int)
-	 ***************************************
-	 */
-	Integer getHeightIncrement();
 
 	/***************************************
 	 * The maximum height and width.
@@ -79,61 +64,4 @@ public interface ShellSurface extends ShellNode {
 	 */
 	Object getDisplayBuffer();
 
-	/***************************************
-	 * The desired delta of the old and new width when this surface's width
-	 * changes.
-	 *
-	 * @return A future height delta, implementation dependent but usually in
-	 *         pixels.
-	 * @see #setWidthIncrement(int)
-	 ***************************************
-	 */
-	Integer getWidthIncrement();
-
-	/***************************************
-	 * Set the height delta when the height is changed.
-	 *
-	 * @param heightIncrement
-	 *            A height delta, implementation dependent but usually in
-	 *            pixels.
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
-	 * @see #getHeightIncrement()
-	 ***************************************
-	 */
-	void setHeightIncrement(@Nonnegative final int heightIncrement);
-
-	/***************************************
-	 * Change the maximum size. Attempts to change to size of this node beyond
-	 * the maximum size are silently ignored.
-	 *
-	 * @param size a {@link Dimension}
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
-	 * @see #getMaxSize()
-	 ***************************************
-	 */
-	void setMaxSize(@Nonnull final DimensionImmutable size);
-
-	/***************************************
-	 *
-	 * @param size a {@link Dimension}
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
-	 * @see #getMinSize()
-	 ***************************************
-	 */
-	void setMinSize(@Nonnull final DimensionImmutable size);
-
-	/***************************************
-	 * Set the width delta when the width is changed.
-	 *
-	 * @param widthIncrement
-	 *            A width delta, implementation dependent but usually in pixels.
-	 * @return A {@link ListenableFuture} that indicates when the operation is
-	 *         done.
-	 * @see #getWidthIncrement()
-	 ***************************************
-	 */
-	void setWidthIncrement(@Nonnegative final int widthIncrement);
 }

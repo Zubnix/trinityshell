@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
-import org.trinity.foundation.display.x11.impl.XWindowPool;
+import org.trinity.foundation.display.x11.impl.XSurfacePool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -39,13 +39,13 @@ public class MapNotifyHandler implements XEventHandler {
 	private static final Logger  LOG        = LoggerFactory.getLogger(MapNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_MAP_NOTIFY;
 	private final XEventChannel xEventChannel;
-	private final XWindowPool   xWindowPool;
+	private final XSurfacePool xSurfacePool;
 
 	@Inject
 	MapNotifyHandler(final XEventChannel xEventChannel,
-					 final XWindowPool xWindowPool) {
+					 final XSurfacePool xSurfacePool) {
 		this.xEventChannel = xEventChannel;
-		this.xWindowPool = xWindowPool;
+		this.xSurfacePool = xSurfacePool;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class MapNotifyHandler implements XEventHandler {
 
 		this.xEventChannel.post(map_notify_event);
 		final int windowId = map_notify_event.getWindow();
-		this.xWindowPool.get(windowId).post(map_notify_event);
+		this.xSurfacePool.get(windowId).post(map_notify_event);
 	}
 
 	public xcb_map_notify_event_t cast(final xcb_generic_event_t event) {

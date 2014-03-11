@@ -22,6 +22,8 @@ package org.trinity.shell.scene.impl;
 import com.google.auto.factory.AutoFactory;
 import org.trinity.common.ListenableEventBus;
 import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellNodeConfigurable;
+import org.trinity.shell.scene.api.ShellNodeConfiguration;
 import org.trinity.shell.scene.api.ShellNodeParent;
 import org.trinity.shell.scene.api.event.ShellNodeEvent;
 import org.trinity.shell.scene.api.event.ShellNodeHideRequestEvent;
@@ -36,93 +38,77 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.media.nativewindow.util.Dimension;
-import javax.media.nativewindow.util.DimensionImmutable;
 import javax.media.nativewindow.util.Point;
-import javax.media.nativewindow.util.PointImmutable;
 import javax.media.nativewindow.util.Rectangle;
 import javax.media.nativewindow.util.RectangleImmutable;
 
 
 @NotThreadSafe
 @AutoFactory
-public class ShellNodeImpl extends ListenableEventBus implements ShellNode {
+public class ShellNodeImpl extends ListenableEventBus implements ShellNode, ShellNodeConfigurable {
 
-	@Nonnull
-	private PointImmutable      position = new Point();
-	@Nonnull
-	private DimensionImmutable  size    = new Dimension();
-	@Nonnull
-	private Boolean             visible = Boolean.FALSE;
-	@Nonnull
-	private ShellNodeParent     parent;
-	@Nonnull
-	private Boolean             destroyed;
+    @Nonnull
+    private RectangleImmutable shape;
+    @Nonnull
+    private Boolean visible = Boolean.FALSE;
+    @Nonnull
+    private ShellNodeParent parent;
+    @Nonnull
+    private Boolean destroyed;
 
-	ShellNodeImpl(@Nonnull final ShellNodeParent parent) {
-		this.parent = parent;
-	}
-
-	@Override
-	public Boolean isDestroyed() {
-		return this.destroyed;
-	}
-
-    public void setDestroyed(@Nonnull final Boolean destroyed) {
-        this.destroyed = destroyed;
+    ShellNodeImpl(@Nonnull final ShellNodeParent parent) {
+        this.parent = parent;
+        this.destroyed = Boolean.FALSE;
     }
 
     @Override
-	public ShellNodeParent getParent() {
-		return this.parent;
-	}
+    public Boolean isDestroyed() {
+        return this.destroyed;
+    }
+
+    @Override
+    public void markDestroyed() {
+        this.destroyed = true;
+    }
+
+    @Override
+    public ShellNodeParent getParent() {
+        return this.parent;
+    }
 
     public void setParent(@Nonnull final ShellNodeParent parent) {
         this.parent = parent;
     }
 
-	@Override
-	public RectangleImmutable getShape() {
+    @Override
+    public void accept(final ShellNodeConfiguration shellNodeConfiguration) {
+        shellNodeConfiguration.visit(this);
+    }
 
-		final PointImmutable position = getPosition();
-		final DimensionImmutable size = getSize();
+    @Override
+    public RectangleImmutable getShape() {
+        return this.shape;
+    }
 
-		return new Rectangle(position.getX(),
-							 position.getY(),
-							 size.getWidth(),
-							 size.getHeight());
-	}
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * This method will only return true if this node is in the visible state an
+     * all of its parents in the hierarchy are visible as well.
+     */
+    @Override
+    public Boolean isVisible() {
+        return this.visible;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * <p/>
-	 * This method will only return true if this node is in the visible state an
-	 * all of its parents in the hierarchy are visible as well.
-	 */
-	@Override
-	public Boolean isVisible() {
-		return this.visible;
-	}
-
+    @Override
     public void setVisible(@Nonnull final Boolean visible) {
         this.visible = visible;
     }
 
     @Override
-    public PointImmutable getPosition() {
-        return this.position;
-    }
-
-    public void setPosition(@Nonnull final PointImmutable position) {
-        this.position = position;
-    }
-
-    @Override
-    public DimensionImmutable getSize() {
-        return this.size;
-    }
-
-    public void setSize(@Nonnull final DimensionImmutable size) {
-        this.size = size;
+    public void configure(final int x, final int y, final int width, final int height) {
+        this.shape = new Rectangle(x, y, width, height);
     }
 
     @Override
@@ -134,40 +120,38 @@ public class ShellNodeImpl extends ListenableEventBus implements ShellNode {
     }
 
     @Override
-	public void requestMove(final int x,
-							final int y) {
-		post(new ShellNodeMoveRequestEvent(this,
-										   new Point(x,
-													 y)));
-	}
+    public void requestMove(final int x,
+                            final int y) {
+        post(new ShellNodeMoveRequestEvent(this,
+                new Point(x,
+                        y)));
+    }
 
-	@Override
-	public void requestResize(@Nonnegative final int width,
-							  @Nonnegative final int height) {
-		post(new ShellNodeResizeRequestEvent(this,
-											 new Dimension(width,
-														   height)));
-	}
+    @Override
+    public void requestResize(@Nonnegative final int width,
+                              @Nonnegative final int height) {
+        post(new ShellNodeResizeRequestEvent(this,
+                new Dimension(width,
+                        height)));
+    }
 
-	@Override
-	public void requestRaise() {
-		post(new ShellNodeRaiseRequestEvent(this));
-	}
+    @Override
+    public void requestRaise() {
+        post(new ShellNodeRaiseRequestEvent(this));
+    }
 
-	@Override
-	public void requestLower() {
-		post(new ShellNodeLowerRequestEvent(this));
-	}
+    @Override
+    public void requestLower() {
+        post(new ShellNodeLowerRequestEvent(this));
+    }
 
-	@Override
-	public void requestShow() {
-		post(new ShellNodeShowRequestEvent(this));
+    @Override
+    public void requestShow() {
+        post(new ShellNodeShowRequestEvent(this));
+    }
 
-	}
-
-	@Override
-	public void requestHide() {
-		post(new ShellNodeHideRequestEvent(this));
-
-	}
+    @Override
+    public void requestHide() {
+        post(new ShellNodeHideRequestEvent(this));
+    }
 }

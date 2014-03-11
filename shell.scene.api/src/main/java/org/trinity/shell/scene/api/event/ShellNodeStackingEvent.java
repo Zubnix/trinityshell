@@ -20,6 +20,7 @@
 package org.trinity.shell.scene.api.event;
 
 import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellNodeConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -30,7 +31,7 @@ import javax.annotation.concurrent.Immutable;
  ***************************************
  */
 @Immutable
-public class ShellNodeStackingEvent extends ShellNodeEvent {
+public class ShellNodeStackingEvent extends ShellNodeEvent  {
 
 	/**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given

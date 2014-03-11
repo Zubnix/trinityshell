@@ -21,6 +21,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.display.api.DisplaySurface;
 import org.trinity.display.api.DisplaySurfaceHandle;
 import org.trinity.display.api.event.DestroyNotify;
+import org.trinity.foundation.display.x11.impl.render.XCompositorSimple;
 
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
@@ -83,7 +84,7 @@ public class TestXDisplayImpl {
 		when(xcb_connection_has_error(this.xcb_connection)).thenReturn(1);
 		//when
 		//a new XDisplay is created
-		new XCompositor(null);
+		new XCompositorSimple(null);
 		//then
 		//the XDisplay object throws an Error
 	}
@@ -160,7 +161,7 @@ public class TestXDisplayImpl {
         //when
         //a new XDisplay is created
         //a client is created
-		final XCompositor xDisplay = new XCompositor(null);
+		final XCompositorSimple xDisplay = new XCompositorSimple(null);
 		xDisplay.post(displaySurfaceCreationNotify);
 
         //then

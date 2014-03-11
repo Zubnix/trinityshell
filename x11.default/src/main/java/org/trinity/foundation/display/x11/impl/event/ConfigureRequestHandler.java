@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
-import org.trinity.foundation.display.x11.impl.XWindowPool;
+import org.trinity.foundation.display.x11.impl.XSurfacePool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -40,13 +40,13 @@ public class ConfigureRequestHandler implements XEventHandler {
 	private static final Integer EVENT_CODE = XCB_CONFIGURE_REQUEST;
 
 	private final XEventChannel xEventChannel;
-	private final XWindowPool   xWindowPool;
+	private final XSurfacePool xSurfacePool;
 
 	@Inject
 	ConfigureRequestHandler(final XEventChannel xEventChannel,
-							final XWindowPool xWindowPool) {
+							final XSurfacePool xSurfacePool) {
 		this.xEventChannel = xEventChannel;
-		this.xWindowPool = xWindowPool;
+		this.xSurfacePool = xSurfacePool;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class ConfigureRequestHandler implements XEventHandler {
 
 		this.xEventChannel.post(request_event);
 		final int windowId = request_event.getWindow();
-		this.xWindowPool.get(windowId).post(request_event);
+		this.xSurfacePool.get(windowId).post(request_event);
 
 //		final int x = request_event.getX();
 //		final int y = request_event.getY();

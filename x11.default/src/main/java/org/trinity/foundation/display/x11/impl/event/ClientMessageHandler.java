@@ -23,7 +23,7 @@ package org.trinity.foundation.display.x11.impl.event;
 import org.freedesktop.xcb.xcb_client_message_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
-import org.trinity.foundation.display.x11.impl.XWindowPool;
+import org.trinity.foundation.display.x11.impl.XSurfacePool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -35,11 +35,11 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
 public class ClientMessageHandler implements XEventHandler {
 
 	private static final Integer EVENT_CODE = XCB_CLIENT_MESSAGE;
-	private final XWindowPool displaySurfacePool;
+	private final XSurfacePool displaySurfacePool;
 
 	@Inject
-	ClientMessageHandler(final XWindowPool xWindowPool) {
-		this.displaySurfacePool = xWindowPool;
+	ClientMessageHandler(final XSurfacePool xSurfacePool) {
+		this.displaySurfacePool = xSurfacePool;
 	}
 
 	@Override

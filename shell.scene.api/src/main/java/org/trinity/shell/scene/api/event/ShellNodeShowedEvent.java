@@ -20,6 +20,7 @@
 package org.trinity.shell.scene.api.event;
 
 import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellNodeConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -30,7 +31,7 @@ import javax.annotation.concurrent.Immutable;
  ***************************************
  */
 @Immutable
-public class ShellNodeShowedEvent extends ShellNodeVisibilityEvent {
+public class ShellNodeShowedEvent extends ShellNodeVisibleEvent {
 
 	/**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given

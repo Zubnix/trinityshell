@@ -20,6 +20,7 @@
 package org.trinity.shell.scene.api.event;
 
 import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellNodeConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;

@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
-import org.trinity.foundation.display.x11.impl.XWindowPool;
+import org.trinity.foundation.display.x11.impl.XSurfacePool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -38,14 +38,14 @@ public class UnmapNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(UnmapNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_UNMAP_NOTIFY;
-	private final XWindowPool   xWindowPool;
+	private final XSurfacePool xSurfacePool;
 	private final XEventChannel xEventChannel;
 
 	@Inject
 	UnmapNotifyHandler(final XEventChannel xEventChannel,
-					   final XWindowPool xWindowPool) {
+					   final XSurfacePool xSurfacePool) {
 		this.xEventChannel = xEventChannel;
-		this.xWindowPool = xWindowPool;
+		this.xSurfacePool = xSurfacePool;
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class UnmapNotifyHandler implements XEventHandler {
 		if(windowId != reportWindowId) {
 			return;
 		}
-		this.xWindowPool.get(windowId).post(unmap_notify_event);
+		this.xSurfacePool.get(windowId).post(unmap_notify_event);
 	}
 
 	private xcb_unmap_notify_event_t cast(final xcb_generic_event_t event) {

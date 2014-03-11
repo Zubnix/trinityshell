@@ -20,16 +20,17 @@
 package org.trinity.shell.scene.api.event;
 
 import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellNodeConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * General event to request visibility (show, hide) related operations.
+ * General event to inform about visibility (show, hide) related operations.
  ***************************************
  */
 @Immutable
-public class ShellNodeVisibilityRequestEvent extends ShellNodeEvent {
+public class ShellNodeVisibleEvent extends ShellNodeEvent {
 
 	/**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
@@ -40,7 +41,7 @@ public class ShellNodeVisibilityRequestEvent extends ShellNodeEvent {
 	 * @param shellNode
 	 *            the emitting {@link ShellNode}
 	 */
-	public ShellNodeVisibilityRequestEvent(@Nonnull final ShellNode shellNode) {
+	public ShellNodeVisibleEvent(@Nonnull final ShellNode shellNode) {
 		super(	shellNode);
 	}
 }

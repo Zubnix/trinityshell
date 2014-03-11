@@ -17,19 +17,20 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.display.x11.impl;
+package org.trinity.foundation.display.x11.impl.render;
 
-import com.google.common.eventbus.Subscribe;
-import org.freedesktop.xcb.xcb_destroy_notify_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.foundation.display.x11.impl.XCompositor;
+import org.trinity.foundation.display.x11.impl.XEventChannel;
+import org.trinity.foundation.display.x11.impl.XWindow;
+import org.trinity.foundation.display.x11.impl.XWindowFactory;
 
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
 
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
@@ -40,76 +41,41 @@ import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY;
 
+
 @Singleton
 @ThreadSafe
-public class XWindowPool {
+public class XCompositorSimple implements XCompositor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XWindowPool.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XCompositorSimple.class);
 
     private static final int CLIENT_EVENT_MASK = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
     private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder()).putInt(CLIENT_EVENT_MASK);
 
-    private final Map<Integer, XWindow> XWindows = new HashMap<>();
-
     private final XEventChannel xEventChannel;
-    private final XCompositor compositor;
+    private final XWindowFactory xWindowFactory;
 
     @Inject
-    XWindowPool(final XEventChannel xEventChannel,
-                       final XCompositor compositor) {
+    XCompositorSimple(final XEventChannel xEventChannel,
+                      final XWindowFactory xWindowFactory) {
         this.xEventChannel = xEventChannel;
-        this.compositor = compositor;
+        this.xWindowFactory = xWindowFactory;
     }
 
-    public XWindow get(final Integer xWindowHandle) {
-
-        XWindow window = this.XWindows.get(xWindowHandle);
-        if (window == null) {
-            window = registerNewXWindow(xWindowHandle);
-            configureClientEvents(window);
-        }
-        return window;
+    @Override
+	public XWindow createSurface(final Integer nativeHandle) {
+        configureClientEvents(nativeHandle);
+		return this.xWindowFactory.create(nativeHandle);
     }
 
-    private XWindow registerNewXWindow(final Integer xWindowHandle) {
-        LOG.debug("Xwindow={} added to cache.",
-                xWindowHandle);
-
-        final XWindow window = this.compositor.createSurface(xWindowHandle);
-        window.register(new DestroyListener(window));
-        this.XWindows.put(xWindowHandle,
-                window);
-        return window;
-    }
-
-    private void configureClientEvents(final XWindow window) {
-        final int winId = (Integer) window.getNativeHandle();
+    private void configureClientEvents(final Integer nativeHandle) {
 
         LOG.debug("[winId={}] configure client evens.",
-                winId);
+                nativeHandle);
 
         xcb_change_window_attributes(this.xEventChannel.getXcbConnection(),
-                winId,
+                nativeHandle,
                 XCB_CW_EVENT_MASK,
                 CLIENT_EVENTS_CONFIG_BUFFER);
         xcb_flush(this.xEventChannel.getXcbConnection());
-    }
-
-    private void unregisterXWindow(final XWindow xWindow) {
-        this.XWindows.remove(xWindow.getNativeHandle().hashCode());
-        xWindow.unregister(this);
-    }
-
-    private class DestroyListener {
-        private final XWindow window;
-
-        public DestroyListener(final XWindow XWindow) {
-            this.window = XWindow;
-        }
-
-        @Subscribe
-        public void destroyed(final xcb_destroy_notify_event_t destroyNotifyEvent) {
-            unregisterXWindow(this.window);
-        }
     }
 }

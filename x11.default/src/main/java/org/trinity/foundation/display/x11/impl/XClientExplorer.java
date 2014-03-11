@@ -21,13 +21,13 @@ public class XClientExplorer {
 	private static final Logger LOG = LoggerFactory.getLogger(XClientExplorer.class);
 
 	private final XEventChannel      xEventChannel;
-	private final XWindowPool displaySurfacePool;
+	private final XSurfacePool displaySurfacePool;
 
 	@Inject
 	XClientExplorer(final XEventChannel xEventChannel,
-					final XWindowPool xWindowPool) {
+					final XSurfacePool xSurfacePool) {
 		this.xEventChannel = xEventChannel;
-		this.displaySurfacePool = xWindowPool;
+		this.displaySurfacePool = xSurfacePool;
 	}
 
 	public void findClientDisplaySurfaces() {

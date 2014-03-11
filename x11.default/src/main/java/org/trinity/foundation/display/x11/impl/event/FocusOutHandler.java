@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
-import org.trinity.foundation.display.x11.impl.XWindowPool;
+import org.trinity.foundation.display.x11.impl.XSurfacePool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -39,13 +39,13 @@ public class FocusOutHandler implements XEventHandler {
 	private static final Logger  LOG        = LoggerFactory.getLogger(FocusOutHandler.class);
 	private static final Integer EVENT_CODE = XCB_FOCUS_OUT;
 	private final XEventChannel xEventChannel;
-	private final XWindowPool   xWindowPool;
+	private final XSurfacePool xSurfacePool;
 
 	@Inject
 	FocusOutHandler(final XEventChannel xEventChannel,
-					final XWindowPool xWindowPool) {
+					final XSurfacePool xSurfacePool) {
 		this.xEventChannel = xEventChannel;
-		this.xWindowPool = xWindowPool;
+		this.xSurfacePool = xSurfacePool;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class FocusOutHandler implements XEventHandler {
 				  focus_out_event.getClass().getSimpleName());
 
 		this.xEventChannel.post(focus_out_event);
-		this.xWindowPool.get(focus_out_event.getEvent()).post(focus_out_event);
+		this.xSurfacePool.get(focus_out_event.getEvent()).post(focus_out_event);
 	}
 
 	private xcb_focus_in_event_t cast(final xcb_generic_event_t event_t) {

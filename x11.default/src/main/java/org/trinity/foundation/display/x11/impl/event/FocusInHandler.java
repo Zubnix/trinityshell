@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
-import org.trinity.foundation.display.x11.impl.XWindowPool;
+import org.trinity.foundation.display.x11.impl.XSurfacePool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -39,13 +39,13 @@ public class FocusInHandler implements XEventHandler {
 	private static final Logger  LOG        = LoggerFactory.getLogger(FocusInHandler.class);
 	private static final Integer EVENT_CODE = XCB_FOCUS_IN;
 	private final XEventChannel xEventChannel;
-	private final XWindowPool   xWindowPool;
+	private final XSurfacePool xSurfacePool;
 
 	@Inject
 	FocusInHandler(final XEventChannel xEventChannel,
-				   final XWindowPool xWindowPool) {
+				   final XSurfacePool xSurfacePool) {
 		this.xEventChannel = xEventChannel;
-		this.xWindowPool = xWindowPool;
+		this.xSurfacePool = xSurfacePool;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class FocusInHandler implements XEventHandler {
 
 		this.xEventChannel.post(focus_in_event);
 		final int windowId = focus_in_event.getEvent();
-		this.xWindowPool.get(windowId).post(focus_in_event);
+		this.xSurfacePool.get(windowId).post(focus_in_event);
 	}
 
 	private xcb_focus_in_event_t cast(final xcb_generic_event_t event_t) {

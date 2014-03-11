@@ -20,6 +20,7 @@
 package org.trinity.shell.scene.api.event;
 
 import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellNodeConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -31,7 +32,7 @@ import javax.annotation.concurrent.Immutable;
  ***************************************
  */
 @Immutable
-public class ShellNodeChildEvent extends ShellNodeEvent {
+public abstract class ShellNodeChildEvent extends ShellNodeEvent {
 
     @Nonnull
     private final ShellNode child;

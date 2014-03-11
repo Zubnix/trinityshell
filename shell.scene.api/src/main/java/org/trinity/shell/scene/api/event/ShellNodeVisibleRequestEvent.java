@@ -25,11 +25,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * General event to inform about visibility (show, hide) related operations.
+ * General event to request visibility (show, hide) related operations.
  ***************************************
  */
 @Immutable
-public class ShellNodeVisibilityEvent extends ShellNodeEvent {
+public class ShellNodeVisibleRequestEvent extends ShellNodeEvent {
 
 	/**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
@@ -40,7 +40,7 @@ public class ShellNodeVisibilityEvent extends ShellNodeEvent {
 	 * @param shellNode
 	 *            the emitting {@link ShellNode}
 	 */
-	public ShellNodeVisibilityEvent(@Nonnull final ShellNode shellNode) {
+	public ShellNodeVisibleRequestEvent(@Nonnull final ShellNode shellNode) {
 		super(	shellNode);
 	}
 }

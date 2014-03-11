@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
-import org.trinity.foundation.display.x11.impl.XWindowPool;
+import org.trinity.foundation.display.x11.impl.XSurfacePool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -39,13 +39,13 @@ public class EnterNotifyHandler implements XEventHandler {
 	private static final Logger  LOG        = LoggerFactory.getLogger(EnterNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_ENTER_NOTIFY;
 	private final XEventChannel xEventChannel;
-	private final XWindowPool   xWindowPool;
+	private final XSurfacePool xSurfacePool;
 
 	@Inject
 	EnterNotifyHandler(final XEventChannel xEventChannel,
-					   final XWindowPool xWindowPool) {
+					   final XSurfacePool xSurfacePool) {
 		this.xEventChannel = xEventChannel;
-		this.xWindowPool = xWindowPool;
+		this.xSurfacePool = xSurfacePool;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class EnterNotifyHandler implements XEventHandler {
 
 		this.xEventChannel.post(enter_notify_event);
 		final int windowId = enter_notify_event.getEvent();
-		this.xWindowPool.get(windowId).post(enter_notify_event);
+		this.xSurfacePool.get(windowId).post(enter_notify_event);
 		event.delete();
 	}
 

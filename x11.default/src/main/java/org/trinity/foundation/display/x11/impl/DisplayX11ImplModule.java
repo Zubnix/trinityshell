@@ -22,6 +22,7 @@ package org.trinity.foundation.display.x11.impl;
 import dagger.Module;
 import dagger.Provides;
 import org.trinity.foundation.display.x11.impl.event.XEventHandlersModule;
+import org.trinity.foundation.display.x11.impl.render.XCompositorSimple;
 
 import javax.inject.Singleton;
 
@@ -30,8 +31,8 @@ import javax.inject.Singleton;
                 XEventHandlersModule.class
         },
         injects = {
-                XCompositor.class,
-                XWindowPool.class,
+                XCompositorSimple.class,
+                XSurfacePool.class,
                 XEventChannel.class,
                 XEventHandlers.class,
                 XSeat.class,
@@ -45,8 +46,8 @@ public class DisplayX11ImplModule {
 
     @Provides
     @Singleton
-	XCompositor provideXCompositor(final XCompositor xCompositor) {
-		return xCompositor;
+    XCompositor provideXCompositor(final XCompositorSimple xCompositorSimple) {
+		return xCompositorSimple;
     }
 
 	@Provides
