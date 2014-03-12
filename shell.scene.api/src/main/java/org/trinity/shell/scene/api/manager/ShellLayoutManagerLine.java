@@ -32,7 +32,7 @@ import org.trinity.shell.scene.api.ShellNode;
  * will be interpreted as have a static size.
  * **************************************
  */
-public interface ShellLayoutManagerLine extends ShellLayoutManager {
+public interface ShellLayoutManagerLine extends Layout {
 
     /**
      * ************************************

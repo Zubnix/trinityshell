@@ -2,7 +2,7 @@ package org.trinity.shell.impl.node.manager;
 
 import org.junit.Test;
 
-public class ShellLayoutManagerLineTest {
+public class LayoutLineTest {
 
 	@Test
 	public void testLayoutH() {

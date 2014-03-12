@@ -30,7 +30,7 @@ import java.util.List;
  *
  ***************************************
  */
-public interface ShellLayoutManager {
+public interface Layout {
 
 	/***************************************
 	 * Register a child with a specific {@code ShellLayoutProperty} so it can be

@@ -26,7 +26,7 @@ import org.trinity.shell.scene.api.ShellNodeParent;
 import org.trinity.shell.scene.api.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.scene.api.event.ShellNodeChildLeftEvent;
 import org.trinity.shell.scene.api.event.ShellNodeEvent;
-import org.trinity.shell.scene.api.manager.ShellLayoutManager;
+import org.trinity.shell.scene.api.manager.Layout;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,7 +46,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class ShellNodeParentImpl extends ShellNodeImpl implements ShellNodeParent {
 
     private final LinkedList<ShellNode> children = new LinkedList<>();
-    private Optional<ShellLayoutManager> optionalLayoutManager = Optional.absent();
+    private Optional<Layout> optionalLayoutManager = Optional.absent();
 
     ShellNodeParentImpl(@Nonnull final ShellNodeParent parent) {
         super(parent);
@@ -61,12 +61,12 @@ public class ShellNodeParentImpl extends ShellNodeImpl implements ShellNodeParen
         return new ArrayList<>(this.children);
     }
 
-    public Optional<ShellLayoutManager> getLayoutManager() {
+    public Optional<Layout> getLayoutManager() {
         return this.optionalLayoutManager;
     }
 
     @Override
-    public void setLayoutManager(@Nullable final ShellLayoutManager shellLayoutManager) {
+    public void setLayoutManager(@Nullable final Layout shellLayoutManager) {
         this.optionalLayoutManager = Optional.of(shellLayoutManager);
         if (this.optionalLayoutManager.isPresent()) {
             register(shellLayoutManager);
@@ -109,12 +109,12 @@ public class ShellNodeParentImpl extends ShellNodeImpl implements ShellNodeParen
     /**
      * {@inheritDoc}
      * <p/>
-     * This call has no effect if no {@link ShellLayoutManager} is set for this
+     * This call has no effect if no {@link org.trinity.shell.scene.api.manager.Layout} is set for this
      * node.
      */
     @Override
     public void layout() {
-        final Optional<ShellLayoutManager> optionalLayoutManager = getLayoutManager();
+        final Optional<Layout> optionalLayoutManager = getLayoutManager();
         if (optionalLayoutManager.isPresent()) {
             optionalLayoutManager.get().layout(getShape(),getChildren());
         }

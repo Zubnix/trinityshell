@@ -19,13 +19,14 @@
  ******************************************************************************/
 package org.trinity.foundation.display.x11.impl;
 
+import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_screen_iterator_t;
 import org.freedesktop.xcb.xcb_screen_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.common.ListenableEventBus;
+import org.trinity.common.Listenable;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -55,7 +56,7 @@ import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_R
 
 @Singleton
 @NotThreadSafe
-public class XEventChannel extends ListenableEventBus {
+public class XEventChannel extends EventBus implements Listenable {
 
     private static final Logger LOG = LoggerFactory.getLogger(XEventChannel.class);
 

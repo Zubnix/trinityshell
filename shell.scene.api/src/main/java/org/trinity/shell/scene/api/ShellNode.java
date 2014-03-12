@@ -19,10 +19,9 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api;
 
+import org.trinity.common.HasDimension;
 import org.trinity.common.Listenable;
 
-import javax.media.nativewindow.util.DimensionImmutable;
-import javax.media.nativewindow.util.PointImmutable;
 import javax.media.nativewindow.util.RectangleImmutable;
 
 /**
@@ -30,18 +29,19 @@ import javax.media.nativewindow.util.RectangleImmutable;
  * The super interface of all nodes that live in the shell scene.
  * **************************************
  */
-public interface ShellNode extends Listenable {
+public interface ShellNode extends Listenable, HasDimension<Space.ShellNodeSpace> {
 
     void accept(ShellNodeConfiguration shellNodeConfiguration);
 
-    /**
-     * ************************************
-     * The shell geometry of the node.
+    /***************************************
+     * The underlying, {@code DisplaySurface} that this shell surface will use
+     * to display it's contents. A display surface can be 'shared', so it is
+     * possible that multiple shell surface's use the same display surface.
      *
-     * @return a {@link RectangleImmutable} shape.
-     * **************************************
+     * @return a platform display buffer.
+     ***************************************
      */
-    RectangleImmutable getShape();
+    DisplayBuffer getDisplayBuffer();
 
     /**
      * *************************************
@@ -105,7 +105,7 @@ public interface ShellNode extends Listenable {
      * <p/>
      * **************************************
      */
-    void requestReparent(final ShellNodeParent parent);
+    void requestReparent(final ShellNode parent);
 
     /**
      * ************************************
@@ -142,8 +142,8 @@ public interface ShellNode extends Listenable {
      * ************************************
      * The shell parent of this node.
      *
-     * @return a future {@link ShellNodeParent}.
+     * @return a {@link ShellNode}.
      * **************************************
      */
-    ShellNodeParent getParent();
+    ShellNode getParent();
 }

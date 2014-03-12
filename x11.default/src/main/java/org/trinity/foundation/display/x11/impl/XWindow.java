@@ -21,13 +21,14 @@ package org.trinity.foundation.display.x11.impl;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_geometry_cookie_t;
 import org.freedesktop.xcb.xcb_get_geometry_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.common.ListenableEventBus;
+import org.trinity.common.Listenable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -50,7 +51,7 @@ import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 
 @ThreadSafe
 @AutoFactory
-public class XWindow extends ListenableEventBus {
+public class XWindow extends EventBus implements Listenable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
 
