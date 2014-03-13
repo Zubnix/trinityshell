@@ -32,7 +32,7 @@
 
     <properties>
         <!-- dep versions -->
-        <jogamp.version>2.1.4</jogamp.version>
+        <jogamp.version>2.1.5-01</jogamp.version>
         <quasar.version>0.4.0</quasar.version>
         <auto.factory.version>1.0-SNAPSHOT</auto.factory.version>
         <auto.value.version>1.0-rc1</auto.value.version>
@@ -129,8 +129,9 @@
         <!-- rendering tools -->
         <dependency>
             <groupId>org.jogamp.jogl</groupId>
-            <artifactId>jogl-all-noawt</artifactId>
+            <artifactId>nativewindow</artifactId>
             <version>${jogamp.version}</version>
+            <classifier>core</classifier>
         </dependency>
         <dependency>
             <groupId>org.jogamp.gluegen</groupId>

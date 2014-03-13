@@ -19,7 +19,7 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.manager;
 
-import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.media.nativewindow.util.RectangleImmutable;
 import java.util.List;
@@ -38,36 +38,36 @@ public interface Layout {
 	 * influence how the child is layed out.
 	 *
 	 * @param child
-	 *            A child {@link ShellNode}
+	 *            A child {@link org.trinity.shell.scene.api.ShellSurface}
 	 * @param layoutProperty
 	 *            a {@link ShellLayoutProperty}
 	 ***************************************
 	 */
-	void setChildLayoutConfiguration(final ShellNode child,
+	void setChildLayoutConfiguration(final ShellSurface child,
 									 final ShellLayoutProperty layoutProperty);
 
 	/***************************************
 	 * The {@code ShellLayoutProperty} that was registered together with the
-	 * given child {@link ShellNode}.
+	 * given child {@link org.trinity.shell.scene.api.ShellSurface}.
 	 *
 	 * @param child
-	 *            A child {@link ShellNode}
+	 *            A child {@link org.trinity.shell.scene.api.ShellSurface}
 	 * @return A {@link ShellLayoutProperty}.
 	 ***************************************
 	 */
-	ShellLayoutProperty getChildLayoutConfiguration(final ShellNode child);
+	ShellLayoutProperty getChildLayoutConfiguration(final ShellSurface child);
 
 	/***************************************
-	 * Remove a previously registered child {@link ShellNode}.
+	 * Remove a previously registered child {@link org.trinity.shell.scene.api.ShellSurface}.
 	 *
 	 * @param child
-	 *            A child {@link ShellNode}.
+	 *            A child {@link org.trinity.shell.scene.api.ShellSurface}.
 	 ***************************************
 	 */
-	void removeChildLayoutConfiguration(final ShellNode child);
+	void removeChildLayoutConfiguration(final ShellSurface child);
 
 	/***************************************
-	 * Layout all child {@link ShellNode}s. This method should only be called by
+	 * Layout all child {@link org.trinity.shell.scene.api.ShellSurface}s. This method should only be called by
 	 * a {@link org.trinity.shell.scene.api.ShellNodeParent}.
 	 *
 	 * @param layoutRegion
@@ -77,5 +77,5 @@ public interface Layout {
 	 ***************************************
 	 */
 	void layout(RectangleImmutable layoutRegion,
-				List<ShellNode> childNodes);
+				List<ShellSurface> childNodes);
 }

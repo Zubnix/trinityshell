@@ -82,7 +82,7 @@ public final class ShellSurfaceImpl extends ShellNodeImpl implements ShellSurfac
 	}
 
 	@Override
-	public DisplaySurface getDisplayBuffer() {
+	public DisplaySurface getBuffer() {
 		return this.displaySurface;
 	}
 

@@ -29,9 +29,13 @@ import org.freedesktop.xcb.xcb_get_geometry_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
+import org.trinity.shell.scene.api.BufferSpace;
+import org.trinity.shell.scene.api.HasSize;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+import javax.media.nativewindow.util.Dimension;
+import javax.media.nativewindow.util.DimensionImmutable;
 import javax.media.nativewindow.util.Rectangle;
 import javax.media.nativewindow.util.RectangleImmutable;
 import java.nio.ByteBuffer;
@@ -51,7 +55,7 @@ import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 
 @ThreadSafe
 @AutoFactory
-public class XWindow extends EventBus implements Listenable {
+public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
 
@@ -93,6 +97,7 @@ public class XWindow extends EventBus implements Listenable {
 
 		// we have to adjust the size with the X border. This sucks because it
 		// introduces an extra roundtrip to the X server. -_-
+        //TODO keep track of the size & border through event listeners?
 
 		final int winId = getNativeHandle();
 		final xcb_get_geometry_cookie_t cookie_t = xcb_get_geometry(getConnectionRef(),
@@ -130,7 +135,9 @@ public class XWindow extends EventBus implements Listenable {
 	}
 
 	public RectangleImmutable getShape() {
-		final int winId = getNativeHandle();
+        //TODO keep track of the size & border through event listeners?
+
+        final int winId = getNativeHandle();
 
 		final xcb_get_geometry_cookie_t geometryRequest = xcb_get_geometry(getConnectionRef(),
 																		   winId);
@@ -154,7 +161,13 @@ public class XWindow extends EventBus implements Listenable {
 							 height);
 	}
 
-	private void checkError(final xcb_generic_error_t e) {
+    @Override
+    public DimensionImmutable getSize() {
+        final RectangleImmutable shape = getShape();
+        return new Dimension(shape.getWidth(),shape.getHeight());
+    }
+
+    private void checkError(final xcb_generic_error_t e) {
 		if(xcb_generic_error_t.getCPtr(e) != 0) {
 			LOG.error("X error: {}.",
 					  XcbErrorUtil.toString(e));

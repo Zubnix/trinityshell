@@ -19,8 +19,7 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.event;
 
-import org.trinity.shell.scene.api.ShellNode;
-import org.trinity.shell.scene.api.ShellNodeConfiguration;
+import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -28,7 +27,7 @@ import javax.media.nativewindow.util.Dimension;
 import javax.media.nativewindow.util.DimensionImmutable;
 
 /***************************************
- * Informs that the {@link ShellNode} that emitted this event, is resized.
+ * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emitted this event, is resized.
  *
  ***************************************
  */
@@ -42,16 +41,16 @@ public class ShellNodeResizedEvent extends ShellNodeEvent {
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
-	 * e.g. {@link ShellNode#toGeoTransformation()}
+	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
-	 * @param shellNode
-	 *            the emitting {@link ShellNode}
+	 * @param shellSurface
+	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 * @param size
 	 *            a size {@link Dimension}
 	 */
-	public ShellNodeResizedEvent(@Nonnull final ShellNode shellNode,
+	public ShellNodeResizedEvent(@Nonnull final ShellSurface shellSurface,
                                  @Nonnull final DimensionImmutable size) {
-		super(shellNode);
+		super(shellSurface);
         this.size = size;
     }
 

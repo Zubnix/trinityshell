@@ -19,14 +19,13 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.event;
 
-import org.trinity.shell.scene.api.ShellNode;
-import org.trinity.shell.scene.api.ShellNodeConfiguration;
+import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * Informs that the {@link ShellNode} that emitted this event, is reparented.
+ * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emitted this event, is reparented.
  *
  ***************************************
  */
@@ -34,27 +33,27 @@ import javax.annotation.concurrent.Immutable;
 public class ShellNodeReparentedEvent extends ShellNodeEvent {
 
     @Nonnull
-    private final ShellNode parent;
+    private final ShellSurface parent;
 
     /**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
-	 * e.g. {@link ShellNode#toGeoTransformation()}
+	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
-	 * @param shellNode
-	 *            the emitting {@link ShellNode}
+	 * @param shellSurface
+	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 * @param parent
-	 *            a parent {@link ShellNode}
+	 *            a parent {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellNodeReparentedEvent(@Nonnull final ShellNode shellNode,
-                                    @Nonnull final ShellNode parent) {
-		super( shellNode);
+	public ShellNodeReparentedEvent(@Nonnull final ShellSurface shellSurface,
+                                    @Nonnull final ShellSurface parent) {
+		super(shellSurface);
         this.parent = parent;
     }
 
     @Nonnull
-    public ShellNode getParent() {
+    public ShellSurface getParent() {
         return this.parent;
     }
 }

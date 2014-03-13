@@ -19,13 +19,13 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.event;
 
-import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * Request to hide the {@link ShellNode} that emits this event.
+ * Request to hide the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
  *
  ***************************************
  */
@@ -36,12 +36,12 @@ public class ShellNodeHideRequestEvent extends ShellNodeVisibleRequestEvent {
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
-	 * e.g. {@link ShellNode#toGeoTransformation()}
+	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
-	 * @param shellNode
-	 *            the emitting {@link ShellNode}
+	 * @param shellSurface
+	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellNodeHideRequestEvent(@Nonnull final ShellNode shellNode) {
-		super(shellNode);
+	public ShellNodeHideRequestEvent(@Nonnull final ShellSurface shellSurface) {
+		super(shellSurface);
 	}
 }

@@ -11,7 +11,7 @@ public interface ShellNodeConfigurable {
 
     void attachDisplayBuffer(@Nonnull Object buffer);
 
-    void setParent(ShellNode shellNodeParent);
+    void setParent(ShellSurface shellSurfaceParent);
 
     void markDestroyed();
 

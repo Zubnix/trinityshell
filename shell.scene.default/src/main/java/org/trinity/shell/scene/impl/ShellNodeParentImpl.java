@@ -21,7 +21,7 @@ package org.trinity.shell.scene.impl;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.common.base.Optional;
-import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellNodeParent;
 import org.trinity.shell.scene.api.event.ShellNodeChildAddedEvent;
 import org.trinity.shell.scene.api.event.ShellNodeChildLeftEvent;
@@ -45,7 +45,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @AutoFactory
 public class ShellNodeParentImpl extends ShellNodeImpl implements ShellNodeParent {
 
-    private final LinkedList<ShellNode> children = new LinkedList<>();
+    private final LinkedList<ShellSurface> children = new LinkedList<>();
     private Optional<Layout> optionalLayoutManager = Optional.absent();
 
     ShellNodeParentImpl(@Nonnull final ShellNodeParent parent) {
@@ -57,7 +57,7 @@ public class ShellNodeParentImpl extends ShellNodeImpl implements ShellNodeParen
      * <p/>
      * The returned array is a copy of the internal array.
      */
-    public List<ShellNode> getChildren() {
+    public List<ShellSurface> getChildren() {
         return new ArrayList<>(this.children);
     }
 
@@ -78,7 +78,7 @@ public class ShellNodeParentImpl extends ShellNodeImpl implements ShellNodeParen
         this.optionalLayoutManager = Optional.absent();
     }
 
-    protected void handleChildReparent(@Nonnull final ShellNode child) {
+    protected void handleChildReparent(@Nonnull final ShellSurface child) {
         checkArgument(child instanceof ShellNodeImpl);
 
         final ShellNodeEvent shellNodeEvent;
@@ -93,7 +93,7 @@ public class ShellNodeParentImpl extends ShellNodeImpl implements ShellNodeParen
         post(shellNodeEvent);
     }
 
-    protected void handleChildStacking(@Nonnull final ShellNode child,
+    protected void handleChildStacking(@Nonnull final ShellSurface child,
                                        final boolean raised) {
         checkArgument(child instanceof ShellNodeImpl);
         checkArgument(this.children.remove(child));

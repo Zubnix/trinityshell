@@ -19,17 +19,14 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api;
 
-import org.trinity.common.HasDimension;
 import org.trinity.common.Listenable;
-
-import javax.media.nativewindow.util.RectangleImmutable;
 
 /**
  * ************************************
  * The super interface of all nodes that live in the shell scene.
  * **************************************
  */
-public interface ShellNode extends Listenable, HasDimension<Space.ShellNodeSpace> {
+public interface ShellSurface extends Listenable, HasShape<ShellSpace> {
 
     void accept(ShellNodeConfiguration shellNodeConfiguration);
 
@@ -41,7 +38,7 @@ public interface ShellNode extends Listenable, HasDimension<Space.ShellNodeSpace
      * @return a platform display buffer.
      ***************************************
      */
-    DisplayBuffer getDisplayBuffer();
+    HasSize<BufferSpace> getBuffer();
 
     /**
      * *************************************
@@ -105,7 +102,7 @@ public interface ShellNode extends Listenable, HasDimension<Space.ShellNodeSpace
      * <p/>
      * **************************************
      */
-    void requestReparent(final ShellNode parent);
+    void requestReparent(final ShellSurface parent);
 
     /**
      * ************************************
@@ -142,8 +139,8 @@ public interface ShellNode extends Listenable, HasDimension<Space.ShellNodeSpace
      * ************************************
      * The shell parent of this node.
      *
-     * @return a {@link ShellNode}.
+     * @return a {@link ShellSurface}.
      * **************************************
      */
-    ShellNode getParent();
+    ShellSurface getParent();
 }

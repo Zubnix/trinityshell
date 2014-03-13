@@ -22,7 +22,7 @@ package org.trinity.shell.scene.impl;
 import com.google.auto.factory.AutoFactory;
 import com.google.common.eventbus.EventBus;
 import org.trinity.common.Listenable;
-import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellNodeConfigurable;
 import org.trinity.shell.scene.api.ShellNodeConfiguration;
 import org.trinity.shell.scene.api.ShellNodeParent;
@@ -46,7 +46,7 @@ import javax.media.nativewindow.util.RectangleImmutable;
 
 @NotThreadSafe
 @AutoFactory
-public class ShellNodeImpl extends EventBus implements ShellNode, ShellNodeConfigurable, Listenable {
+public class ShellSurfaceImpl extends EventBus implements ShellSurface, ShellNodeConfigurable, Listenable {
 
     @Nonnull
     private RectangleImmutable shape;

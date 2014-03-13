@@ -19,14 +19,13 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.event;
 
-import org.trinity.shell.scene.api.ShellNode;
-import org.trinity.shell.scene.api.ShellNodeConfiguration;
+import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * General event to inform about child {@link ShellNode} (added, removed)
+ * General event to inform about child {@link org.trinity.shell.scene.api.ShellSurface} (added, removed)
  * related operations.
  *
  ***************************************
@@ -35,27 +34,27 @@ import javax.annotation.concurrent.Immutable;
 public abstract class ShellNodeChildEvent extends ShellNodeEvent {
 
     @Nonnull
-    private final ShellNode child;
+    private final ShellSurface child;
 
     /**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
-	 * e.g. {@link ShellNode#toGeoTransformation()}
+	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
-	 * @param shellNode
-	 *            the emitting {@link ShellNode}
+	 * @param shellSurface
+	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 * @param shellNodeTransformation
 	 *            a {@link ShellNodeTransformation}
 	 */
-	public ShellNodeChildEvent(@Nonnull final ShellNode shellNode,
-                               @Nonnull final ShellNode child) {
-		super(	shellNode);
+	public ShellNodeChildEvent(@Nonnull final ShellSurface shellSurface,
+                               @Nonnull final ShellSurface child) {
+		super(shellSurface);
         this.child = child;
     }
 
     @Nonnull
-    public ShellNode getChild() {
+    public ShellSurface getChild() {
         return this.child;
     }
 }

@@ -4,5 +4,5 @@ import javax.annotation.Nonnull;
 
 public interface ShellNodeFactory {
 
-	ShellNode construct(@Nonnull ShellNode parent, @Nonnull Object buffer);
+	ShellSurface construct(@Nonnull ShellSurface parent, @Nonnull Object buffer);
 }

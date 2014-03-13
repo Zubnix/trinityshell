@@ -5,6 +5,6 @@ import javax.media.nativewindow.util.DimensionImmutable;
 /**
  * Created by zubzub on 12/03/14.
  */
-public interface HasDimension<SPACE> {
-    DimensionImmutable getDimension();
+public interface HasSize<T extends Space> {
+    DimensionImmutable getSize();
 }

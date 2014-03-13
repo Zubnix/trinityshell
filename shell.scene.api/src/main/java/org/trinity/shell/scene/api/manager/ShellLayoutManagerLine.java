@@ -19,11 +19,11 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.manager;
 
-import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellSurface;
 
 /**
  * ************************************
- * Lays out child {@link ShellNode}s in a single continuous line ie in a single
+ * Lays out child {@link org.trinity.shell.scene.api.ShellSurface}s in a single continuous line ie in a single
  * row (horizontal), or a single column (vertical). Children can be position
  * vertically, horizontally and left to right or right to left. Each child node
  * can be assigned a weight. Each child weight is then compared to the weight of
@@ -53,6 +53,6 @@ public interface ShellLayoutManagerLine extends Layout {
     void setInverseDirection(boolean inverseDirection);
 
     @Override
-    public ShellLayoutPropertyLine getChildLayoutConfiguration(ShellNode child);
+    public ShellLayoutPropertyLine getChildLayoutConfiguration(ShellSurface child);
 
 }

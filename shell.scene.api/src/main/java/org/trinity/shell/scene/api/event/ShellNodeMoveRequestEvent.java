@@ -19,7 +19,7 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.event;
 
-import org.trinity.shell.scene.api.ShellNode;
+import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -27,7 +27,7 @@ import javax.media.nativewindow.util.Point;
 import javax.media.nativewindow.util.PointImmutable;
 
 /***************************************
- * Request to move the {@link ShellNode} that emits this event.
+ * Request to move the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
  *
  ***************************************
  */
@@ -41,16 +41,16 @@ public class ShellNodeMoveRequestEvent extends ShellNodeEvent {
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
-	 * e.g. {@link ShellNode#toGeoTransformation()}
+	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
-	 * @param shellNode
-	 *            the emitting {@link ShellNode}
+	 * @param shellSurface
+	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 * @param position
 	 *            the top left {@link Point} of the shellnode
 	 */
-	public ShellNodeMoveRequestEvent(@Nonnull final ShellNode shellNode,
+	public ShellNodeMoveRequestEvent(@Nonnull final ShellSurface shellSurface,
                                      @Nonnull final PointImmutable position) {
-		super(	shellNode);
+		super(shellSurface);
         this.position = position;
     }
 

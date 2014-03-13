@@ -19,8 +19,7 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.event;
 
-import org.trinity.shell.scene.api.ShellNode;
-import org.trinity.shell.scene.api.ShellNodeConfiguration;
+import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -36,12 +35,12 @@ public class ShellNodeVisibleEvent extends ShellNodeEvent {
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
-	 * e.g. {@link ShellNode#toGeoTransformation()}
+	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
-	 * @param shellNode
-	 *            the emitting {@link ShellNode}
+	 * @param shellSurface
+	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellNodeVisibleEvent(@Nonnull final ShellNode shellNode) {
-		super(	shellNode);
+	public ShellNodeVisibleEvent(@Nonnull final ShellSurface shellSurface) {
+		super(shellSurface);
 	}
 }
