@@ -31,8 +31,7 @@ import org.trinity.shell.scene.api.event.ShellNodeShowRequestEvent;
 import org.trinity.shell.scene.api.manager.ShellLayoutManagerLine;
 import org.trinity.shell.scene.api.manager.ShellLayoutProperty;
 import org.trinity.shell.scene.api.manager.ShellLayoutPropertyLine;
-import org.trinity.shell.scene.impl.ShellNodeImpl;
-import org.trinity.shell.scene.impl.ShellNodeParentImpl;
+import org.trinity.shell.scene.impl.ShellSurfaceDefault;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -80,7 +79,7 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 	protected void layoutHorizontal(@Nonnull final ShellSurface containerNode) {
 		// total available size of the container
-		checkArgument(containerNode instanceof ShellNodeImpl);
+		checkArgument(containerNode instanceof ShellSurfaceDefault);
 
 		int newWidthSize = 0;
 		int fixedHeightSize = 0;

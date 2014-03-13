@@ -29,7 +29,7 @@ import org.freedesktop.xcb.xcb_get_geometry_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
-import org.trinity.shell.scene.api.BufferSpace;
+import org.trinity.shell.scene.api.SpaceBuffer;
 import org.trinity.shell.scene.api.HasSize;
 
 import javax.annotation.Nonnull;
@@ -43,27 +43,20 @@ import java.nio.ByteBuffer;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
-import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
-import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
-import static org.freedesktop.xcb.LibXcb.xcb_flush;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+import static org.freedesktop.xcb.LibXcb.*;
+import static org.freedesktop.xcb.xcb_config_window_t.*;
 
 @ThreadSafe
 @AutoFactory
-public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace> {
+public class XWindow extends EventBus implements Listenable, HasSize<SpaceBuffer> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
 
 	private static final int        MOVE_RESIZE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
 	private static final ByteBuffer MOVE_RESIZE_VALUE_LIST_BUFFER = allocateDirect(16).order(nativeOrder());
 
-	private final Integer               nativeHandle;
-	private final XEventChannel        xEventChannel;
+	private final Integer       nativeHandle;
+	private final XEventChannel xEventChannel;
 
 	XWindow(@Provided final XEventChannel xEventChannel,
 			@Nonnull final Integer nativeHandle) {
@@ -97,7 +90,7 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
 
 		// we have to adjust the size with the X border. This sucks because it
 		// introduces an extra roundtrip to the X server. -_-
-        //TODO keep track of the size & border through event listeners?
+		//TODO keep track of the size & border through event listeners?
 
 		final int winId = getNativeHandle();
 		final xcb_get_geometry_cookie_t cookie_t = xcb_get_geometry(getConnectionRef(),
@@ -135,9 +128,9 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
 	}
 
 	public RectangleImmutable getShape() {
-        //TODO keep track of the size & border through event listeners?
+		//TODO keep track of the size & border through event listeners?
 
-        final int winId = getNativeHandle();
+		final int winId = getNativeHandle();
 
 		final xcb_get_geometry_cookie_t geometryRequest = xcb_get_geometry(getConnectionRef(),
 																		   winId);
@@ -161,13 +154,14 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
 							 height);
 	}
 
-    @Override
-    public DimensionImmutable getSize() {
-        final RectangleImmutable shape = getShape();
-        return new Dimension(shape.getWidth(),shape.getHeight());
-    }
+	@Override
+	public DimensionImmutable getSize() {
+		final RectangleImmutable shape = getShape();
+		return new Dimension(shape.getWidth(),
+							 shape.getHeight());
+	}
 
-    private void checkError(final xcb_generic_error_t e) {
+	private void checkError(final xcb_generic_error_t e) {
 		if(xcb_generic_error_t.getCPtr(e) != 0) {
 			LOG.error("X error: {}.",
 					  XcbErrorUtil.toString(e));

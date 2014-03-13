@@ -26,9 +26,9 @@ import org.trinity.common.Listenable;
  * The super interface of all nodes that live in the shell scene.
  * **************************************
  */
-public interface ShellSurface extends Listenable, HasShape<ShellSpace> {
+public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
 
-    void accept(ShellNodeConfiguration shellNodeConfiguration);
+    void accept(ShellSurfaceConfiguration shellSurfaceConfiguration);
 
     /***************************************
      * The underlying, {@code DisplaySurface} that this shell surface will use
@@ -38,7 +38,7 @@ public interface ShellSurface extends Listenable, HasShape<ShellSpace> {
      * @return a platform display buffer.
      ***************************************
      */
-    HasSize<BufferSpace> getBuffer();
+    HasSize<SpaceBuffer> getBuffer();
 
     /**
      * *************************************

@@ -23,10 +23,11 @@ package org.trinity.shell.scene.api;
 import com.google.common.eventbus.EventBus;
 import dagger.Module;
 
-/***************************************
+/**
+ * ************************************
  * Registers useful objects in the Guice injection framework. The following
  * objects are registered:
- * <p>
+ * <p/>
  * <ul>
  * <li>An {@link EventBus} which is {@link Named} "ShellEventBus". This eventbus
  * is the primary means of communication between independent {@link ShellPlugin}
@@ -34,8 +35,8 @@ import dagger.Module;
  * is driven by a single shell thread, subscribers should thus not block their
  * handling of notifications.
  * </ul>
- *
- ***************************************
+ * <p/>
+ * **************************************
  */
 @Module
 class ShellApiModule {
