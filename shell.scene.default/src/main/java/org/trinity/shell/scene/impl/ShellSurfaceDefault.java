@@ -27,14 +27,8 @@ import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
 import org.trinity.shell.scene.api.SpaceBuffer;
-import org.trinity.shell.scene.api.event.ShellNodeEvent;
-import org.trinity.shell.scene.api.event.ShellNodeHideRequestEvent;
-import org.trinity.shell.scene.api.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.scene.api.event.ShellNodeMoveRequestEvent;
-import org.trinity.shell.scene.api.event.ShellNodeRaiseRequestEvent;
-import org.trinity.shell.scene.api.event.ShellNodeReparentRequestEvent;
-import org.trinity.shell.scene.api.event.ShellNodeResizeRequestEvent;
-import org.trinity.shell.scene.api.event.ShellNodeShowRequestEvent;
+import org.trinity.shell.scene.api.event.*;
+import org.trinity.shell.scene.api.event.ShellSurfaceResizeRequestEvent;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -150,7 +144,7 @@ public class ShellSurfaceDefault extends EventBus implements ShellSurface, Shell
 	@Override
 	public void requestResize(@Nonnegative final int width,
 							  @Nonnegative final int height) {
-		post(new ShellNodeResizeRequestEvent(this,
+		post(new ShellSurfaceResizeRequestEvent(this,
 											 new Dimension(width,
 														   height)));
 	}
@@ -167,11 +161,11 @@ public class ShellSurfaceDefault extends EventBus implements ShellSurface, Shell
 
 	@Override
 	public void requestShow() {
-		post(new ShellNodeShowRequestEvent(this));
+		post(new ShellSurfaceShowRequestEvent(this));
 	}
 
 	@Override
 	public void requestHide() {
-		post(new ShellNodeHideRequestEvent(this));
+		post(new ShellSurfaceHideRequestEvent(this));
 	}
 }

@@ -23,11 +23,11 @@ import com.google.common.eventbus.Subscribe;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellNodeParent;
 import org.trinity.shell.scene.api.event.ShellNodeDestroyedEvent;
-import org.trinity.shell.scene.api.event.ShellNodeHideRequestEvent;
+import org.trinity.shell.scene.api.event.ShellSurfaceHideRequestEvent;
 import org.trinity.shell.scene.api.event.ShellNodeLowerRequestEvent;
 import org.trinity.shell.scene.api.event.ShellNodeRaiseRequestEvent;
 import org.trinity.shell.scene.api.event.ShellNodeReparentRequestEvent;
-import org.trinity.shell.scene.api.event.ShellNodeShowRequestEvent;
+import org.trinity.shell.scene.api.event.ShellSurfaceShowRequestEvent;
 import org.trinity.shell.scene.api.manager.ShellLayoutManagerLine;
 import org.trinity.shell.scene.api.manager.ShellLayoutProperty;
 import org.trinity.shell.scene.api.manager.ShellLayoutPropertyLine;
@@ -300,13 +300,13 @@ public class ShellLayoutManagerLineImpl extends AbstractShellLayoutManager imple
 
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleChildShowRequest(final ShellNodeShowRequestEvent shellNodeShowRequestEvent) {
+		public void handleChildShowRequest(final ShellSurfaceShowRequestEvent shellNodeShowRequestEvent) {
 			shellNodeShowRequestEvent.getSource().doShow();
 		}
 
 		@SuppressWarnings("unused")
 		@Subscribe
-		public void handleChildHideRequest(final ShellNodeHideRequestEvent shellNodeHideRequestEvent) {
+		public void handleChildHideRequest(final ShellSurfaceHideRequestEvent shellNodeHideRequestEvent) {
 			shellNodeHideRequestEvent.getSource().doHide();
 		}
 

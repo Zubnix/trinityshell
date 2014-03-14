@@ -11,10 +11,10 @@ import javax.inject.Singleton;
 import javax.media.nativewindow.util.RectangleImmutable;
 
 @Singleton
-public class ShellSurfaceRoot extends EventBus implements ShellSurface{
+public class ShellSurfaceRootSimple extends EventBus implements ShellSurface{
 
 	@Inject
-	ShellSurfaceRoot() {
+    ShellSurfaceRootSimple() {
 	}
 
 	@Override

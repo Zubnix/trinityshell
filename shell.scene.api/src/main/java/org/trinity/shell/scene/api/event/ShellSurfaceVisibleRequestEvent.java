@@ -25,12 +25,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * Request to show the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
- *
+ * General event to request visibility (show, hide) related operations.
  ***************************************
  */
 @Immutable
-public class ShellNodeShowRequestEvent extends ShellNodeVisibleRequestEvent {
+public class ShellSurfaceVisibleRequestEvent extends ShellNodeEvent {
 
 	/**
 	 * Create a new {@code ShellNodeChildAddedEvent} with the given
@@ -41,7 +40,7 @@ public class ShellNodeShowRequestEvent extends ShellNodeVisibleRequestEvent {
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellNodeShowRequestEvent(@Nonnull final ShellSurface shellSurface) {
+	public ShellSurfaceVisibleRequestEvent(@Nonnull final ShellSurface shellSurface) {
 		super(shellSurface);
 	}
 }

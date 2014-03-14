@@ -58,7 +58,7 @@ public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
      * Signals if this node is destroyed. A destroyed node should not be able to
      * process any geometry changes and should be discarded.
      *
-     * @return a future true if destroyed, a future false if not.
+     * @return a true if destroyed, false if not.
      * **************************************
      */
     Boolean isDestroyed();
@@ -108,7 +108,7 @@ public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
      * ************************************
      * Request that this node is resized. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellNodeResizeRequestEvent}.
+     * {@link org.trinity.shell.scene.api.event.ShellSurfaceResizeRequestEvent}.
      * <p/>
      * **************************************
      */
@@ -119,7 +119,7 @@ public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
      * ************************************
      * Request that this node is shown. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellNodeShowRequestEvent}.
+     * {@link org.trinity.shell.scene.api.event.ShellSurfaceShowRequestEvent}.
      * <p/>
      * **************************************
      */

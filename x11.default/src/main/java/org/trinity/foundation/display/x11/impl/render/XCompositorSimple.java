@@ -26,6 +26,8 @@ import org.trinity.foundation.display.x11.impl.XCompositor;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.foundation.display.x11.impl.XWindowFactory;
+import org.trinity.shell.scene.api.ShellSurface;
+import org.trinity.shell.scene.api.ShellSurfaceFactory;
 
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
@@ -53,25 +55,41 @@ public class XCompositorSimple implements XCompositor {
     private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder()).putInt(CLIENT_EVENT_MASK);
 
     private final XEventChannel xEventChannel;
+    private ShellSurfaceFactory shellSurfaceFactory;
     private final XWindowFactory xWindowFactory;
+    private ShellSurfaceRootSimple shellSurfaceRootSimple;
+    private ShellSimple shellSimple;
 
     @Inject
     XCompositorSimple(final XEventChannel xEventChannel,
-                      final XWindowFactory xWindowFactory) {
+                      final XWindowFactory xWindowFactory,
+                      final ShellSurfaceFactory shellSurfaceFactory,
+                      final ShellSurfaceRootSimple shellSurfaceRootSimple,
+                      final ShellSimple shellSimple) {
         this.xEventChannel = xEventChannel;
         this.xWindowFactory = xWindowFactory;
+        this.shellSurfaceFactory = shellSurfaceFactory;
+        this.shellSurfaceRootSimple = shellSurfaceRootSimple;
+        this.shellSimple = shellSimple;
     }
 
     @Override
 	public Listenable createSurface(final Integer nativeHandle) {
         configureClientEvents(nativeHandle);
+
         final XWindow xWindow = this.xWindowFactory.create(nativeHandle);
-        addToScene(xWindow);
+        final ShellSurface shellSurface = this.shellSurfaceFactory.construct(this.shellSurfaceRootSimple,
+                                                                             xWindow);
+        linkXEvents(xWindow, shellSurface);
+        this.shellSimple.add(shellSurface);
+
         return xWindow;
     }
 
-    private void addToScene(final XWindow xWindow) {
-        //TODO implement
+    private void linkXEvents(final XWindow xWindow,
+                             final ShellSurface shellSurface) {
+       new XEventLinker(xWindow,
+                        shellSurface).link();
     }
 
     private void configureClientEvents(final Integer nativeHandle) {
