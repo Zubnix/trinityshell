@@ -1,7 +1,10 @@
-package org.trinity.foundation.display.x11.impl.render;
-
+package org.trinity.foundation.display.x11.impl.render.simple;
 
 import com.google.common.eventbus.Subscribe;
+import org.freedesktop.xcb.xcb_configure_request_event_t;
+import org.freedesktop.xcb.xcb_destroy_notify_event_t;
+import org.freedesktop.xcb.xcb_map_request_event_t;
+import org.freedesktop.xcb.xcb_unmap_notify_event_t;
 import org.trinity.common.Listenable;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
@@ -9,19 +12,24 @@ import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
 
 import javax.annotation.Nonnull;
 
-public class XEventLinker {
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+
+public class XEventTranslator {
     @Nonnull
     private final Listenable listenable;
     @Nonnull
     private final ShellSurface shellSurface;
 
-    XEventLinker(@Nonnull final Listenable listenable,
-                 @Nonnull final ShellSurface shellSurface){
+    XEventTranslator(@Nonnull final Listenable listenable,
+					 @Nonnull final ShellSurface shellSurface){
         this.listenable = listenable;
         this.shellSurface = shellSurface;
     }
 
-    public void link(){
+    public void register(){
         this.listenable.register(this);
     }
 
@@ -30,7 +38,7 @@ public class XEventLinker {
     }
 
     @Subscribe
-    public void handle(xcb_configure_request_event_t request_event){
+    public void handle(final xcb_configure_request_event_t request_event){
 		final int x = request_event.getX();
 		final int y = request_event.getY();
 		final int width = request_event.getWidth() + (2 * request_event.getBorder_width());
@@ -55,7 +63,7 @@ public class XEventLinker {
     }
 
     @Subscribe
-    public void handle(xcb_map_request_event_t map_request_event){
+    public void handle(final xcb_map_request_event_t map_request_event){
         this.shellSurface.requestShow();
     }
 
@@ -63,7 +71,7 @@ public class XEventLinker {
     public void handle(final xcb_unmap_notify_event_t unmap_notify_event){
         this.shellSurface.accept(new ShellSurfaceConfiguration() {
             @Override
-            public void configure(ShellSurfaceConfigurable shellSurfaceConfigurable) {
+            public void configure(final ShellSurfaceConfigurable shellSurfaceConfigurable) {
                 shellSurfaceConfigurable.setVisible(Boolean.FALSE);
             }
         });
@@ -73,7 +81,7 @@ public class XEventLinker {
     public void handle(final xcb_destroy_notify_event_t destroy_notify_event){
         this.shellSurface.accept(new ShellSurfaceConfiguration() {
             @Override
-            public void configure(ShellSurfaceConfigurable shellSurfaceConfigurable) {
+            public void configure(final ShellSurfaceConfigurable shellSurfaceConfigurable) {
                 shellSurfaceConfigurable.markDestroyed();
             }
         });

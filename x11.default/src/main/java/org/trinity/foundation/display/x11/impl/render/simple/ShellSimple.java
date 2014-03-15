@@ -1,11 +1,11 @@
-package org.trinity.foundation.display.x11.impl.render;
+package org.trinity.foundation.display.x11.impl.render.simple;
 
 import com.google.common.eventbus.Subscribe;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
-import org.trinity.shell.scene.api.event.ShellSurfaceShowRequestEvent;
 import org.trinity.shell.scene.api.event.ShellSurfaceResizeRequestEvent;
+import org.trinity.shell.scene.api.event.ShellSurfaceShowRequestEvent;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -29,16 +29,16 @@ public class ShellSimple {
     }
 
     @Subscribe
-    public void handle(ShellSurfaceResizeRequestEvent shellSurfaceResizeRequestEvent){
+	public void handle(final ShellSurfaceResizeRequestEvent shellSurfaceResizeRequestEvent) {
 
-        final DimensionImmutable size = shellSurfaceResizeRequestEvent.getSize();
+		final DimensionImmutable size = shellSurfaceResizeRequestEvent.getSize();
         final ShellSurface shellSurface = shellSurfaceResizeRequestEvent.getSource();
         final RectangleImmutable shape = shellSurface.getShape();
 
         shellSurface.accept(new ShellSurfaceConfiguration() {
             @Override
-            public void configure(ShellSurfaceConfigurable shellSurfaceConfigurable) {
-                shellSurfaceConfigurable.setShape(shape.getX(),
+			public void configure(final ShellSurfaceConfigurable shellSurfaceConfigurable) {
+				shellSurfaceConfigurable.setShape(shape.getX(),
                                                   shape.getY(),
                                                   size.getWidth(),
                                                   size.getHeight());
@@ -51,8 +51,8 @@ public class ShellSimple {
         final ShellSurface shellSurface = shellSurfaceShowRequestEvent.getSource();
         shellSurface.accept(new ShellSurfaceConfiguration() {
             @Override
-            public void configure(ShellSurfaceConfigurable shellSurfaceConfigurable) {
-                shellSurfaceConfigurable.setVisible(Boolean.TRUE);
+			public void configure(final ShellSurfaceConfigurable shellSurfaceConfigurable) {
+				shellSurfaceConfigurable.setVisible(Boolean.TRUE);
             }
         });
     }

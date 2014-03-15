@@ -21,7 +21,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.display.api.DisplaySurface;
 import org.trinity.display.api.DisplaySurfaceHandle;
 import org.trinity.display.api.event.DestroyNotify;
-import org.trinity.foundation.display.x11.impl.render.XCompositorSimple;
+import org.trinity.foundation.display.x11.impl.render.simple.XCompositorSimple;
 
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;

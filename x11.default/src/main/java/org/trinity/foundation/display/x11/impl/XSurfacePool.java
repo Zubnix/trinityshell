@@ -26,7 +26,7 @@ import org.freedesktop.xcb.xcb_destroy_notify_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
-import org.trinity.foundation.display.x11.impl.render.XCompositorSimple;
+import org.trinity.foundation.display.x11.impl.render.simple.XCompositorSimple;
 
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
@@ -57,12 +57,12 @@ public class XSurfacePool {
     private Listenable registerNewSurface(final Integer surfaceHandle) {
         LOG.debug("Xwindow={} added to cache.",
                 surfaceHandle);
-        final Listenable window = this.compositor.createSurface(surfaceHandle);
-        window.register(new DestroyListener(window));
-        this.surfaces.put(surfaceHandle,
-                window);
-        return window;
-    }
+		final Listenable surface = this.compositor.createSurface(surfaceHandle);
+		surface.register(new DestroyListener(surface));
+		this.surfaces.put(surfaceHandle,
+						  surface);
+		return surface;
+	}
 
     private class DestroyListener {
         private final Listenable surface;
@@ -73,8 +73,8 @@ public class XSurfacePool {
 
         @Subscribe
         public void destroyed(final xcb_destroy_notify_event_t destroyNotifyEvent) {
-            XSurfacePool.this.surfaces.remove(surface);
-            surface.unregister(this);
+            XSurfacePool.this.surfaces.remove(this.surface);
+			this.surface.unregister(this);
         }
     }
 }

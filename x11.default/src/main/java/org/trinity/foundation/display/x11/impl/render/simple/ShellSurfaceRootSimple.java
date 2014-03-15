@@ -1,6 +1,7 @@
-package org.trinity.foundation.display.x11.impl.render;
+package org.trinity.foundation.display.x11.impl.render.simple;
 
 import com.google.common.eventbus.EventBus;
+import org.trinity.foundation.display.x11.impl.XWindow;
 import org.trinity.shell.scene.api.HasSize;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
@@ -11,22 +12,26 @@ import javax.inject.Singleton;
 import javax.media.nativewindow.util.RectangleImmutable;
 
 @Singleton
-public class ShellSurfaceRootSimple extends EventBus implements ShellSurface{
+public class ShellSurfaceRootSimple extends EventBus implements ShellSurface {
+
+	private final XWindow rootXWindow;
 
 	@Inject
-    ShellSurfaceRootSimple() {
+	ShellSurfaceRootSimple(final XWindow rootXWindow) {
+		this.rootXWindow = rootXWindow;
 	}
 
 	@Override
 	public void accept(final ShellSurfaceConfiguration shellSurfaceConfiguration) {
 		//TODO implement with xrandr thingy?
 		//shellSurfaceConfiguration.setShape(...);
+		throw new UnsupportedOperationException("Not yet implemented.");
 	}
 
 	@Override
 	public HasSize<SpaceBuffer> getBuffer() {
-		//TODO return rootwindow?
-		return null;
+
+		return this.rootXWindow;
 	}
 
 	@Override
@@ -41,39 +46,40 @@ public class ShellSurfaceRootSimple extends EventBus implements ShellSurface{
 
 	@Override
 	public void requestLower() {
-		//ignored
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void requestMove(final int x,
 							final int y) {
-		//ingored
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void requestRaise() {
-		//ignored
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void requestReparent(final ShellSurface parent) {
-		//ignored
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void requestResize(final int width,
 							  final int height) {
-		//TODO delegate to xrandr thingy
+		//TODO delegate to xrandr thingy?
+		throw new UnsupportedOperationException("Not yet implemented.");
 	}
 
 	@Override
 	public void requestShow() {
-		//ignored
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void requestHide() {
-		//ignored
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -83,6 +89,6 @@ public class ShellSurfaceRootSimple extends EventBus implements ShellSurface{
 
 	@Override
 	public RectangleImmutable getShape() {
-		return null;
+		return this.rootXWindow.getShape();
 	}
 }

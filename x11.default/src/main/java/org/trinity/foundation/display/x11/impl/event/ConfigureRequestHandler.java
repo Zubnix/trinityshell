@@ -59,22 +59,6 @@ public class ConfigureRequestHandler implements XEventHandler {
 		this.xEventChannel.post(request_event);
 		final int windowId = request_event.getWindow();
 		this.xSurfacePool.get(windowId).post(request_event);
-
-//		final int x = request_event.getX();
-//		final int y = request_event.getY();
-//		final int width = request_event.getWidth() + (2 * request_event.getBorder_width());
-//		final int height = request_event.getHeight() + (2 * request_event.getBorder_width());
-//		final Rectangle geometry = new Rectangle(x,
-//												 y,
-//												 width,
-//												 height);
-//
-//		final int valueMask = request_event.getValue_mask();
-//
-//		final boolean configureX = (valueMask & XCB_CONFIG_WINDOW_X) != 0;
-//		final boolean configureY = (valueMask & XCB_CONFIG_WINDOW_Y) != 0;
-//		final boolean configureWidth = (valueMask & XCB_CONFIG_WINDOW_WIDTH) != 0;
-////		final boolean configureHeight = (valueMask & XCB_CONFIG_WINDOW_HEIGHT) != 0;
 	}
 
 	private xcb_configure_request_event_t cast(final xcb_generic_event_t event_t) {

@@ -115,16 +115,16 @@
         </dependency>
 
         <!-- concurrency tools -->
-        <dependency>
-            <groupId>co.paralleluniverse</groupId>
-            <artifactId>quasar-core</artifactId>
-            <version>${quasar.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>co.paralleluniverse</groupId>
-            <artifactId>quasar-actors</artifactId>
-            <version>${quasar.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>co.paralleluniverse</groupId>-->
+            <!--<artifactId>quasar-core</artifactId>-->
+            <!--<version>${quasar.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>co.paralleluniverse</groupId>-->
+            <!--<artifactId>quasar-actors</artifactId>-->
+            <!--<version>${quasar.version}</version>-->
+        <!--</dependency>-->
 
         <!-- rendering tools -->
         <dependency>
