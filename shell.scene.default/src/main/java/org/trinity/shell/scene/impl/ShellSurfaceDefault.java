@@ -80,7 +80,7 @@ public class ShellSurfaceDefault extends EventBus implements ShellSurface, Shell
 
 	@Override
 	public void accept(final ShellSurfaceConfiguration shellSurfaceConfiguration) {
-		shellSurfaceConfiguration.visit(this);
+		shellSurfaceConfiguration.configure(this);
 	}
 
 	@Override
@@ -110,10 +110,10 @@ public class ShellSurfaceDefault extends EventBus implements ShellSurface, Shell
 	}
 
 	@Override
-	public void configure(final int x,
-						  final int y,
-						  final int width,
-						  final int height) {
+	public void setShape(final int x,
+                         final int y,
+                         final int width,
+                         final int height) {
 		this.shape = new Rectangle(x,
 								   y,
 								   width,

@@ -4,11 +4,10 @@ import com.google.common.eventbus.Subscribe;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
-import org.trinity.shell.scene.api.event.ShellSurfaceHideRequestEvent;
 import org.trinity.shell.scene.api.event.ShellSurfaceShowRequestEvent;
-import org.trinity.shell.scene.api.event.ShellSurfaceVisibleRequestEvent;
 import org.trinity.shell.scene.api.event.ShellSurfaceResizeRequestEvent;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.media.nativewindow.util.DimensionImmutable;
@@ -21,7 +20,7 @@ public class ShellSimple {
 	ShellSimple() {
     }
 
-	public void add(final ShellSurface shellSurface) {
+	public void add(@Nonnull final ShellSurface shellSurface) {
         registerSurfaceListeners(shellSurface);
     }
 
@@ -35,13 +34,14 @@ public class ShellSimple {
         final DimensionImmutable size = shellSurfaceResizeRequestEvent.getSize();
         final ShellSurface shellSurface = shellSurfaceResizeRequestEvent.getSource();
         final RectangleImmutable shape = shellSurface.getShape();
+
         shellSurface.accept(new ShellSurfaceConfiguration() {
             @Override
-            public void visit(ShellSurfaceConfigurable shellSurfaceConfigurable) {
-                shellSurfaceConfigurable.configure(shape.getX(),
-                                                   shape.getY(),
-                                                   size.getWidth(),
-                                                   size.getHeight());
+            public void configure(ShellSurfaceConfigurable shellSurfaceConfigurable) {
+                shellSurfaceConfigurable.setShape(shape.getX(),
+                                                  shape.getY(),
+                                                  size.getWidth(),
+                                                  size.getHeight());
             }
         });
     }
@@ -51,7 +51,7 @@ public class ShellSimple {
         final ShellSurface shellSurface = shellSurfaceShowRequestEvent.getSource();
         shellSurface.accept(new ShellSurfaceConfiguration() {
             @Override
-            public void visit(ShellSurfaceConfigurable shellSurfaceConfigurable) {
+            public void configure(ShellSurfaceConfigurable shellSurfaceConfigurable) {
                 shellSurfaceConfigurable.setVisible(Boolean.TRUE);
             }
         });

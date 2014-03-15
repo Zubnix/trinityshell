@@ -63,7 +63,7 @@ public class XEventLinker {
     public void handle(final xcb_unmap_notify_event_t unmap_notify_event){
         this.shellSurface.accept(new ShellSurfaceConfiguration() {
             @Override
-            public void visit(ShellSurfaceConfigurable shellSurfaceConfigurable) {
+            public void configure(ShellSurfaceConfigurable shellSurfaceConfigurable) {
                 shellSurfaceConfigurable.setVisible(Boolean.FALSE);
             }
         });
@@ -73,7 +73,7 @@ public class XEventLinker {
     public void handle(final xcb_destroy_notify_event_t destroy_notify_event){
         this.shellSurface.accept(new ShellSurfaceConfiguration() {
             @Override
-            public void visit(ShellSurfaceConfigurable shellSurfaceConfigurable) {
+            public void configure(ShellSurfaceConfigurable shellSurfaceConfigurable) {
                 shellSurfaceConfigurable.markDestroyed();
             }
         });

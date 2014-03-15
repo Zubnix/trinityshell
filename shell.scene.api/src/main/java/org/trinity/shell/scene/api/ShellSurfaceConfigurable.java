@@ -8,10 +8,10 @@ import javax.annotation.Nonnull;
  */
 public interface ShellSurfaceConfigurable {
 
-	void configure(int x,
-				   int y,
-				   @Nonnegative int width,
-				   @Nonnegative int height);
+	void setShape(int x,
+                  int y,
+                  @Nonnegative int width,
+                  @Nonnegative int height);
 
 	void attachBuffer(@Nonnull HasSize<SpaceBuffer> buffer);
 

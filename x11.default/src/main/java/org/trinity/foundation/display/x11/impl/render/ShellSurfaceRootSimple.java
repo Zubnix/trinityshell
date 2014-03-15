@@ -20,12 +20,12 @@ public class ShellSurfaceRootSimple extends EventBus implements ShellSurface{
 	@Override
 	public void accept(final ShellSurfaceConfiguration shellSurfaceConfiguration) {
 		//TODO implement with xrandr thingy?
-		//shellSurfaceConfiguration.visit(...);
+		//shellSurfaceConfiguration.setShape(...);
 	}
 
 	@Override
 	public HasSize<SpaceBuffer> getBuffer() {
-		//TODO return rootwindow
+		//TODO return rootwindow?
 		return null;
 	}
 

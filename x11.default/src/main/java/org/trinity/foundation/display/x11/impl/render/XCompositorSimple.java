@@ -29,7 +29,7 @@ import org.trinity.foundation.display.x11.impl.XWindowFactory;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceFactory;
 
-import javax.annotation.concurrent.ThreadSafe;
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -46,7 +46,6 @@ import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTI
 
 
 @Singleton
-@ThreadSafe
 public class XCompositorSimple implements XCompositor {
 
     private static final Logger LOG = LoggerFactory.getLogger(XCompositorSimple.class);
@@ -74,7 +73,7 @@ public class XCompositorSimple implements XCompositor {
     }
 
     @Override
-	public Listenable createSurface(final Integer nativeHandle) {
+	public Listenable createSurface(@Nonnull final Integer nativeHandle) {
         configureClientEvents(nativeHandle);
 
         final XWindow xWindow = this.xWindowFactory.create(nativeHandle);
