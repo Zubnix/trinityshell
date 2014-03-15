@@ -1,7 +1,5 @@
 package org.trinity.foundation.display.x11.impl.xeventhandler;
 
-import com.google.common.base.Optional;
-import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.LibXcb;
 import org.freedesktop.xcb.LibXcbJNI;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
@@ -14,12 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.trinity.display.api.Compositor;
-import org.trinity.display.api.event.ShowRequest;
-import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
+import org.trinity.foundation.display.x11.impl.XSurfacePool;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -30,15 +25,10 @@ import static org.powermock.api.mockito.PowerMockito.when;
         LibXcbJNI.class})
 public class TestMapRequestHandler {
 	@Mock
-	private EventBus           xEventBus;
-	@Mock
-	private XEventChannel      xEventChannel;
-	@Mock
-	private DisplaySurfacePool xWindowPool;
-	@Mock
-	private Compositor compositor;
+	private XEventChannel     xEventChannel;
+	private XSurfacePool      xSurfacePool;
 	@InjectMocks
-	private MapRequestHandler  mapRequestHandler;
+	private MapRequestHandler mapRequestHandler;
 
 	@Mock
 	private xcb_generic_event_t         xcb_generic_event;
@@ -60,12 +50,11 @@ public class TestMapRequestHandler {
 
 		//when
 		//an xcb_generic_event_t event arrives
-		final Optional<ShowRequest> showRequestOptional = this.mapRequestHandler.handle(this.xcb_generic_event);
+		this.mapRequestHandler.handle(this.xcb_generic_event);
 
 		//then
 		//the xcb_map_request_event_t is posted on the x event bus
 		//the event is converted to a ShowRequest
-		verify(this.xEventBus).post(isA(xcb_map_request_event_t.class));
-		assertTrue(showRequestOptional.isPresent());
+		verify(this.xEventChannel).post(isA(xcb_map_request_event_t.class));
 	}
 }

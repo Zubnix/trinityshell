@@ -38,6 +38,7 @@ public class FocusOutHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(FocusOutHandler.class);
 	private static final Integer EVENT_CODE = XCB_FOCUS_OUT;
+
 	private final XEventChannel xEventChannel;
 	private final XSurfacePool xSurfacePool;
 

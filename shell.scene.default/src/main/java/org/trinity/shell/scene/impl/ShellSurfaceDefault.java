@@ -26,9 +26,16 @@ import org.trinity.shell.scene.api.HasSize;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
+import org.trinity.shell.scene.api.ShellSurfaceFactory;
 import org.trinity.shell.scene.api.SpaceBuffer;
-import org.trinity.shell.scene.api.event.*;
+import org.trinity.shell.scene.api.event.ShellNodeEvent;
+import org.trinity.shell.scene.api.event.ShellNodeLowerRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeMoveRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeRaiseRequestEvent;
+import org.trinity.shell.scene.api.event.ShellNodeReparentRequestEvent;
+import org.trinity.shell.scene.api.event.ShellSurfaceHideRequestEvent;
 import org.trinity.shell.scene.api.event.ShellSurfaceResizeRequestEvent;
+import org.trinity.shell.scene.api.event.ShellSurfaceShowRequestEvent;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -40,7 +47,8 @@ import javax.media.nativewindow.util.RectangleImmutable;
 
 
 @NotThreadSafe
-@AutoFactory
+@AutoFactory(implementing = ShellSurfaceFactory.class,
+			 className = "ShellSurfaceDefaultFactory")
 public class ShellSurfaceDefault extends EventBus implements ShellSurface, ShellSurfaceConfigurable, Listenable {
 
 	@Nonnull
@@ -54,7 +62,9 @@ public class ShellSurfaceDefault extends EventBus implements ShellSurface, Shell
 	@Nonnull
 	private HasSize<SpaceBuffer> buffer;
 
-	ShellSurfaceDefault(@Nonnull final ShellSurface parent) {
+	ShellSurfaceDefault(@Nonnull final ShellSurface parent,
+						final HasSize<SpaceBuffer> buffer) {
+		this.buffer = buffer;
 		this.parent = parent;
 		this.destroyed = Boolean.FALSE;
 	}

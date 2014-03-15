@@ -38,7 +38,8 @@ public class UnmapNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(UnmapNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_UNMAP_NOTIFY;
-	private final XSurfacePool xSurfacePool;
+
+	private final XSurfacePool  xSurfacePool;
 	private final XEventChannel xEventChannel;
 
 	@Inject

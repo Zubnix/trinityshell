@@ -38,8 +38,9 @@ public class CirculateNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(CirculateNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_CIRCULATE_NOTIFY;
+
 	private final XEventChannel xEventChannel;
-	private final XSurfacePool xSurfacePool;
+	private final XSurfacePool  xSurfacePool;
 
 	@Inject
 	CirculateNotifyHandler(final XEventChannel xEventChannel,

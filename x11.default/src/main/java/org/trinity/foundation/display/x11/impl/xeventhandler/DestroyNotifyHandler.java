@@ -38,6 +38,7 @@ public class DestroyNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(DestroyNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_DESTROY_NOTIFY;
+
 	private final XEventChannel xEventChannel;
 	private final XSurfacePool xSurfacePool;
 

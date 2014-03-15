@@ -38,6 +38,7 @@ public class FocusInHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(FocusInHandler.class);
 	private static final Integer EVENT_CODE = XCB_FOCUS_IN;
+
 	private final XEventChannel xEventChannel;
 	private final XSurfacePool xSurfacePool;
 

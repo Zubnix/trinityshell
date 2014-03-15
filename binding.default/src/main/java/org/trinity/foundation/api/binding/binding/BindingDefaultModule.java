@@ -21,7 +21,10 @@
 package org.trinity.foundation.api.binding.binding;
 
 import dagger.Module;
+import dagger.Provides;
 import org.trinity.binding.api.ViewBinder;
+
+import javax.inject.Singleton;
 
 @Module(
         injects = {
@@ -36,6 +39,12 @@ import org.trinity.binding.api.ViewBinder;
         library = true,
         complete = false
 )
-public final class RenderBindingImplModule {
+public final class BindingDefaultModule {
+
+	@Provides
+	@Singleton
+	ViewBinder provideViewBinder(final ViewBinderDefault viewBinderDefault) {
+		return viewBinderDefault;
+	}
 
 }

@@ -38,7 +38,8 @@ public class ConfigureNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(ConfigureNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_CONFIGURE_NOTIFY;
-	private final XSurfacePool xSurfacePool;
+
+	private final XSurfacePool  xSurfacePool;
 	private final XEventChannel xEventChannel;
 
 	@Inject

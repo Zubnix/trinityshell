@@ -1,19 +1,13 @@
 package org.trinity.foundation.display.x11.impl;
 
 
-import com.google.common.base.Optional;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.junit.Test;
 import org.trinity.common.Listenable;
-import org.trinity.display.api.event.DisplayEvent;
 
 import java.util.HashSet;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TestXEventHandlers {
 
@@ -31,12 +25,9 @@ public class TestXEventHandlers {
         final XEventHandler xEventHandler0 = mock(XEventHandler.class);
         final XEventHandler xEventHandler1 = mock(XEventHandler.class);
         final Listenable target = mock(Listenable.class);
-        final DisplayEvent displayEvent = mock(DisplayEvent.class);
 
         when(xEventHandler0.getEventCode()).thenReturn(0);
         when(xEventHandler1.getEventCode()).thenReturn(1);
-        when(xEventHandler1.getTarget(xcb_generic_event_0)).thenReturn((Optional) Optional.of(target));
-        when(xEventHandler1.handle(xcb_generic_event_0)).thenReturn((Optional) Optional.of(displayEvent));
 
         final XEventChannel eventBus = mock(XEventChannel.class);
 
@@ -53,7 +44,5 @@ public class TestXEventHandlers {
         verify(xEventHandler1).handle(xcb_generic_event_0);
         verify(xEventHandler0,
                never()).handle((xcb_generic_event_t) any());
-
-        verify(target).post(displayEvent);
     }
 }

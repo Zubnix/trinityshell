@@ -38,6 +38,7 @@ public class EnterNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(EnterNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_ENTER_NOTIFY;
+
 	private final XEventChannel xEventChannel;
 	private final XSurfacePool xSurfacePool;
 
@@ -58,7 +59,6 @@ public class EnterNotifyHandler implements XEventHandler {
 		this.xEventChannel.post(enter_notify_event);
 		final int windowId = enter_notify_event.getEvent();
 		this.xSurfacePool.get(windowId).post(enter_notify_event);
-		event.delete();
 	}
 
 	private xcb_enter_notify_event_t cast(final xcb_generic_event_t event_t) {

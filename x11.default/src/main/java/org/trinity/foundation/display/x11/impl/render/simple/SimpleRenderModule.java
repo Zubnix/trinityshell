@@ -28,7 +28,7 @@ public class SimpleRenderModule {
 
 	@Provides
 	@Singleton
-	ShellSimple provideShellSimple(final ShellSimple shellSimple) {
-		return shellSimple;
+	ShellSimple provideShellSimple() {
+		return new ShellSimple();
 	}
 }

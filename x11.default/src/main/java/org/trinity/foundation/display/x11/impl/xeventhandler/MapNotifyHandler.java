@@ -38,8 +38,9 @@ public class MapNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(MapNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_MAP_NOTIFY;
+
 	private final XEventChannel xEventChannel;
-	private final XSurfacePool xSurfacePool;
+	private final XSurfacePool  xSurfacePool;
 
 	@Inject
 	MapNotifyHandler(final XEventChannel xEventChannel,

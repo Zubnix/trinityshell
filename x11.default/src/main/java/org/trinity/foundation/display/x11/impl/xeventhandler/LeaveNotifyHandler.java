@@ -38,6 +38,7 @@ public class LeaveNotifyHandler implements XEventHandler {
 
 	private static final Logger  LOG        = LoggerFactory.getLogger(LeaveNotifyHandler.class);
 	private static final Integer EVENT_CODE = XCB_LEAVE_NOTIFY;
+
 	private final XEventChannel xEventChannel;
 	private final XSurfacePool xSurfacePool;
 

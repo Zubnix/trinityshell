@@ -40,7 +40,7 @@ public class ConfigureRequestHandler implements XEventHandler {
 	private static final Integer EVENT_CODE = XCB_CONFIGURE_REQUEST;
 
 	private final XEventChannel xEventChannel;
-	private final XSurfacePool xSurfacePool;
+	private final XSurfacePool  xSurfacePool;
 
 	@Inject
 	ConfigureRequestHandler(final XEventChannel xEventChannel,

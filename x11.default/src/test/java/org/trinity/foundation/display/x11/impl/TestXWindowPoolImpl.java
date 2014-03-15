@@ -6,47 +6,20 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.trinity.display.api.DisplaySurfaceHandle;
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestXWindowPoolImpl {
 
 	@Mock
-	private XEventChannel        xEventPump;
-	@Mock
-	private XWindowFactory       displaySurfaceFactory;
-	@Mock
-	private XWindow              xWindow;
-	@Mock
-	private DisplaySurfaceHandle displaySurfaceHandle;
+	private XCompositor  xCompositor;
 	@InjectMocks
-	private DisplaySurfacePool   xWindowPool;
+	private XSurfacePool xSurfacePool;
 
 	@Before
 	public void setup() {
-		final int nativeHandle = 123;
-		when(this.displaySurfaceHandle.getNativeHandle()).thenReturn(nativeHandle);
-		when(this.displaySurfaceFactory.create(this.displaySurfaceHandle)).thenReturn(this.xWindow);
-		when(this.xWindow.getDisplaySurfaceHandle()).thenReturn(this.displaySurfaceHandle);
 	}
 
 	@Test
 	public void testLazyPooling() {
-		//given
-		//a pool
-
-		//when
-		//a window is requested more than once
-		this.xWindowPool.get(this.displaySurfaceHandle);
-		this.xWindowPool.get(this.displaySurfaceHandle);
-
-		//then
-		//it is lazily created and cached if not present
-		verify(this.displaySurfaceFactory,
-			   times(1)).create(this.displaySurfaceHandle);
 	}
 }
