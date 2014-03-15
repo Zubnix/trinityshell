@@ -17,10 +17,10 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.display.x11.impl.event;
+package org.trinity.foundation.display.x11.impl.xeventhandler;
 
-import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.freedesktop.xcb.xcb_unmap_notify_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
@@ -31,18 +31,18 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 
-import static org.freedesktop.xcb.LibXcbConstants.XCB_LEAVE_NOTIFY;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_UNMAP_NOTIFY;
 
 @Immutable
-public class LeaveNotifyHandler implements XEventHandler {
+public class UnmapNotifyHandler implements XEventHandler {
 
-	private static final Logger  LOG        = LoggerFactory.getLogger(LeaveNotifyHandler.class);
-	private static final Integer EVENT_CODE = XCB_LEAVE_NOTIFY;
-	private final XEventChannel xEventChannel;
+	private static final Logger  LOG        = LoggerFactory.getLogger(UnmapNotifyHandler.class);
+	private static final Integer EVENT_CODE = XCB_UNMAP_NOTIFY;
 	private final XSurfacePool xSurfacePool;
+	private final XEventChannel xEventChannel;
 
 	@Inject
-	LeaveNotifyHandler(final XEventChannel xEventChannel,
+	UnmapNotifyHandler(final XEventChannel xEventChannel,
 					   final XSurfacePool xSurfacePool) {
 		this.xEventChannel = xEventChannel;
 		this.xSurfacePool = xSurfacePool;
@@ -50,19 +50,22 @@ public class LeaveNotifyHandler implements XEventHandler {
 
 	@Override
 	public void handle(@Nonnull final xcb_generic_event_t event) {
-		// enter has same structure as leave
-		final xcb_enter_notify_event_t enter_notify_event = cast(event);
+		final xcb_unmap_notify_event_t unmap_notify_event = cast(event);
 
 		LOG.debug("Received X event={}",
-				  enter_notify_event.getClass().getSimpleName());
+				  unmap_notify_event.getClass().getSimpleName());
 
-		this.xEventChannel.post(enter_notify_event);
-		final int windowId = enter_notify_event.getEvent();
-		this.xSurfacePool.get(windowId).post(enter_notify_event);
+		this.xEventChannel.post(unmap_notify_event);
+		final int windowId = unmap_notify_event.getWindow();
+		final int reportWindowId = unmap_notify_event.getEvent();
+		if(windowId != reportWindowId) {
+			return;
+		}
+		this.xSurfacePool.get(windowId).post(unmap_notify_event);
 	}
 
-	private xcb_enter_notify_event_t cast(final xcb_generic_event_t event) {
-		return new xcb_enter_notify_event_t(xcb_generic_event_t.getCPtr(event),
+	private xcb_unmap_notify_event_t cast(final xcb_generic_event_t event) {
+		return new xcb_unmap_notify_event_t(xcb_generic_event_t.getCPtr(event),
 											false);
 	}
 

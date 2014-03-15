@@ -17,58 +17,45 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.display.x11.impl.event;
+package org.trinity.foundation.display.x11.impl.xeventhandler;
 
-import org.freedesktop.xcb.xcb_focus_in_event_t;
+import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
-import org.trinity.foundation.display.x11.impl.XSurfacePool;
+import org.trinity.foundation.display.x11.impl.XcbErrorUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 
-import static org.freedesktop.xcb.LibXcbConstants.XCB_FOCUS_IN;
-
 @Immutable
-public class FocusInHandler implements XEventHandler {
+public class GenericErrorHandler implements XEventHandler {
 
-	private static final Logger  LOG        = LoggerFactory.getLogger(FocusInHandler.class);
-	private static final Integer EVENT_CODE = XCB_FOCUS_IN;
-	private final XEventChannel xEventChannel;
-	private final XSurfacePool xSurfacePool;
+    private static final Logger LOG = LoggerFactory.getLogger(GenericErrorHandler.class);
 
-	@Inject
-	FocusInHandler(final XEventChannel xEventChannel,
-				   final XSurfacePool xSurfacePool) {
-		this.xEventChannel = xEventChannel;
-		this.xSurfacePool = xSurfacePool;
-	}
+    private final Integer eventCode = 0;
+    private final XEventChannel xEventChannel;
 
-	@Override
-	public void handle(@Nonnull final xcb_generic_event_t event_t) {
+    @Inject
+    GenericErrorHandler(final XEventChannel xEventChannel) {
+        this.xEventChannel = xEventChannel;
+    }
 
-		final xcb_focus_in_event_t focus_in_event = cast(event_t);
+    @Override
+    public void handle(@Nonnull final xcb_generic_event_t event_t) {
+        final xcb_generic_error_t request_error = new xcb_generic_error_t(xcb_generic_event_t.getCPtr(event_t),
+                false);
+        this.xEventChannel.post(request_error);
 
-		LOG.debug("Received X event={}",
-				  focus_in_event.getClass().getSimpleName());
+        LOG.error(XcbErrorUtil.toString(request_error));
+    }
 
-		this.xEventChannel.post(focus_in_event);
-		final int windowId = focus_in_event.getEvent();
-		this.xSurfacePool.get(windowId).post(focus_in_event);
-	}
-
-	private xcb_focus_in_event_t cast(final xcb_generic_event_t event_t) {
-		return new xcb_focus_in_event_t(xcb_generic_event_t.getCPtr(event_t),
-										false);
-	}
-
-	@Override
-	public Integer getEventCode() {
-		return EVENT_CODE;
-	}
+    @Override
+    public Integer getEventCode() {
+        return this.eventCode;
+    }
 
 }

@@ -21,7 +21,7 @@ package org.trinity.foundation.display.x11.impl;
 
 import dagger.Module;
 import dagger.Provides;
-import org.trinity.foundation.display.x11.impl.event.XEventHandlersModule;
+import org.trinity.foundation.display.x11.impl.xeventhandler.XEventHandlersModule;
 import org.trinity.foundation.display.x11.impl.render.simple.SimpleRenderModule;
 
 import javax.inject.Singleton;

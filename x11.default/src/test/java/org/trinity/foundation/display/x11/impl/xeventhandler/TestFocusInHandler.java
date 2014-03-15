@@ -1,9 +1,9 @@
-package org.trinity.foundation.display.x11.impl.event;
+package org.trinity.foundation.display.x11.impl.xeventhandler;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.xcb.LibXcbJNI;
-import org.freedesktop.xcb.xcb_enter_notify_event_t;
+import org.freedesktop.xcb.xcb_focus_in_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,15 +16,15 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.trinity.display.api.DisplaySurface;
 import org.trinity.display.api.DisplaySurfaceHandle;
-import org.trinity.display.api.event.PointerLeaveNotify;
+import org.trinity.display.api.event.FocusGainNotify;
 import org.trinity.foundation.display.x11.impl.DisplaySurfacePool;
 
-import static org.freedesktop.xcb.LibXcbJNI.xcb_enter_notify_event_t_event_get;
+import static org.freedesktop.xcb.LibXcbJNI.xcb_focus_in_event_t_event_get;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,13 +32,13 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LibXcbJNI.class)
-public class TestLeaveNotifyHandler {
+public class TestFocusInHandler {
 	@Mock
 	private EventBus            xEventBus;
 	@Mock
 	private DisplaySurfacePool  xWindowPool;
 	@InjectMocks
-	private LeaveNotifyHandler  leaveNotifyHandler;
+	private FocusInHandler      focusInHandler;
 	@Mock
 	private xcb_generic_event_t xcb_generic_event;
 
@@ -47,28 +47,28 @@ public class TestLeaveNotifyHandler {
 	@Test
 	public void testEventHandling() {
 		//given
-		//a LeaveNotifyHandler
+		//a FocusInHandler
 		//an xcb_generic_event_t
 
 		//when
 		//an xcb_generic_event_t event arrives
-		final Optional<PointerLeaveNotify> pointerLeaveNotifyOptional = this.leaveNotifyHandler.handle(this.xcb_generic_event);
+		final Optional<FocusGainNotify> focusGainNotifyOptional = this.focusInHandler.handle(this.xcb_generic_event);
 
 		//then
-		//the xcb_enter_notify_event_t is posted on the x event bus (enter and leave are the same type in xcb)
-		//the event is converted to a PointerLeaveNotify
-		verify(this.xEventBus).post(isA(xcb_enter_notify_event_t.class));
-		assertTrue(pointerLeaveNotifyOptional.isPresent());
+		//the xcb_focus_in_event_t is posted on the x event bus
+		//the event is converted to a DestroyNotify
+		verify(this.xEventBus).post(isA(xcb_focus_in_event_t.class));
+		assertTrue(focusGainNotifyOptional.isPresent());
 	}
 
 	@Test
 	public void testGetTarget() {
 		//given
-		//a EnterNotifyHandler
+		//a FocusInHandler
 		//an xcb_generic_event_t
 		mockStatic(LibXcbJNI.class);
-		when(xcb_enter_notify_event_t_event_get(anyLong(),
-												(xcb_enter_notify_event_t) any())).thenReturn(this.targetWindowId);
+		when(xcb_focus_in_event_t_event_get(anyLong(),
+											(xcb_focus_in_event_t) any())).thenReturn(this.targetWindowId);
 
 		final DisplaySurface displaySurface = mock(DisplaySurface.class);
 		when(displaySurface.getDisplaySurfaceHandle()).thenReturn(XWindowHandle.create(this.targetWindowId));
@@ -77,7 +77,7 @@ public class TestLeaveNotifyHandler {
 			public Object answer(final InvocationOnMock invocation) throws Throwable {
 				final Object arg0 = invocation.getArguments()[0];
 				final XWindowHandle xWindowHandle = (XWindowHandle) arg0;
-				if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(TestLeaveNotifyHandler.this.targetWindowId)) {
+				if(xWindowHandle != null && xWindowHandle.getNativeHandle().equals(TestFocusInHandler.this.targetWindowId)) {
 					return displaySurface;
                 }
                 return null;
@@ -86,7 +86,7 @@ public class TestLeaveNotifyHandler {
 
         //when
         //the target of the xcb_generic_event_t event is requested
-		final Optional<DisplaySurface> target = this.leaveNotifyHandler.getTarget(this.xcb_generic_event);
+		final Optional<DisplaySurface> target = this.focusInHandler.getTarget(this.xcb_generic_event);
 
 		//then
         //the correct DisplaySurface is returned

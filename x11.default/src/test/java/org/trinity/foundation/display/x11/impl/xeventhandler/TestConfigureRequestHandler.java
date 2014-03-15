@@ -1,4 +1,4 @@
-package org.trinity.foundation.display.x11.impl.event;
+package org.trinity.foundation.display.x11.impl.xeventhandler;
 
 import com.google.common.base.Optional;
 import com.google.common.eventbus.EventBus;

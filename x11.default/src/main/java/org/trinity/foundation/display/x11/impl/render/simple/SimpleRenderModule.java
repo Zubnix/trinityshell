@@ -9,11 +9,6 @@ import org.trinity.foundation.display.x11.impl.XWindowFactory;
 import javax.inject.Singleton;
 
 @Module(
-		injects = {
-				ShellSimple.class,
-				ShellSurfaceRootSimple.class,
-				XCompositorSimple.class
-		},
 		complete = false,
 		library = true
 )

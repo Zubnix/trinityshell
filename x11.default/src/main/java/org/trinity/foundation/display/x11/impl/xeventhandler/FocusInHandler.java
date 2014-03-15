@@ -17,9 +17,9 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.display.x11.impl.event;
+package org.trinity.foundation.display.x11.impl.xeventhandler;
 
-import org.freedesktop.xcb.xcb_circulate_notify_event_t;
+import org.freedesktop.xcb.xcb_focus_in_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,19 +31,19 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 
-import static org.freedesktop.xcb.LibXcbConstants.XCB_CIRCULATE_NOTIFY;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_FOCUS_IN;
 
 @Immutable
-public class CirculateNotifyHandler implements XEventHandler {
+public class FocusInHandler implements XEventHandler {
 
-	private static final Logger  LOG        = LoggerFactory.getLogger(CirculateNotifyHandler.class);
-	private static final Integer EVENT_CODE = XCB_CIRCULATE_NOTIFY;
+	private static final Logger  LOG        = LoggerFactory.getLogger(FocusInHandler.class);
+	private static final Integer EVENT_CODE = XCB_FOCUS_IN;
 	private final XEventChannel xEventChannel;
 	private final XSurfacePool xSurfacePool;
 
 	@Inject
-	CirculateNotifyHandler(final XEventChannel xEventChannel,
-						   final XSurfacePool xSurfacePool) {
+	FocusInHandler(final XEventChannel xEventChannel,
+				   final XSurfacePool xSurfacePool) {
 		this.xEventChannel = xEventChannel;
 		this.xSurfacePool = xSurfacePool;
 	}
@@ -51,23 +51,24 @@ public class CirculateNotifyHandler implements XEventHandler {
 	@Override
 	public void handle(@Nonnull final xcb_generic_event_t event_t) {
 
-		final xcb_circulate_notify_event_t circulate_notify_event = cast(event_t);
+		final xcb_focus_in_event_t focus_in_event = cast(event_t);
 
 		LOG.debug("Received X event={}",
-				  circulate_notify_event.getClass().getSimpleName());
+				  focus_in_event.getClass().getSimpleName());
 
-		this.xEventChannel.post(circulate_notify_event);
-		final int windowId = circulate_notify_event.getWindow();
-		this.xSurfacePool.get(windowId).post(circulate_notify_event);
+		this.xEventChannel.post(focus_in_event);
+		final int windowId = focus_in_event.getEvent();
+		this.xSurfacePool.get(windowId).post(focus_in_event);
 	}
 
-	private xcb_circulate_notify_event_t cast(final xcb_generic_event_t event_t) {
-		return new xcb_circulate_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
-												false);
+	private xcb_focus_in_event_t cast(final xcb_generic_event_t event_t) {
+		return new xcb_focus_in_event_t(xcb_generic_event_t.getCPtr(event_t),
+										false);
 	}
 
 	@Override
 	public Integer getEventCode() {
 		return EVENT_CODE;
 	}
+
 }

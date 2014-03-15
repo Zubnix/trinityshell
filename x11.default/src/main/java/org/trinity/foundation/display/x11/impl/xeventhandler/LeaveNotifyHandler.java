@@ -17,9 +17,9 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.display.x11.impl.event;
+package org.trinity.foundation.display.x11.impl.xeventhandler;
 
-import org.freedesktop.xcb.xcb_focus_in_event_t;
+import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,38 +31,39 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 
-import static org.freedesktop.xcb.LibXcbConstants.XCB_FOCUS_OUT;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_LEAVE_NOTIFY;
 
 @Immutable
-public class FocusOutHandler implements XEventHandler {
+public class LeaveNotifyHandler implements XEventHandler {
 
-	private static final Logger  LOG        = LoggerFactory.getLogger(FocusOutHandler.class);
-	private static final Integer EVENT_CODE = XCB_FOCUS_OUT;
+	private static final Logger  LOG        = LoggerFactory.getLogger(LeaveNotifyHandler.class);
+	private static final Integer EVENT_CODE = XCB_LEAVE_NOTIFY;
 	private final XEventChannel xEventChannel;
 	private final XSurfacePool xSurfacePool;
 
 	@Inject
-	FocusOutHandler(final XEventChannel xEventChannel,
-					final XSurfacePool xSurfacePool) {
+	LeaveNotifyHandler(final XEventChannel xEventChannel,
+					   final XSurfacePool xSurfacePool) {
 		this.xEventChannel = xEventChannel;
 		this.xSurfacePool = xSurfacePool;
 	}
 
 	@Override
-	public void handle(@Nonnull final xcb_generic_event_t event_t) {
-		// focus in structure is the same as focus out.
-		final xcb_focus_in_event_t focus_out_event = cast(event_t);
+	public void handle(@Nonnull final xcb_generic_event_t event) {
+		// enter has same structure as leave
+		final xcb_enter_notify_event_t enter_notify_event = cast(event);
 
 		LOG.debug("Received X event={}",
-				  focus_out_event.getClass().getSimpleName());
+				  enter_notify_event.getClass().getSimpleName());
 
-		this.xEventChannel.post(focus_out_event);
-		this.xSurfacePool.get(focus_out_event.getEvent()).post(focus_out_event);
+		this.xEventChannel.post(enter_notify_event);
+		final int windowId = enter_notify_event.getEvent();
+		this.xSurfacePool.get(windowId).post(enter_notify_event);
 	}
 
-	private xcb_focus_in_event_t cast(final xcb_generic_event_t event_t) {
-		return new xcb_focus_in_event_t(xcb_generic_event_t.getCPtr(event_t),
-										false);
+	private xcb_enter_notify_event_t cast(final xcb_generic_event_t event) {
+		return new xcb_enter_notify_event_t(xcb_generic_event_t.getCPtr(event),
+											false);
 	}
 
 	@Override

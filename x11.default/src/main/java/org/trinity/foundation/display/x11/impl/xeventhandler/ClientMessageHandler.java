@@ -17,45 +17,40 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.foundation.display.x11.impl.event;
 
-import org.freedesktop.xcb.xcb_generic_error_t;
+package org.trinity.foundation.display.x11.impl.xeventhandler;
+
+import org.freedesktop.xcb.xcb_client_message_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
-import org.trinity.foundation.display.x11.impl.XcbErrorUtil;
+import org.trinity.foundation.display.x11.impl.XSurfacePool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 
+import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
+
 @Immutable
-public class GenericErrorHandler implements XEventHandler {
+public class ClientMessageHandler implements XEventHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GenericErrorHandler.class);
+	private static final Integer EVENT_CODE = XCB_CLIENT_MESSAGE;
+	private final XSurfacePool displaySurfacePool;
 
-    private final Integer eventCode = 0;
-    private final XEventChannel xEventChannel;
+	@Inject
+	ClientMessageHandler(final XSurfacePool xSurfacePool) {
+		this.displaySurfacePool = xSurfacePool;
+	}
 
-    @Inject
-    GenericErrorHandler(final XEventChannel xEventChannel) {
-        this.xEventChannel = xEventChannel;
-    }
+	@Override
+	public void handle(@Nonnull final xcb_generic_event_t event) {
+		final xcb_client_message_event_t client_message_event_t = new xcb_client_message_event_t(xcb_generic_event_t.getCPtr(event),
+																								 false);
+		this.displaySurfacePool.get(client_message_event_t.getWindow()).post(client_message_event_t);
+	}
 
-    @Override
-    public void handle(@Nonnull final xcb_generic_event_t event_t) {
-        final xcb_generic_error_t request_error = new xcb_generic_error_t(xcb_generic_event_t.getCPtr(event_t),
-                false);
-        this.xEventChannel.post(request_error);
-
-        LOG.error(XcbErrorUtil.toString(request_error));
-    }
-
-    @Override
-    public Integer getEventCode() {
-        return this.eventCode;
-    }
-
+	@Override
+	public Integer getEventCode() {
+		return EVENT_CODE;
+	}
 }

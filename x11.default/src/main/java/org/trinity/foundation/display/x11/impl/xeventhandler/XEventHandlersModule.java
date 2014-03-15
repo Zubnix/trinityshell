@@ -1,4 +1,4 @@
-package org.trinity.foundation.display.x11.impl.event;
+package org.trinity.foundation.display.x11.impl.xeventhandler;
 
 import dagger.Module;
 import dagger.Provides;

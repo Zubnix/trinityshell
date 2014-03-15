@@ -17,11 +17,13 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
+package org.trinity.foundation.display.x11.impl.xeventhandler;
 
-package org.trinity.foundation.display.x11.impl.event;
-
-import org.freedesktop.xcb.xcb_client_message_event_t;
+import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.trinity.foundation.display.x11.impl.XEventChannel;
 import org.trinity.foundation.display.x11.impl.XEventHandler;
 import org.trinity.foundation.display.x11.impl.XSurfacePool;
 
@@ -29,24 +31,39 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 
-import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;
+import static org.freedesktop.xcb.LibXcbConstants.XCB_ENTER_NOTIFY;
 
 @Immutable
-public class ClientMessageHandler implements XEventHandler {
+public class EnterNotifyHandler implements XEventHandler {
 
-	private static final Integer EVENT_CODE = XCB_CLIENT_MESSAGE;
-	private final XSurfacePool displaySurfacePool;
+	private static final Logger  LOG        = LoggerFactory.getLogger(EnterNotifyHandler.class);
+	private static final Integer EVENT_CODE = XCB_ENTER_NOTIFY;
+	private final XEventChannel xEventChannel;
+	private final XSurfacePool xSurfacePool;
 
 	@Inject
-	ClientMessageHandler(final XSurfacePool xSurfacePool) {
-		this.displaySurfacePool = xSurfacePool;
+	EnterNotifyHandler(final XEventChannel xEventChannel,
+					   final XSurfacePool xSurfacePool) {
+		this.xEventChannel = xEventChannel;
+		this.xSurfacePool = xSurfacePool;
 	}
 
 	@Override
 	public void handle(@Nonnull final xcb_generic_event_t event) {
-		final xcb_client_message_event_t client_message_event_t = new xcb_client_message_event_t(xcb_generic_event_t.getCPtr(event),
-																								 false);
-		this.displaySurfacePool.get(client_message_event_t.getWindow()).post(client_message_event_t);
+		final xcb_enter_notify_event_t enter_notify_event = cast(event);
+
+		LOG.debug("Received X event={}",
+				  enter_notify_event.getClass().getSimpleName());
+
+		this.xEventChannel.post(enter_notify_event);
+		final int windowId = enter_notify_event.getEvent();
+		this.xSurfacePool.get(windowId).post(enter_notify_event);
+		event.delete();
+	}
+
+	private xcb_enter_notify_event_t cast(final xcb_generic_event_t event_t) {
+		return new xcb_enter_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
+											false);
 	}
 
 	@Override
