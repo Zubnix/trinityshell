@@ -23,39 +23,37 @@ import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.media.nativewindow.util.Point;
-import javax.media.nativewindow.util.PointImmutable;
 
 /***************************************
- * Request to move the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
+ * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emitted this event, is reparented.
  *
  ***************************************
  */
 @Immutable
-public class ShellNodeMoveRequestEvent extends ShellNodeEvent {
+public class ShellSurfaceReparented extends ShellSurfaceEvent {
 
     @Nonnull
-    private final PointImmutable position;
+    private final ShellSurface parent;
 
     /**
-	 * Create a new {@code ShellNodeChildAddedEvent} with the given
+	 * Create a new {@code ShellSurfaceChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
-	 * @param position
-	 *            the top left {@link Point} of the shellnode
+	 * @param parent
+	 *            a parent {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellNodeMoveRequestEvent(@Nonnull final ShellSurface shellSurface,
-                                     @Nonnull final PointImmutable position) {
+	public ShellSurfaceReparented(@Nonnull final ShellSurface shellSurface,
+                                  @Nonnull final ShellSurface parent) {
 		super(shellSurface);
-        this.position = position;
+        this.parent = parent;
     }
 
     @Nonnull
-    public PointImmutable getPosition() {
-        return this.position;
+    public ShellSurface getParent() {
+        return this.parent;
     }
 }

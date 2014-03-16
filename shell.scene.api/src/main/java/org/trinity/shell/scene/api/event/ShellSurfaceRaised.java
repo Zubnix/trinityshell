@@ -30,10 +30,10 @@ import javax.annotation.concurrent.Immutable;
  ***************************************
  */
 @Immutable
-public class ShellNodeRaisedEvent extends ShellNodeStackingEvent {
+public class ShellSurfaceRaised extends ShellSurfaceStackingEvent {
 
 	/**
-	 * Create a new {@code ShellNodeChildAddedEvent} with the given
+	 * Create a new {@code ShellSurfaceChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
@@ -41,7 +41,7 @@ public class ShellNodeRaisedEvent extends ShellNodeStackingEvent {
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellNodeRaisedEvent(@Nonnull final ShellSurface shellSurface) {
+	public ShellSurfaceRaised(@Nonnull final ShellSurface shellSurface) {
 		super(shellSurface);
 	}
 }

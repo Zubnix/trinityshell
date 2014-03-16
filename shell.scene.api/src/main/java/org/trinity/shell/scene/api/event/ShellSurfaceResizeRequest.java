@@ -23,25 +23,38 @@ import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import javax.media.nativewindow.util.DimensionImmutable;
 
 /***************************************
- * Request to show the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
+ * Request to resize the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
  *
  ***************************************
  */
 @Immutable
-public class ShellSurfaceShowRequestEvent extends ShellSurfaceVisibleRequestEvent {
+public class ShellSurfaceResizeRequest extends ShellSurfaceEvent {
 
-	/**
-	 * Create a new {@code ShellNodeChildAddedEvent} with the given
+    @Nonnull
+    private final DimensionImmutable size;
+
+    /**
+	 * Create a new {@code ShellSurfaceChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
+	 * @param size
+	 *            a {@link DimensionImmutable} size
 	 */
-	public ShellSurfaceShowRequestEvent(@Nonnull final ShellSurface shellSurface) {
+	public ShellSurfaceResizeRequest(@Nonnull final ShellSurface shellSurface,
+                                     @Nonnull final DimensionImmutable size) {
 		super(shellSurface);
-	}
+        this.size = size;
+    }
+
+    @Nonnull
+    public DimensionImmutable getSize() {
+        return this.size;
+    }
 }

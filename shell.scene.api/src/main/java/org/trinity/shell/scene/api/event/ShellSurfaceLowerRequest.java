@@ -25,28 +25,23 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * Informs that a child {@link org.trinity.shell.scene.api.ShellSurface} was added to the node that emitted
- * this event.
+ * Request to lower the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
  *
  ***************************************
  */
 @Immutable
-public class ShellNodeChildAddedEvent extends ShellNodeChildEvent {
+public class ShellSurfaceLowerRequest extends ShellSurfaceStackingRequest {
 
 	/**
-	 * Create a new {@code ShellNodeChildAddedEvent} with the given
+	 * Create a new {@code ShellSurfaceChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
-	 * @param child
-	 *            a child {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellNodeChildAddedEvent(@Nonnull final ShellSurface shellSurface,
-									@Nonnull final ShellSurface child) {
-		super(shellSurface,
-				child);
+	public ShellSurfaceLowerRequest(@Nonnull final ShellSurface shellSurface) {
+		super(shellSurface);
 	}
 }

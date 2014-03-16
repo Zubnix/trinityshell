@@ -25,15 +25,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * Request to hide the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
+ * General event for all {@link org.trinity.shell.scene.api.ShellSurface} operations.
  *
  ***************************************
  */
 @Immutable
-public class ShellSurfaceHideRequestEvent extends ShellSurfaceVisibleRequestEvent {
+public class ShellSurfaceEvent {
+
+	private final ShellSurface shellSurface;
 
 	/**
-	 * Create a new {@code ShellNodeChildAddedEvent} with the given
+	 * Create a new {@code ShellSurfaceChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
@@ -41,7 +43,17 @@ public class ShellSurfaceHideRequestEvent extends ShellSurfaceVisibleRequestEven
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellSurfaceHideRequestEvent(@Nonnull final ShellSurface shellSurface) {
-		super(shellSurface);
+	public ShellSurfaceEvent(@Nonnull final ShellSurface shellSurface) {
+		this.shellSurface = shellSurface;
+	}
+
+	/***************************************
+	 * The source that emitted this event.
+	 *
+	 * @return a {@link org.trinity.shell.scene.api.ShellSurface}.
+	 ***************************************
+	 */
+	public ShellSurface getSource() {
+		return this.shellSurface;
 	}
 }

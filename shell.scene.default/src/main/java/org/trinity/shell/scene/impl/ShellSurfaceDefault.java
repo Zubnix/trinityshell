@@ -22,28 +22,15 @@ package org.trinity.shell.scene.impl;
 import com.google.auto.factory.AutoFactory;
 import com.google.common.eventbus.EventBus;
 import org.trinity.common.Listenable;
-import org.trinity.shell.scene.api.HasSize;
-import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
-import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
-import org.trinity.shell.scene.api.ShellSurfaceFactory;
-import org.trinity.shell.scene.api.SpaceBuffer;
-import org.trinity.shell.scene.api.event.ShellNodeEvent;
-import org.trinity.shell.scene.api.event.ShellNodeLowerRequestEvent;
-import org.trinity.shell.scene.api.event.ShellNodeMoveRequestEvent;
-import org.trinity.shell.scene.api.event.ShellNodeRaiseRequestEvent;
-import org.trinity.shell.scene.api.event.ShellNodeReparentRequestEvent;
-import org.trinity.shell.scene.api.event.ShellSurfaceHideRequestEvent;
-import org.trinity.shell.scene.api.event.ShellSurfaceResizeRequestEvent;
-import org.trinity.shell.scene.api.event.ShellSurfaceShowRequestEvent;
+import org.trinity.shell.scene.api.*;
+import org.trinity.shell.scene.api.BufferSpace;
+import org.trinity.shell.scene.api.event.*;
+import org.trinity.shell.scene.api.event.ShellSurfaceMoveRequest;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import javax.media.nativewindow.util.Dimension;
-import javax.media.nativewindow.util.Point;
-import javax.media.nativewindow.util.Rectangle;
-import javax.media.nativewindow.util.RectangleImmutable;
+import javax.media.nativewindow.util.*;
 
 
 @NotThreadSafe
@@ -52,7 +39,9 @@ import javax.media.nativewindow.util.RectangleImmutable;
 public class ShellSurfaceDefault extends EventBus implements ShellSurface, ShellSurfaceConfigurable, Listenable {
 
 	@Nonnull
-	private RectangleImmutable shape;
+	private DimensionImmutable size;
+    @Nonnull
+    private PointImmutable position;
 	@Nonnull
 	private Boolean visible = Boolean.FALSE;
 	@Nonnull
@@ -60,10 +49,10 @@ public class ShellSurfaceDefault extends EventBus implements ShellSurface, Shell
 	@Nonnull
 	private Boolean              destroyed;
 	@Nonnull
-	private HasSize<SpaceBuffer> buffer;
+	private HasSize<BufferSpace> buffer;
 
 	ShellSurfaceDefault(@Nonnull final ShellSurface parent,
-						final HasSize<SpaceBuffer> buffer) {
+						final HasSize<BufferSpace> buffer) {
 		this.buffer = buffer;
 		this.parent = parent;
 		this.destroyed = Boolean.FALSE;
@@ -93,14 +82,14 @@ public class ShellSurfaceDefault extends EventBus implements ShellSurface, Shell
 		shellSurfaceConfiguration.configure(this);
 	}
 
-	@Override
-	public HasSize<SpaceBuffer> getBuffer() {
-		return this.buffer;
-	}
+    @Override
+    public PointImmutable getPosition() {
+        return this.position;
+    }
 
-	@Override
-	public RectangleImmutable getShape() {
-		return this.shape;
+    @Override
+	public HasSize<BufferSpace> getBuffer() {
+		return this.buffer;
 	}
 
 	/**
@@ -119,63 +108,67 @@ public class ShellSurfaceDefault extends EventBus implements ShellSurface, Shell
 		this.visible = visible;
 	}
 
-	@Override
-	public void setShape(final int x,
-                         final int y,
-                         final int width,
-                         final int height) {
-		this.shape = new Rectangle(x,
-								   y,
-								   width,
-								   height);
-	}
+    @Override
+    public void setPosition(@Nonnull PointImmutable pointImmutable) {
+        this.position = new Point(pointImmutable.getX(),
+                                  pointImmutable.getY());
+    }
 
-	@Override
-	public void attachBuffer(@Nonnull final HasSize<SpaceBuffer> buffer) {
+    @Override
+    public DimensionImmutable getSize() {
+        return this.size;
+    }
+
+    @Override
+    public void setSize(@Nonnull DimensionImmutable size) {
+        this.size = new Dimension(size.getWidth(),
+                                  size.getHeight());
+    }
+
+    @Override
+	public void attachBuffer(@Nonnull final HasSize<BufferSpace> buffer) {
 		this.buffer = buffer;
 	}
 
 	@Override
 	public void requestReparent(@Nonnull final ShellSurface parent) {
-		// update parent to new parent
-		final ShellNodeEvent event = new ShellNodeReparentRequestEvent(this,
-																	   parent);
-		post(event);
+		post(new ShellSurfaceReparentRequest(this,
+                                             parent));
 	}
 
 	@Override
 	public void requestMove(final int x,
 							final int y) {
-		post(new ShellNodeMoveRequestEvent(this,
-										   new Point(x,
-													 y)));
+		post(new ShellSurfaceMoveRequest(this,
+										 new Point(x,
+										    	   y)));
 	}
 
 	@Override
 	public void requestResize(@Nonnegative final int width,
 							  @Nonnegative final int height) {
-		post(new ShellSurfaceResizeRequestEvent(this,
-											 new Dimension(width,
-														   height)));
+		post(new ShellSurfaceResizeRequest(this,
+										   new Dimension(width,
+														 height)));
 	}
 
 	@Override
 	public void requestRaise() {
-		post(new ShellNodeRaiseRequestEvent(this));
+		post(new ShellSurfaceRaiseRequest(this));
 	}
 
 	@Override
 	public void requestLower() {
-		post(new ShellNodeLowerRequestEvent(this));
+		post(new ShellSurfaceLowerRequest(this));
 	}
 
 	@Override
 	public void requestShow() {
-		post(new ShellSurfaceShowRequestEvent(this));
+		post(new ShellSurfaceShowRequest(this));
 	}
 
 	@Override
 	public void requestHide() {
-		post(new ShellSurfaceHideRequestEvent(this));
+		post(new ShellSurfaceHideRequest(this));
 	}
 }

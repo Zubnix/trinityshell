@@ -2,10 +2,10 @@ package org.trinity.foundation.display.x11.impl.render.simple;
 
 import com.google.common.eventbus.EventBus;
 import org.trinity.foundation.display.x11.impl.XWindow;
+import org.trinity.shell.scene.api.BufferSpace;
 import org.trinity.shell.scene.api.HasSize;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
-import org.trinity.shell.scene.api.SpaceBuffer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,7 +29,7 @@ public class ShellSurfaceRootSimple extends EventBus implements ShellSurface {
 	}
 
 	@Override
-	public HasSize<SpaceBuffer> getBuffer() {
+	public HasSize<BufferSpace> getBuffer() {
 
 		return this.rootXWindow;
 	}

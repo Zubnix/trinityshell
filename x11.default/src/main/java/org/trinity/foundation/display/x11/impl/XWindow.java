@@ -29,7 +29,7 @@ import org.freedesktop.xcb.xcb_get_geometry_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
-import org.trinity.shell.scene.api.SpaceBuffer;
+import org.trinity.shell.scene.api.BufferSpace;
 import org.trinity.shell.scene.api.HasSize;
 
 import javax.annotation.Nonnull;
@@ -48,7 +48,7 @@ import static org.freedesktop.xcb.xcb_config_window_t.*;
 
 @ThreadSafe
 @AutoFactory
-public class XWindow extends EventBus implements Listenable, HasSize<SpaceBuffer> {
+public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
 

@@ -25,23 +25,36 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emitted this event was destroyed.
+ * General event to inform about child {@link org.trinity.shell.scene.api.ShellSurface} (added, removed)
+ * related operations.
  *
  ***************************************
  */
 @Immutable
-public class ShellNodeDestroyedEvent extends ShellNodeEvent {
+public abstract class ShellSurfaceChildEvent extends ShellSurfaceEvent {
 
-	/**
-	 * Create a new {@code ShellNodeChildAddedEvent} with the given
+    @Nonnull
+    private final ShellSurface child;
+
+    /**
+	 * Create a new {@code ShellSurfaceChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
+	 * @param shellNodeTransformation
+	 *            a {@link ShellNodeTransformation}
 	 */
-	public ShellNodeDestroyedEvent(@Nonnull final ShellSurface shellSurface) {
+	public ShellSurfaceChildEvent(@Nonnull final ShellSurface shellSurface,
+                                  @Nonnull final ShellSurface child) {
 		super(shellSurface);
-	}
+        this.child = child;
+    }
+
+    @Nonnull
+    public ShellSurface getChild() {
+        return this.child;
+    }
 }

@@ -33,7 +33,7 @@ public class XEventTranslator {
         this.listenable.register(this);
     }
 
-    public void unlink(){
+    public void unregister(){
         this.listenable.unregister(this);
     }
 
@@ -85,6 +85,6 @@ public class XEventTranslator {
                 shellSurfaceConfigurable.markDestroyed();
             }
         });
-        unlink();
+        unregister();
     }
 }

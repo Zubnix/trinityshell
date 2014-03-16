@@ -1,23 +1,23 @@
 package org.trinity.shell.scene.api;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.media.nativewindow.util.DimensionImmutable;
+import javax.media.nativewindow.util.PointImmutable;
 
 /**
  *
  */
 public interface ShellSurfaceConfigurable {
 
-	void setShape(int x,
-                  int y,
-                  @Nonnegative int width,
-                  @Nonnegative int height);
+    void setPosition(@Nonnull PointImmutable pointImmutable);
 
-	void attachBuffer(@Nonnull HasSize<SpaceBuffer> buffer);
+    void setSize(@Nonnull DimensionImmutable size);
+
+	void attachBuffer(@Nonnull HasSize<BufferSpace> buffer);
 
 	void setParent(@Nonnull ShellSurface shellSurface);
 
 	void markDestroyed();
 
-    void setVisible(Boolean visible);
+    void setVisible(@Nonnull Boolean visible);
 }

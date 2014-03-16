@@ -23,39 +23,25 @@ import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
-import javax.media.nativewindow.util.Dimension;
-import javax.media.nativewindow.util.DimensionImmutable;
 
 /***************************************
- * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emitted this event, is resized.
+ * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emitted this event was destroyed.
  *
  ***************************************
  */
 @Immutable
-public class ShellNodeResizedEvent extends ShellNodeEvent {
+public class ShellSurfaceDestroyed extends ShellSurfaceEvent {
 
-    @Nonnull
-    private final DimensionImmutable size;
-
-    /**
-	 * Create a new {@code ShellNodeChildAddedEvent} with the given
+	/**
+	 * Create a new {@code ShellSurfaceChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
-	 * @param size
-	 *            a size {@link Dimension}
 	 */
-	public ShellNodeResizedEvent(@Nonnull final ShellSurface shellSurface,
-                                 @Nonnull final DimensionImmutable size) {
+	public ShellSurfaceDestroyed(@Nonnull final ShellSurface shellSurface) {
 		super(shellSurface);
-        this.size = size;
-    }
-
-    @Nonnull
-    public DimensionImmutable getSize() {
-        return size;
-    }
+	}
 }

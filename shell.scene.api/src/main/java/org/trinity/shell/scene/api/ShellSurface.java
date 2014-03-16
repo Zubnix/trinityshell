@@ -21,14 +21,18 @@ package org.trinity.shell.scene.api;
 
 import org.trinity.common.Listenable;
 
+import javax.media.nativewindow.util.PointImmutable;
+
 /**
  * ************************************
  * The super interface of all nodes that live in the shell scene.
  * **************************************
  */
-public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
+public interface ShellSurface extends Listenable, HasSize<ShellSpace> {
 
     void accept(ShellSurfaceConfiguration shellSurfaceConfiguration);
+
+    PointImmutable getPosition();
 
     /***************************************
      * The underlying, {@code DisplaySurface} that this shell surface will use
@@ -38,7 +42,7 @@ public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
      * @return a platform display buffer.
      ***************************************
      */
-    HasSize<SpaceBuffer> getBuffer();
+    HasSize<BufferSpace> getBuffer();
 
     /**
      * *************************************
@@ -67,7 +71,7 @@ public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
      * ************************************
      * Request that this node is lowered. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellNodeLowerRequestEvent}.
+     * {@link org.trinity.shell.scene.api.event.ShellSurfaceLowerRequest}.
      * <p/>
      * **************************************
      */
@@ -77,7 +81,7 @@ public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
      * ************************************
      * Request that this node is moved. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellNodeMoveRequestEvent}.
+     * {@link org.trinity.shell.scene.api.event.ShellSurfaceMoveRequest}.
      * <p/>
      * **************************************
      */
@@ -88,7 +92,7 @@ public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
      * ************************************
      * Request that this node is raised. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellNodeRaiseRequestEvent}.
+     * {@link org.trinity.shell.scene.api.event.ShellSurfaceRaiseRequest}.
      * <p/>
      * **************************************
      */
@@ -98,7 +102,7 @@ public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
      * ************************************
      * Request that this node is reparented. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellNodeReparentRequestEvent}.
+     * {@link org.trinity.shell.scene.api.event.ShellSurfaceReparentRequest}.
      * <p/>
      * **************************************
      */
@@ -108,7 +112,7 @@ public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
      * ************************************
      * Request that this node is resized. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellSurfaceResizeRequestEvent}.
+     * {@link org.trinity.shell.scene.api.event.ShellSurfaceResizeRequest}.
      * <p/>
      * **************************************
      */
@@ -119,7 +123,7 @@ public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
      * ************************************
      * Request that this node is shown. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellSurfaceShowRequestEvent}.
+     * {@link org.trinity.shell.scene.api.event.ShellSurfaceShowRequest}.
      * <p/>
      * **************************************
      */
@@ -129,7 +133,7 @@ public interface ShellSurface extends Listenable, HasShape<SpaceShell> {
      * ************************************
      * Request that this node is hidden. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellNodeHiddenEvent}.
+     * {@link org.trinity.shell.scene.api.event.ShellSurfaceHidden}.
      * <p/>
      * **************************************
      */

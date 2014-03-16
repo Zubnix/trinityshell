@@ -25,15 +25,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emitted this event is hidden.
- *
+ * General event to inform about visibility (show, hide) related operations.
  ***************************************
  */
 @Immutable
-public class ShellNodeHiddenEvent extends ShellNodeVisibleEvent {
+public class ShellSurfaceVisibilityEvent extends ShellSurfaceEvent {
 
 	/**
-	 * Create a new {@code ShellNodeChildAddedEvent} with the given
+	 * Create a new {@code ShellSurfaceChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
@@ -41,7 +40,7 @@ public class ShellNodeHiddenEvent extends ShellNodeVisibleEvent {
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellNodeHiddenEvent(@Nonnull final ShellSurface shellSurface) {
+	public ShellSurfaceVisibilityEvent(@Nonnull final ShellSurface shellSurface) {
 		super(shellSurface);
 	}
 }

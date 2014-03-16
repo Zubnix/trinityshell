@@ -25,35 +25,35 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * General event for all {@link org.trinity.shell.scene.api.ShellSurface} operations.
+ * Request to reparent the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
  *
  ***************************************
  */
 @Immutable
-public class ShellNodeEvent {
+public class ShellSurfaceReparentRequest extends ShellSurfaceEvent {
 
-	private final ShellSurface shellSurface;
+    @Nonnull
+    private final ShellSurface parent;
 
-	/**
-	 * Create a new {@code ShellNodeChildAddedEvent} with the given
+    /**
+	 * Create a new {@code ShellSurfaceChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
+	 * @param parent
+	 *            a parent {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellNodeEvent(@Nonnull final ShellSurface shellSurface) {
-		this.shellSurface = shellSurface;
-	}
+	public ShellSurfaceReparentRequest(@Nonnull final ShellSurface shellSurface,
+                                       @Nonnull final ShellSurface parent) {
+		super(shellSurface);
+        this.parent = parent;
+    }
 
-	/***************************************
-	 * The source that emitted this event.
-	 *
-	 * @return a {@link org.trinity.shell.scene.api.ShellSurface}.
-	 ***************************************
-	 */
-	public ShellSurface getSource() {
-		return this.shellSurface;
-	}
+    @Nonnull
+    public ShellSurface getParent() {
+        return this.parent;
+    }
 }
