@@ -9,10 +9,15 @@ import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.media.nativewindow.util.RectangleImmutable;
+import javax.media.nativewindow.util.DimensionImmutable;
+import javax.media.nativewindow.util.Point;
+import javax.media.nativewindow.util.PointImmutable;
 
 @Singleton
 public class ShellSurfaceRootSimple extends EventBus implements ShellSurface {
+
+	private final PointImmutable position = new Point(0,
+													  0);
 
 	private final XWindow rootXWindow;
 
@@ -26,6 +31,11 @@ public class ShellSurfaceRootSimple extends EventBus implements ShellSurface {
 		//TODO implement with xrandr thingy?
 		//shellSurfaceConfiguration.setShape(...);
 		throw new UnsupportedOperationException("Not yet implemented.");
+	}
+
+	@Override
+	public PointImmutable getPosition() {
+		return this.position;
 	}
 
 	@Override
@@ -88,7 +98,7 @@ public class ShellSurfaceRootSimple extends EventBus implements ShellSurface {
 	}
 
 	@Override
-	public RectangleImmutable getShape() {
-		return this.rootXWindow.getShape();
+	public DimensionImmutable getSize() {
+		return this.rootXWindow.getSize();
 	}
 }

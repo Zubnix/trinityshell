@@ -36,7 +36,6 @@ import javax.inject.Singleton;
                 XSurfacePool.class,
                 XEventChannel.class,
                 XEventHandlers.class,
-                XSeat.class,
                 XTime.class,
                 XWindowFactory.class
         },

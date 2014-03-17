@@ -7,6 +7,20 @@ import org.trinity.foundation.display.x11.impl.XEventHandler;
 import static dagger.Provides.Type.SET;
 
 @Module(
+		injects = {
+				CirculateNotifyHandler.class,
+				ClientMessageHandler.class,
+				ConfigureNotifyHandler.class,
+				ConfigureRequestHandler.class,
+				DestroyNotifyHandler.class,
+				EnterNotifyHandler.class,
+				FocusInHandler.class,
+				FocusOutHandler.class,
+				GenericErrorHandler.class,
+				LeaveNotifyHandler.class,
+				MapNotifyHandler.class,
+				UnmapNotifyHandler.class,
+		},
 		complete = false,
 		library = true
 )

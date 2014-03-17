@@ -5,6 +5,10 @@ import dagger.Provides;
 import org.trinity.shell.scene.api.ShellSurfaceFactory;
 
 @Module(
+		injects = {
+			ShellSurfaceDefaultFactory.class
+		},
+		complete = true,
 		library = true
 )
 public class ShellSceneDefaultModule {
