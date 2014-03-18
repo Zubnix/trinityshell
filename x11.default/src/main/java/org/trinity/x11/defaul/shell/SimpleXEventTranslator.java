@@ -8,14 +8,10 @@ import org.freedesktop.xcb.xcb_unmap_notify_event_t;
 import org.trinity.common.Listenable;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
-import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
 
 import javax.annotation.Nonnull;
 
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+import static org.freedesktop.xcb.xcb_config_window_t.*;
 
 public class SimpleXEventTranslator {
     @Nonnull
@@ -69,22 +65,12 @@ public class SimpleXEventTranslator {
 
     @Subscribe
     public void handle(final xcb_unmap_notify_event_t unmap_notify_event){
-        this.shellSurface.accept(new ShellSurfaceConfiguration() {
-            @Override
-            public void configure(final ShellSurfaceConfigurable shellSurfaceConfigurable) {
-                shellSurfaceConfigurable.setVisible(Boolean.FALSE);
-            }
-        });
+        this.shellSurface.accept(shellSurfaceConfigurable -> shellSurfaceConfigurable.setVisible(Boolean.FALSE));
     }
 
     @Subscribe
     public void handle(final xcb_destroy_notify_event_t destroy_notify_event){
-        this.shellSurface.accept(new ShellSurfaceConfiguration() {
-            @Override
-            public void configure(final ShellSurfaceConfigurable shellSurfaceConfigurable) {
-                shellSurfaceConfigurable.markDestroyed();
-            }
-        });
+        this.shellSurface.accept(ShellSurfaceConfigurable::markDestroyed);
         unregister();
     }
 }

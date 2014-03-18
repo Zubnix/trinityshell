@@ -1,4 +1,4 @@
-package org.trinity.foundation.display.x11.impl;
+package org.trinity.x11.defaul;
 
 
 import org.freedesktop.xcb.xcb_button_press_event_t;

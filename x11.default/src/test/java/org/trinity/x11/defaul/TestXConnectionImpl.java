@@ -1,4 +1,4 @@
-package org.trinity.foundation.display.x11.impl;
+package org.trinity.x11.defaul;
 
 
 import org.freedesktop.xcb.LibXcb;
@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.trinity.x11.defaul.XEventChannel;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeoutException;

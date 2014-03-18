@@ -48,137 +48,139 @@ import javax.media.nativewindow.util.PointImmutable;
 @AutoFactory
 public class SimpleShellSurface extends EventBus implements ShellSurface, ShellSurfaceConfigurable, Listenable {
 
-    @Nonnull
-    private DimensionImmutable size;
-    @Nonnull
-    private PointImmutable position;
-    @Nonnull
-    private Boolean visible = Boolean.FALSE;
-    @Nonnull
-    private ShellSurface parent;
-    @Nonnull
-    private Boolean destroyed;
-    @Nonnull
-    private HasSize<BufferSpace> buffer;
+	@Nonnull
+	private DimensionImmutable size;
+	@Nonnull
+	private PointImmutable     position;
+	@Nonnull
+	private Boolean visible = Boolean.FALSE;
+	@Nonnull
+	private ShellSurface         parent;
+	@Nonnull
+	private Boolean              destroyed;
+	@Nonnull
+	private HasSize<BufferSpace> buffer;
 
-    SimpleShellSurface(@Nonnull final ShellSurface parent,
-                       final HasSize<BufferSpace> buffer) {
-        this.buffer = buffer;
-        this.parent = parent;
-        this.destroyed = Boolean.FALSE;
-    }
+	SimpleShellSurface(@Nonnull final ShellSurface parent,
+					   final HasSize<BufferSpace> buffer) {
+		this.buffer = buffer;
+		this.parent = parent;
+		this.destroyed = Boolean.FALSE;
+	}
 
-    @Override
-    public Boolean isDestroyed() {
-        return this.destroyed;
-    }
+	@Override
+	public Boolean isDestroyed() {
+		return this.destroyed;
+	}
 
-    @Override
-    public void markDestroyed() {
-        this.destroyed = true;
-    }
+	@Override
+	public void markDestroyed() {
+		this.destroyed = true;
+	}
 
-    @Override
-    public ShellSurface getParent() {
-        return this.parent;
-    }
+	@Override
+	public ShellSurface getParent() {
+		return this.parent;
+	}
 
-    public void setParent(@Nonnull final ShellSurface parent) {
-        this.parent = parent;
-    }
+	public void setParent(@Nonnull final ShellSurface parent) {
+		this.parent = parent;
+	}
 
-    @Override
-    public void accept(final ShellSurfaceConfiguration shellSurfaceConfiguration) {
-        shellSurfaceConfiguration.configure(this);
-    }
+	@Override
+	public void accept(final ShellSurfaceConfiguration shellSurfaceConfiguration) {
+		shellSurfaceConfiguration.configure(this);
+	}
 
-    @Override
-    public PointImmutable getPosition() {
-        return this.position;
-    }
+	@Override
+	public PointImmutable getPosition() {
+		return this.position;
+	}
 
-    @Override
-    public HasSize<BufferSpace> getBuffer() {
-        return this.buffer;
-    }
+	@Override
+	public HasSize<BufferSpace> getBuffer() {
+		return this.buffer;
+	}
 
-    /**
-     * {@inheritDoc}
-     * <p/>
-     * This method will only return true if this node is in the visible state an
-     * all of its parents in the hierarchy are visible as well.
-     */
-    @Override
-    public Boolean isVisible() {
-        return this.visible;
-    }
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * This method will only return true if this node is in the visible state an
+	 * all of its parents in the hierarchy are visible as well.
+	 */
+	@Override
+	public Boolean isVisible() {
+		return this.visible;
+	}
 
-    @Override
-    public void setVisible(@Nonnull final Boolean visible) {
-        this.visible = visible;
-    }
+	@Override
+	public void setVisible(@Nonnull final Boolean visible) {
+		this.visible = visible;
+	}
 
-    @Override
-    public void setPosition(@Nonnull final PointImmutable pointImmutable) {
-        this.position = new Point(pointImmutable.getX(),
-                pointImmutable.getY());
-    }
+	@Override
+	public void setPosition(@Nonnull final PointImmutable pointImmutable) {
+		this.position = new Point(pointImmutable.getX(),
+								  pointImmutable.getY());
+	}
 
-    @Override
-    public DimensionImmutable getSize() {
-        return this.size;
-    }
+	@Override
+	public DimensionImmutable getSize() {
+		return this.size;
+	}
 
-    @Override
-    public void setSize(@Nonnull final DimensionImmutable size) {
-        this.size = new Dimension(size.getWidth(),
-                size.getHeight());
-    }
+	@Override
+	public void setSize(@Nonnull final DimensionImmutable size) {
+		this.size = new Dimension(size.getWidth(),
+								  size.getHeight());
+	}
 
-    @Override
-    public void attachBuffer(@Nonnull final HasSize<BufferSpace> buffer) {
-        this.buffer = buffer;
-    }
+	@Override
+	public void attachBuffer(@Nonnull final HasSize<BufferSpace> buffer) {
+		this.buffer = buffer;
+	}
 
-    @Override
-    public void requestReparent(@Nonnull final ShellSurface parent) {
-        post(new ShellSurfaceReparentRequest(this,
-                parent));
-    }
+	@Override
+	public void requestReparent(@Nonnull final ShellSurface parent) {
+		post(new ShellSurfaceReparentRequest(this,
+											 parent));
+	}
 
-    @Override
-    public void requestMove(final int x,
-                            final int y) {
-        post(new ShellSurfaceMoveRequest(this,
-                new Point(x,
-                        y)));
-    }
+	@Override
+	public void requestMove(final int x,
+							final int y) {
+		post(new ShellSurfaceMoveRequest(this,
+										 new Point(x,
+												   y)
+		));
+	}
 
-    @Override
-    public void requestResize(@Nonnegative final int width,
-                              @Nonnegative final int height) {
-        post(new ShellSurfaceResizeRequest(this,
-                new Dimension(width,
-                        height)));
-    }
+	@Override
+	public void requestResize(@Nonnegative final int width,
+							  @Nonnegative final int height) {
+		post(new ShellSurfaceResizeRequest(this,
+										   new Dimension(width,
+														 height)
+		));
+	}
 
-    @Override
-    public void requestRaise() {
-        post(new ShellSurfaceRaiseRequest(this));
-    }
+	@Override
+	public void requestRaise() {
+		post(new ShellSurfaceRaiseRequest(this));
+	}
 
-    @Override
-    public void requestLower() {
-        post(new ShellSurfaceLowerRequest(this));
-    }
+	@Override
+	public void requestLower() {
+		post(new ShellSurfaceLowerRequest(this));
+	}
 
-    @Override
-    public void requestShow() {
-        post(new ShellSurfaceShowRequest(this));
-    }
+	@Override
+	public void requestShow() {
+		post(new ShellSurfaceShowRequest(this));
+	}
 
-    @Override
-    public void requestHide() {
-        post(new ShellSurfaceHideRequest(this));
-    }
+	@Override
+	public void requestHide() {
+		post(new ShellSurfaceHideRequest(this));
+	}
 }

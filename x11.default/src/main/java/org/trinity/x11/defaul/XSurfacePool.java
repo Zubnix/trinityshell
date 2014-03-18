@@ -36,27 +36,27 @@ import javax.inject.Singleton;
 @ThreadSafe
 public class XSurfacePool {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XSurfacePool.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XSurfacePool.class);
 
-    private final BiMap<Integer, Listenable> surfaces = HashBiMap.create(32);
-    private final SimpleXCompositor compositor;
+	private final BiMap<Integer, Listenable> surfaces = HashBiMap.create(32);
+	private final SimpleXCompositor compositor;
 
-    @Inject
-    XSurfacePool(final SimpleXCompositor compositor) {
-        this.compositor = compositor;
-    }
+	@Inject
+	XSurfacePool(final SimpleXCompositor compositor) {
+		this.compositor = compositor;
+	}
 
-    public Listenable get(final Integer surfaceHandle) {
-        Listenable surface = this.surfaces.get(surfaceHandle);
-        if (surface == null) {
-            surface = registerNewSurface(surfaceHandle);
-        }
-        return surface;
-    }
+	public Listenable get(final Integer surfaceHandle) {
+		Listenable surface = this.surfaces.get(surfaceHandle);
+		if(surface == null) {
+			surface = registerNewSurface(surfaceHandle);
+		}
+		return surface;
+	}
 
-    private Listenable registerNewSurface(final Integer surfaceHandle) {
-        LOG.debug("Xwindow={} added to cache.",
-                surfaceHandle);
+	private Listenable registerNewSurface(final Integer surfaceHandle) {
+		LOG.debug("Xwindow={} added to cache.",
+				  surfaceHandle);
 		final Listenable surface = this.compositor.createSurface(surfaceHandle);
 		surface.register(new DestroyListener(surface));
 		this.surfaces.put(surfaceHandle,
@@ -64,17 +64,17 @@ public class XSurfacePool {
 		return surface;
 	}
 
-    private class DestroyListener {
-        private final Listenable surface;
+	private class DestroyListener {
+		private final Listenable surface;
 
-        public DestroyListener(final Listenable surface) {
-            this.surface = surface;
-        }
+		public DestroyListener(final Listenable surface) {
+			this.surface = surface;
+		}
 
-        @Subscribe
-        public void destroyed(final xcb_destroy_notify_event_t destroyNotifyEvent) {
-            XSurfacePool.this.surfaces.remove(this.surface);
+		@Subscribe
+		public void destroyed(final xcb_destroy_notify_event_t destroyNotifyEvent) {
+			XSurfacePool.this.surfaces.remove(this.surface);
 			this.surface.unregister(this);
-        }
-    }
+		}
+	}
 }

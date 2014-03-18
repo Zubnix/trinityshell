@@ -53,7 +53,7 @@ public final class XEventHandlers {
         // TODO handle error cases
         final int eventCode = response_type & EVENT_CODE_MASK;
 
-        final XEventHandler eventConversion = this.conversionMap.get(Integer.valueOf(eventCode));
+        final XEventHandler eventConversion = this.conversionMap.get(eventCode);
         if (eventConversion == null) {
             return;
         }

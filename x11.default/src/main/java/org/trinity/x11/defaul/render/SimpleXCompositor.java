@@ -19,6 +19,7 @@
  ******************************************************************************/
 package org.trinity.x11.defaul.render;
 
+import dagger.Lazy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
@@ -57,14 +58,14 @@ public class SimpleXCompositor implements XCompositor {
     private final XWindowFactory xWindowFactory;
 
     private final SimpleShellSurfaceFactory simpleShellSurfaceFactory;
-    private final SimpleRootShellSurface simpleRootShellSurface;
+    private final Lazy<SimpleRootShellSurface> simpleRootShellSurface;
     private final SimpleShell simpleShell;
 
     @Inject
     SimpleXCompositor(final XEventChannel xEventChannel,
                       final XWindowFactory xWindowFactory,
                       final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
-                      final SimpleRootShellSurface simpleRootShellSurface,
+                      final Lazy<SimpleRootShellSurface> simpleRootShellSurface,
                       final SimpleShell simpleShell) {
 
         this.xEventChannel = xEventChannel;
@@ -80,7 +81,7 @@ public class SimpleXCompositor implements XCompositor {
         configureClientEvents(nativeHandle);
 
         final XWindow xWindow = this.xWindowFactory.create(nativeHandle);
-        final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(this.simpleRootShellSurface,
+        final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(this.simpleRootShellSurface.get(),
                 xWindow);
         translateXEvents(xWindow,
                 shellSurface);

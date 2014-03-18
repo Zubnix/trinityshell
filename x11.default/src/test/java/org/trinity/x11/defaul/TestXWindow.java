@@ -1,4 +1,4 @@
-package org.trinity.foundation.display.x11.impl;
+package org.trinity.x11.defaul;
 
 
 import com.google.common.util.concurrent.ListeningExecutorService;
