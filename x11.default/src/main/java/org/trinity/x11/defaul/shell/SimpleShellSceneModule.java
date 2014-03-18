@@ -3,6 +3,7 @@ package org.trinity.x11.defaul.shell;
 import dagger.Module;
 import dagger.Provides;
 import org.trinity.x11.defaul.XEventChannel;
+import org.trinity.x11.defaul.render.SimpleRenderer;
 
 import javax.inject.Singleton;
 
@@ -24,7 +25,7 @@ public class SimpleShellSceneModule {
 
 	@Provides
 	@Singleton
-	SimpleShell provideSimpleShell() {
-		return new SimpleShell();
+	SimpleRenderer provideSimpleShell() {
+		return new SimpleRenderer();
 	}
 }

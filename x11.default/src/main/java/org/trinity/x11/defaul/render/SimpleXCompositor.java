@@ -29,7 +29,6 @@ import org.trinity.x11.defaul.XEventChannel;
 import org.trinity.x11.defaul.XWindow;
 import org.trinity.x11.defaul.XWindowFactory;
 import org.trinity.x11.defaul.shell.SimpleRootShellSurface;
-import org.trinity.x11.defaul.shell.SimpleShell;
 import org.trinity.x11.defaul.shell.SimpleShellSurfaceFactory;
 import org.trinity.x11.defaul.shell.SimpleXEventTranslator;
 
@@ -49,62 +48,62 @@ import static org.freedesktop.xcb.xcb_event_mask_t.*;
 @Singleton
 public class SimpleXCompositor implements XCompositor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SimpleXCompositor.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SimpleXCompositor.class);
 
-    private static final int CLIENT_EVENT_MASK = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
-    private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder()).putInt(CLIENT_EVENT_MASK);
+	private static final int        CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+	private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder()).putInt(CLIENT_EVENT_MASK);
 
-    private final XEventChannel xEventChannel;
-    private final XWindowFactory xWindowFactory;
+	private final XEventChannel  xEventChannel;
+	private final XWindowFactory xWindowFactory;
 
-    private final SimpleShellSurfaceFactory simpleShellSurfaceFactory;
-    private final Lazy<SimpleRootShellSurface> simpleRootShellSurface;
-    private final SimpleShell simpleShell;
+	private final SimpleShellSurfaceFactory    simpleShellSurfaceFactory;
+	private final Lazy<SimpleRootShellSurface> simpleRootShellSurface;
+	private final SimpleRenderer               simpleRenderer;
 
-    @Inject
-    SimpleXCompositor(final XEventChannel xEventChannel,
-                      final XWindowFactory xWindowFactory,
-                      final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
-                      final Lazy<SimpleRootShellSurface> simpleRootShellSurface,
-                      final SimpleShell simpleShell) {
+	@Inject
+	SimpleXCompositor(final XEventChannel xEventChannel,
+					  final XWindowFactory xWindowFactory,
+					  final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
+					  final Lazy<SimpleRootShellSurface> simpleRootShellSurface,
+					  final SimpleRenderer simpleRenderer) {
 
-        this.xEventChannel = xEventChannel;
-        this.xWindowFactory = xWindowFactory;
+		this.xEventChannel = xEventChannel;
+		this.xWindowFactory = xWindowFactory;
 
-        this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
-        this.simpleRootShellSurface = simpleRootShellSurface;
-        this.simpleShell = simpleShell;
-    }
+		this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
+		this.simpleRootShellSurface = simpleRootShellSurface;
+		this.simpleRenderer = simpleRenderer;
+	}
 
-    @Override
-    public Listenable createSurface(@Nonnull final Integer nativeHandle) {
-        configureClientEvents(nativeHandle);
+	@Override
+	public Listenable createSurface(@Nonnull final Integer nativeHandle) {
+		configureClientEvents(nativeHandle);
 
-        final XWindow xWindow = this.xWindowFactory.create(nativeHandle);
-        final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(this.simpleRootShellSurface.get(),
-                xWindow);
-        translateXEvents(xWindow,
-                shellSurface);
-        this.simpleShell.add(shellSurface);
+		final XWindow xWindow = this.xWindowFactory.create(nativeHandle);
+		final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(this.simpleRootShellSurface.get(),
+																				xWindow);
+		translateXEvents(xWindow,
+						 shellSurface);
+		this.simpleRenderer.add(shellSurface);
 
-        return xWindow;
-    }
+		return xWindow;
+	}
 
-    private void translateXEvents(final XWindow xWindow,
-                                  final ShellSurface shellSurface) {
-        new SimpleXEventTranslator(xWindow,
-                shellSurface).register();
-    }
+	private void translateXEvents(final XWindow xWindow,
+								  final ShellSurface shellSurface) {
+		new SimpleXEventTranslator(xWindow,
+								   shellSurface).register();
+	}
 
-    private void configureClientEvents(final Integer nativeHandle) {
+	private void configureClientEvents(final Integer nativeHandle) {
 
-        LOG.debug("[winId={}] configure client evens.",
-                nativeHandle);
+		LOG.debug("[winId={}] configure client evens.",
+				  nativeHandle);
 
-        xcb_change_window_attributes(this.xEventChannel.getXcbConnection(),
-                nativeHandle,
-                XCB_CW_EVENT_MASK,
-                CLIENT_EVENTS_CONFIG_BUFFER);
-        xcb_flush(this.xEventChannel.getXcbConnection());
-    }
+		xcb_change_window_attributes(this.xEventChannel.getXcbConnection(),
+									 nativeHandle,
+									 XCB_CW_EVENT_MASK,
+									 CLIENT_EVENTS_CONFIG_BUFFER);
+		xcb_flush(this.xEventChannel.getXcbConnection());
+	}
 }

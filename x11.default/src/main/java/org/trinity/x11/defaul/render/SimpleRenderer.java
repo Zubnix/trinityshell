@@ -1,4 +1,4 @@
-package org.trinity.x11.defaul.shell;
+package org.trinity.x11.defaul.render;
 
 import com.google.common.eventbus.Subscribe;
 import org.trinity.shell.scene.api.ShellSurface;
@@ -13,10 +13,10 @@ import javax.media.nativewindow.util.DimensionImmutable;
 import javax.media.nativewindow.util.PointImmutable;
 
 @Singleton
-public class SimpleShell {
+public class SimpleRenderer {
 
     @Inject
-    SimpleShell() {
+	SimpleRenderer() {
     }
 
     public void add(@Nonnull final ShellSurface shellSurface) {
@@ -41,6 +41,7 @@ public class SimpleShell {
 
         final DimensionImmutable size = shellSurfaceResizeRequest.getSize();
         final ShellSurface shellSurface = shellSurfaceResizeRequest.getSource();
+		shellSurface.getBuffer();
 
 		shellSurface.accept(shellSurfaceConfigurable -> shellSurfaceConfigurable.setSize(size));
 	}
