@@ -22,9 +22,8 @@ package org.trinity.x11.defaul;
 import com.google.common.util.concurrent.Service;
 import dagger.Module;
 import dagger.Provides;
-import org.trinity.foundation.display.x11.impl.XWindowFactory;
-import org.trinity.x11.defaul.simple.SimpleRenderModule;
-import org.trinity.x11.defaul.defaul.DefaultShellSceneModule;
+import org.trinity.x11.defaul.render.SimpleRenderModule;
+import org.trinity.x11.defaul.shell.SimpleShellSceneModule;
 import org.trinity.x11.defaul.xeventhandler.XEventHandlersModule;
 
 import javax.inject.Singleton;
@@ -36,7 +35,7 @@ import static dagger.Provides.Type.SET;
 				//internal
 				XEventHandlersModule.class,
 				SimpleRenderModule.class,
-                DefaultShellSceneModule.class
+                SimpleShellSceneModule.class
         },
         injects = {
                 XShellService.class,

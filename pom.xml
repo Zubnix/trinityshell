@@ -69,7 +69,6 @@
         <module>binding.default</module>
         <module>shell.view.api</module>
         <module>shell.scene.api</module>
-        <module>shell.scene.default</module>
 
         <module>x11.default</module>
 

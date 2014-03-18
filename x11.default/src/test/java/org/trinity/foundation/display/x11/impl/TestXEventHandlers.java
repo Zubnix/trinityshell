@@ -4,6 +4,9 @@ package org.trinity.foundation.display.x11.impl;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.junit.Test;
 import org.trinity.common.Listenable;
+import org.trinity.x11.defaul.XEventChannel;
+import org.trinity.x11.defaul.XEventHandler;
+import org.trinity.x11.defaul.XEventHandlers;
 
 import java.util.HashSet;
 

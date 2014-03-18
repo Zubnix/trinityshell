@@ -3,8 +3,7 @@ package org.trinity.bootstrap;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
-import org.trinity.foundation.display.x11.impl.X11DefaultModule;
-import org.trinity.shell.scene.impl.ShellSceneDefaultModule;
+import org.trinity.x11.defaul.X11DefaultModule;
 
 import javax.inject.Singleton;
 
@@ -14,7 +13,6 @@ import javax.inject.Singleton;
 				ObjectGraph.class
 		},
 		includes = {
-				ShellSceneDefaultModule.class,
 				X11DefaultModule.class,
 				//BindingDefaultModule.class
 		},

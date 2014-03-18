@@ -26,7 +26,7 @@ import org.freedesktop.xcb.xcb_destroy_notify_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
-import org.trinity.x11.defaul.simple.SimpleXCompositor;
+import org.trinity.x11.defaul.render.SimpleXCompositor;
 
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;

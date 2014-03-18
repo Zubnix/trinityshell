@@ -23,8 +23,8 @@ public class SimpleXEventTranslator {
     @Nonnull
     private final ShellSurface shellSurface;
 
-    SimpleXEventTranslator(@Nonnull final Listenable listenable,
-                           @Nonnull final ShellSurface shellSurface){
+    public SimpleXEventTranslator(  @Nonnull final Listenable listenable,
+                                    @Nonnull final ShellSurface shellSurface){
         this.listenable = listenable;
         this.shellSurface = shellSurface;
     }

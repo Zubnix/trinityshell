@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.trinity.x11.defaul.XEventChannel;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeoutException;
@@ -110,7 +111,7 @@ public class TestXConnectionImpl {
 //        when(xcb_connection_has_error(this.xcb_connection)).thenReturn(1);
 //
 //        //when
-//        //the event pump tries to wait for an event
+//        //the event waitForEvent tries to wait for an event
 //        new XEventPump(this.xConnection).call();
 //        //then
 //        //an error is thrown
@@ -130,7 +131,7 @@ public class TestXConnectionImpl {
 //        when(xcb_wait_for_event(this.xcb_connection)).thenReturn(xcb_generic_event);
 //
 //        //when
-//        //the x event pump is stopped
+//        //the x event waitForEvent is stopped
 //        //an event arrives
 //        final XEventPump xEventPump = new XEventPump(this.xConnection);
 //        xEventPump.stop();
@@ -146,7 +147,7 @@ public class TestXConnectionImpl {
 //        }.start();
 //
 //        //then
-//        //the event is passed on to the x event bus after the x event pump is started
+//        //the event is passed on to the x event bus after the x event waitForEvent is started
 //        verify(this.xEventBus,
 //                never()).post(xcb_generic_event);
 //        xEventPump.start();
@@ -169,9 +170,9 @@ public class TestXConnectionImpl {
 //        when(xcb_connection_has_error(this.xcb_connection)).thenReturn(1);
 //
 //        //when
-//        //the x event pump is stopped
+//        //the x event waitForEvent is stopped
 //        //an X server with errors
-//        //the x event pump is started
+//        //the x event waitForEvent is started
 //        final XEventPump xEventPump = new XEventPump(this.xConnection);
 //        xEventPump.stop();
 //        xEventPump.call();

@@ -13,20 +13,19 @@
     <name>Trinitry Bootstrap</name>
 
     <dependencies>
-        <!-- foundation api -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>foundation.api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- X11 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>x11.default</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <!-- bindings -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>binding.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>binding.default</artifactId>
@@ -36,16 +35,12 @@
         <!-- shell api -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>shell.api</artifactId>
+            <artifactId>shell.scene.api</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-
-        <!-- shell implementation -->
-        <!-- scene -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>shell.scene.default</artifactId>
+            <artifactId>shell.view.api</artifactId>
             <version>${project.version}</version>
         </dependency>
 

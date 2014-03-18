@@ -15,6 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.trinity.x11.defaul.XEventChannel;
+import org.trinity.x11.defaul.XTime;
+import org.trinity.x11.defaul.XWindow;
 
 import javax.media.nativewindow.util.RectangleImmutable;
 import java.nio.ByteBuffer;
@@ -31,9 +34,9 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @PrepareForTest({LibXcb.class})
 public class TestXWindow {
 	@Mock
-	private XTime                       xTime;
+	private XTime xTime;
 	@Mock
-	private XEventChannel               xEventChannel;
+	private XEventChannel xEventChannel;
 	@Mock
 	private SWIGTYPE_p_xcb_connection_t xcb_connection;
 
@@ -41,7 +44,7 @@ public class TestXWindow {
 	@Mock
 	private ListeningExecutorService xExecutor;
 	@InjectMocks
-	private XWindow                  xWindow;
+	private XWindow xWindow;
 
 	@Before
 	public void setup() {

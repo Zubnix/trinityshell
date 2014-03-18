@@ -12,21 +12,25 @@
 */
 package org.trinity.bootstrap;
 
+import com.google.common.util.concurrent.Service;
+import com.google.common.util.concurrent.ServiceManager;
 import dagger.ObjectGraph;
-import org.trinity.shell.api.plugin.ShellPluginsRunner;
 import xcb4j.LibXcbLoader;
+
+import javax.inject.Inject;
+import java.util.Set;
 
 public class EntryPoint {
 
-	private final ShellPluginsRunner shellPluginsRunner;
+    private final ServiceManager serviceManager;
 
-	public EntryPoint(final ShellPluginsRunner shellPluginsRunner) {
+    @Inject
+    EntryPoint(final Set<Service> services) {
+        this.serviceManager = new ServiceManager(services);
+    }
 
-		this.shellPluginsRunner = shellPluginsRunner;
-	}
-
-	public void startShellPlugins(){
-		this.shellPluginsRunner.startAll();
+	private void enter(){
+        this.serviceManager.startAsync();
 	}
 
 	public static void main(final String[] args) {
@@ -36,7 +40,6 @@ public class EntryPoint {
 		final ObjectGraph objectGraph = ObjectGraph.create(trinityShellModule);
 		trinityShellModule.setObjectGraph(objectGraph);
 
-		final EntryPoint entryPoint = objectGraph.get(EntryPoint.class);
-		entryPoint.startShellPlugins();
+		objectGraph.get(EntryPoint.class).enter();
     }
 }

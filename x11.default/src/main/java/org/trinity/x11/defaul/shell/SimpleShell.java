@@ -37,7 +37,7 @@ public class SimpleShell {
 
         shellSurface.accept(new ShellSurfaceConfiguration() {
             @Override
-            public void configure(ShellSurfaceConfigurable shellSurfaceConfigurable) {
+            public void configure(final ShellSurfaceConfigurable shellSurfaceConfigurable) {
                 shellSurfaceConfigurable.setPosition(position);
             }
         });

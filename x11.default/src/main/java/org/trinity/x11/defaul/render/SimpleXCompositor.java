@@ -22,12 +22,15 @@ package org.trinity.x11.defaul.render;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
+import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.x11.defaul.XCompositor;
 import org.trinity.x11.defaul.XEventChannel;
 import org.trinity.x11.defaul.XWindow;
-import org.trinity.foundation.display.x11.impl.XWindowFactory;
-import org.trinity.x11.defaul.shell.DefaultShellSurfaceFactory;
-import org.trinity.shell.scene.api.ShellSurface;
+import org.trinity.x11.defaul.XWindowFactory;
+import org.trinity.x11.defaul.shell.SimpleRootShellSurface;
+import org.trinity.x11.defaul.shell.SimpleShell;
+import org.trinity.x11.defaul.shell.SimpleShellSurfaceFactory;
+import org.trinity.x11.defaul.shell.SimpleXEventTranslator;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -53,22 +56,22 @@ public class SimpleXCompositor implements XCompositor {
     private final XEventChannel xEventChannel;
     private final XWindowFactory xWindowFactory;
 
-    private final DefaultShellSurfaceFactory shellSurfaceFactory;
-    private final SimpleShellSurfaceRoot simpleShellSurfaceRoot;
+    private final SimpleShellSurfaceFactory simpleShellSurfaceFactory;
+    private final SimpleRootShellSurface simpleRootShellSurface;
     private final SimpleShell simpleShell;
 
     @Inject
     SimpleXCompositor(final XEventChannel xEventChannel,
                       final XWindowFactory xWindowFactory,
-                      final DefaultShellSurfaceFactory shellSurfaceFactory,
-                      final SimpleShellSurfaceRoot simpleShellSurfaceRoot,
+                      final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
+                      final SimpleRootShellSurface simpleRootShellSurface,
                       final SimpleShell simpleShell) {
 
         this.xEventChannel = xEventChannel;
         this.xWindowFactory = xWindowFactory;
 
-        this.shellSurfaceFactory = shellSurfaceFactory;
-        this.simpleShellSurfaceRoot = simpleShellSurfaceRoot;
+        this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
+        this.simpleRootShellSurface = simpleRootShellSurface;
         this.simpleShell = simpleShell;
     }
 
@@ -77,7 +80,7 @@ public class SimpleXCompositor implements XCompositor {
         configureClientEvents(nativeHandle);
 
         final XWindow xWindow = this.xWindowFactory.create(nativeHandle);
-        final ShellSurface shellSurface = this.shellSurfaceFactory.create(this.simpleShellSurfaceRoot,
+        final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(this.simpleRootShellSurface,
                 xWindow);
         translateXEvents(xWindow,
                 shellSurface);

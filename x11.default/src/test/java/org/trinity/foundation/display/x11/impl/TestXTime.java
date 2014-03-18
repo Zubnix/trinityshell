@@ -6,6 +6,7 @@ import org.freedesktop.xcb.xcb_enter_notify_event_t;
 import org.freedesktop.xcb.xcb_key_press_event_t;
 import org.freedesktop.xcb.xcb_property_notify_event_t;
 import org.junit.Test;
+import org.trinity.x11.defaul.XTime;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;

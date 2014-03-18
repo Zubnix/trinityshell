@@ -38,7 +38,7 @@ public class XShellService extends AbstractExecutionThreadService {
     @Override
     protected void run() {
         while (isRunning()) {
-            this.xEventChannel.pump();
+            this.xEventChannel.waitForEvent();
         }
     }
 

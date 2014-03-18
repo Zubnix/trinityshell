@@ -117,7 +117,7 @@ public class XEventChannel extends EventBus implements Listenable {
         return this.xcb_connection;
     }
 
-    public void pump() {
+    public void waitForEvent() {
         if (xcb_connection_has_error(getXcbConnection()) != 0) {
             final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
             LOG.error(errorMsg);
@@ -125,7 +125,6 @@ public class XEventChannel extends EventBus implements Listenable {
         }
 
         final xcb_generic_event_t xcb_generic_event = xcb_wait_for_event(getXcbConnection());
-
         post(xcb_generic_event);
         xcb_generic_event.delete();
     }
