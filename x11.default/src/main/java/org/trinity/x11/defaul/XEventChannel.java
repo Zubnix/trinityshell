@@ -35,8 +35,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.ByteBuffer.allocateDirect;
@@ -45,7 +43,6 @@ import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
 import static org.freedesktop.xcb.LibXcb.xcb_connect;
 import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
 import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
-import static org.freedesktop.xcb.LibXcb.xcb_flush;
 import static org.freedesktop.xcb.LibXcb.xcb_get_setup;
 import static org.freedesktop.xcb.LibXcb.xcb_screen_next;
 import static org.freedesktop.xcb.LibXcb.xcb_setup_roots_iterator;
@@ -60,7 +57,6 @@ public class XEventChannel extends EventBus implements Listenable {
 
     private static final Logger LOG = LoggerFactory.getLogger(XEventChannel.class);
 
-    private final ExecutorService eventPumpThread = Executors.newSingleThreadExecutor();
     private final ByteBuffer rootWindowAttributes = allocateDirect(4).order(nativeOrder()).putInt(XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT);
 
     private SWIGTYPE_p_xcb_connection_t xcb_connection;
@@ -77,7 +73,7 @@ public class XEventChannel extends EventBus implements Listenable {
         final ByteBuffer screenBuf = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
         screenBuf.putInt(screen);
         this.xcb_connection = xcb_connect(displayName,
-                screenBuf);
+                                          screenBuf);
         if (xcb_connection_has_error(getXcbConnection()) != 0) {
             throw new Error("Cannot open display\n");
         }
@@ -103,10 +99,9 @@ public class XEventChannel extends EventBus implements Listenable {
         final int rootId = xcb_screen.getRoot();
 
         xcb_change_window_attributes(getXcbConnection(),
-                rootId,
-                XCB_CW_EVENT_MASK,
-                this.rootWindowAttributes);
-        xcb_flush(getXcbConnection());
+                                     rootId,
+                                     XCB_CW_EVENT_MASK,
+                                     this.rootWindowAttributes);
     }
 
     public void close() {

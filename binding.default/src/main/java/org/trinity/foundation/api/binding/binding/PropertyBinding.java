@@ -35,12 +35,14 @@ public class PropertyBinding implements ViewBinding {
 		this.propertySlot = propertySlot;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ViewBindingMeta getViewBindingMeta() {
 		return this.viewBindingMeta;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public Collection<DataModelProperty> bind() {
 
 		final String propertySlotDataModelContext = this.propertySlot.dataModelContext();

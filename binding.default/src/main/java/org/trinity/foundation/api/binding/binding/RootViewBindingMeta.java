@@ -7,6 +7,7 @@ import org.trinity.binding.api.view.EventSignals;
 import org.trinity.binding.api.view.ObservableCollection;
 import org.trinity.binding.api.view.PropertySlots;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import java.util.LinkedList;
 
@@ -21,8 +22,8 @@ public abstract class RootViewBindingMeta extends ViewBindingMeta {
     private Optional<EventSignals> eventSignals;
     private Optional<PropertySlots> propertySlots;
 
-    public static ViewBindingMeta create(final Object dataModel,
-                                         final Object viewModel) {
+    public static ViewBindingMeta create(@Nonnull final Object dataModel,
+                                         @Nonnull final Object viewModel) {
 
         return new AutoValue_RootViewBindingMeta(viewModel, dataModel).scan();
     }
@@ -43,28 +44,32 @@ public abstract class RootViewBindingMeta extends ViewBindingMeta {
         return this;
     }
 
+    @Nonnull
     @Override
     public Optional<ObservableCollection> getObservableCollection() {
         return this.observableCollection;
     }
 
+    @Nonnull
     @Override
     public Optional<DataModelContext> getDataModelContext() {
         return this.dataModelContext;
     }
 
+    @Nonnull
     @Override
     public Optional<EventSignals> getEventSignals() {
         return this.eventSignals;
     }
 
+    @Nonnull
     @Override
     public Optional<PropertySlots> getPropertySlots() {
         return this.propertySlots;
     }
 
     @Override
-	public boolean resolveDataModelChain(final LinkedList<DataModelProperty> dataModelChain) {
+	public boolean resolveDataModelChain(@Nonnull final LinkedList<DataModelProperty> dataModelChain) {
 		dataModelChain.add(this.rootDataModelProperty);
 		return appendDataModelPropertyChain(dataModelChain,this.dataContextPath);
 	}

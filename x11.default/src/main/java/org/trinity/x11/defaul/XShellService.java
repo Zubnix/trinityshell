@@ -4,6 +4,8 @@ import com.google.common.util.concurrent.AbstractExecutionThreadService;
 
 import javax.inject.Inject;
 
+import static org.freedesktop.xcb.LibXcb.xcb_flush;
+
 public class XShellService extends AbstractExecutionThreadService {
 
     private final XEventChannel xEventChannel;
@@ -31,7 +33,7 @@ public class XShellService extends AbstractExecutionThreadService {
         this.xEventChannel.register(this.xTime);
         this.xEventChannel.register(this.xEventHandlers);
         this.xEventChannel.open(displayName,
-                targetScreen);
+                                targetScreen);
         this.xClientExplorer.findClientDisplaySurfaces();
     }
 
@@ -39,6 +41,7 @@ public class XShellService extends AbstractExecutionThreadService {
     protected void run() {
         while (isRunning()) {
             this.xEventChannel.waitForEvent();
+            xcb_flush(this.xEventChannel.getXcbConnection());
         }
     }
 

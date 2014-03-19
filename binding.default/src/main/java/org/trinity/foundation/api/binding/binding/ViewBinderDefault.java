@@ -128,27 +128,19 @@ public class ViewBinderDefault implements ViewBinder {
 
 
     @Override
-    public void bind(
-            @Nonnull final Object dataModel,
-            @Nonnull final Object viewModel) {
+    public void bind(@Nonnull final Object dataModel,
+                     @Nonnull final Object viewModel) {
         final ViewBindingMeta viewBindingMeta = RootViewBindingMeta.create(dataModel,
-                viewModel);
-        createAllBindings(
-                viewBindingMeta);
+                                                                           viewModel);
+        createAllBindings(viewBindingMeta);
     }
 
-    private void createAllBindings(
-            final ViewBindingMeta rootViewBindingMeta) {
+    private void createAllBindings(final ViewBindingMeta rootViewBindingMeta) {
         final FluentIterable<ViewBindingMeta> viewBindingMetas = this.viewBindingsTraverser.preOrderTraversal(rootViewBindingMeta);
-
-        for (final ViewBindingMeta viewBindingMeta : viewBindingMetas) {
-            createBindings(
-                    viewBindingMeta);
-        }
+        viewBindingMetas.forEach(this::createBindings);
     }
 
-    private void createBindings(
-            final ViewBindingMeta bindingMeta) {
+    private void createBindings(final ViewBindingMeta bindingMeta) {
 
         //if there are property slots
         if (bindingMeta.getPropertySlots().isPresent()) {
@@ -180,11 +172,10 @@ public class ViewBinderDefault implements ViewBinder {
     }
 
     @Override
-    public void updateViewModelBinding(
-            @Nonnull final Object parentViewModel,
-            @Nonnull final String subViewFieldName,
-            @Nonnull final Optional<?> oldSubView,
-            @Nonnull final Optional<?> newSubView) {
+    public void updateViewModelBinding( @Nonnull final Object parentViewModel,
+                                        @Nonnull final String subViewFieldName,
+                                        @Nonnull final Optional<?> oldSubView,
+                                        @Nonnull final Optional<?> newSubView) {
         if (oldSubView.equals(newSubView)) {
             return;
         }

@@ -22,10 +22,4 @@ public class SimpleShellSceneModule {
 														 final org.trinity.x11.defaul.XWindowFactory xWindowFactory) {
 		return new SimpleRootShellSurface(xWindowFactory.create(xEventChannel.getXcbScreen().getRoot()));
 	}
-
-	@Provides
-	@Singleton
-	SimpleRenderer provideSimpleShell() {
-		return new SimpleRenderer();
-	}
 }

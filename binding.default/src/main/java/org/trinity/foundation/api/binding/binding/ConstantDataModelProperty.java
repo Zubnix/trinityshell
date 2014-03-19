@@ -10,6 +10,7 @@ import javax.annotation.concurrent.Immutable;
 @AutoValue
 public abstract class ConstantDataModelProperty implements DataModelProperty {
 
+    @Nonnull
     public static DataModelProperty create(@Nonnull final Object dataModel){
         return new AutoValue_ConstantDataModelProperty(Optional.of(dataModel));
     }

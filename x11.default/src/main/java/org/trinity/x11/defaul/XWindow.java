@@ -32,6 +32,7 @@ import org.trinity.common.Listenable;
 import org.trinity.shell.scene.api.BufferSpace;
 import org.trinity.shell.scene.api.HasSize;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.media.nativewindow.util.Dimension;
@@ -55,6 +56,7 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
 	private static final int        MOVE_RESIZE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
 	private static final ByteBuffer MOVE_RESIZE_VALUE_LIST_BUFFER = allocateDirect(16).order(nativeOrder());
 
+    @Nonnull
 	private final Integer       nativeHandle;
 	private final XEventChannel xEventChannel;
 
@@ -66,6 +68,7 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
 		this.nativeHandle = nativeHandle;
 	}
 
+    @Nonnull
 	public Integer getNativeHandle() {
 		return this.nativeHandle;
 	}
@@ -76,17 +79,17 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
 				  winId);
 		xcb_destroy_window(getConnectionRef(),
 						   winId);
-		xcb_flush(getConnectionRef());
 	}
 
 	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
 		return this.xEventChannel.getXcbConnection();
 	}
 
-	public void configure(final int x,
-						  final int y,
-						  final int width,
-						  final int height) {
+    @Nonnull
+	public XWindow configure(final int x,
+						     final int y,
+                             @Nonnegative final int width,
+                             @Nonnegative final int height) {
 
 		// we have to adjust the size with the X border. This sucks because it
 		// introduces an extra roundtrip to the X server. -_-
@@ -124,9 +127,10 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
 							 winId,
 							 XWindow.MOVE_RESIZE_VALUE_MASK,
 							 XWindow.MOVE_RESIZE_VALUE_LIST_BUFFER);
-		xcb_flush(getConnectionRef());
+        return this;
 	}
 
+    @Nonnull
 	public RectangleImmutable getShape() {
 		//TODO keep track of the size & border through event listeners?
 
@@ -154,7 +158,8 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
 							 height);
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public DimensionImmutable getSize() {
 		final RectangleImmutable shape = getShape();
 		return new Dimension(shape.getWidth(),

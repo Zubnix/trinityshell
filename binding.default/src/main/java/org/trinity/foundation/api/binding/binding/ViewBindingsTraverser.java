@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.TreeTraverser;
 import org.trinity.binding.api.view.SubView;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
@@ -19,7 +20,7 @@ public class ViewBindingsTraverser extends TreeTraverser<ViewBindingMeta> {
     }
 
     @Override
-    public Iterable<ViewBindingMeta> children(final ViewBindingMeta root) {
+    public Iterable<ViewBindingMeta> children(@Nonnull final ViewBindingMeta root) {
         final Object viewModel = root.getViewModel();
         final Class<?> viewModelClass = viewModel.getClass();
 		final Field[] declaredFields = getFields(viewModelClass);

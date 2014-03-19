@@ -36,11 +36,13 @@ public class EventBinding implements ViewBinding {
         this.eventSignal = eventSignal;
     }
 
+    @Nonnull
     @Override
     public ViewBindingMeta getViewBindingMeta() {
         return this.viewBindingMeta;
     }
 
+    @Nonnull
     @Override
     public Collection<DataModelProperty> bind() {
 

@@ -6,6 +6,7 @@ import org.trinity.binding.api.view.EventSignals;
 import org.trinity.binding.api.view.ObservableCollection;
 import org.trinity.binding.api.view.PropertySlots;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 
 /**
@@ -15,7 +16,8 @@ final class ViewBindingMetaUtil {
     ViewBindingMetaUtil() {
     }
 
-    static Optional<PropertySlots> scanFieldPropertySlots(final Field subviewField) {
+    @Nonnull
+    static Optional<PropertySlots> scanFieldPropertySlots(@Nonnull final Field subviewField) {
 
         final PropertySlots fieldLevelPropertySlots = subviewField.getAnnotation(PropertySlots.class);
         final Optional<PropertySlots> fieldLevelOptionalPropertySlots;
@@ -29,7 +31,8 @@ final class ViewBindingMetaUtil {
         return fieldLevelOptionalPropertySlots;
     }
 
-    static Optional<PropertySlots> scanClassPropertySlots(final Class<?> subviewClass) {
+    @Nonnull
+    static Optional<PropertySlots> scanClassPropertySlots(@Nonnull final Class<?> subviewClass) {
 
         final PropertySlots classLevelPropertySlots = subviewClass.getAnnotation(PropertySlots.class);
         final Optional<PropertySlots> classLevelOptionalPropertySlots;
@@ -43,7 +46,8 @@ final class ViewBindingMetaUtil {
         return classLevelOptionalPropertySlots;
     }
 
-    static Optional<EventSignals> scanClassEventSignals(final Class<?> subviewClass) {
+    @Nonnull
+    static Optional<EventSignals> scanClassEventSignals(@Nonnull final Class<?> subviewClass) {
         final EventSignals classLevelEventSignals = subviewClass.getAnnotation(EventSignals.class);
         final Optional<EventSignals> classLevelOptionalEventSignals;
         if(classLevelEventSignals == null) {
@@ -56,7 +60,8 @@ final class ViewBindingMetaUtil {
         return classLevelOptionalEventSignals;
     }
 
-    static Optional<EventSignals> scanFieldEventSignals(final Field subviewField) {
+    @Nonnull
+    static Optional<EventSignals> scanFieldEventSignals(@Nonnull final Field subviewField) {
         final EventSignals fieldLevelEventSignals = subviewField.getAnnotation(EventSignals.class);
         final Optional<EventSignals> fieldLevelOptionalEventSignals;
         if(fieldLevelEventSignals == null) {
@@ -68,19 +73,23 @@ final class ViewBindingMetaUtil {
         return fieldLevelOptionalEventSignals;
     }
 
-    static Optional<ObservableCollection> scanFieldObservableCollection(final Field subviewField) {
+    @Nonnull
+    static Optional<ObservableCollection> scanFieldObservableCollection(@Nonnull final Field subviewField) {
         return Optional.fromNullable(subviewField.getAnnotation(ObservableCollection.class));
     }
 
-    static Optional<ObservableCollection> scanClassObservableCollection(final Class<?> subviewClass) {
+    @Nonnull
+    static Optional<ObservableCollection> scanClassObservableCollection(@Nonnull final Class<?> subviewClass) {
         return Optional.fromNullable(subviewClass.getAnnotation(ObservableCollection.class));
     }
 
-    static Optional<DataModelContext> scanFieldDataModelContext(final Field subviewField) {
+    @Nonnull
+    static Optional<DataModelContext> scanFieldDataModelContext(@Nonnull final Field subviewField) {
         return Optional.fromNullable(subviewField.getAnnotation(DataModelContext.class));
     }
 
-    static Optional<DataModelContext> scanClassDataModelContext(final Class<?> subviewClass) {
+    @Nonnull
+    static Optional<DataModelContext> scanClassDataModelContext(@Nonnull final Class<?> subviewClass) {
         return Optional.fromNullable(subviewClass.getAnnotation(DataModelContext.class));
     }
 }

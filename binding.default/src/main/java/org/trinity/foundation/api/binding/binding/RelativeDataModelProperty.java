@@ -32,10 +32,13 @@ public abstract class RelativeDataModelProperty implements DataModelProperty {
         return new AutoValue_RelativeDataModelProperty(dataModel, propertyName);
     }
 
+    @Nonnull
     abstract Object getDataModel();
 
+    @Nonnull
     abstract String getPropertyName();
 
+    @Nonnull
     @Override
     public Optional<Object> getPropertyValue() {
 		final Optional<Method> getterMethod = getGetterMethod(getDataModel().getClass(),
@@ -56,9 +59,9 @@ public abstract class RelativeDataModelProperty implements DataModelProperty {
         return propertyValue;
     }
 
-    public Optional<Method> getGetterMethod(final Class<?> dataModelClass,
-                                                   final String propertyName) {
-
+    @Nonnull
+    public Optional<Method> getGetterMethod(@Nonnull final Class<?> dataModelClass,
+                                            @Nonnull final String propertyName) {
         checkNotNull(dataModelClass);
         checkNotNull(propertyName);
 

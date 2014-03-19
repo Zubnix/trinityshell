@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
 import org.trinity.x11.defaul.render.SimpleXCompositor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,7 +47,8 @@ public class XSurfacePool {
 		this.compositor = compositor;
 	}
 
-	public Listenable get(final Integer surfaceHandle) {
+    @Nonnull
+	public Listenable get(@Nonnull final Integer surfaceHandle) {
 		Listenable surface = this.surfaces.get(surfaceHandle);
 		if(surface == null) {
 			surface = registerNewSurface(surfaceHandle);
@@ -73,7 +75,7 @@ public class XSurfacePool {
 
 		@Subscribe
 		public void destroyed(final xcb_destroy_notify_event_t destroyNotifyEvent) {
-			XSurfacePool.this.surfaces.remove(this.surface);
+			XSurfacePool.this.surfaces.inverse().remove(this.surface);
 			this.surface.unregister(this);
 		}
 	}

@@ -19,4 +19,10 @@ public class SimpleRenderModule {
 	XCompositor provideXCompositor(final SimpleXCompositor simpleXCompositor) {
 		return simpleXCompositor;
 	}
+
+    @Provides
+    @Singleton
+    SimpleRenderer provideSimpleShell() {
+        return new SimpleRenderer();
+    }
 }

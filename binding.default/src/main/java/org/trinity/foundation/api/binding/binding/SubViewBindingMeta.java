@@ -45,27 +45,32 @@ public abstract class SubViewBindingMeta extends ViewBindingMeta {
         return this;
     }
 
+    @Nonnull
     public abstract Object getViewModel();
 
     public abstract ViewBindingMeta getParentViewBindingMeta();
 
     public abstract Field getSubViewField();
 
+    @Nonnull
     @Override
     public Optional<ObservableCollection> getObservableCollection() {
         return this.observableCollection;
     }
 
+    @Nonnull
     @Override
     public Optional<DataModelContext> getDataModelContext() {
         return this.dataModelContext;
     }
 
+    @Nonnull
     @Override
     public Optional<EventSignals> getEventSignals() {
         return this.eventSignals;
     }
 
+    @Nonnull
     @Override
     public Optional<PropertySlots> getPropertySlots() {
         return this.propertySlots;

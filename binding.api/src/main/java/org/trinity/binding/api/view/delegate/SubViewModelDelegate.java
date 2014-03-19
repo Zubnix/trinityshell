@@ -19,6 +19,9 @@
  ******************************************************************************/
 package org.trinity.binding.api.view.delegate;
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+
 /**
  * ************************************
  * A delegate to handle the life cycle of a child view element. This delegate
@@ -38,9 +41,9 @@ public interface SubViewModelDelegate {
      * <p/>
      * **************************************
      */
-    <T> T newView(Object parentView,
-                  Class<T> childViewType,
-                  int position);
+    <T> T newView(@Nonnull Object parentView,
+                  @Nonnull Class<T> childViewType,
+                  @Nonnegative int position);
 
     /**
      * ************************************
@@ -51,9 +54,9 @@ public interface SubViewModelDelegate {
      * @param deletedPosition  The index of the view that should be destroyed.
      *                         **************************************
      */
-    void destroyView(Object parentView,
-                     Object deletedChildView,
-                     int deletedPosition);
+    void destroyView(@Nonnull Object parentView,
+                     @Nonnull Object deletedChildView,
+                     @Nonnegative int deletedPosition);
 
     /**
      * ************************************
@@ -65,8 +68,8 @@ public interface SubViewModelDelegate {
      * @param newPosition The new position.
      *                    **************************************
      */
-    void updateChildViewPosition(Object parentView,
-                                 Object childView,
-                                 int oldPosition,
-                                 int newPosition);
+    void updateChildViewPosition(@Nonnull Object parentView,
+                                 @Nonnull Object childView,
+                                 @Nonnegative int oldPosition,
+                                 @Nonnegative int newPosition);
 }

@@ -7,6 +7,7 @@ import org.trinity.binding.api.view.EventSignals;
 import org.trinity.binding.api.view.ObservableCollection;
 import org.trinity.binding.api.view.PropertySlots;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -14,15 +15,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class ViewBindingMeta {
 
+    @Nonnull
 	public abstract Optional<ObservableCollection> getObservableCollection();
+    @Nonnull
 	public abstract Optional<EventSignals> getEventSignals();
+    @Nonnull
 	public abstract Optional<PropertySlots> getPropertySlots();
+    @Nonnull
 	public abstract Optional<DataModelContext> getDataModelContext();
-
+    @Nonnull
 	public abstract Object getViewModel();
 
-	protected boolean appendDataModelPropertyChain(final LinkedList<DataModelProperty> dataModelPropertyChain,
-												   final String propertyChain) {
+	protected boolean appendDataModelPropertyChain(@Nonnull final LinkedList<DataModelProperty> dataModelPropertyChain,
+                                                   @Nonnull final String propertyChain) {
 		checkNotNull(dataModelPropertyChain);
 		checkNotNull(propertyChain);
 		checkArgument(!dataModelPropertyChain.isEmpty());
@@ -53,11 +58,12 @@ public abstract class ViewBindingMeta {
 		return !aborted;
 	}
 
-	protected static Iterable<String> toPropertyNames(final String subModelPath) {
+    @Nonnull
+	protected static Iterable<String> toPropertyNames(@Nonnull final String subModelPath) {
 		checkNotNull(subModelPath);
 
 		return Splitter.on('.').trimResults().omitEmptyStrings().split(subModelPath);
 	}
 
-	public abstract boolean resolveDataModelChain(final LinkedList<DataModelProperty> dataModelChain);
+	public abstract boolean resolveDataModelChain(@Nonnull final LinkedList<DataModelProperty> dataModelChain);
 }

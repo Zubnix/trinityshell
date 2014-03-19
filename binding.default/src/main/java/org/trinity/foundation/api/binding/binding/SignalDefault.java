@@ -47,7 +47,9 @@ public class SignalDefault implements Signal {
 	private static final Map<HashCode, Optional<Method>> EVENT_SLOTS_BY_HASH = new HashMap<>();
 	private static final HashFunction                    HASH_FUNCTION       = Hashing.goodFastHash(16);
 
+    @Nonnull
 	private final Object                   eventSignalReceiver;
+    @Nonnull
 	private final Optional<Method>         slot;
 
 	SignalDefault(@Nonnull final Object eventSignalReceiver,
@@ -125,12 +127,9 @@ public class SignalDefault implements Signal {
 			try {
 				method.invoke(SignalDefault.this.eventSignalReceiver);
 			}
-			catch(final IllegalAccessException e) {
+			catch(final IllegalAccessException | InvocationTargetException e) {
 				e.printStackTrace();
 			}
-			catch(final InvocationTargetException e) {
-				e.printStackTrace();
-			}
-		}
+        }
 	}
 }

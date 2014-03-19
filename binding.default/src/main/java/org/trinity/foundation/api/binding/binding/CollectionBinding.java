@@ -28,10 +28,13 @@ public class CollectionBinding implements ViewBinding {
 	//Table<DataModel,Index,ChildViewModel>
 	private final Table<Object, Integer, Object> dataModelElementToViewModelElement = HashBasedTable.create();
 
-	private final ViewBindingMeta      viewBindingMeta;
 	private final ViewBinder           viewBinder;
 	private final SubViewModelDelegate subViewModelDelegate;
-	private final ObservableCollection observableCollection;
+
+    @Nonnull
+    private final ViewBindingMeta      viewBindingMeta;
+    @Nonnull
+    private final ObservableCollection observableCollection;
 
 	CollectionBinding(@Provided final ViewBinder viewBinder,
 					  @Provided final SubViewModelDelegate subViewModelDelegate,
@@ -46,12 +49,14 @@ public class CollectionBinding implements ViewBinding {
 		this.observableCollection = observableCollection;
 	}
 
+    @Nonnull
 	@Override
 	public ViewBindingMeta getViewBindingMeta() {
 		return this.viewBindingMeta;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public Collection<DataModelProperty> bind() {
 
 		final LinkedList<DataModelProperty> properties = new LinkedList<>();
@@ -133,7 +138,7 @@ public class CollectionBinding implements ViewBinding {
 		});
 	}
 
-	protected void handleListChanged(final List<Object> shadowChildDataModelList,
+	private void handleListChanged(final List<Object> shadowChildDataModelList,
 									 final ListEvent<Object> listChanges) {
 		while(listChanges.next()) {
 			final int sourceIndex = listChanges.getIndex();

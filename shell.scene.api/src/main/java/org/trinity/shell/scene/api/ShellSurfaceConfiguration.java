@@ -1,8 +1,10 @@
 package org.trinity.shell.scene.api;
 
+import javax.annotation.Nonnull;
+
 /**
  *
  */
 public interface ShellSurfaceConfiguration {
-    void configure(ShellSurfaceConfigurable shellSurfaceConfigurable);
+    void configure(@Nonnull ShellSurfaceConfigurable shellSurfaceConfigurable);
 }
