@@ -23,25 +23,39 @@ import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import javax.media.nativewindow.util.Point;
+import javax.media.nativewindow.util.PointImmutable;
 
 /***************************************
- * Request to show the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
+ * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event, is moved.
  *
  ***************************************
  */
 @Immutable
-public class ShellSurfaceShowRequest extends ShellSurfaceVisibilityRequest {
+public class Moved extends ShellSurfaceEvent {
 
-	/**
-	 * Create a new {@code ShellSurfaceChildAdded} with the given
+    @Nonnull
+    private final PointImmutable position;
+
+    /**
+	 * Create a new {@code ChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
+	 * @param position
+	 *            a top left {@link Point} of the shell node
 	 */
-	public ShellSurfaceShowRequest(@Nonnull final ShellSurface shellSurface) {
+	public Moved(@Nonnull final ShellSurface shellSurface,
+                 @Nonnull final PointImmutable position) {
 		super(shellSurface);
-	}
+        this.position = position;
+    }
+
+    @Nonnull
+    public PointImmutable getPosition() {
+        return this.position;
+    }
 }

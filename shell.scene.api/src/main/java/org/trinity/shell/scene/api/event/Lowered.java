@@ -25,15 +25,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * Request to hide the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
+ * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event is lowered.
  *
  ***************************************
  */
 @Immutable
-public class ShellSurfaceHideRequest extends ShellSurfaceVisibilityRequest {
+public class Lowered extends StackingEvent {
 
 	/**
-	 * Create a new {@code ShellSurfaceChildAdded} with the given
+	 * Create a new {@code ChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
@@ -41,7 +41,7 @@ public class ShellSurfaceHideRequest extends ShellSurfaceVisibilityRequest {
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellSurfaceHideRequest(@Nonnull final ShellSurface shellSurface) {
+	public Lowered(@Nonnull final ShellSurface shellSurface) {
 		super(shellSurface);
 	}
 }

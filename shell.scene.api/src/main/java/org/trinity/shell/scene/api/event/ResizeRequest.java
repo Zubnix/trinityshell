@@ -23,37 +23,38 @@ import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import javax.media.nativewindow.util.DimensionImmutable;
 
 /***************************************
- * Request to reparent the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
+ * Request to resize the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
  *
  ***************************************
  */
 @Immutable
-public class ShellSurfaceReparentRequest extends ShellSurfaceEvent {
+public class ResizeRequest extends ShellSurfaceEvent {
 
     @Nonnull
-    private final ShellSurface parent;
+    private final DimensionImmutable size;
 
     /**
-	 * Create a new {@code ShellSurfaceChildAdded} with the given
+	 * Create a new {@code ChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
-	 * @param parent
-	 *            a parent {@link org.trinity.shell.scene.api.ShellSurface}
+	 * @param size
+	 *            a {@link DimensionImmutable} size
 	 */
-	public ShellSurfaceReparentRequest(@Nonnull final ShellSurface shellSurface,
-                                       @Nonnull final ShellSurface parent) {
+	public ResizeRequest(@Nonnull final ShellSurface shellSurface,
+                         @Nonnull final DimensionImmutable size) {
 		super(shellSurface);
-        this.parent = parent;
+        this.size = size;
     }
 
     @Nonnull
-    public ShellSurface getParent() {
-        return this.parent;
+    public DimensionImmutable getSize() {
+        return this.size;
     }
 }

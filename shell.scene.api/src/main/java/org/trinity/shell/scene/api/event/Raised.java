@@ -24,16 +24,16 @@ import org.trinity.shell.scene.api.ShellSurface;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-/***************************************
- * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emitted this event, is showed.
+/**************************************
+ * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emitted this event, is raised.
  *
  ***************************************
  */
 @Immutable
-public class ShellSurfaceShowed extends ShellSurfaceVisibilityEvent {
+public class Raised extends StackingEvent {
 
 	/**
-	 * Create a new {@code ShellSurfaceChildAdded} with the given
+	 * Create a new {@code ChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
@@ -41,7 +41,7 @@ public class ShellSurfaceShowed extends ShellSurfaceVisibilityEvent {
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellSurfaceShowed(@Nonnull final ShellSurface shellSurface) {
+	public Raised(@Nonnull final ShellSurface shellSurface) {
 		super(shellSurface);
 	}
 }

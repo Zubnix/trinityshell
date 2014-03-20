@@ -30,7 +30,6 @@ import org.trinity.x11.defaul.XWindow;
 import org.trinity.x11.defaul.XWindowFactory;
 import org.trinity.x11.defaul.shell.SimpleRootShellSurface;
 import org.trinity.x11.defaul.shell.SimpleShellSurfaceFactory;
-import org.trinity.x11.defaul.shell.SimpleXEventTranslator;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

@@ -23,25 +23,39 @@ import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import javax.media.nativewindow.util.Dimension;
+import javax.media.nativewindow.util.DimensionImmutable;
 
 /***************************************
- * Request to raise the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
+ * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emitted this event, is resized.
  *
  ***************************************
  */
 @Immutable
-public class ShellSurfaceRaiseRequest extends ShellSurfaceStackingRequest {
+public class Resized extends ShellSurfaceEvent {
 
-	/**
-	 * Create a new {@code ShellSurfaceChildAdded} with the given
+    @Nonnull
+    private final DimensionImmutable size;
+
+    /**
+	 * Create a new {@code ChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
+	 * @param size
+	 *            a size {@link Dimension}
 	 */
-	public ShellSurfaceRaiseRequest(@Nonnull final ShellSurface shellSurface) {
+	public Resized(@Nonnull final ShellSurface shellSurface,
+                   @Nonnull final DimensionImmutable size) {
 		super(shellSurface);
-	}
+        this.size = size;
+    }
+
+    @Nonnull
+    public DimensionImmutable getSize() {
+        return size;
+    }
 }

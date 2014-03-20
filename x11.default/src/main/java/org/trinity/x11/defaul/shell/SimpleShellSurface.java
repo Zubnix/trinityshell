@@ -22,17 +22,8 @@ package org.trinity.x11.defaul.shell;
 import com.google.auto.factory.AutoFactory;
 import com.google.common.eventbus.EventBus;
 import org.trinity.common.Listenable;
-import org.trinity.shell.scene.api.BufferSpace;
-import org.trinity.shell.scene.api.HasSize;
-import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
-import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
-import org.trinity.shell.scene.api.event.ShellSurfaceDestroyed;
-import org.trinity.shell.scene.api.event.ShellSurfaceHidden;
-import org.trinity.shell.scene.api.event.ShellSurfaceMoved;
-import org.trinity.shell.scene.api.event.ShellSurfaceReparented;
-import org.trinity.shell.scene.api.event.ShellSurfaceShowed;
-import org.trinity.shell.scene.api.event.ShellSurfaceVisibilityEvent;
+import org.trinity.shell.scene.api.*;
+import org.trinity.shell.scene.api.event.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -79,7 +70,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Override
     public ShellSurfaceConfigurable markDestroyed() {
         this.destroyed = true;
-        post(new ShellSurfaceDestroyed(this));
+        post(new Destroyed(this));
         return this;
     }
 
@@ -92,8 +83,8 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     public ShellSurfaceConfigurable setParent(@Nonnull final ShellSurface parent) {
         this.parent = parent;
-        post(new ShellSurfaceReparented(this,
-                parent));
+        post(new Reparented(this,
+                            parent));
         return this;
     }
 
@@ -119,15 +110,15 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Override
     public ShellSurfaceConfigurable setVisible(@Nonnull final Boolean visible) {
         this.visible = visible;
-        final ShellSurfaceVisibilityEvent shellSurfaceVisibilityEvent = this.visible ? new ShellSurfaceShowed(this):new ShellSurfaceHidden(this);
-        post(shellSurfaceVisibilityEvent);
+        final VisibilityEvent visibilityEvent = this.visible ? new Showed(this):new Hidden(this);
+        post(visibilityEvent);
         return this;
     }
 
     @Nonnull
     @Override
     public ShellSurfaceConfigurable commit() {
-        //TODO implement
+        post(new Committed(this));
         return this;
     }
 
@@ -136,8 +127,8 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     public ShellSurfaceConfigurable setPosition(@Nonnull final PointImmutable pointImmutable) {
         this.position = new Point(pointImmutable.getX(),
                                   pointImmutable.getY());
-        post(new ShellSurfaceMoved(this,
-                                   this.position));
+        post(new Moved(this,
+                       this.position));
         return this;
     }
 

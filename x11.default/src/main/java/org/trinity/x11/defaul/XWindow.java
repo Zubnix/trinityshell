@@ -53,8 +53,10 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
 
 	private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
 
-	private static final int        MOVE_RESIZE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-	private static final ByteBuffer MOVE_RESIZE_VALUE_LIST_BUFFER = allocateDirect(16).order(nativeOrder());
+    private static final int        RESIZE_VALUE_MASK             = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
+    private static final int        MOVE_RESIZE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
+    private static final ByteBuffer RESIZE_VALUE_LIST_BUFFER =      allocateDirect(8).order(nativeOrder());
+    private static final ByteBuffer MOVE_RESIZE_VALUE_LIST_BUFFER = allocateDirect(16).order(nativeOrder());
 
     @Nonnull
 	private final Integer       nativeHandle;
@@ -86,49 +88,61 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
 	}
 
     @Nonnull
+    public XWindow configure(@Nonnegative final int width,
+                             @Nonnegative final int height){
+
+        RESIZE_VALUE_LIST_BUFFER.clear();
+        RESIZE_VALUE_LIST_BUFFER.putInt(width).putInt(height);
+
+        final int winId = getNativeHandle();
+        LOG.debug("[winId={}] move resize x={}, y={}, width={}, height={}.",
+                  winId,
+                  width,
+                  height);
+        xcb_configure_window(getConnectionRef(),
+                             winId,
+                             XWindow.RESIZE_VALUE_MASK,
+                             XWindow.RESIZE_VALUE_LIST_BUFFER);
+        return this;
+    }
+
+    @Nonnull
 	public XWindow configure(final int x,
 						     final int y,
                              @Nonnegative final int width,
                              @Nonnegative final int height) {
 
-		// we have to adjust the size with the X border. This sucks because it
-		// introduces an extra roundtrip to the X server. -_-
-		//TODO keep track of the size & border through event listeners?
-
-		final int winId = getNativeHandle();
-		final xcb_get_geometry_cookie_t cookie_t = xcb_get_geometry(getConnectionRef(),
-																	winId);
-
-
-		final xcb_generic_error_t e = new xcb_generic_error_t();
-		final xcb_get_geometry_reply_t reply = xcb_get_geometry_reply(getConnectionRef(),
-																	  cookie_t,
-																	  e);
-
-		checkError(e);
-		final Integer border = reply.getBorder_width();
-
-
-		final int borderAdjust = 2 * border;
-		final int adjustedWidth = width - borderAdjust;
-		final int adjustedHeight = height - borderAdjust;
-
 		MOVE_RESIZE_VALUE_LIST_BUFFER.clear();
-		MOVE_RESIZE_VALUE_LIST_BUFFER.putInt(x).putInt(y).putInt(adjustedWidth)
-									 .putInt(adjustedHeight);
+		MOVE_RESIZE_VALUE_LIST_BUFFER.putInt(x).putInt(y).putInt(width)
+									 .putInt(height);
 
+        final int winId = getNativeHandle();
 		LOG.debug("[winId={}] move resize x={}, y={}, width={}, height={}.",
 				  winId,
 				  x,
 				  y,
-				  adjustedWidth,
-				  adjustedHeight);
+				  width,
+				  height);
 		xcb_configure_window(getConnectionRef(),
 							 winId,
 							 XWindow.MOVE_RESIZE_VALUE_MASK,
 							 XWindow.MOVE_RESIZE_VALUE_LIST_BUFFER);
         return this;
 	}
+
+    public XWindow map(){
+        final int winId = getNativeHandle();
+        xcb_map_window(getConnectionRef(),
+                       winId);
+        return this;
+    }
+
+    public XWindow unmap(){
+        final int winId = getNativeHandle();
+        xcb_unmap_window(getConnectionRef(),
+                         winId);
+        return this;
+    }
 
     @Nonnull
 	public RectangleImmutable getShape() {

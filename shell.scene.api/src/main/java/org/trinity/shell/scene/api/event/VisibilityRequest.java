@@ -25,15 +25,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * General event to request stacking (raise, lower) related operations.
- *
+ * General event to request visibility (show, hide) related operations.
  ***************************************
  */
 @Immutable
-public class ShellSurfaceStackingRequest extends ShellSurfaceEvent {
+public class VisibilityRequest extends ShellSurfaceEvent {
 
 	/**
-	 * Create a new {@code ShellSurfaceChildAdded} with the given
+	 * Create a new {@code ChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
@@ -41,7 +40,7 @@ public class ShellSurfaceStackingRequest extends ShellSurfaceEvent {
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellSurfaceStackingRequest(@Nonnull final ShellSurface shellSurface) {
+	public VisibilityRequest(@Nonnull final ShellSurface shellSurface) {
 		super(shellSurface);
 	}
 }

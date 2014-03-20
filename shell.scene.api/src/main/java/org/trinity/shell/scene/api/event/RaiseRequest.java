@@ -25,15 +25,15 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * General event to inform about stacking (raise, lower) related operations.
+ * Request to raise the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
  *
  ***************************************
  */
 @Immutable
-public class ShellSurfaceStackingEvent extends ShellSurfaceEvent {
+public class RaiseRequest extends StackingRequest {
 
 	/**
-	 * Create a new {@code ShellSurfaceChildAdded} with the given
+	 * Create a new {@code ChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
@@ -41,7 +41,7 @@ public class ShellSurfaceStackingEvent extends ShellSurfaceEvent {
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellSurfaceStackingEvent(@Nonnull final ShellSurface shellSurface) {
+	public RaiseRequest(@Nonnull final ShellSurface shellSurface) {
 		super(shellSurface);
 	}
 }

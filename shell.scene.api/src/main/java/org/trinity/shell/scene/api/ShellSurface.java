@@ -82,14 +82,14 @@ public interface ShellSurface extends Listenable, HasSize<ShellSpace> {
      * ************************************
      * Request that this node is reparented. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellSurfaceReparentRequest}.
+     * {@link org.trinity.shell.scene.api.event.ReparentRequest}.
      * <p>
      * **************************************
      */
     @Nonnull
     default ShellSurface requestReparent(@Nonnull final ShellSurface parent) {
-        post(new ShellSurfaceReparentRequest(this,
-                                             parent));
+        post(new ReparentRequest(this,
+                                 parent));
         return this;
     }
 
@@ -97,16 +97,16 @@ public interface ShellSurface extends Listenable, HasSize<ShellSpace> {
      * ************************************
      * Request that this node is moved. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellSurfaceMoveRequest}.
+     * {@link org.trinity.shell.scene.api.event.MoveRequest}.
      * <p>
      * **************************************
      */
     @Nonnull
     default ShellSurface requestMove(final int x,
                                      final int y) {
-        post(new ShellSurfaceMoveRequest(this,
-                                         new Point(x,
-                                                   y)));
+        post(new MoveRequest(this,
+                              new Point(x,
+                                        y)));
         return this;
     }
 
@@ -114,16 +114,16 @@ public interface ShellSurface extends Listenable, HasSize<ShellSpace> {
      * ************************************
      * Request that this node is resized. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellSurfaceResizeRequest}.
+     * {@link org.trinity.shell.scene.api.event.ResizeRequest}.
      * <p>
      * **************************************
      */
     @Nonnull
     default ShellSurface requestResize(@Nonnegative final int width,
                                        @Nonnegative final int height) {
-        post(new ShellSurfaceResizeRequest(this,
-                                           new Dimension(width,
-                                                         height)));
+        post(new ResizeRequest(this,
+                               new Dimension(width,
+                               height)));
         return this;
     }
 
@@ -131,13 +131,13 @@ public interface ShellSurface extends Listenable, HasSize<ShellSpace> {
      * ************************************
      * Request that this node is raised. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellSurfaceRaiseRequest}.
+     * {@link org.trinity.shell.scene.api.event.RaiseRequest}.
      * <p>
      * **************************************
      */
     @Nonnull
     default ShellSurface requestRaise() {
-        post(new ShellSurfaceRaiseRequest(this));
+        post(new RaiseRequest(this));
         return this;
     }
 
@@ -145,13 +145,13 @@ public interface ShellSurface extends Listenable, HasSize<ShellSpace> {
      * ************************************
      * Request that this node is lowered. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellSurfaceLowerRequest}.
+     * {@link org.trinity.shell.scene.api.event.LowerRequest}.
      * <p>
      * **************************************
      */
     @Nonnull
     default ShellSurface requestLower() {
-        post(new ShellSurfaceLowerRequest(this));
+        post(new LowerRequest(this));
         return this;
     }
 
@@ -159,13 +159,13 @@ public interface ShellSurface extends Listenable, HasSize<ShellSpace> {
      * ************************************
      * Request that this node is shown. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellSurfaceShowRequest}.
+     * {@link org.trinity.shell.scene.api.event.ShowRequest}.
      * <p>
      * **************************************
      */
     @Nonnull
     default ShellSurface requestShow() {
-        post(new ShellSurfaceShowRequest(this));
+        post(new ShowRequest(this));
         return this;
     }
 
@@ -173,13 +173,13 @@ public interface ShellSurface extends Listenable, HasSize<ShellSpace> {
      * ************************************
      * Request that this node is hidden. This will cause any subscribed node
      * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShellSurfaceHidden}.
+     * {@link org.trinity.shell.scene.api.event.Hidden}.
      * <p>
      * **************************************
      */
     @Nonnull
     default ShellSurface requestHide() {
-        post(new ShellSurfaceHideRequest(this));
+        post(new HideRequest(this));
         return this;
     }
 
@@ -192,4 +192,7 @@ public interface ShellSurface extends Listenable, HasSize<ShellSpace> {
      */
     @Nonnull
     ShellSurface getParent();
+
+//    @Nonnull
+//    List<ShellSurface> getChildren();
 }

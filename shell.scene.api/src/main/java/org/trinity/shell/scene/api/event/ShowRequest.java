@@ -25,35 +25,23 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emitted this event, is reparented.
+ * Request to show the {@link org.trinity.shell.scene.api.ShellSurface} that emits this event.
  *
  ***************************************
  */
 @Immutable
-public class ShellSurfaceReparented extends ShellSurfaceEvent {
+public class ShowRequest extends VisibilityRequest {
 
-    @Nonnull
-    private final ShellSurface parent;
-
-    /**
-	 * Create a new {@code ShellSurfaceChildAdded} with the given
+	/**
+	 * Create a new {@code ChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
 	 *
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
-	 * @param parent
-	 *            a parent {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellSurfaceReparented(@Nonnull final ShellSurface shellSurface,
-                                  @Nonnull final ShellSurface parent) {
+	public ShowRequest(@Nonnull final ShellSurface shellSurface) {
 		super(shellSurface);
-        this.parent = parent;
-    }
-
-    @Nonnull
-    public ShellSurface getParent() {
-        return this.parent;
-    }
+	}
 }

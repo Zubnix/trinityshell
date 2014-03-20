@@ -25,16 +25,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /***************************************
- * Informs that a child {@link org.trinity.shell.scene.api.ShellSurface} was added to the node that emitted
+ * Informs that a child {@link org.trinity.shell.scene.api.ShellSurface} was removed from the node that emitted
  * this event.
  *
  ***************************************
  */
 @Immutable
-public class ShellSurfaceChildAdded extends ShellSurfaceChildEvent {
+public class ChildLeft extends ChildEvent {
 
 	/**
-	 * Create a new {@code ShellSurfaceChildAdded} with the given
+	 * Create a new {@code ChildAdded} with the given
 	 * {@code ShellNode} as the node that emitted the event, and the given
 	 * {@code ShellNodeTransformation} as the details coming from the given node
 	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
@@ -44,9 +44,8 @@ public class ShellSurfaceChildAdded extends ShellSurfaceChildEvent {
 	 * @param child
 	 *            a child {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public ShellSurfaceChildAdded(@Nonnull final ShellSurface shellSurface,
-                                  @Nonnull final ShellSurface child) {
-		super(shellSurface,
-				child);
+	public ChildLeft(@Nonnull final ShellSurface shellSurface,
+                     @Nonnull final ShellSurface child) {
+		super(shellSurface, child);
 	}
 }
