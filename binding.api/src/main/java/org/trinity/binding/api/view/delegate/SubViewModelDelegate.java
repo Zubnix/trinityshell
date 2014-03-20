@@ -23,14 +23,14 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 /**
- * ************************************
+ *
  * A delegate to handle the life cycle of a child view element. This delegate
  * should be implemented for a specific widget toolkit.
- * **************************************
+ *
  */
 public interface SubViewModelDelegate {
     /**
-     * ************************************
+     *
      * Create a new view element.
      *
      * @param parentView    The parent view of the new view instance.
@@ -38,35 +38,34 @@ public interface SubViewModelDelegate {
      * @param position      The position (index) of the new view, relative to it's parent.
      * @param <T>           The type of the new view.
      * @return a future new view instance.
-     * <p/>
-     * **************************************
+     *
      */
     <T> T newView(@Nonnull Object parentView,
                   @Nonnull Class<T> childViewType,
                   @Nonnegative int position);
 
     /**
-     * ************************************
+     *
      * Destroy a view element.
      *
      * @param parentView       The parent of the view that should be destroyed.
      * @param deletedChildView The view that should be destroyed.
      * @param deletedPosition  The index of the view that should be destroyed.
-     *                         **************************************
+     *
      */
     void destroyView(@Nonnull Object parentView,
                      @Nonnull Object deletedChildView,
                      @Nonnegative int deletedPosition);
 
     /**
-     * ************************************
+     *
      * Update the position (index) of a view element, relative to it's parent.
      *
      * @param parentView  The parent view.
      * @param childView   The view who's position should be updated.
      * @param oldPosition The old position.
      * @param newPosition The new position.
-     *                    **************************************
+     *
      */
     void updateChildViewPosition(@Nonnull Object parentView,
                                  @Nonnull Object childView,

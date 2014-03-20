@@ -81,17 +81,10 @@ public class SimpleXCompositor implements XCompositor {
 		final XWindow xWindow = this.xWindowFactory.create(nativeHandle);
 		final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(this.simpleRootShellSurface.get(),
 																				xWindow);
-		translateXEvents(xWindow,
-						 shellSurface);
-		this.simpleRenderer.add(shellSurface);
+		this.simpleRenderer.add(xWindow,
+								shellSurface);
 
 		return xWindow;
-	}
-
-	private void translateXEvents(final XWindow xWindow,
-								  final ShellSurface shellSurface) {
-		new SimpleXEventTranslator(xWindow,
-								   shellSurface).register();
 	}
 
 	private void configureClientEvents(final Integer nativeHandle) {

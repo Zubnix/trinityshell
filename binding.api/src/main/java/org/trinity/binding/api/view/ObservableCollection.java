@@ -27,11 +27,11 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * ************************************
+ *
  * Bind every child view of the marked view to the respective element of the
  * referenced collection. Correctly handling these child views is delegated to
  * the {@link org.trinity.binding.api.view.delegate.SubViewModelDelegate}.
- * **************************************
+ *
  */
 @Retention(RUNTIME)
 @Target({FIELD,

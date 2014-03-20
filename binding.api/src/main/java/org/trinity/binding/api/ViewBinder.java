@@ -26,20 +26,20 @@ import javax.annotation.Nonnull;
 /**
  * ************************************
  * Binds views to models.
- * <p/>
+ * <p>
  * **************************************
  */
 public interface ViewBinder {
 
     /**
-     * ************************************
+     *
      * Update the bound views so they reflect the state of the changed data model.
      *
      * @param dataModel        The data model who's property changed.
      * @param propertyName     The name of the property.
      * @param oldPropertyValue The old value of the property.
      * @param newPropertyValue The new value of the property.
-     *                         **************************************
+     *
      */
     void updateDataModelBinding(
             @Nonnull Object dataModel,
@@ -48,13 +48,13 @@ public interface ViewBinder {
             @Nonnull Optional<Object> newPropertyValue);
 
     /**
-     * ************************************
+     *
      * Bind a view model to a data model so a view reflects the data model's state. The given data model
      * model will be used as the root data model context for the given view model.
      *
      * @param dataModel The data model to visually represent
      * @param viewModel The visual representation of the data model
-     *                  **************************************
+     *
      */
     void bind(
             @Nonnull Object dataModel,

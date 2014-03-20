@@ -27,15 +27,15 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * ************************************
+ *
  * Mark a view as a producer of listenable events. It's up to the
  * {@link EventSignalFilter} to make sure the correct event listeners are
  * installed and the {@link Signal} is fired when an event arrives.
- * <p/>
+ * <p>
  * An {@link EventSignal} is used as an argument of {@link EventSignals}.
  *
  * @see Signal
- * **************************************
+ *
  */
 @Retention(RUNTIME)
 @Target({})

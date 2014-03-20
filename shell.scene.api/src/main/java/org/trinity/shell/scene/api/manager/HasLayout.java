@@ -19,38 +19,20 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api.manager;
 
-import com.google.common.base.Optional;
-
 import javax.annotation.Nonnull;
 
 /**
- * ************************************
- * A {@link org.trinity.shell.scene.api.ShellSurface} that can have child <code>ShellNode</code>s. A node's
- * parent can be changed by calling {@link org.trinity.shell.scene.api.ShellSurface#setParent(Optional)}
- * followed by either {@link org.trinity.shell.scene.api.ShellSurface#doReparent()} or
- * {@link org.trinity.shell.scene.api.ShellSurface#requestReparent()}. <code>doReparent</code> guarantees that
- * the child will have the desired parent as its new parent.
- * <code>requestReparent</code> delegates the reparenting to any subscribed
- * child node listener, which can be, for example, the current parent's
- * {@link org.trinity.shell.scene.api.manager.Layout}.
- * <p/>
- * **************************************
+ *
  */
 public interface HasLayout {
 
     /**
-     * ************************************
-     * Layout all child <code>ShellNode</code>s.
-     * **************************************
+
      */
     void layout();
 
     /**
-     * ************************************
-     * Change the layout manager of this parent to the desired layout manager.
-     *
-     * @param shellLayoutManager A {@link org.trinity.shell.scene.api.manager.Layout}.
-     *                           **************************************
+
      */
     void setLayout(@Nonnull Layout shellLayoutManager);
 

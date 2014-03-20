@@ -17,7 +17,7 @@ public class SimpleRenderer {
     public SimpleRenderer add(@Nonnull final XWindow xWindow,
                               @Nonnull final ShellSurface shellSurface) {
         new SimpleRenderHandler(xWindow,
-                                 shellSurface);
+                                 shellSurface).handle();
         return this;
     }
 }

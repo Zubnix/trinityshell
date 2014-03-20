@@ -27,20 +27,20 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * ************************************
+ *
  * Groups all installed {@link EventSignal}s of a view.
- * **************************************
+ *
  */
 @Retention(RUNTIME)
 @Target({TYPE,
         FIELD})
 public @interface EventSignals {
     /**
-     * ************************************
+     *
      * All {@code EventSignal}s present on a view element.
      *
      * @return {@link EventSignal}s
-     * **************************************
+     *
      */
     EventSignal[] value();
 }

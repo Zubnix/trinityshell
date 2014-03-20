@@ -19,6 +19,7 @@ import static dagger.Provides.Type.SET;
 				GenericErrorHandler.class,
 				LeaveNotifyHandler.class,
 				MapNotifyHandler.class,
+				MapRequestHandler.class,
 				UnmapNotifyHandler.class,
 		},
 		complete = false,
@@ -79,6 +80,11 @@ public class XEventHandlersModule {
 	@Provides(type = SET)
 	XEventHandler provideXEventHandler(final MapNotifyHandler mapNotifyHandler){
 		return mapNotifyHandler;
+	}
+
+	@Provides(type = SET)
+	XEventHandler provideXEventHandler(final MapRequestHandler mapRequestHandler){
+		return mapRequestHandler;
 	}
 
 	@Provides(type = SET)

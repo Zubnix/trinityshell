@@ -9,7 +9,9 @@ import org.freedesktop.xcb.xcb_map_request_event_t;
 import org.freedesktop.xcb.xcb_unmap_notify_event_t;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
+import org.trinity.shell.scene.api.event.Destroyed;
 import org.trinity.shell.scene.api.event.MoveRequest;
+import org.trinity.shell.scene.api.event.ResizeRequest;
 import org.trinity.shell.scene.api.event.ShowRequest;
 import org.trinity.x11.defaul.XWindow;
 
@@ -30,6 +32,11 @@ public class SimpleRenderHandler {
         this.shellSurface = shellSurface;
     }
 
+	public void handle(){
+		this.shellSurface.register(this);
+		this.xWindow.register(this);
+	}
+
     @Subscribe
     public void handle(final xcb_configure_request_event_t request_event) {
 
@@ -49,7 +56,7 @@ public class SimpleRenderHandler {
 
     @Subscribe
     public void handle(final xcb_configure_notify_event_t configure_notify_event) {
-        //signal the compositor to schedule a repaint.
+        //construct a new buffer from the changed xwindow and attach it
         this.shellSurface.accept((shellSurfaceConfigurable) ->  shellSurfaceConfigurable.attachBuffer(this.xWindow).commit());
     }
 
@@ -83,8 +90,18 @@ public class SimpleRenderHandler {
         shellSurface.accept(shellSurfaceConfigurable -> shellSurfaceConfigurable.setPosition(position).commit());
     }
 
+	@Subscribe
+	public void handle(final ResizeRequest resizeRequest){
+
+	}
+
     @Subscribe
     public void handle(final ShowRequest showRequest) {
         this.xWindow.map();
     }
+
+	@Subscribe
+	public void handle(final Destroyed destroyed){
+		this.shellSurface.unregister(this);
+	}
 }
