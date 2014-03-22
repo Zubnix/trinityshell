@@ -21,9 +21,16 @@ package org.trinity.x11.defaul.shell;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.common.eventbus.EventBus;
-import org.trinity.common.Listenable;
-import org.trinity.shell.scene.api.*;
-import org.trinity.shell.scene.api.event.*;
+import org.trinity.shell.scene.api.ShellSurface;
+import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
+import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
+import org.trinity.shell.scene.api.event.Committed;
+import org.trinity.shell.scene.api.event.Destroyed;
+import org.trinity.shell.scene.api.event.Hidden;
+import org.trinity.shell.scene.api.event.Moved;
+import org.trinity.shell.scene.api.event.Showed;
+import org.trinity.shell.scene.api.event.VisibilityEvent;
+import org.trinity.x11.defaul.XWindow;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -34,114 +41,97 @@ import javax.media.nativewindow.util.PointImmutable;
 
 @NotThreadSafe
 @AutoFactory
-public class SimpleShellSurface extends EventBus implements ShellSurface, ShellSurfaceConfigurable, Listenable {
+public class SimpleShellSurface extends EventBus implements ShellSurface, ShellSurfaceConfigurable {
 
-    @Nonnull
-    private PointImmutable position= new Point(0,0);
-    @Nonnull
-    private Boolean visible = Boolean.FALSE;
-    @Nonnull
-    private Boolean destroyed= Boolean.FALSE;
-    @Nonnull
-    private ShellSurface parent;
-    @Nonnull
-    private HasSize<BufferSpace> buffer;
+	@Nonnull
+	private PointImmutable position  = new Point(0,
+												 0);
+	@Nonnull
+	private Boolean        visible   = Boolean.FALSE;
+	@Nonnull
+	private Boolean        destroyed = Boolean.FALSE;
+	@Nonnull
+	private final XWindow buffer;
 
-    SimpleShellSurface(@Nonnull final ShellSurface parent,
-                       @Nonnull final HasSize<BufferSpace> buffer) {
-        this.parent = parent;
-        this.buffer = buffer;
-    }
+	SimpleShellSurface(@Nonnull final XWindow buffer) {
+		this.buffer = buffer;
+	}
 
-    @Nonnull
-    @Override
-    public ShellSurface accept(@Nonnull final ShellSurfaceConfiguration shellSurfaceConfiguration) {
-        shellSurfaceConfiguration.configure(this);
-        return this;
-    }
+	@Nonnull
+	public SimpleShellSurface accept(@Nonnull final SimpleShellSurfaceBehavior simpleShellSurfaceBehavior){
+		register(simpleShellSurfaceBehavior);
+		simpleShellSurfaceBehavior.visit(this);
+		return this;
+	}
 
-    @Nonnull
-    @Override
-    public Boolean isDestroyed() {
-        return this.destroyed;
-    }
+	@Nonnull
+	@Override
+	public SimpleShellSurface accept(@Nonnull final ShellSurfaceConfiguration shellSurfaceConfiguration) {
+		shellSurfaceConfiguration.configure(this);
+		return this;
+	}
 
-    @Nonnull
-    @Override
-    public ShellSurfaceConfigurable markDestroyed() {
-        this.destroyed = true;
-        post(new Destroyed(this));
-        return this;
-    }
+	@Nonnull
+	@Override
+	public Boolean isDestroyed() {
+		return this.destroyed;
+	}
 
-    @Nonnull
-    @Override
-    public ShellSurface getParent() {
-        return this.parent;
-    }
+	@Nonnull
+	@Override
+	public ShellSurfaceConfigurable markDestroyed() {
+		this.destroyed = true;
+		post(new Destroyed(this));
+		return this;
+	}
 
-    @Nonnull
-    public ShellSurfaceConfigurable setParent(@Nonnull final ShellSurface parent) {
-        this.parent = parent;
-        post(new Reparented(this,
-                            parent));
-        return this;
-    }
+	@Nonnull
+	@Override
+	public PointImmutable getPosition() {
+		return this.position;
+	}
 
-    @Nonnull
-    @Override
-    public PointImmutable getPosition() {
-        return this.position;
-    }
+	@Nonnull
+	@Override
+	public XWindow getBuffer() {
+		return this.buffer;
+	}
 
-    @Nonnull
-    @Override
-    public HasSize<BufferSpace> getBuffer() {
-        return this.buffer;
-    }
+	@Nonnull
+	@Override
+	public Boolean isVisible() {
+		return this.visible;
+	}
 
-    @Nonnull
-    @Override
-    public Boolean isVisible() {
-        return this.visible;
-    }
+	@Nonnull
+	@Override
+	public ShellSurfaceConfigurable setVisible(@Nonnull final Boolean visible) {
+		this.visible = visible;
+		final VisibilityEvent visibilityEvent = this.visible ? new Showed(this) : new Hidden(this);
+		post(visibilityEvent);
+		return this;
+	}
 
-    @Nonnull
-    @Override
-    public ShellSurfaceConfigurable setVisible(@Nonnull final Boolean visible) {
-        this.visible = visible;
-        final VisibilityEvent visibilityEvent = this.visible ? new Showed(this):new Hidden(this);
-        post(visibilityEvent);
-        return this;
-    }
+	@Nonnull
+	@Override
+	public ShellSurfaceConfigurable commit() {
+		post(new Committed(this));
+		return this;
+	}
 
-    @Nonnull
-    @Override
-    public ShellSurfaceConfigurable commit() {
-        post(new Committed(this));
-        return this;
-    }
+	@Nonnull
+	@Override
+	public ShellSurfaceConfigurable setPosition(@Nonnull final PointImmutable pointImmutable) {
+		this.position = new Point(pointImmutable.getX(),
+								  pointImmutable.getY());
+		post(new Moved(this,
+					   this.position));
+		return this;
+	}
 
-    @Nonnull
-    @Override
-    public ShellSurfaceConfigurable setPosition(@Nonnull final PointImmutable pointImmutable) {
-        this.position = new Point(pointImmutable.getX(),
-                                  pointImmutable.getY());
-        post(new Moved(this,
-                       this.position));
-        return this;
-    }
-
-    @Nonnull
+	@Nonnull
     @Override
     public DimensionImmutable getSize() {
-        return this.buffer.getSize();
-    }
-
-    @Nonnull
-    @Override
-    public ShellSurfaceConfigurable attachBuffer(@Nonnull final HasSize<BufferSpace> buffer) {
-        this.buffer = buffer;
-        return this;
+        return getBuffer().getSize();
     }
 }

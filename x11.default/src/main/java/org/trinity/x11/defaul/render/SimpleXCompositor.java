@@ -19,16 +19,14 @@
  ******************************************************************************/
 package org.trinity.x11.defaul.render;
 
-import dagger.Lazy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
-import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.x11.defaul.XCompositor;
 import org.trinity.x11.defaul.XEventChannel;
-import org.trinity.x11.defaul.XWindow;
 import org.trinity.x11.defaul.XWindowFactory;
-import org.trinity.x11.defaul.shell.SimpleRootShellSurface;
+import org.trinity.x11.defaul.shell.SimpleShellScene;
+import org.trinity.x11.defaul.shell.SimpleShellSurface;
 import org.trinity.x11.defaul.shell.SimpleShellSurfaceFactory;
 
 import javax.annotation.Nonnull;
@@ -55,36 +53,30 @@ public class SimpleXCompositor implements XCompositor {
 	private final XEventChannel  xEventChannel;
 	private final XWindowFactory xWindowFactory;
 
-	private final SimpleShellSurfaceFactory    simpleShellSurfaceFactory;
-	private final Lazy<SimpleRootShellSurface> simpleRootShellSurface;
-	private final SimpleRenderer               simpleRenderer;
+	private final SimpleShellSurfaceFactory simpleShellSurfaceFactory;
+	private final SimpleShellScene          simpleShellScene;
 
 	@Inject
 	SimpleXCompositor(final XEventChannel xEventChannel,
 					  final XWindowFactory xWindowFactory,
 					  final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
-					  final Lazy<SimpleRootShellSurface> simpleRootShellSurface,
-					  final SimpleRenderer simpleRenderer) {
+					  final SimpleShellScene simpleShellScene) {
 
 		this.xEventChannel = xEventChannel;
 		this.xWindowFactory = xWindowFactory;
 
 		this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
-		this.simpleRootShellSurface = simpleRootShellSurface;
-		this.simpleRenderer = simpleRenderer;
+		this.simpleShellScene = simpleShellScene;
 	}
 
 	@Override
 	public Listenable createSurface(@Nonnull final Integer nativeHandle) {
 		configureClientEvents(nativeHandle);
 
-		final XWindow xWindow = this.xWindowFactory.create(nativeHandle);
-		final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(this.simpleRootShellSurface.get(),
-																				xWindow);
-		this.simpleRenderer.add(xWindow,
-								shellSurface);
+		final SimpleShellSurface shellSurface = this.simpleShellSurfaceFactory.create(this.xWindowFactory.create(nativeHandle));
+		this.simpleShellScene.add(shellSurface);
 
-		return xWindow;
+		return shellSurface;
 	}
 
 	private void configureClientEvents(final Integer nativeHandle) {

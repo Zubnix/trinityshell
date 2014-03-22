@@ -3,7 +3,6 @@ package org.trinity.x11.defaul.shell;
 import dagger.Module;
 import dagger.Provides;
 import org.trinity.x11.defaul.XEventChannel;
-import org.trinity.x11.defaul.render.SimpleRenderer;
 
 import javax.inject.Singleton;
 
