@@ -21,7 +21,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({XEventChannel.class,
+@PrepareForTest({XEventLoop.class,
 				 LibXcb.class})
 public class TestXConnectionImpl {
 
@@ -40,8 +40,8 @@ public class TestXConnectionImpl {
 		when(System.getenv(eq("DISPLAY"))).thenReturn(display);
 
 		//when
-		//XEventChannel is constructed
-		new XEventChannel();
+		//XEventLoop is constructed
+		new XEventLoop();
 
 		//then
 		//a new xcb X connection should be established on ":0".
@@ -56,7 +56,7 @@ public class TestXConnectionImpl {
 	@Test
 	public void testClose() {
 		//given
-		//an open XEventChannel on ":0"
+		//an open XEventLoop on ":0"
 		final String display = ":0";
 		final SWIGTYPE_p_xcb_connection_t connection = mock(SWIGTYPE_p_xcb_connection_t.class);
 
@@ -67,10 +67,10 @@ public class TestXConnectionImpl {
 		mockStatic(System.class);
 		when(System.getenv(eq("DISPLAY"))).thenReturn(display);
 
-		final XEventChannel xConnection = new XEventChannel();
+		final XEventLoop xConnection = new XEventLoop();
 
 		//when
-		//XEventChannel object is close
+		//XEventLoop object is close
 		xConnection.close();
 
 		//then

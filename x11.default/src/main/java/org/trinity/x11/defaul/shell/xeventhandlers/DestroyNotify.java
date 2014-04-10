@@ -17,13 +17,13 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.x11.defaul.xeventhandler;
+package org.trinity.x11.defaul.shell.xeventhandlers;
 
 import org.freedesktop.xcb.xcb_destroy_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.x11.defaul.XEventChannel;
+import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import org.trinity.x11.defaul.XEventHandler;
 import org.trinity.x11.defaul.XSurfacePool;
 
@@ -34,40 +34,36 @@ import javax.inject.Inject;
 import static org.freedesktop.xcb.LibXcbConstants.XCB_DESTROY_NOTIFY;
 
 @Immutable
-public class DestroyNotifyHandler implements XEventHandler {
+public class DestroyNotify implements XEventHandler {
 
-	private static final Logger  LOG        = LoggerFactory.getLogger(DestroyNotifyHandler.class);
-	private static final Integer EVENT_CODE = XCB_DESTROY_NOTIFY;
+    private static final Logger  LOG        = LoggerFactory.getLogger(DestroyNotify.class);
+    private static final Integer EVENT_CODE = XCB_DESTROY_NOTIFY;
 
-	private final XEventChannel xEventChannel;
-	private final XSurfacePool xSurfacePool;
+    private final XSurfacePool  xSurfacePool;
 
-	@Inject
-	DestroyNotifyHandler(final XEventChannel xEventChannel,
-						 final XSurfacePool xSurfacePool) {
-		this.xEventChannel = xEventChannel;
-		this.xSurfacePool = xSurfacePool;
-	}
+    @Inject
+    DestroyNotify(final XSurfacePool xSurfacePool) {
+        this.xSurfacePool = xSurfacePool;
+    }
 
-	@Override
-	public void handle(@Nonnull final xcb_generic_event_t event_t) {
-		final xcb_destroy_notify_event_t destroy_notify_event = cast(event_t);
+    @Override
+    public void handle(@Nonnull final xcb_generic_event_t event_t) {
+        final xcb_destroy_notify_event_t destroy_notify_event = cast(event_t);
+        LOG.debug("Received X event={}",
+                  destroy_notify_event.getClass()
+                                      .getSimpleName()
+                 );
+        this.xSurfacePool.get(destroy_notify_event.getWindow())
+                         .accept(ShellSurfaceConfigurable::markDestroyed);
+    }
 
-		LOG.debug("Received X event={}",
-				  destroy_notify_event.getClass().getSimpleName());
+    public xcb_destroy_notify_event_t cast(final xcb_generic_event_t event_t) {
+        return new xcb_destroy_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
+                                              false);
+    }
 
-		this.xEventChannel.post(destroy_notify_event);
-		final int windowId = destroy_notify_event.getWindow();
-		this.xSurfacePool.get(windowId).post(destroy_notify_event);
-	}
-
-	public xcb_destroy_notify_event_t cast(final xcb_generic_event_t event_t) {
-		return new xcb_destroy_notify_event_t(xcb_generic_event_t.getCPtr(event_t),
-											  false);
-	}
-
-	@Override
-	public Integer getEventCode() {
-		return EVENT_CODE;
-	}
+    @Override
+    public Integer getEventCode() {
+        return EVENT_CODE;
+    }
 }

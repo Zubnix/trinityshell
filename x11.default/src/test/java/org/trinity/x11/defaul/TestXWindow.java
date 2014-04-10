@@ -15,9 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.trinity.x11.defaul.XEventChannel;
-import org.trinity.x11.defaul.XTime;
-import org.trinity.x11.defaul.XWindow;
 
 import javax.media.nativewindow.util.RectangleImmutable;
 import java.nio.ByteBuffer;
@@ -33,66 +30,66 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({LibXcb.class})
 public class TestXWindow {
-	@Mock
-	private XTime xTime;
-	@Mock
-	private XEventChannel xEventChannel;
-	@Mock
-	private SWIGTYPE_p_xcb_connection_t xcb_connection;
+    @Mock
+    private XTime                       xTime;
+    @Mock
+    private XEventLoop                  xEventLoop;
+    @Mock
+    private SWIGTYPE_p_xcb_connection_t xcb_connection;
 
-	private final Integer nativeHandle = 123;
-	@Mock
-	private ListeningExecutorService xExecutor;
-	@InjectMocks
-	private XWindow xWindow;
+    private final Integer nativeHandle = 123;
+    @Mock
+    private ListeningExecutorService xExecutor;
+    @InjectMocks
+    private XWindow                  xWindow;
 
-	@Before
-	public void setup() {
-		when(this.xEventChannel.getXcbConnection()).thenReturn(this.xcb_connection);
-	}
+    @Before
+    public void setup() {
+        when(this.xEventLoop.getXcbConnection()).thenReturn(this.xcb_connection);
+    }
 
-	@Test
-	public void testDestroy() {
-		//given
-		//an XWindow
-		mockStatic(LibXcb.class);
+    @Test
+    public void testDestroy() {
+        //given
+        //an XWindow
+        mockStatic(LibXcb.class);
 
-		//when
-		//the XWindow is destroyed
-		this.xWindow.destroy();
+        //when
+        //the XWindow is destroyed
+        this.xWindow.destroy();
 
-		//then
-		//the native X server window is destroyed
-		verifyStatic();
-		xcb_destroy_window(this.xcb_connection,
-						   this.nativeHandle);
-		xcb_flush(this.xcb_connection);
-	}
+        //then
+        //the native X server window is destroyed
+        verifyStatic();
+        xcb_destroy_window(this.xcb_connection,
+                           this.nativeHandle);
+        xcb_flush(this.xcb_connection);
+    }
 
-	@Test
-	public void testMove() {
-		//given
-		//an XWindow
-		mockStatic(LibXcb.class);
+    @Test
+    public void testMove() {
+        //given
+        //an XWindow
+        mockStatic(LibXcb.class);
 
-		//when
-		//the XWindow is moved
-		final int x = 567;
-		final int y = 890;
-		this.xWindow.configure(x,
-							   y,
-							   100,
-							   100);
+        //when
+        //the XWindow is moved
+        final int x = 567;
+        final int y = 890;
+        this.xWindow.configure(x,
+                               y,
+                               100,
+                               100);
 
-		//then
-		//the native X server window should be moved
-		verifyStatic();
+        //then
+        //the native X server window should be moved
+        verifyStatic();
         final int MOVE_VALUE_MASK = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
         final ArgumentCaptor<ByteBuffer> byteBufferArgumentCaptor = ArgumentCaptor.forClass(ByteBuffer.class);
         xcb_configure_window(eq(this.xcb_connection),
-                eq(this.nativeHandle),
-                eq(MOVE_VALUE_MASK),
-                byteBufferArgumentCaptor.capture());
+                             eq(this.nativeHandle),
+                             eq(MOVE_VALUE_MASK),
+                             byteBufferArgumentCaptor.capture());
         xcb_flush(this.xcb_connection);
         final ByteBuffer value = byteBufferArgumentCaptor.getValue();
         final int passedX = value.getInt(0);

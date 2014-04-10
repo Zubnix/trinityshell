@@ -41,7 +41,7 @@ public class StackingRequest extends ShellSurfaceEvent {
 	 * @param shellSurface
 	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
 	 */
-	public StackingRequest(@Nonnull final ShellSurface shellSurface) {
+	StackingRequest(@Nonnull final ShellSurface shellSurface) {
 		super(shellSurface);
 	}
 }

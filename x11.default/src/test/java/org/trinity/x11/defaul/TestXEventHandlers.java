@@ -4,9 +4,6 @@ package org.trinity.x11.defaul;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.junit.Test;
 import org.trinity.common.Listenable;
-import org.trinity.x11.defaul.XEventChannel;
-import org.trinity.x11.defaul.XEventHandler;
-import org.trinity.x11.defaul.XEventHandlers;
 
 import java.util.HashSet;
 
@@ -32,7 +29,7 @@ public class TestXEventHandlers {
         when(xEventHandler0.getEventCode()).thenReturn(0);
         when(xEventHandler1.getEventCode()).thenReturn(1);
 
-        final XEventChannel eventBus = mock(XEventChannel.class);
+        final XEventLoop eventBus = mock(XEventLoop.class);
 
         final XEventHandlers xEventHandlers = new XEventHandlers(new HashSet() {{add(xEventHandler0); add(xEventHandler1);}});
         //when

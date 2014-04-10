@@ -26,6 +26,7 @@ import org.freedesktop.xcb.xcb_destroy_notify_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
+import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.x11.defaul.render.SimpleXCompositor;
 
 import javax.annotation.Nonnull;
@@ -39,7 +40,7 @@ public class XSurfacePool {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XSurfacePool.class);
 
-	private final BiMap<Integer, Listenable> surfaces = HashBiMap.create(32);
+	private final BiMap<Integer, ShellSurface> surfaces = HashBiMap.create(32);
 	private final SimpleXCompositor compositor;
 
 	@Inject
@@ -48,18 +49,18 @@ public class XSurfacePool {
 	}
 
     @Nonnull
-	public Listenable get(@Nonnull final Integer surfaceHandle) {
-		Listenable surface = this.surfaces.get(surfaceHandle);
+	public ShellSurface get(@Nonnull final Integer surfaceHandle) {
+        ShellSurface surface = this.surfaces.get(surfaceHandle);
 		if(surface == null) {
 			surface = registerNewSurface(surfaceHandle);
 		}
 		return surface;
 	}
 
-	private Listenable registerNewSurface(final Integer surfaceHandle) {
+	private ShellSurface registerNewSurface(final Integer surfaceHandle) {
 		LOG.debug("Xwindow={} added to cache.",
 				  surfaceHandle);
-		final Listenable surface = this.compositor.createSurface(surfaceHandle);
+		final ShellSurface surface = this.compositor.create(surfaceHandle);
 		surface.register(new DestroyListener(surface));
 		this.surfaces.put(surfaceHandle,
 						  surface);

@@ -25,15 +25,11 @@ public class EntryPoint {
     private final ServiceManager serviceManager;
 
     @Inject
-    EntryPoint(final Set<Service> services) {
-        this.serviceManager = new ServiceManager(services);
-    }
+    EntryPoint(final Set<Service> services) { this.serviceManager = new ServiceManager(services); }
 
-	private void enter(){
-        this.serviceManager.startAsync();
-	}
+    private void enter() { this.serviceManager.startAsync(); }
 
-	public static void main(final String[] args) {
+    public static void main(final String[] args) {
         LibXcbLoader.load();
 
 		final TrinityShellModule trinityShellModule = new TrinityShellModule();

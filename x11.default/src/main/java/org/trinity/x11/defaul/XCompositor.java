@@ -2,9 +2,12 @@ package org.trinity.x11.defaul;
 
 import org.trinity.common.Listenable;
 
+import javax.annotation.Nonnull;
+
 /**
  *
  */
 public interface XCompositor {
-    Listenable createSurface(Integer nativeHandle);
+    @Nonnull
+    Listenable create(@Nonnull Integer nativeHandle);
 }

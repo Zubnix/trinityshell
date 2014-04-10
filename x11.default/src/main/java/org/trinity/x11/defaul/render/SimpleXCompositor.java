@@ -19,14 +19,21 @@
  ******************************************************************************/
 package org.trinity.x11.defaul.render;
 
+import com.google.common.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.common.Listenable;
+import org.trinity.shell.scene.api.ShellSurface;
+import org.trinity.shell.scene.api.event.Committed;
+import org.trinity.shell.scene.api.event.Destroyed;
+import org.trinity.shell.scene.api.event.Hidden;
+import org.trinity.shell.scene.api.event.Lowered;
+import org.trinity.shell.scene.api.event.Moved;
+import org.trinity.shell.scene.api.event.Raised;
+import org.trinity.shell.scene.api.event.Showed;
 import org.trinity.x11.defaul.XCompositor;
-import org.trinity.x11.defaul.XEventChannel;
+import org.trinity.x11.defaul.XEventLoop;
 import org.trinity.x11.defaul.XWindowFactory;
-import org.trinity.x11.defaul.shell.SimpleShellScene;
-import org.trinity.x11.defaul.shell.SimpleShellSurface;
+import org.trinity.x11.defaul.shell.SimpleShell;
 import org.trinity.x11.defaul.shell.SimpleShellSurfaceFactory;
 
 import javax.annotation.Nonnull;
@@ -39,55 +46,116 @@ import static java.nio.ByteOrder.nativeOrder;
 import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
 import static org.freedesktop.xcb.LibXcb.xcb_flush;
 import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
-import static org.freedesktop.xcb.xcb_event_mask_t.*;
-
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW;
+import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY;
 
 @Singleton
 public class SimpleXCompositor implements XCompositor {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SimpleXCompositor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SimpleXCompositor.class);
 
-	private static final int        CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
-	private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder()).putInt(CLIENT_EVENT_MASK);
+    private static final int        CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+    private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
+                                                                                   .putInt(CLIENT_EVENT_MASK);
+    private final XEventLoop     xEventLoop;
+    private final XWindowFactory xWindowFactory;
 
-	private final XEventChannel  xEventChannel;
-	private final XWindowFactory xWindowFactory;
+    private final SimpleShellSurfaceFactory  simpleShellSurfaceFactory;
+    private final SimpleShell                simpleShell;
+    private final SimpleRenderer             simpleRenderer;
+    private final SimpleSurfaceBufferHandler simpleSurfaceBufferHandler;
 
-	private final SimpleShellSurfaceFactory simpleShellSurfaceFactory;
-	private final SimpleShellScene          simpleShellScene;
+    @Inject
+    SimpleXCompositor(final XEventLoop xEventLoop,
+                      final XWindowFactory xWindowFactory,
+                      final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
+                      final SimpleShell simpleShell,
+                      final SimpleRenderer simpleRenderer,
+                      final SimpleSurfaceBufferHandler simpleSurfaceBufferHandler) {
 
-	@Inject
-	SimpleXCompositor(final XEventChannel xEventChannel,
-					  final XWindowFactory xWindowFactory,
-					  final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
-					  final SimpleShellScene simpleShellScene) {
+        this.xEventLoop = xEventLoop;
+        this.xWindowFactory = xWindowFactory;
 
-		this.xEventChannel = xEventChannel;
-		this.xWindowFactory = xWindowFactory;
+        this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
+        this.simpleShell = simpleShell;
+        this.simpleRenderer = simpleRenderer;
+        this.simpleSurfaceBufferHandler = simpleSurfaceBufferHandler;
+    }
 
-		this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
-		this.simpleShellScene = simpleShellScene;
-	}
+    @Nonnull
+    @Override
+    public ShellSurface create(@Nonnull final Integer nativeHandle) {
+        configureClientEvents(nativeHandle);
 
-	@Override
-	public Listenable createSurface(@Nonnull final Integer nativeHandle) {
-		configureClientEvents(nativeHandle);
+        final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(this.xWindowFactory.create(nativeHandle));
+        shellSurface.register(this);
+        shellSurface.register(this.simpleSurfaceBufferHandler);
+        this.simpleShell.add(shellSurface);
 
-		final SimpleShellSurface shellSurface = this.simpleShellSurfaceFactory.create(this.xWindowFactory.create(nativeHandle));
-		this.simpleShellScene.add(shellSurface);
+        return shellSurface;
+    }
 
-		return shellSurface;
-	}
+    @Subscribe
+    public void handle(final Committed committed) {
 
-	private void configureClientEvents(final Integer nativeHandle) {
+        final ShellSurface shellSurface = committed.getSource();
 
-		LOG.debug("[winId={}] configure client evens.",
-				  nativeHandle);
+        if(shellSurface.getDamage()
+                       .isPresent()) {
+            requestRender(shellSurface);
+        }
+    }
 
-		xcb_change_window_attributes(this.xEventChannel.getXcbConnection(),
-									 nativeHandle,
-									 XCB_CW_EVENT_MASK,
-									 CLIENT_EVENTS_CONFIG_BUFFER);
-		xcb_flush(this.xEventChannel.getXcbConnection());
-	}
+    @Subscribe
+    public void handle(final Raised raised) {
+        requestRender(raised.getSource());
+    }
+
+    @Subscribe
+    public void handle(final Lowered lowered) {
+        requestRender(lowered.getSource());
+    }
+
+    @Subscribe
+    public void handle(final Showed showed) {
+        requestRender(showed.getSource());
+    }
+
+    @Subscribe
+    public void handle(final Hidden hidden) {
+        requestRender(hidden.getSource());
+    }
+
+    @Subscribe
+    public void handle(final Moved moved) {
+        requestRender(moved.getSource());
+    }
+
+    @Subscribe
+    public void handle(final Destroyed destroyed) {
+        final ShellSurface shellSurface = destroyed.getSource();
+        shellSurface.unregister(this);
+        shellSurface.unregister(this.simpleSurfaceBufferHandler);
+    }
+
+    private void requestRender(final ShellSurface shellSurface) {
+        final boolean needsRedraw = this.simpleShell.needsRedraw(shellSurface);
+
+        if(needsRedraw) {
+            this.simpleRenderer.scheduleRender();
+        }
+    }
+
+    private void configureClientEvents(final Integer nativeHandle) {
+
+        LOG.debug("[winId={}] configure client evens.",
+                  nativeHandle);
+
+        xcb_change_window_attributes(this.xEventLoop.getXcbConnection(),
+                                     nativeHandle,
+                                     XCB_CW_EVENT_MASK,
+                                     CLIENT_EVENTS_CONFIG_BUFFER);
+        xcb_flush(this.xEventLoop.getXcbConnection());
+    }
 }

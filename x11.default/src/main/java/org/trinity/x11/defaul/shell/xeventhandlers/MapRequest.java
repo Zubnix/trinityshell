@@ -17,45 +17,52 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity.x11.defaul.xeventhandler;
+package org.trinity.x11.defaul.shell.xeventhandlers;
 
-import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
+import org.freedesktop.xcb.xcb_map_request_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.x11.defaul.XEventChannel;
 import org.trinity.x11.defaul.XEventHandler;
-import org.trinity.x11.defaul.XcbErrorUtil;
+import org.trinity.x11.defaul.XSurfacePool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 
+import static org.freedesktop.xcb.LibXcbConstants.XCB_MAP_REQUEST;
+
 @Immutable
-public class GenericErrorHandler implements XEventHandler {
+public class MapRequest implements XEventHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GenericErrorHandler.class);
+    private static final Logger  LOG        = LoggerFactory.getLogger(MapRequest.class);
+    private static final Integer EVENT_CODE = XCB_MAP_REQUEST;
 
-    private final Integer eventCode = 0;
-    private final XEventChannel xEventChannel;
+    private final XSurfacePool xSurfacePool;
 
     @Inject
-    GenericErrorHandler(final XEventChannel xEventChannel) {
-        this.xEventChannel = xEventChannel;
+    MapRequest(final XSurfacePool xSurfacePool) {
+        this.xSurfacePool = xSurfacePool;
     }
 
     @Override
-    public void handle(@Nonnull final xcb_generic_event_t event_t) {
-        final xcb_generic_error_t request_error = new xcb_generic_error_t(xcb_generic_event_t.getCPtr(event_t),
-                false);
-        this.xEventChannel.post(request_error);
+    public void handle(@Nonnull final xcb_generic_event_t event) {
+        final xcb_map_request_event_t map_request_event = cast(event);
+        LOG.debug("Received X event={}",
+                  map_request_event.getClass()
+                                   .getSimpleName()
+                 );
+        this.xSurfacePool.get(map_request_event.getWindow())
+                         .requestShow();
+    }
 
-        LOG.error(XcbErrorUtil.toString(request_error));
+    private xcb_map_request_event_t cast(final xcb_generic_event_t event) {
+        return new xcb_map_request_event_t(xcb_generic_event_t.getCPtr(event),
+                                           false);
     }
 
     @Override
     public Integer getEventCode() {
-        return this.eventCode;
+        return EVENT_CODE;
     }
-
 }

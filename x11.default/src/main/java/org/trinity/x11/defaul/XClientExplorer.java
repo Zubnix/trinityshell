@@ -18,27 +18,28 @@ import static org.freedesktop.xcb.xcb_map_state_t.XCB_MAP_STATE_VIEWABLE;
 
 public class XClientExplorer {
 
-	private static final Logger LOG = LoggerFactory.getLogger(XClientExplorer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XClientExplorer.class);
 
-	private final XEventChannel xEventChannel;
-	private final XSurfacePool  displaySurfacePool;
+    private final XEventLoop   xEventLoop;
+    private final XSurfacePool displaySurfacePool;
 
-	@Inject
-	XClientExplorer(final XEventChannel xEventChannel,
-					final XSurfacePool xSurfacePool) {
-		this.xEventChannel = xEventChannel;
-		this.displaySurfacePool = xSurfacePool;
-	}
+    @Inject
+    XClientExplorer(final XEventLoop xEventLoop,
+                    final XSurfacePool xSurfacePool) {
+        this.xEventLoop = xEventLoop;
+        this.displaySurfacePool = xSurfacePool;
+    }
 
-	public void findClientDisplaySurfaces() {
-		// find client display surfaces that are already active on the X server
-		final int root = this.xEventChannel.getXcbScreen().getRoot();
-		final SWIGTYPE_p_xcb_connection_t connection = this.xEventChannel.getXcbConnection();
-		final xcb_query_tree_cookie_t query_tree_cookie = xcb_query_tree(connection,
-																		 root);
-		final xcb_generic_error_t e = new xcb_generic_error_t();
-		// this is a one time call, no need to make it async.
-		final xcb_query_tree_reply_t query_tree_reply = xcb_query_tree_reply(connection,
+    public void findClientDisplaySurfaces() {
+        // find client display surfaces that are already active on the X server
+        final int root = this.xEventLoop.getXcbScreen()
+                                        .getRoot();
+        final SWIGTYPE_p_xcb_connection_t connection = this.xEventLoop.getXcbConnection();
+        final xcb_query_tree_cookie_t query_tree_cookie = xcb_query_tree(connection,
+                                                                         root);
+        final xcb_generic_error_t e = new xcb_generic_error_t();
+        // this is a one time call, no need to make it async.
+        final xcb_query_tree_reply_t query_tree_reply = xcb_query_tree_reply(connection,
 																			 query_tree_cookie,
 																			 e);
 		if(xcb_generic_error_t.getCPtr(e) != 0) {

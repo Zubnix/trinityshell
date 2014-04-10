@@ -44,58 +44,93 @@ import java.nio.ByteBuffer;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
-import static org.freedesktop.xcb.LibXcb.*;
-import static org.freedesktop.xcb.xcb_config_window_t.*;
+import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
+import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
+import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
+import static org.freedesktop.xcb.LibXcb.xcb_map_window;
+import static org.freedesktop.xcb.LibXcb.xcb_unmap_window;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
+import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 
 @ThreadSafe
 @AutoFactory
 public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
 
     private static final int        RESIZE_VALUE_MASK             = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
     private static final int        MOVE_RESIZE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    private static final ByteBuffer RESIZE_VALUE_LIST_BUFFER =      allocateDirect(8).order(nativeOrder());
+    private static final ByteBuffer RESIZE_VALUE_LIST_BUFFER      = allocateDirect(8).order(nativeOrder());
     private static final ByteBuffer MOVE_RESIZE_VALUE_LIST_BUFFER = allocateDirect(16).order(nativeOrder());
 
     @Nonnull
-	private final Integer       nativeHandle;
-	private final XEventChannel xEventChannel;
+    private final Integer    nativeHandle;
+    private final XEventLoop xEventLoop;
 
-	XWindow(@Provided final XEventChannel xEventChannel,
-			@Nonnull final Integer nativeHandle) {
-		checkNotNull(nativeHandle);
+    XWindow(@Provided final XEventLoop xEventLoop,
+            @Nonnull final Integer nativeHandle) {
+        checkNotNull(nativeHandle);
 
-		this.xEventChannel = xEventChannel;
-		this.nativeHandle = nativeHandle;
-	}
-
-    @Nonnull
-	public Integer getNativeHandle() {
-		return this.nativeHandle;
-	}
-
-	public void destroy() {
-		final int winId = getNativeHandle();
-		LOG.debug("[winId={}] destroy.",
-				  winId);
-		xcb_destroy_window(getConnectionRef(),
-						   winId);
-	}
-
-	private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
-		return this.xEventChannel.getXcbConnection();
-	}
+        this.xEventLoop = xEventLoop;
+        this.nativeHandle = nativeHandle;
+    }
 
     @Nonnull
-    public XWindow configure(@Nonnegative final int width,
-                             @Nonnegative final int height){
+    public Integer getNativeHandle() {
+        return this.nativeHandle;
+    }
 
-        RESIZE_VALUE_LIST_BUFFER.clear();
-        RESIZE_VALUE_LIST_BUFFER.putInt(width).putInt(height);
+    public void destroy() {
+        final int winId = getNativeHandle();
+        LOG.debug("[winId={}] destroy.",
+                  winId);
+        xcb_destroy_window(getConnectionRef(),
+                           winId);
+    }
+
+    private SWIGTYPE_p_xcb_connection_t getConnectionRef() {
+        return this.xEventLoop.getXcbConnection();
+    }
+
+    @Nonnull
+    public XWindow configure(final int x,
+                             final int y,
+                             @Nonnegative final int width,
+                             @Nonnegative final int height) {
+
+        MOVE_RESIZE_VALUE_LIST_BUFFER.clear();
+        MOVE_RESIZE_VALUE_LIST_BUFFER.putInt(x)
+                                     .putInt(y)
+                                     .putInt(width)
+                                     .putInt(height);
 
         final int winId = getNativeHandle();
         LOG.debug("[winId={}] move resize x={}, y={}, width={}, height={}.",
+                  winId,
+                  x,
+                  y,
+                  width,
+                  height);
+        xcb_configure_window(getConnectionRef(),
+                             winId,
+                             XWindow.MOVE_RESIZE_VALUE_MASK,
+                             XWindow.MOVE_RESIZE_VALUE_LIST_BUFFER);
+        return this;
+    }
+
+    @Nonnull
+    public XWindow configure(@Nonnegative final int width,
+                             @Nonnegative final int height) {
+
+        RESIZE_VALUE_LIST_BUFFER.clear();
+        RESIZE_VALUE_LIST_BUFFER.putInt(width)
+                                .putInt(height);
+
+        final int winId = getNativeHandle();
+        LOG.debug("[winId={}] resize width={}, height={}.",
                   winId,
                   width,
                   height);
@@ -106,38 +141,14 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
         return this;
     }
 
-    @Nonnull
-	public XWindow configure(final int x,
-						     final int y,
-                             @Nonnegative final int width,
-                             @Nonnegative final int height) {
-
-		MOVE_RESIZE_VALUE_LIST_BUFFER.clear();
-		MOVE_RESIZE_VALUE_LIST_BUFFER.putInt(x).putInt(y).putInt(width)
-									 .putInt(height);
-
-        final int winId = getNativeHandle();
-		LOG.debug("[winId={}] move resize x={}, y={}, width={}, height={}.",
-				  winId,
-				  x,
-				  y,
-				  width,
-				  height);
-		xcb_configure_window(getConnectionRef(),
-							 winId,
-							 XWindow.MOVE_RESIZE_VALUE_MASK,
-							 XWindow.MOVE_RESIZE_VALUE_LIST_BUFFER);
-        return this;
-	}
-
-    public XWindow map(){
+    public XWindow map() {
         final int winId = getNativeHandle();
         xcb_map_window(getConnectionRef(),
                        winId);
         return this;
     }
 
-    public XWindow unmap(){
+    public XWindow unmap() {
         final int winId = getNativeHandle();
         xcb_unmap_window(getConnectionRef(),
                          winId);
@@ -145,32 +156,32 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
     }
 
     @Nonnull
-	public RectangleImmutable getShape() {
-		//TODO keep track of the size & border through event listeners?
+    public RectangleImmutable getShape() {
+        //TODO keep track of the size & border through event listeners?
 
-		final int winId = getNativeHandle();
+        final int winId = getNativeHandle();
 
-		final xcb_get_geometry_cookie_t geometryRequest = xcb_get_geometry(getConnectionRef(),
-																		   winId);
+        final xcb_get_geometry_cookie_t geometryRequest = xcb_get_geometry(getConnectionRef(),
+                                                                           winId);
 
-		LOG.debug("get geometry reply.");
+        LOG.debug("get geometry reply.");
 
-		final xcb_generic_error_t e = new xcb_generic_error_t();
-		final xcb_get_geometry_reply_t get_geometry_reply = xcb_get_geometry_reply(getConnectionRef(),
-																				   geometryRequest,
-																				   e);
+        final xcb_generic_error_t e = new xcb_generic_error_t();
+        final xcb_get_geometry_reply_t get_geometry_reply = xcb_get_geometry_reply(getConnectionRef(),
+                                                                                   geometryRequest,
+                                                                                   e);
 
-		checkError(e);
-		final int width = get_geometry_reply.getWidth() + (2 * get_geometry_reply.getBorder_width());
-		final int height = get_geometry_reply.getHeight() + (2 * get_geometry_reply.getBorder_width());
-		final int x = get_geometry_reply.getX();
-		final int y = get_geometry_reply.getY();
+        checkError(e);
+        final int width = get_geometry_reply.getWidth() + (2 * get_geometry_reply.getBorder_width());
+        final int height = get_geometry_reply.getHeight() + (2 * get_geometry_reply.getBorder_width());
+        final int x = get_geometry_reply.getX();
+        final int y = get_geometry_reply.getY();
 
-		return new Rectangle(x,
-							 y,
-							 width,
-							 height);
-	}
+        return new Rectangle(x,
+                             y,
+                             width,
+                             height);
+    }
 
 	@Nonnull
     @Override

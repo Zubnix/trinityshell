@@ -39,17 +39,13 @@ public final class XEventHandlers {
 
     @Inject
     XEventHandlers(final Set<XEventHandler> eventConversions) {
-
-        for (final XEventHandler eventConversion : eventConversions) {
-            this.conversionMap.put(eventConversion.getEventCode(),
-                    eventConversion);
-        }
+        eventConversions.forEach(xEventHandler -> this.conversionMap.put(xEventHandler.getEventCode(),
+                                                                         xEventHandler));
     }
 
     @Subscribe
     public void handleXEvent(final xcb_generic_event_t event) {
         final short response_type = event.getResponse_type();
-
         // TODO handle error cases
         final int eventCode = response_type & EVENT_CODE_MASK;
 
@@ -57,7 +53,7 @@ public final class XEventHandlers {
         if (eventConversion == null) {
             return;
         }
-
         eventConversion.handle(event);
+        event.delete();
     }
 }

@@ -24,7 +24,7 @@ import dagger.Module;
 import dagger.Provides;
 import org.trinity.x11.defaul.render.SimpleRenderModule;
 import org.trinity.x11.defaul.shell.SimpleShellSceneModule;
-import org.trinity.x11.defaul.xeventhandler.XEventHandlersModule;
+import org.trinity.x11.defaul.shell.xeventhandlers.XEventHandlersModule;
 
 import javax.inject.Singleton;
 
@@ -41,7 +41,7 @@ import static dagger.Provides.Type.SET;
                 XShellService.class,
 
                 XSurfacePool.class,
-                XEventChannel.class,
+                XEventLoop.class,
                 XEventHandlers.class,
                 XTime.class,
                 XWindowFactory.class
@@ -54,9 +54,9 @@ public class X11DefaultModule {
 	@Provides
 	@Singleton
 	XSeat provideXSeat(final XTime xTime,
-					   final XEventChannel xEventChannel) {
+					   final XEventLoop xEventLoop) {
 		return new XSeat(xTime,
-						 xEventChannel);
+                         xEventLoop);
 	}
 
     @Provides(type = SET)

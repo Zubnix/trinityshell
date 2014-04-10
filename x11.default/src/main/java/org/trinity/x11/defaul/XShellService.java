@@ -8,17 +8,17 @@ import static org.freedesktop.xcb.LibXcb.xcb_flush;
 
 public class XShellService extends AbstractExecutionThreadService {
 
-    private final XEventChannel xEventChannel;
-    private final XEventHandlers xEventHandlers;
+    private final XEventLoop      xEventLoop;
+    private final XEventHandlers  xEventHandlers;
     private final XClientExplorer xClientExplorer;
-    private final XTime xTime;
+    private final XTime           xTime;
 
     @Inject
-    XShellService(final XEventChannel xEventChannel,
+    XShellService(final XEventLoop xEventLoop,
                   final XEventHandlers xEventHandlers,
                   final XClientExplorer xClientExplorer,
                   final XTime xTime) {
-        this.xEventChannel = xEventChannel;
+        this.xEventLoop = xEventLoop;
         this.xEventHandlers = xEventHandlers;
         this.xClientExplorer = xClientExplorer;
         this.xTime = xTime;
@@ -30,25 +30,25 @@ public class XShellService extends AbstractExecutionThreadService {
         final String displayName = System.getenv("DISPLAY");
         final int targetScreen = 0;
 
-        this.xEventChannel.register(this.xTime);
-        this.xEventChannel.register(this.xEventHandlers);
-        this.xEventChannel.open(displayName,
-                                targetScreen);
+        this.xEventLoop.register(this.xTime);
+        this.xEventLoop.register(this.xEventHandlers);
+        this.xEventLoop.open(displayName,
+                             targetScreen);
         this.xClientExplorer.findClientDisplaySurfaces();
     }
 
     @Override
     protected void run() {
         while (isRunning()) {
-            this.xEventChannel.waitForEvent();
-            xcb_flush(this.xEventChannel.getXcbConnection());
+            xcb_flush(this.xEventLoop.waitForEvent()
+                                     .getXcbConnection());
         }
     }
 
     @Override
     protected void shutDown() {
-        this.xEventChannel.close();
-        this.xEventChannel.unregister(this.xEventHandlers);
-        this.xEventChannel.unregister(this.xTime);
+        this.xEventLoop.close();
+        this.xEventLoop.unregister(this.xEventHandlers);
+        this.xEventLoop.unregister(this.xTime);
     }
 }

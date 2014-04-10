@@ -20,26 +20,35 @@
 package org.trinity.shell.scene.api;
 
 import org.trinity.common.Listenable;
-import org.trinity.shell.scene.api.event.*;
+import org.trinity.shell.scene.api.event.HideRequest;
+import org.trinity.shell.scene.api.event.LowerRequest;
+import org.trinity.shell.scene.api.event.MoveRequest;
+import org.trinity.shell.scene.api.event.RaiseRequest;
+import org.trinity.shell.scene.api.event.ResizeRequest;
+import org.trinity.shell.scene.api.event.ShowRequest;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.Dimension;
 import javax.media.nativewindow.util.Point;
 import javax.media.nativewindow.util.PointImmutable;
+import javax.media.nativewindow.util.RectangleImmutable;
+import java.util.Optional;
 
 /**
  * ************************************
  * The super interface of all nodes that live in the shell scene.
  * **************************************
  */
-public interface ShellSurface extends Listenable, HasSize<ShellSpace> {
+public interface ShellSurface extends Listenable {
 
-    @Nonnull
-    ShellSurface accept(@Nonnull ShellSurfaceConfiguration shellSurfaceConfiguration);
+    void accept(@Nonnull ShellSurfaceConfiguration shellSurfaceConfiguration);
 
     @Nonnull
     PointImmutable getPosition();
+
+    @Nonnull
+    Optional<RectangleImmutable> getDamage();
 
     /**
      * ************************************
@@ -51,21 +60,7 @@ public interface ShellSurface extends Listenable, HasSize<ShellSpace> {
      * **************************************
      */
     @Nonnull
-    HasSize<BufferSpace> getBuffer();
-
-    /**
-     * *************************************
-     * Indicates if this node is visible. This is implementation dependent. A
-     * <code>PaintSurfaceNode</code> is usually only visible if it's parent is
-     * visible. So even though this method may return true, the
-     * <code>PaintSurfaceNode</code> will only be physically visible if all it's
-     * parents are physically visible as well.
-     *
-     * @return future true if visible, future false if not
-     * **************************************
-     */
-    @Nonnull
-    Boolean isVisible();
+    Optional<HasSize<BufferSpace>> getBuffer();
 
     /**
      * ************************************
@@ -167,7 +162,4 @@ public interface ShellSurface extends Listenable, HasSize<ShellSpace> {
         post(new HideRequest(this));
         return this;
     }
-
-//    @Nonnull
-//    List<ShellSurface> getChildren();
 }
