@@ -24,7 +24,7 @@ public class SimpleRootShellSurface extends SimpleShellSurface {
 
     @Nonnull
     @Override
-    public SimpleShellSurface accept(@Nonnull final ShellSurfaceConfiguration shellSurfaceConfiguration) {
+    public void accept(@Nonnull final ShellSurfaceConfiguration shellSurfaceConfiguration) {
         //TODO implement with xrandr thingy?
         //shellSurfaceConfiguration.setShape(...);
         throw new UnsupportedOperationException("Not yet implemented.");
@@ -34,12 +34,6 @@ public class SimpleRootShellSurface extends SimpleShellSurface {
     @Override
     public PointImmutable getPosition() {
         return this.position;
-    }
-
-    @Nonnull
-    @Override
-    public Boolean isVisible() {
-        return true;
     }
 
     @Nonnull

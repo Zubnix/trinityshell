@@ -1,10 +1,10 @@
 package org.trinity.x11.defaul.render;
 
 import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.eventbus.Subscribe;
 import org.trinity.shell.scene.api.BufferSpace;
 import org.trinity.shell.scene.api.HasSize;
+import org.trinity.shell.scene.api.event.Destroyed;
 import org.trinity.shell.scene.api.event.ResizeRequest;
 import org.trinity.shell.scene.api.event.ShowRequest;
 import org.trinity.x11.defaul.XWindow;
@@ -13,11 +13,11 @@ import javax.media.nativewindow.util.DimensionImmutable;
 import javax.media.nativewindow.util.Rectangle;
 
 @AutoFactory
-public class SimpleSurfaceBufferHandler {
+public class SimpleBufferHandler {
 
     private final XWindow xWindow;
 
-    SimpleSurfaceBufferHandler(@Provided final XWindow xWindow) {
+    SimpleBufferHandler(final XWindow xWindow) {
         this.xWindow = xWindow;
     }
 
@@ -60,5 +60,11 @@ public class SimpleSurfaceBufferHandler {
                                                                           height))
                                                .commit();
                    });
+    }
+
+    @Subscribe
+    public void handle(final Destroyed destroyed) {
+        destroyed.getSource()
+                 .unregister(this);
     }
 }

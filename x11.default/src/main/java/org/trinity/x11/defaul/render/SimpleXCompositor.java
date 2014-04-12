@@ -32,6 +32,7 @@ import org.trinity.shell.scene.api.event.Raised;
 import org.trinity.shell.scene.api.event.Showed;
 import org.trinity.x11.defaul.XCompositor;
 import org.trinity.x11.defaul.XEventLoop;
+import org.trinity.x11.defaul.XWindow;
 import org.trinity.x11.defaul.XWindowFactory;
 import org.trinity.x11.defaul.shell.SimpleShell;
 import org.trinity.x11.defaul.shell.SimpleShellSurfaceFactory;
@@ -64,7 +65,7 @@ public class SimpleXCompositor implements XCompositor {
     private final SimpleShellSurfaceFactory  simpleShellSurfaceFactory;
     private final SimpleShell                simpleShell;
     private final SimpleRenderer             simpleRenderer;
-    private final SimpleSurfaceBufferHandler simpleSurfaceBufferHandler;
+    private final SimpleBufferHandlerFactory simpleBufferHandlerFactory;
 
     @Inject
     SimpleXCompositor(final XEventLoop xEventLoop,
@@ -72,7 +73,7 @@ public class SimpleXCompositor implements XCompositor {
                       final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
                       final SimpleShell simpleShell,
                       final SimpleRenderer simpleRenderer,
-                      final SimpleSurfaceBufferHandler simpleSurfaceBufferHandler) {
+                      final SimpleBufferHandlerFactory simpleBufferHandlerFactory) {
 
         this.xEventLoop = xEventLoop;
         this.xWindowFactory = xWindowFactory;
@@ -80,7 +81,7 @@ public class SimpleXCompositor implements XCompositor {
         this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
         this.simpleShell = simpleShell;
         this.simpleRenderer = simpleRenderer;
-        this.simpleSurfaceBufferHandler = simpleSurfaceBufferHandler;
+        this.simpleBufferHandlerFactory = simpleBufferHandlerFactory;
     }
 
     @Nonnull
@@ -88,9 +89,13 @@ public class SimpleXCompositor implements XCompositor {
     public ShellSurface create(@Nonnull final Integer nativeHandle) {
         configureClientEvents(nativeHandle);
 
-        final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(this.xWindowFactory.create(nativeHandle));
+        final XWindow xWindow = this.xWindowFactory.create(nativeHandle);
+        final SimpleBufferHandler simpleBufferHandler = this.simpleBufferHandlerFactory.create(xWindow);
+
+        final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(xWindow);
         shellSurface.register(this);
-        shellSurface.register(this.simpleSurfaceBufferHandler);
+        shellSurface.register(simpleBufferHandler);
+
         this.simpleShell.add(shellSurface);
 
         return shellSurface;
@@ -136,14 +141,13 @@ public class SimpleXCompositor implements XCompositor {
     public void handle(final Destroyed destroyed) {
         final ShellSurface shellSurface = destroyed.getSource();
         shellSurface.unregister(this);
-        shellSurface.unregister(this.simpleSurfaceBufferHandler);
     }
 
     private void requestRender(final ShellSurface shellSurface) {
         final boolean needsRedraw = this.simpleShell.needsRedraw(shellSurface);
 
         if(needsRedraw) {
-            this.simpleRenderer.scheduleRender();
+           // this.simpleRenderer.scheduleRender();
         }
     }
 
