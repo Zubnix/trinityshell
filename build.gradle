@@ -1,21 +1,34 @@
 apply plugin: 'java'
 
+group =		"org.trinity"
+version = 	"0.0.3-SNAPSHOT"
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile 'com.squareup.dagger:dagger-compiler:$daggerVersion'
-    runtime 'com.google.guava:guava:$guavaVersion'
-    compile 'com.google.auto.value:auto-value:$autoValueVersion'
-    compile 'com.google.auto.factory:auto-factory:$autoFactoryVersion'
-    runtime 'org.jogamp.jogl:nativewindow:$jogampVersion:core'
-    runtime 'org.jogamp.gluegen:gluegen:$jogampVersion'
-    runtime 'com.google.code.findbugs:jsr305:$findbugsVersion'
-    runtime 'org.slf4j:slf4j-api:$slf4jVersion'
+	compile(
+		[group: "com.squareup.dagger", 			name: "dagger-compiler", 			version: "${daggerVersion}"],
+		[group: "com.google.auto.value", 		name: "auto-value", 				version: "${autoValueVersion}"],
+		[group: "com.google.auto.factory", 		name: "auto-factory", 				version: "${autoFactoryVersion}"]
+	)
 
-    testCompile 'junit:junit:$junitVersion'
-    testCompile 'org.mockito:mockito-all:$mockitoVersion'
-    testCompile 'org.powermock:powermock-module-junit4:$powermockVersion'
-    testCompile 'org.powermock:powermock-api-mockito:$powermockVersion'
+	runtime (
+		[group: "com.google.guava",				name: "guava", 						version: "${guavaVersion}"],
+		[group: "org.jogamp.jogl", 				name: "nativewindow", 				version: "${jogampVersion}", classifier: "core"],
+		[group: "org.jogamp.gluegen", 			name: "gluegen", 					version: "${jogampVersion}"],
+		[group: "com.google.code.findbugs", 	name: "jsr305", 					version: "${findbugsVersion}"],
+		[group: "org.slf4j", 					name: "slf4j-api", 					version: "${slf4jVersion}"]
+	)
+
+	testCompile (
+		[group: "junit", 						name: "junit", 						version: "${junitVersion}"],
+		[group: "org.mockito", 					name: "mockito-all", 				version: "${mockitoVersion}"],
+		[group: "org.powermock", 				name: "powermock-module-junit4", 	version: "${powermockVersion}"],
+		[group: "org.powermock", 				name: "mockito-all", 				version: "${powermockVersion}"]
+	)
 }
