@@ -1,0 +1,10 @@
+dependencies {
+    compile(
+        project(":binding.api"),
+        project(":binding.default"),
+        project(":common"),
+        project(":shell.scene.api"),
+        project(":shell.view.api"),
+        project(":x11.default"),
+    )
+}

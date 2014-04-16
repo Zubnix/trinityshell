@@ -1,0 +1,6 @@
+dependencies {
+    compile(
+        project(":binding.api"),
+        [group: "net.java.dev.glazedlists", name: "glazedlists_java15", version: "1.9.0"]
+    )
+}
