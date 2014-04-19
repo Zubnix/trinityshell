@@ -22,6 +22,7 @@ package org.trinity.x11.defaul;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_geometry_cookie_t;
@@ -29,8 +30,7 @@ import org.freedesktop.xcb.xcb_get_geometry_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
-import org.trinity.shell.scene.api.BufferSpace;
-import org.trinity.shell.scene.api.HasSize;
+import org.trinity.shell.scene.api.Buffer;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -57,14 +57,19 @@ import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 
 @ThreadSafe
 @AutoFactory
-public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace> {
+public class XWindow extends EventBus implements Listenable, Buffer {
 
     private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
 
     private static final int        RESIZE_VALUE_MASK             = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    private static final int        MOVE_RESIZE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
+    private static final int        MOVE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
     private static final ByteBuffer RESIZE_VALUE_LIST_BUFFER      = allocateDirect(8).order(nativeOrder());
-    private static final ByteBuffer MOVE_RESIZE_VALUE_LIST_BUFFER = allocateDirect(16).order(nativeOrder());
+    private static final ByteBuffer MOVE_VALUE_LIST_BUFFER = allocateDirect(8).order(nativeOrder());
+
+    private final EventBus visitorDispatcher = new EventBus();
+    {
+        this.visitorDispatcher.register(this);
+    }
 
     @Nonnull
     private final Integer    nativeHandle;
@@ -96,34 +101,28 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
     }
 
     @Nonnull
-    public XWindow configure(final int x,
-                             final int y,
-                             @Nonnegative final int width,
-                             @Nonnegative final int height) {
+    public XWindow move(final int x,
+                        final int y) {
 
-        MOVE_RESIZE_VALUE_LIST_BUFFER.clear();
-        MOVE_RESIZE_VALUE_LIST_BUFFER.putInt(x)
-                                     .putInt(y)
-                                     .putInt(width)
-                                     .putInt(height);
+        MOVE_VALUE_LIST_BUFFER.clear();
+        MOVE_VALUE_LIST_BUFFER.putInt(x)
+                                     .putInt(y);
 
         final int winId = getNativeHandle();
-        LOG.debug("[winId={}] move resize x={}, y={}, width={}, height={}.",
+        LOG.debug("[winId={}] move x={}, y={}.",
                   winId,
                   x,
-                  y,
-                  width,
-                  height);
+                  y);
         xcb_configure_window(getConnectionRef(),
                              winId,
-                             XWindow.MOVE_RESIZE_VALUE_MASK,
-                             XWindow.MOVE_RESIZE_VALUE_LIST_BUFFER);
+                             XWindow.MOVE_VALUE_MASK,
+                             XWindow.MOVE_VALUE_LIST_BUFFER);
         return this;
     }
 
     @Nonnull
-    public XWindow configure(@Nonnegative final int width,
-                             @Nonnegative final int height) {
+    public XWindow resize(@Nonnegative final int width,
+                          @Nonnegative final int height) {
 
         RESIZE_VALUE_LIST_BUFFER.clear();
         RESIZE_VALUE_LIST_BUFFER.putInt(width)
@@ -219,4 +218,16 @@ public class XWindow extends EventBus implements Listenable, HasSize<BufferSpace
 							 getClass().getSimpleName(),
 							 getNativeHandle());
 	}
+
+    @Override
+    public void accept(@Nonnull final Object renderCommand) {
+        //We (ab)use guava's eventbus as a dynamic type based dispatcher. That way we don't have to cast!
+        //Any unsupported render command will simply be ignored
+        this.visitorDispatcher.post(renderCommand);
+    }
+
+    @Subscribe
+    public void accept(@Nonnull final XWindowRenderCommand xWindowRenderCommand){
+        xWindowRenderCommand.visit(this);
+    }
 }

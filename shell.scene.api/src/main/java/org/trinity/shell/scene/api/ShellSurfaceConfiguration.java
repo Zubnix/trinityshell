@@ -6,5 +6,5 @@ import javax.annotation.Nonnull;
  *
  */
 public interface ShellSurfaceConfiguration {
-    void configure(@Nonnull ShellSurfaceConfigurable shellSurfaceConfigurable);
+    void visit(@Nonnull ShellSurfaceConfigurable shellSurfaceConfigurable);
 }

@@ -147,13 +147,13 @@ public class SimpleXCompositor implements XCompositor {
         final boolean needsRedraw = this.simpleShell.needsRedraw(shellSurface);
 
         if(needsRedraw) {
-           // this.simpleRenderer.scheduleRender();
+            this.simpleShell.getShellSurfacesStack().forEach(this.simpleRenderer::render);
         }
     }
 
     private void configureClientEvents(final Integer nativeHandle) {
 
-        LOG.debug("[winId={}] configure client evens.",
+        LOG.debug("[winId={}] visit client evens.",
                   nativeHandle);
 
         xcb_change_window_attributes(this.xEventLoop.getXcbConnection(),

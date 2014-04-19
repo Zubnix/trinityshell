@@ -2,13 +2,15 @@ package org.trinity.x11.defaul.render;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.common.eventbus.Subscribe;
-import org.trinity.shell.scene.api.BufferSpace;
-import org.trinity.shell.scene.api.HasSize;
+import org.trinity.shell.scene.api.Buffer;
+import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
+import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
 import org.trinity.shell.scene.api.event.Destroyed;
 import org.trinity.shell.scene.api.event.ResizeRequest;
 import org.trinity.shell.scene.api.event.ShowRequest;
 import org.trinity.x11.defaul.XWindow;
 
+import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.DimensionImmutable;
 import javax.media.nativewindow.util.Rectangle;
 
@@ -27,8 +29,8 @@ public class SimpleBufferHandler {
         final DimensionImmutable size = resizeRequest.getSize();
         final int width = size.getWidth();
         final int height = size.getHeight();
-        final HasSize<BufferSpace> buffer = this.xWindow.configure(width,
-                                                                   height);
+        final Buffer buffer = this.xWindow.resize(width,
+                                                  height);
         resizeRequest.getSource()
                      .accept(shellSurfaceConfigurable -> {
                          shellSurfaceConfigurable.attachBuffer(buffer,
@@ -50,15 +52,18 @@ public class SimpleBufferHandler {
         final int height = size.getHeight();
 
         showRequest.getSource()
-                   .accept(shellSurfaceConfigurable -> {
-                       shellSurfaceConfigurable.attachBuffer(this.xWindow,
-                                                             0,
-                                                             0)
-                                               .markDamaged(new Rectangle(0,
-                                                                          0,
-                                                                          width,
-                                                                          height))
-                                               .commit();
+                   .accept(new ShellSurfaceConfiguration() {
+                       @Override
+                       public void visit(@Nonnull final ShellSurfaceConfigurable shellSurfaceConfigurable) {
+                           shellSurfaceConfigurable.attachBuffer(SimpleBufferHandler.this.xWindow,
+                                                                 0,
+                                                                 0)
+                                                   .markDamaged(new Rectangle(0,
+                                                                              0,
+                                                                              width,
+                                                                              height))
+                                                   .commit();
+                       }
                    });
     }
 

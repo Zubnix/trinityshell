@@ -21,8 +21,7 @@ package org.trinity.x11.defaul.shell;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.common.eventbus.EventBus;
-import org.trinity.shell.scene.api.BufferSpace;
-import org.trinity.shell.scene.api.HasSize;
+import org.trinity.shell.scene.api.Buffer;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
@@ -53,17 +52,17 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     private Optional<RectangleImmutable> damage        = Optional.empty();
 
     @Nonnull
-    private Optional<HasSize<BufferSpace>> pendingBuffer;
+    private Optional<Buffer> pendingBuffer;
     @Nonnull
-    private Optional<HasSize<BufferSpace>> buffer;
+    private Optional<Buffer> buffer;
 
-    SimpleShellSurface(@Nonnull final HasSize<BufferSpace> buffer) {
+    SimpleShellSurface(@Nonnull final Buffer buffer) {
         this.buffer = Optional.of(buffer);
     }
 
     @Override
     public void accept(@Nonnull final ShellSurfaceConfiguration shellSurfaceConfiguration) {
-        shellSurfaceConfiguration.configure(this);
+        shellSurfaceConfiguration.visit(this);
     }
 
     @Nonnull
@@ -91,7 +90,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable attachBuffer(@Nonnull final HasSize<BufferSpace> buffer,
+    public ShellSurfaceConfigurable attachBuffer(@Nonnull final Buffer buffer,
                                                  @Nonnull final Integer relX,
                                                  @Nonnull final Integer relY) {
         this.pendingBuffer = Optional.of(buffer);
@@ -121,7 +120,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public Optional<HasSize<BufferSpace>> getBuffer() {
+    public Optional<Buffer> getBuffer() {
         return this.buffer;
     }
 

@@ -19,7 +19,7 @@ public interface ShellSurfaceConfigurable {
     ShellSurfaceConfigurable markDamaged(@Nonnull RectangleImmutable damage);
 
     @Nonnull
-    ShellSurfaceConfigurable attachBuffer(@Nonnull HasSize<BufferSpace> buffer,
+    ShellSurfaceConfigurable attachBuffer(@Nonnull Buffer buffer,
                                           @Nonnull Integer relX,
                                           @Nonnull Integer relY);
 

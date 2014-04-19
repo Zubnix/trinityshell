@@ -60,7 +60,7 @@ public interface ShellSurface extends Listenable {
      * **************************************
      */
     @Nonnull
-    Optional<HasSize<BufferSpace>> getBuffer();
+    Optional<Buffer> getBuffer();
 
     /**
      * ************************************

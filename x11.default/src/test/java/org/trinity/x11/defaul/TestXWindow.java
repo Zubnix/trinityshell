@@ -76,10 +76,8 @@ public class TestXWindow {
         //the XWindow is moved
         final int x = 567;
         final int y = 890;
-        this.xWindow.configure(x,
-                               y,
-                               100,
-                               100);
+        this.xWindow.move(x,
+                          y);
 
         //then
         //the native X server window should be moved
@@ -121,10 +119,9 @@ public class TestXWindow {
         final int width = 12;
         final int height = 34;
 
-		this.xWindow.configure(0,
-							   0,
-							   width,
-							   height);
+		this.xWindow.resize(
+                          width,
+                          height);
 
         //then
         //the native X server window is resized, taking into account it's X window border.
