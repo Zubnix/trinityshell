@@ -4,5 +4,5 @@ import javax.annotation.Nonnull;
 
 public interface Buffer extends HasSize<BufferSpace>{
 
-    void accept(@Nonnull Object renderCommand);
+    void accept(@Nonnull Object renderer);
 }

@@ -220,14 +220,16 @@ public class XWindow extends EventBus implements Listenable, Buffer {
 	}
 
     @Override
-    public void accept(@Nonnull final Object renderCommand) {
+    public void accept(@Nonnull final Object renderer) {
         //We (ab)use guava's eventbus as a dynamic type based dispatcher. That way we don't have to cast!
-        //Any unsupported render command will simply be ignored
-        this.visitorDispatcher.post(renderCommand);
+        //Any unsupported renderer will simply be ignored. To detect any unsupported render, simply listen
+        //for guava's deadevent object.
+        this.visitorDispatcher.post(renderer);
     }
 
+    //called by visitor dispatcher.
     @Subscribe
-    public void accept(@Nonnull final XWindowRenderCommand xWindowRenderCommand){
-        xWindowRenderCommand.visit(this);
+    public void accept(@Nonnull final XWindowRenderer xWindowRenderer){
+        xWindowRenderer.visit(this);
     }
 }

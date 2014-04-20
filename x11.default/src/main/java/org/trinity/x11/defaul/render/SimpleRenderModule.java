@@ -9,8 +9,7 @@ import javax.inject.Singleton;
 @Module(
 		injects = {
                 SimpleXCompositor.class,
-                SimpleBufferHandlerFactory.class,
-                SimpleXWindowRenderCommandFactory.class
+                SimpleBufferHandlerFactory.class
         },
 		complete = false,
 		library = true
