@@ -47,6 +47,10 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 	private Boolean        destroyed = Boolean.FALSE;
 
     @Nonnull
+    private Optional<RectangleImmutable> pendingInputRegion = Optional.empty();
+    @Nonnull
+    private Optional<RectangleImmutable> inputRegion = Optional.empty();
+    @Nonnull
     private Optional<RectangleImmutable> pendingDamage = Optional.empty();
     @Nonnull
     private Optional<RectangleImmutable> damage        = Optional.empty();
@@ -114,6 +118,12 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
+    public Optional<RectangleImmutable> getInputRegion() {
+        return this.inputRegion;
+    }
+
+    @Nonnull
+    @Override
     public Optional<RectangleImmutable> getDamage() {
         return this.damage;
     }
@@ -131,8 +141,23 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
         this.pendingBuffer = Optional.empty();
         this.damage = this.pendingDamage;
         this.pendingDamage = Optional.empty();
+        this.inputRegion = this.pendingInputRegion;
 
         post(new Committed(this));
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public ShellSurfaceConfigurable removeInputRegion() {
+        this.pendingInputRegion = Optional.empty();
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public ShellSurfaceConfigurable setInputRegion(@Nonnull final RectangleImmutable inputRegion) {
+        this.pendingInputRegion = Optional.of(inputRegion);
         return this;
     }
 

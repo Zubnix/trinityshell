@@ -10,6 +10,11 @@ import javax.media.nativewindow.util.RectangleImmutable;
 public interface ShellSurfaceConfigurable {
 
     @Nonnull
+    ShellSurfaceConfigurable removeInputRegion();
+    @Nonnull
+    ShellSurfaceConfigurable setInputRegion(@Nonnull RectangleImmutable inputRegion);
+
+    @Nonnull
     ShellSurfaceConfigurable setPosition(@Nonnull PointImmutable position);
 
     @Nonnull
