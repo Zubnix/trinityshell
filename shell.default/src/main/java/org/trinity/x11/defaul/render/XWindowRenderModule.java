@@ -8,16 +8,16 @@ import javax.inject.Singleton;
 
 @Module(
 		injects = {
-                SimpleXCompositor.class,
-                SimpleBufferHandlerFactory.class
+                XWindowCompositor.class,
+                XWindowBufferHandlerFactory.class
         },
 		complete = false,
 		library = true
 )
-public class SimpleRenderModule {
+public class XWindowRenderModule {
 	@Provides
 	@Singleton
-	XCompositor provideXCompositor(final SimpleXCompositor simpleXCompositor) {
-		return simpleXCompositor;
+	XCompositor provideXCompositor(final XWindowCompositor XWindowCompositor) {
+		return XWindowCompositor;
 	}
 }

@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
 import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.x11.defaul.render.SimpleXCompositor;
+import org.trinity.x11.defaul.render.XWindowCompositor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -41,10 +41,10 @@ public class XSurfacePool {
 	private static final Logger LOG = LoggerFactory.getLogger(XSurfacePool.class);
 
 	private final BiMap<Integer, ShellSurface> surfaces = HashBiMap.create(32);
-	private final SimpleXCompositor compositor;
+	private final XWindowCompositor compositor;
 
 	@Inject
-	XSurfacePool(final SimpleXCompositor compositor) {
+	XSurfacePool(final XWindowCompositor compositor) {
 		this.compositor = compositor;
 	}
 

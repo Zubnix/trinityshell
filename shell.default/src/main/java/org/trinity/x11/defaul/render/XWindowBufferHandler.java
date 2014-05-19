@@ -15,11 +15,11 @@ import javax.media.nativewindow.util.DimensionImmutable;
 import javax.media.nativewindow.util.Rectangle;
 
 @AutoFactory
-public class SimpleBufferHandler {
+public class XWindowBufferHandler {
 
     private final XWindow xWindow;
 
-    SimpleBufferHandler(final XWindow xWindow) {
+    XWindowBufferHandler(final XWindow xWindow) {
         this.xWindow = xWindow;
     }
 
@@ -55,13 +55,13 @@ public class SimpleBufferHandler {
                    .accept(new ShellSurfaceConfiguration() {
                        @Override
                        public void visit(@Nonnull final ShellSurfaceConfigurable shellSurfaceConfigurable) {
-                           shellSurfaceConfigurable.attachBuffer(SimpleBufferHandler.this.xWindow,
+                           shellSurfaceConfigurable.attachBuffer(XWindowBufferHandler.this.xWindow,
                                                                  0,
                                                                  0)
                                                    .markDamaged(new Rectangle(0,
-                                                                              0,
-                                                                              width,
-                                                                              height))
+                                                           0,
+                                                           width,
+                                                           height))
                                                    .commit();
                        }
                    });

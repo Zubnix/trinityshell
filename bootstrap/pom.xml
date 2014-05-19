@@ -16,7 +16,7 @@
         <!-- X11 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>x11.default</artifactId>
+            <artifactId>shell.default</artifactId>
             <version>${project.version}</version>
         </dependency>
 

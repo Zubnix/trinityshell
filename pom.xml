@@ -69,7 +69,7 @@
         <module>shell.view.api</module>
         <module>shell.scene.api</module>
 
-        <module>x11.default</module>
+        <module>shell.default</module>
 
         <module>bootstrap</module>
     </modules>

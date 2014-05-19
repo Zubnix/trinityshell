@@ -44,16 +44,8 @@ import java.nio.ByteBuffer;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
-import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
-import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
-import static org.freedesktop.xcb.LibXcb.xcb_map_window;
-import static org.freedesktop.xcb.LibXcb.xcb_unmap_window;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+import static org.freedesktop.xcb.LibXcb.*;
+import static org.freedesktop.xcb.xcb_config_window_t.*;
 
 @ThreadSafe
 @AutoFactory
@@ -68,7 +60,12 @@ public class XWindow extends EventBus implements Listenable, Buffer {
 
     private final EventBus visitorDispatcher = new EventBus();
     {
-        this.visitorDispatcher.register(this);
+        this.visitorDispatcher.register(new Object() {
+            @Subscribe
+            public void handle(@Nonnull final XWindowRenderer xWindowRenderer) {
+                xWindowRenderer.visit(XWindow.this);
+            }
+        });
     }
 
     @Nonnull
@@ -225,11 +222,5 @@ public class XWindow extends EventBus implements Listenable, Buffer {
         //Any unsupported renderer will simply be ignored. To detect any unsupported render, simply listen
         //for guava's deadevent object.
         this.visitorDispatcher.post(renderer);
-    }
-
-    //called by visitor dispatcher.
-    @Subscribe
-    public void accept(@Nonnull final XWindowRenderer xWindowRenderer){
-        xWindowRenderer.visit(this);
     }
 }

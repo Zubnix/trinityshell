@@ -6,3 +6,7 @@
 *.idea
 target
 trinity.log
+*.class
+target/
+build/
+externals/

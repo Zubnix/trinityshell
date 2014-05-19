@@ -5,3 +5,4 @@
 /display.iml
 /bin
 /pom.xml.releaseBackup
+*.class

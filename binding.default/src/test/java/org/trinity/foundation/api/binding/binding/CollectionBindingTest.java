@@ -129,11 +129,9 @@ public class CollectionBindingTest {
 												  (Class) ChildViewModel.class,
 												  1);
 
-		verify(this.viewBinder).bind(
-									 element0,
+		verify(this.viewBinder).bind( element0,
 									 this.subViewModel0);
-		verify(this.viewBinder).bind(
-									 element1,
+		verify(this.viewBinder).bind( element1,
 									 this.subViewModel1);
 	}
 

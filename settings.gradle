@@ -3,6 +3,6 @@ include ":common",
         ":binding.default",
         ":shell.scene.api",
         ":shell.view.api",
-        ":x11.default",
+        ":shell.default",
 
         ":bootstrap"

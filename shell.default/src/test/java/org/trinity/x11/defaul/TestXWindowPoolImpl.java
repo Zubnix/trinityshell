@@ -6,8 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.trinity.x11.defaul.XCompositor;
-import org.trinity.x11.defaul.XSurfacePool;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestXWindowPoolImpl {
