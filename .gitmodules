@@ -13,3 +13,6 @@
 [submodule "externals/auto"]
 	path = externals/auto
 	url = https://github.com/google/auto.git
+[submodule "externals/wayland-java"]
+	path = externals/wayland-java
+	url = https://github.com/jekstrand/wayland-java.git

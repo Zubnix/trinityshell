@@ -12,6 +12,11 @@
 	<name>shell Default Implementation</name>
 	<packaging>bundle</packaging>
 
+    <properties>
+        <XCB4J.version>0.0.1</XCB4J.version>
+        <wayland.version>0.0.1-SNAPSHOT</wayland.version>
+    </properties>
+
 	<dependencies>
         <dependency>
             <groupId>org.trinity</groupId>
@@ -23,10 +28,16 @@
             <artifactId>shell.scene.api</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.trinity</groupId>
             <artifactId>XCB4J</artifactId>
-            <version>0.0.1</version>
+            <version>${XCB4J.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freedesktop</groupId>
+            <artifactId>wayland</artifactId>
+            <version>${wayland.version}</version>
         </dependency>
 
         <!-- logging implementation for test log output -->
