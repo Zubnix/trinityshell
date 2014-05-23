@@ -58,15 +58,14 @@ public class XWindow extends EventBus implements Listenable, Buffer {
     private static final ByteBuffer RESIZE_VALUE_LIST_BUFFER      = allocateDirect(8).order(nativeOrder());
     private static final ByteBuffer MOVE_VALUE_LIST_BUFFER = allocateDirect(8).order(nativeOrder());
 
-    private final EventBus visitorDispatcher = new EventBus();
-    {
-        this.visitorDispatcher.register(new Object() {
+    private final EventBus visitorDispatcher = new EventBus(){{
+        register(new Object() {
             @Subscribe
             public void handle(@Nonnull final XWindowRenderer xWindowRenderer) {
                 xWindowRenderer.visit(XWindow.this);
             }
         });
-    }
+    }};
 
     @Nonnull
     private final Integer    nativeHandle;

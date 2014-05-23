@@ -1,6 +1,7 @@
 package org.trinity.wayland.defaul;
 
 import org.freedesktop.wayland.protocol.wl_shell;
+import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.Global;
 import org.freedesktop.wayland.server.Resource;
@@ -21,8 +22,17 @@ public class WlShell extends Global implements wl_shell.Requests {
 
     @Override
     public void getShellSurface(final wl_shell.Resource resource,
-                                final int id,
-                                final Resource surfaceRes) {
+                                final int               id,
+                                final Resource          surfaceRes) {
 
+    }
+
+    @Override
+    public void bindClient(final Client client,
+                           final int    version,
+                           final int    id) {
+       new wl_shell.Resource(client,
+                             1,
+                             id).setImplementation(this);
     }
 }

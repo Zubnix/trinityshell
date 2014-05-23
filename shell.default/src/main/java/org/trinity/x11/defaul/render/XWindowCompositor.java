@@ -64,26 +64,26 @@ public class XWindowCompositor implements XCompositor {
     private final XEventLoop     xEventLoop;
     private final XWindowFactory xWindowFactory;
 
-    private final SimpleShellSurfaceFactory  simpleShellSurfaceFactory;
-    private final SimpleShell                simpleShell;
-    private final SimpleXWindowRenderer XWindowRenderer;
-    private final XWindowBufferHandlerFactory xWindowBufferHandlerFactory;
+    private final SimpleShellSurfaceFactory     simpleShellSurfaceFactory;
+    private final SimpleShell                   simpleShell;
+    private final SimpleXWindowRenderer         XWindowRenderer;
+    private final XWindowBufferHandlerFactory   xWindowBufferHandlerFactory;
 
     @Inject
-    XWindowCompositor(final XEventLoop xEventLoop,
-                      final XWindowFactory xWindowFactory,
-                      final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
-                      final SimpleShell simpleShell,
-                      final SimpleXWindowRenderer XWindowRenderer,
+    XWindowCompositor(final XEventLoop                  xEventLoop,
+                      final XWindowFactory              xWindowFactory,
+                      final SimpleShellSurfaceFactory   simpleShellSurfaceFactory,
+                      final SimpleShell                 simpleShell,
+                      final SimpleXWindowRenderer       XWindowRenderer,
                       final XWindowBufferHandlerFactory xWindowBufferHandlerFactory) {
 
-        this.xEventLoop = xEventLoop;
+        this.xEventLoop     = xEventLoop;
         this.xWindowFactory = xWindowFactory;
 
-        this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
-        this.simpleShell = simpleShell;
-        this.XWindowRenderer = XWindowRenderer;
-        this.xWindowBufferHandlerFactory = xWindowBufferHandlerFactory;
+        this.simpleShellSurfaceFactory      = simpleShellSurfaceFactory;
+        this.simpleShell                    = simpleShell;
+        this.XWindowRenderer                = XWindowRenderer;
+        this.xWindowBufferHandlerFactory    = xWindowBufferHandlerFactory;
     }
 
     @Nonnull
