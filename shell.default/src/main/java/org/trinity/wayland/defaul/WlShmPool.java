@@ -12,7 +12,6 @@ import org.trinity.wayland.defaul.events.ResourceDestroyed;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.Dimension;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -28,7 +27,7 @@ public class WlShmPool implements wl_shm_pool.Requests {
     private final WlShmBufferFactory    wlShmBufferFactory;
 
     private boolean destroyed   = false;
-    private int     refCount    =  0;
+    private int refCount = 0;
 
     WlShmPool(@Provided final WlShmBufferFactory    wlShmBufferFactory,
               @Nonnull  final ShmPool               shmPool) {
@@ -57,17 +56,21 @@ public class WlShmPool implements wl_shm_pool.Requests {
                                                                                      height),
                                                                        stride,
                                                                        format);
+
+        final wl_buffer.Resource bufferResource = new wl_buffer.Resource(resource.getClient(),
+                                                                         1,
+                                                                         id);
+        bufferResource.setImplementation(wlShmBuffer);
         wlShmBuffer.register(new Object() {
             @Subscribe
             public void handle(final ResourceDestroyed resourceEvent) {
                 wlShmBuffer.unregister(this);
                 WlShmPool.this.refCount--;
+                bufferResource.destroy();
                 release();
             }
         });
-        new wl_buffer.Resource(resource.getClient(),
-                               1,
-                               id).setImplementation(wlShmBuffer);
+
     }
 
     @Override

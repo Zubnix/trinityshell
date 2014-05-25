@@ -6,7 +6,6 @@ import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.protocol.wl_buffer;
 import org.trinity.shell.scene.api.Buffer;
 import org.trinity.wayland.defaul.events.ResourceDestroyed;
-import org.trinity.x11.defaul.XWindowRenderer;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -72,6 +71,6 @@ public class WlShmBuffer extends EventBus implements wl_buffer.Requests, Buffer{
     @Nonnull
     @Override
     public DimensionImmutable getSize() {
-        return size;
+        return this.size;
     }
 }

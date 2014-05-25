@@ -10,12 +10,15 @@ import javax.inject.Singleton;
  * Created by Erik De Rijcke on 5/22/14.
  */
 @Module(
+        staticInjections = {
+          EagerSingletons.class
+        },
         injects = {
-                EagerSingletons.class,
                 WlShmPoolFactory.class,
                 WlShmBufferFactory.class,
                 WlSurfaceFactory.class,
-                WlRegionFactory.class
+                WlRegionFactory.class,
+                WlShellSurfaceFactory.class
         }
 )
 public class WlModule {

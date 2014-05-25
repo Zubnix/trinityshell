@@ -1,7 +1,6 @@
 package org.trinity.wayland.defaul;
 
 import com.google.common.eventbus.Subscribe;
-import org.freedesktop.wayland.Interface;
 import org.freedesktop.wayland.protocol.wl_data_device_manager;
 import org.freedesktop.wayland.protocol.wl_data_source;
 import org.freedesktop.wayland.server.Client;
@@ -22,12 +21,10 @@ public class WlDataDeviceManager extends Global implements wl_data_device_manage
 
     @Inject
     WlDataDeviceManager(final Display               display,
-                        final Interface             iface,
-                        final int                   version,
                         final WlDataSourceFactory   wlDataSourceFactory) {
         super(display,
-              iface,
-              version);
+              wl_data_device_manager.WAYLAND_INTERFACE,
+              1);
         this.wlDataSourceFactory = wlDataSourceFactory;
     }
 
