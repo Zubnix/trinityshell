@@ -1,4 +1,4 @@
-package org.trinity.wayland.defaul;
+package org.trinity.wayland.defaul.protocol;
 
 import com.google.auto.factory.AutoFactory;
 import org.freedesktop.wayland.protocol.wl_shell_surface;

@@ -1,4 +1,4 @@
-package org.trinity.wayland.defaul;
+package org.trinity.wayland.defaul.protocol;
 
 import dagger.Module;
 import dagger.Provides;
@@ -14,6 +14,9 @@ import javax.inject.Singleton;
           EagerSingletons.class
         },
         injects = {
+                WlSeatFactory.class,
+                WlDataDeviceFactory.class,
+                WlDataDeviceFactory.class,
                 WlShmPoolFactory.class,
                 WlShmBufferFactory.class,
                 WlSurfaceFactory.class,
@@ -27,5 +30,23 @@ public class WlModule {
     @Singleton
     Display provideDisplay() {
         return new Display();
+    }
+
+    @Provides
+    @Singleton
+    WlPointer provideWlPointer(){
+        return new WlPointer();
+    }
+
+    @Provides
+    @Singleton
+    WlKeyboard provideWlKeyboard(){
+        return new WlKeyboard();
+    }
+
+    @Provides
+    @Singleton
+    WlTouch provideWlTouch(){
+        return new WlTouch();
     }
 }

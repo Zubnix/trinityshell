@@ -1,4 +1,4 @@
-package org.trinity.wayland.defaul;
+package org.trinity.wayland.defaul.protocol;
 
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.protocol.wl_compositor;
@@ -7,7 +7,7 @@ import org.freedesktop.wayland.protocol.wl_surface;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.Global;
-import org.trinity.wayland.defaul.events.ResourceDestroyed;
+import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,8 +18,8 @@ import javax.inject.Singleton;
 @Singleton//Eager
 public class WlCompositor extends Global implements wl_compositor.Requests {
 
-    private final WlSurfaceFactory  wlSurfaceFactory;
-    private final WlRegionFactory   wlRegionFactory;
+    private final WlSurfaceFactory wlSurfaceFactory;
+    private final WlRegionFactory wlRegionFactory;
 
     @Inject
     WlCompositor(final Display          display,

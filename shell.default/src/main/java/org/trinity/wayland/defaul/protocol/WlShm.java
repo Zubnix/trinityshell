@@ -1,4 +1,4 @@
-package org.trinity.wayland.defaul;
+package org.trinity.wayland.defaul.protocol;
 
 import com.google.common.base.Throwables;
 import org.freedesktop.wayland.ShmPool;

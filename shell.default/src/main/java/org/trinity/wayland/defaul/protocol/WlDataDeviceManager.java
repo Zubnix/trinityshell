@@ -1,12 +1,13 @@
-package org.trinity.wayland.defaul;
+package org.trinity.wayland.defaul.protocol;
 
 import com.google.common.eventbus.Subscribe;
+import org.freedesktop.wayland.protocol.wl_data_device;
 import org.freedesktop.wayland.protocol.wl_data_device_manager;
 import org.freedesktop.wayland.protocol.wl_data_source;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.Global;
-import org.trinity.wayland.defaul.events.ResourceDestroyed;
+import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -59,5 +60,11 @@ public class WlDataDeviceManager extends Global implements wl_data_device_manage
                               final int                                     id,
                               final org.freedesktop.wayland.server.Resource seat) {
 
+        final WlSeat wlSeat = (WlSeat) seat.getImplementation();
+        final WlDataDevice wlDataDevice = wlSeat.getWlDataDevice();
+        final wl_data_device.Resource dataDeviceResource = new wl_data_device.Resource(resource.getClient(),
+                                                                                       1,
+                                                                                       id);
+        dataDeviceResource.setImplementation(wlDataDevice);
     }
 }

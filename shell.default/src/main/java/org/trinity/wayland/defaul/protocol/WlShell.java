@@ -1,4 +1,4 @@
-package org.trinity.wayland.defaul;
+package org.trinity.wayland.defaul.protocol;
 
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.protocol.wl_shell;
@@ -7,7 +7,7 @@ import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.Global;
 import org.freedesktop.wayland.server.Resource;
-import org.trinity.wayland.defaul.events.ResourceDestroyed;
+import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

@@ -1,10 +1,10 @@
-package org.trinity.wayland.defaul;
+package org.trinity.wayland.defaul.protocol;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.protocol.wl_data_source;
-import org.trinity.wayland.defaul.events.ResourceDestroyed;
+import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
 
 import java.util.List;
 

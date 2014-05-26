@@ -1,4 +1,4 @@
-package org.trinity.wayland.defaul;
+package org.trinity.wayland.defaul.protocol;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
@@ -7,7 +7,7 @@ import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.ShmPool;
 import org.freedesktop.wayland.protocol.wl_buffer;
 import org.freedesktop.wayland.protocol.wl_shm_pool;
-import org.trinity.wayland.defaul.events.ResourceDestroyed;
+import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
