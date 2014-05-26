@@ -24,7 +24,7 @@ import javax.inject.Singleton;
                 WlShellSurfaceFactory.class
         }
 )
-public class WlModule {
+public class WlProtocolModule {
 
     @Provides
     @Singleton
