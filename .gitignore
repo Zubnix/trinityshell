@@ -4,6 +4,7 @@
 *.project*
 *.iml
 *.idea
+*.gradle/
 target
 trinity.log
 *.class
