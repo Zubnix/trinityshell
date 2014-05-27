@@ -32,7 +32,7 @@
 
     <properties>
         <!-- dep versions -->
-        <jogamp.version>2.1.5-01</jogamp.version>
+        <jogl.version>2.1.5-01</jogl.version>
         <auto.factory.version>1.0-SNAPSHOT</auto.factory.version>
         <auto.value.version>1.0-rc1</auto.value.version>
         <dagger.version>1.2.0</dagger.version>
@@ -114,15 +114,14 @@
 
         <!-- rendering tools -->
         <dependency>
-            <groupId>org.jogamp.jogl</groupId>
-            <artifactId>nativewindow</artifactId>
-            <version>${jogamp.version}</version>
-            <classifier>core</classifier>
+            <groupId>org.jogamp.gluegen</groupId>
+            <artifactId>gluegen-rt-main</artifactId>
+            <version>${jogl.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jogamp.gluegen</groupId>
-            <artifactId>gluegen</artifactId>
-            <version>${jogamp.version}</version>
+            <groupId>org.jogamp.jogl</groupId>
+            <artifactId>jogl-all-noawt-main</artifactId>
+            <version>${jogl.version}</version>
         </dependency>
 
         <!-- misc. program aids (not the disease) -->

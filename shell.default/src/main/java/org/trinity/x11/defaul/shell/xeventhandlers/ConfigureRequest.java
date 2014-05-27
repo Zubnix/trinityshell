@@ -58,19 +58,19 @@ public class ConfigureRequest implements XEventHandler {
                                .getSimpleName()
                  );
 
-        final int value_mask = request_event.getValue_mask();
+        final int value_mask            = request_event.getValue_mask();
 
-        final boolean configureX = (value_mask & XCB_CONFIG_WINDOW_X) != 0;
-        final boolean configureY = (value_mask & XCB_CONFIG_WINDOW_Y) != 0;
+        final boolean configureX        = (value_mask & XCB_CONFIG_WINDOW_X) != 0;
+        final boolean configureY        = (value_mask & XCB_CONFIG_WINDOW_Y) != 0;
         //we implicitly require clients to provide both x and y values here,
         //a more advanced implementation can easily work around this restriction.
-        final boolean positionRequest = configureX && configureY;
+        final boolean positionRequest   = configureX && configureY;
 
-        final boolean configureWidth = (value_mask & XCB_CONFIG_WINDOW_WIDTH) != 0;
-        final boolean configureHeight = (value_mask & XCB_CONFIG_WINDOW_HEIGHT) != 0;
+        final boolean configureWidth    = (value_mask & XCB_CONFIG_WINDOW_WIDTH) != 0;
+        final boolean configureHeight   = (value_mask & XCB_CONFIG_WINDOW_HEIGHT) != 0;
         //we implicitly require clients to provide both width and height values here,
         //a more advanced implementation can easily work around this restriction.
-        final boolean sizeRequest = configureWidth && configureHeight;
+        final boolean sizeRequest       = configureWidth && configureHeight;
 
         final ShellSurface shellSurface = this.xSurfacePool.get(request_event.getWindow());
 
@@ -92,7 +92,6 @@ public class ConfigureRequest implements XEventHandler {
 
     @Override
     public Integer getEventCode() {
-
         return EVENT_CODE;
     }
 }

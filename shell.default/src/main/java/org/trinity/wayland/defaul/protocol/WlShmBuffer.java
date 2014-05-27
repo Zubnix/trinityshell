@@ -5,6 +5,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.protocol.wl_buffer;
 import org.trinity.shell.scene.api.Buffer;
+import org.trinity.wayland.defaul.WlShmBufferRenderer;
 import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
 
 import javax.annotation.Nonnegative;

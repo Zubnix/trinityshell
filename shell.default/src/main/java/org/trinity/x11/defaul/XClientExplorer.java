@@ -32,11 +32,10 @@ public class XClientExplorer {
 
     public void findClientDisplaySurfaces() {
         // find client display surfaces that are already active on the X server
-        final int root = this.xEventLoop.getXcbScreen()
-                                        .getRoot();
         final SWIGTYPE_p_xcb_connection_t connection = this.xEventLoop.getXcbConnection();
         final xcb_query_tree_cookie_t query_tree_cookie = xcb_query_tree(connection,
-                                                                         root);
+                                                                         this.xEventLoop.getXcbScreen()
+                                                                                        .getRoot());
         final xcb_generic_error_t e = new xcb_generic_error_t();
         // this is a one time call, no need to make it async.
         final xcb_query_tree_reply_t query_tree_reply = xcb_query_tree_reply(connection,

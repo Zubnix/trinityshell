@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.protocol.wl_data_source;
+import org.trinity.common.Listenable;
 import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  * Created by Erik De Rijcke on 5/23/14.
  */
 @AutoFactory
-public class WlDataSource extends EventBus implements wl_data_source.Requests {
+public class WlDataSource extends EventBus implements wl_data_source.Requests,Listenable {
 
     final List<String> mimeTypes = Lists.newArrayList();
 
@@ -28,5 +29,6 @@ public class WlDataSource extends EventBus implements wl_data_source.Requests {
     @Override
     public void destroy(final wl_data_source.Resource resource) {
         post(new ResourceDestroyed(resource));
+        resource.destroy();
     }
 }

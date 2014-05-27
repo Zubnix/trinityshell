@@ -10,12 +10,12 @@ import javax.inject.Inject;
 import javax.media.nativewindow.util.PointImmutable;
 import java.util.Optional;
 
-public class SimpleXWindowRenderer implements XWindowRenderer {
+public class XSimpleRenderer implements XWindowRenderer {
 
     private ShellSurface currentShellSurface;
 
     @Inject
-    SimpleXWindowRenderer() {
+    XSimpleRenderer() {
     }
 
     private void setCurrentShellSurface(final ShellSurface currentShellSurface) {

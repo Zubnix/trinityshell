@@ -53,8 +53,9 @@ public class UnmapNotify implements XEventHandler {
                   unmap_notify_event.getClass()
                                     .getSimpleName()
                  );
-        final int windowId = unmap_notify_event.getWindow();
-        final int reportWindowId = unmap_notify_event.getEvent();
+        final int windowId          = unmap_notify_event.getWindow();
+        final int reportWindowId    = unmap_notify_event.getEvent();
+
         if(windowId != reportWindowId) {
             return;
         }

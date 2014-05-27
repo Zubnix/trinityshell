@@ -22,7 +22,7 @@ package org.trinity.x11.defaul;
 import com.google.common.util.concurrent.Service;
 import dagger.Module;
 import dagger.Provides;
-import org.trinity.x11.defaul.render.XWindowRenderModule;
+import org.trinity.x11.defaul.render.XRenderModule;
 import org.trinity.x11.defaul.shell.SimpleShellSceneModule;
 import org.trinity.x11.defaul.shell.xeventhandlers.XEventHandlersModule;
 
@@ -34,7 +34,7 @@ import static dagger.Provides.Type.SET;
         includes = {
 				//internal
 				XEventHandlersModule.class,
-				XWindowRenderModule.class,
+				XRenderModule.class,
                 SimpleShellSceneModule.class
         },
         injects = {

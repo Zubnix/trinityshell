@@ -30,12 +30,11 @@ import org.trinity.shell.scene.api.event.Lowered;
 import org.trinity.shell.scene.api.event.Moved;
 import org.trinity.shell.scene.api.event.Raised;
 import org.trinity.shell.scene.api.event.Showed;
-import org.trinity.x11.defaul.XCompositor;
 import org.trinity.x11.defaul.XEventLoop;
 import org.trinity.x11.defaul.XWindow;
 import org.trinity.x11.defaul.XWindowFactory;
-import org.trinity.x11.defaul.shell.SimpleShell;
-import org.trinity.x11.defaul.shell.SimpleShellSurfaceFactory;
+import org.trinity.x11.defaul.shell.XSimpleShell;
+import org.trinity.x11.defaul.shell.XSimpleShellSurfaceFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -52,38 +51,39 @@ import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY;
 
 @Singleton
-public class XWindowCompositor implements XCompositor {
+public class XCompositor implements org.trinity.x11.defaul.XCompositor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XWindowCompositor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XCompositor.class);
 
-    private static final int        CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW |
-                                                                  XCB_EVENT_MASK_LEAVE_WINDOW |
-                                                                  XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+    private static final int        CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW
+                                                                | XCB_EVENT_MASK_LEAVE_WINDOW
+                                                                | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+
     private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
                                                                                    .putInt(CLIENT_EVENT_MASK);
     private final XEventLoop     xEventLoop;
     private final XWindowFactory xWindowFactory;
 
-    private final SimpleShellSurfaceFactory     simpleShellSurfaceFactory;
-    private final SimpleShell                   simpleShell;
-    private final SimpleXWindowRenderer         XWindowRenderer;
-    private final XWindowBufferHandlerFactory   xWindowBufferHandlerFactory;
+    private final XSimpleShellSurfaceFactory    simpleShellSurfaceFactory;
+    private final XSimpleShell                  XSimpleShell;
+    private final XSimpleRenderer               XWindowRenderer;
+    private final XBufferHandlerFactory         xBufferHandlerFactory;
 
     @Inject
-    XWindowCompositor(final XEventLoop                  xEventLoop,
-                      final XWindowFactory              xWindowFactory,
-                      final SimpleShellSurfaceFactory   simpleShellSurfaceFactory,
-                      final SimpleShell                 simpleShell,
-                      final SimpleXWindowRenderer       XWindowRenderer,
-                      final XWindowBufferHandlerFactory xWindowBufferHandlerFactory) {
+    XCompositor(final XEventLoop                    xEventLoop,
+                final XWindowFactory                xWindowFactory,
+                final XSimpleShellSurfaceFactory    xSimpleShellSurfaceFactory,
+                final XSimpleShell                  xSimpleShell,
+                final XSimpleRenderer               xWindowRenderer,
+                final XBufferHandlerFactory         xBufferHandlerFactory) {
 
         this.xEventLoop     = xEventLoop;
         this.xWindowFactory = xWindowFactory;
 
-        this.simpleShellSurfaceFactory      = simpleShellSurfaceFactory;
-        this.simpleShell                    = simpleShell;
-        this.XWindowRenderer                = XWindowRenderer;
-        this.xWindowBufferHandlerFactory    = xWindowBufferHandlerFactory;
+        this.simpleShellSurfaceFactory      = xSimpleShellSurfaceFactory;
+        this.XSimpleShell                   = xSimpleShell;
+        this.XWindowRenderer                = xWindowRenderer;
+        this.xBufferHandlerFactory          = xBufferHandlerFactory;
     }
 
     @Nonnull
@@ -91,14 +91,14 @@ public class XWindowCompositor implements XCompositor {
     public ShellSurface create(@Nonnull final Integer nativeHandle) {
         configureClientEvents(nativeHandle);
 
-        final XWindow xWindow = this.xWindowFactory.create(nativeHandle);
-        final XWindowBufferHandler XWindowBufferHandler = this.xWindowBufferHandlerFactory.create(xWindow);
+        final XWindow xWindow               = this.xWindowFactory.create(nativeHandle);
+        final XBufferHandler XBufferHandler = this.xBufferHandlerFactory.create(xWindow);
+        final ShellSurface shellSurface     = this.simpleShellSurfaceFactory.create(xWindow);
 
-        final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(xWindow);
         shellSurface.register(this);
-        shellSurface.register(XWindowBufferHandler);
+        shellSurface.register(XBufferHandler);
 
-        this.simpleShell.add(shellSurface);
+        this.XSimpleShell.add(shellSurface);
 
         return shellSurface;
     }
@@ -141,15 +141,13 @@ public class XWindowCompositor implements XCompositor {
 
     @Subscribe
     public void handle(final Destroyed destroyed) {
-        final ShellSurface shellSurface = destroyed.getSource();
-        shellSurface.unregister(this);
+        destroyed.getSource().unregister(this);
     }
 
     private void requestRender(final ShellSurface shellSurface) {
-        final boolean needsRedraw = this.simpleShell.needsRedraw(shellSurface);
 
-        if(needsRedraw) {
-            this.simpleShell.getShellSurfacesStack().forEach(this.XWindowRenderer::render);
+        if(this.XSimpleShell.needsRedraw(shellSurface)) {
+            this.XSimpleShell.getShellSurfacesStack().forEach(this.XWindowRenderer::render);
         }
     }
 

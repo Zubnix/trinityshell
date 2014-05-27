@@ -12,7 +12,7 @@ import javax.inject.Singleton;
                 XEventHandlersModule.class
         },
 		injects = {
-				SimpleShellSurfaceFactory.class
+				XSimpleShellSurfaceFactory.class
 		},
 		complete = true,
 		library = true
@@ -20,15 +20,15 @@ import javax.inject.Singleton;
 public class SimpleShellSceneModule {
 	@Provides
 	@Singleton
-	SimpleRootShellSurface provideSimpleRootShellSurface(final XEventLoop xEventLoop,
+    XSimpleRootShellSurface provideSimpleRootShellSurface(final XEventLoop xEventLoop,
 														 //We have to use the fully qualified classname here or dagger will produce incorrect code.
 														 final org.trinity.x11.defaul.XWindowFactory xWindowFactory) {
-		return new SimpleRootShellSurface(xWindowFactory.create(xEventLoop.getXcbScreen().getRoot()));
+		return new XSimpleRootShellSurface(xWindowFactory.create(xEventLoop.getXcbScreen().getRoot()));
 	}
 
 	@Provides
 	@Singleton
-    SimpleShell provideSimpleShell() {
-		return new SimpleShell();
+    XSimpleShell provideSimpleShell() {
+		return new XSimpleShell();
 	}
 }

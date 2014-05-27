@@ -34,11 +34,10 @@ public class WlShell extends Global implements wl_shell.Requests {
                                 final int               id,
                                 final Resource          surfaceRes) {
         final WlSurface wlSurface = (WlSurface) surfaceRes.getImplementation();
-        final WlShellSurface wlShellSurface = this.wlShellSurfaceFactory.create(wlSurface);
         final wl_shell_surface.Resource shellSurfaceResource = new wl_shell_surface.Resource(resource.getClient(),
                                                                                              1,
                                                                                              id);
-        shellSurfaceResource.setImplementation(wlShellSurface);
+        shellSurfaceResource.setImplementation(this.wlShellSurfaceFactory.create(wlSurface));
         wlSurface.register(new Object() {
             @Subscribe
             public void handle(final ResourceDestroyed event) {

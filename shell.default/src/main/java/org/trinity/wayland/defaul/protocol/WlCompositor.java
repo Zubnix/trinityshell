@@ -1,13 +1,11 @@
 package org.trinity.wayland.defaul.protocol;
 
-import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.protocol.wl_compositor;
 import org.freedesktop.wayland.protocol.wl_region;
 import org.freedesktop.wayland.protocol.wl_surface;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.Global;
-import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,34 +42,16 @@ public class WlCompositor extends Global implements wl_compositor.Requests {
     @Override
     public void createSurface(final wl_compositor.Resource  resource,
                               final int                     id) {
-        final WlSurface wlSurface                   = this.wlSurfaceFactory.create();
-        final wl_surface.Resource surfaceResource   = new wl_surface.Resource(resource.getClient(),
-                                                                              1,
-                                                                              id);
-        surfaceResource.setImplementation(wlSurface);
-        wlSurface.register(new Object(){
-            @Subscribe
-            public void handle(final ResourceDestroyed event){
-                wlSurface.unregister(this);
-                surfaceResource.destroy();
-            }
-        });
+        new wl_surface.Resource(resource.getClient(),
+                                1,
+                                id).setImplementation(this.wlSurfaceFactory.create());
     }
 
     @Override
     public void createRegion(final wl_compositor.Resource   resource,
                              final int                      id) {
-        final WlRegion wlRegion                 = this.wlRegionFactory.create();
-        final wl_region.Resource regionResource = new wl_region.Resource(resource.getClient(),
-                                                                         1,
-                                                                         id);
-        regionResource.setImplementation(wlRegion);
-        wlRegion.register(new Object(){
-            @Subscribe
-            public void handle(final ResourceDestroyed event){
-                wlRegion.unregister(this);
-                regionResource.destroy();
-            }
-        });
+        new wl_region.Resource(resource.getClient(),
+                               1,
+                               id).setImplementation(this.wlRegionFactory.create());
     }
 }

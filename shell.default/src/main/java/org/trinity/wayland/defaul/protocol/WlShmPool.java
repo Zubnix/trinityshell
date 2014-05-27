@@ -66,7 +66,6 @@ public class WlShmPool implements wl_shm_pool.Requests {
             public void handle(final ResourceDestroyed resourceEvent) {
                 wlShmBuffer.unregister(this);
                 WlShmPool.this.refCount--;
-                bufferResource.destroy();
                 release();
             }
         });

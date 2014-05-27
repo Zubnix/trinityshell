@@ -30,26 +30,26 @@ import javax.annotation.concurrent.Immutable;
  */
 @Immutable
 public class XcbErrorUtil {
-	public static final int SUCCESS = 0;
-	public static final int BAD_REQUEST = 1;
-	public static final int BAD_VALUE = 2;
-	public static final int BAD_WINDOW = 3;
-	public static final int BAD_PIXMAP = 4;
-	public static final int BAD_ATOM = 5;
-	public static final int BAD_CURSOR = 6;
-	public static final int BAD_FONT = 7;
-	public static final int BAD_MATCH = 8;
-	public static final int BAD_DRAWABLE = 9;
-	public static final int BAD_ACCESS = 10;
-	public static final int BAD_ALLOC = 11;
-	public static final int BAD_COLOR = 12;
-	public static final int BAD_GC = 13;
-	public static final int BAD_ID_CHOICE = 14;
-	public static final int BAD_NAME = 15;
-	public static final int BAD_LENGTH = 16;
-	public static final int BAD_IMPLEMENTATION = 17;
-	public static final int BAD_FIRST_EXTENSION_ERROR = 18;
-	public static final int BAD_LAST_EXTENSION_ERROR = 19;
+	public static final int SUCCESS                     = 0;
+	public static final int BAD_REQUEST                 = 1;
+	public static final int BAD_VALUE                   = 2;
+	public static final int BAD_WINDOW                  = 3;
+	public static final int BAD_PIXMAP                  = 4;
+	public static final int BAD_ATOM                    = 5;
+	public static final int BAD_CURSOR                  = 6;
+	public static final int BAD_FONT                    = 7;
+	public static final int BAD_MATCH                   = 8;
+	public static final int BAD_DRAWABLE                = 9;
+	public static final int BAD_ACCESS                  = 10;
+	public static final int BAD_ALLOC                   = 11;
+	public static final int BAD_COLOR                   = 12;
+	public static final int BAD_GC                      = 13;
+	public static final int BAD_ID_CHOICE               = 14;
+	public static final int BAD_NAME                    = 15;
+	public static final int BAD_LENGTH                  = 16;
+	public static final int BAD_IMPLEMENTATION          = 17;
+	public static final int BAD_FIRST_EXTENSION_ERROR   = 18;
+	public static final int BAD_LAST_EXTENSION_ERROR    = 19;
 
 	public static String toString(@Nonnull final xcb_generic_error_t generic_error_t) {
 		return String.format(	"Native XCB: %s - error: %d - resource id: %d",

@@ -12,13 +12,13 @@ import javax.media.nativewindow.util.Point;
 import javax.media.nativewindow.util.PointImmutable;
 
 @Singleton
-public class SimpleRootShellSurface extends SimpleShellSurface {
+public class XSimpleRootShellSurface extends XSimpleShellSurface {
 
     private final PointImmutable position = new Point(0,
                                                       0);
 
     @Inject
-    SimpleRootShellSurface(final XWindow rootXWindow) {
+    XSimpleRootShellSurface(final XWindow rootXWindow) {
 		super(rootXWindow);
     }
 
