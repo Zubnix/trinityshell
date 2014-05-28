@@ -16,3 +16,6 @@
 [submodule "externals/wayland-java"]
 	path = externals/wayland-java
 	url = https://github.com/jekstrand/wayland-java.git
+[submodule "externals/pixman4j"]
+	path = externals/pixman4j
+	url = git@github.com:Zubnix/pixman4j.git

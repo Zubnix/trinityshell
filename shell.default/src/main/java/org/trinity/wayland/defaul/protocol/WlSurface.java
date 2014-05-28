@@ -5,14 +5,13 @@ import com.google.auto.factory.Provided;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.protocol.wl_surface;
 import org.freedesktop.wayland.server.Resource;
+import org.trinity.SimpleShellSurfaceFactory;
 import org.trinity.common.Listenable;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
-import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
 import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
 
 import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.media.nativewindow.util.Rectangle;
 
@@ -26,7 +25,7 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Listena
 
     private final ShellSurface shellSurface;
 
-    WlSurface(@Provided final ShellSurface shellSurface) {
+    WlSurface(final ShellSurface shellSurface) {
         this.shellSurface = shellSurface;
     }
 
@@ -104,12 +103,6 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Listena
                                @Nullable final Resource  region) {
         final WlRegion wlRegion = (WlRegion) region.getImplementation();
 
-        getShellSurface().accept(new ShellSurfaceConfiguration() {
-            @Override
-            public void visit(@Nonnull ShellSurfaceConfigurable shellSurfaceConfigurable) {
-
-            }
-        });
 
     }
 

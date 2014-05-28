@@ -22,6 +22,7 @@ package org.trinity.x11.defaul.render;
 import com.google.common.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.trinity.SimpleShellSurfaceFactory;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.event.Committed;
 import org.trinity.shell.scene.api.event.Destroyed;
@@ -34,7 +35,6 @@ import org.trinity.x11.defaul.XEventLoop;
 import org.trinity.x11.defaul.XWindow;
 import org.trinity.x11.defaul.XWindowFactory;
 import org.trinity.x11.defaul.shell.XSimpleShell;
-import org.trinity.x11.defaul.shell.XSimpleShellSurfaceFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -64,7 +64,7 @@ public class XCompositor implements org.trinity.x11.defaul.XCompositor {
     private final XEventLoop     xEventLoop;
     private final XWindowFactory xWindowFactory;
 
-    private final XSimpleShellSurfaceFactory    simpleShellSurfaceFactory;
+    private final SimpleShellSurfaceFactory     simpleShellSurfaceFactory;
     private final XSimpleShell                  XSimpleShell;
     private final XSimpleRenderer               XWindowRenderer;
     private final XBufferHandlerFactory         xBufferHandlerFactory;
@@ -72,7 +72,7 @@ public class XCompositor implements org.trinity.x11.defaul.XCompositor {
     @Inject
     XCompositor(final XEventLoop                    xEventLoop,
                 final XWindowFactory                xWindowFactory,
-                final XSimpleShellSurfaceFactory    xSimpleShellSurfaceFactory,
+                final SimpleShellSurfaceFactory     simpleShellSurfaceFactory,
                 final XSimpleShell                  xSimpleShell,
                 final XSimpleRenderer               xWindowRenderer,
                 final XBufferHandlerFactory         xBufferHandlerFactory) {
@@ -80,7 +80,7 @@ public class XCompositor implements org.trinity.x11.defaul.XCompositor {
         this.xEventLoop     = xEventLoop;
         this.xWindowFactory = xWindowFactory;
 
-        this.simpleShellSurfaceFactory      = xSimpleShellSurfaceFactory;
+        this.simpleShellSurfaceFactory      = simpleShellSurfaceFactory;
         this.XSimpleShell                   = xSimpleShell;
         this.XWindowRenderer                = xWindowRenderer;
         this.xBufferHandlerFactory          = xBufferHandlerFactory;

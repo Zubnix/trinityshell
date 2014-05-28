@@ -1,4 +1,23 @@
-package org.trinity.wayland.defaul.shell;
+/*******************************************************************************
+ * Trinity Shell Copyright (C) 2011 Erik De Rijcke
+ *
+ * This file is part of Trinity Shell.
+ *
+ * Trinity Shell is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * Trinity Shell is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ ******************************************************************************/
+package org.trinity;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.common.eventbus.EventBus;
@@ -11,21 +30,21 @@ import org.trinity.shell.scene.api.event.Destroyed;
 import org.trinity.shell.scene.api.event.Moved;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import javax.annotation.concurrent.NotThreadSafe;
 import javax.media.nativewindow.util.Point;
 import javax.media.nativewindow.util.PointImmutable;
 import javax.media.nativewindow.util.RectangleImmutable;
 import java.util.Optional;
 
-/**
- * Created by Erik De Rijcke on 5/27/14.
- */
-public class WlSimleShellSurface extends EventBus implements ShellSurface, ShellSurfaceConfigurable{
-    @Nonnull
-    private PointImmutable position  = new Point(0,
-            0);
-    @Nonnull
-    private Boolean        destroyed = Boolean.FALSE;
+@NotThreadSafe
+@AutoFactory
+public class SimpleShellSurface extends EventBus implements ShellSurface, ShellSurfaceConfigurable {
+
+	@Nonnull
+	private PointImmutable position  = new Point(0,
+												 0);
+	@Nonnull
+	private Boolean        destroyed = Boolean.FALSE;
 
     @Nonnull
     private Optional<RectangleImmutable> pendingInputRegion = Optional.empty();
@@ -37,12 +56,12 @@ public class WlSimleShellSurface extends EventBus implements ShellSurface, Shell
     private Optional<RectangleImmutable> damage             = Optional.empty();
 
     @Nonnull
-    private Optional<Buffer> pendingBuffer  = Optional.empty();
+    private Optional<Buffer> pendingBuffer;
     @Nonnull
-    private Optional<Buffer> buffer         = Optional.empty();
+    private Optional<Buffer> buffer;
 
-    @Inject
-    WlSimleShellSurface() {
+    SimpleShellSurface(@Nonnull final Optional<Buffer> optionalBuffer) {
+        this.buffer = optionalBuffer;
     }
 
     @Override
@@ -51,25 +70,24 @@ public class WlSimleShellSurface extends EventBus implements ShellSurface, Shell
     }
 
     @Nonnull
-    @Override
-    public Boolean isDestroyed() {
-        return this.destroyed;
-    }
+	@Override
+	public Boolean isDestroyed() {
+		return this.destroyed;
+	}
 
     @Nonnull
     @Override
     public ShellSurfaceConfigurable markDestroyed() {
         this.destroyed = true;
-        post(new Destroyed(this));
-        return this;
-    }
+		post(new Destroyed(this));
+		return this;
+	}
 
     @Nonnull
     @Override
     public ShellSurfaceConfigurable markDamaged(@Nonnull final RectangleImmutable damage) {
-        final RectangleImmutable damageUnion = this.damage.orElse(damage)
-                                                          .union(damage);
-        this.pendingDamage = Optional.of(damageUnion);
+        this.pendingDamage = Optional.of(this.damage.orElse(damage)
+                                                    .union(damage));
         return this;
     }
 
@@ -78,9 +96,9 @@ public class WlSimleShellSurface extends EventBus implements ShellSurface, Shell
     public ShellSurfaceConfigurable attachBuffer(@Nonnull final Buffer buffer,
                                                  @Nonnull final Integer relX,
                                                  @Nonnull final Integer relY) {
-        this.pendingBuffer = Optional.of(buffer);
-        this.position = new Point(this.position.getX() + relX,
-                                  this.position.getY() + relY);
+        this.pendingBuffer  = Optional.of(buffer);
+        this.position       = new Point(this.position.getX() + relX,
+                                        this.position.getY() + relY);
         return this;
     }
 
@@ -116,8 +134,8 @@ public class WlSimleShellSurface extends EventBus implements ShellSurface, Shell
     }
 
     @Nonnull
-    @Override
-    public ShellSurfaceConfigurable commit() {
+	@Override
+	public ShellSurfaceConfigurable commit() {
         this.buffer         = this.pendingBuffer;
         this.pendingBuffer  = Optional.empty();
         this.damage         = this.pendingDamage;
