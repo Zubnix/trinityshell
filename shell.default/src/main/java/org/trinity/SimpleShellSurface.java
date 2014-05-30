@@ -21,10 +21,7 @@ package org.trinity;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.common.eventbus.EventBus;
-import org.trinity.shell.scene.api.Buffer;
-import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
-import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
+import org.trinity.shell.scene.api.*;
 import org.trinity.shell.scene.api.event.Committed;
 import org.trinity.shell.scene.api.event.Destroyed;
 import org.trinity.shell.scene.api.event.Moved;
@@ -47,13 +44,13 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 	private Boolean        destroyed = Boolean.FALSE;
 
     @Nonnull
-    private Optional<RectangleImmutable> pendingInputRegion = Optional.empty();
+    private Optional<Region> pendingInputRegion = Optional.empty();
     @Nonnull
-    private Optional<RectangleImmutable> inputRegion        = Optional.empty();
+    private Optional<Region> inputRegion        = Optional.empty();
     @Nonnull
-    private Optional<RectangleImmutable> pendingDamage      = Optional.empty();
+    private Optional<Region> pendingDamage      = Optional.empty();
     @Nonnull
-    private Optional<RectangleImmutable> damage             = Optional.empty();
+    private Optional<Region> damage             = Optional.empty();
 
     @Nonnull
     private Optional<Buffer> pendingBuffer;
@@ -155,7 +152,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable setInputRegion(@Nonnull final RectangleImmutable inputRegion) {
+    public ShellSurfaceConfigurable setInputRegion(@Nonnull final Region inputRegion) {
         this.pendingInputRegion = Optional.of(inputRegion);
         return this;
     }

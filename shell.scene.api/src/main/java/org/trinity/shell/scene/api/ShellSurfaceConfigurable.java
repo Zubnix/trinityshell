@@ -12,7 +12,7 @@ public interface ShellSurfaceConfigurable {
     @Nonnull
     ShellSurfaceConfigurable removeInputRegion();
     @Nonnull
-    ShellSurfaceConfigurable setInputRegion(@Nonnull RectangleImmutable inputRegion);
+    ShellSurfaceConfigurable setInputRegion(@Nonnull Region inputRegion);
 
     @Nonnull
     ShellSurfaceConfigurable setPosition(@Nonnull PointImmutable position);
