@@ -48,10 +48,10 @@ public interface ShellSurface extends Listenable {
     PointImmutable getPosition();
 
     @Nonnull
-    Optional<RectangleImmutable> getInputRegion();
+    Optional<Region> getInputRegion();
 
     @Nonnull
-    Optional<RectangleImmutable> getDamage();
+    Optional<Region> getDamage();
 
     /**
      * ************************************

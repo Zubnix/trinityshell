@@ -1,4 +1,4 @@
-package org.trinity.wayland.defaul;
+package org.trinity;
 
 import com.google.auto.factory.AutoFactory;
 import org.pixman.LibPixman;
@@ -6,12 +6,14 @@ import org.pixman.pixman_box32;
 import org.pixman.pixman_region32;
 import org.trinity.shell.scene.api.Region;
 
+import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.Rectangle;
 import javax.media.nativewindow.util.RectangleImmutable;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.pixman.LibPixman.pixman_region32_init_rect;
 import static org.pixman.LibPixman.pixman_region32_rectangles;
 import static org.pixman.LibPixman.pixman_region32_union_rect;
 
@@ -49,31 +51,35 @@ public class PixmanRegion implements Region {
     }
 
     @Override
-    public void add(RectangleImmutable rectangle) {
+    public Region add(@Nonnull RectangleImmutable rectangle) {
         final pixman_region32 new_pixman_region32 = new pixman_region32();
-        pixman_region32_union_rect(new_pixman_region32,
-                                   this.pixman_region32,
-                                   rectangle.getX(),
-                                   rectangle.getY(),
-                                   rectangle.getWidth(),
-                                   rectangle.getHeight());
+        final int result = pixman_region32_union_rect(new_pixman_region32,
+                                           this.pixman_region32,
+                                           rectangle.getX(),
+                                           rectangle.getY(),
+                                           rectangle.getWidth(),
+                                           rectangle.getHeight());
         this.pixman_region32 = new_pixman_region32;
+
+        return this;
     }
 
     @Override
-    public void subtract(RectangleImmutable rectangle) {
+    public Region subtract(@Nonnull RectangleImmutable rectangle) {
         final pixman_region32 delta_pixman_region32 = new pixman_region32();
-        LibPixman.pixman_region32_init_rect(delta_pixman_region32,
-                                            rectangle.getX(),
-                                            rectangle.getY(),
-                                            rectangle.getWidth(),
-                                            rectangle.getHeight());
+        pixman_region32_init_rect(delta_pixman_region32,
+                                  rectangle.getX(),
+                                  rectangle.getY(),
+                                  rectangle.getWidth(),
+                                  rectangle.getHeight());
 
         final pixman_region32 new_pixman_region32 = new pixman_region32();
-        LibPixman.pixman_region32_subtract(new_pixman_region32,
-                                           delta_pixman_region32,
-                                           this.pixman_region32);
+        final int result = LibPixman.pixman_region32_subtract(new_pixman_region32,
+                                                         delta_pixman_region32,
+                                                         this.pixman_region32);
         this.pixman_region32 = new_pixman_region32;
+
+        return this;
     }
 
     public pixman_region32 getPixmanRegion32() {

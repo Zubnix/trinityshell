@@ -20,6 +20,7 @@
 package org.trinity;
 
 import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.eventbus.EventBus;
 import org.trinity.shell.scene.api.*;
 import org.trinity.shell.scene.api.event.Committed;
@@ -37,12 +38,12 @@ import java.util.Optional;
 @AutoFactory
 public class SimpleShellSurface extends EventBus implements ShellSurface, ShellSurfaceConfigurable {
 
-	@Nonnull
-	private PointImmutable position  = new Point(0,
-												 0);
-	@Nonnull
-	private Boolean        destroyed = Boolean.FALSE;
-
+    private final PixmanRegionFactory pixmanRegionFactory;
+    @Nonnull
+    private PointImmutable   position           = new Point(0,
+                                                            0);
+    @Nonnull
+    private Boolean          destroyed          = Boolean.FALSE;
     @Nonnull
     private Optional<Region> pendingInputRegion = Optional.empty();
     @Nonnull
@@ -51,13 +52,15 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     private Optional<Region> pendingDamage      = Optional.empty();
     @Nonnull
     private Optional<Region> damage             = Optional.empty();
-
     @Nonnull
     private Optional<Buffer> pendingBuffer;
     @Nonnull
     private Optional<Buffer> buffer;
 
-    SimpleShellSurface(@Nonnull final Optional<Buffer> optionalBuffer) {
+
+    SimpleShellSurface(@Provided final PixmanRegionFactory pixmanRegionFactory,
+                       @Nonnull final Optional<Buffer> optionalBuffer) {
+        this.pixmanRegionFactory = pixmanRegionFactory;
         this.buffer = optionalBuffer;
     }
 
@@ -67,24 +70,24 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     }
 
     @Nonnull
-	@Override
-	public Boolean isDestroyed() {
-		return this.destroyed;
-	}
+    @Override
+    public Boolean isDestroyed() {
+        return this.destroyed;
+    }
 
     @Nonnull
     @Override
     public ShellSurfaceConfigurable markDestroyed() {
         this.destroyed = true;
-		post(new Destroyed(this));
-		return this;
-	}
+        post(new Destroyed(this));
+        return this;
+    }
 
     @Nonnull
     @Override
     public ShellSurfaceConfigurable markDamaged(@Nonnull final RectangleImmutable damage) {
-        this.pendingDamage = Optional.of(this.damage.orElse(damage)
-                                                    .union(damage));
+        this.pendingDamage.orElse(this.pixmanRegionFactory.create())
+                          .add(damage);
         return this;
     }
 
@@ -93,9 +96,9 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     public ShellSurfaceConfigurable attachBuffer(@Nonnull final Buffer buffer,
                                                  @Nonnull final Integer relX,
                                                  @Nonnull final Integer relY) {
-        this.pendingBuffer  = Optional.of(buffer);
-        this.position       = new Point(this.position.getX() + relX,
-                                        this.position.getY() + relY);
+        this.pendingBuffer = Optional.of(buffer);
+        this.position = new Point(this.position.getX() + relX,
+                                  this.position.getY() + relY);
         return this;
     }
 
@@ -114,13 +117,13 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public Optional<RectangleImmutable> getInputRegion() {
+    public Optional<Region> getInputRegion() {
         return this.inputRegion;
     }
 
     @Nonnull
     @Override
-    public Optional<RectangleImmutable> getDamage() {
+    public Optional<Region> getDamage() {
         return this.damage;
     }
 
@@ -131,13 +134,13 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     }
 
     @Nonnull
-	@Override
-	public ShellSurfaceConfigurable commit() {
-        this.buffer         = this.pendingBuffer;
-        this.pendingBuffer  = Optional.empty();
-        this.damage         = this.pendingDamage;
-        this.pendingDamage  = Optional.empty();
-        this.inputRegion    = this.pendingInputRegion;
+    @Override
+    public ShellSurfaceConfigurable commit() {
+        this.buffer = this.pendingBuffer;
+        this.pendingBuffer = Optional.empty();
+        this.damage = this.pendingDamage;
+        this.pendingDamage = Optional.empty();
+        this.inputRegion = this.pendingInputRegion;
 
         post(new Committed(this));
         return this;

@@ -21,15 +21,15 @@ public class WlShellService extends AbstractIdleService {
     }
 
     @Override
-    protected void startUp() throws Exception {
+    protected void startUp() {
 //        this.display.getEventLoop()
 //                    .addFileDescriptor(fd,
 //                                       EventLoop.EVENT_READABLE,
-//                                        this.wlEventHandler);
+//                                       this.wlEventHandler);
     }
 
     @Override
-    protected void shutDown() throws Exception {
+    protected void shutDown() {
 
     }
 }

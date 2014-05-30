@@ -6,7 +6,7 @@ import java.util.List;
 public interface Region  {
     List<RectangleImmutable> asList();
 
-    void add(RectangleImmutable rectangle);
+    Region add(RectangleImmutable rectangle);
 
-    void subtract(RectangleImmutable rectangle);
+    Region subtract(RectangleImmutable rectangle);
 }
