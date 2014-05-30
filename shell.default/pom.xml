@@ -13,7 +13,7 @@
 	<packaging>bundle</packaging>
 
     <properties>
-        <XCB4J.version>0.0.1</XCB4J.version>
+        <xcb4j.version>0.0.1</xcb4j.version>
         <wayland.version>0.0.1-SNAPSHOT</wayland.version>
     </properties>
 
@@ -32,12 +32,17 @@
         <dependency>
             <groupId>org.trinity</groupId>
             <artifactId>XCB4J</artifactId>
-            <version>${XCB4J.version}</version>
+            <version>${xcb4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.freedesktop</groupId>
             <artifactId>wayland</artifactId>
             <version>${wayland.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.trinity</groupId>
+            <artifactId>PIXMAN4J</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!-- logging implementation for test log output -->

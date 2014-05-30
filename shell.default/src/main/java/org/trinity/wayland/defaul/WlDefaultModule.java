@@ -16,7 +16,8 @@ import static dagger.Provides.Type.SET;
         },
         injects = {
                 WlEventHandler.class
-        }
+        },
+        library = true
 )
 public class WlDefaultModule {
     @Provides(type = SET)

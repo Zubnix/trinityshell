@@ -22,7 +22,8 @@ import javax.inject.Singleton;
                 WlSurfaceFactory.class,
                 WlRegionFactory.class,
                 WlShellSurfaceFactory.class
-        }
+        },
+        library = true
 )
 public class WlProtocolModule {
 

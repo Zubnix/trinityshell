@@ -40,6 +40,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.nio.ByteBuffer;
+import java.util.Optional;
 
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
@@ -93,7 +94,7 @@ public class XCompositor implements org.trinity.x11.defaul.XCompositor {
 
         final XWindow xWindow               = this.xWindowFactory.create(nativeHandle);
         final XBufferHandler XBufferHandler = this.xBufferHandlerFactory.create(xWindow);
-        final ShellSurface shellSurface     = this.simpleShellSurfaceFactory.create(xWindow);
+        final ShellSurface shellSurface     = this.simpleShellSurfaceFactory.create(Optional.of(xWindow));
 
         shellSurface.register(this);
         shellSurface.register(XBufferHandler);
