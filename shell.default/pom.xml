@@ -15,6 +15,7 @@
     <properties>
         <xcb4j.version>0.0.1</xcb4j.version>
         <wayland.version>0.0.1-SNAPSHOT</wayland.version>
+        <jnr.enxio.version>0,4</jnr.enxio.version>
     </properties>
 
 	<dependencies>
@@ -43,6 +44,16 @@
             <groupId>org.trinity</groupId>
             <artifactId>PIXMAN4J</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-ffi</artifactId>
+            <version>1.0.10</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-constants</artifactId>
+            <version>0.8.5</version>
         </dependency>
 
         <!-- logging implementation for test log output -->

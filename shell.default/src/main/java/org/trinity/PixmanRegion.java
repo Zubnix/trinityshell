@@ -74,9 +74,9 @@ public class PixmanRegion implements Region {
                                   rectangle.getHeight());
 
         final pixman_region32 new_pixman_region32 = new pixman_region32();
-        final int result = LibPixman.pixman_region32_subtract(new_pixman_region32,
-                                                         delta_pixman_region32,
-                                                         this.pixman_region32);
+        LibPixman.pixman_region32_subtract(new_pixman_region32,
+                                           delta_pixman_region32,
+                                           this.pixman_region32);
         this.pixman_region32 = new_pixman_region32;
 
         return this;
