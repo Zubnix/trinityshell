@@ -2,7 +2,7 @@ package org.trinity;
 
 import dagger.Module;
 import dagger.Provides;
-import jnr.ffi.LibraryLoader;
+import jnr.ffi.*;
 
 @Module
 public class ShellDefaultModule {

@@ -1,5 +1,6 @@
 package org.trinity;
 
+import jnr.ffi.annotations.IgnoreError;
 import jnr.ffi.annotations.In;
 import jnr.ffi.annotations.Out;
 import jnr.ffi.types.size_t;
@@ -9,17 +10,24 @@ import java.nio.ByteBuffer;
 
 public interface LibC {
 
-    public int close(int fd);
+    int close(int fd);
+
+    int fcntl(int fd,
+              int cmd,
+              int data);
+
+    @IgnoreError
+    String strerror(int error);
 
     @ssize_t
-    public int read(int fd,
-                    @Out ByteBuffer data,
-                    @size_t long size);
+    int read(int fd,
+             @Out ByteBuffer data,
+             @size_t long size);
 
     @ssize_t
-    public int write(int fd,
-                     @In ByteBuffer data,
-                     @size_t long size);
+    int write(int fd,
+              @In ByteBuffer data,
+              @size_t long size);
 
-    public int pipe(@Out int[] fds);
+    int pipe(@Out int[] fds);
 }
