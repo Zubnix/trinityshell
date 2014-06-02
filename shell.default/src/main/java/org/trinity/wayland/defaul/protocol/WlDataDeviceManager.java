@@ -19,8 +19,8 @@ public class WlDataDeviceManager extends Global implements wl_data_device_manage
     private final WlDataSourceFactory wlDataSourceFactory;
 
     @Inject
-    WlDataDeviceManager(final Display               display,
-                        final WlDataSourceFactory   wlDataSourceFactory) {
+    WlDataDeviceManager(final Display             display,
+                        final WlDataSourceFactory wlDataSourceFactory) {
         super(display,
               wl_data_device_manager.WAYLAND_INTERFACE,
               1);
@@ -37,8 +37,8 @@ public class WlDataDeviceManager extends Global implements wl_data_device_manage
     }
 
     @Override
-    public void createDataSource(final wl_data_device_manager.Resource  resource,
-                                 final int                              id) {
+    public void createDataSource(final wl_data_device_manager.Resource resource,
+                                 final int                             id) {
         new wl_data_source.Resource(resource.getClient(),
                                     1,
                                     id).setImplementation(this.wlDataSourceFactory.create());

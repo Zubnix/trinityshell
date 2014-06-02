@@ -48,7 +48,7 @@ import static org.freedesktop.xcb.LibXcb.*;
 import static org.freedesktop.xcb.xcb_config_window_t.*;
 
 @ThreadSafe
-@AutoFactory
+@AutoFactory(className = "XWindowFactory")
 public class XWindow extends EventBus implements Listenable, Buffer {
 
     private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);

@@ -1,15 +1,13 @@
 package org.trinity.wayland.defaul.protocol;
 
 import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.protocol.wl_surface;
 import org.freedesktop.wayland.server.Resource;
-import org.trinity.SimpleShellSurfaceFactory;
 import org.trinity.common.Listenable;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
-import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
+import org.trinity.wayland.defaul.events.ResourceDestroyed;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
@@ -20,7 +18,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Created by Erik De Rijcke on 5/23/14.
  */
-@AutoFactory
+@AutoFactory(className = "WlSurfaceFactory")
 public class WlSurface extends EventBus implements wl_surface.Requests3, Listenable {
 
     private final ShellSurface shellSurface;
@@ -34,14 +32,14 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Listena
     }
 
     @Override
-    public void setBufferScale(final wl_surface.Resource    resource,
-                               final int                    scale) {
+    public void setBufferScale(final wl_surface.Resource resource,
+                               final int                 scale) {
 
     }
 
     @Override
-    public void setBufferTransform(final wl_surface.Resource    resource,
-                                   final int                    transform) {
+    public void setBufferTransform(final wl_surface.Resource resource,
+                                   final int                 transform) {
 
     }
 
@@ -53,10 +51,10 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Listena
     }
 
     @Override
-    public void attach(final wl_surface.Resource    resource,
-                       @Nullable final Resource     buffer,
-                       final int                    x,
-                       final int                    y) {
+    public void attach(final wl_surface.Resource resource,
+                       @Nullable final Resource  buffer,
+                       final int                 x,
+                       final int                 y) {
 
         if(buffer == null){
             getShellSurface().accept(ShellSurfaceConfigurable::detachBuffer);
@@ -70,11 +68,11 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Listena
     }
 
     @Override
-    public void damage(final wl_surface.Resource    resource,
-                       final int                    x,
-                       final int                    y,
-                       @Nonnegative final int       width,
-                       @Nonnegative final int       height) {
+    public void damage(final wl_surface.Resource resource,
+                       final int                 x,
+                       final int                 y,
+                       @Nonnegative final int    width,
+                       @Nonnegative final int    height) {
         checkArgument(width > 0);
         checkArgument(height > 0);
 
@@ -93,17 +91,28 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Listena
 
     @Override
     public void setOpaqueRegion(final wl_surface.Resource resource,
-                                final Resource            region) {
-        final WlRegion wlRegion = (WlRegion) region.getImplementation();
-
+                                @Nullable final Resource  regionResource) {
+        if(regionResource == null) {
+            getShellSurface().accept(ShellSurfaceConfigurable::removeOpaqueRegion);
+        }
+        else {
+            final WlRegion wlRegion = (WlRegion) regionResource.getImplementation();
+            getShellSurface().accept(shellSurfaceConfigurable ->
+                                     shellSurfaceConfigurable.setOpaqueRegion(wlRegion.getRegion()));
+        }
     }
 
     @Override
-    public void setInputRegion(final wl_surface.Resource resource,
-                               @Nullable final Resource  region) {
-        final WlRegion wlRegion = (WlRegion) region.getImplementation();
-
-
+    public void setInputRegion(final wl_surface.Resource surfaceResource,
+                               @Nullable final Resource  regionResource) {
+        if(regionResource == null){
+            getShellSurface().accept(ShellSurfaceConfigurable::removeInputRegion);
+        }
+        else {
+            final WlRegion wlRegion = (WlRegion) regionResource.getImplementation();
+            getShellSurface().accept(shellSurfaceConfigurable ->
+                                     shellSurfaceConfigurable.setInputRegion(wlRegion.getRegion()));
+        }
     }
 
     @Override

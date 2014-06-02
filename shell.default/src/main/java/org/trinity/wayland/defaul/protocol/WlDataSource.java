@@ -5,14 +5,14 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.protocol.wl_data_source;
 import org.trinity.common.Listenable;
-import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
+import org.trinity.wayland.defaul.events.ResourceDestroyed;
 
 import java.util.List;
 
 /**
  * Created by Erik De Rijcke on 5/23/14.
  */
-@AutoFactory
+@AutoFactory(className = "WlDataSourceFactory")
 public class WlDataSource extends EventBus implements wl_data_source.Requests,Listenable {
 
     final List<String> mimeTypes = Lists.newArrayList();

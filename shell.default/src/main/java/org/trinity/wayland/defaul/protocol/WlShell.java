@@ -7,7 +7,7 @@ import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.Global;
 import org.freedesktop.wayland.server.Resource;
-import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
+import org.trinity.wayland.defaul.events.ResourceDestroyed;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

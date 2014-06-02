@@ -4,13 +4,13 @@ import com.google.auto.factory.AutoFactory;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.protocol.wl_data_offer;
 import org.trinity.common.Listenable;
-import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
+import org.trinity.wayland.defaul.events.ResourceDestroyed;
 
 
 /**
  * Created by Erik De Rijcke on 5/26/14.
  */
-@AutoFactory
+@AutoFactory(className = "WlDataOfferFactory")
 public class WlDataOffer extends EventBus implements wl_data_offer.Requests, Listenable {
 
     WlDataOffer() {
@@ -24,9 +24,9 @@ public class WlDataOffer extends EventBus implements wl_data_offer.Requests, Lis
     }
 
     @Override
-    public void receive(final wl_data_offer.Resource    resource,
-                        final String                    mimeType,
-                        final int                       fd) {
+    public void receive(final wl_data_offer.Resource resource,
+                        final String                 mimeType,
+                        final int                    fd) {
 
     }
 

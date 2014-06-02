@@ -7,7 +7,7 @@ import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.ShmPool;
 import org.freedesktop.wayland.protocol.wl_buffer;
 import org.freedesktop.wayland.protocol.wl_shm_pool;
-import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
+import org.trinity.wayland.defaul.events.ResourceDestroyed;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -20,19 +20,19 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Created by Erik De Rijcke on 5/23/14.
  */
-@AutoFactory
+@AutoFactory(className = "WlShmPoolFactory")
 public class WlShmPool implements wl_shm_pool.Requests {
 
-    private final ShmPool               shmPool;
-    private final WlShmBufferFactory    wlShmBufferFactory;
+    private final ShmPool            shmPool;
+    private final WlShmBufferFactory wlShmBufferFactory;
 
-    private boolean destroyed   = false;
-    private int refCount = 0;
+    private boolean destroyed = false;
+    private int refCount      = 0;
 
-    WlShmPool(@Provided final WlShmBufferFactory    wlShmBufferFactory,
-              @Nonnull  final ShmPool               shmPool) {
+    WlShmPool(@Provided final WlShmBufferFactory wlShmBufferFactory,
+              @Nonnull  final ShmPool            shmPool) {
         this.wlShmBufferFactory = wlShmBufferFactory;
-        this.shmPool = shmPool;
+        this.shmPool            = shmPool;
     }
 
     @Override
@@ -80,8 +80,8 @@ public class WlShmPool implements wl_shm_pool.Requests {
     }
 
     @Override
-    public void resize(final wl_shm_pool.Resource   resource,
-                       final int                    size) {
+    public void resize(final wl_shm_pool.Resource resource,
+                       final int                  size) {
         try {
             this.shmPool.resize(size);
         } catch (final IOException e) {

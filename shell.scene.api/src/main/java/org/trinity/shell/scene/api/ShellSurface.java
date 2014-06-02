@@ -32,7 +32,6 @@ import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.Dimension;
 import javax.media.nativewindow.util.Point;
 import javax.media.nativewindow.util.PointImmutable;
-import javax.media.nativewindow.util.RectangleImmutable;
 import java.util.Optional;
 
 /**
@@ -52,6 +51,9 @@ public interface ShellSurface extends Listenable {
 
     @Nonnull
     Optional<Region> getDamage();
+
+    @Nonnull
+    Optional<Region> getOpaqueRegion();
 
     /**
      * ************************************

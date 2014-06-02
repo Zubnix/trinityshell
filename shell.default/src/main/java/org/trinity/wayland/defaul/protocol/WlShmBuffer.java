@@ -6,7 +6,7 @@ import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.protocol.wl_buffer;
 import org.trinity.shell.scene.api.Buffer;
 import org.trinity.wayland.defaul.WlShmBufferRenderer;
-import org.trinity.wayland.defaul.protocol.events.ResourceDestroyed;
+import org.trinity.wayland.defaul.events.ResourceDestroyed;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -16,13 +16,13 @@ import java.nio.ByteBuffer;
 /**
  * Created by Erik De Rijcke on 5/23/14.
  */
-@AutoFactory
+@AutoFactory(className = "WlShmBufferFactory")
 public class WlShmBuffer extends EventBus implements wl_buffer.Requests, Buffer{
 
-    private final ByteBuffer            byteBuffer;
-    private final DimensionImmutable    size;
-    private final int                   stride;
-    private final int                   format;
+    private final ByteBuffer         byteBuffer;
+    private final DimensionImmutable size;
+    private final int                stride;
+    private final int                format;
 
     private final EventBus visitorDispatcher = new EventBus(){{
         register(new Object() {
@@ -33,9 +33,9 @@ public class WlShmBuffer extends EventBus implements wl_buffer.Requests, Buffer{
         });
     }};
 
-    WlShmBuffer(@Nonnull final ByteBuffer           byteBuffer,
-                @Nonnull final DimensionImmutable   size,
-                @Nonnegative final int              stride,
+    WlShmBuffer(@Nonnull final ByteBuffer         byteBuffer,
+                @Nonnull final DimensionImmutable size,
+                @Nonnegative final int            stride,
                 final int format) {
         this.byteBuffer = byteBuffer;
         this.size = size;

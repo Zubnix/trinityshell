@@ -7,7 +7,7 @@ import org.freedesktop.wayland.server.Resource;
 /**
  * Created by Erik De Rijcke on 5/26/14.
  */
-@AutoFactory
+@AutoFactory(className = "WlDataDeviceFactory")
 public class WlDataDevice implements wl_data_device.Requests {
 
     private final WlSeat wlSeat;

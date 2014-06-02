@@ -17,7 +17,7 @@ import static org.pixman.LibPixman.pixman_region32_init_rect;
 import static org.pixman.LibPixman.pixman_region32_rectangles;
 import static org.pixman.LibPixman.pixman_region32_union_rect;
 
-@AutoFactory
+@AutoFactory(className = "PixmanRegionFactory")
 public class PixmanRegion implements Region {
 
     private pixman_region32 pixman_region32 = new pixman_region32();
@@ -28,15 +28,15 @@ public class PixmanRegion implements Region {
     @Override
     public List<RectangleImmutable> asList() {
         //int pointer
-        ByteBuffer n_rects = ByteBuffer.allocateDirect(4);
+        final ByteBuffer n_rects = ByteBuffer.allocateDirect(4);
         final long boxArrayPointer = pixman_box32.getCPtr(pixman_region32_rectangles(this.pixman_region32,
                                                                                      n_rects));
-        int rectangles = n_rects.getInt();
+        final int rectangles = n_rects.getInt();
 
-        List<RectangleImmutable> boxes = new ArrayList<>(rectangles);
+        final List<RectangleImmutable> boxes = new ArrayList<>(rectangles);
         for (int i = 0; i < rectangles; i++) {
-            pixman_box32 pixman_box32 = new pixman_box32(boxArrayPointer + i,
-                                                         true);
+            final pixman_box32 pixman_box32 = new pixman_box32(boxArrayPointer + i,
+                                                               true);
             final int x = pixman_box32.getX1();
             final int y = pixman_box32.getY1();
 
@@ -51,21 +51,22 @@ public class PixmanRegion implements Region {
     }
 
     @Override
-    public Region add(@Nonnull RectangleImmutable rectangle) {
+    public Region add(@Nonnull final RectangleImmutable rectangle) {
         final pixman_region32 new_pixman_region32 = new pixman_region32();
+        //FIXME check result.
         final int result = pixman_region32_union_rect(new_pixman_region32,
-                                           this.pixman_region32,
-                                           rectangle.getX(),
-                                           rectangle.getY(),
-                                           rectangle.getWidth(),
-                                           rectangle.getHeight());
+                                                      this.pixman_region32,
+                                                      rectangle.getX(),
+                                                      rectangle.getY(),
+                                                      rectangle.getWidth(),
+                                                      rectangle.getHeight());
         this.pixman_region32 = new_pixman_region32;
 
         return this;
     }
 
     @Override
-    public Region subtract(@Nonnull RectangleImmutable rectangle) {
+    public Region subtract(@Nonnull final RectangleImmutable rectangle) {
         final pixman_region32 delta_pixman_region32 = new pixman_region32();
         pixman_region32_init_rect(delta_pixman_region32,
                                   rectangle.getX(),

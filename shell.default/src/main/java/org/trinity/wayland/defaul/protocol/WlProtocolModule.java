@@ -21,7 +21,8 @@ import javax.inject.Singleton;
                 WlShmBufferFactory.class,
                 WlSurfaceFactory.class,
                 WlRegionFactory.class,
-                WlShellSurfaceFactory.class
+                WlShellSurfaceFactory.class,
+                WlSubSurfaceFactory.class
         },
         library = true
 )
@@ -31,6 +32,12 @@ public class WlProtocolModule {
     @Singleton
     Display provideDisplay() {
         return new Display();
+    }
+
+    @Provides
+    @Singleton
+    WlSubCompositor provideWlSubCompositor(final WlSubSurfaceFactory wlSubSurfaceFactory){
+        return new WlSubCompositor(wlSubSurfaceFactory);
     }
 
     @Provides

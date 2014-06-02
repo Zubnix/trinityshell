@@ -1,4 +1,4 @@
-package org.trinity;
+package org.trinity.wayland.defaul;
 
 import jnr.ffi.annotations.IgnoreError;
 import jnr.ffi.annotations.In;

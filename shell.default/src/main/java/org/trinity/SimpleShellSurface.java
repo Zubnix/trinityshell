@@ -22,7 +22,11 @@ package org.trinity;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.eventbus.EventBus;
-import org.trinity.shell.scene.api.*;
+import org.trinity.shell.scene.api.Buffer;
+import org.trinity.shell.scene.api.Region;
+import org.trinity.shell.scene.api.ShellSurface;
+import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
+import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
 import org.trinity.shell.scene.api.event.Committed;
 import org.trinity.shell.scene.api.event.Destroyed;
 import org.trinity.shell.scene.api.event.Moved;
@@ -35,31 +39,38 @@ import javax.media.nativewindow.util.RectangleImmutable;
 import java.util.Optional;
 
 @NotThreadSafe
-@AutoFactory
+@AutoFactory(className = "SimpleShellSurfaceFactory")
 public class SimpleShellSurface extends EventBus implements ShellSurface, ShellSurfaceConfigurable {
 
     private final PixmanRegionFactory pixmanRegionFactory;
+    //pending states
     @Nonnull
-    private PointImmutable   position           = new Point(0,
-                                                            0);
+    private Optional<Region> pendingOpaqueRegion = Optional.empty();
     @Nonnull
-    private Boolean          destroyed          = Boolean.FALSE;
+    private Optional<Region> pendingInputRegion  = Optional.empty();
     @Nonnull
-    private Optional<Region> pendingInputRegion = Optional.empty();
-    @Nonnull
-    private Optional<Region> inputRegion        = Optional.empty();
-    @Nonnull
-    private Optional<Region> pendingDamage      = Optional.empty();
-    @Nonnull
-    private Optional<Region> damage             = Optional.empty();
+    private Optional<Region> pendingDamage       = Optional.empty();
     @Nonnull
     private Optional<Buffer> pendingBuffer;
+    //committed states
+    @Nonnull
+    private Optional<Region> opaqueRegion = Optional.empty();
+    @Nonnull
+    private Optional<Region> inputRegion  = Optional.empty();
+    @Nonnull
+    private Optional<Region> damage       = Optional.empty();
     @Nonnull
     private Optional<Buffer> buffer;
+    //additional server side states
+    @Nonnull
+    private PointImmutable   position  = new Point(0,
+                                                   0);
+    @Nonnull
+    private Boolean          destroyed = Boolean.FALSE;
 
 
     SimpleShellSurface(@Provided final PixmanRegionFactory pixmanRegionFactory,
-                       @Nonnull final Optional<Buffer> optionalBuffer) {
+                       @Nonnull  final Optional<Buffer>    optionalBuffer) {
         this.pixmanRegionFactory = pixmanRegionFactory;
         this.buffer = optionalBuffer;
     }
@@ -86,14 +97,14 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     @Override
     public ShellSurfaceConfigurable markDamaged(@Nonnull final RectangleImmutable damage) {
-        this.pendingDamage.orElse(this.pixmanRegionFactory.create())
-                          .add(damage);
+        this.pendingDamage = Optional.of(this.pendingDamage.orElse(this.pixmanRegionFactory.create())
+                                                           .add(damage));
         return this;
     }
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable attachBuffer(@Nonnull final Buffer buffer,
+    public ShellSurfaceConfigurable attachBuffer(@Nonnull final Buffer  buffer,
                                                  @Nonnull final Integer relX,
                                                  @Nonnull final Integer relY) {
         this.pendingBuffer = Optional.of(buffer);
@@ -129,6 +140,12 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
+    public Optional<Region> getOpaqueRegion() {
+        return this.opaqueRegion;
+    }
+
+    @Nonnull
+    @Override
     public Optional<Buffer> getBuffer() {
         return this.buffer;
     }
@@ -136,13 +153,30 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     @Override
     public ShellSurfaceConfigurable commit() {
-        this.buffer = this.pendingBuffer;
+        //flush
+        this.buffer        = this.pendingBuffer;
+        this.damage        = this.pendingDamage;
+        this.inputRegion   = this.pendingInputRegion;
+        this.opaqueRegion  = this.pendingOpaqueRegion;
+        //reset
         this.pendingBuffer = Optional.empty();
-        this.damage = this.pendingDamage;
         this.pendingDamage = Optional.empty();
-        this.inputRegion = this.pendingInputRegion;
-
+        //notify
         post(new Committed(this));
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public ShellSurfaceConfigurable removeOpaqueRegion() {
+        this.pendingOpaqueRegion = Optional.empty();
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public ShellSurfaceConfigurable setOpaqueRegion(@Nonnull final Region opaqueRegion) {
+        this.pendingOpaqueRegion = Optional.of(opaqueRegion);
         return this;
     }
 
