@@ -1,17 +1,21 @@
 package org.trinity.wayland.defaul.protocol;
 
 import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
+import org.freedesktop.wayland.protocol.wl_callback;
 import org.freedesktop.wayland.protocol.wl_surface;
+import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Resource;
-import org.trinity.common.Listenable;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
-import org.trinity.wayland.defaul.events.ResourceDestroyed;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 import javax.media.nativewindow.util.Rectangle;
+
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -19,12 +23,17 @@ import static com.google.common.base.Preconditions.checkArgument;
  * Created by Erik De Rijcke on 5/23/14.
  */
 @AutoFactory(className = "WlSurfaceFactory")
-public class WlSurface extends EventBus implements wl_surface.Requests3, Listenable {
+public class WlSurface extends EventBus implements wl_surface.Requests3, ProtocolObject<wl_surface.Resource> {
 
-    private final ShellSurface shellSurface;
+    private final Set<wl_surface.Resource> resources = Sets.newHashSet();
 
-    WlSurface(final ShellSurface shellSurface) {
-        this.shellSurface = shellSurface;
+    private final WlCallbackFactory wlCallbackFactory;
+    private final ShellSurface      shellSurface;
+
+    WlSurface(@Provided final WlCallbackFactory wlCallbackFactory,
+              final ShellSurface                shellSurface) {
+        this.wlCallbackFactory = wlCallbackFactory;
+        this.shellSurface      = shellSurface;
     }
 
     public ShellSurface getShellSurface() {
@@ -44,22 +53,35 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Listena
     }
 
     @Override
+    public Set<wl_surface.Resource> getResources() {
+        return this.resources;
+    }
+
+    @Override
+    public wl_surface.Resource create(final Client client,
+                                      final int version,
+                                      final int id) {
+        return new wl_surface.Resource(client,
+                                       version,
+                                       id);
+    }
+
+
+    @Override
     public void destroy(final wl_surface.Resource resource) {
-        post(new ResourceDestroyed(resource));
+        ProtocolObject.super.destroy(resource);
         getShellSurface().accept(ShellSurfaceConfigurable::markDestroyed);
-        resource.destroy();
     }
 
     @Override
     public void attach(final wl_surface.Resource resource,
-                       @Nullable final Resource  buffer,
+                       @Nullable final Resource  bufferResource,
                        final int                 x,
                        final int                 y) {
-
-        if(buffer == null){
+        if(bufferResource == null){
             getShellSurface().accept(ShellSurfaceConfigurable::detachBuffer);
         }else {
-            final WlShmBuffer wlShmBuffer = (WlShmBuffer) buffer.getImplementation();
+            final WlShmBuffer wlShmBuffer = (WlShmBuffer) bufferResource.getImplementation();
             getShellSurface().accept(shellSurfaceConfigurable ->
                                      shellSurfaceConfigurable.attachBuffer(wlShmBuffer,
                                                                            x,
@@ -85,8 +107,13 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Listena
 
     @Override
     public void frame(final wl_surface.Resource resource,
-                      final int                 callback) {
-
+                      final int                 callbackId) {
+        final wl_callback.Resource callbackResource = new wl_callback.Resource(resource.getClient(),
+                                                                               1,
+                                                                               callbackId);
+        callbackResource.setImplementation(this.wlCallbackFactory.create());
+        getShellSurface().accept(shellSurfaceConfigurable ->
+                                 shellSurfaceConfigurable.addPaintCallback(callbackResource::done));
     }
 
     @Override

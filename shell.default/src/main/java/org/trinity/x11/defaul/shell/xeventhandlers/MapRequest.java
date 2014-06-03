@@ -21,8 +21,6 @@ package org.trinity.x11.defaul.shell.xeventhandlers;
 
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_map_request_event_t;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trinity.x11.defaul.XEventHandler;
 import org.trinity.x11.defaul.XSurfacePool;
 
@@ -35,7 +33,6 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_MAP_REQUEST;
 @Immutable
 public class MapRequest implements XEventHandler {
 
-    private static final Logger  LOG        = LoggerFactory.getLogger(MapRequest.class);
     private static final Integer EVENT_CODE = XCB_MAP_REQUEST;
 
     private final XSurfacePool xSurfacePool;
@@ -48,10 +45,6 @@ public class MapRequest implements XEventHandler {
     @Override
     public void handle(@Nonnull final xcb_generic_event_t event) {
         final xcb_map_request_event_t map_request_event = cast(event);
-        LOG.debug("Received X event={}",
-                  map_request_event.getClass()
-                                   .getSimpleName()
-                 );
         this.xSurfacePool.get(map_request_event.getWindow())
                          .requestShow();
     }

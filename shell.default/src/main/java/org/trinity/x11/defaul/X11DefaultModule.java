@@ -39,7 +39,6 @@ import static dagger.Provides.Type.SET;
         },
         injects = {
                 XShellService.class,
-
                 XSurfacePool.class,
                 XEventLoop.class,
                 XEventHandlers.class,

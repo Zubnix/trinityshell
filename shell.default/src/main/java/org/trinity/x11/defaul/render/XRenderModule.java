@@ -2,13 +2,15 @@ package org.trinity.x11.defaul.render;
 
 import dagger.Module;
 import dagger.Provides;
+import org.trinity.SimpleShellSurfaceFactory;
+import org.trinity.x11.defaul.XEventLoop;
+import org.trinity.x11.defaul.shell.XSimpleShell;
 
 import javax.inject.Singleton;
 
 @Module(
 		injects = {
-                XCompositor.class,
-                XBufferHandlerFactory.class
+                XWindowHandlerFactory.class
         },
 		complete = false,
 		library = true
@@ -16,7 +18,17 @@ import javax.inject.Singleton;
 public class XRenderModule {
 	@Provides
 	@Singleton
-    org.trinity.x11.defaul.XCompositor provideXCompositor(final XCompositor XCompositor) {
-		return XCompositor;
+    XCompositor provideXCompositor(final XEventLoop                xEventLoop,
+                                   final org.trinity.x11.defaul.XWindowFactory            xWindowFactory,
+                                   final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
+                                   final XSimpleShell              xSimpleShell,
+                                   final XSimpleRenderer           xWindowRenderer,
+                                   final XWindowHandlerFactory     xWindowHandlerFactory) {
+		return new XCompositor(xEventLoop,
+                               xWindowFactory,
+                               simpleShellSurfaceFactory,
+                               xSimpleShell,
+                               xWindowRenderer,
+                               xWindowHandlerFactory);
 	}
 }

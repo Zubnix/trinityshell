@@ -32,7 +32,9 @@ import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.Dimension;
 import javax.media.nativewindow.util.Point;
 import javax.media.nativewindow.util.PointImmutable;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.IntConsumer;
 
 /**
  * ************************************
@@ -42,6 +44,9 @@ import java.util.Optional;
 public interface ShellSurface extends Listenable {
 
     void accept(@Nonnull ShellSurfaceConfiguration shellSurfaceConfiguration);
+
+    @Nonnull
+    List<IntConsumer> getPaintCallbacks();
 
     @Nonnull
     PointImmutable getPosition();
@@ -165,6 +170,12 @@ public interface ShellSurface extends Listenable {
     @Nonnull
     default ShellSurface requestHide() {
         post(new HideRequest(this));
+        return this;
+    }
+
+    @Nonnull
+    default ShellSurface firePaintCallbacks(final int serial){
+        getPaintCallbacks().forEach(paintCallback -> paintCallback.accept(serial));
         return this;
     }
 }

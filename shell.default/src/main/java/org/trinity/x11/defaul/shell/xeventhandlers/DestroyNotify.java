@@ -21,8 +21,6 @@ package org.trinity.x11.defaul.shell.xeventhandlers;
 
 import org.freedesktop.xcb.xcb_destroy_notify_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import org.trinity.x11.defaul.XEventHandler;
 import org.trinity.x11.defaul.XSurfacePool;
@@ -36,7 +34,6 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_DESTROY_NOTIFY;
 @Immutable
 public class DestroyNotify implements XEventHandler {
 
-    private static final Logger  LOG        = LoggerFactory.getLogger(DestroyNotify.class);
     private static final Integer EVENT_CODE = XCB_DESTROY_NOTIFY;
 
     private final XSurfacePool  xSurfacePool;
@@ -49,10 +46,6 @@ public class DestroyNotify implements XEventHandler {
     @Override
     public void handle(@Nonnull final xcb_generic_event_t event_t) {
         final xcb_destroy_notify_event_t destroy_notify_event = cast(event_t);
-        LOG.debug("Received X event={}",
-                  destroy_notify_event.getClass()
-                                      .getSimpleName()
-                 );
         this.xSurfacePool.get(destroy_notify_event.getWindow())
                          .accept(ShellSurfaceConfigurable::markDestroyed);
     }

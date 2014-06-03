@@ -1,20 +1,22 @@
 package org.trinity.wayland.defaul.protocol;
 
+import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.protocol.wl_subcompositor;
-import org.freedesktop.wayland.protocol.wl_subsurface;
+import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Resource;
-import org.trinity.wayland.defaul.events.ResourceDestroyed;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Set;
 
 /**
  * Created by Erik De Rijcke on 6/2/14.
  */
 @Singleton
-public class WlSubCompositor extends EventBus implements wl_subcompositor.Requests {
+public class WlSubCompositor extends EventBus implements wl_subcompositor.Requests, ProtocolObject<wl_subcompositor.Resource> {
 
+    private final Set<wl_subcompositor.Resource> resources = Sets.newHashSet();
     private final WlSubSurfaceFactory wlSubSurfaceFactory;
 
     @Inject
@@ -24,8 +26,7 @@ public class WlSubCompositor extends EventBus implements wl_subcompositor.Reques
 
     @Override
     public void destroy(final wl_subcompositor.Resource resource) {
-        post(new ResourceDestroyed(resource));
-        resource.destroy();
+        ProtocolObject.super.destroy(resource);
     }
 
     @Override
@@ -33,8 +34,22 @@ public class WlSubCompositor extends EventBus implements wl_subcompositor.Reques
                               final int                       id,
                               final Resource                  surfaceResource,
                               final Resource                  parentResource) {
-        new wl_subsurface.Resource(resource.getClient(),
-                                   1,
-                                   id).setImplementation(this.wlSubSurfaceFactory.create());
+        this.wlSubSurfaceFactory.create().add(resource.getClient(),
+                                              1,
+                                              id);
+    }
+
+    @Override
+    public Set<wl_subcompositor.Resource> getResources() {
+        return this.resources;
+    }
+
+    @Override
+    public wl_subcompositor.Resource create(final Client client,
+                                            final int version,
+                                            final int id) {
+        return new wl_subcompositor.Resource(client,
+                                             version,
+                                             id);
     }
 }

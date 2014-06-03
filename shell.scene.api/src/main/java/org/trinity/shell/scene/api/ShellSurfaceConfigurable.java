@@ -3,12 +3,15 @@ package org.trinity.shell.scene.api;
 import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.PointImmutable;
 import javax.media.nativewindow.util.RectangleImmutable;
+import java.util.function.IntConsumer;
 
 /**
  *
  */
 public interface ShellSurfaceConfigurable {
 
+    @Nonnull
+    ShellSurfaceConfigurable addPaintCallback(IntConsumer callback);
     @Nonnull
     ShellSurfaceConfigurable removeOpaqueRegion();
     @Nonnull

@@ -11,12 +11,12 @@ import org.trinity.x11.defaul.XWindow;
 import javax.media.nativewindow.util.DimensionImmutable;
 import javax.media.nativewindow.util.Rectangle;
 
-@AutoFactory(className = "XBufferHandlerFactory")
-public class XBufferHandler {
+@AutoFactory(className = "XWindowHandlerFactory")
+public class XWindowHandler {
 
     private final XWindow xWindow;
 
-    XBufferHandler(final XWindow xWindow) {
+    XWindowHandler(final XWindow xWindow) {
         this.xWindow = xWindow;
     }
 
@@ -44,12 +44,12 @@ public class XBufferHandler {
     public void handle(final ShowRequest showRequest) {
 
         final DimensionImmutable size = this.xWindow.getSize();
-        final int width = size.getWidth();
-        final int height = size.getHeight();
+        final int width               = size.getWidth();
+        final int height              = size.getHeight();
 
         showRequest.getSource()
                    .accept(shellSurfaceConfigurable ->
-                           shellSurfaceConfigurable.attachBuffer(XBufferHandler.this.xWindow,
+                           shellSurfaceConfigurable.attachBuffer(XWindowHandler.this.xWindow,
                                                                  0,
                                                                  0)
                                                    .markDamaged(new Rectangle(0,

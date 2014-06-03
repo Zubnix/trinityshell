@@ -21,6 +21,7 @@ package org.trinity;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import org.trinity.shell.scene.api.Buffer;
 import org.trinity.shell.scene.api.Region;
@@ -36,7 +37,9 @@ import javax.annotation.concurrent.NotThreadSafe;
 import javax.media.nativewindow.util.Point;
 import javax.media.nativewindow.util.PointImmutable;
 import javax.media.nativewindow.util.RectangleImmutable;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.IntConsumer;
 
 @NotThreadSafe
 @AutoFactory(className = "SimpleShellSurfaceFactory")
@@ -67,6 +70,8 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
                                                    0);
     @Nonnull
     private Boolean          destroyed = Boolean.FALSE;
+    @Nonnull
+    private final List<IntConsumer> paintCallbacks = Lists.newLinkedList();
 
 
     SimpleShellSurface(@Provided final PixmanRegionFactory pixmanRegionFactory,
@@ -78,6 +83,12 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Override
     public void accept(@Nonnull final ShellSurfaceConfiguration shellSurfaceConfiguration) {
         shellSurfaceConfiguration.visit(this);
+    }
+
+    @Nonnull
+    @Override
+    public List<IntConsumer> getPaintCallbacks() {
+        return this.paintCallbacks;
     }
 
     @Nonnull
@@ -163,6 +174,13 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
         this.pendingDamage = Optional.empty();
         //notify
         post(new Committed(this));
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public ShellSurfaceConfigurable addPaintCallback(final IntConsumer callback) {
+        this.paintCallbacks.add(callback);
         return this;
     }
 

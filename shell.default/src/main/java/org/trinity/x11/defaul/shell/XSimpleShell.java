@@ -38,9 +38,8 @@ public class XSimpleShell {
     public void handle(final MoveRequest moveRequest) {
         final PointImmutable position = moveRequest.getPosition();
         moveRequest.getSource()
-                   .accept(shellSurfaceConfigurable -> {
-                       shellSurfaceConfigurable.setPosition(position);
-                   });
+                   .accept(shellSurfaceConfigurable ->
+                           shellSurfaceConfigurable.setPosition(position));
     }
 
     @Subscribe

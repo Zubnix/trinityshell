@@ -12,7 +12,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -27,10 +29,10 @@ public class WlJobExecutor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WlJobExecutor.class);
 
-    private static final int        FD_CLOEXEC     = 1;
-    private static final byte       EVENT_NEW_JOB  = 1;
-    private static final byte       EVENT_FINISHED = 0;
-    private static final Runnable[] NO_JOBS        = new Runnable[0];
+    private static final int            FD_CLOEXEC     = 1;
+    private static final byte           EVENT_NEW_JOB  = 1;
+    private static final byte           EVENT_FINISHED = 0;
+    private static final List<Runnable> NO_JOBS        = Collections.emptyList();
 
     private final ByteBuffer eventNewJobBuffer   = ByteBuffer.allocateDirect(1)
                                                              .putInt(EVENT_NEW_JOB);
@@ -45,7 +47,8 @@ public class WlJobExecutor {
     private final LibC    libC;
 
     private EventLoop.EventSource eventSource;
-    private int[]                 pipe;
+    private int                   pipeR;
+    private int                   pipeWR;
 
     @Inject
     WlJobExecutor(final Display display,
@@ -56,22 +59,24 @@ public class WlJobExecutor {
 
     public void start() throws IOException {
         //FIXME move setting pipe up to outside construction logic
-        this.pipe        = configure(pipe());
+        final int[] pipe = configure(pipe());
+        this.pipeR       = pipe[0];
+        this.pipeWR      = pipe[1];
         this.eventSource = this.display.getEventLoop()
-                                       .addFileDescriptor(this.pipe[0],
+                                       .addFileDescriptor(this.pipeR,
                                                           EventLoop.EVENT_READABLE,
                                                           this::handle);
     }
 
     public void fireFinishedEvent() throws IOException {
-        if (this.libC.write(this.pipe[1],
+        if (this.libC.write(this.pipeWR,
                             this.eventFinishedBuffer,
                             1) != 1) {
             throw new IOException(getError());
         }
     }
 
-    public void offer(@Nonnull final Runnable job){
+    public void submit(@Nonnull final Runnable job){
         checkNotNull(job);
 
         try {
@@ -81,18 +86,18 @@ public class WlJobExecutor {
         } catch (final IOException e) {
             //"rollback"
             this.pendingJobs.remove(job);
-            LOGGER.error("Can not offer job", e);
+            LOGGER.error("Can not submit job", e);
         } finally {
             this.jobsLock.unlock();
         }
     }
 
     private void clean() {
-        if (this.libC.close(this.pipe[0]) == -1) {
+        if (this.libC.close(this.pipeR) == -1) {
             LOGGER.error("Failed to close pipe read fd",
                     new IOException(getError()));
         }
-        if (this.libC.close(this.pipe[1]) == -1) {
+        if (this.libC.close(this.pipeWR) == -1) {
             LOGGER.error("Failed to close pipe write fd",
                     new IOException(getError()));
         }
@@ -116,7 +121,7 @@ public class WlJobExecutor {
 
     private byte read(){
         this.eventReadBuffer.clear();
-        this.libC.read(this.pipe[0],
+        this.libC.read(this.pipeR,
                        this.eventReadBuffer,
                        1);
         this.eventReadBuffer.rewind();
@@ -124,17 +129,15 @@ public class WlJobExecutor {
     }
 
     private void process() {
-        for(final Runnable job: flush()){
-            job.run();
-        }
+        commit().forEach(Runnable::run);
     }
 
-    private Runnable[] flush(){
-        Runnable[] jobs = NO_JOBS;
+    private List<Runnable> commit(){
+        List<Runnable> jobs = NO_JOBS;
         try {
             this.jobsLock.lock();
             if(!this.pendingJobs.isEmpty()){
-                jobs = this.pendingJobs.toArray(new Runnable[this.pendingJobs.size()]);
+                jobs = Lists.newLinkedList(this.pendingJobs);
                 this.pendingJobs.clear();
             }
         } finally {
@@ -144,7 +147,7 @@ public class WlJobExecutor {
     }
 
     private void fireNewJobEvent() throws IOException {
-        if (this.libC.write(this.pipe[1],
+        if (this.libC.write(this.pipeWR,
                             this.eventNewJobBuffer,
                             1) != 1) {
             throw new IOException(getError());

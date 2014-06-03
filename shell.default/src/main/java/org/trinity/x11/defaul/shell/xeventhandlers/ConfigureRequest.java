@@ -21,8 +21,6 @@ package org.trinity.x11.defaul.shell.xeventhandlers;
 
 import org.freedesktop.xcb.xcb_configure_request_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.x11.defaul.XEventHandler;
 import org.trinity.x11.defaul.XSurfacePool;
@@ -40,7 +38,6 @@ import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
 @Immutable
 public class ConfigureRequest implements XEventHandler {
 
-    private static final Logger  LOG        = LoggerFactory.getLogger(ConfigureRequest.class);
     private static final Integer EVENT_CODE = XCB_CONFIGURE_REQUEST;
 
     private final XSurfacePool xSurfacePool;
@@ -53,10 +50,6 @@ public class ConfigureRequest implements XEventHandler {
     @Override
     public void handle(@Nonnull final xcb_generic_event_t event) {
         final xcb_configure_request_event_t request_event = cast(event);
-        LOG.debug("Received X event={}",
-                  request_event.getClass()
-                               .getSimpleName()
-                 );
 
         final int value_mask            = request_event.getValue_mask();
 

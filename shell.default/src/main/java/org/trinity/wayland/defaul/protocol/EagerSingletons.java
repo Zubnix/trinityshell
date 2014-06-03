@@ -15,6 +15,8 @@ public final class EagerSingletons {
     static WlShell wlShell;
     @Inject
     static WlCompositor wlCompositor;
+    @Inject
+    static WlOutput wlOutput;
 
     @Inject
     EagerSingletons() {

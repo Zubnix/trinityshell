@@ -1,14 +1,16 @@
 package org.trinity.wayland.defaul.protocol;
 
 import com.google.auto.factory.AutoFactory;
+import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.protocol.wl_region;
-import org.trinity.common.Listenable;
+import org.freedesktop.wayland.server.Client;
 import org.trinity.shell.scene.api.Region;
-import org.trinity.wayland.defaul.events.ResourceDestroyed;
 
 import javax.annotation.Nonnegative;
 import javax.media.nativewindow.util.Rectangle;
+
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -16,7 +18,9 @@ import static com.google.common.base.Preconditions.checkArgument;
  * Created by Erik De Rijcke on 5/23/14.
  */
 @AutoFactory(className = "WlRegionFactory")
-public class WlRegion extends EventBus implements wl_region.Requests, Listenable {
+public class WlRegion extends EventBus implements wl_region.Requests, ProtocolObject<wl_region.Resource> {
+
+    private final Set<wl_region.Resource> resources = Sets.newHashSet();
 
     private final Region region;
 
@@ -25,9 +29,22 @@ public class WlRegion extends EventBus implements wl_region.Requests, Listenable
     }
 
     @Override
+    public Set<wl_region.Resource> getResources() {
+        return this.resources;
+    }
+
+    @Override
+    public wl_region.Resource create(final Client client,
+                                     final int version,
+                                     final int id) {
+        return new wl_region.Resource(client,
+                                      version,
+                                      id);
+    }
+
+    @Override
     public void destroy(final wl_region.Resource resource) {
-        post(new ResourceDestroyed(resource));
-        resource.destroy();
+        ProtocolObject.super.destroy(resource);
     }
 
     @Override

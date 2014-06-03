@@ -20,8 +20,6 @@
 package org.trinity.x11.defaul.render;
 
 import com.google.common.eventbus.Subscribe;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trinity.SimpleShellSurfaceFactory;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.event.Committed;
@@ -52,54 +50,48 @@ import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY;
 
 @Singleton
-public class XCompositor implements org.trinity.x11.defaul.XCompositor {
-
-    private static final Logger LOG = LoggerFactory.getLogger(XCompositor.class);
+public class XCompositor {
 
     private static final int        CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW
                                                                 | XCB_EVENT_MASK_LEAVE_WINDOW
                                                                 | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
-
     private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
                                                                                    .putInt(CLIENT_EVENT_MASK);
-    private final XEventLoop     xEventLoop;
-    private final XWindowFactory xWindowFactory;
-
-    private final SimpleShellSurfaceFactory     simpleShellSurfaceFactory;
-    private final XSimpleShell                  XSimpleShell;
-    private final XSimpleRenderer               XWindowRenderer;
-    private final XBufferHandlerFactory         xBufferHandlerFactory;
+    private final XEventLoop                xEventLoop;
+    private final XWindowFactory            xWindowFactory;
+    private final SimpleShellSurfaceFactory simpleShellSurfaceFactory;
+    private final XSimpleShell              xSimpleShell;
+    private final XSimpleRenderer           xWindowRenderer;
+    private final XWindowHandlerFactory     xWindowHandlerFactory;
 
     @Inject
-    XCompositor(final XEventLoop                    xEventLoop,
-                final XWindowFactory                xWindowFactory,
-                final SimpleShellSurfaceFactory     simpleShellSurfaceFactory,
-                final XSimpleShell                  xSimpleShell,
-                final XSimpleRenderer               xWindowRenderer,
-                final XBufferHandlerFactory         xBufferHandlerFactory) {
+    XCompositor(final XEventLoop                xEventLoop,
+                final XWindowFactory            xWindowFactory,
+                final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
+                final XSimpleShell              xSimpleShell,
+                final XSimpleRenderer           xWindowRenderer,
+                final XWindowHandlerFactory     xWindowHandlerFactory) {
 
-        this.xEventLoop     = xEventLoop;
-        this.xWindowFactory = xWindowFactory;
-
-        this.simpleShellSurfaceFactory      = simpleShellSurfaceFactory;
-        this.XSimpleShell                   = xSimpleShell;
-        this.XWindowRenderer                = xWindowRenderer;
-        this.xBufferHandlerFactory          = xBufferHandlerFactory;
+        this.xEventLoop                = xEventLoop;
+        this.xWindowFactory            = xWindowFactory;
+        this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
+        this.xSimpleShell              = xSimpleShell;
+        this.xWindowRenderer           = xWindowRenderer;
+        this.xWindowHandlerFactory     = xWindowHandlerFactory;
     }
 
     @Nonnull
-    @Override
-    public ShellSurface create(@Nonnull final Integer nativeHandle) {
-        configureClientEvents(nativeHandle);
+    public ShellSurface create(@Nonnull final Integer windowHandle) {
+        configure(windowHandle);
 
-        final XWindow xWindow               = this.xWindowFactory.create(nativeHandle);
-        final XBufferHandler XBufferHandler = this.xBufferHandlerFactory.create(xWindow);
-        final ShellSurface shellSurface     = this.simpleShellSurfaceFactory.create(Optional.of(xWindow));
+        final XWindow        xWindow        = this.xWindowFactory.create(windowHandle);
+        final XWindowHandler xWindowHandler = this.xWindowHandlerFactory.create(xWindow);
+        final ShellSurface   shellSurface   = this.simpleShellSurfaceFactory.create(Optional.of(xWindow));
 
         shellSurface.register(this);
-        shellSurface.register(XBufferHandler);
+        shellSurface.register(xWindowHandler);
 
-        this.XSimpleShell.add(shellSurface);
+        this.xSimpleShell.add(shellSurface);
 
         return shellSurface;
     }
@@ -146,19 +138,14 @@ public class XCompositor implements org.trinity.x11.defaul.XCompositor {
     }
 
     private void requestRender(final ShellSurface shellSurface) {
-
-        if(this.XSimpleShell.needsRedraw(shellSurface)) {
-            this.XSimpleShell.getShellSurfacesStack().forEach(this.XWindowRenderer::render);
+        if(this.xSimpleShell.needsRedraw(shellSurface)) {
+            this.xSimpleShell.getShellSurfacesStack().forEach(this.xWindowRenderer::render);
         }
     }
 
-    private void configureClientEvents(final Integer nativeHandle) {
-
-        LOG.debug("[winId={}] visit client evens.",
-                  nativeHandle);
-
+    private void configure(final Integer windowHandle) {
         xcb_change_window_attributes(this.xEventLoop.getXcbConnection(),
-                                     nativeHandle,
+                                     windowHandle,
                                      XCB_CW_EVENT_MASK,
                                      CLIENT_EVENTS_CONFIG_BUFFER);
         xcb_flush(this.xEventLoop.getXcbConnection());

@@ -21,8 +21,6 @@ package org.trinity.x11.defaul.shell.xeventhandlers;
 
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.freedesktop.xcb.xcb_unmap_notify_event_t;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.trinity.x11.defaul.XEventHandler;
 import org.trinity.x11.defaul.XSurfacePool;
 
@@ -35,7 +33,6 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_UNMAP_NOTIFY;
 @Immutable
 public class UnmapNotify implements XEventHandler {
 
-    private static final Logger  LOG        = LoggerFactory.getLogger(UnmapNotify.class);
     private static final Integer EVENT_CODE = XCB_UNMAP_NOTIFY;
 
     private final XSurfacePool xSurfacePool;
@@ -48,13 +45,8 @@ public class UnmapNotify implements XEventHandler {
     @Override
     public void handle(@Nonnull final xcb_generic_event_t event) {
         final xcb_unmap_notify_event_t unmap_notify_event = cast(event);
-
-        LOG.debug("Received X event={}",
-                  unmap_notify_event.getClass()
-                                    .getSimpleName()
-                 );
-        final int windowId          = unmap_notify_event.getWindow();
-        final int reportWindowId    = unmap_notify_event.getEvent();
+        final int windowId                                = unmap_notify_event.getWindow();
+        final int reportWindowId                          = unmap_notify_event.getEvent();
 
         if(windowId != reportWindowId) {
             return;
