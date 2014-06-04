@@ -20,6 +20,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static jnr.constants.platform.Fcntl.F_GETFD;
 import static jnr.constants.platform.Fcntl.F_SETFD;
+import static jnr.ffi.Runtime.*;
 
 /**
  * Created by Erik De Rijcke on 6/2/14.
@@ -58,7 +59,7 @@ public class WlJobExecutor {
     }
 
     public void start() throws IOException {
-        //FIXME move setting pipe up to outside construction logic
+        //FIXME move setting up pipe outside this class
         final int[] pipe = configure(pipe());
         this.pipeR       = pipe[0];
         this.pipeWR      = pipe[1];
@@ -194,6 +195,6 @@ public class WlJobExecutor {
     }
 
     private String getError() {
-        return this.libC.strerror(LastError.getLastError(jnr.ffi.Runtime.getRuntime(this.libC)));
+        return this.libC.strerror(LastError.getLastError(getRuntime(this.libC)));
     }
 }

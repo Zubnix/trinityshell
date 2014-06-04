@@ -1,11 +1,18 @@
 package org.trinity.wayland.defaul.protocol;
 
 import com.google.auto.factory.AutoFactory;
+import com.google.common.collect.Sets;
+import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.protocol.wl_shell_surface;
+import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Resource;
 
+import java.util.Set;
+
 @AutoFactory(className = "WlShellSurfaceFactory")
-public class WlShellSurface implements wl_shell_surface.Requests {
+public class WlShellSurface extends EventBus implements wl_shell_surface.Requests, ProtocolObject<wl_shell_surface.Resource> {
+
+    private final Set<wl_shell_surface.Resource> resources = Sets.newHashSet();
 
     private final WlSurface wlSurface;
 
@@ -83,5 +90,19 @@ public class WlShellSurface implements wl_shell_surface.Requests {
     public void setClass(final wl_shell_surface.Resource resource,
                          final String                    class_) {
 
+    }
+
+    @Override
+    public Set<wl_shell_surface.Resource> getResources() {
+        return this.resources;
+    }
+
+    @Override
+    public wl_shell_surface.Resource create(final Client client,
+                                            final int version,
+                                            final int id) {
+        return new wl_shell_surface.Resource(client,
+                                             version,
+                                             id);
     }
 }

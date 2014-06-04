@@ -42,9 +42,9 @@ public class WlPointer extends EventBus implements wl_pointer.Requests3, Protoco
     }
 
     @Override
-    public wl_pointer.Resource create(Client client,
-                                      int version,
-                                      int id) {
+    public wl_pointer.Resource create(final Client client,
+                                      final int version,
+                                      final int id) {
         return new wl_pointer.Resource(client,
                                        version,
                                        id);

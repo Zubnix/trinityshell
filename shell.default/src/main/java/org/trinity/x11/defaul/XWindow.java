@@ -22,7 +22,6 @@ package org.trinity.x11.defaul;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
 import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_get_geometry_cookie_t;
@@ -58,14 +57,7 @@ public class XWindow extends EventBus implements Listenable, Buffer {
     private static final ByteBuffer RESIZE_VALUE_LIST_BUFFER      = allocateDirect(8).order(nativeOrder());
     private static final ByteBuffer MOVE_VALUE_LIST_BUFFER = allocateDirect(8).order(nativeOrder());
 
-    private final EventBus visitorDispatcher = new EventBus(){{
-        register(new Object() {
-            @Subscribe
-            public void handle(@Nonnull final XWindowRenderer xWindowRenderer) {
-                xWindowRenderer.visit(XWindow.this);
-            }
-        });
-    }};
+    private final EventBus dispatcher = XWindowRenderer.DISPATCHER(this);
 
     @Nonnull
     private final Integer    nativeHandle;
@@ -220,6 +212,6 @@ public class XWindow extends EventBus implements Listenable, Buffer {
         //We (ab)use guava's eventbus as a dynamic type based dispatcher. That way we don't have to cast!
         //Any unsupported renderer will simply be ignored. To detect any unsupported render, simply listen
         //for guava's deadevent object.
-        this.visitorDispatcher.post(renderer);
+        this.dispatcher.post(renderer);
     }
 }

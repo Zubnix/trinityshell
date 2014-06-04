@@ -80,7 +80,8 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
                        final int                 y) {
         if(bufferResource == null){
             getShellSurface().accept(ShellSurfaceConfigurable::detachBuffer);
-        }else {
+        }
+        else {
             final WlShmBuffer wlShmBuffer = (WlShmBuffer) bufferResource.getImplementation();
             getShellSurface().accept(shellSurfaceConfigurable ->
                                      shellSurfaceConfigurable.attachBuffer(wlShmBuffer,
@@ -108,10 +109,9 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
     @Override
     public void frame(final wl_surface.Resource resource,
                       final int                 callbackId) {
-        final wl_callback.Resource callbackResource = new wl_callback.Resource(resource.getClient(),
-                                                                               1,
-                                                                               callbackId);
-        callbackResource.setImplementation(this.wlCallbackFactory.create());
+        final wl_callback.Resource callbackResource = this.wlCallbackFactory.create().add(resource.getClient(),
+                                                                                          1,
+                                                                                          callbackId);
         getShellSurface().accept(shellSurfaceConfigurable ->
                                  shellSurfaceConfigurable.addPaintCallback(callbackResource::done));
     }

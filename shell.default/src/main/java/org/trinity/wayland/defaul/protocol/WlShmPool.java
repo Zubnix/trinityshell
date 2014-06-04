@@ -3,10 +3,12 @@ package org.trinity.wayland.defaul.protocol;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Sets;
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.ShmPool;
-import org.freedesktop.wayland.protocol.wl_buffer;
 import org.freedesktop.wayland.protocol.wl_shm_pool;
+import org.freedesktop.wayland.server.Client;
 import org.trinity.wayland.defaul.events.ResourceDestroyed;
 
 import javax.annotation.Nonnegative;
@@ -14,6 +16,7 @@ import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.Dimension;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -21,7 +24,9 @@ import static com.google.common.base.Preconditions.checkArgument;
  * Created by Erik De Rijcke on 5/23/14.
  */
 @AutoFactory(className = "WlShmPoolFactory")
-public class WlShmPool implements wl_shm_pool.Requests {
+public class WlShmPool extends EventBus implements wl_shm_pool.Requests, ProtocolObject<wl_shm_pool.Resource> {
+
+    private final Set<wl_shm_pool.Resource> resources = Sets.newHashSet();
 
     private final ShmPool            shmPool;
     private final WlShmBufferFactory wlShmBufferFactory;
@@ -56,11 +61,9 @@ public class WlShmPool implements wl_shm_pool.Requests {
                                                                                      height),
                                                                        stride,
                                                                        format);
-
-        final wl_buffer.Resource bufferResource = new wl_buffer.Resource(resource.getClient(),
-                                                                         1,
-                                                                         id);
-        bufferResource.setImplementation(wlShmBuffer);
+        wlShmBuffer.add(resource.getClient(),
+                        1,
+                        id);
         wlShmBuffer.register(new Object() {
             @Subscribe
             public void handle(final ResourceDestroyed resourceEvent) {
@@ -73,10 +76,24 @@ public class WlShmPool implements wl_shm_pool.Requests {
     }
 
     @Override
+    public Set<wl_shm_pool.Resource> getResources() {
+        return this.resources;
+    }
+
+    @Override
+    public wl_shm_pool.Resource create(final Client client,
+                                       final int version,
+                                       final int id) {
+        return new wl_shm_pool.Resource(client,
+                                        version,
+                                        id);
+    }
+
+    @Override
     public void destroy(final wl_shm_pool.Resource resource) {
         this.destroyed = true;
         release();
-        resource.destroy();
+        ProtocolObject.super.destroy(resource);
     }
 
     @Override

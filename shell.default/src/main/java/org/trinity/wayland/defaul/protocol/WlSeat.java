@@ -3,21 +3,25 @@ package org.trinity.wayland.defaul.protocol;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import org.freedesktop.wayland.protocol.wl_keyboard;
-import org.freedesktop.wayland.protocol.wl_pointer;
+import com.google.common.collect.Sets;
+import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.protocol.wl_seat;
-import org.freedesktop.wayland.protocol.wl_touch;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.Global;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by Erik De Rijcke on 5/23/14.
  */
 @AutoFactory(className = "WlSeatFactory")
-public class WlSeat extends Global implements wl_seat.Requests {
+public class WlSeat extends Global implements wl_seat.Requests, ProtocolObject<wl_seat.Resource> {
+
+    private final Set<wl_seat.Resource> resources = Sets.newHashSet();
+    private final EventBus              eventBus = new EventBus();
 
     private final WlDataDevice         wlDataDevice;
     private final Optional<WlPointer>  optionalWlPointer;
@@ -60,37 +64,66 @@ public class WlSeat extends Global implements wl_seat.Requests {
     public void bindClient(final Client client,
                            final int    version,
                            final int    id) {
-        final wl_seat.Resource seatResource = new wl_seat.Resource(client,
-                                                                   1,
-                                                                   id);
-        seatResource.setImplementation(this);
-        seatResource.capabilities(this.capabilities);
+        add(client,
+                1,
+                id);
     }
 
     @Override
     public void getPointer(final wl_seat.Resource resource,
                            final int              id) {
         this.optionalWlPointer.ifPresent(wlPointer ->
-                                         new wl_pointer.Resource(resource.getClient(),
-                                                                 1,
-                                                                 id).setImplementation(wlPointer));
+                                        wlPointer.add(resource.getClient(),
+                                                      1,
+                                                      id));
     }
 
     @Override
     public void getKeyboard(final wl_seat.Resource  resource,
                             final int               id) {
         this.optionalWlKeyboard.ifPresent(wlKeyboard ->
-                                          new wl_keyboard.Resource(resource.getClient(),
-                                                                   1,
-                                                                   id).setImplementation(wlKeyboard));
+                                          wlKeyboard.add(resource.getClient(),
+                                                         1,
+                                                         id));
     }
 
     @Override
     public void getTouch(final wl_seat.Resource resource,
                          final int              id) {
         this.optionalWlTouch.ifPresent(wlTouch ->
-                                       new wl_touch.Resource(resource.getClient(),
-                                                               1,
-                                                               id).setImplementation(wlTouch));
+                                       wlTouch.add(resource.getClient(),
+                                                   1,
+                                                   id));
+    }
+
+    @Override
+    public Set<wl_seat.Resource> getResources() {
+        return this.resources;
+    }
+
+    @Override
+    public wl_seat.Resource create(final Client client,
+                                   final int version,
+                                   final int id) {
+        final wl_seat.Resource resource = new wl_seat.Resource(client,
+                                                               version,
+                                                               id);
+        resource.capabilities(this.capabilities);
+        return resource;
+    }
+
+    @Override
+    public void register(@Nonnull final Object listener) {
+        this.eventBus.register(listener);
+    }
+
+    @Override
+    public void unregister(@Nonnull final Object listener) {
+        this.eventBus.unregister(listener);
+    }
+
+    @Override
+    public void post(@Nonnull final Object event) {
+        this.eventBus.post(event);
     }
 }

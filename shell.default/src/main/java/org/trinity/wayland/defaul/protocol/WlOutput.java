@@ -43,26 +43,26 @@ public class WlOutput extends Global implements wl_output.Requests, ProtocolObje
     }
 
     @Override
-    public wl_output.Resource create(Client client,
-                                     int version,
-                                     int id) {
+    public wl_output.Resource create(final Client client,
+                                     final int version,
+                                     final int id) {
         return new wl_output.Resource(client,
                                       version,
                                       id);
     }
 
     @Override
-    public void register(@Nonnull Object listener) {
+    public void register(@Nonnull final Object listener) {
         this.eventBus.register(listener);
     }
 
     @Override
-    public void unregister(@Nonnull Object listener) {
+    public void unregister(@Nonnull final Object listener) {
         this.eventBus.unregister(listener);
     }
 
     @Override
-    public void post(@Nonnull Object event) {
+    public void post(@Nonnull final Object event) {
         this.eventBus.post(event);
     }
 }

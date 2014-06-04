@@ -32,9 +32,9 @@ public class WlKeyboard extends EventBus implements wl_keyboard.Requests3, Proto
     }
 
     @Override
-    public wl_keyboard.Resource create(Client client,
-                                       int version,
-                                       int id) {
+    public wl_keyboard.Resource create(final Client client,
+                                       final int version,
+                                       final int id) {
         return new wl_keyboard.Resource(client,
                                         version,
                                         id);
