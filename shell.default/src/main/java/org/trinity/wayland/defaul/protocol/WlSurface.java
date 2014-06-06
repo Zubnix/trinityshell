@@ -4,17 +4,20 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.protocol.wl_callback;
 import org.freedesktop.wayland.protocol.wl_surface;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Resource;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
+import org.trinity.wayland.defaul.events.ResourceDestroyed;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 import javax.media.nativewindow.util.Rectangle;
 
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -25,10 +28,19 @@ import static com.google.common.base.Preconditions.checkArgument;
 @AutoFactory(className = "WlSurfaceFactory")
 public class WlSurface extends EventBus implements wl_surface.Requests3, ProtocolObject<wl_surface.Resource> {
 
-    private final Set<wl_surface.Resource> resources = Sets.newHashSet();
+    private final Set<wl_surface.Resource> resources         = Sets.newHashSet();
+    private final Object                   destroyedListener = new Object(){
+        @Subscribe
+        public void handle(final ResourceDestroyed resourceDestroyed){
+            WlSurface.this.pendingBuffer.get().unregister(this);
+            detachBuffer();
+        }
+    };
 
     private final WlCallbackFactory wlCallbackFactory;
     private final ShellSurface      shellSurface;
+
+    private Optional<WlShmBuffer> pendingBuffer = Optional.empty();
 
     WlSurface(@Provided final WlCallbackFactory wlCallbackFactory,
               final ShellSurface                shellSurface) {
@@ -59,8 +71,8 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
 
     @Override
     public wl_surface.Resource create(final Client client,
-                                      final int version,
-                                      final int id) {
+                                      final int    version,
+                                      final int    id) {
         return new wl_surface.Resource(client,
                                        version,
                                        id);
@@ -79,14 +91,12 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
                        final int                 x,
                        final int                 y) {
         if(bufferResource == null){
-            getShellSurface().accept(ShellSurfaceConfigurable::detachBuffer);
+            detachBuffer();
         }
         else {
-            final WlShmBuffer wlShmBuffer = (WlShmBuffer) bufferResource.getImplementation();
-            getShellSurface().accept(shellSurfaceConfigurable ->
-                                     shellSurfaceConfigurable.attachBuffer(wlShmBuffer,
-                                                                           x,
-                                                                           y));
+            attachBuffer((WlShmBuffer) bufferResource.getImplementation(),
+                         x,
+                         y);
         }
     }
 
@@ -96,7 +106,7 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
                        final int                 y,
                        @Nonnegative final int    width,
                        @Nonnegative final int    height) {
-        checkArgument(width > 0);
+        checkArgument(width  > 0);
         checkArgument(height > 0);
 
         getShellSurface().accept(shellSurfaceConfigurable ->
@@ -113,7 +123,10 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
                                                                                           1,
                                                                                           callbackId);
         getShellSurface().accept(shellSurfaceConfigurable ->
-                                 shellSurfaceConfigurable.addPaintCallback(callbackResource::done));
+                                 shellSurfaceConfigurable.addCallback(serial -> {
+                                     callbackResource.done(serial);
+                                     callbackResource.destroy();
+                                 }));
     }
 
     @Override
@@ -144,6 +157,25 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
 
     @Override
     public void commit(final wl_surface.Resource resource) {
+        this.pendingBuffer = Optional.empty();
         getShellSurface().accept(ShellSurfaceConfigurable::commit);
+    }
+
+    private void detachBuffer(){
+        getShellSurface().accept(ShellSurfaceConfigurable::detachBuffer);
+    }
+
+    private void attachBuffer(final WlShmBuffer newBuffer,
+                              final int         x,
+                              final int         y){
+        this.pendingBuffer.ifPresent(wlShmBuffer ->
+                                     wlShmBuffer.unregister(this.destroyedListener));
+        this.pendingBuffer = Optional.of(newBuffer);
+        newBuffer.register(this.destroyedListener);
+
+        getShellSurface().accept(shellSurfaceConfigurable ->
+                                 shellSurfaceConfigurable.attachBuffer(newBuffer,
+                                                                       x,
+                                                                       y));
     }
 }

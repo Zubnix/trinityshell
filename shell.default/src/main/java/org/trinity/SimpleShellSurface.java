@@ -46,38 +46,43 @@ import java.util.function.IntConsumer;
 public class SimpleShellSurface extends EventBus implements ShellSurface, ShellSurfaceConfigurable {
 
     private final PixmanRegionFactory pixmanRegionFactory;
+
     //pending states
     @Nonnull
-    private Optional<Region> pendingOpaqueRegion = Optional.empty();
+    private List<IntConsumer> pendingCallbacks    = Lists.newLinkedList();
     @Nonnull
-    private Optional<Region> pendingInputRegion  = Optional.empty();
+    private Optional<Region>  pendingOpaqueRegion = Optional.empty();
     @Nonnull
-    private Optional<Region> pendingDamage       = Optional.empty();
+    private Optional<Region>  pendingInputRegion  = Optional.empty();
     @Nonnull
-    private Optional<Buffer> pendingBuffer;
+    private Optional<Region>  pendingDamage       = Optional.empty();
+    @Nonnull
+    private Optional<Buffer>  pendingBuffer       = Optional.empty();
+    @Nonnull
+    private PointImmutable    pendingPosition     = new Point(0,
+                                                              0);
     //committed states
     @Nonnull
-    private Optional<Region> opaqueRegion = Optional.empty();
+    private List<IntConsumer> callbacks    = Lists.newLinkedList();
     @Nonnull
-    private Optional<Region> inputRegion  = Optional.empty();
+    private Optional<Region>  opaqueRegion = Optional.empty();
     @Nonnull
-    private Optional<Region> damage       = Optional.empty();
+    private Optional<Region>  inputRegion  = Optional.empty();
     @Nonnull
-    private Optional<Buffer> buffer;
+    private Optional<Region>  damage       = Optional.empty();
+    @Nonnull
+    private Optional<Buffer>  buffer       = Optional.empty();
+    @Nonnull
+    private PointImmutable    position     = new Point(0,
+                                                       0);
     //additional server side states
     @Nonnull
-    private PointImmutable   position  = new Point(0,
-                                                   0);
-    @Nonnull
-    private Boolean          destroyed = Boolean.FALSE;
-    @Nonnull
-    private final List<IntConsumer> paintCallbacks = Lists.newLinkedList();
-
+    private Boolean           destroyed    = Boolean.FALSE;
 
     SimpleShellSurface(@Provided final PixmanRegionFactory pixmanRegionFactory,
                        @Nonnull  final Optional<Buffer>    optionalBuffer) {
         this.pixmanRegionFactory = pixmanRegionFactory;
-        this.buffer = optionalBuffer;
+        this.buffer              = optionalBuffer;
     }
 
     @Override
@@ -88,7 +93,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     @Override
     public List<IntConsumer> getPaintCallbacks() {
-        return this.paintCallbacks;
+        return this.callbacks;
     }
 
     @Nonnull
@@ -118,16 +123,19 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     public ShellSurfaceConfigurable attachBuffer(@Nonnull final Buffer  buffer,
                                                  @Nonnull final Integer relX,
                                                  @Nonnull final Integer relY) {
-        this.pendingBuffer = Optional.of(buffer);
-        this.position = new Point(this.position.getX() + relX,
-                                  this.position.getY() + relY);
+        this.pendingBuffer   = Optional.of(buffer);
+        this.pendingPosition = new Point(this.pendingPosition.getX() + relX,
+                                         this.pendingPosition.getY() + relY);
         return this;
     }
 
     @Nonnull
     @Override
     public ShellSurfaceConfigurable detachBuffer() {
-        this.pendingBuffer = Optional.empty();
+        this.pendingBuffer   = Optional.empty();
+        this.pendingDamage   = Optional.empty();
+        this.pendingPosition = new Point(0,
+                                         0);
         return this;
     }
 
@@ -165,13 +173,15 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Override
     public ShellSurfaceConfigurable commit() {
         //flush
-        this.buffer        = this.pendingBuffer;
-        this.damage        = this.pendingDamage;
-        this.inputRegion   = this.pendingInputRegion;
-        this.opaqueRegion  = this.pendingOpaqueRegion;
+        this.buffer       = this.pendingBuffer;
+        this.position     = this.pendingPosition;
+        this.damage       = this.pendingDamage;
+        this.inputRegion  = this.pendingInputRegion;
+        this.opaqueRegion = this.pendingOpaqueRegion;
+        this.callbacks    = this.pendingCallbacks;
         //reset
-        this.pendingBuffer = Optional.empty();
-        this.pendingDamage = Optional.empty();
+        detachBuffer();
+        this.pendingCallbacks = Lists.newLinkedList();
         //notify
         post(new Committed(this));
         return this;
@@ -179,8 +189,8 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable addPaintCallback(final IntConsumer callback) {
-        this.paintCallbacks.add(callback);
+    public ShellSurfaceConfigurable addCallback(final IntConsumer callback) {
+        this.pendingCallbacks.add(callback);
         return this;
     }
 
@@ -215,10 +225,10 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     @Override
     public ShellSurfaceConfigurable setPosition(@Nonnull final PointImmutable position) {
-        this.position = new Point(position.getX(),
+        this.pendingPosition = new Point(position.getX(),
                                   position.getY());
         post(new Moved(this,
-                       this.position));
+                       this.pendingPosition));
         return this;
     }
 }

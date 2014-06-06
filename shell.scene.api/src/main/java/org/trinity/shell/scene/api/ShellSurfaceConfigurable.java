@@ -11,7 +11,7 @@ import java.util.function.IntConsumer;
 public interface ShellSurfaceConfigurable {
 
     @Nonnull
-    ShellSurfaceConfigurable addPaintCallback(IntConsumer callback);
+    ShellSurfaceConfigurable addCallback(IntConsumer callback);
     @Nonnull
     ShellSurfaceConfigurable removeOpaqueRegion();
     @Nonnull
