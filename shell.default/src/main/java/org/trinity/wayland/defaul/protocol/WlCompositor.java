@@ -7,8 +7,10 @@ import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.Global;
 import org.trinity.PixmanRegionFactory;
+import org.trinity.SimpleShellSurface;
 import org.trinity.SimpleShellSurfaceFactory;
 import org.trinity.shell.scene.api.Buffer;
+import org.trinity.wayland.defaul.render.WlShellCompositor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -30,6 +32,7 @@ public class WlCompositor extends Global implements wl_compositor.Requests, Prot
     private final WlRegionFactory           wlRegionFactory;
     private final SimpleShellSurfaceFactory simpleShellSurfaceFactory;
     private final PixmanRegionFactory       pixmanRegionFactory;
+    private final WlShellCompositor         wlShellCompositor;
 
     @Inject
     WlCompositor(final Display                   display,
@@ -37,7 +40,8 @@ public class WlCompositor extends Global implements wl_compositor.Requests, Prot
                  final WlSurfaceFactory          wlSurfaceFactory,
                  final WlRegionFactory           wlRegionFactory,
                  final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
-                 final PixmanRegionFactory       pixmanRegionFactory) {
+                 final PixmanRegionFactory       pixmanRegionFactory,
+                 final WlShellCompositor         wlShellCompositor) {
         super(display,
               wl_compositor.WAYLAND_INTERFACE,
               1);
@@ -46,6 +50,7 @@ public class WlCompositor extends Global implements wl_compositor.Requests, Prot
         this.wlRegionFactory           = wlRegionFactory;
         this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
         this.pixmanRegionFactory       = pixmanRegionFactory;
+        this.wlShellCompositor         = wlShellCompositor;
     }
 
     @Override
@@ -63,9 +68,11 @@ public class WlCompositor extends Global implements wl_compositor.Requests, Prot
     @Override
     public void createSurface(final wl_compositor.Resource resource,
                               final int                    id) {
-        this.wlSurfaceFactory.create(this.simpleShellSurfaceFactory.create(Optional.<Buffer>empty())).add(resource.getClient(),
-                                                                                                     1,
-                                                                                                     id);
+        final SimpleShellSurface shellSurface = this.simpleShellSurfaceFactory.create(Optional.<Buffer>empty());
+        shellSurface.register(this.wlShellCompositor);
+        this.wlSurfaceFactory.create(shellSurface).add(resource.getClient(),
+                                                       1,
+                                                       id);
     }
 
     @Override

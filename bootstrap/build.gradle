@@ -5,6 +5,6 @@ dependencies {
         project(":common"),
         project(":shell.scene.api"),
         project(":shell.view.api"),
-        project(":x11.default"),
+        project(":shell.default"),
     )
 }

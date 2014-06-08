@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
 import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.x11.defaul.render.XCompositor;
+import org.trinity.x11.defaul.render.XShellCompositor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -38,46 +38,47 @@ import javax.inject.Singleton;
 @ThreadSafe
 public class XSurfacePool {
 
-	private static final Logger LOG = LoggerFactory.getLogger(XSurfacePool.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XSurfacePool.class);
 
-	private final BiMap<Integer, ShellSurface> surfaces = HashBiMap.create(32);
-	private final XCompositor compositor;
+    private final BiMap<Integer, ShellSurface> surfaces = HashBiMap.create(32);
+    private final XShellCompositor compositor;
 
-	@Inject
-	XSurfacePool(final XCompositor compositor) {
-		this.compositor = compositor;
-	}
+    @Inject
+    XSurfacePool(final XShellCompositor compositor) {
+        this.compositor = compositor;
+    }
 
     @Nonnull
-	public ShellSurface get(@Nonnull final Integer surfaceHandle) {
+    public ShellSurface get(@Nonnull final Integer surfaceHandle) {
         ShellSurface surface = this.surfaces.get(surfaceHandle);
-		if(surface == null) {
-			surface = registerNewSurface(surfaceHandle);
-		}
-		return surface;
-	}
+        if(surface == null) {
+            surface = registerNewSurface(surfaceHandle);
+        }
+        return surface;
+    }
 
-	private ShellSurface registerNewSurface(final Integer surfaceHandle) {
-		LOG.debug("Xwindow={} added to cache.",
-				  surfaceHandle);
-		final ShellSurface surface = this.compositor.create(surfaceHandle);
-		surface.register(new DestroyListener(surface));
-		this.surfaces.put(surfaceHandle,
-						  surface);
-		return surface;
-	}
+    private ShellSurface registerNewSurface(final Integer surfaceHandle) {
+        LOG.debug("Xwindow={} added to cache.",
+                  surfaceHandle);
+        final ShellSurface surface = this.compositor.create(surfaceHandle);
+        surface.register(new DestroyListener(surface));
+        this.surfaces.put(surfaceHandle,
+                          surface);
+        return surface;
+    }
 
-	private class DestroyListener {
-		private final Listenable surface;
+    private class DestroyListener {
+        private final Listenable surface;
 
-		public DestroyListener(final Listenable surface) {
-			this.surface = surface;
-		}
+        public DestroyListener(final Listenable surface) {
+            this.surface = surface;
+        }
 
-		@Subscribe
-		public void destroyed(final xcb_destroy_notify_event_t destroyNotifyEvent) {
-			XSurfacePool.this.surfaces.inverse().remove(this.surface);
-			this.surface.unregister(this);
-		}
-	}
+        @Subscribe
+        public void destroyed(final xcb_destroy_notify_event_t destroyNotifyEvent) {
+            XSurfacePool.this.surfaces.inverse()
+                                      .remove(this.surface);
+            this.surface.unregister(this);
+        }
+    }
 }

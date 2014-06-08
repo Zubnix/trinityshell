@@ -15,12 +15,12 @@ import javax.media.nativewindow.util.PointImmutable;
 import java.util.LinkedList;
 
 @Singleton
-public class XSimpleShell {
+public class XScene {
 
     private final LinkedList<ShellSurface> shellSurfacesStack = new LinkedList<>();
 
     @Inject
-    XSimpleShell() {}
+    XScene() {}
 
     public LinkedList<ShellSurface> getShellSurfacesStack() { return this.shellSurfacesStack; }
 

@@ -32,7 +32,7 @@ import org.trinity.shell.scene.api.event.Showed;
 import org.trinity.x11.defaul.XEventLoop;
 import org.trinity.x11.defaul.XWindow;
 import org.trinity.x11.defaul.XWindowFactory;
-import org.trinity.x11.defaul.shell.XSimpleShell;
+import org.trinity.x11.defaul.shell.XScene;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -50,48 +50,48 @@ import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY;
 
 @Singleton
-public class XCompositor {
+public class XShellCompositor {
 
     private static final int        CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW
-                                                                | XCB_EVENT_MASK_LEAVE_WINDOW
-                                                                | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+            | XCB_EVENT_MASK_LEAVE_WINDOW
+            | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
     private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
                                                                                    .putInt(CLIENT_EVENT_MASK);
     private final XEventLoop                xEventLoop;
     private final XWindowFactory            xWindowFactory;
     private final SimpleShellSurfaceFactory simpleShellSurfaceFactory;
-    private final XSimpleShell              xSimpleShell;
+    private final XScene                    xScene;
     private final XSimpleRenderer           xWindowRenderer;
     private final XWindowHandlerFactory     xWindowHandlerFactory;
 
     @Inject
-    XCompositor(final XEventLoop                xEventLoop,
-                final XWindowFactory            xWindowFactory,
-                final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
-                final XSimpleShell              xSimpleShell,
-                final XSimpleRenderer           xWindowRenderer,
-                final XWindowHandlerFactory     xWindowHandlerFactory) {
+    XShellCompositor(final XEventLoop xEventLoop,
+                     final XWindowFactory xWindowFactory,
+                     final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
+                     final XScene xScene,
+                     final XSimpleRenderer xWindowRenderer,
+                     final XWindowHandlerFactory xWindowHandlerFactory) {
 
-        this.xEventLoop                = xEventLoop;
-        this.xWindowFactory            = xWindowFactory;
+        this.xEventLoop = xEventLoop;
+        this.xWindowFactory = xWindowFactory;
         this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
-        this.xSimpleShell              = xSimpleShell;
-        this.xWindowRenderer           = xWindowRenderer;
-        this.xWindowHandlerFactory     = xWindowHandlerFactory;
+        this.xScene = xScene;
+        this.xWindowRenderer = xWindowRenderer;
+        this.xWindowHandlerFactory = xWindowHandlerFactory;
     }
 
     @Nonnull
     public ShellSurface create(@Nonnull final Integer windowHandle) {
         configure(windowHandle);
 
-        final XWindow        xWindow        = this.xWindowFactory.create(windowHandle);
+        final XWindow xWindow = this.xWindowFactory.create(windowHandle);
         final XWindowHandler xWindowHandler = this.xWindowHandlerFactory.create(xWindow);
-        final ShellSurface   shellSurface   = this.simpleShellSurfaceFactory.create(Optional.of(xWindow));
+        final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(Optional.of(xWindow));
 
         shellSurface.register(this);
         shellSurface.register(xWindowHandler);
 
-        this.xSimpleShell.add(shellSurface);
+        this.xScene.add(shellSurface);
 
         return shellSurface;
     }
@@ -134,12 +134,14 @@ public class XCompositor {
 
     @Subscribe
     public void handle(final Destroyed destroyed) {
-        destroyed.getSource().unregister(this);
+        destroyed.getSource()
+                 .unregister(this);
     }
 
     private void requestRender(final ShellSurface shellSurface) {
-        if(this.xSimpleShell.needsRedraw(shellSurface)) {
-            this.xSimpleShell.getShellSurfacesStack().forEach(this.xWindowRenderer::render);
+        if(this.xScene.needsRedraw(shellSurface)) {
+            this.xScene.getShellSurfacesStack()
+                       .forEach(this.xWindowRenderer::render);
         }
     }
 
