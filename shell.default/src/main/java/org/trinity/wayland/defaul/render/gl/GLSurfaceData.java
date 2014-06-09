@@ -11,10 +11,6 @@ import java.nio.ByteBuffer;
 
 import static javax.media.opengl.GL.GL_RGBA;
 import static javax.media.opengl.GL.GL_UNSIGNED_BYTE;
-import static org.freedesktop.wayland.protocol.wl_shm.FORMAT_ARGB8888;
-import static org.freedesktop.wayland.protocol.wl_shm.FORMAT_XRGB8888;
-import static org.trinity.wayland.defaul.render.gl.GLBufferFormat.SHM_ARGB8888;
-import static org.trinity.wayland.defaul.render.gl.GLBufferFormat.SHM_XRGB8888;
 
 @AutoValue
 public abstract class GLSurfaceData {
@@ -25,23 +21,9 @@ public abstract class GLSurfaceData {
 
     public abstract Texture getTexture();
 
-    public GLBufferFormat refresh(final GLProfile   profile,
-                                  final GL2ES2      gl,
-                                  final WlShmBuffer buffer) {
-        final GLBufferFormat format;
-        switch(buffer.getFormat()) {
-            case FORMAT_ARGB8888: {
-                format = SHM_ARGB8888;
-                break;
-            }
-            case FORMAT_XRGB8888: {
-                format = SHM_XRGB8888;
-                break;
-            }
-            default: {
-                throw new UnsupportedOperationException("Format " + buffer.getFormat() + " not supported.");
-            }
-        }
+    public GLSurfaceData refresh(final GLProfile   profile,
+                        final GL2ES2      gl,
+                        final WlShmBuffer buffer) {
 
         final ByteBuffer bufferData = buffer.getByteBuffer();
         final int textureWidth      = buffer.getStride() / 4;
@@ -63,7 +45,6 @@ public abstract class GLSurfaceData {
         getTexture().bind(gl);
         getTexture().updateImage(gl,
                                  textureData);
-
-        return format;
+        return this;
     }
 }
