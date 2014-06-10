@@ -22,8 +22,8 @@ public abstract class GLSurfaceData {
     public abstract Texture getTexture();
 
     public GLSurfaceData refresh(final GLProfile   profile,
-                        final GL2ES2      gl,
-                        final WlShmBuffer buffer) {
+                                 final GL2ES2      gl,
+                                 final WlShmBuffer buffer) {
 
         final ByteBuffer bufferData = buffer.getByteBuffer();
         final int textureWidth      = buffer.getStride() / 4;

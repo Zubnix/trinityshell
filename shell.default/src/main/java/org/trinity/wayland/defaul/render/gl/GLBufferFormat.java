@@ -1,6 +1,6 @@
 package org.trinity.wayland.defaul.render.gl;
 
-enum GLBufferFormat {
+public enum GLBufferFormat {
     SHM_ARGB8888("surface",
                  "surface_argb8888"),
     SHM_XRGB8888("surface",

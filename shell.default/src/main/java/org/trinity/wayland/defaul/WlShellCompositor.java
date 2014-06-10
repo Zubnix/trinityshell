@@ -1,4 +1,4 @@
-package org.trinity.wayland.defaul.render;
+package org.trinity.wayland.defaul;
 
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.server.Display;
@@ -11,12 +11,12 @@ public class WlShellCompositor {
 
     private final Display    display;
     private final WlScene    wlScene;
-    private final WlRenderer wlRenderer;
+    private final WlShmRenderer wlRenderer;
 
     @Inject
     WlShellCompositor(final Display    display,
                       final WlScene    wlScene,
-                      final WlRenderer wlRenderer) {
+                      final WlShmRenderer wlRenderer) {
         this.display = display;
         this.wlScene = wlScene;
         this.wlRenderer = wlRenderer;

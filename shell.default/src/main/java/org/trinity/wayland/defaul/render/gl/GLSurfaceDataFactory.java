@@ -2,9 +2,14 @@ package org.trinity.wayland.defaul.render.gl;
 
 import com.jogamp.opengl.util.texture.Texture;
 
+import javax.inject.Inject;
 import javax.media.opengl.GL2ES2;
 
 public class GLSurfaceDataFactory {
+
+    @Inject
+    GLSurfaceDataFactory() {
+    }
 
     public GLSurfaceData create(final GL2ES2 gl){
         return GLSurfaceData.create(createTexture(gl));

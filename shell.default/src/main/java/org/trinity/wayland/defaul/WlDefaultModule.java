@@ -5,7 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import jnr.ffi.LibraryLoader;
 import org.freedesktop.wayland.server.Display;
-import org.trinity.wayland.defaul.protocol.WlProtocolModule;
+import org.trinity.wayland.defaul.render.gl.GLModule;
 
 import javax.inject.Singleton;
 
@@ -16,11 +16,29 @@ import static dagger.Provides.Type.SET;
  */
 @Module(
         includes = {
-                WlProtocolModule.class
+                GLModule.class
+        },
+        injects = {
+                WlShmRenderer.class,
+                WlShellCompositor.class
         },
         library = true
 )
 public class WlDefaultModule {
+
+
+    @Provides
+    @Singleton
+    Display provideDisplay() {
+        return new Display();
+    }
+
+    @Provides
+    @Singleton
+    WlScene provideWlScene(){
+        return new WlScene();
+    }
+
     @Singleton
     @Provides
     LibC provideLibC(){

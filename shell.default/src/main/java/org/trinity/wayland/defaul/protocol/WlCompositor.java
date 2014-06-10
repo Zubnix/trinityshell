@@ -10,7 +10,7 @@ import org.trinity.PixmanRegionFactory;
 import org.trinity.SimpleShellSurface;
 import org.trinity.SimpleShellSurfaceFactory;
 import org.trinity.shell.scene.api.Buffer;
-import org.trinity.wayland.defaul.render.WlShellCompositor;
+import org.trinity.wayland.defaul.WlShellCompositor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

@@ -1,11 +1,13 @@
-package org.trinity.wayland.defaul.render;
+package org.trinity.wayland.defaul;
 
 import com.google.common.collect.Lists;
 import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.LinkedList;
 
+@Singleton
 public class WlScene {
     private final LinkedList<ShellSurface> shellSurfacesStack = Lists.newLinkedList();
 

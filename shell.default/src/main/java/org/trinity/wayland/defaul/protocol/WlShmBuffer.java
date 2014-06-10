@@ -6,7 +6,7 @@ import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.protocol.wl_buffer;
 import org.freedesktop.wayland.server.Client;
 import org.trinity.shell.scene.api.Buffer;
-import org.trinity.wayland.defaul.WlShmBufferRenderer;
+import org.trinity.wayland.defaul.WlShmRenderer;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -21,7 +21,7 @@ import java.util.Set;
 public class WlShmBuffer extends EventBus implements wl_buffer.Requests, Buffer, ProtocolObject<wl_buffer.Resource>{
 
     private final Set<wl_buffer.Resource> resources  = Sets.newHashSet();
-    private final EventBus                dispatcher = WlShmBufferRenderer.DISPATCHER(this);
+    private final EventBus                dispatcher = WlShmRenderer.DISPATCHER(this);
 
     private final ByteBuffer         byteBuffer;
     private final DimensionImmutable size;
@@ -29,10 +29,10 @@ public class WlShmBuffer extends EventBus implements wl_buffer.Requests, Buffer,
     private final int                format;
 
 
-    WlShmBuffer(@Nonnull final ByteBuffer         byteBuffer,
-                @Nonnull final DimensionImmutable size,
-                @Nonnegative final int            stride,
-                final int format) {
+    WlShmBuffer(@Nonnull     final ByteBuffer         byteBuffer,
+                @Nonnull     final DimensionImmutable size,
+                @Nonnegative final int                stride,
+                             final int                format) {
         this.byteBuffer = byteBuffer;
         this.size = size;
         this.stride = stride;

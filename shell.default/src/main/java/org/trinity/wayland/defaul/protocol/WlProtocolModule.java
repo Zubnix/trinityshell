@@ -2,7 +2,7 @@ package org.trinity.wayland.defaul.protocol;
 
 import dagger.Module;
 import dagger.Provides;
-import org.freedesktop.wayland.server.Display;
+import org.trinity.wayland.defaul.WlDefaultModule;
 
 import javax.inject.Singleton;
 
@@ -10,6 +10,9 @@ import javax.inject.Singleton;
  * Created by Erik De Rijcke on 5/22/14.
  */
 @Module(
+        includes = {
+                WlDefaultModule.class
+        },
         staticInjections = {
           EagerSingletons.class
         },
@@ -27,12 +30,6 @@ import javax.inject.Singleton;
         library = true
 )
 public class WlProtocolModule {
-
-    @Provides
-    @Singleton
-    Display provideDisplay() {
-        return new Display();
-    }
 
     @Provides
     @Singleton

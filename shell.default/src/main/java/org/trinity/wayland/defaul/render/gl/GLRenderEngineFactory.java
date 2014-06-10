@@ -24,20 +24,23 @@ import static javax.media.opengl.GL2ES2.GL_FRAGMENT_SHADER;
 import static javax.media.opengl.GL2ES2.GL_VERTEX_SHADER;
 
 @Singleton
-public class GlRendererFactory {
+public class GLRenderEngineFactory {
 
     private final Provider<GLSurfaceDataFactory> surfaceDataFactoryProvider;
 
     @Inject
-    GlRendererFactory(final Provider<GLSurfaceDataFactory> surfaceDataFactoryProvider) {
+    GLRenderEngineFactory(final Provider<GLSurfaceDataFactory> surfaceDataFactoryProvider) {
         this.surfaceDataFactoryProvider = surfaceDataFactoryProvider;
     }
 
-    public GLRenderer create() {
+    public GLRenderEngine create(final int width,
+                                 final int height) {
         final GLProfile profile = getGLProfile();
-        final GLAutoDrawable drawable = createDrawable(profile);
+        final GLAutoDrawable drawable = createDrawable(profile,
+                                                       width,
+                                                       height);
 
-        return new GLRenderer(this.surfaceDataFactoryProvider.get(),
+        return new GLRenderEngine(this.surfaceDataFactoryProvider.get(),
                               createShaders(drawable.getGL()
                                                     .getGL2ES2()),
                               drawable,
@@ -49,7 +52,9 @@ public class GlRendererFactory {
         return GLProfile.getGL2ES2();
     }
 
-    private GLAutoDrawable createDrawable(final GLProfile profile) {
+    private GLAutoDrawable createDrawable(final GLProfile profile,
+                                          final int       width,
+                                          final int       height) {
         final Display display = NewtFactory.createDisplay(":0.0");
         final Screen screen = NewtFactory.createScreen(display,
                                                        0);
@@ -67,6 +72,10 @@ public class GlRendererFactory {
         gl.glEnable(GL.GL_BLEND);
         gl.glBlendFunc(GL.GL_ONE,
                        GL.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glViewport(0,
+                      0,
+                      width,
+                      height);
         return drawable;
     }
 

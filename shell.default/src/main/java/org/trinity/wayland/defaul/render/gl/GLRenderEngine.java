@@ -6,6 +6,7 @@ import com.jogamp.opengl.util.glsl.ShaderState;
 import com.jogamp.opengl.util.texture.Texture;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.wayland.defaul.protocol.WlShmBuffer;
+import org.trinity.wayland.defaul.WlShmRenderEngine;
 
 import javax.inject.Inject;
 import javax.media.nativewindow.util.DimensionImmutable;
@@ -22,7 +23,7 @@ import static org.freedesktop.wayland.protocol.wl_shm.FORMAT_XRGB8888;
 import static org.trinity.wayland.defaul.render.gl.GLBufferFormat.SHM_ARGB8888;
 import static org.trinity.wayland.defaul.render.gl.GLBufferFormat.SHM_XRGB8888;
 
-public class GLRenderer {
+public class GLRenderEngine implements WlShmRenderEngine {
 
     private final Map<ShellSurface, GLSurfaceData> cachedSurfaceData = Maps.newHashMap();
 
@@ -32,21 +33,23 @@ public class GLRenderer {
     private final Map<GLBufferFormat, ShaderState> shaders;
 
     @Inject
-    GLRenderer(final GLSurfaceDataFactory glSurfaceDataFactory,
-               final Map<GLBufferFormat, ShaderState> shaders,
-               final GLAutoDrawable drawable,
-               final GLProfile profile) {
-        this.shaders = shaders;
+    GLRenderEngine(final GLSurfaceDataFactory             glSurfaceDataFactory,
+                   final Map<GLBufferFormat, ShaderState> shaders,
+                   final GLAutoDrawable                   drawable,
+                   final GLProfile                        profile) {
+        this.shaders              = shaders;
         this.glSurfaceDataFactory = glSurfaceDataFactory;
-        this.drawable = drawable;
-        this.profile = profile;
+        this.drawable             = drawable;
+        this.profile              = profile;
     }
 
+    @Override
     public void draw(final ShellSurface shellSurface,
-                     final WlShmBuffer buffer) {
+                     final WlShmBuffer  buffer) {
 
         makeCurrent();
         final GL2ES2 gl = queryGl();
+
         clear(gl);
         final ShaderState shaderState = enableShader(gl,
                                                      queryBufferFormat(buffer));
@@ -63,8 +66,8 @@ public class GLRenderer {
                       shaderState);
     }
 
-    private void draw(final GL2ES2 gl,
-                      final Texture texture,
+    private void draw(final GL2ES2             gl,
+                      final Texture            texture,
                       final DimensionImmutable size) {
         gl.glActiveTexture(GL2ES2.GL_TEXTURE0);
         texture.bind(gl);
@@ -116,47 +119,49 @@ public class GLRenderer {
                         6);
     }
 
-    private void disableShader(final GL2ES2 gl,
+    private void disableShader(final GL2ES2      gl,
                                final ShaderState shaderState) {
         shaderState.useProgram(gl,
                                false);
     }
 
-    private ShaderState enableShader(final GL2ES2 gl,
+    private ShaderState enableShader(final GL2ES2         gl,
                                      final GLBufferFormat bufferFormat) {
-        final ShaderState sstate = this.shaders.get(bufferFormat);
-        sstate.useProgram(gl,
-                          true);
+        final ShaderState state = this.shaders.get(bufferFormat);
+        state.useProgram(gl,
+                         true);
 
-        sstate.uniform(gl,
-                       new GLUniformData("vu_projection",
-                                         4,
-                                         4,
-                                         FloatBuffer.wrap(projectionMatrix))
-                      );
+        final float[] projectionMatrix = {
+                2.0f / (float) this.drawable.getWidth(), 0, 0, 0,
+                0, 2.0f / -(float) this.drawable.getHeight(), 0, 0,
+                0, 0, -1, 0,
+                -1, 1, 0, 1
+        };
 
-        sstate.uniform(gl,
-                       new GLUniformData("vu_surface_transform",
-                                         3,
-                                         3,
-                                         surface.getTransform()
-                                                .asBuffer()
-                       )
-                      );
+        state.uniform(gl,
+                      new GLUniformData("vu_projection",
+                      4,
+                      4,
+                      FloatBuffer.wrap(projectionMatrix)));
 
-        sstate.uniform(gl,
-                       new GLUniformData("vu_texture_transform",
-                                         3,
-                                         3,
-                                         surfaceData.textureTransform.asBuffer())
-                      );
+//        state.uniform(gl,
+//                      new GLUniformData("vu_surface_transform",
+//                      3,
+//                      3,
+//                      surface.getTransform()
+//                             .asBuffer()));
+//
+//        state.uniform(gl,
+//                      new GLUniformData("vu_texture_transform",
+//                      3,
+//                      3,
+//                      surfaceData.textureTransform.asBuffer()));
 
-        sstate.uniform(gl,
-                       new GLUniformData("fu_texture",
-                                         0)
-                      );
+        state.uniform(gl,
+                      new GLUniformData("fu_texture",
+                      0));
 
-        return sstate;
+        return state;
     }
 
     private GL2ES2 queryGl() {
@@ -197,7 +202,7 @@ public class GLRenderer {
         return format;
     }
 
-    private GLSurfaceData querySurfaceData(final GL2ES2 gl,
+    private GLSurfaceData querySurfaceData(final GL2ES2       gl,
                                            final ShellSurface shellSurface) {
         GLSurfaceData surfaceData = this.cachedSurfaceData.get(shellSurface);
         if(surfaceData == null) {

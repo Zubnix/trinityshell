@@ -3,6 +3,7 @@ package org.trinity.bootstrap;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
+import org.trinity.wayland.defaul.protocol.WlProtocolModule;
 import org.trinity.x11.defaul.X11DefaultModule;
 
 import javax.inject.Singleton;
@@ -14,6 +15,7 @@ import javax.inject.Singleton;
 		},
 		includes = {
 				X11DefaultModule.class,
+                WlProtocolModule.class
 				//BindingDefaultModule.class
 		},
 		complete = true,
