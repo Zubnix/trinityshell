@@ -4,9 +4,11 @@ import com.google.common.collect.Maps;
 import com.jogamp.opengl.util.GLArrayDataClient;
 import com.jogamp.opengl.util.glsl.ShaderState;
 import com.jogamp.opengl.util.texture.Texture;
+import org.ejml.data.FixedMatrix3x3_64F;
+import org.ejml.data.FixedMatrix4x4_64F;
 import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.wayland.defaul.protocol.WlShmBuffer;
 import org.trinity.wayland.defaul.WlShmRenderEngine;
+import org.trinity.wayland.defaul.protocol.WlShmBuffer;
 
 import javax.inject.Inject;
 import javax.media.nativewindow.util.DimensionImmutable;
@@ -50,20 +52,42 @@ public class GLRenderEngine implements WlShmRenderEngine {
         makeCurrent();
         final GL2ES2 gl = queryGl();
 
-        clear(gl);
-        final ShaderState shaderState = enableShader(gl,
-                                                     queryBufferFormat(buffer));
-        draw(gl,
-             querySurfaceData(gl,
-                              shellSurface).refresh(this.profile,
-                                                    gl,
-                                                    buffer)
-                                           .getTexture(),
-             buffer.getSize()
-            );
+        final GLSurfaceData surfaceData = querySurfaceData(gl,
+                                                           shellSurface).refresh(this.profile,
+                                                                                 gl,
+                                                                                 buffer);
 
+        clear(gl);
+        final ShaderState state = this.shaders.get(queryBufferFormat(buffer));
+        enableShader(gl,
+                     state,
+                     new FixedMatrix4x4_64F(2.0 / this.drawable.getWidth(),
+                                            0,
+                                            0,
+                                            0,
+
+                                            0,
+                                            2.0 / -this.drawable.getHeight(),
+                                            0,
+                                            0,
+
+                                            0,
+                                            0,
+                                            -1,
+                                            0,
+
+                                            -1,
+                                            1,
+                                            0,
+                                            1),
+                     surfaceData.getTransform(),
+                     shellSurface.getTransform()
+                    );
+        draw(gl,
+             surfaceData.getTexture(),
+             buffer.getSize());
         disableShader(gl,
-                      shaderState);
+                      state);
     }
 
     private void draw(final GL2ES2             gl,
@@ -125,43 +149,84 @@ public class GLRenderEngine implements WlShmRenderEngine {
                                false);
     }
 
-    private ShaderState enableShader(final GL2ES2         gl,
-                                     final GLBufferFormat bufferFormat) {
-        final ShaderState state = this.shaders.get(bufferFormat);
+    private void enableShader(final GL2ES2 gl,
+                              final ShaderState state,
+                              final FixedMatrix4x4_64F projection,
+                              final FixedMatrix3x3_64F textureTransform,
+                              final FixedMatrix3x3_64F bufferTransform) {
         state.useProgram(gl,
                          true);
 
-        final float[] projectionMatrix = {
-                2.0f / (float) this.drawable.getWidth(), 0, 0, 0,
-                0, 2.0f / -(float) this.drawable.getHeight(), 0, 0,
-                0, 0, -1, 0,
-                -1, 1, 0, 1
-        };
-
         state.uniform(gl,
                       new GLUniformData("vu_projection",
-                      4,
-                      4,
-                      FloatBuffer.wrap(projectionMatrix)));
+                                        4,
+                                        4,
+                                        FloatBuffer.wrap(new float[]{
+                                                (float) projection.a11,
+                                                (float) projection.a12,
+                                                (float) projection.a13,
+                                                (float) projection.a14,
 
-//        state.uniform(gl,
-//                      new GLUniformData("vu_surface_transform",
-//                      3,
-//                      3,
-//                      surface.getTransform()
-//                             .asBuffer()));
-//
-//        state.uniform(gl,
-//                      new GLUniformData("vu_texture_transform",
-//                      3,
-//                      3,
-//                      surfaceData.textureTransform.asBuffer()));
+                                                (float) projection.a21,
+                                                (float) projection.a22,
+                                                (float) projection.a23,
+                                                (float) projection.a24,
+
+                                                (float) projection.a31,
+                                                (float) projection.a32,
+                                                (float) projection.a33,
+                                                (float) projection.a34,
+
+                                                (float) projection.a41,
+                                                (float) projection.a42,
+                                                (float) projection.a43,
+                                                (float) projection.a44
+                                        })
+                      )
+                     );
+
+        state.uniform(gl,
+                      new GLUniformData("vu_surface_transform",
+                                        3,
+                                        3,
+                                        FloatBuffer.wrap(new float[]{
+                                                (float) bufferTransform.a11,
+                                                (float) bufferTransform.a12,
+                                                (float) bufferTransform.a13,
+
+                                                (float) bufferTransform.a21,
+                                                (float) bufferTransform.a22,
+                                                (float) bufferTransform.a23,
+
+                                                (float) bufferTransform.a31,
+                                                (float) bufferTransform.a32,
+                                                (float) bufferTransform.a33
+                                        })
+                      )
+                     );
+        state.uniform(gl,
+                      new GLUniformData("vu_texture_transform",
+                                        3,
+                                        3,
+                                        FloatBuffer.wrap(new float[]{
+                                                (float) textureTransform.a11,
+                                                (float) textureTransform.a12,
+                                                (float) textureTransform.a13,
+
+                                                (float) textureTransform.a21,
+                                                (float) textureTransform.a22,
+                                                (float) textureTransform.a23,
+
+                                                (float) textureTransform.a31,
+                                                (float) textureTransform.a32,
+                                                (float) textureTransform.a33
+                                        })
+                      )
+                     );
 
         state.uniform(gl,
                       new GLUniformData("fu_texture",
                       0));
-
-        return state;
     }
 
     private GL2ES2 queryGl() {

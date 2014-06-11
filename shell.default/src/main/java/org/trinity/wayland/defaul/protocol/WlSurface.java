@@ -5,7 +5,9 @@ import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import org.ejml.data.FixedMatrix3x3_64F;
 import org.freedesktop.wayland.protocol.wl_callback;
+import org.freedesktop.wayland.protocol.wl_output;
 import org.freedesktop.wayland.protocol.wl_surface;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Resource;
@@ -16,7 +18,6 @@ import org.trinity.wayland.defaul.events.ResourceDestroyed;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 import javax.media.nativewindow.util.Rectangle;
-
 import java.util.Optional;
 import java.util.Set;
 
@@ -61,7 +62,26 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
     @Override
     public void setBufferTransform(final wl_surface.Resource resource,
                                    final int                 transform) {
+        this.shellSurface.accept(shellSurfaceConfigurable ->
+                                 shellSurfaceConfigurable.setTransform(getMatrix(transform)));
+    }
 
+    private FixedMatrix3x3_64F getMatrix(final int transform){
+        switch (transform) {
+            case wl_output.TRANSFORM_NORMAL:
+            case wl_output.TRANSFORM_90:
+            case wl_output.TRANSFORM_180:
+            case wl_output.TRANSFORM_270:
+            case wl_output.TRANSFORM_FLIPPED:
+            case wl_output.TRANSFORM_FLIPPED_90:
+            case wl_output.TRANSFORM_FLIPPED_180:
+            case wl_output.TRANSFORM_FLIPPED_270:
+                return new FixedMatrix3x3_64F(1,0,0,
+                                              0,1,0,
+                                              0,0,1);
+            default:
+                throw new IllegalArgumentException("Invalid transform");
+        }
     }
 
     @Override

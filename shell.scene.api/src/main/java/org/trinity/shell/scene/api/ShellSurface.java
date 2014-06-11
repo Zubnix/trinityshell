@@ -19,6 +19,7 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api;
 
+import org.ejml.data.FixedMatrix3x3_64F;
 import org.trinity.common.Listenable;
 import org.trinity.shell.scene.api.event.HideRequest;
 import org.trinity.shell.scene.api.event.LowerRequest;
@@ -44,53 +45,22 @@ import java.util.function.IntConsumer;
 public interface ShellSurface extends Listenable {
 
     void accept(@Nonnull ShellSurfaceConfiguration shellSurfaceConfiguration);
-
     @Nonnull
     List<IntConsumer> getPaintCallbacks();
-
     @Nonnull
     PointImmutable getPosition();
-
     @Nonnull
     Optional<Region> getInputRegion();
-
     @Nonnull
     Optional<Region> getDamage();
-
     @Nonnull
     Optional<Region> getOpaqueRegion();
-
-    /**
-     * ************************************
-     * The underlying, {@code DisplaySurface} that this shell surface will use
-     * to display it's contents. A display surface can be 'shared', so it is
-     * possible that multiple shell surface's use the same display surface.
-     *
-     * @return a platform display buffer.
-     * **************************************
-     */
     @Nonnull
     Optional<Buffer> getBuffer();
-
-    /**
-     * ************************************
-     * Signals if this node is destroyed. A destroyed node should not be able to
-     * process any geometry changes and should be discarded.
-     *
-     * @return a true if destroyed, false if not.
-     * **************************************
-     */
     @Nonnull
     Boolean isDestroyed();
-
-    /**
-     * ************************************
-     * Request that this node is moved. This will cause any subscribed node
-     * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.MoveRequest}.
-     * <p>
-     * **************************************
-     */
+    @Nonnull
+    FixedMatrix3x3_64F getTransform();
     @Nonnull
     default ShellSurface requestMove(final int x,
                                      final int y) {
@@ -99,15 +69,6 @@ public interface ShellSurface extends Listenable {
                                         y)));
         return this;
     }
-
-    /**
-     * ************************************
-     * Request that this node is resized. This will cause any subscribed node
-     * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ResizeRequest}.
-     * <p>
-     * **************************************
-     */
     @Nonnull
     default ShellSurface requestResize(@Nonnegative final int width,
                                        @Nonnegative final int height) {
@@ -116,63 +77,26 @@ public interface ShellSurface extends Listenable {
                                height)));
         return this;
     }
-
-    /**
-     * ************************************
-     * Request that this node is raised. This will cause any subscribed node
-     * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.RaiseRequest}.
-     * <p>
-     * **************************************
-     */
     @Nonnull
     default ShellSurface requestRaise() {
         post(new RaiseRequest(this));
         return this;
     }
-
-    /**
-     * ************************************
-     * Request that this node is lowered. This will cause any subscribed node
-     * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.LowerRequest}.
-     * <p>
-     * **************************************
-     */
     @Nonnull
     default ShellSurface requestLower() {
         post(new LowerRequest(this));
         return this;
     }
-
-    /**
-     * ************************************
-     * Request that this node is shown. This will cause any subscribed node
-     * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.ShowRequest}.
-     * <p>
-     * **************************************
-     */
     @Nonnull
     default ShellSurface requestShow() {
         post(new ShowRequest(this));
         return this;
     }
-
-    /**
-     * ************************************
-     * Request that this node is hidden. This will cause any subscribed node
-     * listener, e.g. a layout manager, to receive a
-     * {@link org.trinity.shell.scene.api.event.Hidden}.
-     * <p>
-     * **************************************
-     */
     @Nonnull
     default ShellSurface requestHide() {
         post(new HideRequest(this));
         return this;
     }
-
     @Nonnull
     default ShellSurface firePaintCallbacks(final int serial){
         getPaintCallbacks().forEach(paintCallback -> paintCallback.accept(serial));

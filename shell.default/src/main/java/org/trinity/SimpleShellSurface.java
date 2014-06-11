@@ -23,6 +23,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
+import org.ejml.data.FixedMatrix3x3_64F;
 import org.trinity.shell.scene.api.Buffer;
 import org.trinity.shell.scene.api.Region;
 import org.trinity.shell.scene.api.ShellSurface;
@@ -49,40 +50,49 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     //pending states
     @Nonnull
-    private List<IntConsumer> pendingCallbacks    = Lists.newLinkedList();
+    private List<IntConsumer>  pendingCallbacks    = Lists.newLinkedList();
     @Nonnull
-    private Optional<Region>  pendingOpaqueRegion = Optional.empty();
+    private Optional<Region>   pendingOpaqueRegion = Optional.empty();
     @Nonnull
-    private Optional<Region>  pendingInputRegion  = Optional.empty();
+    private Optional<Region>   pendingInputRegion  = Optional.empty();
     @Nonnull
-    private Optional<Region>  pendingDamage       = Optional.empty();
+    private Optional<Region>   pendingDamage       = Optional.empty();
     @Nonnull
-    private Optional<Buffer>  pendingBuffer       = Optional.empty();
+    private Optional<Buffer>   pendingBuffer       = Optional.empty();
     @Nonnull
-    private PointImmutable    pendingPosition     = new Point(0,
-                                                              0);
+    private FixedMatrix3x3_64F pendingTransform    = new FixedMatrix3x3_64F(1, 0, 0,
+                                                                            0, 1, 0,
+                                                                            0, 0, 1);
+    @Nonnull
+    private PointImmutable     pendingPosition     = new Point(0,
+                                                               0);
+
     //committed states
     @Nonnull
-    private List<IntConsumer> callbacks    = Lists.newLinkedList();
+    private List<IntConsumer>  callbacks    = Lists.newLinkedList();
     @Nonnull
-    private Optional<Region>  opaqueRegion = Optional.empty();
+    private Optional<Region>   opaqueRegion = Optional.empty();
     @Nonnull
-    private Optional<Region>  inputRegion  = Optional.empty();
+    private Optional<Region>   inputRegion  = Optional.empty();
     @Nonnull
-    private Optional<Region>  damage       = Optional.empty();
+    private Optional<Region>   damage       = Optional.empty();
     @Nonnull
-    private Optional<Buffer>  buffer       = Optional.empty();
+    private Optional<Buffer>   buffer       = Optional.empty();
     @Nonnull
-    private PointImmutable    position     = new Point(0,
-                                                       0);
+    private FixedMatrix3x3_64F transform    = new FixedMatrix3x3_64F(1, 0, 0,
+                                                                     0, 1, 0,
+                                                                     0, 0, 1);
+    @Nonnull
+    private PointImmutable     position     = new Point(0,
+                                                        0);
     //additional server side states
     @Nonnull
-    private Boolean           destroyed    = Boolean.FALSE;
+    private Boolean            destroyed    = Boolean.FALSE;
 
     SimpleShellSurface(@Provided final PixmanRegionFactory pixmanRegionFactory,
-                       @Nonnull  final Optional<Buffer>    optionalBuffer) {
+                       @Nonnull final Optional<Buffer> optionalBuffer) {
         this.pixmanRegionFactory = pixmanRegionFactory;
-        this.buffer              = optionalBuffer;
+        this.buffer = optionalBuffer;
     }
 
     @Override
@@ -104,6 +114,12 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
+    public FixedMatrix3x3_64F getTransform() {
+        return this.transform;
+    }
+
+    @Nonnull
+    @Override
     public ShellSurfaceConfigurable markDestroyed() {
         this.destroyed = true;
         post(new Destroyed(this));
@@ -120,10 +136,10 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable attachBuffer(@Nonnull final Buffer  buffer,
+    public ShellSurfaceConfigurable attachBuffer(@Nonnull final Buffer buffer,
                                                  @Nonnull final Integer relX,
                                                  @Nonnull final Integer relY) {
-        this.pendingBuffer   = Optional.of(buffer);
+        this.pendingBuffer = Optional.of(buffer);
         this.pendingPosition = new Point(this.pendingPosition.getX() + relX,
                                          this.pendingPosition.getY() + relY);
         return this;
@@ -131,9 +147,25 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
+    public ShellSurfaceConfigurable setTransform(final FixedMatrix3x3_64F transform) {
+        this.pendingTransform = transform;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public ShellSurfaceConfigurable removeTransform() {
+        this.pendingTransform = new FixedMatrix3x3_64F(1, 0, 0,
+                                                       0, 1, 0,
+                                                       0, 0, 1);
+        return this;
+    }
+
+    @Nonnull
+    @Override
     public ShellSurfaceConfigurable detachBuffer() {
-        this.pendingBuffer   = Optional.empty();
-        this.pendingDamage   = Optional.empty();
+        this.pendingBuffer = Optional.empty();
+        this.pendingDamage = Optional.empty();
         this.pendingPosition = new Point(0,
                                          0);
         return this;
@@ -173,6 +205,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Override
     public ShellSurfaceConfigurable commit() {
         //flush
+        this.transform = this.pendingTransform;
         this.buffer       = this.pendingBuffer;
         this.position     = this.pendingPosition;
         this.damage       = this.pendingDamage;
@@ -226,7 +259,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Override
     public ShellSurfaceConfigurable setPosition(@Nonnull final PointImmutable position) {
         this.pendingPosition = new Point(position.getX(),
-                                  position.getY());
+                                         position.getY());
         post(new Moved(this,
                        this.pendingPosition));
         return this;

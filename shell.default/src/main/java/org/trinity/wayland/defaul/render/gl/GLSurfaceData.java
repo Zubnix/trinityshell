@@ -3,6 +3,7 @@ package org.trinity.wayland.defaul.render.gl;
 import com.google.auto.value.AutoValue;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
+import org.ejml.data.FixedMatrix3x3_64F;
 import org.trinity.wayland.defaul.protocol.WlShmBuffer;
 
 import javax.media.opengl.GL2ES2;
@@ -46,5 +47,20 @@ public abstract class GLSurfaceData {
         getTexture().updateImage(gl,
                                  textureData);
         return this;
+    }
+
+    public FixedMatrix3x3_64F getTransform(){
+        final Texture texture = getTexture();
+        return new FixedMatrix3x3_64F(1.0/texture.getImageWidth(),
+                                      0,
+                                      0,
+
+                                      0,
+                                      1.0/texture.getImageHeight(),
+                                      0,
+
+                                      0,
+                                      0,
+                                      1);
     }
 }
