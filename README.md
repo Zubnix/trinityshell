@@ -7,15 +7,15 @@ It is still a young project that is usable but not usefull as a lot of very basi
 
 ##Building  and Running
 
-`git clone git@github.com:Zubnix/trinityshell.git` Clone the project
-`git submodule init` Initialie the submodules
-`git submodule update` Update the submodules
-`cd externals/xcb4j` Go to the xcb4j submodule
-`mvn install` Build the xcb4j sudmoule. In case xcb4j doesn't want to build, have a look at the xcb4j project on github.
-`cd ../..` Go back to the project directory
-`mvn install` Build the project
-`cd bootstrap` Go to the bootstrap directory
-`mvn assembly:assembly` Build a fat jar of the project
+- `git clone git@github.com:Zubnix/trinityshell.git` Clone the project
+- `git submodule init` Initialie the submodules
+- `git submodule update` Update the submodules
+- `cd externals/xcb4j` Go to the xcb4j submodule
+- `mvn install` Build the xcb4j sudmoule. In case xcb4j doesn't want to build, have a look at the xcb4j project on github.
+- `cd ../..` Go back to the project directory
+- `mvn install` Build the project
+- `cd bootstrap` Go to the bootstrap directory
+- `mvn assembly:assembly` Build a fat jar of the project
 
 Now startup your favority X test server (like Xephyr) eg `Xephyr -ac :1`. Set the DISPLAY environment variable to :1 with the command `export DISPLAY=:1`. Now you can start trinity shell java -jar bootstrap-0.0.2-SNAPSHOT-jar-with-dependencies.jar`. If you see errors related to libpng, install libpng12 using your distro's package manager.
 
