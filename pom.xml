@@ -59,12 +59,12 @@
         <module>bootstrap</module>
     </modules>
 
-    <!--<repositories>-->
-    <!--<repository>-->
-    <!--<id>apache-snapshots</id>-->
-    <!--<url>https://repository.apache.org/snapshots/</url>-->
-    <!--</repository>-->
-    <!--</repositories>-->
+    <repositories>
+        <repository>
+            <id>apache-snapshots</id>
+            <url>https://repository.apache.org/snapshots/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <!-- google guice+guava -->
