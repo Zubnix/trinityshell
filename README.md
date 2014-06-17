@@ -23,6 +23,6 @@ You'll still have to start programs from outside Trinity Shell, in command line 
 
 ##Branches
 
-- master: Uses QtJambi (Qt bindings for java) and X
-- 0.0.3-SNAPSHOT: Uses JavaFX and X. Based on master.
-- 0.1.0-SNAPSHOT: Targets wayland, the successor of X. Complete rewrite.
+- master: Uses QtJambi (Qt bindings for java) and X. JDK7.
+- 0.0.3-SNAPSHOT: Uses JavaFX and X. Based on master. JDK8.
+- 0.1.0-SNAPSHOT: Targets wayland, the successor of X. Complete rewrite. JDK8.
