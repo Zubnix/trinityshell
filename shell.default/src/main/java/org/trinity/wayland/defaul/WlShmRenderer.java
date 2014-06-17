@@ -21,13 +21,13 @@ public class WlShmRenderer {
         }};
     }
 
-    private final Display        display;
+    private final Display           display;
     private final WlShmRenderEngine engine;
 
     private ShellSurface current;
 
     @Inject
-    WlShmRenderer(final Display display,
+    WlShmRenderer(final Display           display,
                   final WlShmRenderEngine engine) {
         this.display = display;
         this.engine  = engine;

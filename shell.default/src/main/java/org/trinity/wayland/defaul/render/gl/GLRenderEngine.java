@@ -20,6 +20,7 @@ import javax.media.opengl.GLUniformData;
 import java.nio.FloatBuffer;
 import java.util.Map;
 
+import static javax.media.opengl.GL.*;
 import static org.freedesktop.wayland.protocol.wl_shm.FORMAT_ARGB8888;
 import static org.freedesktop.wayland.protocol.wl_shm.FORMAT_XRGB8888;
 import static org.trinity.wayland.defaul.render.gl.GLBufferFormat.SHM_ARGB8888;
@@ -80,7 +81,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
                                             1,
                                             0,
                                             1),
-                     surfaceData.getTransform(),
+                     surfaceData.calcTransform(),
                      shellSurface.getTransform()
                     );
         draw(gl,
@@ -93,7 +94,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
     private void draw(final GL2ES2             gl,
                       final Texture            texture,
                       final DimensionImmutable size) {
-        gl.glActiveTexture(GL2ES2.GL_TEXTURE0);
+        gl.glActiveTexture(GL_TEXTURE0);
         texture.bind(gl);
 
         final int width = size.getWidth();
@@ -129,7 +130,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
 
         final GLArrayDataClient vertexData = GLArrayDataClient.createGLSL("va_vertex",
                                                                           2,
-                                                                          GL2ES2.GL_FLOAT,
+                                                                          GL_FLOAT,
                                                                           false,
                                                                           6);
         vertexData.setName("va_vertex");
@@ -138,7 +139,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
         vertexData.enableBuffer(gl,
                                 true);
 
-        gl.glDrawArrays(GL2ES2.GL_TRIANGLES,
+        gl.glDrawArrays(GL_TRIANGLES,
                         0,
                         6);
     }
@@ -156,34 +157,33 @@ public class GLRenderEngine implements WlShmRenderEngine {
                               final FixedMatrix3x3_64F bufferTransform) {
         state.useProgram(gl,
                          true);
-
         state.uniform(gl,
-                      new GLUniformData("vu_projection",
-                                        4,
-                                        4,
-                                        FloatBuffer.wrap(new float[]{
-                                                (float) projection.a11,
-                                                (float) projection.a12,
-                                                (float) projection.a13,
-                                                (float) projection.a14,
+                new GLUniformData("vu_projection",
+                        4,
+                        4,
+                        FloatBuffer.wrap(new float[]{
+                                (float) projection.a11,
+                                (float) projection.a12,
+                                (float) projection.a13,
+                                (float) projection.a14,
 
-                                                (float) projection.a21,
-                                                (float) projection.a22,
-                                                (float) projection.a23,
-                                                (float) projection.a24,
+                                (float) projection.a21,
+                                (float) projection.a22,
+                                (float) projection.a23,
+                                (float) projection.a24,
 
-                                                (float) projection.a31,
-                                                (float) projection.a32,
-                                                (float) projection.a33,
-                                                (float) projection.a34,
+                                (float) projection.a31,
+                                (float) projection.a32,
+                                (float) projection.a33,
+                                (float) projection.a34,
 
-                                                (float) projection.a41,
-                                                (float) projection.a42,
-                                                (float) projection.a43,
-                                                (float) projection.a44
-                                        })
-                      )
-                     );
+                                (float) projection.a41,
+                                (float) projection.a42,
+                                (float) projection.a43,
+                                (float) projection.a44
+                        })
+                )
+        );
 
         state.uniform(gl,
                       new GLUniformData("vu_surface_transform",
@@ -240,7 +240,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
                         0,
                         1,
                         1);
-        gl.glClear(GL2ES2.GL_COLOR_BUFFER_BIT);
+        gl.glClear(GL_COLOR_BUFFER_BIT);
     }
 
     private void makeCurrent() {

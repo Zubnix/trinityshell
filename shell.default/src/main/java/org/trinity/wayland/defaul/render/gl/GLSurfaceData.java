@@ -49,7 +49,7 @@ public abstract class GLSurfaceData {
         return this;
     }
 
-    public FixedMatrix3x3_64F getTransform(){
+    public FixedMatrix3x3_64F calcTransform(){
         final Texture texture = getTexture();
         return new FixedMatrix3x3_64F(1.0/texture.getImageWidth(),
                                       0,
