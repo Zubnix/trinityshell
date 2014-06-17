@@ -36,9 +36,9 @@ public class WlJobExecutor {
     private static final List<Runnable> NO_JOBS        = Collections.emptyList();
 
     private final ByteBuffer eventNewJobBuffer   = ByteBuffer.allocateDirect(1)
-                                                             .putInt(EVENT_NEW_JOB);
+                                                             .put(EVENT_NEW_JOB);
     private final ByteBuffer eventFinishedBuffer = ByteBuffer.allocateDirect(1)
-                                                             .putInt(EVENT_FINISHED);
+                                                             .put(EVENT_FINISHED);
     private final ByteBuffer eventReadBuffer     = ByteBuffer.allocateDirect(1);
 
     private final ReentrantLock        jobsLock    = new ReentrantLock();
@@ -83,6 +83,7 @@ public class WlJobExecutor {
         try {
             this.jobsLock.lock();
             this.pendingJobs.add(job);
+            //wake up event thread
             fireNewJobEvent();
         } catch (final IOException e) {
             //"rollback"
@@ -102,7 +103,6 @@ public class WlJobExecutor {
             LOGGER.error("Failed to close pipe write fd",
                     new IOException(getError()));
         }
-
         this.display.getEventLoop()
                     .remove(this.eventSource);
     }

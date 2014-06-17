@@ -15,6 +15,7 @@ package org.trinity.bootstrap;
 import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.ServiceManager;
 import dagger.ObjectGraph;
+import pixman4j.LibPixmanLoader;
 import xcb4j.LibXcbLoader;
 
 import javax.inject.Inject;
@@ -31,6 +32,7 @@ public class EntryPoint {
 
     public static void main(final String[] args) {
         LibXcbLoader.load();
+        LibPixmanLoader.load();
 
 		final TrinityShellModule trinityShellModule = new TrinityShellModule();
 		final ObjectGraph objectGraph = ObjectGraph.create(trinityShellModule);

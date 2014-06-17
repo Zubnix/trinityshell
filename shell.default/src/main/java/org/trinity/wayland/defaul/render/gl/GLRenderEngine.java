@@ -150,8 +150,8 @@ public class GLRenderEngine implements WlShmRenderEngine {
                                false);
     }
 
-    private void enableShader(final GL2ES2 gl,
-                              final ShaderState state,
+    private void enableShader(final GL2ES2             gl,
+                              final ShaderState        state,
                               final FixedMatrix4x4_64F projection,
                               final FixedMatrix3x3_64F textureTransform,
                               final FixedMatrix3x3_64F bufferTransform) {
@@ -246,7 +246,9 @@ public class GLRenderEngine implements WlShmRenderEngine {
     private void makeCurrent() {
         final int status = this.drawable.getContext()
                                         .makeCurrent();
-        if(status != GLContext.CONTEXT_CURRENT) { throw new IllegalStateException(); }
+        if(status != GLContext.CONTEXT_CURRENT) {
+            throw new IllegalStateException();
+        }
     }
 
     private GLBufferFormat queryBufferFormat(final WlShmBuffer buffer) {

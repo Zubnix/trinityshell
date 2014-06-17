@@ -41,11 +41,10 @@ public class GLRenderEngineFactory {
                                                        height);
 
         return new GLRenderEngine(this.surfaceDataFactoryProvider.get(),
-                              createShaders(drawable.getGL()
-                                                    .getGL2ES2()),
-                              drawable,
-                              profile
-        );
+                                  createShaders(drawable.getGL()
+                                                        .getGL2ES2()),
+                                  drawable,
+                                  profile);
     }
 
     private GLProfile getGLProfile() {
@@ -101,7 +100,9 @@ public class GLRenderEngineFactory {
             prog.add(vcode);
             prog.add(fcode);
             if(!prog.link(gl,
-                          System.err)) { throw new GLException("Couldn't link program: " + prog); }
+                          System.err)) {
+                throw new GLException("Couldn't link program: " + prog);
+            }
 
             final ShaderState state = new ShaderState();
             state.attachShaderProgram(gl,

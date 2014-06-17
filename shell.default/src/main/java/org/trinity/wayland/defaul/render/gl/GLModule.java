@@ -21,10 +21,9 @@ public class GLModule {
     private final int width;
     private final int height;
 
-    public GLModule(final int width,
-                    final int height) {
-        this.width  = width;
-        this.height = height;
+    public GLModule() {
+        this.width  = 800;
+        this.height = 600;
     }
 
     @Provides
