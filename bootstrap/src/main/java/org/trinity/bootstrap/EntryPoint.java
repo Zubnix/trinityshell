@@ -36,7 +36,10 @@ public class EntryPoint {
 
 		final TrinityShellModule trinityShellModule = new TrinityShellModule();
 		final ObjectGraph objectGraph = ObjectGraph.create(trinityShellModule);
+
         trinityShellModule.setObjectGraph(objectGraph);
+        objectGraph.injectStatics();
+
 		objectGraph.get(EntryPoint.class).enter();
     }
 }
