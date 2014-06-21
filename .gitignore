@@ -11,3 +11,5 @@ trinity.log
 target/
 build/
 externals/
+site-resources/
+site/
