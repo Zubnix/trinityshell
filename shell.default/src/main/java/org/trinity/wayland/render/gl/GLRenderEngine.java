@@ -82,8 +82,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
                                             0,
                                             1),
                      surfaceData.calcTransform(),
-                     shellSurface.getTransform()
-                    );
+                     shellSurface.getTransform());
         draw(gl,
              surfaceData.getTexture(),
              buffer.getSize());
@@ -244,11 +243,14 @@ public class GLRenderEngine implements WlShmRenderEngine {
     }
 
     private void makeCurrent() {
-        final int status = this.drawable.getContext()
-                                        .makeCurrent();
-        if(status != GLContext.CONTEXT_CURRENT) {
-            throw new IllegalStateException();
+        final int current = this.drawable.getContext().makeCurrent();
+        switch (current){
+            case GLContext.CONTEXT_NOT_CURRENT:
+                throw new IllegalStateException("GLContext could not be made current.");
+            case GLContext.CONTEXT_CURRENT:
+            case GLContext.CONTEXT_CURRENT_NEW:
         }
+
     }
 
     private GLBufferFormat queryBufferFormat(final WlShmBuffer buffer) {
