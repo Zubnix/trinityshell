@@ -12,4 +12,3 @@ void main() {
     gl_Position = vu_projection * vec4(surface_pos.xy, 0, surface_pos.z);
     vo_tex_coord = texture_pos.xy / texture_pos.z;
 }
-
