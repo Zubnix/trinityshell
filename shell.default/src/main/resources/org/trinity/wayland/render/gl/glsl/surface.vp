@@ -1,3 +1,5 @@
+//VERTEX SHADER
+#version 100
 attribute vec2 va_vertex;
 
 uniform mat4 vu_projection;

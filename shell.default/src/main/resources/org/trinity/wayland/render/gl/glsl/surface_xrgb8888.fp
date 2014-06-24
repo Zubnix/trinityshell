@@ -1,3 +1,5 @@
+//FRAGMENT SHADER
+#version 100
 uniform sampler2D fu_texture;
 
 varying mediump vec2 vo_tex_coord;
