@@ -49,15 +49,12 @@ public class GLRenderEngine implements WlShmRenderEngine {
     @Override
     public void draw(final ShellSurface shellSurface,
                      final WlShmBuffer  buffer) {
-
         makeCurrent();
         final GL2ES2 gl = queryGl();
-
         final GLSurfaceData surfaceData = querySurfaceData(gl,
                                                            shellSurface).refresh(this.profile,
                                                                                  gl,
                                                                                  buffer);
-
         clear(gl);
         final ShaderState state = this.shaders.get(queryBufferFormat(buffer));
         enableShader(gl,
@@ -88,6 +85,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
              buffer.getSize());
         disableShader(gl,
                       state);
+        this.drawable.swapBuffers();
     }
 
     private void draw(final GL2ES2             gl,
@@ -126,7 +124,6 @@ public class GLRenderEngine implements WlShmRenderEngine {
                 bottomRightX,
                 bottomRightY
         };
-
         final GLArrayDataClient vertexData = GLArrayDataClient.createGLSL("va_vertex",
                                                                           2,
                                                                           GL_FLOAT,
@@ -137,7 +134,6 @@ public class GLRenderEngine implements WlShmRenderEngine {
         vertexData.seal(true);
         vertexData.enableBuffer(gl,
                                 true);
-
         gl.glDrawArrays(GL_TRIANGLES,
                         0,
                         6);
@@ -183,7 +179,6 @@ public class GLRenderEngine implements WlShmRenderEngine {
                         })
                 )
         );
-
         state.uniform(gl,
                       new GLUniformData("vu_surface_transform",
                                         3,
@@ -222,7 +217,6 @@ public class GLRenderEngine implements WlShmRenderEngine {
                                         })
                       )
                      );
-
         state.uniform(gl,
                       new GLUniformData("fu_texture",
                       0));
@@ -235,6 +229,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
     }
 
     private void clear(final GL2ES2 gl) {
+        //set everything to blue when doing a render pass, eases debugging.
         gl.glClearColor(0,
                         0,
                         1,
