@@ -29,7 +29,7 @@ public class WlShellService extends AbstractExecutionThreadService {
 
     @Override
     protected void run() {
-        this.display.addSocket("wayland-1");
+        this.display.addSocket("wayland-0");
         this.display.run();
     }
 
