@@ -104,9 +104,7 @@ public class WlJobExecutor {
             LOGGER.error("Failed to close pipe write fd",
                     new IOException(getError()));
         }
-        //FIXME
-//        this.display.getEventLoop()
-//                    .remove(this.eventSource);
+        this.eventSource.remove();
     }
 
     private int handle(final int fd,
