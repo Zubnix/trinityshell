@@ -30,7 +30,7 @@ public class WlModule {
     @Provides
     @Singleton
     Display provideDisplay() {
-        return new Display();
+        return Display.create();
     }
 
     @Provides

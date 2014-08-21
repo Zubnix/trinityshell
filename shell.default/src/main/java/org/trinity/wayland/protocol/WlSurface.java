@@ -4,16 +4,17 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import org.ejml.data.FixedMatrix3x3_64F;
-import org.freedesktop.wayland.protocol.wl_callback;
-import org.freedesktop.wayland.protocol.wl_output;
-import org.freedesktop.wayland.protocol.wl_surface;
 import org.freedesktop.wayland.server.Client;
-import org.freedesktop.wayland.server.Resource;
+import org.freedesktop.wayland.server.Listener;
+import org.freedesktop.wayland.server.WlBufferResource;
+import org.freedesktop.wayland.server.WlCallbackResource;
+import org.freedesktop.wayland.server.WlRegionResource;
+import org.freedesktop.wayland.server.WlSurfaceRequestsV3;
+import org.freedesktop.wayland.server.WlSurfaceResource;
+import org.freedesktop.wayland.shared.WlOutputTransform;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
-import org.trinity.wayland.events.ResourceDestroyed;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
@@ -27,13 +28,13 @@ import static com.google.common.base.Preconditions.checkArgument;
  * Created by Erik De Rijcke on 5/23/14.
  */
 @AutoFactory(className = "WlSurfaceFactory")
-public class WlSurface extends EventBus implements wl_surface.Requests3, ProtocolObject<wl_surface.Resource> {
+public class WlSurface extends EventBus implements WlSurfaceRequestsV3, ProtocolObject<WlSurfaceResource> {
 
-    private final Set<wl_surface.Resource> resources         = Sets.newHashSet();
-    private final Object                   destroyedListener = new Object(){
-        @Subscribe
-        public void handle(final ResourceDestroyed resourceDestroyed){
-            WlSurface.this.pendingBuffer.get().unregister(this);
+    private final Set<WlSurfaceResource> resources         = Sets.newHashSet();
+    private final Listener destroyListener = new Listener() {
+        @Override
+        public void handle() {
+            remove();
             detachBuffer();
         }
     };
@@ -41,7 +42,7 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
     private final WlCallbackFactory wlCallbackFactory;
     private final ShellSurface      shellSurface;
 
-    private Optional<WlShmBuffer> pendingBuffer = Optional.empty();
+    private Optional<WlBufferResource> pendingBuffer = Optional.empty();
 
     WlSurface(@Provided final WlCallbackFactory wlCallbackFactory,
               final ShellSurface                shellSurface) {
@@ -54,78 +55,71 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
     }
 
     @Override
-    public void setBufferScale(final wl_surface.Resource resource,
-                               final int                 scale) {
+    public void setBufferScale(final WlSurfaceResource resource,
+                               final int               scale) {
 
     }
 
     @Override
-    public void setBufferTransform(final wl_surface.Resource resource,
-                                   final int                 transform) {
+    public void setBufferTransform(final WlSurfaceResource resource,
+                                   final int               transform) {
         this.shellSurface.accept(shellSurfaceConfigurable ->
                                  shellSurfaceConfigurable.setTransform(getMatrix(transform)));
     }
 
     private FixedMatrix3x3_64F getMatrix(final int transform){
-        switch (transform) {
-            case wl_output.TRANSFORM_NORMAL:
-            case wl_output.TRANSFORM_90:
-            case wl_output.TRANSFORM_180:
-            case wl_output.TRANSFORM_270:
-            case wl_output.TRANSFORM_FLIPPED:
-            case wl_output.TRANSFORM_FLIPPED_90:
-            case wl_output.TRANSFORM_FLIPPED_180:
-            case wl_output.TRANSFORM_FLIPPED_270:
-                return new FixedMatrix3x3_64F(1,0,0,
-                                              0,1,0,
-                                              0,0,1);
-            default:
-                throw new IllegalArgumentException("Invalid transform");
+        if(transform == WlOutputTransform.FLIPPED_270.getValue()){
+            return new FixedMatrix3x3_64F(1,0,0,
+                    0,1,0,
+                    0,0,1);
         }
+        throw new IllegalArgumentException("Invalid transform");
     }
 
     @Override
-    public Set<wl_surface.Resource> getResources() {
+    public Set<WlSurfaceResource> getResources() {
         return this.resources;
     }
 
     @Override
-    public wl_surface.Resource create(final Client client,
-                                      final int    version,
-                                      final int    id) {
-        return new wl_surface.Resource(client,
-                                       version,
-                                       id);
+    public WlSurfaceResource create(final Client client,
+                                      final int  version,
+                                      final int  id) {
+        return new WlSurfaceResource(client,
+                                     version,
+                                     id,
+                                     this);
     }
 
 
     @Override
-    public void destroy(final wl_surface.Resource resource) {
+    public void destroy(final WlSurfaceResource resource) {
         ProtocolObject.super.destroy(resource);
         getShellSurface().accept(ShellSurfaceConfigurable::markDestroyed);
     }
 
     @Override
-    public void attach(final wl_surface.Resource resource,
-                       @Nullable final Resource  bufferResource,
-                       final int                 x,
-                       final int                 y) {
-        if(bufferResource == null){
+    public void attach(final WlSurfaceResource requester,
+                       @Nullable
+                       final WlBufferResource  buffer,
+                       final int               x,
+                       final int               y) {
+        if(buffer == null){
             detachBuffer();
         }
         else {
-            attachBuffer((WlShmBuffer) bufferResource.getImplementation(),
+            attachBuffer(buffer,
                          x,
                          y);
         }
     }
 
     @Override
-    public void damage(final wl_surface.Resource resource,
-                       final int                 x,
-                       final int                 y,
-                       @Nonnegative final int    width,
-                       @Nonnegative final int    height) {
+    public void damage(final WlSurfaceResource resource,
+                       final int               x,
+                       final int               y,
+                       @Nonnegative final int  width,
+                       @Nonnegative final int  height) {
         checkArgument(width  > 0);
         checkArgument(height > 0);
 
@@ -137,11 +131,11 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
     }
 
     @Override
-    public void frame(final wl_surface.Resource resource,
-                      final int                 callbackId) {
-        final wl_callback.Resource callbackResource = this.wlCallbackFactory.create().add(resource.getClient(),
-                                                                                          1,
-                                                                                          callbackId);
+    public void frame(final WlSurfaceResource resource,
+                      final int               callbackId) {
+        final WlCallbackResource callbackResource = this.wlCallbackFactory.create().add(resource.getClient(),
+                                                                                        resource.getVersion(),
+                                                                                        callbackId);
         getShellSurface().accept(shellSurfaceConfigurable ->
                                  shellSurfaceConfigurable.addCallback(serial -> {
                                      callbackResource.done(serial);
@@ -150,21 +144,22 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
     }
 
     @Override
-    public void setOpaqueRegion(final wl_surface.Resource resource,
-                                @Nullable final Resource  regionResource) {
-        if(regionResource == null) {
+    public void setOpaqueRegion(final WlSurfaceResource requester,
+                                final WlRegionResource  region) {
+        if(region == null) {
             getShellSurface().accept(ShellSurfaceConfigurable::removeOpaqueRegion);
         }
         else {
-            final WlRegion wlRegion = (WlRegion) regionResource.getImplementation();
+            final WlRegion wlRegion = (WlRegion) region.getImplementation();
             getShellSurface().accept(shellSurfaceConfigurable ->
                                      shellSurfaceConfigurable.setOpaqueRegion(wlRegion.getRegion()));
         }
     }
 
     @Override
-    public void setInputRegion(final wl_surface.Resource surfaceResource,
-                               @Nullable final Resource  regionResource) {
+    public void setInputRegion(final WlSurfaceResource requester,
+                               @Nullable
+                               final WlRegionResource  regionResource) {
         if(regionResource == null){
             getShellSurface().accept(ShellSurfaceConfigurable::removeInputRegion);
         }
@@ -176,7 +171,7 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
     }
 
     @Override
-    public void commit(final wl_surface.Resource resource) {
+    public void commit(final WlSurfaceResource requester) {
         this.pendingBuffer = Optional.empty();
         getShellSurface().accept(ShellSurfaceConfigurable::commit);
     }
@@ -185,17 +180,17 @@ public class WlSurface extends EventBus implements wl_surface.Requests3, Protoco
         getShellSurface().accept(ShellSurfaceConfigurable::detachBuffer);
     }
 
-    private void attachBuffer(final WlShmBuffer newBuffer,
-                              final int         x,
-                              final int         y){
+    private void attachBuffer(final WlBufferResource  buffer,
+                              final int               x,
+                              final int               y){
         this.pendingBuffer.ifPresent(wlShmBuffer ->
-                                     wlShmBuffer.unregister(this.destroyedListener));
-        this.pendingBuffer = Optional.of(newBuffer);
-        newBuffer.register(this.destroyedListener);
+                                     this.destroyListener.remove());
+        this.pendingBuffer = Optional.of(buffer);
+        buffer.addDestroyListener(this.destroyListener);
 
         getShellSurface().accept(shellSurfaceConfigurable ->
-                                 shellSurfaceConfigurable.attachBuffer(newBuffer,
-                                                                       x,
-                                                                       y));
+                shellSurfaceConfigurable.attachBuffer(buffer,
+                                                      x,
+                                                      y));
     }
 }

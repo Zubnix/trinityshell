@@ -2,9 +2,10 @@ package org.trinity.wayland.protocol;
 
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import org.freedesktop.wayland.protocol.wl_subcompositor;
 import org.freedesktop.wayland.server.Client;
-import org.freedesktop.wayland.server.Resource;
+import org.freedesktop.wayland.server.WlSubcompositorRequests;
+import org.freedesktop.wayland.server.WlSubcompositorResource;
+import org.freedesktop.wayland.server.WlSurfaceResource;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,9 +15,9 @@ import java.util.Set;
  * Created by Erik De Rijcke on 6/2/14.
  */
 @Singleton
-public class WlSubCompositor extends EventBus implements wl_subcompositor.Requests, ProtocolObject<wl_subcompositor.Resource> {
+public class WlSubCompositor extends EventBus implements WlSubcompositorRequests, ProtocolObject<WlSubcompositorResource> {
 
-    private final Set<wl_subcompositor.Resource> resources = Sets.newHashSet();
+    private final Set<WlSubcompositorResource> resources = Sets.newHashSet();
     private final WlSubSurfaceFactory wlSubSurfaceFactory;
 
     @Inject
@@ -25,31 +26,33 @@ public class WlSubCompositor extends EventBus implements wl_subcompositor.Reques
     }
 
     @Override
-    public void destroy(final wl_subcompositor.Resource resource) {
+    public void destroy(final WlSubcompositorResource resource) {
         ProtocolObject.super.destroy(resource);
     }
 
     @Override
-    public void getSubsurface(final wl_subcompositor.Resource resource,
-                              final int                       id,
-                              final Resource                  surfaceResource,
-                              final Resource                  parentResource) {
-        this.wlSubSurfaceFactory.create().add(resource.getClient(),
-                                              1,
-                                              id);
+    public void getSubsurface(final WlSubcompositorResource requester,
+                              final int id,
+                              final WlSurfaceResource surface,
+                              final WlSurfaceResource parent) {
+        this.wlSubSurfaceFactory.create(surface,
+                                        parent).add(requester.getClient(),
+                                                    requester.getVersion(),
+                                                    id);
     }
 
     @Override
-    public Set<wl_subcompositor.Resource> getResources() {
+    public Set<WlSubcompositorResource> getResources() {
         return this.resources;
     }
 
     @Override
-    public wl_subcompositor.Resource create(final Client client,
+    public WlSubcompositorResource create(final Client client,
                                             final int version,
                                             final int id) {
-        return new wl_subcompositor.Resource(client,
-                                             version,
-                                             id);
+        return new WlSubcompositorResource(client,
+                                           version,
+                                           id,
+                                           this);
     }
 }

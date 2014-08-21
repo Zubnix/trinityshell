@@ -14,12 +14,13 @@ public interface ProtocolObject<T extends Resource> extends Listenable {
     Set<T> getResources();
 
     default T add(final Client client,
-                  final int version,
-                  final int id){
+                  final int    version,
+                  final int    id){
+        //FIXME check if version is supported by compositor.
+
         final T resource = create(client,
                                   version,
                                   id);
-        resource.setImplementation(this);
         getResources().add(resource);
         return  resource;
     }

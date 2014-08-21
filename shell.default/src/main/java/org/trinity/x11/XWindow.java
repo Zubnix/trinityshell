@@ -29,7 +29,6 @@ import org.freedesktop.xcb.xcb_get_geometry_reply_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trinity.common.Listenable;
-import org.trinity.shell.scene.api.Buffer;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -48,7 +47,7 @@ import static org.freedesktop.xcb.xcb_config_window_t.*;
 
 @ThreadSafe
 @AutoFactory(className = "XWindowFactory")
-public class XWindow extends EventBus implements Listenable, Buffer {
+public class XWindow extends EventBus implements Listenable {
 
     private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
 
@@ -56,8 +55,6 @@ public class XWindow extends EventBus implements Listenable, Buffer {
     private static final int        MOVE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
     private static final ByteBuffer RESIZE_VALUE_LIST_BUFFER      = allocateDirect(8).order(nativeOrder());
     private static final ByteBuffer MOVE_VALUE_LIST_BUFFER = allocateDirect(8).order(nativeOrder());
-
-    private final EventBus dispatcher = XWindowRenderer.DISPATCHER(this);
 
     @Nonnull
     private final Integer    nativeHandle;
@@ -171,7 +168,6 @@ public class XWindow extends EventBus implements Listenable, Buffer {
     }
 
 	@Nonnull
-    @Override
 	public DimensionImmutable getSize() {
 		final RectangleImmutable shape = getShape();
 		return new Dimension(shape.getWidth(),
@@ -206,12 +202,4 @@ public class XWindow extends EventBus implements Listenable, Buffer {
 							 getClass().getSimpleName(),
 							 getNativeHandle());
 	}
-
-    @Override
-    public void accept(@Nonnull final Object renderer) {
-        //We (ab)use guava's eventbus as a dynamic type based dispatcher. That way we don't have to cast!
-        //Any unsupported renderer will simply be ignored. To detect any unsupported render, simply listen
-        //for guava's deadevent object.
-        this.dispatcher.post(renderer);
-    }
 }

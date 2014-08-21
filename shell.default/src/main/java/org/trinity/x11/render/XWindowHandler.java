@@ -2,7 +2,6 @@ package org.trinity.x11.render;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.common.eventbus.Subscribe;
-import org.trinity.shell.scene.api.Buffer;
 import org.trinity.shell.scene.api.event.Destroyed;
 import org.trinity.shell.scene.api.event.ResizeRequest;
 import org.trinity.shell.scene.api.event.ShowRequest;
@@ -26,7 +25,7 @@ public class XWindowHandler {
         final DimensionImmutable size   = resizeRequest.getSize();
         final int width                 = size.getWidth();
         final int height                = size.getHeight();
-        final Buffer buffer             = this.xWindow.resize(width,
+        final XWindow buffer            = this.xWindow.resize(width,
                                                               height);
         resizeRequest.getSource()
                      .accept(shellSurfaceConfigurable ->

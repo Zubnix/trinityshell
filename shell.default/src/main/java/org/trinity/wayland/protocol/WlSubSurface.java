@@ -3,68 +3,68 @@ package org.trinity.wayland.protocol;
 import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import org.freedesktop.wayland.protocol.wl_subsurface;
 import org.freedesktop.wayland.server.Client;
-import org.freedesktop.wayland.server.Resource;
+import org.freedesktop.wayland.server.WlSubsurfaceRequests;
+import org.freedesktop.wayland.server.WlSubsurfaceResource;
+import org.freedesktop.wayland.server.WlSurfaceResource;
 
 import java.util.Set;
 
-/**
- * Created by Erik De Rijcke on 6/2/14.
- */
 @AutoFactory(className = "WlSubSurfaceFactory")
-public class WlSubSurface extends EventBus implements wl_subsurface.Requests, ProtocolObject<wl_subsurface.Resource> {
+public class WlSubSurface extends EventBus implements WlSubsurfaceRequests, ProtocolObject<WlSubsurfaceResource> {
 
-    private final Set<wl_subsurface.Resource> resources = Sets.newHashSet();
+    private final Set<WlSubsurfaceResource> resources = Sets.newHashSet();
 
-    WlSubSurface() {
+    WlSubSurface(final WlSurfaceResource surface,
+                 final WlSurfaceResource parent) {
     }
 
     @Override
-    public Set<wl_subsurface.Resource> getResources() {
+    public Set<WlSubsurfaceResource> getResources() {
         return this.resources;
     }
 
     @Override
-    public wl_subsurface.Resource create(final Client client,
+    public WlSubsurfaceResource create(final Client client,
                                          final int version,
                                          final int id) {
-        return new wl_subsurface.Resource(client,
-                                          version,
-                                          id);
+        return new WlSubsurfaceResource(client,
+                                        version,
+                                        id,
+                                        this);
     }
 
     @Override
-    public void destroy(final wl_subsurface.Resource resource) {
+    public void destroy(final WlSubsurfaceResource resource) {
         ProtocolObject.super.destroy(resource);
     }
 
     @Override
-    public void setPosition(final wl_subsurface.Resource resource,
-                            final int                    x,
-                            final int                    y) {
+    public void setPosition(final WlSubsurfaceResource requester,
+                            final int x,
+                            final int y) {
 
     }
 
     @Override
-    public void placeAbove(final wl_subsurface.Resource resource,
-                           final Resource               sibling) {
+    public void placeAbove(final WlSubsurfaceResource requester,
+                           final WlSurfaceResource sibling) {
 
     }
 
     @Override
-    public void placeBelow(final wl_subsurface.Resource resource,
-                           final Resource               sibling) {
+    public void placeBelow(final WlSubsurfaceResource requester,
+                           final WlSurfaceResource sibling) {
 
     }
 
     @Override
-    public void setSync(final wl_subsurface.Resource resource) {
+    public void setSync(final WlSubsurfaceResource requester) {
 
     }
 
     @Override
-    public void setDesync(final wl_subsurface.Resource resource) {
+    public void setDesync(final WlSubsurfaceResource requester) {
 
     }
 }

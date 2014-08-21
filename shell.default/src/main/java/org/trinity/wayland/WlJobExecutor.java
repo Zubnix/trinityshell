@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import jnr.ffi.LastError;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.EventLoop;
+import org.freedesktop.wayland.server.EventSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +48,9 @@ public class WlJobExecutor {
     private final Display display;
     private final LibC    libC;
 
-    private EventLoop.EventSource eventSource;
-    private int                   pipeR;
-    private int                   pipeWR;
+    private EventSource eventSource;
+    private int         pipeR;
+    private int         pipeWR;
 
     @Inject
     WlJobExecutor(final Display display,
@@ -103,8 +104,9 @@ public class WlJobExecutor {
             LOGGER.error("Failed to close pipe write fd",
                     new IOException(getError()));
         }
-        this.display.getEventLoop()
-                    .remove(this.eventSource);
+        //FIXME
+//        this.display.getEventLoop()
+//                    .remove(this.eventSource);
     }
 
     private int handle(final int fd,

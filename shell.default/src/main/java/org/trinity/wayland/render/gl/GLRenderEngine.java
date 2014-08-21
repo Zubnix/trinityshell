@@ -6,12 +6,12 @@ import com.jogamp.opengl.util.glsl.ShaderState;
 import com.jogamp.opengl.util.texture.Texture;
 import org.ejml.data.FixedMatrix3x3_64F;
 import org.ejml.data.FixedMatrix4x4_64F;
+import org.freedesktop.wayland.server.ShmBuffer;
+import org.freedesktop.wayland.shared.WlShmFormat;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.wayland.WlShmRenderEngine;
-import org.trinity.wayland.protocol.WlShmBuffer;
 
 import javax.inject.Inject;
-import javax.media.nativewindow.util.DimensionImmutable;
 import javax.media.opengl.GL2ES2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLContext;
@@ -21,8 +21,6 @@ import java.nio.FloatBuffer;
 import java.util.Map;
 
 import static javax.media.opengl.GL.*;
-import static org.freedesktop.wayland.protocol.wl_shm.FORMAT_ARGB8888;
-import static org.freedesktop.wayland.protocol.wl_shm.FORMAT_XRGB8888;
 import static org.trinity.wayland.render.gl.GLBufferFormat.SHM_ARGB8888;
 import static org.trinity.wayland.render.gl.GLBufferFormat.SHM_XRGB8888;
 
@@ -48,7 +46,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
 
     @Override
     public void draw(final ShellSurface shellSurface,
-                     final WlShmBuffer  buffer) {
+                     final ShmBuffer    buffer) {
         makeCurrent();
         final GL2ES2 gl = queryGl();
         final GLSurfaceData surfaceData = querySurfaceData(gl,
@@ -82,20 +80,19 @@ public class GLRenderEngine implements WlShmRenderEngine {
                      shellSurface.getTransform());
         draw(gl,
              surfaceData.getTexture(),
-             buffer.getSize());
+             buffer.getWidth(),
+             buffer.getHeight());
         disableShader(gl,
                       state);
         this.drawable.swapBuffers();
     }
 
-    private void draw(final GL2ES2             gl,
-                      final Texture            texture,
-                      final DimensionImmutable size) {
+    private void draw(final GL2ES2  gl,
+                      final Texture texture,
+                      final int     width,
+                      final int     height) {
         gl.glActiveTexture(GL_TEXTURE0);
         texture.bind(gl);
-
-        final int width = size.getWidth();
-        final int height = size.getHeight();
 
         final float topLeftX = 0;
         final float topLeftY = 0;
@@ -245,23 +242,19 @@ public class GLRenderEngine implements WlShmRenderEngine {
             case GLContext.CONTEXT_CURRENT:
             case GLContext.CONTEXT_CURRENT_NEW:
         }
-
     }
 
-    private GLBufferFormat queryBufferFormat(final WlShmBuffer buffer) {
+    private GLBufferFormat queryBufferFormat(final ShmBuffer buffer) {
         final GLBufferFormat format;
-        switch(buffer.getFormat()) {
-            case FORMAT_ARGB8888: {
-                format = SHM_ARGB8888;
-                break;
-            }
-            case FORMAT_XRGB8888: {
-                format = SHM_XRGB8888;
-                break;
-            }
-            default: {
-                throw new UnsupportedOperationException("Format " + buffer.getFormat() + " not supported.");
-            }
+        final int bufferFormat = buffer.getFormat();
+        if(bufferFormat == WlShmFormat.ARGB8888.getValue()){
+            format = SHM_ARGB8888;
+        }
+        else if(bufferFormat == WlShmFormat.XRGB8888.getValue()){
+            format = SHM_XRGB8888;
+        }
+        else{
+            throw new UnsupportedOperationException("Format " + buffer.getFormat() + " not supported.");
         }
         return format;
     }

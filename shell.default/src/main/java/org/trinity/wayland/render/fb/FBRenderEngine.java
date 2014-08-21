@@ -1,8 +1,8 @@
 package org.trinity.wayland.render.fb;
 
+import org.freedesktop.wayland.server.ShmBuffer;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.wayland.WlShmRenderEngine;
-import org.trinity.wayland.protocol.WlShmBuffer;
 
 import javax.inject.Inject;
 
@@ -17,7 +17,7 @@ public class FBRenderEngine implements WlShmRenderEngine {
 
     @Override
     public void draw(final ShellSurface shellSurface,
-                     final WlShmBuffer buffer) {
+                     final ShmBuffer buffer) {
         throw new UnsupportedOperationException("not yet implemented");
     }
 }

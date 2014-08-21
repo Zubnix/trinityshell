@@ -24,7 +24,6 @@ import com.google.auto.factory.Provided;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import org.ejml.data.FixedMatrix3x3_64F;
-import org.trinity.shell.scene.api.Buffer;
 import org.trinity.shell.scene.api.Region;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
@@ -58,7 +57,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     private Optional<Region>   pendingDamage       = Optional.empty();
     @Nonnull
-    private Optional<Buffer>   pendingBuffer       = Optional.empty();
+    private Optional<Object>   pendingBuffer       = Optional.empty();
     @Nonnull
     private FixedMatrix3x3_64F pendingTransform    = new FixedMatrix3x3_64F(1, 0, 0,
                                                                             0, 1, 0,
@@ -77,7 +76,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     private Optional<Region>   damage       = Optional.empty();
     @Nonnull
-    private Optional<Buffer>   buffer       = Optional.empty();
+    private Optional<Object>   buffer       = Optional.empty();
     @Nonnull
     private FixedMatrix3x3_64F transform    = new FixedMatrix3x3_64F(1, 0, 0,
                                                                      0, 1, 0,
@@ -90,7 +89,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     private Boolean            destroyed    = Boolean.FALSE;
 
     SimpleShellSurface(@Provided final PixmanRegionFactory pixmanRegionFactory,
-                       @Nonnull final Optional<Buffer> optionalBuffer) {
+                       @Nonnull final Optional<Object> optionalBuffer) {
         this.pixmanRegionFactory = pixmanRegionFactory;
         this.buffer = optionalBuffer;
     }
@@ -136,7 +135,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable attachBuffer(@Nonnull final Buffer buffer,
+    public ShellSurfaceConfigurable attachBuffer(@Nonnull final Object  buffer,
                                                  @Nonnull final Integer relX,
                                                  @Nonnull final Integer relY) {
         this.pendingBuffer = Optional.of(buffer);
@@ -197,7 +196,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public Optional<Buffer> getBuffer() {
+    public Optional<Object> getBuffer() {
         return this.buffer;
     }
 
@@ -205,7 +204,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Override
     public ShellSurfaceConfigurable commit() {
         //flush
-        this.transform = this.pendingTransform;
+        this.transform    = this.pendingTransform;
         this.buffer       = this.pendingBuffer;
         this.position     = this.pendingPosition;
         this.damage       = this.pendingDamage;

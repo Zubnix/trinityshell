@@ -3,12 +3,13 @@ package org.trinity.wayland.protocol;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import org.freedesktop.wayland.protocol.wl_shell;
-import org.freedesktop.wayland.protocol.wl_shell_surface;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.Global;
-import org.freedesktop.wayland.server.Resource;
+import org.freedesktop.wayland.server.WlShellRequests;
+import org.freedesktop.wayland.server.WlShellResource;
+import org.freedesktop.wayland.server.WlShellSurfaceResource;
+import org.freedesktop.wayland.server.WlSurfaceResource;
 import org.trinity.wayland.events.ResourceDestroyed;
 
 import javax.annotation.Nonnull;
@@ -20,10 +21,10 @@ import java.util.Set;
  * Created by Erik De Rijcke on 5/22/14.
  */
 @Singleton//Eager
-public class WlShell extends Global implements wl_shell.Requests, ProtocolObject<wl_shell.Resource> {
+public class WlShell extends Global implements WlShellRequests, ProtocolObject<WlShellResource> {
 
-    private final Set<wl_shell.Resource> resources = Sets.newHashSet();
-    private final EventBus               eventBus  = new EventBus();
+    private final Set<WlShellResource> resources = Sets.newHashSet();
+    private final EventBus             eventBus  = new EventBus();
 
     private final WlShellSurfaceFactory wlShellSurfaceFactory;
 
@@ -31,20 +32,19 @@ public class WlShell extends Global implements wl_shell.Requests, ProtocolObject
     WlShell(final Display               display,
             final WlShellSurfaceFactory wlShellSurfaceFactory) {
         super(display,
-              wl_shell.WAYLAND_INTERFACE,
-              1);
+              VERSION);
         this.wlShellSurfaceFactory = wlShellSurfaceFactory;
     }
 
     @Override
-    public void getShellSurface(final wl_shell.Resource resource,
-                                final int               id,
-                                final Resource          surfaceRes) {
-        final WlSurface wlSurface = (WlSurface) surfaceRes.getImplementation();
-        final WlShellSurface wlShellSurface = this.wlShellSurfaceFactory.create(wlSurface);
-        final wl_shell_surface.Resource shellSurfaceResource = wlShellSurface.add(resource.getClient(),
-                                                                                  1,
-                                                                                  id);
+    public void getShellSurface(final WlShellResource requester,
+                                final int id,
+                                final WlSurfaceResource surface) {
+        final WlSurface wlSurface                         = (WlSurface) surface.getImplementation();
+        final WlShellSurface wlShellSurface               = this.wlShellSurfaceFactory.create(wlSurface);
+        final WlShellSurfaceResource shellSurfaceResource = wlShellSurface.add(requester.getClient(),
+                                                                               requester.getVersion(),
+                                                                               id);
         wlSurface.register(new Object() {
             @Subscribe
             public void handle(final ResourceDestroyed event) {
@@ -55,26 +55,28 @@ public class WlShell extends Global implements wl_shell.Requests, ProtocolObject
     }
 
     @Override
-    public void bindClient(final Client client,
+    public void onBindClient(final Client client,
                            final int    version,
                            final int    id) {
+        //FIXME check if we support requested version.
         add(client,
-                1,
-                id);
+            version,
+            id);
     }
 
     @Override
-    public Set<wl_shell.Resource> getResources() {
+    public Set<WlShellResource> getResources() {
         return this.resources;
     }
 
     @Override
-    public wl_shell.Resource create(final Client client,
+    public WlShellResource create(final Client client,
                                     final int version,
                                     final int id) {
-        return new wl_shell.Resource(client,
-                                     1,
-                                     id);
+        return new WlShellResource(client,
+                                   version,
+                                   id,
+                                   this);
     }
 
     @Override

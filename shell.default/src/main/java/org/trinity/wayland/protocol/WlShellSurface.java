@@ -3,16 +3,19 @@ package org.trinity.wayland.protocol;
 import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import org.freedesktop.wayland.protocol.wl_shell_surface;
 import org.freedesktop.wayland.server.Client;
-import org.freedesktop.wayland.server.Resource;
+import org.freedesktop.wayland.server.WlOutputResource;
+import org.freedesktop.wayland.server.WlSeatResource;
+import org.freedesktop.wayland.server.WlShellSurfaceRequests;
+import org.freedesktop.wayland.server.WlShellSurfaceResource;
+import org.freedesktop.wayland.server.WlSurfaceResource;
 
 import java.util.Set;
 
 @AutoFactory(className = "WlShellSurfaceFactory")
-public class WlShellSurface extends EventBus implements wl_shell_surface.Requests, ProtocolObject<wl_shell_surface.Resource> {
+public class WlShellSurface extends EventBus implements WlShellSurfaceRequests, ProtocolObject<WlShellSurfaceResource> {
 
-    private final Set<wl_shell_surface.Resource> resources = Sets.newHashSet();
+    private final Set<WlShellSurfaceResource> resources = Sets.newHashSet();
 
     private final WlSurface wlSurface;
 
@@ -21,88 +24,89 @@ public class WlShellSurface extends EventBus implements wl_shell_surface.Request
     }
 
     @Override
-    public void pong(final wl_shell_surface.Resource resource,
-                     final int                       serial) {
+    public void pong(final WlShellSurfaceResource requester,
+                     final int serial) {
 
     }
 
     @Override
-    public void move(final wl_shell_surface.Resource resource,
-                     final                           Resource seatResource,
-                     final                           int serial) {
+    public void move(final WlShellSurfaceResource requester,
+                     final WlSeatResource seat,
+                     final int serial) {
 
     }
 
     @Override
-    public void resize(final wl_shell_surface.Resource resource,
-                       final Resource                  seatResource,
-                       final int                       serial,
-                       final int                       edges) {
+    public void resize(final WlShellSurfaceResource requester,
+                       final WlSeatResource seat,
+                       final int serial,
+                       final int edges) {
 
     }
 
     @Override
-    public void setToplevel(final wl_shell_surface.Resource resource) {
+    public void setToplevel(final WlShellSurfaceResource requester) {
 
     }
 
     @Override
-    public void setTransient(final wl_shell_surface.Resource resource,
-                             final Resource                  parentResource,
-                             final int                       x,
-                             final int                       y,
-                             final int                       flags) {
+    public void setTransient(final WlShellSurfaceResource requester,
+                             final WlSurfaceResource parent,
+                             final int x,
+                             final int y,
+                             final int flags) {
 
     }
 
     @Override
-    public void setFullscreen(final wl_shell_surface.Resource resource,
-                              final int                       method,
-                              final int                       framerate,
-                              final Resource                  output) {
+    public void setFullscreen(final WlShellSurfaceResource requester,
+                              final int method,
+                              final int framerate,
+                              final WlOutputResource output) {
 
     }
 
     @Override
-    public void setPopup(final wl_shell_surface.Resource resource,
-                         final Resource                  seat,
-                         final int                       serial,
-                         final Resource                  parent,
-                         final int                       x,
-                         final int                       y,
-                         final int                       flags) {
+    public void setPopup(final WlShellSurfaceResource requester,
+                         final WlSeatResource seat,
+                         final int serial,
+                         final WlSurfaceResource parent,
+                         final int x,
+                         final int y,
+                         final int flags) {
 
     }
 
     @Override
-    public void setMaximized(final wl_shell_surface.Resource resource,
-                             final Resource                  output) {
+    public void setMaximized(final WlShellSurfaceResource requester,
+                             final WlOutputResource output) {
 
     }
 
     @Override
-    public void setTitle(final wl_shell_surface.Resource resource,
-                         final String                    title) {
+    public void setTitle(final WlShellSurfaceResource requester,
+                         final String title) {
 
     }
 
     @Override
-    public void setClass(final wl_shell_surface.Resource resource,
-                         final String                    class_) {
+    public void setClass(final WlShellSurfaceResource requester,
+                         final String class_) {
 
     }
 
     @Override
-    public Set<wl_shell_surface.Resource> getResources() {
+    public Set<WlShellSurfaceResource> getResources() {
         return this.resources;
     }
 
     @Override
-    public wl_shell_surface.Resource create(final Client client,
-                                            final int version,
-                                            final int id) {
-        return new wl_shell_surface.Resource(client,
-                                             version,
-                                             id);
+    public WlShellSurfaceResource create(final Client client,
+                                         final int version,
+                                         final int id) {
+        return new WlShellSurfaceResource(client,
+                version,
+                id,
+                this);
     }
 }

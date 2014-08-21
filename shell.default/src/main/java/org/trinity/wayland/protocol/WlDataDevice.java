@@ -3,9 +3,11 @@ package org.trinity.wayland.protocol;
 import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import org.freedesktop.wayland.protocol.wl_data_device;
 import org.freedesktop.wayland.server.Client;
-import org.freedesktop.wayland.server.Resource;
+import org.freedesktop.wayland.server.WlDataDeviceRequests;
+import org.freedesktop.wayland.server.WlDataDeviceResource;
+import org.freedesktop.wayland.server.WlDataSourceResource;
+import org.freedesktop.wayland.server.WlSurfaceResource;
 
 import java.util.Set;
 
@@ -13,9 +15,9 @@ import java.util.Set;
  * Created by Erik De Rijcke on 5/26/14.
  */
 @AutoFactory(className = "WlDataDeviceFactory")
-public class WlDataDevice extends EventBus implements wl_data_device.Requests, ProtocolObject<wl_data_device.Resource> {
+public class WlDataDevice extends EventBus implements WlDataDeviceRequests, ProtocolObject<WlDataDeviceResource> {
 
-    private final Set<wl_data_device.Resource> resources = Sets.newHashSet();
+    private final Set<WlDataDeviceResource> resources = Sets.newHashSet();
 
     private final WlSeat wlSeat;
 
@@ -24,32 +26,33 @@ public class WlDataDevice extends EventBus implements wl_data_device.Requests, P
     }
 
     @Override
-    public void startDrag(final wl_data_device.Resource resource,
-                          final Resource                source,
-                          final Resource                origin,
-                          final Resource                icon,
-                          final int                     serial) {
+    public void startDrag(final WlDataDeviceResource requester,
+                          final WlDataSourceResource source,
+                          final WlSurfaceResource origin,
+                          final WlSurfaceResource icon,
+                          final int serial) {
 
     }
 
     @Override
-    public void setSelection(final wl_data_device.Resource  resource,
-                             final Resource                 source,
-                             final int                      serial) {
+    public void setSelection(final WlDataDeviceResource requester,
+                             final WlDataSourceResource source,
+                             final int serial) {
 
     }
 
     @Override
-    public Set<wl_data_device.Resource> getResources() {
+    public Set<WlDataDeviceResource> getResources() {
         return this.resources;
     }
 
     @Override
-    public wl_data_device.Resource create(final Client client,
+    public WlDataDeviceResource create(final Client client,
                                           final int version,
                                           final int id) {
-        return new wl_data_device.Resource(client,
-                                           version,
-                                           id);
+        return new WlDataDeviceResource(client,
+                                        version,
+                                        id,
+                                        this);
     }
 }

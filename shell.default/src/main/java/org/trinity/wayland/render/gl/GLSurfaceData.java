@@ -4,7 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import org.ejml.data.FixedMatrix3x3_64F;
-import org.trinity.wayland.protocol.WlShmBuffer;
+import org.freedesktop.wayland.server.ShmBuffer;
 
 import javax.media.opengl.GL2ES2;
 import javax.media.opengl.GLProfile;
@@ -24,12 +24,11 @@ public abstract class GLSurfaceData {
 
     public GLSurfaceData refresh(final GLProfile   profile,
                                  final GL2ES2      gl,
-                                 final WlShmBuffer buffer) {
+                                 final ShmBuffer   buffer) {
 
-        final ByteBuffer bufferData = buffer.getByteBuffer();
+        final ByteBuffer bufferData = buffer.getData();
         final int textureWidth      = buffer.getStride() / 4;
-        final int textureHeight     = buffer.getSize()
-                                            .getHeight();
+        final int textureHeight     = buffer.getHeight();
 
         final TextureData textureData = new TextureData(profile,
                                                         GL_RGBA,

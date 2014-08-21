@@ -2,14 +2,14 @@ package org.trinity.wayland.protocol;
 
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import org.freedesktop.wayland.protocol.wl_compositor;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.Global;
+import org.freedesktop.wayland.server.WlCompositorRequestsV3;
+import org.freedesktop.wayland.server.WlCompositorResource;
 import org.trinity.PixmanRegionFactory;
 import org.trinity.SimpleShellSurface;
 import org.trinity.SimpleShellSurfaceFactory;
-import org.trinity.shell.scene.api.Buffer;
 import org.trinity.wayland.WlShellCompositor;
 
 import javax.annotation.Nonnull;
@@ -22,10 +22,10 @@ import java.util.Set;
  * Created by Erik De Rijcke on 5/22/14.
  */
 @Singleton//Eager
-public class WlCompositor extends Global implements wl_compositor.Requests, ProtocolObject<wl_compositor.Resource> {
+public class WlCompositor extends Global implements WlCompositorRequestsV3, ProtocolObject<WlCompositorResource> {
 
-    private final Set<wl_compositor.Resource> resources = Sets.newHashSet();
-    private final EventBus                    eventBus  = new EventBus();
+    private final Set<WlCompositorResource> resources = Sets.newHashSet();
+    private final EventBus                  eventBus  = new EventBus();
 
     private final WlSubCompositor           subCompositor;
     private final WlSurfaceFactory          wlSurfaceFactory;
@@ -43,8 +43,7 @@ public class WlCompositor extends Global implements wl_compositor.Requests, Prot
                  final PixmanRegionFactory       pixmanRegionFactory,
                  final WlShellCompositor         wlShellCompositor) {
         super(display,
-              wl_compositor.WAYLAND_INTERFACE,
-              1);
+              VERSION);
         this.subCompositor             = subCompositor;
         this.wlSurfaceFactory          = wlSurfaceFactory;
         this.wlRegionFactory           = wlRegionFactory;
@@ -54,9 +53,9 @@ public class WlCompositor extends Global implements wl_compositor.Requests, Prot
     }
 
     @Override
-    public void bindClient(final Client client,
-                           final int    version,
-                           final int    id) {
+    public void onBindClient(final Client client,
+                             final int    version,
+                             final int    id) {
         add(client,
             version,
             id);
@@ -66,35 +65,36 @@ public class WlCompositor extends Global implements wl_compositor.Requests, Prot
     }
 
     @Override
-    public void createSurface(final wl_compositor.Resource resource,
+    public void createSurface(final WlCompositorResource resource,
                               final int                    id) {
-        final SimpleShellSurface shellSurface = this.simpleShellSurfaceFactory.create(Optional.<Buffer>empty());
+        final SimpleShellSurface shellSurface = this.simpleShellSurfaceFactory.create(Optional.empty());
         shellSurface.register(this.wlShellCompositor);
         this.wlSurfaceFactory.create(shellSurface).add(resource.getClient(),
-                                                       1,
+                                                       resource.getVersion(),
                                                        id);
     }
 
     @Override
-    public void createRegion(final wl_compositor.Resource resource,
-                             final int                    id) {
+    public void createRegion(final WlCompositorResource resource,
+                             final int                  id) {
         this.wlRegionFactory.create(this.pixmanRegionFactory.create()).add(resource.getClient(),
-                                                                           1,
+                                                                           resource.getVersion(),
                                                                            id);
     }
 
     @Override
-    public Set<wl_compositor.Resource> getResources() {
+    public Set<WlCompositorResource> getResources() {
         return this.resources;
     }
 
     @Override
-    public wl_compositor.Resource create(final Client client,
-                                         final int version,
-                                         final int id) {
-        return new wl_compositor.Resource(client,
-                                          version,
-                                          id);
+    public WlCompositorResource create(final Client client,
+                                       final int version,
+                                       final int id) {
+        return new WlCompositorResource(client,
+                                        version,
+                                        id,
+                                        this);
     }
 
     @Override

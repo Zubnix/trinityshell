@@ -56,7 +56,7 @@ public interface ShellSurface extends Listenable {
     @Nonnull
     Optional<Region> getOpaqueRegion();
     @Nonnull
-    Optional<Buffer> getBuffer();
+    Optional<Object> getBuffer();
     @Nonnull
     Boolean isDestroyed();
     @Nonnull

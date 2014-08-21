@@ -5,10 +5,12 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import org.freedesktop.wayland.protocol.wl_seat;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.Global;
+import org.freedesktop.wayland.server.WlSeatRequestsV3;
+import org.freedesktop.wayland.server.WlSeatResource;
+import org.freedesktop.wayland.shared.WlSeatCapability;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -18,10 +20,10 @@ import java.util.Set;
  * Created by Erik De Rijcke on 5/23/14.
  */
 @AutoFactory(className = "WlSeatFactory")
-public class WlSeat extends Global implements wl_seat.Requests, ProtocolObject<wl_seat.Resource> {
+public class WlSeat extends Global implements WlSeatRequestsV3, ProtocolObject<WlSeatResource> {
 
-    private final Set<wl_seat.Resource> resources = Sets.newHashSet();
-    private final EventBus              eventBus = new EventBus();
+    private final Set<WlSeatResource> resources = Sets.newHashSet();
+    private final EventBus            eventBus = new EventBus();
 
     private final WlDataDevice         wlDataDevice;
     private final Optional<WlPointer>  optionalWlPointer;
@@ -36,8 +38,7 @@ public class WlSeat extends Global implements wl_seat.Requests, ProtocolObject<w
            final Optional<WlKeyboard> optionalWlKeyboard,
            final Optional<WlTouch>    optionalWlTouch) {
         super(display,
-              wl_seat.WAYLAND_INTERFACE,
-              1);
+              VERSION);
         this.wlDataDevice       = wlDataDevice;
         this.optionalWlKeyboard = optionalWlKeyboard;
         this.optionalWlTouch    = optionalWlTouch;
@@ -45,13 +46,14 @@ public class WlSeat extends Global implements wl_seat.Requests, ProtocolObject<w
 
         int capabilities = 0;
         if (this.optionalWlPointer.isPresent()) {
-            capabilities |= wl_seat.CAPABILITY_POINTER;
+
+            capabilities |= WlSeatCapability.POINTER.getValue();
         }
         if (this.optionalWlKeyboard.isPresent()) {
-            capabilities |= wl_seat.CAPABILITY_KEYBOARD;
+            capabilities |= WlSeatCapability.KEYBOARD.getValue();
         }
         if(this.optionalWlTouch.isPresent()){
-            capabilities |= wl_seat.CAPABILITY_TOUCH;
+            capabilities |= WlSeatCapability.TOUCH.getValue();
         }
         this.capabilities = capabilities;
     }
@@ -61,53 +63,55 @@ public class WlSeat extends Global implements wl_seat.Requests, ProtocolObject<w
     }
 
     @Override
-    public void bindClient(final Client client,
-                           final int    version,
-                           final int    id) {
+    public void onBindClient(final Client client,
+                             final int    version,
+                             final int    id) {
+        //FIXME check if we support given version.
         add(client,
-                1,
-                id);
+            version,
+            id);
     }
 
     @Override
-    public void getPointer(final wl_seat.Resource resource,
-                           final int              id) {
+    public void getPointer(final WlSeatResource resource,
+                           final int            id) {
         this.optionalWlPointer.ifPresent(wlPointer ->
-                                        wlPointer.add(resource.getClient(),
-                                                      1,
-                                                      id));
+                                         wlPointer.add(resource.getClient(),
+                                                       resource.getVersion(),
+                                                       id));
     }
 
     @Override
-    public void getKeyboard(final wl_seat.Resource  resource,
-                            final int               id) {
+    public void getKeyboard(final WlSeatResource resource,
+                            final int            id) {
         this.optionalWlKeyboard.ifPresent(wlKeyboard ->
                                           wlKeyboard.add(resource.getClient(),
-                                                         1,
+                                                         resource.getVersion(),
                                                          id));
     }
 
     @Override
-    public void getTouch(final wl_seat.Resource resource,
-                         final int              id) {
+    public void getTouch(final WlSeatResource resource,
+                         final int            id) {
         this.optionalWlTouch.ifPresent(wlTouch ->
                                        wlTouch.add(resource.getClient(),
-                                                   1,
+                                                   resource.getVersion(),
                                                    id));
     }
 
     @Override
-    public Set<wl_seat.Resource> getResources() {
+    public Set<WlSeatResource> getResources() {
         return this.resources;
     }
 
     @Override
-    public wl_seat.Resource create(final Client client,
-                                   final int version,
-                                   final int id) {
-        final wl_seat.Resource resource = new wl_seat.Resource(client,
-                                                               version,
-                                                               id);
+    public WlSeatResource create(final Client client,
+                                 final int version,
+                                 final int id) {
+        final WlSeatResource resource = new WlSeatResource(client,
+                                                           version,
+                                                           id,
+                                                           this);
         resource.capabilities(this.capabilities);
         return resource;
     }
