@@ -2,6 +2,7 @@ package org.trinity.wayland;
 
 import com.google.common.collect.Lists;
 import jnr.ffi.LastError;
+import nativelibs.LibC;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.EventLoop;
 import org.freedesktop.wayland.server.EventSource;

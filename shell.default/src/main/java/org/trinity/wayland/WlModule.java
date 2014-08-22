@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.Service;
 import dagger.Module;
 import dagger.Provides;
 import jnr.ffi.LibraryLoader;
+import nativelibs.LibC;
 import org.freedesktop.wayland.server.Display;
 import org.trinity.wayland.render.gl.GLModule;
 
