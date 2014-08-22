@@ -27,7 +27,7 @@ subprojects {
                 [group: "junit",                    name: "junit",                      version: "${junitVersion}"],
                 [group: "org.mockito",              name: "mockito-all",                version: "${mockitoVersion}"],
                 [group: "org.powermock",            name: "powermock-module-junit4",    version: "${powermockVersion}"],
-                [group: "org.powermock",            name: "mockito-all",                version: "${powermockVersion}"],
+                [group: "org.powermock",            name: "powermock-api-mockito",      version: "${powermockVersion}"],
                 [group: "ch.qos.logback",           name: "logback-classic",            version: "$logbackClassicVersion"]
         )
     }

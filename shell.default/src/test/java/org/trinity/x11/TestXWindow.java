@@ -2,11 +2,7 @@ package org.trinity.x11;
 
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import org.freedesktop.xcb.LibXcb;
-import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
-import org.freedesktop.xcb.xcb_generic_error_t;
-import org.freedesktop.xcb.xcb_get_geometry_cookie_t;
-import org.freedesktop.xcb.xcb_get_geometry_reply_t;
+import org.freedesktop.xcb.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,20 +16,10 @@ import javax.media.nativewindow.util.RectangleImmutable;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
 
-import static org.freedesktop.xcb.LibXcb.xcb_configure_window;
-import static org.freedesktop.xcb.LibXcb.xcb_destroy_window;
-import static org.freedesktop.xcb.LibXcb.xcb_flush;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry;
-import static org.freedesktop.xcb.LibXcb.xcb_get_geometry_reply;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+import static org.freedesktop.xcb.LibXcb.*;
+import static org.freedesktop.xcb.xcb_config_window_t.*;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 

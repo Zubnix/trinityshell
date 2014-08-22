@@ -1,10 +1,6 @@
 package org.trinity.x11.xevents;
 
-import org.freedesktop.xcb.LibXcb;
-import org.freedesktop.xcb.LibXcbJNI;
-import org.freedesktop.xcb.SWIGTYPE_p_xcb_connection_t;
-import org.freedesktop.xcb.xcb_generic_event_t;
-import org.freedesktop.xcb.xcb_map_request_event_t;
+import org.freedesktop.xcb.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +14,8 @@ import org.trinity.x11.shell.xeventhandlers.MapRequest;
 
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({LibXcb.class,
