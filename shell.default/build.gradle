@@ -2,7 +2,11 @@ dependencies {
     compile(
         project(":common"),
         project(":shell.scene.api"),
-        [group: "org.trinity", name: "XCB4J", version: "0.0.1"],
-        [group: "org.freedesktop", name: "wayland", version: "0.0.1-SNAPSHOT"]
+
+        [group: "org.freedesktop", name: "wayland",     version: "0.0.1-SNAPSHOT"],
+        [group: "org.freedesktop", name: "native-util", version: "0.0.1-SNAPSHOT"],
+
+        [group: "org.trinity",     name: "XCB4J",       version: "0.0.1"],
+        [group: "org.trinity",     name: "PIXMAN4J",    version: "0.0.1-SNAPSHOT"],
     )
 }

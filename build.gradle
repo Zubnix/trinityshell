@@ -1,6 +1,5 @@
-version = 	"0.1.0-SNAPSHOT"
-
 subprojects {
+    version = 	"0.1.0-SNAPSHOT"
     apply plugin: 'java'
 
     group =		"org.trinity"
@@ -15,14 +14,13 @@ subprojects {
     dependencies {
         compile(
                 [group: "com.google.guava",         name: "guava",                      version: "${guavaVersion}"],
-                [group: "org.jogamp.jogl",          name: "nativewindow",               version: "${jogampVersion}",    classifier: "core"],
-                [group: "org.jogamp.gluegen",       name: "gluegen",                    version: "${jogampVersion}"],
                 [group: "com.google.code.findbugs", name: "jsr305",                     version: "${findbugsVersion}"],
-                [group: "org.slf4j",                name: "slf4j-api",                  version: "${slf4jVersion}"],
-
-                [group: "com.squareup.dagger",      name: "dagger-compiler",            version: "${daggerVersion}"],
                 [group: "com.google.auto.value",    name: "auto-value",                 version: "${autoValueVersion}"],
-                [group: "com.google.auto.factory",  name: "auto-factory",               version: "${autoFactoryVersion}"]
+                [group: "com.google.auto.factory",  name: "auto-factory",               version: "${autoFactoryVersion}"],
+                [group: "org.jogamp.jogl",          name: "jogl-all-main",              version: "${jogampVersion}"],
+                [group: "org.jogamp.gluegen",       name: "gluegen-rt-main",            version: "${jogampVersion}"],
+                [group: "org.slf4j",                name: "slf4j-api",                  version: "${slf4jVersion}"],
+                [group: "com.squareup.dagger",      name: "dagger-compiler",            version: "${daggerVersion}"]
         )
 
         testCompile(
