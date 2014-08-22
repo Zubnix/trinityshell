@@ -57,13 +57,13 @@ public class GLRenderEngine implements WlShmRenderEngine {
         final ShaderState state = this.shaders.get(queryBufferFormat(buffer));
         enableShader(gl,
                      state,
-                     new FixedMatrix4x4_64F(2.0 / this.drawable.getWidth(),
+                     new FixedMatrix4x4_64F(2.0 / this.drawable.getSurfaceWidth(),
                                             0,
                                             0,
                                             0,
 
                                             0,
-                                            2.0 / -this.drawable.getHeight(),
+                                            2.0 / -this.drawable.getSurfaceHeight(),
                                             0,
                                             0,
 
