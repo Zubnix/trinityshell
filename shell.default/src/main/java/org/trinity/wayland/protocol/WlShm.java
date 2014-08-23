@@ -18,7 +18,7 @@ import java.util.Set;
  * Created by Erik De Rijcke on 5/22/14.
  */
 @Singleton//Eager
-public class WlShm extends Global implements WlShmRequests, ProtocolObject<WlShmResource> {
+public class WlShm extends Global<WlShmResource> implements WlShmRequests, ProtocolObject<WlShmResource> {
 
     private final Set<WlShmResource> resources = Sets.newHashSet();
     private final EventBus           eventBus  = new EventBus();
@@ -29,6 +29,7 @@ public class WlShm extends Global implements WlShmRequests, ProtocolObject<WlShm
     WlShm(final Display             display,
           final WlShmPoolFactory    wlShmPoolFactory) {
         super(display,
+              WlShmResource.class,
               VERSION);
         this.wlShmPoolFactory = wlShmPoolFactory;
     }
@@ -44,18 +45,19 @@ public class WlShm extends Global implements WlShmRequests, ProtocolObject<WlShm
     }
 
     @Override
-    public void onBindClient(final Client client,
-                           final int    version,
-                           final int    id){
+    public WlShmResource onBindClient(final Client client,
+                                      final int    version,
+                                      final int    id){
         //FIXME check if we support requested version.
-        publish(add(client,
-                    version,
-                    id));
+        return publish(add(client,
+                           version,
+                           id));
     }
 
-    private void publish(final WlShmResource res){
+    private WlShmResource publish(final WlShmResource res){
         res.format(WlShmFormat.ARGB8888.getValue());
         res.format(WlShmFormat.XRGB8888.getValue());
+        return res;
     }
 
     @Override

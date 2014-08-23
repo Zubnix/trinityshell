@@ -17,7 +17,7 @@ import java.util.Set;
  * Created by Erik De Rijcke on 6/3/14.
  */
 @Singleton//Eager
-public class WlOutput extends Global implements WlOutputRequestsV2, ProtocolObject<WlOutputResource> {
+public class WlOutput extends Global<WlOutputResource> implements WlOutputRequestsV2, ProtocolObject<WlOutputResource> {
 
     private final EventBus              eventBus  = new EventBus();
     private final Set<WlOutputResource> resources = Sets.newHashSet();
@@ -25,16 +25,17 @@ public class WlOutput extends Global implements WlOutputRequestsV2, ProtocolObje
     @Inject
     WlOutput(final Display display) {
         super(display,
+              WlOutputResource.class,
               VERSION);
     }
 
     @Override
-    public void onBindClient(final Client client,
-                             final int version,
-                             final int id) {
-        add(client,
-            version,
-            id);
+    public WlOutputResource onBindClient(final Client client,
+                                         final int    version,
+                                         final int    id) {
+        return add(client,
+                   version,
+                   id);
     }
 
     @Override
@@ -44,8 +45,8 @@ public class WlOutput extends Global implements WlOutputRequestsV2, ProtocolObje
 
     @Override
     public WlOutputResource create(final Client client,
-                                     final int version,
-                                     final int id) {
+                                   final int    version,
+                                   final int    id) {
         return new WlOutputResource(client,
                                     version,
                                     id,

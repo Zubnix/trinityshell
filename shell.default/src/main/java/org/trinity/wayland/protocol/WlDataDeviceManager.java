@@ -2,12 +2,7 @@ package org.trinity.wayland.protocol;
 
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import org.freedesktop.wayland.server.Client;
-import org.freedesktop.wayland.server.Display;
-import org.freedesktop.wayland.server.Global;
-import org.freedesktop.wayland.server.WlDataDeviceManagerRequests;
-import org.freedesktop.wayland.server.WlDataDeviceManagerResource;
-import org.freedesktop.wayland.server.WlSeatResource;
+import org.freedesktop.wayland.server.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -18,7 +13,7 @@ import java.util.Set;
  * Created by Erik De Rijcke on 5/22/14.
  */
 @Singleton//EAGER
-public class WlDataDeviceManager extends Global implements WlDataDeviceManagerRequests, ProtocolObject<WlDataDeviceManagerResource> {
+public class WlDataDeviceManager extends Global<WlDataDeviceManagerResource> implements WlDataDeviceManagerRequests, ProtocolObject<WlDataDeviceManagerResource> {
 
     private final Set<WlDataDeviceManagerResource> resources = Sets.newHashSet();
     private final EventBus                         eventBus  = new EventBus();
@@ -29,17 +24,18 @@ public class WlDataDeviceManager extends Global implements WlDataDeviceManagerRe
     WlDataDeviceManager(final Display display,
                         final WlDataSourceFactory wlDataSourceFactory) {
         super(display,
+              WlDataDeviceManagerResource.class,
               VERSION);
         this.wlDataSourceFactory = wlDataSourceFactory;
     }
 
     @Override
-    public void onBindClient(final Client client,
+    public WlDataDeviceManagerResource onBindClient(final Client client,
                              final int version,
                              final int id) {
-        add(client,
-            version,
-            id);
+        return add(client,
+                   version,
+                   id);
     }
 
     @Override

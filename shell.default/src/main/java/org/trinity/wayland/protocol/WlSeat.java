@@ -20,7 +20,7 @@ import java.util.Set;
  * Created by Erik De Rijcke on 5/23/14.
  */
 @AutoFactory(className = "WlSeatFactory")
-public class WlSeat extends Global implements WlSeatRequestsV3, ProtocolObject<WlSeatResource> {
+public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV3, ProtocolObject<WlSeatResource> {
 
     private final Set<WlSeatResource> resources = Sets.newHashSet();
     private final EventBus            eventBus = new EventBus();
@@ -38,6 +38,7 @@ public class WlSeat extends Global implements WlSeatRequestsV3, ProtocolObject<W
            final Optional<WlKeyboard> optionalWlKeyboard,
            final Optional<WlTouch>    optionalWlTouch) {
         super(display,
+              WlSeatResource.class,
               VERSION);
         this.wlDataDevice       = wlDataDevice;
         this.optionalWlKeyboard = optionalWlKeyboard;
@@ -63,13 +64,13 @@ public class WlSeat extends Global implements WlSeatRequestsV3, ProtocolObject<W
     }
 
     @Override
-    public void onBindClient(final Client client,
+    public WlSeatResource onBindClient(final Client client,
                              final int    version,
                              final int    id) {
         //FIXME check if we support given version.
-        add(client,
-            version,
-            id);
+        return add(client,
+                   version,
+                   id);
     }
 
     @Override

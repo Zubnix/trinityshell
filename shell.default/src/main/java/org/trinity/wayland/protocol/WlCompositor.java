@@ -22,7 +22,7 @@ import java.util.Set;
  * Created by Erik De Rijcke on 5/22/14.
  */
 @Singleton//Eager
-public class WlCompositor extends Global implements WlCompositorRequestsV3, ProtocolObject<WlCompositorResource> {
+public class WlCompositor extends Global<WlCompositorResource> implements WlCompositorRequestsV3, ProtocolObject<WlCompositorResource> {
 
     private final Set<WlCompositorResource> resources = Sets.newHashSet();
     private final EventBus                  eventBus  = new EventBus();
@@ -43,6 +43,7 @@ public class WlCompositor extends Global implements WlCompositorRequestsV3, Prot
                  final PixmanRegionFactory       pixmanRegionFactory,
                  final WlShellCompositor         wlShellCompositor) {
         super(display,
+              WlCompositorResource.class,
               VERSION);
         this.subCompositor             = subCompositor;
         this.wlSurfaceFactory          = wlSurfaceFactory;
@@ -53,15 +54,16 @@ public class WlCompositor extends Global implements WlCompositorRequestsV3, Prot
     }
 
     @Override
-    public void onBindClient(final Client client,
-                             final int    version,
-                             final int    id) {
-        add(client,
-            version,
-            id);
+    public WlCompositorResource onBindClient(final Client client,
+                                             final int    version,
+                                             final int    id) {
+        WlCompositorResource wlCompositorResource = add(client,
+                                                        version,
+                                                        id);
         this.subCompositor.add(client,
                                version,
                                id);
+        return wlCompositorResource;
     }
 
     @Override

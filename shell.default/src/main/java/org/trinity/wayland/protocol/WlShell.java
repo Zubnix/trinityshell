@@ -21,7 +21,7 @@ import java.util.Set;
  * Created by Erik De Rijcke on 5/22/14.
  */
 @Singleton//Eager
-public class WlShell extends Global implements WlShellRequests, ProtocolObject<WlShellResource> {
+public class WlShell extends Global<WlShellResource> implements WlShellRequests, ProtocolObject<WlShellResource> {
 
     private final Set<WlShellResource> resources = Sets.newHashSet();
     private final EventBus             eventBus  = new EventBus();
@@ -32,6 +32,7 @@ public class WlShell extends Global implements WlShellRequests, ProtocolObject<W
     WlShell(final Display               display,
             final WlShellSurfaceFactory wlShellSurfaceFactory) {
         super(display,
+              WlShellResource.class,
               VERSION);
         this.wlShellSurfaceFactory = wlShellSurfaceFactory;
     }
@@ -55,13 +56,13 @@ public class WlShell extends Global implements WlShellRequests, ProtocolObject<W
     }
 
     @Override
-    public void onBindClient(final Client client,
+    public WlShellResource onBindClient(final Client client,
                            final int    version,
                            final int    id) {
         //FIXME check if we support requested version.
-        add(client,
-            version,
-            id);
+        return add(client,
+                   version,
+                   id);
     }
 
     @Override
