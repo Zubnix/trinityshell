@@ -14,6 +14,7 @@
 
     <properties>
         <xcb4j.version>0.0.1</xcb4j.version>
+        <pixman4j.version>0.0.1-SNAPSHOT</pixman4j.version>
         <wayland.version>0.0.1-SNAPSHOT</wayland.version>
     </properties>
 
@@ -33,6 +34,11 @@
             <groupId>org.trinity</groupId>
             <artifactId>XCB4J</artifactId>
             <version>${xcb4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.trinity</groupId>
+            <artifactId>PIXMAN4J</artifactId>
+            <version>${pixman4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.freedesktop</groupId>
