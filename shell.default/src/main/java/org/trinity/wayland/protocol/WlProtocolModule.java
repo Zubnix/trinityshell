@@ -2,6 +2,7 @@ package org.trinity.wayland.protocol;
 
 import dagger.Module;
 import dagger.Provides;
+import org.freedesktop.wayland.server.Display;
 import org.trinity.wayland.WlModule;
 
 import javax.inject.Singleton;
@@ -32,8 +33,10 @@ public class WlProtocolModule {
 
     @Provides
     @Singleton
-    WlSubCompositor provideWlSubCompositor(final org.trinity.wayland.protocol.WlSubSurfaceFactory wlSubSurfaceFactory){
-        return new WlSubCompositor(wlSubSurfaceFactory);
+    WlSubCompositor provideWlSubCompositor(final Display display,
+                                           final WlSubSurfaceFactory wlSubSurfaceFactory){
+        return new WlSubCompositor(display,
+                                   wlSubSurfaceFactory);
     }
 
     @Provides
