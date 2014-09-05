@@ -33,7 +33,7 @@ public class WlProtocolModule {
 
     @Provides
     @Singleton
-    WlSubCompositor provideWlSubCompositor(final Display display,
+    WlSubCompositor provideWlSubCompositor(final Display             display,
                                            final WlSubSurfaceFactory wlSubSurfaceFactory){
         return new WlSubCompositor(display,
                                    wlSubSurfaceFactory);
