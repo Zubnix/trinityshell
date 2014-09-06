@@ -36,10 +36,19 @@ public class WlShmPool extends EventBus implements WlShmPoolRequests, ProtocolOb
                              @Nonnegative
                              final int               stride,
                              final int               format) {
-        checkArgument(width > 0);
-        checkArgument(height > 0);
-        checkArgument(stride > 0);
-        checkArgument(offset > 0);
+        checkArgument(width > 0,
+                      "Width was %s but expected nonnegative, nonzero",
+                      width);
+        checkArgument(height > 0,
+                      "Height was %s but expected nonnegative, nonzero",
+                      height);
+        checkArgument(stride > 0,
+                      "Stride was %s but expected nonnegative, nonzero",
+                      stride);
+        checkArgument(offset >= 0,
+                      "Offset was %s but expected nonnegative",
+                      offset);
+
 
         new ShmBuffer(resource.getClient(),
                       id,
