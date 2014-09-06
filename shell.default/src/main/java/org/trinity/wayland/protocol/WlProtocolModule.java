@@ -25,7 +25,7 @@ import javax.inject.Singleton;
                 WlSurfaceFactory.class,
                 WlRegionFactory.class,
                 WlShellSurfaceFactory.class,
-                WlSubSurfaceFactory.class
+                org.trinity.wayland.protocol.WlSubSurfaceFactory.class
         },
         library = true
 )
@@ -34,7 +34,7 @@ public class WlProtocolModule {
     @Provides
     @Singleton
     WlSubCompositor provideWlSubCompositor(final Display             display,
-                                           final WlSubSurfaceFactory wlSubSurfaceFactory){
+                                           final org.trinity.wayland.protocol.WlSubSurfaceFactory wlSubSurfaceFactory){
         return new WlSubCompositor(display,
                                    wlSubSurfaceFactory);
     }
