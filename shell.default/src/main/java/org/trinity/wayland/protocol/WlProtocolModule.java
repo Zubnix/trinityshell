@@ -21,7 +21,6 @@ import javax.inject.Singleton;
                 WlSeatFactory.class,
                 WlDataDeviceFactory.class,
                 WlDataDeviceFactory.class,
-                WlShmPoolFactory.class,
                 WlSurfaceFactory.class,
                 WlRegionFactory.class,
                 WlShellSurfaceFactory.class,

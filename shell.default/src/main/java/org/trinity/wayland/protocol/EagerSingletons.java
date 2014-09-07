@@ -10,8 +10,6 @@ public final class EagerSingletons {
     @Inject
     static WlDataDeviceManager wlDataDeviceManager;
     @Inject
-    static WlShm wlShm;
-    @Inject
     static WlShell wlShell;
     @Inject
     static WlCompositor wlCompositor;
