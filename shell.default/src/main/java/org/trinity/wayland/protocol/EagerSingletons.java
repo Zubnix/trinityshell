@@ -10,13 +10,13 @@ public final class EagerSingletons {
     @Inject
     static WlDataDeviceManager wlDataDeviceManager;
     @Inject
-    static WlShell wlShell;
+    static WlShell             wlShell;
     @Inject
-    static WlCompositor wlCompositor;
+    static WlCompositor        wlCompositor;
     @Inject
-    static WlSubCompositor wlSubCompositor;
+    static WlSubCompositor     wlSubCompositor;
     @Inject
-    static WlOutput wlOutput;
+    static WlOutput            wlOutput;
 
     @Inject
     EagerSingletons() {
