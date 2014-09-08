@@ -4,14 +4,11 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.*;
 import org.trinity.PixmanRegionFactory;
-import org.trinity.SimpleShellSurface;
-import org.trinity.SimpleShellSurfaceFactory;
 import org.trinity.wayland.WlShellCompositor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -23,27 +20,24 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
     private final Set<WlCompositorResource> resources = Sets.newHashSet();
     private final EventBus                  eventBus  = new EventBus();
 
-    private final WlSurfaceFactory          wlSurfaceFactory;
-    private final WlRegionFactory           wlRegionFactory;
-    private final SimpleShellSurfaceFactory simpleShellSurfaceFactory;
-    private final PixmanRegionFactory       pixmanRegionFactory;
-    private final WlShellCompositor         wlShellCompositor;
+    private final WlSurfaceFactory    wlSurfaceFactory;
+    private final WlRegionFactory     wlRegionFactory;
+    private final PixmanRegionFactory pixmanRegionFactory;
+    private final WlShellCompositor   wlShellCompositor;
 
     @Inject
-    WlCompositor(final Display                   display,
-                 final WlSurfaceFactory          wlSurfaceFactory,
-                 final WlRegionFactory           wlRegionFactory,
-                 final SimpleShellSurfaceFactory simpleShellSurfaceFactory,
-                 final PixmanRegionFactory       pixmanRegionFactory,
-                 final WlShellCompositor         wlShellCompositor) {
+    WlCompositor(final Display             display,
+                 final WlSurfaceFactory    wlSurfaceFactory,
+                 final WlRegionFactory     wlRegionFactory,
+                 final PixmanRegionFactory pixmanRegionFactory,
+                 final WlShellCompositor   wlShellCompositor) {
         super(display,
               WlCompositorResource.class,
               VERSION);
-        this.wlSurfaceFactory          = wlSurfaceFactory;
-        this.wlRegionFactory           = wlRegionFactory;
-        this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
-        this.pixmanRegionFactory       = pixmanRegionFactory;
-        this.wlShellCompositor         = wlShellCompositor;
+        this.wlSurfaceFactory    = wlSurfaceFactory;
+        this.wlRegionFactory     = wlRegionFactory;
+        this.pixmanRegionFactory = pixmanRegionFactory;
+        this.wlShellCompositor   = wlShellCompositor;
     }
 
     @Override
@@ -57,20 +51,20 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
 
     @Override
     public void createSurface(final WlCompositorResource resource,
-                              final int                    id) {
-        final SimpleShellSurface shellSurface = this.simpleShellSurfaceFactory.create(Optional.empty());
-        shellSurface.register(this.wlShellCompositor);
-        this.wlSurfaceFactory.create(shellSurface).add(resource.getClient(),
-                                                       resource.getVersion(),
-                                                       id);
+                              final int                  id) {
+        this.wlSurfaceFactory.create(this.wlShellCompositor.create())
+                             .add(resource.getClient(),
+                                  resource.getVersion(),
+                                  id);
     }
 
     @Override
     public void createRegion(final WlCompositorResource resource,
                              final int                  id) {
-        this.wlRegionFactory.create(this.pixmanRegionFactory.create()).add(resource.getClient(),
-                                                                           resource.getVersion(),
-                                                                           id);
+        this.wlRegionFactory.create(this.pixmanRegionFactory.create())
+                            .add(resource.getClient(),
+                                 resource.getVersion(),
+                                 id);
     }
 
     @Override
