@@ -4,6 +4,8 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.*;
 import org.trinity.PixmanRegionFactory;
+import org.trinity.shell.scene.api.ShellSurface;
+import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import org.trinity.wayland.WlShellCompositor;
 
 import javax.annotation.Nonnull;
@@ -26,24 +28,24 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
     private final WlShellCompositor   wlShellCompositor;
 
     @Inject
-    WlCompositor(final Display             display,
-                 final WlSurfaceFactory    wlSurfaceFactory,
-                 final WlRegionFactory     wlRegionFactory,
+    WlCompositor(final Display display,
+                 final WlSurfaceFactory wlSurfaceFactory,
+                 final WlRegionFactory wlRegionFactory,
                  final PixmanRegionFactory pixmanRegionFactory,
-                 final WlShellCompositor   wlShellCompositor) {
+                 final WlShellCompositor wlShellCompositor) {
         super(display,
               WlCompositorResource.class,
               VERSION);
-        this.wlSurfaceFactory    = wlSurfaceFactory;
-        this.wlRegionFactory     = wlRegionFactory;
+        this.wlSurfaceFactory = wlSurfaceFactory;
+        this.wlRegionFactory = wlRegionFactory;
         this.pixmanRegionFactory = pixmanRegionFactory;
-        this.wlShellCompositor   = wlShellCompositor;
+        this.wlShellCompositor = wlShellCompositor;
     }
 
     @Override
     public WlCompositorResource onBindClient(final Client client,
-                                             final int    version,
-                                             final int    id) {
+                                             final int version,
+                                             final int id) {
         return add(client,
                    version,
                    id);
@@ -51,16 +53,23 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
 
     @Override
     public void createSurface(final WlCompositorResource resource,
-                              final int                  id) {
-        this.wlSurfaceFactory.create(this.wlShellCompositor.create())
-                             .add(resource.getClient(),
-                                  resource.getVersion(),
-                                  id);
+                              final int id) {
+        final ShellSurface shellSurface = this.wlShellCompositor.create();
+        final WlSurfaceResource wlSurfaceResource = this.wlSurfaceFactory.create(shellSurface)
+                                                                         .add(resource.getClient(),
+                                                                              resource.getVersion(),
+                                                                              id);
+        wlSurfaceResource.addDestroyListener(new Listener() {
+            @Override
+            public void handle() {
+                shellSurface.accept(ShellSurfaceConfigurable::markDestroyed);
+            }
+        });
     }
 
     @Override
     public void createRegion(final WlCompositorResource resource,
-                             final int                  id) {
+                             final int id) {
         this.wlRegionFactory.create(this.pixmanRegionFactory.create())
                             .add(resource.getClient(),
                                  resource.getVersion(),
@@ -83,17 +92,23 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
     }
 
     @Override
-    public void register(@Nonnull final Object listener) {
+    public void register(
+            @Nonnull
+            final Object listener) {
         this.eventBus.register(listener);
     }
 
     @Override
-    public void unregister(@Nonnull final Object listener) {
+    public void unregister(
+            @Nonnull
+            final Object listener) {
         this.eventBus.unregister(listener);
     }
 
     @Override
-    public void post(@Nonnull final Object event) {
+    public void post(
+            @Nonnull
+            final Object event) {
         this.eventBus.post(event);
     }
 }
