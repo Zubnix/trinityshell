@@ -17,11 +17,6 @@ public class WlScene {
 
     public LinkedList<ShellSurface> getShellSurfacesStack() { return this.shellSurfacesStack; }
 
-    public void add(final ShellSurface shellSurface) {
-        shellSurface.register(this);
-        this.shellSurfacesStack.addLast(shellSurface);
-    }
-
     public boolean needsRender(final ShellSurface shellSurface) {
         //for now, always redraw
         return true;
