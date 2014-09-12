@@ -62,8 +62,10 @@ public class WlShellCompositor {
 
     private void renderScene() {
         this.display.getEventLoop()
-                    .addIdle(() ->
-                                     this.wlScene.getShellSurfacesStack()
-                                                 .forEach(this.wlRenderer::render));
+                    .addIdle(() -> {
+                        this.wlScene.getShellSurfacesStack()
+                                    .forEach(this.wlRenderer::render);
+                        this.display.flushClients();
+                    });
     }
 }
