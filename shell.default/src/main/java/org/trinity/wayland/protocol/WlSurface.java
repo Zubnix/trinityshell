@@ -28,7 +28,6 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
     private final Listener               destroyListener = new Listener() {
         @Override
         public void handle() {
-            remove();
             detachBuffer();
             shellSurface.accept(ShellSurfaceConfigurable::detachBuffer);
         }
