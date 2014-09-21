@@ -25,8 +25,6 @@ public abstract class GLSurfaceData {
     public GLSurfaceData refresh(final GLProfile profile,
                                  final GL2ES2    gl,
                                  final ShmBuffer buffer) {
-
-        buffer.beginAccess();
         final ByteBuffer bufferData = buffer.getData();
         final int textureWidth      = buffer.getStride() / 4;
         final int textureHeight     = buffer.getHeight();
@@ -46,7 +44,6 @@ public abstract class GLSurfaceData {
         getTexture().bind(gl);
         getTexture().updateImage(gl,
                                  textureData);
-        buffer.endAccess();
         return this;
     }
 

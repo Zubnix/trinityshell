@@ -47,6 +47,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
     @Override
     public void draw(final ShellSurface shellSurface,
                      final ShmBuffer    buffer) {
+        buffer.beginAccess();
         makeCurrent();
         final GL2ES2 gl = queryGl();
         final GLSurfaceData surfaceData = querySurfaceData(gl,
@@ -85,6 +86,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
         disableShader(gl,
                       state);
         this.drawable.swapBuffers();
+        buffer.endAccess();
     }
 
     private void draw(final GL2ES2  gl,
