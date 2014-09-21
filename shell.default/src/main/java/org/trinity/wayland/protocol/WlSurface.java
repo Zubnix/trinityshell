@@ -30,6 +30,7 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
         public void handle() {
             detachBuffer();
             shellSurface.accept(ShellSurfaceConfigurable::detachBuffer);
+            destroy();
         }
     };
 

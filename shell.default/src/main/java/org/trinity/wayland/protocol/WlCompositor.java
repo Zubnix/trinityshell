@@ -63,6 +63,7 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
             @Override
             public void handle() {
                 shellSurface.accept(ShellSurfaceConfigurable::markDestroyed);
+                destroy();
             }
         });
     }
