@@ -54,4 +54,12 @@ public class WlShmRenderer {
         this.current.getPaintCallbacks().forEach(callback ->
                                                  callback.accept(serial));
     }
+
+    public void beginRender() {
+        this.engine.begin();
+    }
+
+    public void endRender() {
+        this.engine.end();
+    }
 }

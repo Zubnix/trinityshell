@@ -1,67 +1,73 @@
 package org.trinity.wayland.render.gl;
 
-import com.google.auto.value.AutoValue;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureData;
-import org.ejml.data.FixedMatrix3x3_64F;
+import com.jogamp.common.nio.Buffers;
 import org.freedesktop.wayland.server.ShmBuffer;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2ES2;
-import javax.media.opengl.GLProfile;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
-import static javax.media.opengl.GL.GL_RGBA;
-import static javax.media.opengl.GL.GL_UNSIGNED_BYTE;
+public class GLSurfaceData {
 
-@AutoValue
-public abstract class GLSurfaceData {
-
-    public static GLSurfaceData create(final Texture texture) {
-        return new AutoValue_GLSurfaceData(texture);
+    public static GLSurfaceData create(final GL2ES2 gl) {
+        IntBuffer tex = Buffers.newDirectIntBuffer(1);
+        gl.glGenTextures(1,
+                         tex);
+        return new GLSurfaceData(gl,
+                                 tex);
     }
 
-    public abstract Texture getTexture();
+    private final IntBuffer tex;
+    private int width;
+    private int height;
 
-    public GLSurfaceData refresh(final GLProfile profile,
-                                 final GL2ES2    gl,
-                                 final ShmBuffer buffer) {
+    private GLSurfaceData(final GL2ES2 gl,
+                          final IntBuffer tex) {
+        this.tex = tex;
+        gl.glTexParameteri(GL.GL_TEXTURE_2D,
+                           GL.GL_TEXTURE_WRAP_S,
+                           GL.GL_CLAMP_TO_EDGE);
+        gl.glTexParameteri(GL.GL_TEXTURE_2D,
+                           GL.GL_TEXTURE_WRAP_T,
+                           GL.GL_CLAMP_TO_EDGE);
+        gl.glTexParameteri(GL.GL_TEXTURE_2D,
+                           GL.GL_TEXTURE_MIN_FILTER,
+                           GL.GL_NEAREST);
+        gl.glTexParameteri(GL.GL_TEXTURE_2D,
+                           GL.GL_TEXTURE_MAG_FILTER,
+                           GL.GL_NEAREST);
+    }
 
-        buffer.beginAccess();
-        final ByteBuffer bufferData = buffer.getData();
-        final int textureWidth      = buffer.getStride() / 4;
-        final int textureHeight     = buffer.getHeight();
+    public GLSurfaceData makeActive(final GL2ES2 gl,
+                                    final ShmBuffer buffer) {
+        final ByteBuffer pixels = buffer.getData();
+        this.width = buffer.getStride() / 4;
+        this.height = buffer.getHeight();
 
-        final TextureData textureData = new TextureData(profile,
-                                                        GL_RGBA,
-                                                        textureWidth,
-                                                        textureHeight,
-                                                        0,
-                                                        GL_RGBA,
-                                                        GL_UNSIGNED_BYTE,
-                                                        false,
-                                                        false,
-                                                        false,
-                                                        bufferData,
-                                                        null);
-        getTexture().bind(gl);
-        getTexture().updateImage(gl,
-                                 textureData);
-        buffer.endAccess();
+        gl.glBindTexture(GL2ES2.GL_TEXTURE_2D,
+                         getTexture().get(0));
+        gl.glTexImage2D(GL.GL_TEXTURE_2D,
+                        0,
+                        GL.GL_RGBA,
+                        width,
+                        height,
+                        0,
+                        GL.GL_RGBA,
+                        GL.GL_UNSIGNED_BYTE,
+                        pixels);
         return this;
     }
 
-    public FixedMatrix3x3_64F calcTransform(){
-        final Texture texture = getTexture();
-        return new FixedMatrix3x3_64F(1.0/texture.getImageWidth(),
-                                      0,
-                                      0,
+    public int getWidth() {
+        return width;
+    }
 
-                                      0,
-                                      1.0/texture.getImageHeight(),
-                                      0,
+    public int getHeight() {
+        return height;
+    }
 
-                                      0,
-                                      0,
-                                      1);
+    public IntBuffer getTexture() {
+        return tex;
     }
 }
