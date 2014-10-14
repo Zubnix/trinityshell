@@ -20,4 +20,16 @@ public class FBRenderEngine implements WlShmRenderEngine {
                      final ShmBuffer buffer) {
         throw new UnsupportedOperationException("not yet implemented");
     }
+
+    @Override
+    public void begin() {
+        throw new UnsupportedOperationException("not yet implemented");
+
+    }
+
+    @Override
+    public void end() {
+        throw new UnsupportedOperationException("not yet implemented");
+
+    }
 }
