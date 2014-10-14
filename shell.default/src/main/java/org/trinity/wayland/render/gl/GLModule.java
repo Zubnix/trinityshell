@@ -4,16 +4,12 @@ import dagger.Module;
 import dagger.Provides;
 import org.trinity.wayland.WlShmRenderEngine;
 
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 /**
  * Created by Erik De Rijcke on 6/10/14.
  */
 @Module(
-        injects = {
-                GLSurfaceDataFactory.class
-        },
         library = true
 )
 public class GLModule {
@@ -28,8 +24,8 @@ public class GLModule {
 
     @Provides
     @Singleton
-    GLRenderEngineFactory provideGLRenderEngineFactory(final Provider<GLSurfaceDataFactory> surfaceDataFactoryProvider){
-        return new GLRenderEngineFactory(surfaceDataFactoryProvider);
+    GLRenderEngineFactory provideGLRenderEngineFactory(){
+        return new GLRenderEngineFactory();
     }
 
     @Provides
