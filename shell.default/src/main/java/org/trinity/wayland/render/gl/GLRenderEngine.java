@@ -52,15 +52,14 @@ public class GLRenderEngine implements WlShmRenderEngine {
                     "}";
 
     private final Map<ShellSurface, GLSurfaceData> cachedSurfaceData = Maps.newHashMap();
-    private final Map<GLBufferFormat, Integer> shaderPrograms;
+    private final Map<GLBufferFormat, Integer>     shaderPrograms    = Maps.newHashMap();
 
     private final GLAutoDrawable drawable;
     private       Mat4           projection;
 
+
     @Inject
-    GLRenderEngine(final Map<GLBufferFormat, Integer> shaderPrograms,
-                   final GLAutoDrawable drawable) {
-        this.shaderPrograms = shaderPrograms;
+    GLRenderEngine(final GLAutoDrawable drawable) {
         this.drawable = drawable;
     }
 
@@ -94,8 +93,6 @@ public class GLRenderEngine implements WlShmRenderEngine {
     public void draw(final ShellSurface shellSurface,
                      final ShmBuffer buffer) {
         final GL2ES2 gl = queryGl();
-        //TODO move this to begin()
-
 
         buffer.beginAccess();
         final GLSurfaceData surfaceData = querySurfaceData(gl,
@@ -234,20 +231,19 @@ public class GLRenderEngine implements WlShmRenderEngine {
                                   final float[] vertices) {
 
         int uniTrans = gl.glGetUniformLocation(program,
-                                               "ma_projection");
-        //FIXME configure jglm buffer allocator to use jogls buffer factory!
+                                               "mu_projection");
         gl.glUniformMatrix4fv(uniTrans,
                               1,
                               false,
                               projection.getBuffer());
 
-        //TODO reuse vertices_buffer
-        IntBuffer vertices_buffer = IntBuffer.allocate(1);
-        gl.glGenBuffers(1,
-                        vertices_buffer);
         //make vertices_buffer active
+        IntBuffer buffer = Buffers.newDirectIntBuffer(1);
+        gl.glGenBuffers(1,
+                        buffer);
+        //make buffer active
         gl.glBindBuffer(GL2ES2.GL_ARRAY_BUFFER,
-                        vertices_buffer.get(0));
+                        buffer.get(0));
         gl.glBufferData(GL2ES2.GL_ARRAY_BUFFER,
                         vertices.length * 4,
                         Buffers.newDirectFloatBuffer(vertices),
