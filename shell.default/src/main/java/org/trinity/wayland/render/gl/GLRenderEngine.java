@@ -18,7 +18,6 @@ import java.nio.IntBuffer;
 import java.util.Map;
 
 import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
-import static javax.media.opengl.GL.GL_TRIANGLES;
 import static org.trinity.wayland.render.gl.GLBufferFormat.SHM_ARGB8888;
 import static org.trinity.wayland.render.gl.GLBufferFormat.SHM_XRGB8888;
 
@@ -41,14 +40,15 @@ public class GLRenderEngine implements WlShmRenderEngine {
                     "uniform sampler2D tex;\n" +
                     "\n" +
                     "void main(){\n" +
-                    "    gl_FragColor = texture2D(tex, vv_texcoord).bgra;\n" +
+                    "    gl_FragColor = texture2D(tex, vv_texcoord);\n" +
                     "}";
     private static final String SURFACE_XRGB8888_F =
             "varying vec2 vv_texcoord;\n" +
                     "uniform sampler2D tex;\n" +
                     "\n" +
                     "void main() {\n" +
-                    "    gl_FragColor = vec4(texture2D(tex, vv_texcoord).bgr, 1);\n" +
+                    "    gl_FragColor.rgb = texture2D(tex, vv_texcoord).rgb;\n" +
+                    "    gl_FragColor.a = 1f;\n" +
                     "}";
 
     private final Map<ShellSurface, GLSurfaceData> cachedSurfaceData = Maps.newHashMap();
@@ -68,20 +68,20 @@ public class GLRenderEngine implements WlShmRenderEngine {
         projection = new Mat4(2.0f / this.drawable.getSurfaceWidth(),
                               0,
                               0,
-                              0,
+                              -1,
 
                               0,
                               2.0f / -this.drawable.getSurfaceHeight(),
                               0,
-                              0,
-
-                              0,
-                              0,
-                              -1,
-                              0,
-
-                              -1,
                               1,
+
+                              0,
+                              0,
+                              1,
+                              0,
+
+                              0,
+                              0,
                               0,
                               1);
         final GL2ES2 gl = queryGl();
@@ -95,9 +95,6 @@ public class GLRenderEngine implements WlShmRenderEngine {
         final GL2ES2 gl = queryGl();
 
         buffer.beginAccess();
-        final GLSurfaceData surfaceData = querySurfaceData(gl,
-                                                           shellSurface).makeActive(gl,
-                                                                                    buffer);
         final PointImmutable position = shellSurface.getPosition();
         float[] vertices = {
                 position.getX(),
@@ -105,21 +102,37 @@ public class GLRenderEngine implements WlShmRenderEngine {
                 0f,
                 0f,
 
-                position.getX() + surfaceData.getWidth(),
+                position.getX() + buffer.getWidth(),
                 position.getY(),
                 1f,
                 0f,
 
-                position.getX(),
-                position.getY() - surfaceData.getHeight(),
-                0f,
+                position.getX() + buffer.getWidth(),
+                position.getY() + buffer.getHeight(),
+                1f,
                 1f,
 
-                position.getX() + surfaceData.getWidth(),
-                position.getY() - surfaceData.getHeight(),
-                1f,
-                1f,
+                position.getX(),
+                position.getY() + buffer.getHeight(),
+                0f,
+                1f
         };
+
+        //define triangles to be drawn.
+        int elements[] = {
+                0, 1, 2,
+                2, 3, 0
+        };
+        IntBuffer ebo = Buffers.newDirectIntBuffer(1);
+        gl.glGenBuffers(1, ebo);
+
+        gl.glBindBuffer(GL2ES2.GL_ELEMENT_ARRAY_BUFFER, ebo.get(0));
+        gl.glBufferData(GL2ES2.GL_ELEMENT_ARRAY_BUFFER,
+                        4 * elements.length, Buffers.newDirectIntBuffer(elements), GL2ES2.GL_DYNAMIC_DRAW);
+
+        querySurfaceData(gl,
+                         shellSurface).makeActive(gl,
+                                                  buffer);
 
         final int shaderProgram = queryShaderProgram(gl,
                                                      queryBufferFormat(buffer));
@@ -129,9 +142,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
                          vertices);
         gl.glUseProgram(shaderProgram);
         //TODO use element buffer?
-        gl.glDrawArrays(GL_TRIANGLES,
-                        0,
-                        6);
+        gl.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, 0);
         buffer.endAccess();
     }
 
