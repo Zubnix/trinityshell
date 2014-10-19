@@ -4,7 +4,6 @@ import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import org.trinity.wayland.protocol.WlProtocolModule;
-import org.trinity.x11.X11Module;
 
 import javax.inject.Singleton;
 
@@ -14,7 +13,7 @@ import javax.inject.Singleton;
 				ObjectGraph.class
 		},
 		includes = {
-				X11Module.class,
+				//X11Module.class,
                 WlProtocolModule.class
 				//BindingDefaultModule.class
 		},
