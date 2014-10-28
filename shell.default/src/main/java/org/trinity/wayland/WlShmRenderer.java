@@ -50,9 +50,7 @@ public class WlShmRenderer {
 
         this.engine.draw(this.current,
                          shmBuffer);
-        final int serial = this.display.nextSerial();
-        this.current.getPaintCallbacks().forEach(callback ->
-                                                 callback.accept(serial));
+        this.current.firePaintCallbacks(this.display.nextSerial());
     }
 
     public void beginRender() {

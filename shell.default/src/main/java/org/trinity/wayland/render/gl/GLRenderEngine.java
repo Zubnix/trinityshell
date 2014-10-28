@@ -55,12 +55,18 @@ public class GLRenderEngine implements WlShmRenderEngine {
     private final Map<GLBufferFormat, Integer>     shaderPrograms    = Maps.newHashMap();
 
     private final GLAutoDrawable drawable;
-    private       Mat4           projection;
+    private final IntBuffer      elementBuffer;
+    private final IntBuffer vertexBuffer;
+    private Mat4 projection;
 
 
     @Inject
-    GLRenderEngine(final GLAutoDrawable drawable) {
-        this.drawable = drawable;
+    GLRenderEngine(final GLAutoDrawable drawable,
+                   final IntBuffer      elementBuffer,
+                   final IntBuffer      vertexBuffer) {
+        this.drawable      = drawable;
+        this.elementBuffer = elementBuffer;
+        this.vertexBuffer  = vertexBuffer;
     }
 
     @Override
@@ -86,7 +92,22 @@ public class GLRenderEngine implements WlShmRenderEngine {
                               1);
         final GL2ES2 gl = queryGl();
         makeCurrent();
-        clear(gl);
+        gl.glClear(GL_COLOR_BUFFER_BIT);
+        //define triangles to be drawn.
+        int elements[] = {
+                0, 1, 2,
+                2, 3, 0
+        };
+        //make element buffer active
+        gl.glBindBuffer(GL2ES2.GL_ELEMENT_ARRAY_BUFFER,
+                        elementBuffer.get(0));
+        gl.glBufferData(GL2ES2.GL_ELEMENT_ARRAY_BUFFER,
+                        4 * elements.length,
+                        Buffers.newDirectIntBuffer(elements),
+                        GL2ES2.GL_DYNAMIC_DRAW);
+        //make vertexBuffer active
+        gl.glBindBuffer(GL2ES2.GL_ARRAY_BUFFER,
+                        vertexBuffer.get(0));
     }
 
     @Override
@@ -118,18 +139,6 @@ public class GLRenderEngine implements WlShmRenderEngine {
                 1f
         };
 
-        //define triangles to be drawn.
-        int elements[] = {
-                0, 1, 2,
-                2, 3, 0
-        };
-        IntBuffer ebo = Buffers.newDirectIntBuffer(1);
-        gl.glGenBuffers(1, ebo);
-
-        gl.glBindBuffer(GL2ES2.GL_ELEMENT_ARRAY_BUFFER, ebo.get(0));
-        gl.glBufferData(GL2ES2.GL_ELEMENT_ARRAY_BUFFER,
-                        4 * elements.length, Buffers.newDirectIntBuffer(elements), GL2ES2.GL_DYNAMIC_DRAW);
-
         querySurfaceData(gl,
                          shellSurface).makeActive(gl,
                                                   buffer);
@@ -141,7 +150,6 @@ public class GLRenderEngine implements WlShmRenderEngine {
                          projection,
                          vertices);
         gl.glUseProgram(shaderProgram);
-        //TODO use element buffer?
         gl.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, 0);
         buffer.endAccess();
     }
@@ -236,9 +244,9 @@ public class GLRenderEngine implements WlShmRenderEngine {
         }
     }
 
-    private void configureShaders(final GL2ES2 gl,
+    private void configureShaders(final GL2ES2  gl,
                                   final Integer program,
-                                  final Mat4 projection,
+                                  final Mat4    projection,
                                   final float[] vertices) {
 
         int uniTrans = gl.glGetUniformLocation(program,
@@ -248,13 +256,6 @@ public class GLRenderEngine implements WlShmRenderEngine {
                               false,
                               projection.getBuffer());
 
-        //make vertices_buffer active
-        IntBuffer buffer = Buffers.newDirectIntBuffer(1);
-        gl.glGenBuffers(1,
-                        buffer);
-        //make buffer active
-        gl.glBindBuffer(GL2ES2.GL_ARRAY_BUFFER,
-                        buffer.get(0));
         gl.glBufferData(GL2ES2.GL_ARRAY_BUFFER,
                         vertices.length * 4,
                         Buffers.newDirectFloatBuffer(vertices),
@@ -282,15 +283,6 @@ public class GLRenderEngine implements WlShmRenderEngine {
     private GL2ES2 queryGl() {
         return this.drawable.getGL()
                             .getGL2ES2();
-    }
-
-    private void clear(final GL2ES2 gl) {
-        //set everything to blue when doing a render pass, eases debugging.
-        gl.glClearColor(0,
-                        0,
-                        1,
-                        1);
-        gl.glClear(GL_COLOR_BUFFER_BIT);
     }
 
     private void makeCurrent() {
@@ -324,6 +316,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
         GLSurfaceData surfaceData = this.cachedSurfaceData.get(shellSurface);
         if (surfaceData == null) {
             surfaceData = GLSurfaceData.create(gl);
+            this.cachedSurfaceData.put(shellSurface,surfaceData);
         }
         return surfaceData;
     }
