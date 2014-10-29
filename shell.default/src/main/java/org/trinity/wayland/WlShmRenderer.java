@@ -9,10 +9,12 @@ import org.freedesktop.wayland.server.WlBufferResource;
 import org.trinity.shell.scene.api.ShellSurface;
 
 import javax.inject.Inject;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class WlShmRenderer {
 
-    private final EventBus dispatcher= new EventBus();
+    private final EventBus dispatcher = new EventBus();
 
     private final Display           display;
     private final WlShmRenderEngine engine;
@@ -20,44 +22,49 @@ public class WlShmRenderer {
     private ShellSurface current;
 
     @Inject
-    WlShmRenderer(final Display           display,
+    WlShmRenderer(final Display display,
                   final WlShmRenderEngine engine) {
         this.display = display;
-        this.engine  = engine;
+        this.engine = engine;
 
         this.dispatcher.register(this);
     }
 
     public void render(final ShellSurface shellSurface) {
-        this.current =  shellSurface;
+        this.current = shellSurface;
         dispatcher.post(shellSurface.getBuffer()
-                  .get());
+                                    .get());
     }
 
     @Subscribe
-    public void unknownBufferType(final DeadEvent deadEvent){
+    public void unknownBufferType(final DeadEvent deadEvent) {
         throw new IllegalArgumentException(String.format("Buffer %s is not a known type.",
-                                                         deadEvent.getEvent().getClass().getName()));
+                                                         deadEvent.getEvent()
+                                                                  .getClass()
+                                                                  .getName()));
     }
 
     @Subscribe
-    public void render(final WlBufferResource bufferResource){
+    public void render(final WlBufferResource bufferResource) throws ExecutionException, InterruptedException {
 
         final ShmBuffer shmBuffer = ShmBuffer.get(bufferResource);
-        if(shmBuffer == null){
+        if (shmBuffer == null) {
             throw new IllegalArgumentException("Buffer is not an ShmBuffer.");
         }
 
         this.engine.draw(this.current,
-                         shmBuffer);
-        this.current.firePaintCallbacks(this.display.nextSerial());
+                         shmBuffer)
+                   .get();
+        this.current.firePaintCallbacks((int) TimeUnit.NANOSECONDS.toMillis(System.nanoTime()));
     }
 
-    public void beginRender() {
-        this.engine.begin();
+    public void beginRender() throws ExecutionException, InterruptedException {
+        this.engine.begin()
+                   .get();
     }
 
-    public void endRender() {
-        this.engine.end();
+    public void endRender() throws ExecutionException, InterruptedException {
+        this.engine.end()
+                   .get();
     }
 }

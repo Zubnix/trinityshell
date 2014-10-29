@@ -9,6 +9,7 @@ import org.trinity.shell.scene.api.event.Destroyed;
 
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 public class WlShellCompositor {
 
@@ -63,11 +64,16 @@ public class WlShellCompositor {
     private void renderScene() {
         this.display.getEventLoop()
                     .addIdle(() -> {
-                        this.wlRenderer.beginRender();
-                        this.wlScene.getShellSurfacesStack()
-                                    .forEach(this.wlRenderer::render);
-                        this.wlRenderer.endRender();
-                        this.display.flushClients();
+                        try {
+                            this.wlRenderer.beginRender();
+                            this.wlScene.getShellSurfacesStack()
+                                        .forEach(this.wlRenderer::render);
+                            this.wlRenderer.endRender();
+                            this.display.flushClients();
+                        }
+                        catch (ExecutionException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     });
     }
 }

@@ -5,6 +5,7 @@ import dagger.Provides;
 import org.trinity.wayland.WlShmRenderEngine;
 
 import javax.inject.Singleton;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Erik De Rijcke on 6/10/14.
@@ -31,7 +32,12 @@ public class GLModule {
     @Provides
     @Singleton
     WlShmRenderEngine provideGLRenderEngine(final GLRenderEngineFactory glRenderEngineFactory){
-        return glRenderEngineFactory.create(this.width,
-                                            this.height);
+        try {
+            return glRenderEngineFactory.create(this.width,
+                                                this.height).get();
+        }
+        catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

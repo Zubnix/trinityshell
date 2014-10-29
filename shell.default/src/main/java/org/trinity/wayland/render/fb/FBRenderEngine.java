@@ -1,5 +1,6 @@
 package org.trinity.wayland.render.fb;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import org.freedesktop.wayland.server.ShmBuffer;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.wayland.WlShmRenderEngine;
@@ -16,19 +17,19 @@ public class FBRenderEngine implements WlShmRenderEngine {
     }
 
     @Override
-    public void draw(final ShellSurface shellSurface,
+    public ListenableFuture<?> draw(final ShellSurface shellSurface,
                      final ShmBuffer buffer) {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
     @Override
-    public void begin() {
+    public ListenableFuture<?> begin() {
         throw new UnsupportedOperationException("not yet implemented");
 
     }
 
     @Override
-    public void end() {
+    public ListenableFuture<?> end() {
         throw new UnsupportedOperationException("not yet implemented");
 
     }

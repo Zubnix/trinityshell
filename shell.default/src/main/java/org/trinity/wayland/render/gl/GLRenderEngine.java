@@ -1,6 +1,8 @@
 package org.trinity.wayland.render.gl;
 
 import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.hackoeur.jglm.Mat4;
 import com.jogamp.common.nio.Buffers;
 import org.freedesktop.wayland.server.ShmBuffer;
@@ -13,7 +15,6 @@ import javax.media.nativewindow.util.PointImmutable;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2ES2;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLContext;
 import java.nio.IntBuffer;
 import java.util.Map;
 
@@ -54,23 +55,39 @@ public class GLRenderEngine implements WlShmRenderEngine {
     private final Map<ShellSurface, GLSurfaceData> cachedSurfaceData = Maps.newHashMap();
     private final Map<GLBufferFormat, Integer>     shaderPrograms    = Maps.newHashMap();
 
-    private final GLAutoDrawable drawable;
-    private final IntBuffer      elementBuffer;
-    private final IntBuffer vertexBuffer;
-    private Mat4 projection;
+    private final ListeningExecutorService renderThread;
+    private final GLAutoDrawable           drawable;
+    private final IntBuffer                elementBuffer;
+    private final IntBuffer                vertexBuffer;
+    private final int[] elements = new int[]{
+            0,
+            1,
+            2,
+            2,
+            3,
+            0
+    };
 
+    private Mat4   projection;
+    private GL2ES2 gl;
 
     @Inject
-    GLRenderEngine(final GLAutoDrawable drawable,
-                   final IntBuffer      elementBuffer,
-                   final IntBuffer      vertexBuffer) {
-        this.drawable      = drawable;
+    GLRenderEngine(final ListeningExecutorService renderThread,
+                   final GLAutoDrawable drawable,
+                   final IntBuffer elementBuffer,
+                   final IntBuffer vertexBuffer) {
+        this.renderThread = renderThread;
+        this.drawable = drawable;
         this.elementBuffer = elementBuffer;
-        this.vertexBuffer  = vertexBuffer;
+        this.vertexBuffer = vertexBuffer;
     }
 
     @Override
-    public void begin() {
+    public ListenableFuture<?> begin() {
+        return this.renderThread.submit((Runnable) this::doBegin);
+    }
+
+    private void doBegin() {
         projection = new Mat4(2.0f / this.drawable.getSurfaceWidth(),
                               0,
                               0,
@@ -90,14 +107,9 @@ public class GLRenderEngine implements WlShmRenderEngine {
                               0,
                               0,
                               1);
-        final GL2ES2 gl = queryGl();
-        makeCurrent();
+        refreshGl();
         gl.glClear(GL_COLOR_BUFFER_BIT);
         //define triangles to be drawn.
-        int elements[] = {
-                0, 1, 2,
-                2, 3, 0
-        };
         //make element buffer active
         gl.glBindBuffer(GL2ES2.GL_ELEMENT_ARRAY_BUFFER,
                         elementBuffer.get(0));
@@ -111,9 +123,14 @@ public class GLRenderEngine implements WlShmRenderEngine {
     }
 
     @Override
-    public void draw(final ShellSurface shellSurface,
-                     final ShmBuffer buffer) {
-        final GL2ES2 gl = queryGl();
+    public ListenableFuture<?> draw(final ShellSurface shellSurface,
+                                    final ShmBuffer buffer) {
+        return this.renderThread.submit(() -> doDraw(shellSurface,
+                                                     buffer));
+    }
+
+    private void doDraw(final ShellSurface shellSurface,
+                        final ShmBuffer buffer) {
 
         buffer.beginAccess();
         final PointImmutable position = shellSurface.getPosition();
@@ -139,56 +156,51 @@ public class GLRenderEngine implements WlShmRenderEngine {
                 1f
         };
 
-        querySurfaceData(gl,
-                         shellSurface).makeActive(gl,
-                                                  buffer);
+        querySurfaceData(shellSurface,
+                         buffer).makeActive(gl,
+                                            buffer);
 
-        final int shaderProgram = queryShaderProgram(gl,
-                                                     queryBufferFormat(buffer));
-        configureShaders(gl,
-                         shaderProgram,
+        final int shaderProgram = queryShaderProgram(queryBufferFormat(buffer));
+        configureShaders(shaderProgram,
                          projection,
                          vertices);
         gl.glUseProgram(shaderProgram);
-        gl.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, 0);
+        gl.glDrawElements(GL.GL_TRIANGLES,
+                          6,
+                          GL.GL_UNSIGNED_INT,
+                          0);
         buffer.endAccess();
     }
 
     @Override
-    public void end() {
-        this.drawable.swapBuffers();
+    public ListenableFuture<?> end() {
+        return this.renderThread.submit((Runnable) drawable::swapBuffers);
     }
 
-    private int queryShaderProgram(final GL2ES2 gl,
-                                   GLBufferFormat bufferFormat) {
+    private int queryShaderProgram(GLBufferFormat bufferFormat) {
         Integer shaderProgram = this.shaderPrograms.get(bufferFormat);
         if (shaderProgram == null) {
-            shaderProgram = createShaderProgram(gl,
-                                                bufferFormat);
+            shaderProgram = createShaderProgram(bufferFormat);
             this.shaderPrograms.put(bufferFormat,
                                     shaderProgram);
         }
         return shaderProgram;
     }
 
-    private int createShaderProgram(final GL2ES2 gl,
-                                    GLBufferFormat bufferFormat) {
+    private int createShaderProgram(GLBufferFormat bufferFormat) {
         final int vertexShader = gl.glCreateShader(GL2ES2.GL_VERTEX_SHADER);
-        compileShader(gl,
-                      vertexShader,
+        compileShader(vertexShader,
                       SURFACE_V);
 
         final int fragmentShader;
         if (bufferFormat == SHM_ARGB8888) {
             fragmentShader = gl.glCreateShader(GL2ES2.GL_FRAGMENT_SHADER);
-            compileShader(gl,
-                          fragmentShader,
+            compileShader(fragmentShader,
                           SURFACE_ARGB8888_F);
         }
         else if (bufferFormat == SHM_XRGB8888) {
             fragmentShader = gl.glCreateShader(GL2ES2.GL_FRAGMENT_SHADER);
-            compileShader(gl,
-                          fragmentShader,
+            compileShader(fragmentShader,
                           SURFACE_XRGB8888_F);
         }
         else {
@@ -204,8 +216,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
         return shaderProgram;
     }
 
-    private void compileShader(final GL2ES2 gl,
-                               final int shaderHandle,
+    private void compileShader(final int shaderHandle,
                                String shaderSource) {
         String[] lines = new String[]{shaderSource};
         int[] lengths = new int[]{lines[0].length()};
@@ -244,9 +255,8 @@ public class GLRenderEngine implements WlShmRenderEngine {
         }
     }
 
-    private void configureShaders(final GL2ES2  gl,
-                                  final Integer program,
-                                  final Mat4    projection,
+    private void configureShaders(final Integer program,
+                                  final Mat4 projection,
                                   final float[] vertices) {
 
         int uniTrans = gl.glGetUniformLocation(program,
@@ -280,20 +290,9 @@ public class GLRenderEngine implements WlShmRenderEngine {
                                  2 * 4);
     }
 
-    private GL2ES2 queryGl() {
-        return this.drawable.getGL()
-                            .getGL2ES2();
-    }
-
-    private void makeCurrent() {
-        final int current = this.drawable.getContext()
-                                         .makeCurrent();
-        switch (current) {
-            case GLContext.CONTEXT_NOT_CURRENT:
-                throw new IllegalStateException("GLContext could not be made current.");
-            case GLContext.CONTEXT_CURRENT:
-            case GLContext.CONTEXT_CURRENT_NEW:
-        }
+    private void refreshGl() {
+        gl = this.drawable.getGL()
+                          .getGL2ES2();
     }
 
     private GLBufferFormat queryBufferFormat(final ShmBuffer buffer) {
@@ -311,12 +310,15 @@ public class GLRenderEngine implements WlShmRenderEngine {
         return format;
     }
 
-    private GLSurfaceData querySurfaceData(final GL2ES2 gl,
-                                           final ShellSurface shellSurface) {
+    private GLSurfaceData querySurfaceData(final ShellSurface shellSurface,
+                                           final ShmBuffer buffer) {
         GLSurfaceData surfaceData = this.cachedSurfaceData.get(shellSurface);
         if (surfaceData == null) {
             surfaceData = GLSurfaceData.create(gl);
-            this.cachedSurfaceData.put(shellSurface,surfaceData);
+            surfaceData.init(gl,
+                             buffer);
+            this.cachedSurfaceData.put(shellSurface,
+                                       surfaceData);
         }
         return surfaceData;
     }
