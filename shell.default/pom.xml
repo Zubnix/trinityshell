@@ -14,8 +14,9 @@
 
     <properties>
         <xcb4j.version>0.0.1</xcb4j.version>
-        <pixman4j.version>0.0.1-SNAPSHOT</pixman4j.version>
-        <wayland.version>1.0.0-SNAPSHOT</wayland.version>
+        <pixman-java-bindings.version>1.0.0-SNAPSHOT</pixman-java-bindings.version>
+        <libinput-java-bindings.version>1.0.0-SNAPSHOT</libinput-java-bindings.version>
+        <wayland-java-bindings.version>1.0.0-SNAPSHOT</wayland-java-bindings.version>
         <jgml.version>0.1-SNAPSHOT</jgml.version>
     </properties>
 
@@ -30,31 +31,31 @@
             <artifactId>shell.scene.api</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.trinity</groupId>
             <artifactId>XCB4J</artifactId>
             <version>${xcb4j.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>org.trinity</groupId>
-            <artifactId>PIXMAN4J</artifactId>
-            <version>${pixman4j.version}</version>
+            <groupId>org.freedesktop</groupId>
+            <artifactId>pixman-java-bindings</artifactId>
+            <version>${pixman-java-bindings.version}</version>
         </dependency>
         <dependency>
             <groupId>org.freedesktop</groupId>
             <artifactId>wayland</artifactId>
-            <version>${wayland.version}</version>
+            <version>${wayland-java-bindings.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freedesktop</groupId>
+            <artifactId>libinput-java-bindings</artifactId>
+            <version>${libinput-java-bindings.version}</version>
         </dependency>
         <dependency>
             <groupId>com.hackoeur</groupId>
             <artifactId>jglm</artifactId>
             <version>${jgml.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.freedesktop</groupId>
-            <artifactId>native-util</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- logging implementation for test log output -->
         <dependency>

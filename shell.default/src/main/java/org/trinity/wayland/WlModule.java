@@ -3,8 +3,6 @@ package org.trinity.wayland;
 import com.google.common.util.concurrent.Service;
 import dagger.Module;
 import dagger.Provides;
-import jnr.ffi.LibraryLoader;
-import nativelibs.LibC;
 import org.freedesktop.wayland.server.Display;
 import org.trinity.wayland.render.gl.GLModule;
 
@@ -40,19 +38,11 @@ public class WlModule {
         return new WlScene();
     }
 
-    @Singleton
-    @Provides
-    LibC provideLibC(){
-        return LibraryLoader.create(LibC.class)
-                            .load("c");
-    }
 
     @Singleton
     @Provides
-    WlJobExecutor provideWlJobExecutor(final Display display,
-                                       final LibC    libC){
-        return new WlJobExecutor(display,
-                                 libC);
+    WlJobExecutor provideWlJobExecutor(final Display display){
+        return new WlJobExecutor(display);
     }
 
     @Provides(type = SET)
