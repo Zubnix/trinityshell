@@ -1,5 +1,7 @@
 package org.trinity.wayland;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.eventbus.DeadEvent;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -12,19 +14,17 @@ import javax.inject.Inject;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+@AutoFactory
 public class WlShmRenderer {
 
     private final EventBus dispatcher = new EventBus();
 
-    private final Display           display;
     private final WlShmRenderEngine engine;
 
     private ShellSurface current;
 
     @Inject
-    WlShmRenderer(final Display display,
-                  final WlShmRenderEngine engine) {
-        this.display = display;
+    WlShmRenderer(final WlShmRenderEngine engine) {
         this.engine = engine;
 
         this.dispatcher.register(this);

@@ -1,5 +1,7 @@
 package org.trinity.wayland;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.server.Display;
 import org.trinity.SimpleShellSurfaceFactory;
@@ -11,6 +13,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
+@AutoFactory
 public class WlShellCompositor {
 
     private final Display                   display;
@@ -20,10 +23,10 @@ public class WlShellCompositor {
 
 
     @Inject
-    WlShellCompositor(final Display display,
-                      final WlScene wlScene,
+    WlShellCompositor(@Provided final Display display,
+                      @Provided final WlScene wlScene,
                       final WlShmRenderer wlRenderer,
-                      final SimpleShellSurfaceFactory simpleShellSurfaceFactory) {
+                      @Provided final SimpleShellSurfaceFactory simpleShellSurfaceFactory) {
         this.display = display;
         this.wlScene = wlScene;
         this.wlRenderer = wlRenderer;

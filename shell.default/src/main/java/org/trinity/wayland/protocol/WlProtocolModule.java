@@ -14,9 +14,6 @@ import javax.inject.Singleton;
         includes = {
                 WlModule.class
         },
-        staticInjections = {
-          EagerSingletons.class
-        },
         injects = {
                 WlSeatFactory.class,
                 WlDataDeviceFactory.class,
@@ -26,7 +23,10 @@ import javax.inject.Singleton;
                 WlShellSurfaceFactory.class,
                 org.trinity.wayland.protocol.WlSubSurfaceFactory.class
         },
-        library = true
+        library = true,
+
+        //depends on wlmodule that needs a render engine
+        complete = false
 )
 public class WlProtocolModule {
 

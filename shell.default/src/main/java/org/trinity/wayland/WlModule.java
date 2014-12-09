@@ -10,18 +10,14 @@ import javax.inject.Singleton;
 
 import static dagger.Provides.Type.SET;
 
-/**
- * Created by Erik De Rijcke on 5/26/14.
- */
-@Module(
-        includes = {
-                GLModule.class
-        },
-        injects = {
+@Module(injects = {
                 WlShmRenderer.class,
                 WlShellCompositor.class
         },
-        library = true
+        library = true,
+
+        //needs render engine implementation
+        complete = false
 )
 public class WlModule {
 

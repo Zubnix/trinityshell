@@ -9,7 +9,7 @@ import org.trinity.shell.scene.api.ShellSurface;
  */
 public interface WlShmRenderEngine {
     ListenableFuture<?> draw(final ShellSurface shellSurface,
-                                final ShmBuffer buffer);
+                             final ShmBuffer buffer);
 
     ListenableFuture<?> begin();
 

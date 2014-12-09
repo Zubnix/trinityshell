@@ -1,5 +1,7 @@
 package org.trinity.wayland.protocol;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.*;
@@ -16,7 +18,7 @@ import java.util.Set;
 /**
  * Created by Erik De Rijcke on 5/22/14.
  */
-@Singleton//Eager
+@AutoFactory
 public class WlCompositor extends Global<WlCompositorResource> implements WlCompositorRequestsV3, ProtocolObject<WlCompositorResource> {
 
     private final Set<WlCompositorResource> resources = Sets.newHashSet();
@@ -28,10 +30,10 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
     private final WlShellCompositor   wlShellCompositor;
 
     @Inject
-    WlCompositor(final Display display,
-                 final WlSurfaceFactory wlSurfaceFactory,
-                 final WlRegionFactory wlRegionFactory,
-                 final PixmanRegionFactory pixmanRegionFactory,
+    WlCompositor(@Provided final Display display,
+                 @Provided final WlSurfaceFactory wlSurfaceFactory,
+                 @Provided final WlRegionFactory wlRegionFactory,
+                 @Provided final PixmanRegionFactory pixmanRegionFactory,
                  final WlShellCompositor wlShellCompositor) {
         super(display,
               WlCompositorResource.class,

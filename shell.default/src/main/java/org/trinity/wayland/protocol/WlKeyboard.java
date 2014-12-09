@@ -10,10 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Set;
 
-/**
- * Created by Erik De Rijcke on 5/26/14.
- */
-@Singleton
 public class WlKeyboard extends EventBus implements WlKeyboardRequestsV3, ProtocolObject<WlKeyboardResource> {
 
     private final Set<WlKeyboardResource> resources = Sets.newHashSet();

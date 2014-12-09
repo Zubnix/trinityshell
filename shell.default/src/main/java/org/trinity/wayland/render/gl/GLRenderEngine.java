@@ -3,14 +3,12 @@ package org.trinity.wayland.render.gl;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.hackoeur.jglm.Mat4;
 import com.jogamp.common.nio.Buffers;
 import org.freedesktop.wayland.server.ShmBuffer;
 import org.freedesktop.wayland.shared.WlShmFormat;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.wayland.WlShmRenderEngine;
 
-import javax.inject.Inject;
 import javax.media.nativewindow.util.PointImmutable;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2ES2;
@@ -71,7 +69,6 @@ public class GLRenderEngine implements WlShmRenderEngine {
     private Mat4   projection;
     private GL2ES2 gl;
 
-    @Inject
     GLRenderEngine(final ListeningExecutorService renderThread,
                    final GLAutoDrawable drawable,
                    final IntBuffer elementBuffer,
@@ -134,7 +131,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
 
         buffer.beginAccess();
         final PointImmutable position = shellSurface.getPosition();
-        float[] vertices = {
+        final float[] vertices = {
                 position.getX(),
                 position.getY(),
                 0f,
@@ -177,7 +174,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
         return this.renderThread.submit((Runnable) drawable::swapBuffers);
     }
 
-    private int queryShaderProgram(GLBufferFormat bufferFormat) {
+    private int queryShaderProgram(final GLBufferFormat bufferFormat) {
         Integer shaderProgram = this.shaderPrograms.get(bufferFormat);
         if (shaderProgram == null) {
             shaderProgram = createShaderProgram(bufferFormat);
@@ -187,7 +184,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
         return shaderProgram;
     }
 
-    private int createShaderProgram(GLBufferFormat bufferFormat) {
+    private int createShaderProgram(final GLBufferFormat bufferFormat) {
         final int vertexShader = gl.glCreateShader(GL2ES2.GL_VERTEX_SHADER);
         compileShader(vertexShader,
                       SURFACE_V);
@@ -217,9 +214,9 @@ public class GLRenderEngine implements WlShmRenderEngine {
     }
 
     private void compileShader(final int shaderHandle,
-                               String shaderSource) {
-        String[] lines = new String[]{shaderSource};
-        int[] lengths = new int[]{lines[0].length()};
+                               final String shaderSource) {
+        final String[] lines = new String[]{shaderSource};
+        final int[] lengths = new int[]{lines[0].length()};
         gl.glShaderSource(shaderHandle,
                           lines.length,
                           lines,
@@ -227,7 +224,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
                           0);
         gl.glCompileShader(shaderHandle);
 
-        IntBuffer vstatus = IntBuffer.allocate(1);
+        final IntBuffer vstatus = IntBuffer.allocate(1);
         gl.glGetShaderiv(shaderHandle,
                          GL2ES2.GL_COMPILE_STATUS,
                          vstatus);
@@ -237,13 +234,13 @@ public class GLRenderEngine implements WlShmRenderEngine {
         else {
             //failure!
             //get log length
-            int[] logLength = new int[1];
+            final int[] logLength = new int[1];
             gl.glGetShaderiv(shaderHandle,
                              GL2ES2.GL_INFO_LOG_LENGTH,
                              logLength,
                              0);
             //get log
-            byte[] log = new byte[logLength[0]];
+            final byte[] log = new byte[logLength[0]];
             gl.glGetShaderInfoLog(shaderHandle,
                                   logLength[0],
                                   (int[]) null,
@@ -259,7 +256,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
                                   final Mat4 projection,
                                   final float[] vertices) {
 
-        int uniTrans = gl.glGetUniformLocation(program,
+        final int uniTrans = gl.glGetUniformLocation(program,
                                                "mu_projection");
         gl.glUniformMatrix4fv(uniTrans,
                               1,
@@ -270,9 +267,9 @@ public class GLRenderEngine implements WlShmRenderEngine {
                         vertices.length * 4,
                         Buffers.newDirectFloatBuffer(vertices),
                         GL2ES2.GL_DYNAMIC_DRAW);
-        int posAttrib = gl.glGetAttribLocation(program,
+        final int posAttrib = gl.glGetAttribLocation(program,
                                                "va_position");
-        int texAttrib = gl.glGetAttribLocation(program,
+        final int texAttrib = gl.glGetAttribLocation(program,
                                                "va_texcoord");
         gl.glEnableVertexAttribArray(posAttrib);
         gl.glVertexAttribPointer(posAttrib,
