@@ -242,6 +242,9 @@ public class GLRenderEngine implements WlShmRenderEngine {
                              logLength,
                              0);
             //get log
+            if(logLength[0]==0){
+                logLength[0] = 1024;
+            }
             final byte[] log = new byte[logLength[0]];
             gl.glGetShaderInfoLog(shaderHandle,
                                   logLength[0],

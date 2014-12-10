@@ -1,5 +1,6 @@
 package org.trinity.wayland.render.gl;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.jogamp.common.nio.Buffers;
 
@@ -8,6 +9,7 @@ import javax.media.opengl.GL2ES2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLContext;
 import java.nio.IntBuffer;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
 public class GLRenderEngineFactory {
@@ -18,21 +20,29 @@ public class GLRenderEngineFactory {
 
     public GLRenderEngine create(final GLAutoDrawable drawable) {
 
-        makeCurrent(drawable);
-        final GL2ES2 gl = drawable.getGL()
-                                  .getGL2ES2();
-        gl.setSwapInterval(1);
-        final IntBuffer elementBuffer = Buffers.newDirectIntBuffer(1);
-        gl.glGenBuffers(1,
-                        elementBuffer);
-        final IntBuffer vertexBuffer = Buffers.newDirectIntBuffer(1);
-        gl.glGenBuffers(1,
-                        vertexBuffer);
+        final ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
+        try {
+            return executorService.submit(() -> {
+                makeCurrent(drawable);
+                final GL2ES2 gl = drawable.getGL()
+                                          .getGL2ES2();
+                gl.setSwapInterval(1);
+                final IntBuffer elementBuffer = Buffers.newDirectIntBuffer(1);
+                gl.glGenBuffers(1,
+                                elementBuffer);
+                final IntBuffer vertexBuffer = Buffers.newDirectIntBuffer(1);
+                gl.glGenBuffers(1,
+                                vertexBuffer);
 
-        return new GLRenderEngine(MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()),
-                                  drawable,
-                                  elementBuffer,
-                                  vertexBuffer);
+                return new GLRenderEngine(executorService,
+                                          drawable,
+                                          elementBuffer,
+                                          vertexBuffer);
+            }).get();
+        }
+        catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private GLContext makeCurrent(final GLAutoDrawable drawable) {
