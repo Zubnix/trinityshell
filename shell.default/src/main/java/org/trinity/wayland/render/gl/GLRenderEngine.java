@@ -3,6 +3,8 @@ package org.trinity.wayland.render.gl;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+
+import com.hackoeur.jglm.Mat4;
 import com.jogamp.common.nio.Buffers;
 import org.freedesktop.wayland.server.ShmBuffer;
 import org.freedesktop.wayland.shared.WlShmFormat;
@@ -66,7 +68,7 @@ public class GLRenderEngine implements WlShmRenderEngine {
             0
     };
 
-    private Mat4   projection;
+    private Mat4 projection;
     private GL2ES2 gl;
 
     GLRenderEngine(final ListeningExecutorService renderThread,

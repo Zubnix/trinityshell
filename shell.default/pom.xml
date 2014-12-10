@@ -23,11 +23,6 @@
 	<dependencies>
         <dependency>
             <groupId>org.trinity</groupId>
-            <artifactId>common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.trinity</groupId>
             <artifactId>shell.scene.api</artifactId>
             <version>${project.version}</version>
         </dependency>

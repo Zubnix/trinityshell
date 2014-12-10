@@ -18,7 +18,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
 
-package org.trinity.common;
+package org.trinity.shell.scene.api;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -28,10 +28,7 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Extends guava's {@link EventBus} idea with asynchronous event delivery. This
- * interface does not (can not) extend from guava's Eventbus as it's developers
- * think it's a good idea to *not* separate implementation (a class) from api
- * (an interface)...
+ * Expose guava's {@link EventBus} mechanism as an interface.
  */
 public interface Listenable {
 	/**

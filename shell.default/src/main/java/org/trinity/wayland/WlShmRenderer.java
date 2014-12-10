@@ -26,7 +26,6 @@ public class WlShmRenderer {
     @Inject
     WlShmRenderer(final WlShmRenderEngine engine) {
         this.engine = engine;
-
         this.dispatcher.register(this);
     }
 

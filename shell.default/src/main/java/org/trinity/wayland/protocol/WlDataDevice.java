@@ -19,11 +19,7 @@ public class WlDataDevice extends EventBus implements WlDataDeviceRequests, Prot
 
     private final Set<WlDataDeviceResource> resources = Sets.newHashSet();
 
-    private final WlSeat wlSeat;
-
-    WlDataDevice(final WlSeat wlSeat) {
-        this.wlSeat = wlSeat;
-    }
+    WlDataDevice() {}
 
     @Override
     public void startDrag(final WlDataDeviceResource requester,

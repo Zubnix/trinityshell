@@ -63,7 +63,6 @@
     </properties>
 
     <modules>
-        <module>common</module>
         <module>binding.api</module>
         <module>binding.default</module>
         <module>shell.view.api</module>

@@ -10,7 +10,7 @@ import org.freedesktop.wayland.server.WlShellRequests;
 import org.freedesktop.wayland.server.WlShellResource;
 import org.freedesktop.wayland.server.WlShellSurfaceResource;
 import org.freedesktop.wayland.server.WlSurfaceResource;
-import org.trinity.wayland.events.ResourceDestroyed;
+import org.trinity.wayland.protocol.events.ResourceDestroyed;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

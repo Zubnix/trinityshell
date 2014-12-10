@@ -19,8 +19,6 @@
  ******************************************************************************/
 package org.trinity.shell.scene.api;
 
-import org.ejml.data.FixedMatrix3x3_64F;
-import org.trinity.common.Listenable;
 import org.trinity.shell.scene.api.event.HideRequest;
 import org.trinity.shell.scene.api.event.LowerRequest;
 import org.trinity.shell.scene.api.event.MoveRequest;
@@ -60,7 +58,7 @@ public interface ShellSurface extends Listenable {
     @Nonnull
     Boolean isDestroyed();
     @Nonnull
-    FixedMatrix3x3_64F getTransform();
+    float[] getTransform();
     @Nonnull
     default ShellSurface requestMove(final int x,
                                      final int y) {

@@ -2,8 +2,8 @@ package org.trinity.wayland.protocol;
 
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Resource;
-import org.trinity.common.Listenable;
-import org.trinity.wayland.events.ResourceDestroyed;
+import org.trinity.shell.scene.api.Listenable;
+import org.trinity.wayland.protocol.events.ResourceDestroyed;
 
 import java.util.Set;
 

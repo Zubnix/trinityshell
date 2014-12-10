@@ -1,6 +1,0 @@
-dependencies {
-    compile(
-        project(":common"),
-        [group: "com.googlecode.efficient-java-matrix-library", name: "ejml", version: "0.25"]
-    )
-}

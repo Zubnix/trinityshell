@@ -16,6 +16,9 @@ import javax.inject.Singleton;
         },
         injects = {
                 WlSeatFactory.class,
+                WlKeyboardFactory.class,
+                WlPointerFactory.class,
+                WlTouchFactory.class,
                 WlDataDeviceFactory.class,
                 WlDataDeviceFactory.class,
                 WlSurfaceFactory.class,

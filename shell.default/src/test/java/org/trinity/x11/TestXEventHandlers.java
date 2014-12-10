@@ -2,7 +2,7 @@ package org.trinity.x11;
 
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.junit.Test;
-import org.trinity.common.Listenable;
+import org.trinity.shell.scene.api.Listenable;
 
 import java.util.HashSet;
 

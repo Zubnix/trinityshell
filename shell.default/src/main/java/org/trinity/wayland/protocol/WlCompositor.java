@@ -4,15 +4,20 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import org.freedesktop.wayland.server.*;
-import org.trinity.PixmanRegionFactory;
+
+import org.freedesktop.wayland.server.Client;
+import org.freedesktop.wayland.server.Display;
+import org.freedesktop.wayland.server.Global;
+import org.freedesktop.wayland.server.Listener;
+import org.freedesktop.wayland.server.WlCompositorRequestsV3;
+import org.freedesktop.wayland.server.WlCompositorResource;
+import org.freedesktop.wayland.server.WlSurfaceResource;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import org.trinity.wayland.WlShellCompositor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Set;
 
 /**
@@ -26,14 +31,14 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
 
     private final WlSurfaceFactory    wlSurfaceFactory;
     private final WlRegionFactory     wlRegionFactory;
-    private final PixmanRegionFactory pixmanRegionFactory;
+    private final org.trinity.PixmanRegionFactory pixmanRegionFactory;
     private final WlShellCompositor   wlShellCompositor;
 
     @Inject
     WlCompositor(@Provided final Display display,
                  @Provided final WlSurfaceFactory wlSurfaceFactory,
                  @Provided final WlRegionFactory wlRegionFactory,
-                 @Provided final PixmanRegionFactory pixmanRegionFactory,
+                 @Provided final org.trinity.PixmanRegionFactory pixmanRegionFactory,
                  final WlShellCompositor wlShellCompositor) {
         super(display,
               WlCompositorResource.class,

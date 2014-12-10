@@ -25,7 +25,7 @@ import com.google.common.eventbus.Subscribe;
 import org.freedesktop.xcb.xcb_destroy_notify_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.common.Listenable;
+import org.trinity.shell.scene.api.Listenable;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.x11.render.XShellCompositor;
 

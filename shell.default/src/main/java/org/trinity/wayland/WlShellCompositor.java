@@ -4,7 +4,6 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.server.Display;
-import org.trinity.SimpleShellSurfaceFactory;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.event.Committed;
 import org.trinity.shell.scene.api.event.Destroyed;
@@ -19,14 +18,14 @@ public class WlShellCompositor {
     private final Display                   display;
     private final WlScene                   wlScene;
     private final WlShmRenderer             wlRenderer;
-    private final SimpleShellSurfaceFactory simpleShellSurfaceFactory;
+    private final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory;
 
 
     @Inject
     WlShellCompositor(@Provided final Display display,
                       @Provided final WlScene wlScene,
                       final WlShmRenderer wlRenderer,
-                      @Provided final SimpleShellSurfaceFactory simpleShellSurfaceFactory) {
+                      @Provided final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory) {
         this.display = display;
         this.wlScene = wlScene;
         this.wlRenderer = wlRenderer;

@@ -1,6 +1,5 @@
 dependencies {
     compile(
-        project(":common"),
         project(":shell.scene.api"),
 
         [group: "org.freedesktop", name: "wayland",                version: "1.0.0-SNAPSHOT"],

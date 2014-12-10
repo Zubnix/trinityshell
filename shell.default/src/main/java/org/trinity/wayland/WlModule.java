@@ -11,8 +11,8 @@ import javax.inject.Singleton;
 import static dagger.Provides.Type.SET;
 
 @Module(injects = {
-                WlShmRenderer.class,
-                WlShellCompositor.class
+                WlShmRendererFactory.class,
+                WlShellCompositorFactory.class
         },
         library = true,
 

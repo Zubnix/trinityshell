@@ -4,7 +4,6 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import org.ejml.data.FixedMatrix3x3_64F;
 import org.freedesktop.wayland.server.*;
 import org.freedesktop.wayland.shared.WlOutputTransform;
 import org.trinity.shell.scene.api.ShellSurface;
@@ -64,17 +63,11 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
                                          shellSurfaceConfigurable.setTransform(getMatrix(transform)));
     }
 
-    private FixedMatrix3x3_64F getMatrix(final int transform) {
+    private float[] getMatrix(final int transform) {
         if (transform == WlOutputTransform.FLIPPED_270.getValue()) {
-            return new FixedMatrix3x3_64F(1,
-                                          0,
-                                          0,
-                                          0,
-                                          1,
-                                          0,
-                                          0,
-                                          0,
-                                          1);
+            return new float[]{1, 0, 0,
+                               0, 1, 0,
+                               0, 0, 1};
         }
         throw new IllegalArgumentException("Invalid transform");
     }

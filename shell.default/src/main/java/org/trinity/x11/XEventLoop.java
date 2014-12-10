@@ -26,7 +26,7 @@ import org.freedesktop.xcb.xcb_screen_iterator_t;
 import org.freedesktop.xcb.xcb_screen_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.common.Listenable;
+import org.trinity.shell.scene.api.Listenable;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;

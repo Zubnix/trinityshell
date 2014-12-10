@@ -23,7 +23,6 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
-import org.ejml.data.FixedMatrix3x3_64F;
 import org.trinity.shell.scene.api.Region;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
@@ -59,9 +58,9 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     private Optional<Object>   pendingBuffer       = Optional.empty();
     @Nonnull
-    private FixedMatrix3x3_64F pendingTransform    = new FixedMatrix3x3_64F(1, 0, 0,
-                                                                            0, 1, 0,
-                                                                            0, 0, 1);
+    private float[] pendingTransform    = new float[]{1, 0, 0,
+                                                      0, 1, 0,
+                                                      0, 0, 1};
     @Nonnull
     private PointImmutable     pendingPosition     = new Point(0,
                                                                0);
@@ -78,9 +77,9 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     private Optional<Object>   buffer       = Optional.empty();
     @Nonnull
-    private FixedMatrix3x3_64F transform    = new FixedMatrix3x3_64F(1, 0, 0,
-                                                                     0, 1, 0,
-                                                                     0, 0, 1);
+    private float[] transform    = new float[]{1, 0, 0,
+                                               0, 1, 0,
+                                               0, 0, 1};
     @Nonnull
     private PointImmutable     position     = new Point(0,
                                                         0);
@@ -113,7 +112,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public FixedMatrix3x3_64F getTransform() {
+    public float[] getTransform() {
         return this.transform;
     }
 
@@ -146,7 +145,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable setTransform(final FixedMatrix3x3_64F transform) {
+    public ShellSurfaceConfigurable setTransform(final float[] transform) {
         this.pendingTransform = transform;
         return this;
     }
@@ -154,9 +153,9 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     @Override
     public ShellSurfaceConfigurable removeTransform() {
-        this.pendingTransform = new FixedMatrix3x3_64F(1, 0, 0,
-                                                       0, 1, 0,
-                                                       0, 0, 1);
+        this.pendingTransform = new float[]{1, 0, 0,
+                                            0, 1, 0,
+                                            0, 0, 1};
         return this;
     }
 

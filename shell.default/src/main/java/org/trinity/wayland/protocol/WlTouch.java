@@ -1,5 +1,6 @@
 package org.trinity.wayland.protocol;
 
+import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.Client;
@@ -10,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Set;
 
+@AutoFactory
 public class WlTouch extends EventBus implements WlTouchRequestsV3, ProtocolObject<WlTouchResource> {
 
     private final Set<WlTouchResource> resources = Sets.newHashSet();

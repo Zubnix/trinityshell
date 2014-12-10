@@ -1,4 +1,4 @@
-package org.trinity.wayland.events;
+package org.trinity.wayland.protocol.events;
 
 import org.freedesktop.wayland.server.Resource;
 

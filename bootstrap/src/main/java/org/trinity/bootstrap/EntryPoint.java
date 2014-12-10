@@ -20,6 +20,8 @@ import org.trinity.wayland.WlShellCompositor;
 import org.trinity.wayland.WlShellCompositorFactory;
 import org.trinity.wayland.WlShmRenderer;
 import org.trinity.wayland.WlShmRendererFactory;
+import org.trinity.wayland.input.newt.GLWindowSeat;
+import org.trinity.wayland.input.newt.GLWindowSeatFactory;
 import org.trinity.wayland.platform.newt.GLWindowFactory;
 import org.trinity.wayland.protocol.WlCompositor;
 import org.trinity.wayland.protocol.WlCompositorFactory;
@@ -38,6 +40,7 @@ public class EntryPoint {
     private final WlShmRendererFactory wlShmRendererFactory;
     private final WlShellCompositorFactory wlShellCompositorFactory;
     private final WlCompositorFactory wlCompositorFactory;
+    private final GLWindowSeatFactory glWindowSeatFactory;
     private final Set<Service> services;
 
     @Inject
@@ -46,12 +49,14 @@ public class EntryPoint {
                 final WlShmRendererFactory wlShmRendererFactory,
                 final WlShellCompositorFactory wlShellCompositorFactory,
                 final WlCompositorFactory wlCompositorFactory,
+                final GLWindowSeatFactory glWindowSeatFactory,
                 final Set<Service> services) {
         this.glWindowFactory = glWindowFactory;
         this.glRenderEngineFactory = glRenderEngineFactory;
         this.wlShmRendererFactory = wlShmRendererFactory;
         this.wlShellCompositorFactory = wlShellCompositorFactory;
         this.wlCompositorFactory = wlCompositorFactory;
+        this.glWindowSeatFactory = glWindowSeatFactory;
         this.services = services;
 
         //group services that will drive compositor
@@ -60,17 +65,24 @@ public class EntryPoint {
 
     private void enter() {
         //create an output
+        //create an X opengl enabled window
         final GLWindow glWindow = glWindowFactory.create();
 
         //setup our render engine
+        //create an opengl renderengine that uses shm buffers and outputs to an X opengl window
         final GLRenderEngine glRenderEngine = glRenderEngineFactory.create(glWindow);
+        //create an shm renderer that passes on shm buffers to it's render implementation
         final WlShmRenderer wlShmRenderer = wlShmRendererFactory.create(glRenderEngine);
 
         //setup compositing
+        //create a compositor with shell and scene logic
         final WlShellCompositor wlShellCompositor = wlShellCompositorFactory.create(wlShmRenderer);
+        //create a wayland compositor that delegates it's requests to a shell implementation.
         final WlCompositor wlCompositor = wlCompositorFactory.create(wlShellCompositor);
 
-        //TODO setup seat
+        //setup seat
+        //create a seat that listens for input on the X opengl window and passes it on to a wayland seat.
+        final GLWindowSeat glWindowSeat = glWindowSeatFactory.create(glWindow);
 
         //start all services
         this.serviceManager.startAsync();

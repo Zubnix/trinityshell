@@ -1,7 +1,5 @@
 package org.trinity.shell.scene.api;
 
-import org.ejml.data.FixedMatrix3x3_64F;
-
 import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.PointImmutable;
 import javax.media.nativewindow.util.RectangleImmutable;
@@ -33,7 +31,7 @@ public interface ShellSurfaceConfigurable {
                                           @Nonnull Integer relX,
                                           @Nonnull Integer relY);
     @Nonnull
-    ShellSurfaceConfigurable setTransform(FixedMatrix3x3_64F transform);
+    ShellSurfaceConfigurable setTransform(float[] transform);
     @Nonnull
     ShellSurfaceConfigurable removeTransform();
     @Nonnull
