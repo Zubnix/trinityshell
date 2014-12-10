@@ -6,6 +6,7 @@ import org.trinity.shell.scene.api.ShellSurface;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.LinkedList;
+import java.util.Optional;
 
 @Singleton
 public class WlScene {
@@ -16,6 +17,11 @@ public class WlScene {
     }
 
     public LinkedList<ShellSurface> getShellSurfacesStack() { return this.shellSurfacesStack; }
+
+    public Optional<ShellSurface> findSurfaceAt(int absX, int absY){
+        //TODO find underlying shellsurface
+        return null;
+    }
 
     public boolean needsRender(final ShellSurface shellSurface) {
         //for now, always redraw

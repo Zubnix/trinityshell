@@ -95,9 +95,9 @@ public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV3, 
     public void getTouch(final WlSeatResource resource,
                          final int            id) {
         this.optionalWlTouch.ifPresent(wlTouch ->
-                                       wlTouch.add(resource.getClient(),
-                                                   resource.getVersion(),
-                                                   id));
+                                               wlTouch.add(resource.getClient(),
+                                                           resource.getVersion(),
+                                                           id));
     }
 
     @Override
@@ -130,5 +130,17 @@ public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV3, 
     @Override
     public void post(@Nonnull final Object event) {
         this.eventBus.post(event);
+    }
+
+    public Optional<WlKeyboard> getOptionalWlKeyboard() {
+        return optionalWlKeyboard;
+    }
+
+    public Optional<WlPointer> getOptionalWlPointer() {
+        return optionalWlPointer;
+    }
+
+    public Optional<WlTouch> getOptionalWlTouch() {
+        return optionalWlTouch;
     }
 }

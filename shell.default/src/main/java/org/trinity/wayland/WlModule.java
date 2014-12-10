@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.Service;
 import dagger.Module;
 import dagger.Provides;
 import org.freedesktop.wayland.server.Display;
-import org.trinity.wayland.render.gl.GLModule;
 
 import javax.inject.Singleton;
 
@@ -15,7 +14,6 @@ import static dagger.Provides.Type.SET;
                 WlShellCompositorFactory.class
         },
         library = true,
-
         //needs render engine implementation
         complete = false
 )
