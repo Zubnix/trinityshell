@@ -5,6 +5,8 @@ import org.freedesktop.wayland.server.Resource;
 import org.trinity.shell.scene.api.Listenable;
 import org.trinity.wayland.protocol.events.ResourceDestroyed;
 
+import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -12,6 +14,15 @@ import java.util.Set;
  */
 public interface ProtocolObject<T extends Resource> extends Listenable {
     Set<T> getResources();
+
+    default Optional<T> getResource(){
+      final Iterator<T> iterator = getResources().iterator();
+      if(iterator.hasNext()){
+        return Optional.of(iterator.next());
+      }else{
+        return Optional.empty();
+      }
+    }
 
     default T add(final Client client,
                   final int    version,
