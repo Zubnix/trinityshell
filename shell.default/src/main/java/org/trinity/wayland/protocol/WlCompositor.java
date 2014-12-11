@@ -4,14 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-
-import org.freedesktop.wayland.server.Client;
-import org.freedesktop.wayland.server.Display;
-import org.freedesktop.wayland.server.Global;
-import org.freedesktop.wayland.server.Listener;
-import org.freedesktop.wayland.server.WlCompositorRequestsV3;
-import org.freedesktop.wayland.server.WlCompositorResource;
-import org.freedesktop.wayland.server.WlSurfaceResource;
+import org.freedesktop.wayland.server.*;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import org.trinity.wayland.WlShellCompositor;
@@ -20,19 +13,17 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Set;
 
-/**
- * Created by Erik De Rijcke on 5/22/14.
- */
+
 @AutoFactory
 public class WlCompositor extends Global<WlCompositorResource> implements WlCompositorRequestsV3, ProtocolObject<WlCompositorResource> {
 
     private final Set<WlCompositorResource> resources = Sets.newHashSet();
     private final EventBus                  eventBus  = new EventBus();
 
-    private final WlSurfaceFactory    wlSurfaceFactory;
-    private final WlRegionFactory     wlRegionFactory;
+    private final WlSurfaceFactory                wlSurfaceFactory;
+    private final WlRegionFactory                 wlRegionFactory;
     private final org.trinity.PixmanRegionFactory pixmanRegionFactory;
-    private final WlShellCompositor   wlShellCompositor;
+    private final WlShellCompositor               wlShellCompositor;
 
     @Inject
     WlCompositor(@Provided final Display display,

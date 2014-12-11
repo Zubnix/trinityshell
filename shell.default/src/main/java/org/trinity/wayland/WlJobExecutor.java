@@ -20,9 +20,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * Created by Erik De Rijcke on 6/2/14.
- */
 @Singleton
 public class WlJobExecutor {
 

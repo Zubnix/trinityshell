@@ -2,20 +2,13 @@ package org.trinity.wayland.protocol;
 
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import org.freedesktop.wayland.server.Client;
-import org.freedesktop.wayland.server.Display;
-import org.freedesktop.wayland.server.Global;
-import org.freedesktop.wayland.server.WlOutputRequestsV2;
-import org.freedesktop.wayland.server.WlOutputResource;
+import org.freedesktop.wayland.server.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Set;
 
-/**
- * Created by Erik De Rijcke on 6/3/14.
- */
 @Singleton//Eager
 public class WlOutput extends Global<WlOutputResource> implements WlOutputRequestsV2, ProtocolObject<WlOutputResource> {
 
@@ -31,8 +24,8 @@ public class WlOutput extends Global<WlOutputResource> implements WlOutputReques
 
     @Override
     public WlOutputResource onBindClient(final Client client,
-                                         final int    version,
-                                         final int    id) {
+                                         final int version,
+                                         final int id) {
         return add(client,
                    version,
                    id);
@@ -45,8 +38,8 @@ public class WlOutput extends Global<WlOutputResource> implements WlOutputReques
 
     @Override
     public WlOutputResource create(final Client client,
-                                   final int    version,
-                                   final int    id) {
+                                   final int version,
+                                   final int id) {
         return new WlOutputResource(client,
                                     version,
                                     id,

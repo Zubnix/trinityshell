@@ -9,7 +9,6 @@ import org.freedesktop.wayland.server.WlPointerResource;
 import org.freedesktop.wayland.server.WlSurfaceResource;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Set;
 
 @AutoFactory
@@ -18,7 +17,7 @@ public class WlPointer extends EventBus implements WlPointerRequestsV3, Protocol
     private final Set<WlPointerResource> resources = Sets.newHashSet();
 
     @Inject
-    WlPointer(){
+    WlPointer() {
     }
 
     @Override
@@ -42,8 +41,8 @@ public class WlPointer extends EventBus implements WlPointerRequestsV3, Protocol
 
     @Override
     public WlPointerResource create(final Client client,
-                                      final int version,
-                                      final int id) {
+                                    final int version,
+                                    final int id) {
         return new WlPointerResource(client,
                                      version,
                                      id,

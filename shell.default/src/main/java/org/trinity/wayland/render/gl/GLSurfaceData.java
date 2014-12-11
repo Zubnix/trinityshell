@@ -14,21 +14,19 @@ public class GLSurfaceData {
         IntBuffer tex = Buffers.newDirectIntBuffer(1);
         gl.glGenTextures(1,
                          tex);
-        return new GLSurfaceData(gl,
-                                 tex);
+        return new GLSurfaceData(tex);
     }
 
     private final IntBuffer tex;
-    private int width;
-    private int height;
+    private       int       width;
+    private       int       height;
 
-    private GLSurfaceData(final GL2ES2 gl,
-                          final IntBuffer tex) {
+    private GLSurfaceData(final IntBuffer tex) {
         this.tex = tex;
     }
 
     public void init(final GL2ES2 gl,
-                     final ShmBuffer buffer){
+                     final ShmBuffer buffer) {
         this.width = buffer.getStride() / 4;
         this.height = buffer.getHeight();
         final ByteBuffer pixels = buffer.getData();
@@ -38,8 +36,8 @@ public class GLSurfaceData {
         gl.glTexImage2D(GL.GL_TEXTURE_2D,
                         0,
                         GL.GL_RGBA,
-                        width,
-                        height,
+                        this.width,
+                        this.height,
                         0,
                         GL.GL_RGBA,
                         GL.GL_UNSIGNED_BYTE,
@@ -72,27 +70,14 @@ public class GLSurfaceData {
                            0,
                            0,
                            0,
-                           width,
-                           height,
+                           this.width,
+                           this.height,
                            GL.GL_RGBA,
                            GL.GL_UNSIGNED_BYTE,
                            pixels);
-//
-//        gl.glTexParameteri(GL.GL_TEXTURE_2D,
-//                           GL.GL_TEXTURE_WRAP_S,
-//                           GL.GL_CLAMP_TO_EDGE);
-//        gl.glTexParameteri(GL.GL_TEXTURE_2D,
-//                           GL.GL_TEXTURE_WRAP_T,
-//                           GL.GL_CLAMP_TO_EDGE);
-//        gl.glTexParameteri(GL.GL_TEXTURE_2D,
-//                           GL.GL_TEXTURE_MIN_FILTER,
-//                           GL.GL_NEAREST);
-//        gl.glTexParameteri(GL.GL_TEXTURE_2D,
-//                           GL.GL_TEXTURE_MAG_FILTER,
-//                           GL.GL_NEAREST);
     }
 
     public IntBuffer getTexture() {
-        return tex;
+        return this.tex;
     }
 }

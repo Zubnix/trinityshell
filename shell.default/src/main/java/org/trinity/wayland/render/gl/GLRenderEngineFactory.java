@@ -38,7 +38,8 @@ public class GLRenderEngineFactory {
                                           drawable,
                                           elementBuffer,
                                           vertexBuffer);
-            }).get();
+            })
+                                  .get();
         }
         catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);

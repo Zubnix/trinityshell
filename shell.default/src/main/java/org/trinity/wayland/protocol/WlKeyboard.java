@@ -8,7 +8,6 @@ import org.freedesktop.wayland.server.WlKeyboardRequestsV3;
 import org.freedesktop.wayland.server.WlKeyboardResource;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Set;
 
 @AutoFactory
@@ -32,8 +31,8 @@ public class WlKeyboard extends EventBus implements WlKeyboardRequestsV3, Protoc
 
     @Override
     public WlKeyboardResource create(final Client client,
-                                       final int version,
-                                       final int id) {
+                                     final int version,
+                                     final int id) {
         return new WlKeyboardResource(client,
                                       version,
                                       id,

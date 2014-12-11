@@ -7,9 +7,6 @@ import org.trinity.wayland.WlModule;
 
 import javax.inject.Singleton;
 
-/**
- * Created by Erik De Rijcke on 5/22/14.
- */
 @Module(
         includes = {
                 WlModule.class
@@ -35,27 +32,27 @@ public class WlProtocolModule {
 
     @Provides
     @Singleton
-    WlSubCompositor provideWlSubCompositor(final Display             display,
-                                           final org.trinity.wayland.protocol.WlSubSurfaceFactory wlSubSurfaceFactory){
+    WlSubCompositor provideWlSubCompositor(final Display display,
+                                           final org.trinity.wayland.protocol.WlSubSurfaceFactory wlSubSurfaceFactory) {
         return new WlSubCompositor(display,
                                    wlSubSurfaceFactory);
     }
 
     @Provides
     @Singleton
-    WlPointer provideWlPointer(){
+    WlPointer provideWlPointer() {
         return new WlPointer();
     }
 
     @Provides
     @Singleton
-    WlKeyboard provideWlKeyboard(){
+    WlKeyboard provideWlKeyboard() {
         return new WlKeyboard();
     }
 
     @Provides
     @Singleton
-    WlTouch provideWlTouch(){
+    WlTouch provideWlTouch() {
         return new WlTouch();
     }
 }

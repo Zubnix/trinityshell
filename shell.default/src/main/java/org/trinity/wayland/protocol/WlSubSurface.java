@@ -26,8 +26,8 @@ public class WlSubSurface extends EventBus implements WlSubsurfaceRequests, Prot
 
     @Override
     public WlSubsurfaceResource create(final Client client,
-                                         final int version,
-                                         final int id) {
+                                       final int version,
+                                       final int id) {
         return new WlSubsurfaceResource(client,
                                         version,
                                         id,

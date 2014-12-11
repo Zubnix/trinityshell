@@ -1,8 +1,7 @@
 package org.trinity.wayland.input.newt;
 
-import org.trinity.wayland.protocol.WlProtocolModule;
-
 import dagger.Module;
+import org.trinity.wayland.protocol.WlProtocolModule;
 
 @Module(injects = GLWindowSeatFactory.class,
         includes = {

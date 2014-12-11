@@ -6,9 +6,6 @@ import org.freedesktop.wayland.server.Display;
 import javax.inject.Inject;
 import java.io.IOException;
 
-/**
- * Created by Erik De Rijcke on 5/26/14.
- */
 public class WlShellService extends AbstractExecutionThreadService {
 
     private final Display       display;
@@ -22,8 +19,7 @@ public class WlShellService extends AbstractExecutionThreadService {
     }
 
     @Override
-    protected void startUp() throws
-                             IOException {
+    protected void startUp() throws IOException {
         this.wlJobExecutor.start();
     }
 

@@ -15,11 +15,11 @@ public class GLWindowFactory {
     GLWindowFactory() {
     }
 
-    public GLWindow create(){
+    public GLWindow create() {
         return createDrawable(System.getenv("DISPLAY"),
-                getGLProfile(),
-                800,
-                600);
+                              getGLProfile(),
+                              800,
+                              600);
     }
 
     private GLWindow createDrawable(final String xDisplay,
@@ -28,13 +28,13 @@ public class GLWindowFactory {
                                     final int height) {
         final Display display = NewtFactory.createDisplay(xDisplay);
         final Screen screen = NewtFactory.createScreen(display,
-                0);
+                                                       0);
         final GLWindow drawable = GLWindow.create(screen,
-                new GLCapabilities(profile));
+                                                  new GLCapabilities(profile));
         drawable.setSize(width,
-                height);
+                         height);
         drawable.setVisible(true,
-                true);
+                            true);
         return drawable;
     }
 

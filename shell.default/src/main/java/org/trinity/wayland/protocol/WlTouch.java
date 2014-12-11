@@ -8,7 +8,6 @@ import org.freedesktop.wayland.server.WlTouchRequestsV3;
 import org.freedesktop.wayland.server.WlTouchResource;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Set;
 
 @AutoFactory
@@ -32,8 +31,8 @@ public class WlTouch extends EventBus implements WlTouchRequestsV3, ProtocolObje
 
     @Override
     public WlTouchResource create(final Client client,
-                                    final int version,
-                                    final int id) {
+                                  final int version,
+                                  final int id) {
         return new WlTouchResource(client,
                                    version,
                                    id,

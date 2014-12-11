@@ -12,7 +12,6 @@ import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 import javax.media.nativewindow.util.Rectangle;
-
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -20,20 +19,17 @@ import java.util.WeakHashMap;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-/**
- * Created by Erik De Rijcke on 5/23/14.
- */
 @AutoFactory(className = "WlSurfaceFactory")
 public class WlSurface extends EventBus implements WlSurfaceRequestsV3, ProtocolObject<WlSurfaceResource> {
 
-    public static final Map<ShellSurface,WlSurface> SHELL_SURFACE_WL_SURFACE_MAP = new WeakHashMap<>();
+    public static final Map<ShellSurface, WlSurface> SHELL_SURFACE_WL_SURFACE_MAP = new WeakHashMap<>();
 
     private final Set<WlSurfaceResource> resources       = Sets.newHashSet();
     private final Listener               destroyListener = new Listener() {
         @Override
         public void handle() {
             detachBuffer();
-            shellSurface.accept(ShellSurfaceConfigurable::detachBuffer);
+            WlSurface.this.shellSurface.accept(ShellSurfaceConfigurable::detachBuffer);
             destroy();
         }
     };
@@ -49,7 +45,8 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
             final ShellSurface shellSurface) {
         this.wlCallbackFactory = wlCallbackFactory;
         this.shellSurface = shellSurface;
-        SHELL_SURFACE_WL_SURFACE_MAP.put(shellSurface,this);
+        SHELL_SURFACE_WL_SURFACE_MAP.put(shellSurface,
+                                         this);
     }
 
     public ShellSurface getShellSurface() {
@@ -71,9 +68,15 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
 
     private float[] getMatrix(final int transform) {
         if (transform == WlOutputTransform.FLIPPED_270.getValue()) {
-            return new float[]{1, 0, 0,
-                               0, 1, 0,
-                               0, 0, 1};
+            return new float[]{1,
+                               0,
+                               0,
+                               0,
+                               1,
+                               0,
+                               0,
+                               0,
+                               1};
         }
         throw new IllegalArgumentException("Invalid transform");
     }

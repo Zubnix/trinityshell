@@ -10,14 +10,10 @@ import org.trinity.shell.scene.api.Region;
 
 import javax.annotation.Nonnegative;
 import javax.media.nativewindow.util.Rectangle;
-
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-/**
- * Created by Erik De Rijcke on 5/23/14.
- */
 @AutoFactory(className = "WlRegionFactory")
 public class WlRegion extends EventBus implements WlRegionRequests, ProtocolObject<WlRegionResource> {
 
@@ -51,10 +47,10 @@ public class WlRegion extends EventBus implements WlRegionRequests, ProtocolObje
 
     @Override
     public void add(final WlRegionResource resource,
-                    final int               x,
-                    final int               y,
-                    @Nonnegative final int  width,
-                    @Nonnegative final int  height) {
+                    final int x,
+                    final int y,
+                    @Nonnegative final int width,
+                    @Nonnegative final int height) {
         checkArgument(width > 0);
         checkArgument(height > 0);
 
@@ -66,8 +62,8 @@ public class WlRegion extends EventBus implements WlRegionRequests, ProtocolObje
 
     @Override
     public void subtract(final WlRegionResource resource,
-                         final int              x,
-                         final int              y,
+                         final int x,
+                         final int y,
                          @Nonnegative final int width,
                          @Nonnegative final int height) {
         checkArgument(width > 0);
@@ -79,7 +75,7 @@ public class WlRegion extends EventBus implements WlRegionRequests, ProtocolObje
                                            height));
     }
 
-    public Region getRegion(){
+    public Region getRegion() {
         return this.region;
     }
 }

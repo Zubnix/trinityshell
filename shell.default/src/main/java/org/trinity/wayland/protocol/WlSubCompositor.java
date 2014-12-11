@@ -9,18 +9,16 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Set;
 
-/**
- * Created by Erik De Rijcke on 6/2/14.
- */
 @Singleton
 public class WlSubCompositor extends Global<WlSubcompositorResource> implements WlSubcompositorRequests, ProtocolObject<WlSubcompositorResource> {
 
     private final Set<WlSubcompositorResource> resources = Sets.newHashSet();
-    private final EventBus eventBus = new EventBus();
+    private final EventBus                     eventBus  = new EventBus();
+
     private final WlSubSurfaceFactory wlSubSurfaceFactory;
 
     @Inject
-    WlSubCompositor(final Display             display,
+    WlSubCompositor(final Display display,
                     final WlSubSurfaceFactory wlSubSurfaceFactory) {
         super(display,
               WlSubcompositorResource.class,
@@ -39,9 +37,10 @@ public class WlSubCompositor extends Global<WlSubcompositorResource> implements 
                               final WlSurfaceResource surface,
                               final WlSurfaceResource parent) {
         this.wlSubSurfaceFactory.create(surface,
-                                        parent).add(requester.getClient(),
-                                                    requester.getVersion(),
-                                                    id);
+                                        parent)
+                                .add(requester.getClient(),
+                                     requester.getVersion(),
+                                     id);
     }
 
     @Override
@@ -51,8 +50,8 @@ public class WlSubCompositor extends Global<WlSubcompositorResource> implements 
 
     @Override
     public WlSubcompositorResource create(final Client client,
-                                            final int version,
-                                            final int id) {
+                                          final int version,
+                                          final int id) {
         return new WlSubcompositorResource(client,
                                            version,
                                            id,
@@ -75,7 +74,9 @@ public class WlSubCompositor extends Global<WlSubcompositorResource> implements 
     }
 
     @Override
-    public WlSubcompositorResource onBindClient(Client client, int version, int id) {
+    public WlSubcompositorResource onBindClient(Client client,
+                                                int version,
+                                                int id) {
         return new WlSubcompositorResource(client,
                                            version,
                                            id,

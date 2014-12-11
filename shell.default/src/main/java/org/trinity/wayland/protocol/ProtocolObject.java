@@ -12,32 +12,33 @@ import java.util.Set;
 public interface ProtocolObject<T extends Resource> extends Listenable {
     Set<T> getResources();
 
-    default Optional<T> getResource(){
-      final Iterator<T> iterator = getResources().iterator();
-      if(iterator.hasNext()){
-        return Optional.of(iterator.next());
-      }else{
-        return Optional.empty();
-      }
+    default Optional<T> getResource() {
+        final Iterator<T> iterator = getResources().iterator();
+        if (iterator.hasNext()) {
+            return Optional.of(iterator.next());
+        }
+        else {
+            return Optional.empty();
+        }
     }
 
     default T add(final Client client,
-                  final int    version,
-                  final int    id){
+                  final int version,
+                  final int id) {
         //FIXME check if version is supported by compositor.
 
         final T resource = create(client,
                                   version,
                                   id);
         getResources().add(resource);
-        return  resource;
+        return resource;
     }
 
     T create(final Client client,
              final int version,
              final int id);
 
-    default void destroy(final T resource){
+    default void destroy(final T resource) {
         post(new ResourceDestroyed(resource));
         getResources().remove(resource);
         resource.destroy();

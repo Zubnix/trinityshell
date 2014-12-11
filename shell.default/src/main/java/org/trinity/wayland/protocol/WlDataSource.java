@@ -11,9 +11,6 @@ import org.freedesktop.wayland.server.WlDataSourceResource;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by Erik De Rijcke on 5/23/14.
- */
 @AutoFactory(className = "WlDataSourceFactory")
 public class WlDataSource extends EventBus implements WlDataSourceRequests, ProtocolObject<WlDataSourceResource> {
 
@@ -36,8 +33,8 @@ public class WlDataSource extends EventBus implements WlDataSourceRequests, Prot
 
     @Override
     public WlDataSourceResource create(final Client client,
-                                       final int    version,
-                                       final int    id) {
+                                       final int version,
+                                       final int id) {
         return new WlDataSourceResource(client,
                                         version,
                                         id,

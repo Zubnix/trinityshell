@@ -1,11 +1,9 @@
 package org.trinity.wayland;
 
 import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.common.eventbus.DeadEvent;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.ShmBuffer;
 import org.freedesktop.wayland.server.WlBufferResource;
 import org.trinity.shell.scene.api.ShellSurface;
@@ -31,8 +29,8 @@ public class WlShmRenderer {
 
     public void render(final ShellSurface shellSurface) {
         this.current = shellSurface;
-        dispatcher.post(shellSurface.getBuffer()
-                                    .get());
+        this.dispatcher.post(shellSurface.getBuffer()
+                                         .get());
     }
 
     @Subscribe

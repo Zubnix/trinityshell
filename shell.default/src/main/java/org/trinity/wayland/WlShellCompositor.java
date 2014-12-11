@@ -84,6 +84,6 @@ public class WlShellCompositor {
     }
 
     public WlScene getWlScene() {
-        return wlScene;
+        return this.wlScene;
     }
 }

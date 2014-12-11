@@ -11,7 +11,7 @@ public enum GLBufferFormat {
 
     GLBufferFormat(final String vertexShader,
                    final String fragmentShader) {
-        this.vertexShader   = vertexShader;
+        this.vertexShader = vertexShader;
         this.fragmentShader = fragmentShader;
     }
 

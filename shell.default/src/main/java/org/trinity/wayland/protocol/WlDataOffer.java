@@ -9,29 +9,25 @@ import org.freedesktop.wayland.server.WlDataOfferResource;
 
 import java.util.Set;
 
-
-/**
- * Created by Erik De Rijcke on 5/26/14.
- */
 @AutoFactory(className = "WlDataOfferFactory")
 public class WlDataOffer extends EventBus implements WlDataOfferRequests, ProtocolObject<WlDataOfferResource> {
 
     private final Set<WlDataOfferResource> resources = Sets.newHashSet();
 
-    WlDataOffer(){
+    WlDataOffer() {
     }
 
     @Override
     public void accept(final WlDataOfferResource resource,
-                       final int                 serial,
-                       final String              mimeType) {
+                       final int serial,
+                       final String mimeType) {
 
     }
 
     @Override
     public void receive(final WlDataOfferResource resource,
-                        final String              mimeType,
-                        final int                 fd) {
+                        final String mimeType,
+                        final int fd) {
 
     }
 
@@ -42,8 +38,8 @@ public class WlDataOffer extends EventBus implements WlDataOfferRequests, Protoc
 
     @Override
     public WlDataOfferResource create(final Client client,
-                                         final int    version,
-                                         final int    id) {
+                                      final int version,
+                                      final int id) {
         return new WlDataOfferResource(client,
                                        version,
                                        id,

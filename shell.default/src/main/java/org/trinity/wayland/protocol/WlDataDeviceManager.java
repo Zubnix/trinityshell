@@ -9,9 +9,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Set;
 
-/**
- * Created by Erik De Rijcke on 5/22/14.
- */
 @Singleton//EAGER
 public class WlDataDeviceManager extends Global<WlDataDeviceManagerResource> implements WlDataDeviceManagerRequests, ProtocolObject<WlDataDeviceManagerResource> {
 
@@ -31,8 +28,8 @@ public class WlDataDeviceManager extends Global<WlDataDeviceManagerResource> imp
 
     @Override
     public WlDataDeviceManagerResource onBindClient(final Client client,
-                             final int version,
-                             final int id) {
+                                                    final int version,
+                                                    final int id) {
         return add(client,
                    version,
                    id);
@@ -41,19 +38,21 @@ public class WlDataDeviceManager extends Global<WlDataDeviceManagerResource> imp
     @Override
     public void createDataSource(final WlDataDeviceManagerResource resource,
                                  final int id) {
-        this.wlDataSourceFactory.create().add(resource.getClient(),
-                                              resource.getVersion(),
-                                              id);
+        this.wlDataSourceFactory.create()
+                                .add(resource.getClient(),
+                                     resource.getVersion(),
+                                     id);
     }
 
     @Override
     public void getDataDevice(final WlDataDeviceManagerResource requester,
-                              final int                         id,
-                              final WlSeatResource              seat) {
+                              final int id,
+                              final WlSeatResource seat) {
         final WlSeat wlSeat = (WlSeat) seat.getImplementation();
-        wlSeat.getWlDataDevice().add(requester.getClient(),
-                                     requester.getVersion(),
-                                     id);
+        wlSeat.getWlDataDevice()
+              .add(requester.getClient(),
+                   requester.getVersion(),
+                   id);
     }
 
     @Override
@@ -63,8 +62,8 @@ public class WlDataDeviceManager extends Global<WlDataDeviceManagerResource> imp
 
     @Override
     public WlDataDeviceManagerResource create(final Client client,
-                                                  final int    version,
-                                                  final int    id) {
+                                              final int version,
+                                              final int id) {
         return new WlDataDeviceManagerResource(client,
                                                version,
                                                id,
