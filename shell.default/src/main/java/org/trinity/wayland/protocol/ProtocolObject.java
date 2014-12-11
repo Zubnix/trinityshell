@@ -9,9 +9,6 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
-/**
- * Created by Erik De Rijcke on 6/3/14.
- */
 public interface ProtocolObject<T extends Resource> extends Listenable {
     Set<T> getResources();
 

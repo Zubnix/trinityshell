@@ -15,17 +15,21 @@ import java.util.concurrent.ExecutionException;
 @AutoFactory
 public class WlShellCompositor {
 
-    private final Display                   display;
-    private final WlScene                   wlScene;
-    private final WlShmRenderer             wlRenderer;
+    private final Display                               display;
+    private final WlScene                               wlScene;
+    private final WlShmRenderer                         wlRenderer;
     private final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory;
 
 
     @Inject
-    WlShellCompositor(@Provided final Display display,
-                      @Provided final WlScene wlScene,
-                      final WlShmRenderer wlRenderer,
-                      @Provided final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory) {
+    WlShellCompositor(
+            @Provided
+            final Display display,
+            @Provided
+            final WlScene wlScene,
+            final WlShmRenderer wlRenderer,
+            @Provided
+            final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory) {
         this.display = display;
         this.wlScene = wlScene;
         this.wlRenderer = wlRenderer;
