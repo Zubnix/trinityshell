@@ -12,8 +12,11 @@ import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 import javax.media.nativewindow.util.Rectangle;
+
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -22,6 +25,8 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 @AutoFactory(className = "WlSurfaceFactory")
 public class WlSurface extends EventBus implements WlSurfaceRequestsV3, ProtocolObject<WlSurfaceResource> {
+
+    public static final Map<ShellSurface,WlSurface> SHELL_SURFACE_WL_SURFACE_MAP = new WeakHashMap<>();
 
     private final Set<WlSurfaceResource> resources       = Sets.newHashSet();
     private final Listener               destroyListener = new Listener() {
@@ -44,6 +49,7 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
             final ShellSurface shellSurface) {
         this.wlCallbackFactory = wlCallbackFactory;
         this.shellSurface = shellSurface;
+        SHELL_SURFACE_WL_SURFACE_MAP.put(shellSurface,this);
     }
 
     public ShellSurface getShellSurface() {

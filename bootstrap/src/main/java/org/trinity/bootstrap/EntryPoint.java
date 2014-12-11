@@ -82,7 +82,8 @@ public class EntryPoint {
 
         //setup seat
         //create a seat that listens for input on the X opengl window and passes it on to a wayland seat.
-        final GLWindowSeat glWindowSeat = glWindowSeatFactory.create(glWindow);
+        final GLWindowSeat glWindowSeat = glWindowSeatFactory.create(glWindow,
+                                                                     wlShellCompositor);
 
         //start all services
         this.serviceManager.startAsync();

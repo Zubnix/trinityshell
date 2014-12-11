@@ -2,7 +2,10 @@ package org.trinity.wayland.input.newt;
 
 
 import com.jogamp.newt.opengl.GLWindow;
+
+import org.freedesktop.wayland.server.Display;
 import org.trinity.wayland.WlJobExecutor;
+import org.trinity.wayland.WlShellCompositor;
 import org.trinity.wayland.protocol.*;
 
 import javax.inject.Inject;
@@ -10,18 +13,21 @@ import java.util.Optional;
 
 public class GLWindowSeatFactory {
 
-    private final WlDataDeviceFactory wlDataDeviceFactory;
+  private final Display display;
+  private final WlDataDeviceFactory wlDataDeviceFactory;
     private final WlSeatFactory       wlSeatFactory;
     private final WlKeyboardFactory   wlKeyboardFactory;
     private final WlPointerFactory    wlPointerFactory;
     private final WlJobExecutor wlJobExecutor;
 
     @Inject
-    GLWindowSeatFactory(WlDataDeviceFactory wlDataDeviceFactory,
+    GLWindowSeatFactory(Display display,
+                        WlDataDeviceFactory wlDataDeviceFactory,
                         WlSeatFactory wlSeatFactory,
                         WlKeyboardFactory wlKeyboardFactory,
                         WlPointerFactory wlPointerFactory,
                         WlJobExecutor wlJobExecutor) {
+        this.display = display;
         this.wlDataDeviceFactory = wlDataDeviceFactory;
         this.wlSeatFactory = wlSeatFactory;
         this.wlKeyboardFactory = wlKeyboardFactory;
@@ -29,12 +35,15 @@ public class GLWindowSeatFactory {
         this.wlJobExecutor = wlJobExecutor;
     }
 
-    public GLWindowSeat create(final GLWindow glWindow){
+    public GLWindowSeat create(final GLWindow glWindow,
+                               final WlShellCompositor wlShellCompositor){
     final WlSeat wlSeat = wlSeatFactory.create(wlDataDeviceFactory.create(),
                                                Optional.of(wlPointerFactory.create()),
                                                Optional.of(wlKeyboardFactory.create()),
                                                Optional.<WlTouch>empty());
-    GLWindowSeat glWindowSeat = new GLWindowSeat(wlSeat,
+    GLWindowSeat glWindowSeat = new GLWindowSeat(display,
+                                                 wlSeat,
+                                                 wlShellCompositor,
                                                  wlJobExecutor);
     glWindow.addMouseListener(glWindowSeat);
     glWindow.addKeyListener(glWindowSeat);

@@ -18,7 +18,7 @@ public class WlScene {
 
     public LinkedList<ShellSurface> getShellSurfacesStack() { return this.shellSurfacesStack; }
 
-    public Optional<ShellSurface> findSurfaceAt(int absX, int absY){
+    public Optional<ShellSurface> findSurfaceAtCoordinate(int absX, int absY){
         //TODO find underlying shellsurface
         return null;
     }
