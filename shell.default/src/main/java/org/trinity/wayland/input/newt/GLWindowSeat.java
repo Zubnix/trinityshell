@@ -11,14 +11,12 @@ import org.freedesktop.wayland.server.WlSurfaceResource;
 import org.freedesktop.wayland.util.Fixed;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.wayland.WlJobExecutor;
-import org.trinity.wayland.WlScene;
 import org.trinity.wayland.WlShellCompositor;
 import org.trinity.wayland.protocol.WlPointer;
 import org.trinity.wayland.protocol.WlSeat;
 import org.trinity.wayland.protocol.WlSurface;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public class GLWindowSeat implements MouseListener, KeyListener{
 
@@ -27,7 +25,7 @@ public class GLWindowSeat implements MouseListener, KeyListener{
   private final WlShellCompositor wlShellCompositor;
   private final WlJobExecutor wlJobExecutor;
 
-  private Optional<WlSurface> focusSurface = Optional.empty();
+  private Optional<WlSurface> currentFocus = Optional.empty();
 
   public GLWindowSeat(Display display,
                       WlSeat wlSeat,
@@ -73,39 +71,73 @@ public class GLWindowSeat implements MouseListener, KeyListener{
 
     //schedule a job to be executed on the compositor thread.
     this.wlJobExecutor.submit(() -> {
-
-      final WlPointer wlPointer = wlSeat.getOptionalWlPointer().get();
-
-      //give focus to underlying surface (if different focus surface)
       final Optional<ShellSurface> newFocusShellSurface = wlShellCompositor.getWlScene().findSurfaceAtCoordinate(absX,
                                                                                                                  absY);
+      final Optional<WlSurface> newFocus;
       if (newFocusShellSurface.isPresent()) {
-        final ShellSurface shellSurface = newFocusShellSurface.get();
-        final WlSurface wlSurface = WlSurface.SHELL_SURFACE_WL_SURFACE_MAP.get(shellSurface);
+          newFocus = Optional.of(WlSurface.SHELL_SURFACE_WL_SURFACE_MAP.get(newFocusShellSurface.get()));
+      }else{
+          newFocus = Optional.empty();
+      }
 
-        if (!focusSurface.isPresent() || !focusSurface.get().equals(wlSurface)) {
-          //we have to update the focus as the pointer has reached a new surface
-          final WlSurfaceResource wlSurfaceResource = wlSurface.getResource().get();
-          final Optional<WlPointerResource> resourceOptional = findPointerResource(wlSurfaceResource);
-          if (resourceOptional.isPresent()) {
-            final WlPointerResource wlPointerResource = resourceOptional.get();
-            wlPointerResource.enter(display.nextSerial(),
+      shiftFocus(currentFocus,
+                 newFocus,
+                 absX,
+                 absY);
+      reportMotion(currentFocus,
+                   (int) time,
+                   absX,
+                   absY);
+    });
+  }
+
+  private void reportMotion(Optional<WlSurface> currentFocus,
+                            final int time,
+                            final int absX,
+                            final int absY) {
+    if(currentFocus.isPresent()) {
+      final WlSurfaceResource wlSurfaceResource = currentFocus.get().getResource().get();
+      final Optional<WlPointerResource> pointerResource = findPointerResource(wlSurfaceResource);
+      if(pointerResource.isPresent()){
+        pointerResource.get().motion(time,
+                                     //TODO calculate relative coordinates
+                                     Fixed.create(0),
+                                     Fixed.create(0));
+      }
+    }
+  }
+
+  private void shiftFocus(Optional<WlSurface> oldFocus, Optional<WlSurface> newFocus,
+                          final int absX,
+                          final int absY){
+    if(oldFocus.equals(newFocus)){
+      //no focus shift, do nothing
+      return;
+    }
+
+    if(oldFocus.isPresent()){
+      //a previous surface had the focus, it now leaves focus
+      final WlSurfaceResource wlSurfaceResource = oldFocus.get().getResource().get();
+      final Optional<WlPointerResource> pointerResource = findPointerResource(wlSurfaceResource);
+      if(pointerResource.isPresent()){
+        pointerResource.get().leave(display.nextSerial(),
+                                    wlSurfaceResource);
+      }
+    }
+
+    if(newFocus.isPresent()){
+      //a new surface has the focus, it now gains focus
+      final WlSurfaceResource wlSurfaceResource = newFocus.get().getResource().get();
+      final Optional<WlPointerResource> pointerResource = findPointerResource(wlSurfaceResource);
+      if(pointerResource.isPresent()){
+        pointerResource.get().enter(display.nextSerial(),
                                     wlSurfaceResource,
-                                    //TODO calculate coordinates
+                                    //TODO calculate relative coordinates
                                     Fixed.create(0),
                                     Fixed.create(0));
-                focusSurface = Optional.of(wlSurface);
-
-                wlPointerResource.motion((int) time,
-                                         //TODO use calculated coordinates
-                                         Fixed.create(0),
-                                         Fixed.create(0));
-              }
-        }
+        currentFocus = newFocus;
       }
-      else if(focusSurface.isPresent()){
-      }
-    });
+    }
   }
 
   private Optional<WlPointerResource> findPointerResource(WlSurfaceResource wlSurfaceResource){
