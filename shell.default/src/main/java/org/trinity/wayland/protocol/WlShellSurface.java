@@ -3,12 +3,7 @@ package org.trinity.wayland.protocol;
 import com.google.auto.factory.AutoFactory;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import org.freedesktop.wayland.server.Client;
-import org.freedesktop.wayland.server.WlOutputResource;
-import org.freedesktop.wayland.server.WlSeatResource;
-import org.freedesktop.wayland.server.WlShellSurfaceRequests;
-import org.freedesktop.wayland.server.WlShellSurfaceResource;
-import org.freedesktop.wayland.server.WlSurfaceResource;
+import org.freedesktop.wayland.server.*;
 
 import java.util.Set;
 
@@ -105,8 +100,8 @@ public class WlShellSurface extends EventBus implements WlShellSurfaceRequests, 
                                          final int version,
                                          final int id) {
         return new WlShellSurfaceResource(client,
-                version,
-                id,
-                this);
+                                          version,
+                                          id,
+                                          this);
     }
 }

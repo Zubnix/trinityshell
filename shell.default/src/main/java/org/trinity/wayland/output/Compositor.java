@@ -35,7 +35,7 @@ public class Compositor {
         final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(Optional.empty());
         shellSurface.register(this);
         this.scene.getShellSurfacesStack()
-                    .add(shellSurface);
+                  .add(shellSurface);
         return shellSurface;
     }
 
@@ -52,7 +52,7 @@ public class Compositor {
     public void handle(final Destroyed event) {
         final ShellSurface shellSurface = event.getSource();
         this.scene.getShellSurfacesStack()
-                    .remove(shellSurface);
+                  .remove(shellSurface);
         renderScene();
     }
 

@@ -1,19 +1,16 @@
 package org.trinity.wayland.input.newt;
 
-import com.google.auto.factory.Provided;
-
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
-
 import org.freedesktop.wayland.shared.WlPointerButtonState;
 import org.trinity.wayland.input.Seat;
 import org.trinity.wayland.output.JobExecutor;
 
 public class GLWindowSeat implements MouseListener, KeyListener {
 
-    private final Seat seat;
+    private final Seat        seat;
     private final JobExecutor jobExecutor;
 
     GLWindowSeat(final Seat seat,

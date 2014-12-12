@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class ShellService extends AbstractExecutionThreadService {
 
-    private final Display       display;
+    private final Display     display;
     private final JobExecutor jobExecutor;
 
     @Inject

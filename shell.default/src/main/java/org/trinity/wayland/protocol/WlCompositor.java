@@ -23,7 +23,7 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
     private final WlSurfaceFactory                wlSurfaceFactory;
     private final WlRegionFactory                 wlRegionFactory;
     private final org.trinity.PixmanRegionFactory pixmanRegionFactory;
-    private final Compositor compositor;
+    private final Compositor                      compositor;
 
     @Inject
     WlCompositor(@Provided final Display display,

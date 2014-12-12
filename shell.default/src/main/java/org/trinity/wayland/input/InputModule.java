@@ -1,16 +1,15 @@
 package org.trinity.wayland.input;
 
+import dagger.Module;
 import org.trinity.wayland.protocol.ProtocolModule;
 
-import dagger.Module;
-
 @Module(
-    includes = {
-        ProtocolModule.class
-    },
-    injects = {
-        Seat.class
-    }
+        includes = {
+                ProtocolModule.class
+        },
+        injects = {
+                Seat.class
+        }
 )
 public class InputModule {
 
