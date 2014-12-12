@@ -1,18 +1,25 @@
 package org.trinity.wayland.input.newt;
 
+import com.google.auto.factory.Provided;
+
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
 
+import org.freedesktop.wayland.shared.WlPointerButtonState;
 import org.trinity.wayland.input.Seat;
+import org.trinity.wayland.output.JobExecutor;
 
 public class GLWindowSeat implements MouseListener, KeyListener {
 
     private final Seat seat;
+    private final JobExecutor jobExecutor;
 
-    GLWindowSeat(Seat seat) {
+    GLWindowSeat(final Seat seat,
+                 final JobExecutor jobExecutor) {
         this.seat = seat;
+        this.jobExecutor = jobExecutor;
     }
 
     @Override
@@ -33,11 +40,22 @@ public class GLWindowSeat implements MouseListener, KeyListener {
     @Override
     public void mousePressed(final MouseEvent e) {
 
+        final long time = e.getWhen();
+        final short button = e.getButton();
+
+        this.jobExecutor.submit(() -> this.seat.handleButton((int) time,
+                                                             button,
+                                                             WlPointerButtonState.PRESSED));
     }
 
     @Override
     public void mouseReleased(final MouseEvent e) {
+        final long time = e.getWhen();
+        final short button = e.getButton();
 
+        this.jobExecutor.submit(() -> this.seat.handleButton((int) time,
+                                                             button,
+                                                             WlPointerButtonState.RELEASED));
     }
 
     @Override
@@ -47,9 +65,9 @@ public class GLWindowSeat implements MouseListener, KeyListener {
         final int absX = e.getX();
         final int absY = e.getY();
 
-        this.seat.handlePointerMove(time,
-                                    absX,
-                                    absY);
+        this.jobExecutor.submit(() -> this.seat.handlePointerMove((int) time,
+                                                                  absX,
+                                                                  absY));
     }
 
 

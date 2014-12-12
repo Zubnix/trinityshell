@@ -4,11 +4,12 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 
 import org.freedesktop.wayland.server.Display;
+import org.freedesktop.wayland.server.Listener;
 import org.freedesktop.wayland.server.WlPointerResource;
 import org.freedesktop.wayland.server.WlSurfaceResource;
+import org.freedesktop.wayland.shared.WlPointerButtonState;
 import org.freedesktop.wayland.util.Fixed;
 import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.wayland.output.JobExecutor;
 import org.trinity.wayland.output.Compositor;
 import org.trinity.wayland.protocol.WlPointer;
 import org.trinity.wayland.protocol.WlSeat;
@@ -24,24 +25,20 @@ public class Seat {
   private final Display     display;
   private final WlSeat      wlSeat;
   private final Compositor  compositor;
-  private final JobExecutor jobExecutor;
 
   private Optional<WlSurface> currentFocus = Optional.empty();
 
   Seat(@Provided final Display display,
        final WlSeat wlSeat,
-       final Compositor compositor,
-       @Provided final JobExecutor jobExecutor) {
+       final Compositor compositor) {
     this.display = display;
     this.wlSeat = wlSeat;
     this.compositor = compositor;
-    this.jobExecutor = jobExecutor;
   }
 
-  public void handlePointerMove(final long time,
-                                 final int absX,
-                                 final int absY) {
-    this.jobExecutor.submit(() -> {
+  public void handlePointerMove(final int time,
+                                final int absX,
+                                final int absY) {
       final Optional<ShellSurface> newFocusShellSurface = this.compositor.getScene()
           .findSurfaceAtCoordinate(absX,
                                    absY);
@@ -58,12 +55,12 @@ public class Seat {
                    absX,
                    absY);
       }
-      else if (this.currentFocus.isPresent()) {
-        reportMotion((int) time,
+
+      if (this.currentFocus.isPresent()) {
+        reportMotion(time,
                      absX,
                      absY);
       }
-    });
   }
 
   private void reportMotion(final int time,
@@ -75,10 +72,10 @@ public class Seat {
     final Optional<WlPointerResource> pointerResource = findPointerResource(wlSurfaceResource);
     if (pointerResource.isPresent()) {
       final PointImmutable relativePoint = this.compositor.getScene()
-          .relativeCoordinate(this.currentFocus.get()
-                                  .getShellSurface(),
-                              absX,
-                              absY);
+                                                          .relativeCoordinate(this.currentFocus.get()
+                                                                                  .getShellSurface(),
+                                                                              absX,
+                                                                              absY);
       pointerResource.get()
           .motion(time,
                   Fixed.create(relativePoint.getX()),
@@ -126,8 +123,8 @@ public class Seat {
 
   private void leaveFocus() {
     final WlSurfaceResource wlSurfaceResource = this.currentFocus.get()
-        .getResource()
-        .get();
+                                                                 .getResource()
+                                                                 .get();
     final Optional<WlPointerResource> pointerResource = findPointerResource(wlSurfaceResource);
     if (pointerResource.isPresent()) {
       pointerResource.get()
@@ -146,5 +143,19 @@ public class Seat {
       }
     }
     return Optional.empty();
+  }
+
+  public void handleButton(final int time,
+                           final int button,
+                           final WlPointerButtonState buttonState) {
+    if (this.currentFocus.isPresent()) {
+      final Optional<WlSurfaceResource> wlSurfaceResource = this.currentFocus.get().getResource();
+      if(wlSurfaceResource.isPresent()){
+        final Optional<WlPointerResource> pointerResource = findPointerResource(wlSurfaceResource.get());
+        if(pointerResource.isPresent()){
+          pointerResource.get().button(display.nextSerial(),time,button,buttonState.getValue());
+        }
+      }
+    }
   }
 }
