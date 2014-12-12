@@ -4,8 +4,6 @@ import com.sun.jna.LastErrorException;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 
-import java.nio.ByteBuffer;
-
 public interface CLibrary extends Library {
     String        JNA_LIBRARY_NAME = "c";
     CLibrary      INSTANCE         = (CLibrary) Native.loadLibrary(JNA_LIBRARY_NAME,
@@ -39,13 +37,13 @@ public interface CLibrary extends Library {
 
 
     int write(int fd,
-              ByteBuffer buffer,
+              byte[] buffer,
               int n_byte) throws LastErrorException;
 
     int close(int fd) throws LastErrorException;
 
     void read(int fd,
-              ByteBuffer buffer,
+              byte[] buffer,
               int n_byte) throws LastErrorException;
 
     int fcntl(int fd,

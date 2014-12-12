@@ -12,7 +12,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,31 +29,29 @@ public class JobExecutor {
     private static final byte           EVENT_FINISHED = 0;
     private static final List<Runnable> NO_JOBS        = Collections.emptyList();
 
-    private final ByteBuffer eventNewJobBuffer   = ByteBuffer.allocateDirect(1)
-                                                             .put(EVENT_NEW_JOB);
-    private final ByteBuffer eventFinishedBuffer = ByteBuffer.allocateDirect(1)
-                                                             .put(EVENT_FINISHED);
-    private final ByteBuffer eventReadBuffer     = ByteBuffer.allocateDirect(1);
+    private final byte[] eventNewJobBuffer   = new byte[]{EVENT_NEW_JOB};
+    private final byte[] eventFinishedBuffer = new byte[]{EVENT_FINISHED};
+    private final byte[] eventReadBuffer     = new byte[1];
 
     private final ReentrantLock        jobsLock    = new ReentrantLock();
     private final LinkedList<Runnable> pendingJobs = Lists.newLinkedList();
 
-    private final Display display;
 
-    private EventSource eventSource;
-    private int         pipeR;
-    private int         pipeWR;
+    private       EventSource eventSource;
+    private final Display     display;
+    private       int         pipeR;
+    private       int         pipeWR;
 
     @Inject
-    JobExecutor(final Display display) {
+    JobExecutor(final Display display,
+                final int pipeR,
+                final int pipeWR) {
         this.display = display;
+        this.pipeR = pipeR;
+        this.pipeWR = pipeWR;
     }
 
     public void start() throws IOException {
-        //FIXME move setting up pipe outside this class
-        final int[] pipe = configure(pipe());
-        this.pipeR = pipe[0];
-        this.pipeWR = pipe[1];
         this.eventSource = this.display.getEventLoop()
                                        .addFileDescriptor(this.pipeR,
                                                           EventLoop.EVENT_READABLE,
@@ -67,9 +64,7 @@ public class JobExecutor {
                                 1);
     }
 
-    public void submit(
-            @Nonnull
-            final Runnable job) {
+    public void submit(@Nonnull final Runnable job) {
         checkNotNull(job);
 
         try {
@@ -95,7 +90,7 @@ public class JobExecutor {
         this.eventSource.remove();
     }
 
-    private int handle(final int fd,
+    public int handle(final int fd,
                        final int mask) {
         final byte event = read();
         if (event == EVENT_FINISHED) {
@@ -111,12 +106,10 @@ public class JobExecutor {
     }
 
     private byte read() {
-        this.eventReadBuffer.clear();
         CLibrary.INSTANCE.read(this.pipeR,
                                this.eventReadBuffer,
                                1);
-        this.eventReadBuffer.rewind();
-        return this.eventReadBuffer.get();
+        return this.eventReadBuffer[0];
     }
 
     private void process() {
@@ -142,32 +135,5 @@ public class JobExecutor {
         CLibrary.INSTANCE.write(this.pipeWR,
                                 this.eventNewJobBuffer,
                                 1);
-    }
-
-    private int[] pipe() throws IOException {
-        final int[] pipeFds = new int[2];
-        CLibrary.INSTANCE.pipe(pipeFds);
-        return pipeFds;
-    }
-
-    private int[] configure(final int[] pipeFds) throws IOException {
-        final int readFd = pipeFds[0];
-        final int writeFd = pipeFds[1];
-
-        final int readFlags = CLibrary.INSTANCE.fcntl(readFd,
-                                                      CLibrary.F_GETFD,
-                                                      0);
-        CLibrary.INSTANCE.fcntl(readFd,
-                                CLibrary.F_SETFD,
-                                readFlags | CLibrary.FD_CLOEXEC);
-
-        final int writeFlags = CLibrary.INSTANCE.fcntl(writeFd,
-                                                       CLibrary.F_GETFD,
-                                                       0);
-        CLibrary.INSTANCE.fcntl(writeFd,
-                                CLibrary.F_SETFD,
-                                writeFlags | CLibrary.FD_CLOEXEC);
-
-        return pipeFds;
     }
 }
