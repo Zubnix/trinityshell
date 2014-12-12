@@ -1,4 +1,4 @@
-package org.trinity.wayland.platform.newt;
+package org.trinity.platform.newt;
 
 import dagger.Module;
 

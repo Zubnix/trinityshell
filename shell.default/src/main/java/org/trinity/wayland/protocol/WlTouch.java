@@ -10,7 +10,7 @@ import org.freedesktop.wayland.server.WlTouchResource;
 import javax.inject.Inject;
 import java.util.Set;
 
-@AutoFactory
+@AutoFactory(className = "WlTouchFactory")
 public class WlTouch extends EventBus implements WlTouchRequestsV3, ProtocolObject<WlTouchResource> {
 
     private final Set<WlTouchResource> resources = Sets.newHashSet();

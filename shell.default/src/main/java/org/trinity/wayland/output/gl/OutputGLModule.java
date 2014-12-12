@@ -1,4 +1,4 @@
-package org.trinity.wayland.render.gl;
+package org.trinity.wayland.output.gl;
 
 import dagger.Module;
 import dagger.Provides;
@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 @Module(
         library = true
 )
-public class GLModule {
+public class OutputGLModule {
 
     @Provides
     @Singleton

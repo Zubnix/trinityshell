@@ -1,4 +1,4 @@
-package org.trinity.wayland;
+package org.trinity.wayland.output;
 
 import com.google.common.collect.Lists;
 import org.freedesktop.wayland.server.Display;
@@ -21,9 +21,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @Singleton
-public class WlJobExecutor {
+public class JobExecutor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WlJobExecutor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JobExecutor.class);
 
 
     private static final byte           EVENT_NEW_JOB  = 1;
@@ -46,7 +46,7 @@ public class WlJobExecutor {
     private int         pipeWR;
 
     @Inject
-    WlJobExecutor(final Display display) {
+    JobExecutor(final Display display) {
         this.display = display;
     }
 
