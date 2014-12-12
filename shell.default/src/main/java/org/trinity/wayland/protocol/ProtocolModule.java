@@ -3,13 +3,13 @@ package org.trinity.wayland.protocol;
 import dagger.Module;
 import dagger.Provides;
 import org.freedesktop.wayland.server.Display;
-import org.trinity.wayland.WlModule;
+import org.trinity.wayland.output.OutputModule;
 
 import javax.inject.Singleton;
 
 @Module(
         includes = {
-                WlModule.class
+                OutputModule.class
         },
         injects = {
                 WlSeatFactory.class,
@@ -28,7 +28,7 @@ import javax.inject.Singleton;
         //depends on wlmodule that needs a render engine
         complete = false
 )
-public class WlProtocolModule {
+public class ProtocolModule {
 
     @Provides
     @Singleton

@@ -1,4 +1,4 @@
-package org.trinity.wayland;
+package org.trinity.wayland.output;
 
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import org.freedesktop.wayland.server.Display;
@@ -6,21 +6,21 @@ import org.freedesktop.wayland.server.Display;
 import javax.inject.Inject;
 import java.io.IOException;
 
-public class WlShellService extends AbstractExecutionThreadService {
+public class ShellService extends AbstractExecutionThreadService {
 
     private final Display       display;
-    private final WlJobExecutor wlJobExecutor;
+    private final JobExecutor jobExecutor;
 
     @Inject
-    WlShellService(final Display display,
-                   final WlJobExecutor wlJobExecutor) {
+    ShellService(final Display display,
+                 final JobExecutor jobExecutor) {
         this.display = display;
-        this.wlJobExecutor = wlJobExecutor;
+        this.jobExecutor = jobExecutor;
     }
 
     @Override
     protected void startUp() throws IOException {
-        this.wlJobExecutor.start();
+        this.jobExecutor.start();
     }
 
     @Override
@@ -33,6 +33,6 @@ public class WlShellService extends AbstractExecutionThreadService {
     @Override
     protected void shutDown() throws IOException {
         this.display.terminate();
-        this.wlJobExecutor.fireFinishedEvent();
+        this.jobExecutor.fireFinishedEvent();
     }
 }

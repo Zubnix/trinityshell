@@ -1,4 +1,4 @@
-package org.trinity.wayland.render.gl;
+package org.trinity.wayland.output.gl;
 
 import com.jogamp.common.nio.Buffers;
 import org.freedesktop.wayland.server.ShmBuffer;

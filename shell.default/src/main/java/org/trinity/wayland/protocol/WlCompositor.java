@@ -7,14 +7,14 @@ import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.*;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
-import org.trinity.wayland.WlShellCompositor;
+import org.trinity.wayland.output.Compositor;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Set;
 
 
-@AutoFactory
+@AutoFactory(className = "WlCompositorFactory")
 public class WlCompositor extends Global<WlCompositorResource> implements WlCompositorRequestsV3, ProtocolObject<WlCompositorResource> {
 
     private final Set<WlCompositorResource> resources = Sets.newHashSet();
@@ -23,21 +23,21 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
     private final WlSurfaceFactory                wlSurfaceFactory;
     private final WlRegionFactory                 wlRegionFactory;
     private final org.trinity.PixmanRegionFactory pixmanRegionFactory;
-    private final WlShellCompositor               wlShellCompositor;
+    private final Compositor compositor;
 
     @Inject
     WlCompositor(@Provided final Display display,
                  @Provided final WlSurfaceFactory wlSurfaceFactory,
                  @Provided final WlRegionFactory wlRegionFactory,
                  @Provided final org.trinity.PixmanRegionFactory pixmanRegionFactory,
-                 final WlShellCompositor wlShellCompositor) {
+                 final Compositor compositor) {
         super(display,
               WlCompositorResource.class,
               VERSION);
         this.wlSurfaceFactory = wlSurfaceFactory;
         this.wlRegionFactory = wlRegionFactory;
         this.pixmanRegionFactory = pixmanRegionFactory;
-        this.wlShellCompositor = wlShellCompositor;
+        this.compositor = compositor;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
     @Override
     public void createSurface(final WlCompositorResource resource,
                               final int id) {
-        final ShellSurface shellSurface = this.wlShellCompositor.create();
+        final ShellSurface shellSurface = this.compositor.create();
         final WlSurfaceResource wlSurfaceResource = this.wlSurfaceFactory.create(shellSurface)
                                                                          .add(resource.getClient(),
                                                                               resource.getVersion(),

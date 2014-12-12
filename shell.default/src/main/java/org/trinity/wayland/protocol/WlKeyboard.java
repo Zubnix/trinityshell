@@ -10,7 +10,7 @@ import org.freedesktop.wayland.server.WlKeyboardResource;
 import javax.inject.Inject;
 import java.util.Set;
 
-@AutoFactory
+@AutoFactory(className = "WlKeyboardFactory")
 public class WlKeyboard extends EventBus implements WlKeyboardRequestsV3, ProtocolObject<WlKeyboardResource> {
 
     private final Set<WlKeyboardResource> resources = Sets.newHashSet();

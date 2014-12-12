@@ -1,4 +1,4 @@
-package org.trinity.wayland;
+package org.trinity.wayland.output;
 
 import com.google.common.util.concurrent.Service;
 import dagger.Module;
@@ -10,14 +10,14 @@ import javax.inject.Singleton;
 import static dagger.Provides.Type.SET;
 
 @Module(injects = {
-                WlShmRendererFactory.class,
-                WlShellCompositorFactory.class
+                ShmRendererFactory.class,
+                CompositorFactory.class
         },
         library = true,
-        //needs render engine implementation
+        //needs render engine implementation, defined at startup.
         complete = false
 )
-public class WlModule {
+public class OutputModule {
 
 
     @Provides
@@ -28,19 +28,19 @@ public class WlModule {
 
     @Provides
     @Singleton
-    WlScene provideWlScene(){
-        return new WlScene();
+    Scene provideWlScene(){
+        return new Scene();
     }
 
 
     @Singleton
     @Provides
-    WlJobExecutor provideWlJobExecutor(final Display display){
-        return new WlJobExecutor(display);
+    JobExecutor provideWlJobExecutor(final Display display){
+        return new JobExecutor(display);
     }
 
     @Provides(type = SET)
-    Service provideService(final WlShellService wlShellService) {
-        return wlShellService;
+    Service provideService(final ShellService shellService) {
+        return shellService;
     }
 }

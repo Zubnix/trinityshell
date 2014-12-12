@@ -1,4 +1,4 @@
-package org.trinity.wayland.render.gl;
+package org.trinity.wayland.output.gl;
 
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -8,7 +8,7 @@ import com.jogamp.common.nio.Buffers;
 import org.freedesktop.wayland.server.ShmBuffer;
 import org.freedesktop.wayland.shared.WlShmFormat;
 import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.wayland.WlShmRenderEngine;
+import org.trinity.wayland.output.ShmRenderEngine;
 
 import javax.media.nativewindow.util.PointImmutable;
 import javax.media.opengl.GL;
@@ -18,10 +18,10 @@ import java.nio.IntBuffer;
 import java.util.Map;
 
 import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
-import static org.trinity.wayland.render.gl.GLBufferFormat.SHM_ARGB8888;
-import static org.trinity.wayland.render.gl.GLBufferFormat.SHM_XRGB8888;
+import static org.trinity.wayland.output.gl.GLBufferFormat.SHM_ARGB8888;
+import static org.trinity.wayland.output.gl.GLBufferFormat.SHM_XRGB8888;
 
-public class GLRenderEngine implements WlShmRenderEngine {
+public class GLRenderEngine implements ShmRenderEngine {
 
     private static final String SURFACE_V          =
             "uniform mat4 mu_projection;\n" +

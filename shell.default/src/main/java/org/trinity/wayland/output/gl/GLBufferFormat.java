@@ -1,4 +1,4 @@
-package org.trinity.wayland.render.gl;
+package org.trinity.wayland.output.gl;
 
 public enum GLBufferFormat {
     SHM_ARGB8888("surface",

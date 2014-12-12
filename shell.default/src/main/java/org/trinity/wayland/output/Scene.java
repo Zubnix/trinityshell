@@ -1,4 +1,4 @@
-package org.trinity.wayland;
+package org.trinity.wayland.output;
 
 import com.google.common.collect.Lists;
 import org.trinity.shell.scene.api.Region;
@@ -14,11 +14,11 @@ import java.util.LinkedList;
 import java.util.Optional;
 
 @Singleton
-public class WlScene {
+public class Scene {
     private final LinkedList<ShellSurface> shellSurfacesStack = Lists.newLinkedList();
 
     @Inject
-    WlScene() {
+    Scene() {
     }
 
     public LinkedList<ShellSurface> getShellSurfacesStack() { return this.shellSurfacesStack; }

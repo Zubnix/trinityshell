@@ -1,4 +1,4 @@
-package org.trinity.wayland;
+package org.trinity.wayland.output;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
@@ -12,26 +12,21 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-@AutoFactory
-public class WlShellCompositor {
+@AutoFactory(className = "CompositorFactory")
+public class Compositor {
 
     private final Display                               display;
-    private final WlScene                               wlScene;
-    private final WlShmRenderer                         wlRenderer;
+    private final Scene                                 scene;
+    private final ShmRenderer                           wlRenderer;
     private final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory;
 
-
     @Inject
-    WlShellCompositor(
-            @Provided
-            final Display display,
-            @Provided
-            final WlScene wlScene,
-            final WlShmRenderer wlRenderer,
-            @Provided
-            final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory) {
+    Compositor(@Provided final Display display,
+               @Provided final Scene scene,
+               final ShmRenderer wlRenderer,
+               @Provided final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory) {
         this.display = display;
-        this.wlScene = wlScene;
+        this.scene = scene;
         this.wlRenderer = wlRenderer;
         this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
     }
@@ -39,7 +34,7 @@ public class WlShellCompositor {
     public ShellSurface create() {
         final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(Optional.empty());
         shellSurface.register(this);
-        this.wlScene.getShellSurfacesStack()
+        this.scene.getShellSurfacesStack()
                     .add(shellSurface);
         return shellSurface;
     }
@@ -56,13 +51,13 @@ public class WlShellCompositor {
     @Subscribe
     public void handle(final Destroyed event) {
         final ShellSurface shellSurface = event.getSource();
-        this.wlScene.getShellSurfacesStack()
+        this.scene.getShellSurfacesStack()
                     .remove(shellSurface);
         renderScene();
     }
 
     private void requestRender(final ShellSurface shellSurface) {
-        if (this.wlScene.needsRender(shellSurface)) {
+        if (this.scene.needsRender(shellSurface)) {
             renderScene();
         }
     }
@@ -72,8 +67,8 @@ public class WlShellCompositor {
                     .addIdle(() -> {
                         try {
                             this.wlRenderer.beginRender();
-                            this.wlScene.getShellSurfacesStack()
-                                        .forEach(this.wlRenderer::render);
+                            this.scene.getShellSurfacesStack()
+                                      .forEach(this.wlRenderer::render);
                             this.wlRenderer.endRender();
                             this.display.flushClients();
                         }
@@ -83,7 +78,7 @@ public class WlShellCompositor {
                     });
     }
 
-    public WlScene getWlScene() {
-        return this.wlScene;
+    public Scene getScene() {
+        return this.scene;
     }
 }

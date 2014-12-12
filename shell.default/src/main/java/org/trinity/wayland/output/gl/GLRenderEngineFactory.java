@@ -1,4 +1,4 @@
-package org.trinity.wayland.render.gl;
+package org.trinity.wayland.output.gl;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;

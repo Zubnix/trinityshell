@@ -16,17 +16,18 @@ import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.ServiceManager;
 import com.jogamp.newt.opengl.GLWindow;
 import dagger.ObjectGraph;
-import org.trinity.wayland.WlShellCompositor;
-import org.trinity.wayland.WlShellCompositorFactory;
-import org.trinity.wayland.WlShmRenderer;
-import org.trinity.wayland.WlShmRendererFactory;
+
+import org.trinity.wayland.output.Compositor;
+import org.trinity.wayland.output.CompositorFactory;
+import org.trinity.wayland.output.ShmRenderer;
 import org.trinity.wayland.input.newt.GLWindowSeat;
 import org.trinity.wayland.input.newt.GLWindowSeatFactory;
-import org.trinity.wayland.platform.newt.GLWindowFactory;
+import org.trinity.platform.newt.GLWindowFactory;
+import org.trinity.wayland.output.ShmRendererFactory;
 import org.trinity.wayland.protocol.WlCompositor;
 import org.trinity.wayland.protocol.WlCompositorFactory;
-import org.trinity.wayland.render.gl.GLRenderEngine;
-import org.trinity.wayland.render.gl.GLRenderEngineFactory;
+import org.trinity.wayland.output.gl.GLRenderEngine;
+import org.trinity.wayland.output.gl.GLRenderEngineFactory;
 import xcb4j.LibXcbLoader;
 
 import javax.inject.Inject;
@@ -37,17 +38,16 @@ public class EntryPoint {
     private final ServiceManager serviceManager;
     private final GLWindowFactory glWindowFactory;
     private final GLRenderEngineFactory glRenderEngineFactory;
-    private final WlShmRendererFactory wlShmRendererFactory;
-    private final WlShellCompositorFactory wlShellCompositorFactory;
+    private final ShmRendererFactory wlShmRendererFactory;
+    private final CompositorFactory wlShellCompositorFactory;
     private final WlCompositorFactory wlCompositorFactory;
     private final GLWindowSeatFactory glWindowSeatFactory;
-    private final Set<Service> services;
 
     @Inject
     EntryPoint( final GLWindowFactory glWindowFactory,
                 final GLRenderEngineFactory glRenderEngineFactory,
-                final WlShmRendererFactory wlShmRendererFactory,
-                final WlShellCompositorFactory wlShellCompositorFactory,
+                final ShmRendererFactory wlShmRendererFactory,
+                final CompositorFactory wlShellCompositorFactory,
                 final WlCompositorFactory wlCompositorFactory,
                 final GLWindowSeatFactory glWindowSeatFactory,
                 final Set<Service> services) {
@@ -57,7 +57,6 @@ public class EntryPoint {
         this.wlShellCompositorFactory = wlShellCompositorFactory;
         this.wlCompositorFactory = wlCompositorFactory;
         this.glWindowSeatFactory = glWindowSeatFactory;
-        this.services = services;
 
         //group services that will drive compositor
         this.serviceManager = new ServiceManager(services);
@@ -72,18 +71,18 @@ public class EntryPoint {
         //create an opengl renderengine that uses shm buffers and outputs to an X opengl window
         final GLRenderEngine glRenderEngine = glRenderEngineFactory.create(glWindow);
         //create an shm renderer that passes on shm buffers to it's render implementation
-        final WlShmRenderer wlShmRenderer = wlShmRendererFactory.create(glRenderEngine);
+        final ShmRenderer shmRenderer = wlShmRendererFactory.create(glRenderEngine);
 
         //setup compositing
         //create a compositor with shell and scene logic
-        final WlShellCompositor wlShellCompositor = wlShellCompositorFactory.create(wlShmRenderer);
+        final Compositor compositor = wlShellCompositorFactory.create(shmRenderer);
         //create a wayland compositor that delegates it's requests to a shell implementation.
-        final WlCompositor wlCompositor = wlCompositorFactory.create(wlShellCompositor);
+        final WlCompositor wlCompositor = wlCompositorFactory.create(compositor);
 
         //setup seat
         //create a seat that listens for input on the X opengl window and passes it on to a wayland seat.
         final GLWindowSeat glWindowSeat = glWindowSeatFactory.create(glWindow,
-                                                                     wlShellCompositor);
+                                                                     compositor);
 
         //start all services
         this.serviceManager.startAsync();

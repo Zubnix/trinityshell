@@ -11,7 +11,7 @@ import org.freedesktop.wayland.server.WlSurfaceResource;
 import javax.inject.Inject;
 import java.util.Set;
 
-@AutoFactory
+@AutoFactory(className = "WlPointerFactory")
 public class WlPointer extends EventBus implements WlPointerRequestsV3, ProtocolObject<WlPointerResource> {
 
     private final Set<WlPointerResource> resources = Sets.newHashSet();
