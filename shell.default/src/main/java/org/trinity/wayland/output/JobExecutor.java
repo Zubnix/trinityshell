@@ -12,9 +12,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -25,9 +23,9 @@ public class JobExecutor {
     private static final Logger LOGGER = LoggerFactory.getLogger(JobExecutor.class);
 
 
-    private static final byte           EVENT_NEW_JOB  = 1;
-    private static final byte           EVENT_FINISHED = 0;
-    private static final List<Runnable> NO_JOBS        = Collections.emptyList();
+    private static final byte                 EVENT_NEW_JOB  = 1;
+    private static final byte                 EVENT_FINISHED = 0;
+    private static final LinkedList<Runnable> NO_JOBS        = new LinkedList<>();
 
     private final byte[] eventNewJobBuffer   = new byte[]{EVENT_NEW_JOB};
     private final byte[] eventFinishedBuffer = new byte[]{EVENT_FINISHED};
@@ -91,18 +89,30 @@ public class JobExecutor {
     }
 
     public int handle(final int fd,
-                       final int mask) {
+                      final int mask) {
+        final LinkedList<Runnable> jobs = commit();
+        while(true){
+            if (!(handleNextEvent(jobs))) {
+                break;
+            }
+        }
+
+        return 0;
+    }
+
+    private boolean handleNextEvent(final LinkedList<Runnable> jobs) {
         final byte event = read();
         if (event == EVENT_FINISHED) {
             clean();
+            return false;
         }
-        else if (event == EVENT_NEW_JOB) {
-            process();
+        else if (event == EVENT_NEW_JOB){
+            jobs.pop().run();
+            return !jobs.isEmpty();
         }
         else {
             throw new IllegalStateException("Got illegal event code " + event);
         }
-        return 0;
     }
 
     private byte read() {
@@ -112,12 +122,8 @@ public class JobExecutor {
         return this.eventReadBuffer[0];
     }
 
-    private void process() {
-        commit().forEach(Runnable::run);
-    }
-
-    private List<Runnable> commit() {
-        List<Runnable> jobs = NO_JOBS;
+    private LinkedList<Runnable> commit() {
+        LinkedList<Runnable> jobs = NO_JOBS;
         try {
             this.jobsLock.lock();
             if (!this.pendingJobs.isEmpty()) {
