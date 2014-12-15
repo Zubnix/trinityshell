@@ -1,6 +1,7 @@
 package org.trinity;
 
 import com.google.auto.factory.AutoFactory;
+import com.sun.jna.ptr.IntByReference;
 import org.freedesktop.pixman1.Pixman1Library;
 import org.freedesktop.pixman1.pixman_box32;
 import org.freedesktop.pixman1.pixman_region32;
@@ -9,8 +10,6 @@ import org.trinity.shell.scene.api.Region;
 import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.Rectangle;
 import javax.media.nativewindow.util.RectangleImmutable;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +24,10 @@ public class PixmanRegion implements Region {
     @Override
     public List<RectangleImmutable> asList() {
         //int pointer
-        final IntBuffer n_rects = ByteBuffer.allocateDirect(4).asIntBuffer();
+        final IntByReference n_rects = new IntByReference();
         final pixman_box32 pixman_box32_array = Pixman1Library.INSTANCE.pixman_region32_rectangles(this.pixman_region32,
-                                                                                              n_rects);
-        final int size = n_rects.get();
+                                                                                                   n_rects);
+        final int size = n_rects.getValue();
         final pixman_box32[] pixman_box32s = (pixman_box32[]) pixman_box32_array.toArray(size);
 
         final List<RectangleImmutable> boxes = new ArrayList<>(size);
