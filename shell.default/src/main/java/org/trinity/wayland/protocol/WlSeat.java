@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @AutoFactory(className = "WlSeatFactory")
-public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV3, ProtocolObject<WlSeatResource> {
+public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV4, ProtocolObject<WlSeatResource> {
 
     private final Set<WlSeatResource> resources = Sets.newHashSet();
     private final EventBus            eventBus  = new EventBus();
