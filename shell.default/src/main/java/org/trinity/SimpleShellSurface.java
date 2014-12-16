@@ -138,8 +138,8 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
                                                  @Nonnull final Integer relX,
                                                  @Nonnull final Integer relY) {
         this.pendingBuffer = Optional.of(buffer);
-        this.pendingPosition = new Point(this.pendingPosition.getX() + relX,
-                                         this.pendingPosition.getY() + relY);
+        this.pendingPosition = new Point(this.position.getX() + relX,
+                                         this.position.getY() + relY);
         return this;
     }
 
