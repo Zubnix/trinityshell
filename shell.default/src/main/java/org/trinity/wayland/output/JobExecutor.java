@@ -18,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @Singleton
-public class JobExecutor {
+public class JobExecutor implements EventLoop.FileDescriptorEventHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobExecutor.class);
 
@@ -53,7 +53,7 @@ public class JobExecutor {
         this.eventSource = this.display.getEventLoop()
                                        .addFileDescriptor(this.pipeR,
                                                           EventLoop.EVENT_READABLE,
-                                                          this::handle);
+                                                          this);
     }
 
     public void fireFinishedEvent() throws IOException {
