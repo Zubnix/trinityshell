@@ -47,7 +47,7 @@ public class WlDataDeviceManager extends Global<WlDataDeviceManagerResource> imp
     @Override
     public void getDataDevice(final WlDataDeviceManagerResource requester,
                               final int id,
-                              final WlSeatResource seat) {
+                              @Nonnull final WlSeatResource seat) {
         final WlSeat wlSeat = (WlSeat) seat.getImplementation();
         wlSeat.getWlDataDevice()
               .add(requester.getClient(),

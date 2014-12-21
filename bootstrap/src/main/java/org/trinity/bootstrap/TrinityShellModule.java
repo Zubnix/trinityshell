@@ -3,8 +3,7 @@ package org.trinity.bootstrap;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
-import org.trinity.platform.newt.PlatformNewtModule;
-import org.trinity.wayland.input.newt.InputNewtModule;
+import org.trinity.wayland.platform.newt.PlatformNewtModule;
 import org.trinity.wayland.output.gl.OutputGLModule;
 import org.trinity.wayland.protocol.ProtocolModule;
 
@@ -18,7 +17,6 @@ import javax.inject.Singleton;
 		includes = {
 				//X11Module.class,
 				PlatformNewtModule.class,
-				InputNewtModule.class,
 				OutputGLModule.class,
                 ProtocolModule.class,
 				//BindingDefaultModule.class

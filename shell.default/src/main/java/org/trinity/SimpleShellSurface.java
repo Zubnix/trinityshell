@@ -94,8 +94,8 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     }
 
     @Override
-    public void accept(@Nonnull final ShellSurfaceConfiguration shellSurfaceConfiguration) {
-        shellSurfaceConfiguration.visit(this);
+    public void accept(@Nonnull final ShellSurfaceConfiguration config) {
+        config.visit(this);
     }
 
     @Nonnull

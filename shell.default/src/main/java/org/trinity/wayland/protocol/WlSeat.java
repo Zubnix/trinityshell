@@ -7,6 +7,7 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.*;
 import org.freedesktop.wayland.shared.WlSeatCapability;
+import org.trinity.wayland.output.Seat;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -20,6 +21,7 @@ public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV4, 
 
     private final WlDataDevice         wlDataDevice;
     private final Optional<WlPointer>  optionalWlPointer;
+    private final Seat                 seat;
     private final Optional<WlKeyboard> optionalWlKeyboard;
     private final Optional<WlTouch>    optionalWlTouch;
     private final int                  capabilities;
@@ -29,7 +31,8 @@ public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV4, 
            final WlDataDevice wlDataDevice,
            final Optional<WlPointer> optionalWlPointer,
            final Optional<WlKeyboard> optionalWlKeyboard,
-           final Optional<WlTouch> optionalWlTouch) {
+           final Optional<WlTouch> optionalWlTouch,
+           final Seat seat) {
         super(display,
               WlSeatResource.class,
               VERSION);
@@ -37,6 +40,7 @@ public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV4, 
         this.optionalWlKeyboard = optionalWlKeyboard;
         this.optionalWlTouch = optionalWlTouch;
         this.optionalWlPointer = optionalWlPointer;
+        this.seat = seat;
 
         int capabilities = 0;
         if (this.optionalWlPointer.isPresent()) {
@@ -126,14 +130,18 @@ public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV4, 
     }
 
     public Optional<WlKeyboard> getOptionalWlKeyboard() {
-        return optionalWlKeyboard;
+        return this.optionalWlKeyboard;
     }
 
     public Optional<WlPointer> getOptionalWlPointer() {
-        return optionalWlPointer;
+        return this.optionalWlPointer;
     }
 
     public Optional<WlTouch> getOptionalWlTouch() {
-        return optionalWlTouch;
+        return this.optionalWlTouch;
+    }
+
+    public Seat getSeat() {
+        return this.seat;
     }
 }

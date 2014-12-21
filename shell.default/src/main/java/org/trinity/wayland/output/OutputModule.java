@@ -10,10 +10,12 @@ import javax.inject.Singleton;
 
 import static dagger.Provides.Type.SET;
 
-@Module(injects = {
-        ShmRendererFactory.class,
-        CompositorFactory.class
-},
+@Module(
+        injects = {
+                ShmRendererFactory.class,
+                CompositorFactory.class,
+                Display.class
+        },
         library = true,
         //needs render engine implementation, defined at startup.
         complete = false
@@ -38,8 +40,8 @@ public class OutputModule {
     @Provides
     JobExecutor provideWlJobExecutor(final Display display) {
         final int[] pipe = configure(pipe());
-        int pipeR = pipe[0];
-        int pipeWR = pipe[1];
+        final int pipeR = pipe[0];
+        final int pipeWR = pipe[1];
 
         return new JobExecutor(display,
                                pipeR,

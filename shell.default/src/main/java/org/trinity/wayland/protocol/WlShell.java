@@ -31,7 +31,7 @@ public class WlShell extends Global<WlShellResource> implements WlShellRequests,
     @Override
     public void getShellSurface(final WlShellResource requester,
                                 final int id,
-                                final WlSurfaceResource surface) {
+                                @Nonnull final WlSurfaceResource surface) {
         final WlSurface wlSurface = (WlSurface) surface.getImplementation();
         final WlShellSurface wlShellSurface = this.wlShellSurfaceFactory.create(wlSurface);
         final WlShellSurfaceResource shellSurfaceResource = wlShellSurface.add(requester.getClient(),

@@ -23,8 +23,10 @@ import javax.inject.Singleton;
                 WlShellSurfaceFactory.class,
                 org.trinity.wayland.protocol.WlSubSurfaceFactory.class
         },
+        staticInjections = {
+            EagerSingletons.class
+        },
         library = true,
-
         //depends on wlmodule that needs a render engine
         complete = false
 )
@@ -36,23 +38,5 @@ public class ProtocolModule {
                                            final org.trinity.wayland.protocol.WlSubSurfaceFactory wlSubSurfaceFactory) {
         return new WlSubCompositor(display,
                                    wlSubSurfaceFactory);
-    }
-
-    @Provides
-    @Singleton
-    WlPointer provideWlPointer() {
-        return new WlPointer();
-    }
-
-    @Provides
-    @Singleton
-    WlKeyboard provideWlKeyboard() {
-        return new WlKeyboard();
-    }
-
-    @Provides
-    @Singleton
-    WlTouch provideWlTouch() {
-        return new WlTouch();
     }
 }

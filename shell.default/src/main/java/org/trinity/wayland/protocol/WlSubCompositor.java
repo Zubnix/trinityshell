@@ -34,8 +34,8 @@ public class WlSubCompositor extends Global<WlSubcompositorResource> implements 
     @Override
     public void getSubsurface(final WlSubcompositorResource requester,
                               final int id,
-                              final WlSurfaceResource surface,
-                              final WlSurfaceResource parent) {
+                              @Nonnull final WlSurfaceResource surface,
+                              @Nonnull final WlSurfaceResource parent) {
         this.wlSubSurfaceFactory.create(surface,
                                         parent)
                                 .add(requester.getClient(),
@@ -59,24 +59,24 @@ public class WlSubCompositor extends Global<WlSubcompositorResource> implements 
     }
 
     @Override
-    public void register(@Nonnull Object listener) {
+    public void register(@Nonnull final Object listener) {
         this.eventBus.register(listener);
     }
 
     @Override
-    public void unregister(@Nonnull Object listener) {
+    public void unregister(@Nonnull final Object listener) {
         this.eventBus.unregister(listener);
     }
 
     @Override
-    public void post(@Nonnull Object event) {
+    public void post(@Nonnull final Object event) {
         this.eventBus.post(event);
     }
 
     @Override
-    public WlSubcompositorResource onBindClient(Client client,
-                                                int version,
-                                                int id) {
+    public WlSubcompositorResource onBindClient(final Client client,
+                                                final int version,
+                                                final int id) {
         return new WlSubcompositorResource(client,
                                            version,
                                            id,

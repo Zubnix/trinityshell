@@ -1,4 +1,4 @@
-package org.trinity.platform.newt;
+package org.trinity.wayland.platform.newt;
 
 import com.jogamp.newt.Display;
 import com.jogamp.newt.NewtFactory;

@@ -1,12 +1,14 @@
-package org.trinity.wayland.input.newt;
+package org.trinity.wayland.platform.newt;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
 import org.freedesktop.wayland.shared.WlPointerButtonState;
-import org.trinity.wayland.input.Seat;
 import org.trinity.wayland.output.JobExecutor;
+import org.trinity.wayland.output.Seat;
+import org.trinity.wayland.output.events.Button;
+import org.trinity.wayland.output.events.Motion;
 
 public class GLWindowSeat implements MouseListener, KeyListener {
 
@@ -40,9 +42,10 @@ public class GLWindowSeat implements MouseListener, KeyListener {
         final long time = e.getWhen();
         final short button = e.getButton();
 
-        this.jobExecutor.submit(() -> this.seat.handleButton((int) time,
-                                                             button,
-                                                             WlPointerButtonState.PRESSED));
+        this.jobExecutor.submit(() -> this.seat.getPointer()
+                                               .post(new Button((int) time,
+                                                                button,
+                                                                WlPointerButtonState.PRESSED)));
     }
 
     @Override
@@ -50,21 +53,23 @@ public class GLWindowSeat implements MouseListener, KeyListener {
         final long time = e.getWhen();
         final short button = e.getButton();
 
-        this.jobExecutor.submit(() -> this.seat.handleButton((int) time,
-                                                             button,
-                                                             WlPointerButtonState.RELEASED));
+        this.jobExecutor.submit(() -> this.seat.getPointer()
+                                               .post(new Button((int) time,
+                                                                button,
+                                                                WlPointerButtonState.RELEASED)));
     }
 
     @Override
     public void mouseMoved(final MouseEvent e) {
 
         final long time = e.getWhen();
-        final int absX = e.getX();
-        final int absY = e.getY();
+        final int x = e.getX();
+        final int y = e.getY();
 
-        this.jobExecutor.submit(() -> this.seat.handlePointerMove((int) time,
-                                                                  absX,
-                                                                  absY));
+        this.jobExecutor.submit(() -> this.seat.getPointer()
+                                               .post(new Motion((int) time,
+                                                                x,
+                                                                y)));
     }
 
 

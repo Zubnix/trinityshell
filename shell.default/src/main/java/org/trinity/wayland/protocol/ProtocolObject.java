@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
-public interface ProtocolObject<T extends Resource> extends Listenable {
+public interface ProtocolObject<T extends Resource<?>> extends Listenable {
     Set<T> getResources();
 
     default Optional<T> getResource() {

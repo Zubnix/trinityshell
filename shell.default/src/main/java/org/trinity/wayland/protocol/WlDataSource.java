@@ -8,6 +8,7 @@ import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.WlDataSourceRequests;
 import org.freedesktop.wayland.server.WlDataSourceResource;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public class WlDataSource extends EventBus implements WlDataSourceRequests, Prot
 
     @Override
     public void offer(final WlDataSourceResource resource,
-                      final String mimeType) {
+                      @Nonnull final String mimeType) {
         this.mimeTypes.add(mimeType);
     }
 

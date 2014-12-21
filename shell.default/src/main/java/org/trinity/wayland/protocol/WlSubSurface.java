@@ -8,6 +8,7 @@ import org.freedesktop.wayland.server.WlSubsurfaceRequests;
 import org.freedesktop.wayland.server.WlSubsurfaceResource;
 import org.freedesktop.wayland.server.WlSurfaceResource;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 @AutoFactory(className = "WlSubSurfaceFactory")
@@ -48,13 +49,13 @@ public class WlSubSurface extends EventBus implements WlSubsurfaceRequests, Prot
 
     @Override
     public void placeAbove(final WlSubsurfaceResource requester,
-                           final WlSurfaceResource sibling) {
+                           @Nonnull final WlSurfaceResource sibling) {
 
     }
 
     @Override
     public void placeBelow(final WlSubsurfaceResource requester,
-                           final WlSurfaceResource sibling) {
+                           @Nonnull final WlSurfaceResource sibling) {
 
     }
 

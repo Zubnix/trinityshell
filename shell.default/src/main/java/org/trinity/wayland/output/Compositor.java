@@ -17,25 +17,23 @@ public class Compositor {
 
     private final Display                               display;
     private final Scene                                 scene;
-    private final ShmRenderer                           wlRenderer;
+    private final ShmRenderer                           shmRenderer;
     private final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory;
 
     @Inject
     Compositor(@Provided final Display display,
                @Provided final Scene scene,
-               final ShmRenderer wlRenderer,
+               final ShmRenderer shmRenderer,
                @Provided final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory) {
         this.display = display;
         this.scene = scene;
-        this.wlRenderer = wlRenderer;
+        this.shmRenderer = shmRenderer;
         this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
     }
 
     public ShellSurface create() {
         final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(Optional.empty());
         shellSurface.register(this);
-        this.scene.getShellSurfacesStack()
-                  .add(shellSurface);
         return shellSurface;
     }
 
@@ -50,9 +48,8 @@ public class Compositor {
 
     @Subscribe
     public void handle(final Destroyed event) {
-        final ShellSurface shellSurface = event.getSource();
         this.scene.getShellSurfacesStack()
-                  .remove(shellSurface);
+                  .remove(event.getSource());
         renderScene();
     }
 
@@ -66,10 +63,10 @@ public class Compositor {
         this.display.getEventLoop()
                     .addIdle(() -> {
                         try {
-                            this.wlRenderer.beginRender();
+                            this.shmRenderer.beginRender();
                             this.scene.getShellSurfacesStack()
-                                      .forEach(this.wlRenderer::render);
-                            this.wlRenderer.endRender();
+                                      .forEach(this.shmRenderer::render);
+                            this.shmRenderer.endRender();
                             this.display.flushClients();
                         }
                         catch (ExecutionException | InterruptedException e) {

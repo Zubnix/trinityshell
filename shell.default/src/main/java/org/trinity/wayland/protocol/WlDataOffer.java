@@ -7,6 +7,7 @@ import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.WlDataOfferRequests;
 import org.freedesktop.wayland.server.WlDataOfferResource;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 @AutoFactory(className = "WlDataOfferFactory")
@@ -26,7 +27,7 @@ public class WlDataOffer extends EventBus implements WlDataOfferRequests, Protoc
 
     @Override
     public void receive(final WlDataOfferResource resource,
-                        final String mimeType,
+                        @Nonnull final String mimeType,
                         final int fd) {
 
     }

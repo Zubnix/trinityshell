@@ -16,18 +16,17 @@ import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.ServiceManager;
 import com.jogamp.newt.opengl.GLWindow;
 import dagger.ObjectGraph;
-
+import org.trinity.wayland.platform.newt.GLWindowFactory;
+import org.trinity.wayland.platform.newt.GLWindowSeat;
+import org.trinity.wayland.platform.newt.GLWindowSeatFactory;
 import org.trinity.wayland.output.Compositor;
 import org.trinity.wayland.output.CompositorFactory;
 import org.trinity.wayland.output.ShmRenderer;
-import org.trinity.wayland.input.newt.GLWindowSeat;
-import org.trinity.wayland.input.newt.GLWindowSeatFactory;
-import org.trinity.platform.newt.GLWindowFactory;
 import org.trinity.wayland.output.ShmRendererFactory;
-import org.trinity.wayland.protocol.WlCompositor;
-import org.trinity.wayland.protocol.WlCompositorFactory;
 import org.trinity.wayland.output.gl.GLRenderEngine;
 import org.trinity.wayland.output.gl.GLRenderEngineFactory;
+import org.trinity.wayland.protocol.WlCompositor;
+import org.trinity.wayland.protocol.WlCompositorFactory;
 import xcb4j.LibXcbLoader;
 
 import javax.inject.Inject;
@@ -35,22 +34,22 @@ import java.util.Set;
 
 public class EntryPoint {
 
-    private final ServiceManager serviceManager;
-    private final GLWindowFactory glWindowFactory;
+    private final ServiceManager        serviceManager;
+    private final GLWindowFactory       glWindowFactory;
     private final GLRenderEngineFactory glRenderEngineFactory;
-    private final ShmRendererFactory wlShmRendererFactory;
-    private final CompositorFactory wlShellCompositorFactory;
-    private final WlCompositorFactory wlCompositorFactory;
-    private final GLWindowSeatFactory glWindowSeatFactory;
+    private final ShmRendererFactory    wlShmRendererFactory;
+    private final CompositorFactory     wlShellCompositorFactory;
+    private final WlCompositorFactory   wlCompositorFactory;
+    private final GLWindowSeatFactory   glWindowSeatFactory;
 
     @Inject
-    EntryPoint( final GLWindowFactory glWindowFactory,
-                final GLRenderEngineFactory glRenderEngineFactory,
-                final ShmRendererFactory wlShmRendererFactory,
-                final CompositorFactory wlShellCompositorFactory,
-                final WlCompositorFactory wlCompositorFactory,
-                final GLWindowSeatFactory glWindowSeatFactory,
-                final Set<Service> services) {
+    EntryPoint(final GLWindowFactory glWindowFactory,
+               final GLRenderEngineFactory glRenderEngineFactory,
+               final ShmRendererFactory wlShmRendererFactory,
+               final CompositorFactory wlShellCompositorFactory,
+               final WlCompositorFactory wlCompositorFactory,
+               final GLWindowSeatFactory glWindowSeatFactory,
+               final Set<Service> services) {
         this.glWindowFactory = glWindowFactory;
         this.glRenderEngineFactory = glRenderEngineFactory;
         this.wlShmRendererFactory = wlShmRendererFactory;
@@ -65,36 +64,38 @@ public class EntryPoint {
     private void enter() {
         //create an output
         //create an X opengl enabled window
-        final GLWindow glWindow = glWindowFactory.create();
+        final GLWindow glWindow = this.glWindowFactory.create();
 
         //setup our render engine
         //create an opengl renderengine that uses shm buffers and outputs to an X opengl window
-        final GLRenderEngine glRenderEngine = glRenderEngineFactory.create(glWindow);
+        final GLRenderEngine glRenderEngine = this.glRenderEngineFactory.create(glWindow);
         //create an shm renderer that passes on shm buffers to it's render implementation
-        final ShmRenderer shmRenderer = wlShmRendererFactory.create(glRenderEngine);
+        final ShmRenderer shmRenderer = this.wlShmRendererFactory.create(glRenderEngine);
 
         //setup compositing
         //create a compositor with shell and scene logic
-        final Compositor compositor = wlShellCompositorFactory.create(shmRenderer);
+        final Compositor compositor = this.wlShellCompositorFactory.create(shmRenderer);
         //create a wayland compositor that delegates it's requests to a shell implementation.
-        final WlCompositor wlCompositor = wlCompositorFactory.create(compositor);
+        final WlCompositor wlCompositor = this.wlCompositorFactory.create(compositor);
 
         //setup seat
         //create a seat that listens for input on the X opengl window and passes it on to a wayland seat.
-        final GLWindowSeat glWindowSeat = glWindowSeatFactory.create(glWindow,
-                                                                     compositor);
+        final GLWindowSeat glWindowSeat = this.glWindowSeatFactory.create(glWindow,
+                                                                          compositor);
 
-        //start all services
+        //start all services, 1 thread per service & exit main thread.
         this.serviceManager.startAsync();
     }
 
     public static void main(final String[] args) {
         LibXcbLoader.load();
 
-		final TrinityShellModule trinityShellModule = new TrinityShellModule();
-		final ObjectGraph objectGraph = ObjectGraph.create(trinityShellModule);
+        final TrinityShellModule trinityShellModule = new TrinityShellModule();
+        final ObjectGraph objectGraph = ObjectGraph.create(trinityShellModule);
         trinityShellModule.setObjectGraph(objectGraph);
+        objectGraph.injectStatics();
 
-		objectGraph.get(EntryPoint.class).enter();
+        objectGraph.get(EntryPoint.class)
+                   .enter();
     }
 }

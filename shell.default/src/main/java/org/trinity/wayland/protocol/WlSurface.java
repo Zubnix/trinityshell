@@ -12,17 +12,13 @@ import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;
 import javax.media.nativewindow.util.Rectangle;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 @AutoFactory(className = "WlSurfaceFactory")
 public class WlSurface extends EventBus implements WlSurfaceRequestsV3, ProtocolObject<WlSurfaceResource> {
-
-    public static final Map<ShellSurface, WlSurface> SHELL_SURFACE_WL_SURFACE_MAP = new WeakHashMap<>();
 
     private final Set<WlSurfaceResource> resources       = Sets.newHashSet();
     private final Listener               destroyListener = new Listener() {
@@ -39,14 +35,10 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
 
     private Optional<WlBufferResource> pendingBuffer = Optional.empty();
 
-    WlSurface(
-            @Provided
-            final WlCallbackFactory wlCallbackFactory,
-            final ShellSurface shellSurface) {
+    WlSurface(@Provided final WlCallbackFactory wlCallbackFactory,
+              final ShellSurface shellSurface) {
         this.wlCallbackFactory = wlCallbackFactory;
         this.shellSurface = shellSurface;
-        SHELL_SURFACE_WL_SURFACE_MAP.put(shellSurface,
-                                         this);
     }
 
     public ShellSurface getShellSurface() {
@@ -105,8 +97,7 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
 
     @Override
     public void attach(final WlSurfaceResource requester,
-                       @Nullable
-                       final WlBufferResource buffer,
+                       @Nullable final WlBufferResource buffer,
                        final int x,
                        final int y) {
         if (buffer == null) {
@@ -166,8 +157,7 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
 
     @Override
     public void setInputRegion(final WlSurfaceResource requester,
-                               @Nullable
-                               final WlRegionResource regionResource) {
+                               @Nullable final WlRegionResource regionResource) {
         if (regionResource == null) {
             getShellSurface().accept(ShellSurfaceConfigurable::removeInputRegion);
         }
@@ -197,9 +187,8 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
         this.pendingBuffer = Optional.of(buffer);
         buffer.addDestroyListener(this.destroyListener);
 
-        getShellSurface().accept(shellSurfaceConfigurable ->
-                                         shellSurfaceConfigurable.attachBuffer(buffer,
-                                                                               x,
-                                                                               y));
+        getShellSurface().accept(config -> config.attachBuffer(buffer,
+                                                               x,
+                                                               y));
     }
 }

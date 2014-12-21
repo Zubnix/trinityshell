@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.*;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 @AutoFactory(className = "WlDataDeviceFactory")
@@ -17,7 +18,7 @@ public class WlDataDevice extends EventBus implements WlDataDeviceRequests, Prot
     @Override
     public void startDrag(final WlDataDeviceResource requester,
                           final WlDataSourceResource source,
-                          final WlSurfaceResource origin,
+                          @Nonnull final WlSurfaceResource origin,
                           final WlSurfaceResource icon,
                           final int serial) {
 

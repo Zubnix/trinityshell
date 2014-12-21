@@ -7,6 +7,7 @@ import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.server.ShmBuffer;
 import org.freedesktop.wayland.server.WlBufferResource;
 import org.trinity.shell.scene.api.ShellSurface;
+import org.trinity.wayland.protocol.WlSurface;
 
 import javax.inject.Inject;
 import java.util.concurrent.ExecutionException;
@@ -17,19 +18,19 @@ public class ShmRenderer {
 
     private final EventBus dispatcher = new EventBus();
 
-    private final ShmRenderEngine engine;
+    private final ShmRenderEngine shmRenderEngine;
 
     private ShellSurface current;
 
     @Inject
-    ShmRenderer(final ShmRenderEngine engine) {
-        this.engine = engine;
+    ShmRenderer(final ShmRenderEngine shmRenderEngine) {
+        this.shmRenderEngine = shmRenderEngine;
         this.dispatcher.register(this);
     }
 
-    public void render(final ShellSurface shellSurface) {
-        this.current = shellSurface;
-        this.dispatcher.post(shellSurface.getBuffer()
+    public void render(final WlSurface wlSurface) {
+        this.current = wlSurface.getShellSurface();
+        this.dispatcher.post(this.current.getBuffer()
                                          .get());
     }
 
@@ -49,19 +50,19 @@ public class ShmRenderer {
             throw new IllegalArgumentException("Buffer is not an ShmBuffer.");
         }
 
-        this.engine.draw(this.current,
-                         shmBuffer)
-                   .get();
+        this.shmRenderEngine.draw(this.current,
+                                  shmBuffer)
+                            .get();
         this.current.firePaintCallbacks((int) TimeUnit.NANOSECONDS.toMillis(System.nanoTime()));
     }
 
     public void beginRender() throws ExecutionException, InterruptedException {
-        this.engine.begin()
-                   .get();
+        this.shmRenderEngine.begin()
+                            .get();
     }
 
     public void endRender() throws ExecutionException, InterruptedException {
-        this.engine.end()
-                   .get();
+        this.shmRenderEngine.end()
+                            .get();
     }
 }
