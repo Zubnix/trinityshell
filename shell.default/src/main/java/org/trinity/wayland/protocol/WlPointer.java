@@ -143,12 +143,14 @@ public class WlPointer extends EventBus implements WlPointerRequestsV3, Protocol
         final Optional<WlSurface> newFocus = this.compositor.getScene()
                                                             .findSurfaceAtCoordinate(x,
                                                                                      y);
-        if (!this.focus.equals(newFocus)) {
+        if (this.grab.isPresent() && !this.focus.equals(newFocus)) {
             //pointer is over a different surface
-            shiftFocus(newFocus,
-                       x,
-                       y);
+            reportFocus(newFocus,
+                        x,
+                        y);
         }
+        //update focus tracking
+        this.focus = newFocus;
 
         if (this.grab.isPresent()
                 && this.focus.equals(this.grab)) {
@@ -207,9 +209,10 @@ public class WlPointer extends EventBus implements WlPointerRequestsV3, Protocol
         }
     }
 
-    private void shiftFocus(final Optional<WlSurface> newFocus,
-                            final int x,
-                            final int y) {
+    private void reportFocus(final Optional<WlSurface> newFocus,
+                             final int x,
+                             final int y) {
+        //the new focus does not match the 'old' focus.
 
         if (this.focus.isPresent()
                 && this.grab.equals(this.focus)) {
@@ -222,8 +225,6 @@ public class WlPointer extends EventBus implements WlPointerRequestsV3, Protocol
             reportEnter(x,
                         y);
         }
-        //update focus tracking
-        this.focus = newFocus;
     }
 
     private Optional<WlPointerResource> findPointerResource(final WlSurfaceResource wlSurfaceResource) {

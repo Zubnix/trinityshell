@@ -6,12 +6,14 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.server.*;
 import org.trinity.shell.scene.api.ShellSurface;
+import org.trinity.wayland.output.Compositor;
 import org.trinity.wayland.output.Pointer;
 import org.trinity.wayland.output.events.Motion;
 import org.trinity.wayland.protocol.events.ResourceDestroyed;
 
 import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.Point;
+import javax.media.nativewindow.util.PointImmutable;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,9 +22,12 @@ public class WlShellSurface extends EventBus implements WlShellSurfaceRequests, 
 
     private final Set<WlShellSurfaceResource> resources = Sets.newHashSet();
 
-    private final WlSurface wlSurface;
+    private final Compositor compositor;
+    private final WlSurface  wlSurface;
 
-    WlShellSurface(final WlSurface wlSurface) {
+    WlShellSurface(final Compositor compositor,
+                   final WlSurface wlSurface) {
+        this.compositor = compositor;
         this.wlSurface = wlSurface;
     }
 
@@ -57,8 +62,12 @@ public class WlShellSurface extends EventBus implements WlShellSurfaceRequests, 
         //listen for pointer motion
         final Pointer pointer = wlSeat.getSeat()
                                       .getPointer();
-        //keep reference to pointer 'start' position
-        final Point startPosition = pointer.getPosition();
+        //keep reference to surface position position, relative to the pointer position
+        final PointImmutable pointerStartPosition = pointer.getPosition();
+        final PointImmutable surfaceStartPosition = this.wlSurface.getShellSurface()
+                                                                  .getPosition();
+        final PointImmutable pointerSurfaceDelta = new Point(pointerStartPosition.getX() - surfaceStartPosition.getY(),
+                                                             pointerStartPosition.getY() - surfaceStartPosition.getY());
 
         final Object motionListener = new Object() {
             @Subscribe
@@ -69,7 +78,7 @@ public class WlShellSurface extends EventBus implements WlShellSurfaceRequests, 
                                     .get()
                                     .equals(serial)) {
                     //move surface
-                    move(startPosition,
+                    move(pointerSurfaceDelta,
                          motion);
                 }
                 else {
@@ -91,21 +100,15 @@ public class WlShellSurface extends EventBus implements WlShellSurfaceRequests, 
         register(motionListener);
     }
 
-
-    private void move(final Point startPosition,
+    private void move(final PointImmutable pointerSurfaceDelta,
                       final Motion motion) {
-        final int deltaX = motion.getX() - startPosition.getX();
-        final int deltaY = motion.getY() - startPosition.getY();
 
         final ShellSurface shellSurface = this.wlSurface.getShellSurface();
 
-        //FIXME we need a better way to manipulate a surface's position
-        shellSurface.accept(config -> {
-            config.attachBuffer(shellSurface.getBuffer(),
-                                deltaX,
-                                deltaY);
-            config.commit();
-        });
+        shellSurface.accept(config ->
+                                    config.setPosition(new Point(motion.getX() - pointerSurfaceDelta.getX(),
+                                                                 motion.getY() - pointerSurfaceDelta.getY())));
+        this.compositor.requestRender(shellSurface);
     }
 
     @Override

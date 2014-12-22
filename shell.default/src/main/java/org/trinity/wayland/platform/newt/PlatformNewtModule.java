@@ -11,7 +11,7 @@ import org.trinity.wayland.protocol.ProtocolModule;
         library = true,
         complete = true,
         includes = {
-                ProtocolModule.class
+                ProtocolModule.class,
         })
 public class PlatformNewtModule {
 

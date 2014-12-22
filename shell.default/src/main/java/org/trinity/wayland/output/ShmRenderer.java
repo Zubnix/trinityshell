@@ -9,7 +9,6 @@ import org.freedesktop.wayland.server.WlBufferResource;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.wayland.protocol.WlSurface;
 
-import javax.inject.Inject;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +21,6 @@ public class ShmRenderer {
 
     private ShellSurface current;
 
-    @Inject
     ShmRenderer(final ShmRenderEngine shmRenderEngine) {
         this.shmRenderEngine = shmRenderEngine;
         this.dispatcher.register(this);

@@ -21,8 +21,10 @@ package org.trinity;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
+import org.freedesktop.wayland.server.WlBufferResource;
 import org.trinity.shell.scene.api.Region;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
@@ -48,49 +50,57 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     //pending states
     @Nonnull
-    private List<IntConsumer>  pendingCallbacks    = Lists.newLinkedList();
+    private Optional<Region>           pendingOpaqueRegion = Optional.empty();
     @Nonnull
-    private Optional<Region>   pendingOpaqueRegion = Optional.empty();
+    private Optional<Region>           pendingInputRegion  = Optional.empty();
     @Nonnull
-    private Optional<Region>   pendingInputRegion  = Optional.empty();
+    private Optional<Region>           pendingDamage       = Optional.empty();
     @Nonnull
-    private Optional<Region>   pendingDamage       = Optional.empty();
+    private Optional<WlBufferResource> pendingBuffer       = Optional.empty();
     @Nonnull
-    private Optional<Object>   pendingBuffer       = Optional.empty();
+    private float[]                    pendingTransform    = new float[]{1,
+                                                                         0,
+                                                                         0,
+                                                                         0,
+                                                                         1,
+                                                                         0,
+                                                                         0,
+                                                                         0,
+                                                                         1};
     @Nonnull
-    private float[] pendingTransform    = new float[]{1, 0, 0,
-                                                      0, 1, 0,
-                                                      0, 0, 1};
-    @Nonnull
-    private PointImmutable     pendingPosition     = new Point(0,
-                                                               0);
+    private Point                      pendingBufferOffset = new Point();
 
     //committed states
     @Nonnull
-    private List<IntConsumer>  callbacks    = Lists.newLinkedList();
+    private final List<IntConsumer>          callbacks    = Lists.newLinkedList();
     @Nonnull
-    private Optional<Region>   opaqueRegion = Optional.empty();
+    private       Optional<Region>           opaqueRegion = Optional.empty();
     @Nonnull
-    private Optional<Region>   inputRegion  = Optional.empty();
+    private       Optional<Region>           inputRegion  = Optional.empty();
     @Nonnull
-    private Optional<Region>   damage       = Optional.empty();
+    private       Optional<Region>           damage       = Optional.empty();
     @Nonnull
-    private Optional<Object>   buffer       = Optional.empty();
+    private       Optional<WlBufferResource> buffer       = Optional.empty();
     @Nonnull
-    private float[] transform    = new float[]{1, 0, 0,
-                                               0, 1, 0,
-                                               0, 0, 1};
+    private       float[]                    transform    = new float[]{1,
+                                                                        0,
+                                                                        0,
+                                                                        0,
+                                                                        1,
+                                                                        0,
+                                                                        0,
+                                                                        0,
+                                                                        1};
     @Nonnull
-    private PointImmutable     position     = new Point(0,
-                                                        0);
+    private       Point                      position     = new Point();
     //additional server side states
     @Nonnull
-    private Boolean            destroyed    = Boolean.FALSE;
+    private       Boolean                    destroyed    = Boolean.FALSE;
 
     SimpleShellSurface(@Provided final PixmanRegionFactory pixmanRegionFactory,
-                       @Nonnull final Optional<Object> optionalBuffer) {
+                       @Nonnull final Optional<?> optionalBuffer) {
         this.pixmanRegionFactory = pixmanRegionFactory;
-        this.buffer = optionalBuffer;
+        this.buffer = (Optional<WlBufferResource>) optionalBuffer;
     }
 
     @Override
@@ -134,12 +144,14 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable attachBuffer(@Nonnull final Object  buffer,
+    public ShellSurfaceConfigurable attachBuffer(@Nonnull final Object buffer,
                                                  @Nonnull final Integer relX,
                                                  @Nonnull final Integer relY) {
-        this.pendingBuffer = Optional.of(buffer);
-        this.pendingPosition = new Point(this.position.getX() + relX,
-                                         this.position.getY() + relY);
+        Preconditions.checkArgument(buffer instanceof WlBufferResource);
+
+        this.pendingBuffer = Optional.of((WlBufferResource) buffer);
+        this.pendingBufferOffset = new Point(relX,
+                                             relY);
         return this;
     }
 
@@ -153,9 +165,15 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     @Override
     public ShellSurfaceConfigurable removeTransform() {
-        this.pendingTransform = new float[]{1, 0, 0,
-                                            0, 1, 0,
-                                            0, 0, 1};
+        this.pendingTransform = new float[]{1,
+                                            0,
+                                            0,
+                                            0,
+                                            1,
+                                            0,
+                                            0,
+                                            0,
+                                            1};
         return this;
     }
 
@@ -164,8 +182,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     public ShellSurfaceConfigurable detachBuffer() {
         this.pendingBuffer = Optional.empty();
         this.pendingDamage = Optional.empty();
-        this.pendingPosition = new Point(0,
-                                         0);
+        this.pendingBufferOffset = new Point();
         return this;
     }
 
@@ -195,7 +212,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public Optional<Object> getBuffer() {
+    public Optional<WlBufferResource> getBuffer() {
         return this.buffer;
     }
 
@@ -203,16 +220,20 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Override
     public ShellSurfaceConfigurable commit() {
         //flush
-        this.transform    = this.pendingTransform;
-        this.buffer       = this.pendingBuffer;
-        this.position     = this.pendingPosition;
-        this.damage       = this.pendingDamage;
-        this.inputRegion  = this.pendingInputRegion;
+        this.transform = this.pendingTransform;
+        if (this.buffer.isPresent()) {
+            //signal client that the previous buffer can be reused as we will now use the
+            //newly attached buffer.
+            final WlBufferResource wlBufferResource = this.buffer.get();
+            wlBufferResource.release();
+        }
+        this.buffer = this.pendingBuffer;
+        this.position = this.position.translate(this.pendingBufferOffset);
+        this.damage = this.pendingDamage;
+        this.inputRegion = this.pendingInputRegion;
         this.opaqueRegion = this.pendingOpaqueRegion;
-        this.callbacks    = this.pendingCallbacks;
         //reset
         detachBuffer();
-        this.pendingCallbacks = Lists.newLinkedList();
         //notify
         post(new Committed(this));
         return this;
@@ -221,7 +242,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     @Override
     public ShellSurfaceConfigurable addCallback(final IntConsumer callback) {
-        this.pendingCallbacks.add(callback);
+        this.callbacks.add(callback);
         return this;
     }
 
@@ -256,10 +277,10 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     @Override
     public ShellSurfaceConfigurable setPosition(@Nonnull final PointImmutable position) {
-        this.pendingPosition = new Point(position.getX(),
-                                         position.getY());
+        this.position = new Point(position.getX(),
+                                  position.getY());
         post(new Moved(this,
-                       this.pendingPosition));
+                       this.position));
         return this;
     }
 }

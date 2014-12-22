@@ -1,31 +1,34 @@
 package org.trinity.wayland.protocol;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.server.*;
+import org.trinity.wayland.output.Compositor;
 import org.trinity.wayland.protocol.events.ResourceDestroyed;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Set;
 
-@Singleton//Eager
+@AutoFactory(className = "WlShellFactory")
 public class WlShell extends Global<WlShellResource> implements WlShellRequests, ProtocolObject<WlShellResource> {
 
     private final Set<WlShellResource> resources = Sets.newHashSet();
     private final EventBus             eventBus  = new EventBus();
 
     private final WlShellSurfaceFactory wlShellSurfaceFactory;
+    private final Compositor            compositor;
 
-    @Inject
-    WlShell(final Display display,
-            final WlShellSurfaceFactory wlShellSurfaceFactory) {
+    WlShell(@Provided final Display display,
+            @Provided final WlShellSurfaceFactory wlShellSurfaceFactory,
+            final Compositor compositor) {
         super(display,
               WlShellResource.class,
               VERSION);
         this.wlShellSurfaceFactory = wlShellSurfaceFactory;
+        this.compositor = compositor;
     }
 
     @Override
@@ -33,7 +36,8 @@ public class WlShell extends Global<WlShellResource> implements WlShellRequests,
                                 final int id,
                                 @Nonnull final WlSurfaceResource surface) {
         final WlSurface wlSurface = (WlSurface) surface.getImplementation();
-        final WlShellSurface wlShellSurface = this.wlShellSurfaceFactory.create(wlSurface);
+        final WlShellSurface wlShellSurface = this.wlShellSurfaceFactory.create(this.compositor,
+                                                                                wlSurface);
         final WlShellSurfaceResource shellSurfaceResource = wlShellSurface.add(requester.getClient(),
                                                                                requester.getVersion(),
                                                                                id);

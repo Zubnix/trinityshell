@@ -27,6 +27,7 @@ import org.trinity.wayland.output.gl.GLRenderEngine;
 import org.trinity.wayland.output.gl.GLRenderEngineFactory;
 import org.trinity.wayland.protocol.WlCompositor;
 import org.trinity.wayland.protocol.WlCompositorFactory;
+import org.trinity.wayland.protocol.WlShellFactory;
 import xcb4j.LibXcbLoader;
 
 import javax.inject.Inject;
@@ -41,6 +42,7 @@ public class EntryPoint {
     private final CompositorFactory     wlShellCompositorFactory;
     private final WlCompositorFactory   wlCompositorFactory;
     private final GLWindowSeatFactory   glWindowSeatFactory;
+    private final WlShellFactory wlShellFactory;
 
     @Inject
     EntryPoint(final GLWindowFactory glWindowFactory,
@@ -49,6 +51,7 @@ public class EntryPoint {
                final CompositorFactory wlShellCompositorFactory,
                final WlCompositorFactory wlCompositorFactory,
                final GLWindowSeatFactory glWindowSeatFactory,
+               final WlShellFactory wlShellFactory,
                final Set<Service> services) {
         this.glWindowFactory = glWindowFactory;
         this.glRenderEngineFactory = glRenderEngineFactory;
@@ -56,6 +59,7 @@ public class EntryPoint {
         this.wlShellCompositorFactory = wlShellCompositorFactory;
         this.wlCompositorFactory = wlCompositorFactory;
         this.glWindowSeatFactory = glWindowSeatFactory;
+        this.wlShellFactory = wlShellFactory;
 
         //group services that will drive compositor
         this.serviceManager = new ServiceManager(services);
@@ -67,7 +71,7 @@ public class EntryPoint {
         final GLWindow glWindow = this.glWindowFactory.create();
 
         //setup our render engine
-        //create an opengl renderengine that uses shm buffers and outputs to an X opengl window
+        //create an opengl render engine that uses shm buffers and outputs to an X opengl window
         final GLRenderEngine glRenderEngine = this.glRenderEngineFactory.create(glWindow);
         //create an shm renderer that passes on shm buffers to it's render implementation
         final ShmRenderer shmRenderer = this.wlShmRendererFactory.create(glRenderEngine);
@@ -82,6 +86,10 @@ public class EntryPoint {
         //create a seat that listens for input on the X opengl window and passes it on to a wayland seat.
         final GLWindowSeat glWindowSeat = this.glWindowSeatFactory.create(glWindow,
                                                                           compositor);
+
+        //enable wl_shell protocol
+        this.wlShellFactory.create(compositor);
+        //TODO enable xdg_shell protocol
 
         //start all services, 1 thread per service & exit main thread.
         this.serviceManager.startAsync();

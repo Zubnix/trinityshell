@@ -23,9 +23,6 @@ import javax.inject.Singleton;
                 WlShellSurfaceFactory.class,
                 org.trinity.wayland.protocol.WlSubSurfaceFactory.class
         },
-        staticInjections = {
-            EagerSingletons.class
-        },
         library = true,
         //depends on wlmodule that needs a render engine
         complete = false

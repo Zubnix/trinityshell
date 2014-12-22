@@ -8,9 +8,9 @@ import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.shell.scene.api.event.Committed;
 import org.trinity.shell.scene.api.event.Destroyed;
 
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @AutoFactory(className = "CompositorFactory")
 public class Compositor {
@@ -20,7 +20,8 @@ public class Compositor {
     private final ShmRenderer                           shmRenderer;
     private final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory;
 
-    @Inject
+    private AtomicBoolean renderScheduled = new AtomicBoolean(false);
+
     Compositor(@Provided final Display display,
                @Provided final Scene scene,
                final ShmRenderer shmRenderer,
@@ -48,29 +49,36 @@ public class Compositor {
 
     @Subscribe
     public void handle(final Destroyed event) {
-        this.scene.getShellSurfacesStack()
-                  .remove(event.getSource());
-        renderScene();
+        if (this.scene.getShellSurfacesStack()
+                      .remove(event.getSource())) {
+            renderScene();
+        }
     }
 
-    private void requestRender(final ShellSurface shellSurface) {
-        if (this.scene.needsRender(shellSurface)) {
-            renderScene();
+    public void requestRender(final ShellSurface shellSurface) {
+        if (this.renderScheduled.compareAndSet(false,
+                                               true)) {
+            if (this.scene.needsRender(shellSurface)) {
+                renderScene();
+            }
         }
     }
 
     private void renderScene() {
         this.display.getEventLoop()
                     .addIdle(() -> {
-                        try {
-                            this.shmRenderer.beginRender();
-                            this.scene.getShellSurfacesStack()
-                                      .forEach(this.shmRenderer::render);
-                            this.shmRenderer.endRender();
-                            this.display.flushClients();
-                        }
-                        catch (ExecutionException | InterruptedException e) {
-                            e.printStackTrace();
+                        if (this.renderScheduled.compareAndSet(true,
+                                                               false)) {
+                            try {
+                                this.shmRenderer.beginRender();
+                                this.scene.getShellSurfacesStack()
+                                          .forEach(this.shmRenderer::render);
+                                this.shmRenderer.endRender();
+                                this.display.flushClients();
+                            }
+                            catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
     }

@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.Dimension;
 import javax.media.nativewindow.util.Point;
 import javax.media.nativewindow.util.PointImmutable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.IntConsumer;
@@ -55,7 +56,7 @@ public interface ShellSurface extends Listenable {
     Optional<Region> getOpaqueRegion();
 
     @Nonnull
-    Optional<Object> getBuffer();
+    Optional<?> getBuffer();
 
     @Nonnull
     Boolean isDestroyed();
@@ -107,7 +108,9 @@ public interface ShellSurface extends Listenable {
 
     @Nonnull
     default ShellSurface firePaintCallbacks(final int serial) {
-        getPaintCallbacks().forEach(paintCallback -> paintCallback.accept(serial));
+        final List<IntConsumer> callbacks = new ArrayList<>(getPaintCallbacks());
+        getPaintCallbacks().clear();
+        callbacks.forEach(paintCallback -> paintCallback.accept(serial));
         return this;
     }
 }

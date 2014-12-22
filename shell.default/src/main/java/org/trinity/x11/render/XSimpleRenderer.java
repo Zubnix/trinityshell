@@ -31,7 +31,7 @@ public class XSimpleRenderer implements XWindowRenderer {
 
     public void render(@Nonnull final ShellSurface shellSurface) {
         setCurrentShellSurface(shellSurface);
-        final Optional<Object> optionalBuffer = shellSurface.getBuffer();
+        final Optional<?> optionalBuffer = shellSurface.getBuffer();
         if(optionalBuffer.isPresent()){
             this.dispatcher.post(optionalBuffer.get());
         }
