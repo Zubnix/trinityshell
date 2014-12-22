@@ -66,7 +66,7 @@ public class WlShellSurface extends EventBus implements WlShellSurfaceRequests, 
         final PointImmutable pointerStartPosition = pointer.getPosition();
         final PointImmutable surfaceStartPosition = this.wlSurface.getShellSurface()
                                                                   .getPosition();
-        final PointImmutable pointerSurfaceDelta = new Point(pointerStartPosition.getX() - surfaceStartPosition.getY(),
+        final PointImmutable pointerSurfaceDelta = new Point(pointerStartPosition.getX() - surfaceStartPosition.getX(),
                                                              pointerStartPosition.getY() - surfaceStartPosition.getY());
 
         final Object motionListener = new Object() {
