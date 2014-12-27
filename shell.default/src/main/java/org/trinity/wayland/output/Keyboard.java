@@ -1,14 +1,13 @@
 package org.trinity.wayland.output;
 
+import com.google.auto.factory.AutoFactory;
 import com.google.common.eventbus.EventBus;
 
-import javax.inject.Inject;
-
+@AutoFactory(className = "KeyboardFactory")
 public class Keyboard {
 
     private final EventBus inputBus = new EventBus();
 
-    @Inject
     Keyboard() {
     }
 

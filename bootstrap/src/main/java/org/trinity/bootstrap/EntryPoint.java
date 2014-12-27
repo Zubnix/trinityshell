@@ -16,18 +16,15 @@ import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.ServiceManager;
 import com.jogamp.newt.opengl.GLWindow;
 import dagger.ObjectGraph;
-import org.trinity.wayland.platform.newt.GLWindowFactory;
-import org.trinity.wayland.platform.newt.GLWindowSeat;
-import org.trinity.wayland.platform.newt.GLWindowSeatFactory;
 import org.trinity.wayland.output.Compositor;
 import org.trinity.wayland.output.CompositorFactory;
 import org.trinity.wayland.output.ShmRenderer;
 import org.trinity.wayland.output.ShmRendererFactory;
 import org.trinity.wayland.output.gl.GLRenderEngine;
 import org.trinity.wayland.output.gl.GLRenderEngineFactory;
-import org.trinity.wayland.protocol.WlCompositor;
-import org.trinity.wayland.protocol.WlCompositorFactory;
-import org.trinity.wayland.protocol.WlShellFactory;
+import org.trinity.wayland.platform.newt.GLWindowFactory;
+import org.trinity.wayland.platform.newt.GLWindowSeatFactory;
+import org.trinity.wayland.protocol.*;
 import xcb4j.LibXcbLoader;
 
 import javax.inject.Inject;
@@ -42,7 +39,8 @@ public class EntryPoint {
     private final CompositorFactory     wlShellCompositorFactory;
     private final WlCompositorFactory   wlCompositorFactory;
     private final GLWindowSeatFactory   glWindowSeatFactory;
-    private final WlShellFactory wlShellFactory;
+    private final WlSeatFactory         wlSeatFactory;
+    private final WlShellFactory        wlShellFactory;
 
     @Inject
     EntryPoint(final GLWindowFactory glWindowFactory,
@@ -51,6 +49,7 @@ public class EntryPoint {
                final CompositorFactory wlShellCompositorFactory,
                final WlCompositorFactory wlCompositorFactory,
                final GLWindowSeatFactory glWindowSeatFactory,
+               final WlSeatFactory wlSeatFactory,
                final WlShellFactory wlShellFactory,
                final Set<Service> services) {
         this.glWindowFactory = glWindowFactory;
@@ -59,6 +58,7 @@ public class EntryPoint {
         this.wlShellCompositorFactory = wlShellCompositorFactory;
         this.wlCompositorFactory = wlCompositorFactory;
         this.glWindowSeatFactory = glWindowSeatFactory;
+        this.wlSeatFactory = wlSeatFactory;
         this.wlShellFactory = wlShellFactory;
 
         //group services that will drive compositor
@@ -84,11 +84,14 @@ public class EntryPoint {
 
         //setup seat
         //create a seat that listens for input on the X opengl window and passes it on to a wayland seat.
-        final GLWindowSeat glWindowSeat = this.glWindowSeatFactory.create(glWindow,
-                                                                          compositor);
+        //these objects will listen for input events
+        final WlSeat wlSeat = this.wlSeatFactory.create();
+        this.glWindowSeatFactory.create(glWindow,
+                                        wlSeat,
+                                        compositor);
 
         //enable wl_shell protocol
-        this.wlShellFactory.create(compositor);
+        this.wlShellFactory.create();
         //TODO enable xdg_shell protocol
 
         //start all services, 1 thread per service & exit main thread.

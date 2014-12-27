@@ -6,7 +6,6 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.server.*;
-import org.trinity.wayland.output.Compositor;
 import org.trinity.wayland.protocol.events.ResourceDestroyed;
 
 import javax.annotation.Nonnull;
@@ -19,16 +18,13 @@ public class WlShell extends Global<WlShellResource> implements WlShellRequests,
     private final EventBus             eventBus  = new EventBus();
 
     private final WlShellSurfaceFactory wlShellSurfaceFactory;
-    private final Compositor            compositor;
 
     WlShell(@Provided final Display display,
-            @Provided final WlShellSurfaceFactory wlShellSurfaceFactory,
-            final Compositor compositor) {
+            @Provided final WlShellSurfaceFactory wlShellSurfaceFactory) {
         super(display,
               WlShellResource.class,
               VERSION);
         this.wlShellSurfaceFactory = wlShellSurfaceFactory;
-        this.compositor = compositor;
     }
 
     @Override
@@ -36,8 +32,7 @@ public class WlShell extends Global<WlShellResource> implements WlShellRequests,
                                 final int id,
                                 @Nonnull final WlSurfaceResource surface) {
         final WlSurface wlSurface = (WlSurface) surface.getImplementation();
-        final WlShellSurface wlShellSurface = this.wlShellSurfaceFactory.create(this.compositor,
-                                                                                wlSurface);
+        final WlShellSurface wlShellSurface = this.wlShellSurfaceFactory.create(wlSurface);
         final WlShellSurfaceResource shellSurfaceResource = wlShellSurface.add(requester.getClient(),
                                                                                requester.getVersion(),
                                                                                id);

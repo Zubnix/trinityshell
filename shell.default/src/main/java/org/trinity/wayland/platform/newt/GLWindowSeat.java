@@ -6,18 +6,16 @@ import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
 import org.freedesktop.wayland.shared.WlPointerButtonState;
 import org.trinity.wayland.output.JobExecutor;
-import org.trinity.wayland.output.Seat;
-import org.trinity.wayland.output.events.Button;
-import org.trinity.wayland.output.events.Motion;
+import org.trinity.wayland.protocol.WlSeat;
 
 public class GLWindowSeat implements MouseListener, KeyListener {
 
-    private final Seat        seat;
+    private final WlSeat      wlSeat;
     private final JobExecutor jobExecutor;
 
-    GLWindowSeat(final Seat seat,
+    GLWindowSeat(final WlSeat wlSeat,
                  final JobExecutor jobExecutor) {
-        this.seat = seat;
+        this.wlSeat = wlSeat;
         this.jobExecutor = jobExecutor;
     }
 
@@ -42,10 +40,12 @@ public class GLWindowSeat implements MouseListener, KeyListener {
         final long time = e.getWhen();
         final short button = e.getButton();
 
-        this.jobExecutor.submit(() -> this.seat.getPointer()
-                                               .post(new Button((int) time,
-                                                                button,
-                                                                WlPointerButtonState.PRESSED)));
+        this.wlSeat.getOptionalWlPointer()
+                   .ifPresent(wlPointer -> this.jobExecutor.submit(() -> wlPointer.getPointer()
+                                                                                  .button(wlPointer,
+                                                                                          (int) time,
+                                                                                          button,
+                                                                                          WlPointerButtonState.PRESSED)));
     }
 
     @Override
@@ -53,10 +53,12 @@ public class GLWindowSeat implements MouseListener, KeyListener {
         final long time = e.getWhen();
         final short button = e.getButton();
 
-        this.jobExecutor.submit(() -> this.seat.getPointer()
-                                               .post(new Button((int) time,
-                                                                button,
-                                                                WlPointerButtonState.RELEASED)));
+        this.wlSeat.getOptionalWlPointer()
+                   .ifPresent(wlPointer -> this.jobExecutor.submit(() -> wlPointer.getPointer()
+                                                                                  .button(wlPointer,
+                                                                                          (int) time,
+                                                                                          button,
+                                                                                          WlPointerButtonState.RELEASED)));
     }
 
     @Override
@@ -66,10 +68,13 @@ public class GLWindowSeat implements MouseListener, KeyListener {
         final int x = e.getX();
         final int y = e.getY();
 
-        this.jobExecutor.submit(() -> this.seat.getPointer()
-                                               .post(new Motion((int) time,
-                                                                x,
-                                                                y)));
+        this.wlSeat.getOptionalWlPointer()
+                   .ifPresent(wlPointer -> this.jobExecutor.submit(() -> wlPointer.getPointer()
+                                                                                  .motion(wlPointer,
+                                                                                          (int) time,
+                                                                                          x,
+                                                                                          y)));
+
     }
 
 

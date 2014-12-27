@@ -49,10 +49,10 @@ public class WlDataDeviceManager extends Global<WlDataDeviceManagerResource> imp
                               final int id,
                               @Nonnull final WlSeatResource seat) {
         final WlSeat wlSeat = (WlSeat) seat.getImplementation();
-        wlSeat.getWlDataDevice()
-              .add(requester.getClient(),
-                   requester.getVersion(),
-                   id);
+//        wlSeat.getWlDataDevice()
+//              .add(requester.getClient(),
+//                   requester.getVersion(),
+//                   id);
     }
 
     @Override

@@ -1,58 +1,49 @@
 package org.trinity.wayland.platform.newt;
 
-
 import com.jogamp.newt.opengl.GLWindow;
 import org.trinity.wayland.output.Compositor;
 import org.trinity.wayland.output.JobExecutor;
-import org.trinity.wayland.output.Seat;
-import org.trinity.wayland.output.SeatFactory;
-import org.trinity.wayland.protocol.*;
+import org.trinity.wayland.output.KeyboardFactory;
+import org.trinity.wayland.output.PointerFactory;
+import org.trinity.wayland.protocol.WlKeyboardFactory;
+import org.trinity.wayland.protocol.WlPointerFactory;
+import org.trinity.wayland.protocol.WlSeat;
 
 import javax.inject.Inject;
-import java.util.Optional;
 
 public class GLWindowSeatFactory {
-
-    private final SeatFactory         seatFactory;
-    private final WlSeatFactory       wlSeatFactory;
-    private final WlDataDeviceFactory wlDataDeviceFactory;
-    private final WlPointerFactory    wlPointerFactory;
-    private final WlKeyboardFactory   wlKeyboardFactory;
-    private final JobExecutor         jobExecutor;
+    private final JobExecutor       jobExecutor;
+    private final WlPointerFactory  wlPointerFactory;
+    private final WlKeyboardFactory wlKeyboardFactory;
+    private final PointerFactory    pointerFactory;
+    private final KeyboardFactory   keyboardFactory;
 
     @Inject
-    GLWindowSeatFactory(final SeatFactory seatFactory,
-                        final WlSeatFactory wlSeatFactory,
-                        final WlDataDeviceFactory wlDataDeviceFactory,
+    GLWindowSeatFactory(final JobExecutor jobExecutor,
                         final WlPointerFactory wlPointerFactory,
                         final WlKeyboardFactory wlKeyboardFactory,
-                        final JobExecutor jobExecutor) {
-        this.seatFactory = seatFactory;
-        this.wlSeatFactory = wlSeatFactory;
-        this.wlDataDeviceFactory = wlDataDeviceFactory;
+                        final PointerFactory pointerFactory,
+                        final KeyboardFactory keyboardFactory) {
+        this.jobExecutor = jobExecutor;
         this.wlPointerFactory = wlPointerFactory;
         this.wlKeyboardFactory = wlKeyboardFactory;
-        this.jobExecutor = jobExecutor;
+        this.pointerFactory = pointerFactory;
+        this.keyboardFactory = keyboardFactory;
     }
 
     public GLWindowSeat create(final GLWindow glWindow,
+                               final WlSeat wlSeat,
                                final Compositor compositor) {
-        final Seat seat = this.seatFactory.create();
-        //these objects will listen for input events
-        final WlPointer wlPointer = this.wlPointerFactory.create(compositor);
-        final WlKeyboard wlKeyboard = this.wlKeyboardFactory.create();
-        seat.getPointer()
-            .register(wlPointer);
-        seat.getKeyboard()
-            .register(wlKeyboard);
-        this.wlSeatFactory.create(this.wlDataDeviceFactory.create(),
-                                  Optional.of(wlPointer),
-                                  Optional.of(wlKeyboard),
-                                  Optional.<WlTouch>empty(),
-                                  seat);
-        //these objects will post input events
-        final GLWindowSeat glWindowSeat = new GLWindowSeat(seat,
+        //this objects will post input events from the system to our wayland compositor system
+        final GLWindowSeat glWindowSeat = new GLWindowSeat(wlSeat,
                                                            this.jobExecutor);
+        //FIXME for now we put these here, these should be handled dynamically when a mouse or keyboard is
+        //added or removed
+
+        //enable pointer and keyboard for wlseat
+        wlSeat.setWlPointer(this.wlPointerFactory.create(this.pointerFactory.create(compositor)));
+        wlSeat.setWlKeyboard(this.wlKeyboardFactory.create(this.keyboardFactory.create()));
+
         glWindow.addMouseListener(glWindowSeat);
         glWindow.addKeyListener(glWindowSeat);
         return glWindowSeat;

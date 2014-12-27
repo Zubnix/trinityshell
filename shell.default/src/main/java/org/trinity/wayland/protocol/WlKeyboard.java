@@ -6,17 +6,18 @@ import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.WlKeyboardRequestsV3;
 import org.freedesktop.wayland.server.WlKeyboardResource;
+import org.trinity.wayland.output.Keyboard;
 
-import javax.inject.Inject;
 import java.util.Set;
 
 @AutoFactory(className = "WlKeyboardFactory")
 public class WlKeyboard extends EventBus implements WlKeyboardRequestsV3, ProtocolObject<WlKeyboardResource> {
 
     private final Set<WlKeyboardResource> resources = Sets.newHashSet();
+    private final Keyboard keyboard;
 
-    @Inject
-    WlKeyboard() {
+    WlKeyboard(final Keyboard keyboard) {
+        this.keyboard = keyboard;
     }
 
     @Override
@@ -37,5 +38,9 @@ public class WlKeyboard extends EventBus implements WlKeyboardRequestsV3, Protoc
                                       version,
                                       id,
                                       this);
+    }
+
+    public Keyboard getKeyboard() {
+        return this.keyboard;
     }
 }

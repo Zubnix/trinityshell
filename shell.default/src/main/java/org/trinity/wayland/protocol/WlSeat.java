@@ -7,7 +7,6 @@ import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.*;
 import org.freedesktop.wayland.shared.WlSeatCapability;
-import org.trinity.wayland.output.Seat;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -19,45 +18,14 @@ public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV4, 
     private final Set<WlSeatResource> resources = Sets.newHashSet();
     private final EventBus            eventBus  = new EventBus();
 
-    private final WlDataDevice         wlDataDevice;
-    private final Optional<WlPointer>  optionalWlPointer;
-    private final Seat                 seat;
-    private final Optional<WlKeyboard> optionalWlKeyboard;
-    private final Optional<WlTouch>    optionalWlTouch;
-    private final int                  capabilities;
+    private Optional<WlPointer>  optionalWlPointer  = Optional.empty();
+    private Optional<WlKeyboard> optionalWlKeyboard = Optional.empty();
+    private Optional<WlTouch>    optionalWlTouch    = Optional.empty();
 
-
-    WlSeat(@Provided final Display display,
-           final WlDataDevice wlDataDevice,
-           final Optional<WlPointer> optionalWlPointer,
-           final Optional<WlKeyboard> optionalWlKeyboard,
-           final Optional<WlTouch> optionalWlTouch,
-           final Seat seat) {
+    WlSeat(@Provided final Display display) {
         super(display,
               WlSeatResource.class,
               VERSION);
-        this.wlDataDevice = wlDataDevice;
-        this.optionalWlKeyboard = optionalWlKeyboard;
-        this.optionalWlTouch = optionalWlTouch;
-        this.optionalWlPointer = optionalWlPointer;
-        this.seat = seat;
-
-        int capabilities = 0;
-        if (this.optionalWlPointer.isPresent()) {
-
-            capabilities |= WlSeatCapability.POINTER.getValue();
-        }
-        if (this.optionalWlKeyboard.isPresent()) {
-            capabilities |= WlSeatCapability.KEYBOARD.getValue();
-        }
-        if (this.optionalWlTouch.isPresent()) {
-            capabilities |= WlSeatCapability.TOUCH.getValue();
-        }
-        this.capabilities = capabilities;
-    }
-
-    public WlDataDevice getWlDataDevice() {
-        return this.wlDataDevice;
     }
 
     @Override
@@ -110,7 +78,7 @@ public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV4, 
                                                            version,
                                                            id,
                                                            this);
-        resource.capabilities(this.capabilities);
+        emiteCapabilities(resource);
         return resource;
     }
 
@@ -129,19 +97,61 @@ public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV4, 
         this.eventBus.post(event);
     }
 
+    private void emiteCapabilities(final WlSeatResource wlSeatResource) {
+        int capabilities = 0;
+        if (this.optionalWlPointer.isPresent()) {
+            capabilities |= WlSeatCapability.POINTER.getValue();
+        }
+        if (this.optionalWlKeyboard.isPresent()) {
+            capabilities |= WlSeatCapability.KEYBOARD.getValue();
+        }
+        if (this.optionalWlTouch.isPresent()) {
+            capabilities |= WlSeatCapability.TOUCH.getValue();
+        }
+        wlSeatResource.capabilities(capabilities);
+    }
+
     public Optional<WlKeyboard> getOptionalWlKeyboard() {
         return this.optionalWlKeyboard;
+    }
+
+    public void setWlKeyboard(final WlKeyboard wlKeyboard) {
+
+    }
+
+    public void removeWlKeyboard() {
+
     }
 
     public Optional<WlPointer> getOptionalWlPointer() {
         return this.optionalWlPointer;
     }
 
+    public void setWlPointer(@Nonnull final WlPointer newWlPointer) {
+        //destroy the previous pointer
+        this.optionalWlPointer.ifPresent(wlPointer -> wlPointer.getResources()
+                                                               .forEach(wlPointer::destroy));
+        this.optionalWlPointer = Optional.of(newWlPointer);
+        getResources().forEach(this::emiteCapabilities);
+    }
+
+    public void removeWlPointer() {
+        this.optionalWlPointer.ifPresent(wlPointer -> wlPointer.getResources()
+                                                               .forEach(org.freedesktop.wayland.server.WlPointerResource::destroy));
+        this.optionalWlPointer = Optional.empty();
+        getResources().forEach(this::emiteCapabilities);
+    }
+
+
     public Optional<WlTouch> getOptionalWlTouch() {
         return this.optionalWlTouch;
     }
 
-    public Seat getSeat() {
-        return this.seat;
+    public void setWlTouch() {
+
+    }
+
+    public void removeWlTouch() {
+
     }
 }
