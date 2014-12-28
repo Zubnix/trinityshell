@@ -1,13 +1,10 @@
-package org.trinity;
+package org.trinity.wayland.output;
 
 import com.sun.jna.LastErrorException;
 import com.sun.jna.Library;
-import com.sun.jna.Native;
 
 public interface CLibrary extends Library {
     String        JNA_LIBRARY_NAME = "c";
-    CLibrary      INSTANCE         = (CLibrary) Native.loadLibrary(JNA_LIBRARY_NAME,
-                                                                   CLibrary.class);
 
     /* command values */
     int F_DUPFD = 0;	/* duplicate file descriptor */

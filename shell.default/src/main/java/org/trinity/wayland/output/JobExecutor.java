@@ -6,7 +6,6 @@ import org.freedesktop.wayland.server.EventLoop;
 import org.freedesktop.wayland.server.EventSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.CLibrary;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -37,16 +36,19 @@ public class JobExecutor implements EventLoop.FileDescriptorEventHandler {
 
     private       EventSource eventSource;
     private final Display     display;
-    private       int         pipeR;
-    private       int         pipeWR;
+    private final int         pipeR;
+    private final int         pipeWR;
+    private final CLibrary    libc;
 
     @Inject
     JobExecutor(final Display display,
                 final int pipeR,
-                final int pipeWR) {
+                final int pipeWR,
+                final CLibrary libc) {
         this.display = display;
         this.pipeR = pipeR;
         this.pipeWR = pipeWR;
+        this.libc = libc;
     }
 
     public void start() throws IOException {
@@ -57,9 +59,9 @@ public class JobExecutor implements EventLoop.FileDescriptorEventHandler {
     }
 
     public void fireFinishedEvent() throws IOException {
-        CLibrary.INSTANCE.write(this.pipeWR,
-                                this.eventFinishedBuffer,
-                                1);
+        this.libc.write(this.pipeWR,
+                        this.eventFinishedBuffer,
+                        1);
     }
 
     public void submit(@Nonnull final Runnable job) {
@@ -83,15 +85,15 @@ public class JobExecutor implements EventLoop.FileDescriptorEventHandler {
     }
 
     private void clean() {
-        CLibrary.INSTANCE.close(this.pipeR);
-        CLibrary.INSTANCE.close(this.pipeWR);
+        this.libc.close(this.pipeR);
+        this.libc.close(this.pipeWR);
         this.eventSource.remove();
     }
 
     public int handle(final int fd,
                       final int mask) {
         final LinkedList<Runnable> jobs = commit();
-        while(true){
+        while (true) {
             if (!(handleNextEvent(jobs))) {
                 break;
             }
@@ -106,8 +108,9 @@ public class JobExecutor implements EventLoop.FileDescriptorEventHandler {
             clean();
             return false;
         }
-        else if (event == EVENT_NEW_JOB){
-            jobs.pop().run();
+        else if (event == EVENT_NEW_JOB) {
+            jobs.pop()
+                .run();
             return !jobs.isEmpty();
         }
         else {
@@ -116,9 +119,9 @@ public class JobExecutor implements EventLoop.FileDescriptorEventHandler {
     }
 
     private byte read() {
-        CLibrary.INSTANCE.read(this.pipeR,
-                               this.eventReadBuffer,
-                               1);
+        this.libc.read(this.pipeR,
+                       this.eventReadBuffer,
+                       1);
         return this.eventReadBuffer[0];
     }
 
@@ -138,8 +141,8 @@ public class JobExecutor implements EventLoop.FileDescriptorEventHandler {
     }
 
     private void fireNewJobEvent() throws IOException {
-        CLibrary.INSTANCE.write(this.pipeWR,
-                                this.eventNewJobBuffer,
-                                1);
+        this.libc.write(this.pipeWR,
+                        this.eventNewJobBuffer,
+                        1);
     }
 }
