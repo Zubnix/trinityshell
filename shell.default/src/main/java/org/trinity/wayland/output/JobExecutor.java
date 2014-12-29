@@ -52,10 +52,15 @@ public class JobExecutor implements EventLoop.FileDescriptorEventHandler {
     }
 
     public void start() throws IOException {
-        this.eventSource = this.display.getEventLoop()
-                                       .addFileDescriptor(this.pipeR,
-                                                          EventLoop.EVENT_READABLE,
-                                                          this);
+        if (this.eventSource == null) {
+            this.eventSource = this.display.getEventLoop()
+                                           .addFileDescriptor(this.pipeR,
+                                                              EventLoop.EVENT_READABLE,
+                                                              this);
+        }
+        else {
+            throw new IllegalStateException("Job executor already started.");
+        }
     }
 
     public void fireFinishedEvent() throws IOException {
@@ -88,6 +93,7 @@ public class JobExecutor implements EventLoop.FileDescriptorEventHandler {
         this.libc.close(this.pipeR);
         this.libc.close(this.pipeWR);
         this.eventSource.remove();
+        this.eventSource = null;
     }
 
     public int handle(final int fd,
