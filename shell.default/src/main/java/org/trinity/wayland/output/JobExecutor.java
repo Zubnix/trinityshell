@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -34,11 +35,12 @@ public class JobExecutor implements EventLoop.FileDescriptorEventHandler {
     private final LinkedList<Runnable> pendingJobs = Lists.newLinkedList();
 
 
-    private       EventSource eventSource;
-    private final Display     display;
-    private final int         pipeR;
-    private final int         pipeWR;
-    private final CLibrary    libc;
+    private Optional<EventSource> eventSource = Optional.empty();
+
+    private final Display  display;
+    private final int      pipeR;
+    private final int      pipeWR;
+    private final CLibrary libc;
 
     @Inject
     JobExecutor(final Display display,
@@ -52,11 +54,11 @@ public class JobExecutor implements EventLoop.FileDescriptorEventHandler {
     }
 
     public void start() throws IOException {
-        if (this.eventSource == null) {
-            this.eventSource = this.display.getEventLoop()
-                                           .addFileDescriptor(this.pipeR,
-                                                              EventLoop.EVENT_READABLE,
-                                                              this);
+        if (!this.eventSource.isPresent()) {
+            this.eventSource = Optional.of(this.display.getEventLoop()
+                                                       .addFileDescriptor(this.pipeR,
+                                                                          EventLoop.EVENT_READABLE,
+                                                                          this));
         }
         else {
             throw new IllegalStateException("Job executor already started.");
@@ -92,14 +94,15 @@ public class JobExecutor implements EventLoop.FileDescriptorEventHandler {
     private void clean() {
         this.libc.close(this.pipeR);
         this.libc.close(this.pipeWR);
-        this.eventSource.remove();
-        this.eventSource = null;
+        this.eventSource.get()
+                        .remove();
+        this.eventSource = Optional.empty();
     }
 
     public int handle(final int fd,
                       final int mask) {
         final LinkedList<Runnable> jobs = commit();
-        while (true) {
+        while (this.eventSource.isPresent()) {
             if (!(handleNextEvent(jobs))) {
                 break;
             }
