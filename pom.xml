@@ -41,7 +41,7 @@
         <slf4j.version>1.7.7</slf4j.version>
 
         <!-- test dep versions -->
-        <junit.version>4.12</junit.version>
+        <junit.version><!--Don't use 4.12, powermock can't handle it. -->4.11</junit.version>
         <mockito.version>1.10.8</mockito.version>
         <powermock.version>1.6.0</powermock.version>
         <truth.version>0.25</truth.version>
