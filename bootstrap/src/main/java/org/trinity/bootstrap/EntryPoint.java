@@ -80,7 +80,7 @@ public class EntryPoint {
         //create a compositor with shell and scene logic
         final Compositor compositor = this.wlShellCompositorFactory.create(shmRenderer);
         //create a wayland compositor that delegates it's requests to a shell implementation.
-        final WlCompositor wlCompositor = this.wlCompositorFactory.create(compositor);
+        this.wlCompositorFactory.create(compositor).makeGlobal();
 
         //setup seat
         //create a seat that listens for input on the X opengl window and passes it on to a wayland seat.
@@ -89,9 +89,10 @@ public class EntryPoint {
         this.glWindowSeatFactory.create(glWindow,
                                         wlSeat,
                                         compositor);
+        wlSeat.makeGlobal();
 
         //enable wl_shell protocol
-        this.wlShellFactory.create();
+        this.wlShellFactory.create().makeGlobal();
         //TODO enable xdg_shell protocol
 
         //start all services, 1 thread per service & exit main thread.
