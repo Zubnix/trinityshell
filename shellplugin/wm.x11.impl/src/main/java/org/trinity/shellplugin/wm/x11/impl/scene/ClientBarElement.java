@@ -29,6 +29,7 @@ import static org.freedesktop.xcb.LibXcbConstants.XCB_CURRENT_TIME;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 
 import org.freedesktop.xcb.IntArray;
 import org.freedesktop.xcb.xcb_client_message_event_t;
@@ -132,21 +133,16 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 	}
 
 	private void queryCanSendWmDeleteMsg(final DisplaySurface clientXWindow) {
-		final ListenableFuture<Optional<xcb_icccm_get_wm_protocols_reply_t>> wmProtocolFuture = this.wmProtocols
+		final CompletableFuture<Optional<xcb_icccm_get_wm_protocols_reply_t>> wmProtocolFuture = this.wmProtocols
 				.get(clientXWindow);
-		addCallback(wmProtocolFuture,
-					new FutureCallback<Optional<xcb_icccm_get_wm_protocols_reply_t>>() {
-						@Override
-						public void onSuccess(final Optional<xcb_icccm_get_wm_protocols_reply_t> result) {
-							updateCanSendWmDeleteMsg(result);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							LOG.error(	"Failed to get wm_protocols protocol",
-										t);
-						}
-					});
+		wmProtocolFuture.whenComplete((result, t) -> {
+			if(t == null) {
+				LOG.error(	"Failed to get wm_protocols protocol",
+						t);
+			} else {
+				updateCanSendWmDeleteMsg(result);
+			}
+		});
 	}
 
 	private void updateCanSendWmDeleteMsg(final Optional<xcb_icccm_get_wm_protocols_reply_t> optionalWmProtocolReply) {
@@ -169,22 +165,16 @@ public class ClientBarElement implements HasText, ReceivesPointerInput {
 
 	// called by shell executor
 	public void queryClientName(final DisplaySurface clientXWindow) {
-		final ListenableFuture<Optional<xcb_icccm_get_text_property_reply_t>> wmNameFuture = this.wmName
+		final CompletableFuture<Optional<xcb_icccm_get_text_property_reply_t>> wmNameFuture = this.wmName
 				.get(clientXWindow);
-		addCallback(wmNameFuture,
-					new FutureCallback<Optional<xcb_icccm_get_text_property_reply_t>>() {
-						@Override
-						public void onSuccess(final Optional<xcb_icccm_get_text_property_reply_t> optionalTextProperty) {
-							updateClientName(optionalTextProperty);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							LOG.error(	"Failed to get wm name protocol",
-										t);
-						}
-					},
-					shellExecutor);
+		wmNameFuture.whenCompleteAsync((result, t) -> {
+			if(t == null) {
+				LOG.error(	"Failed to get wm name protocol",
+						t);
+			} else {
+				updateClientName(optionalTextProperty);
+			}
+		}, shellExecutor);
 	}
 
 	// called by shell executor
