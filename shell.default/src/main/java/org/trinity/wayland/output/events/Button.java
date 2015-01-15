@@ -3,8 +3,8 @@ package org.trinity.wayland.output.events;
 import org.freedesktop.wayland.shared.WlPointerButtonState;
 
 public class Button {
-    private final int time;
-    private final int button;
+    private final int                  time;
+    private final int                  button;
     private final WlPointerButtonState buttonState;
 
     public Button(final int time,

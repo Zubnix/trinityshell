@@ -26,7 +26,7 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
         public void handle() {
             detachBuffer();
             WlSurface.this.shellSurface.accept(ShellSurfaceConfigurable::detachBuffer);
-            destroy();
+            remove();
         }
     };
 
@@ -61,14 +61,14 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
     private float[] getMatrix(final int transform) {
         if (transform == WlOutputTransform.FLIPPED_270.getValue()) {
             return new float[]{1,
-                               0,
-                               0,
-                               0,
-                               1,
-                               0,
-                               0,
-                               0,
-                               1};
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    1};
         }
         throw new IllegalArgumentException("Invalid transform");
     }
@@ -136,10 +136,7 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
                                                                                resource.getVersion(),
                                                                                callbackId);
         getShellSurface().accept(shellSurfaceConfigurable ->
-                                         shellSurfaceConfigurable.addCallback(serial -> {
-                                             callbackResource.done(serial);
-                                             callbackResource.destroy();
-                                         }));
+                                         shellSurfaceConfigurable.addCallback(callbackResource::done));
     }
 
     @Override

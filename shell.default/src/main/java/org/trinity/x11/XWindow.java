@@ -51,10 +51,10 @@ public class XWindow extends EventBus implements Listenable {
 
     private static final Logger LOG = LoggerFactory.getLogger(XWindow.class);
 
-    private static final int        RESIZE_VALUE_MASK             = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    private static final int        MOVE_VALUE_MASK        = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
-    private static final ByteBuffer RESIZE_VALUE_LIST_BUFFER      = allocateDirect(8).order(nativeOrder());
-    private static final ByteBuffer MOVE_VALUE_LIST_BUFFER = allocateDirect(8).order(nativeOrder());
+    private static final int        RESIZE_VALUE_MASK        = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
+    private static final int        MOVE_VALUE_MASK          = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
+    private static final ByteBuffer RESIZE_VALUE_LIST_BUFFER = allocateDirect(8).order(nativeOrder());
+    private static final ByteBuffer MOVE_VALUE_LIST_BUFFER   = allocateDirect(8).order(nativeOrder());
 
     @Nonnull
     private final Integer    nativeHandle;
@@ -91,7 +91,7 @@ public class XWindow extends EventBus implements Listenable {
 
         MOVE_VALUE_LIST_BUFFER.clear();
         MOVE_VALUE_LIST_BUFFER.putInt(x)
-                                     .putInt(y);
+                              .putInt(y);
 
         final int winId = getNativeHandle();
         LOG.debug("[winId={}] move x={}, y={}.",
@@ -167,39 +167,39 @@ public class XWindow extends EventBus implements Listenable {
                              height);
     }
 
-	@Nonnull
-	public DimensionImmutable getSize() {
-		final RectangleImmutable shape = getShape();
-		return new Dimension(shape.getWidth(),
-							 shape.getHeight());
-	}
+    @Nonnull
+    public DimensionImmutable getSize() {
+        final RectangleImmutable shape = getShape();
+        return new Dimension(shape.getWidth(),
+                             shape.getHeight());
+    }
 
-	private void checkError(final xcb_generic_error_t e) {
-		if(xcb_generic_error_t.getCPtr(e) != 0) {
-			LOG.error("X error: {}.",
-					  XcbErrorUtil.toString(e));
-		}
-	}
+    private void checkError(final xcb_generic_error_t e) {
+        if (xcb_generic_error_t.getCPtr(e) != 0) {
+            LOG.error("X error: {}.",
+                      XcbErrorUtil.toString(e));
+        }
+    }
 
-	@Override
-	public boolean equals(final Object obj) {
-		if(obj instanceof XWindow) {
-			final XWindow otherWindow = (XWindow) obj;
-			return otherWindow.getNativeHandle()
-							  .equals(getNativeHandle());
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof XWindow) {
+            final XWindow otherWindow = (XWindow) obj;
+            return otherWindow.getNativeHandle()
+                              .equals(getNativeHandle());
+        }
+        return false;
+    }
 
-	@Override
-	public int hashCode() {
-		return getNativeHandle();
-	}
+    @Override
+    public int hashCode() {
+        return getNativeHandle();
+    }
 
-	@Override
-	public String toString() {
-		return String.format("%s=%s",
-							 getClass().getSimpleName(),
-							 getNativeHandle());
-	}
+    @Override
+    public String toString() {
+        return String.format("%s=%s",
+                             getClass().getSimpleName(),
+                             getNativeHandle());
+    }
 }

@@ -36,7 +36,7 @@ public class DestroyNotify implements XEventHandler {
 
     private static final Integer EVENT_CODE = XCB_DESTROY_NOTIFY;
 
-    private final XSurfacePool  xSurfacePool;
+    private final XSurfacePool xSurfacePool;
 
     @Inject
     DestroyNotify(final XSurfacePool xSurfacePool) {

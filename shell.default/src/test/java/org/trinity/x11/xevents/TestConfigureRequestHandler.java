@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({LibXcb.class,
-                 LibXcbJNI.class})
+        LibXcbJNI.class})
 public class TestConfigureRequestHandler {
 
     @Mock

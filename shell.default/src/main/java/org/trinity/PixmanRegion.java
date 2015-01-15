@@ -31,11 +31,11 @@ public class PixmanRegion implements Region {
         final pixman_box32[] pixman_box32s = (pixman_box32[]) pixman_box32_array.toArray(size);
 
         final List<RectangleImmutable> boxes = new ArrayList<>(size);
-        for (final pixman_box32 pixman_box32:pixman_box32s) {
+        for (final pixman_box32 pixman_box32 : pixman_box32s) {
             final int x = pixman_box32.x1;
             final int y = pixman_box32.y1;
 
-            final int width  = pixman_box32.x2 - x;
+            final int width = pixman_box32.x2 - x;
             final int height = pixman_box32.y2 - y;
             boxes.add(new Rectangle(x,
                                     y,
@@ -72,8 +72,8 @@ public class PixmanRegion implements Region {
 
         final pixman_region32 new_pixman_region32 = new pixman_region32();
         Pixman1Library.INSTANCE.pixman_region32_subtract(new_pixman_region32,
-                                           delta_pixman_region32,
-                                           this.pixman_region32);
+                                                         delta_pixman_region32,
+                                                         this.pixman_region32);
         this.pixman_region32 = new_pixman_region32;
 
         return this;

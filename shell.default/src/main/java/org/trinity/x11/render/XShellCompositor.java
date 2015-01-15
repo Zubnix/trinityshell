@@ -22,13 +22,7 @@ package org.trinity.x11.render;
 import com.google.common.eventbus.Subscribe;
 import org.trinity.SimpleShellSurfaceFactory;
 import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.shell.scene.api.event.Committed;
-import org.trinity.shell.scene.api.event.Destroyed;
-import org.trinity.shell.scene.api.event.Hidden;
-import org.trinity.shell.scene.api.event.Lowered;
-import org.trinity.shell.scene.api.event.Moved;
-import org.trinity.shell.scene.api.event.Raised;
-import org.trinity.shell.scene.api.event.Showed;
+import org.trinity.shell.scene.api.event.*;
 import org.trinity.x11.XEventLoop;
 import org.trinity.x11.XWindow;
 import org.trinity.x11.XWindowFactory;
@@ -45,16 +39,14 @@ import static java.nio.ByteOrder.nativeOrder;
 import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
 import static org.freedesktop.xcb.LibXcb.xcb_flush;
 import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
-import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_ENTER_WINDOW;
-import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_LEAVE_WINDOW;
-import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+import static org.freedesktop.xcb.xcb_event_mask_t.*;
 
 @Singleton
 public class XShellCompositor {
 
     private static final int        CLIENT_EVENT_MASK           = XCB_EVENT_MASK_ENTER_WINDOW
-                                                                | XCB_EVENT_MASK_LEAVE_WINDOW
-                                                                | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
+            | XCB_EVENT_MASK_LEAVE_WINDOW
+            | XCB_EVENT_MASK_STRUCTURE_NOTIFY;
     private static final ByteBuffer CLIENT_EVENTS_CONFIG_BUFFER = allocateDirect(4).order(nativeOrder())
                                                                                    .putInt(CLIENT_EVENT_MASK);
     private final XEventLoop                xEventLoop;
@@ -72,21 +64,21 @@ public class XShellCompositor {
                      final XSimpleRenderer xWindowRenderer,
                      final XWindowHandlerFactory xWindowHandlerFactory) {
 
-        this.xEventLoop                = xEventLoop;
-        this.xWindowFactory            = xWindowFactory;
+        this.xEventLoop = xEventLoop;
+        this.xWindowFactory = xWindowFactory;
         this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
-        this.xScene                    = xScene;
-        this.xWindowRenderer           = xWindowRenderer;
-        this.xWindowHandlerFactory     = xWindowHandlerFactory;
+        this.xScene = xScene;
+        this.xWindowRenderer = xWindowRenderer;
+        this.xWindowHandlerFactory = xWindowHandlerFactory;
     }
 
     @Nonnull
     public ShellSurface create(@Nonnull final Integer windowHandle) {
         configure(windowHandle);
 
-        final XWindow xWindow               = this.xWindowFactory.create(windowHandle);
+        final XWindow xWindow = this.xWindowFactory.create(windowHandle);
         final XWindowHandler xWindowHandler = this.xWindowHandlerFactory.create(xWindow);
-        final ShellSurface shellSurface     = this.simpleShellSurfaceFactory.create(Optional.of(xWindow));
+        final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(Optional.of(xWindow));
 
         shellSurface.register(this);
         shellSurface.register(xWindowHandler);
@@ -101,8 +93,8 @@ public class XShellCompositor {
 
         final ShellSurface shellSurface = committed.getSource();
 
-        if(shellSurface.getDamage()
-                       .isPresent()) {
+        if (shellSurface.getDamage()
+                        .isPresent()) {
             requestRender(shellSurface);
         }
     }
@@ -139,7 +131,7 @@ public class XShellCompositor {
     }
 
     private void requestRender(final ShellSurface shellSurface) {
-        if(this.xScene.needsRedraw(shellSurface)) {
+        if (this.xScene.needsRedraw(shellSurface)) {
             this.xScene.getShellSurfacesStack()
                        .forEach(this.xWindowRenderer::render);
         }

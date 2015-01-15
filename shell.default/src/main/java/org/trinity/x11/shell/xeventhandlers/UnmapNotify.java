@@ -45,10 +45,10 @@ public class UnmapNotify implements XEventHandler {
     @Override
     public void handle(@Nonnull final xcb_generic_event_t event) {
         final xcb_unmap_notify_event_t unmap_notify_event = cast(event);
-        final int windowId                                = unmap_notify_event.getWindow();
-        final int reportWindowId                          = unmap_notify_event.getEvent();
+        final int windowId = unmap_notify_event.getWindow();
+        final int reportWindowId = unmap_notify_event.getEvent();
 
-        if(windowId != reportWindowId) {
+        if (windowId != reportWindowId) {
             return;
         }
         this.xSurfacePool.get(windowId)

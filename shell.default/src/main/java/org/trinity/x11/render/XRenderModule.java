@@ -8,20 +8,20 @@ import org.trinity.x11.shell.XScene;
 import javax.inject.Singleton;
 
 @Module(
-		injects = {
+        injects = {
                 XWindowHandlerFactory.class
         },
-		complete = false,
-		library = true
+        complete = false,
+        library = true
 )
 public class XRenderModule {
-	@Provides
-	@Singleton
-    XShellCompositor provideXCompositor(final XEventLoop                                   xEventLoop,
-                                        final org.trinity.x11.XWindowFactory               xWindowFactory,
-                                        final org.trinity.SimpleShellSurfaceFactory        simpleShellSurfaceFactory,
-                                        final XScene                                       xScene,
-                                        final XSimpleRenderer                              xWindowRenderer,
+    @Provides
+    @Singleton
+    XShellCompositor provideXCompositor(final XEventLoop xEventLoop,
+                                        final org.trinity.x11.XWindowFactory xWindowFactory,
+                                        final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory,
+                                        final XScene xScene,
+                                        final XSimpleRenderer xWindowRenderer,
                                         final org.trinity.x11.render.XWindowHandlerFactory xWindowHandlerFactory) {
         return new XShellCompositor(xEventLoop,
                                     xWindowFactory,
@@ -29,5 +29,5 @@ public class XRenderModule {
                                     xScene,
                                     xWindowRenderer,
                                     xWindowHandlerFactory);
-	}
+    }
 }

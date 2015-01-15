@@ -30,10 +30,7 @@ import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CONFIGURE_REQUEST;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_HEIGHT;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_WIDTH;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_X;
-import static org.freedesktop.xcb.xcb_config_window_t.XCB_CONFIG_WINDOW_Y;
+import static org.freedesktop.xcb.xcb_config_window_t.*;
 
 @Immutable
 public class ConfigureRequest implements XEventHandler {
@@ -51,28 +48,28 @@ public class ConfigureRequest implements XEventHandler {
     public void handle(@Nonnull final xcb_generic_event_t event) {
         final xcb_configure_request_event_t request_event = cast(event);
 
-        final int value_mask            = request_event.getValue_mask();
+        final int value_mask = request_event.getValue_mask();
 
-        final boolean configureX        = (value_mask & XCB_CONFIG_WINDOW_X) != 0;
-        final boolean configureY        = (value_mask & XCB_CONFIG_WINDOW_Y) != 0;
+        final boolean configureX = (value_mask & XCB_CONFIG_WINDOW_X) != 0;
+        final boolean configureY = (value_mask & XCB_CONFIG_WINDOW_Y) != 0;
         //we implicitly require clients to provide both x and y values here,
         //a more advanced implementation can easily work around this restriction.
-        final boolean positionRequest   = configureX && configureY;
+        final boolean positionRequest = configureX && configureY;
 
-        final boolean configureWidth    = (value_mask & XCB_CONFIG_WINDOW_WIDTH) != 0;
-        final boolean configureHeight   = (value_mask & XCB_CONFIG_WINDOW_HEIGHT) != 0;
+        final boolean configureWidth = (value_mask & XCB_CONFIG_WINDOW_WIDTH) != 0;
+        final boolean configureHeight = (value_mask & XCB_CONFIG_WINDOW_HEIGHT) != 0;
         //we implicitly require clients to provide both width and height values here,
         //a more advanced implementation can easily work around this restriction.
-        final boolean sizeRequest       = configureWidth && configureHeight;
+        final boolean sizeRequest = configureWidth && configureHeight;
 
         final ShellSurface shellSurface = this.xSurfacePool.get(request_event.getWindow());
 
-        if(positionRequest) {
+        if (positionRequest) {
             shellSurface.requestMove(request_event.getX(),
                                      request_event.getY());
         }
 
-        if(sizeRequest) {
+        if (sizeRequest) {
             shellSurface.requestResize(request_event.getWidth(),
                                        request_event.getHeight());
         }

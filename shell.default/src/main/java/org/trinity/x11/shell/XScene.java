@@ -2,12 +2,7 @@ package org.trinity.x11.shell;
 
 import com.google.common.eventbus.Subscribe;
 import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.shell.scene.api.event.Destroyed;
-import org.trinity.shell.scene.api.event.LowerRequest;
-import org.trinity.shell.scene.api.event.Lowered;
-import org.trinity.shell.scene.api.event.MoveRequest;
-import org.trinity.shell.scene.api.event.RaiseRequest;
-import org.trinity.shell.scene.api.event.Raised;
+import org.trinity.shell.scene.api.event.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -39,7 +34,7 @@ public class XScene {
         final PointImmutable position = moveRequest.getPosition();
         moveRequest.getSource()
                    .accept(shellSurfaceConfigurable ->
-                           shellSurfaceConfigurable.setPosition(position));
+                                   shellSurfaceConfigurable.setPosition(position));
     }
 
     @Subscribe

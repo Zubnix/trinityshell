@@ -22,40 +22,40 @@ public class XWindowHandler {
     @Subscribe
     public void handle(final ResizeRequest resizeRequest) {
 
-        final DimensionImmutable size   = resizeRequest.getSize();
-        final int width                 = size.getWidth();
-        final int height                = size.getHeight();
-        final XWindow buffer            = this.xWindow.resize(width,
-                                                              height);
+        final DimensionImmutable size = resizeRequest.getSize();
+        final int width = size.getWidth();
+        final int height = size.getHeight();
+        final XWindow buffer = this.xWindow.resize(width,
+                                                   height);
         resizeRequest.getSource()
                      .accept(shellSurfaceConfigurable ->
-                             shellSurfaceConfigurable.attachBuffer(buffer,
-                                                                   0,
-                                                                   0)
-                                                     .markDamaged(new Rectangle(0,
-                                                                                0,
-                                                                                width,
-                                                                                height))
-                                                     .commit());
+                                     shellSurfaceConfigurable.attachBuffer(buffer,
+                                                                           0,
+                                                                           0)
+                                                             .markDamaged(new Rectangle(0,
+                                                                                        0,
+                                                                                        width,
+                                                                                        height))
+                                                             .commit());
     }
 
     @Subscribe
     public void handle(final ShowRequest showRequest) {
 
         final DimensionImmutable size = this.xWindow.getSize();
-        final int width               = size.getWidth();
-        final int height              = size.getHeight();
+        final int width = size.getWidth();
+        final int height = size.getHeight();
 
         showRequest.getSource()
                    .accept(shellSurfaceConfigurable ->
-                           shellSurfaceConfigurable.attachBuffer(XWindowHandler.this.xWindow,
-                                                                 0,
-                                                                 0)
-                                                   .markDamaged(new Rectangle(0,
-                                                                              0,
-                                                                              width,
-                                                                              height))
-                                                   .commit());
+                                   shellSurfaceConfigurable.attachBuffer(XWindowHandler.this.xWindow,
+                                                                         0,
+                                                                         0)
+                                                           .markDamaged(new Rectangle(0,
+                                                                                      0,
+                                                                                      width,
+                                                                                      height))
+                                                           .commit());
     }
 
     @Subscribe

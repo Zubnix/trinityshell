@@ -6,11 +6,7 @@ import org.trinity.shell.scene.api.Listenable;
 
 import java.util.HashSet;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TestXEventHandlers {
 
@@ -34,7 +30,10 @@ public class TestXEventHandlers {
 
         final XEventLoop eventBus = mock(XEventLoop.class);
 
-        final XEventHandlers xEventHandlers = new XEventHandlers(new HashSet() {{add(xEventHandler0); add(xEventHandler1);}});
+        final XEventHandlers xEventHandlers = new XEventHandlers(new HashSet() {{
+            add(xEventHandler0);
+            add(xEventHandler1);
+        }});
         //when
         //an event arrives with code 1
         //an event arrives with code 3

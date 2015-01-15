@@ -1,16 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
+    <parent>
         <groupId>org.trinity</groupId>
         <artifactId>trinity</artifactId>
         <version>0.1.0-SNAPSHOT</version>
-	</parent>
+    </parent>
 
-	<artifactId>shell.default</artifactId>
-	<name>shell Default Implementation</name>
-	<packaging>bundle</packaging>
+    <artifactId>shell.default</artifactId>
+    <name>shell Default Implementation</name>
+    <packaging>bundle</packaging>
 
     <properties>
         <xcb4j.version>0.0.1</xcb4j.version>
@@ -20,7 +21,7 @@
         <jgml.version>0.1-SNAPSHOT</jgml.version>
     </properties>
 
-	<dependencies>
+    <dependencies>
         <dependency>
             <groupId>org.trinity</groupId>
             <artifactId>shell.scene.api</artifactId>
@@ -59,6 +60,6 @@
             <version>1.1.2</version>
             <scope>test</scope>
         </dependency>
-	</dependencies>
+    </dependencies>
 </project>
 

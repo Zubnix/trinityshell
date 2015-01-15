@@ -41,17 +41,22 @@ public class ShmRenderer {
     }
 
     @Subscribe
-    public void render(final WlBufferResource bufferResource) throws ExecutionException, InterruptedException {
+    public void render(final WlBufferResource bufferResource) {
 
         final ShmBuffer shmBuffer = ShmBuffer.get(bufferResource);
         if (shmBuffer == null) {
             throw new IllegalArgumentException("Buffer is not an ShmBuffer.");
         }
-
-        this.shmRenderEngine.draw(this.current,
-                                  shmBuffer)
-                            .get();
+        try {
+            this.shmRenderEngine.draw(this.current,
+                                      shmBuffer)
+                                .get();
+        }
+        catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
         this.current.firePaintCallbacks((int) TimeUnit.NANOSECONDS.toMillis(System.nanoTime()));
+        bufferResource.release();
     }
 
     public void beginRender() throws ExecutionException, InterruptedException {

@@ -23,8 +23,8 @@ import org.freedesktop.xcb.xcb_generic_error_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.trinity.x11.XEventLoop;
 import org.trinity.x11.XEventHandler;
+import org.trinity.x11.XEventLoop;
 import org.trinity.x11.XcbErrorUtil;
 
 import javax.annotation.Nonnull;

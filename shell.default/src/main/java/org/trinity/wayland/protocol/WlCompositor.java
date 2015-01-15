@@ -54,7 +54,9 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
                               final int id) {
         final ShellSurface shellSurface = this.compositor.create();
         final WlSurface wlSurface = this.wlSurfaceFactory.create(shellSurface);
-        this.compositor.getScene().getShellSurfacesStack().push(wlSurface);
+        this.compositor.getScene()
+                       .getShellSurfacesStack()
+                       .push(wlSurface);
         final WlSurfaceResource wlSurfaceResource = wlSurface.add(resource.getClient(),
                                                                   resource.getVersion(),
                                                                   id);
@@ -62,7 +64,7 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
             @Override
             public void handle() {
                 shellSurface.accept(ShellSurfaceConfigurable::markDestroyed);
-                destroy();
+                remove();
             }
         });
     }

@@ -1,13 +1,13 @@
 dependencies {
     compile(
-        project(":shell.scene.api"),
+            project(":shell.scene.api"),
 
-        [group: "org.freedesktop", name: "wayland",                version: "1.0.0-SNAPSHOT"],
-        [group: "org.freedesktop", name: "pixman-java-bindings",   version: "1.0.0-SNAPSHOT"],
-        [group: "org.freedesktop", name: "libinput-java-bindings", version: "1.0.0-SNAPSHOT"],
+            [group: "org.freedesktop", name: "wayland", version: "1.0.0-SNAPSHOT"],
+            [group: "org.freedesktop", name: "pixman-java-bindings", version: "1.0.0-SNAPSHOT"],
+            [group: "org.freedesktop", name: "libinput-java-bindings", version: "1.0.0-SNAPSHOT"],
 
-        [group: "com.hackoeur", name: "jglm", version: "0.1-SNAPSHOT"],
+            [group: "com.hackoeur", name: "jglm", version: "0.1-SNAPSHOT"],
 
-        [group: "org.trinity",     name: "XCB4J",       version: "0.0.1"],
+            [group: "org.trinity", name: "XCB4J", version: "0.0.1"],
     )
 }

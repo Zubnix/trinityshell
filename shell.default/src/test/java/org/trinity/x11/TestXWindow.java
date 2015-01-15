@@ -89,9 +89,9 @@ public class TestXWindow {
         final int passedX = value.getInt(0);
         final int passedY = value.getInt(4);
         assertEquals(x,
-                passedX);
+                     passedX);
         assertEquals(y,
-                passedY);
+                     passedY);
     }
 
     @Test
@@ -104,10 +104,10 @@ public class TestXWindow {
         final int borderWidth = 4;
 
         when(xcb_get_geometry(this.xcb_connection,
-							  this.nativeHandle)).thenReturn(geo_cookie);
+                              this.nativeHandle)).thenReturn(geo_cookie);
         when(xcb_get_geometry_reply(eq(this.xcb_connection),
-                eq(geo_cookie),
-                (xcb_generic_error_t) any())).thenReturn(geo_reply);
+                                    eq(geo_cookie),
+                                    (xcb_generic_error_t) any())).thenReturn(geo_reply);
         when(geo_reply.getBorder_width()).thenReturn(borderWidth);
 
         //when
@@ -115,9 +115,9 @@ public class TestXWindow {
         final int width = 12;
         final int height = 34;
 
-		this.xWindow.resize(
-                          width,
-                          height);
+        this.xWindow.resize(
+                width,
+                height);
 
         //then
         //the native X server window is resized, taking into account it's X window border.
@@ -125,18 +125,18 @@ public class TestXWindow {
         final ArgumentCaptor<ByteBuffer> byteBufferArgumentCaptor = ArgumentCaptor.forClass(ByteBuffer.class);
         verifyStatic();
         xcb_configure_window(eq(this.xcb_connection),
-                eq(this.nativeHandle),
-                eq(RESIZE_VALUE_MASK),
-                byteBufferArgumentCaptor.capture());
+                             eq(this.nativeHandle),
+                             eq(RESIZE_VALUE_MASK),
+                             byteBufferArgumentCaptor.capture());
         xcb_flush(this.xcb_connection);
         final ByteBuffer value = byteBufferArgumentCaptor.getValue();
         final int passedWidth = value.getInt(0);
         final int passedHeight = value.getInt(4);
 
         assertEquals(width - (2 * borderWidth),
-                passedWidth);
+                     passedWidth);
         assertEquals(height - (2 * borderWidth),
-                passedHeight);
+                     passedHeight);
     }
 
     @Test
@@ -153,10 +153,10 @@ public class TestXWindow {
         final Integer givenHeight = 654;
 
         when(xcb_get_geometry(this.xcb_connection,
-							  this.nativeHandle)).thenReturn(geo_cookie);
+                              this.nativeHandle)).thenReturn(geo_cookie);
         when(xcb_get_geometry_reply(eq(this.xcb_connection),
-                eq(geo_cookie),
-                (xcb_generic_error_t) any())).thenReturn(geo_reply);
+                                    eq(geo_cookie),
+                                    (xcb_generic_error_t) any())).thenReturn(geo_reply);
         when(geo_reply.getBorder_width()).thenReturn(borderWidth);
         when(geo_reply.getX()).thenReturn(givenX.shortValue());
         when(geo_reply.getY()).thenReturn(givenY.shortValue());
@@ -171,17 +171,17 @@ public class TestXWindow {
         //the native X server window's geometry is returned.
         verifyStatic();
         xcb_get_geometry_reply(eq(this.xcb_connection),
-                eq(geo_cookie),
-                (xcb_generic_error_t) any());
+                               eq(geo_cookie),
+                               (xcb_generic_error_t) any());
 
         final RectangleImmutable rectangle = geometry;
-		assertEquals((int) givenX,
-					 rectangle.getX());
-		assertEquals((int) givenY,
-					 rectangle.getY());
-		assertEquals((int) (givenWidth + 2 * borderWidth),
-					 rectangle.getWidth());
-		assertEquals((int) (givenHeight + 2 * borderWidth),
-					 rectangle.getHeight());
-	}
+        assertEquals((int) givenX,
+                     rectangle.getX());
+        assertEquals((int) givenY,
+                     rectangle.getY());
+        assertEquals((int) (givenWidth + 2 * borderWidth),
+                     rectangle.getWidth());
+        assertEquals((int) (givenHeight + 2 * borderWidth),
+                     rectangle.getHeight());
+    }
 }

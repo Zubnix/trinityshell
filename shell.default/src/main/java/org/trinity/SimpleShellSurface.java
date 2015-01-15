@@ -59,14 +59,14 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     private Optional<WlBufferResource> pendingBuffer       = Optional.empty();
     @Nonnull
     private float[]                    pendingTransform    = new float[]{1,
-                                                                         0,
-                                                                         0,
-                                                                         0,
-                                                                         1,
-                                                                         0,
-                                                                         0,
-                                                                         0,
-                                                                         1};
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1};
     @Nonnull
     private Point                      pendingBufferOffset = new Point();
 
@@ -83,14 +83,14 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     private       Optional<WlBufferResource> buffer       = Optional.empty();
     @Nonnull
     private       float[]                    transform    = new float[]{1,
-                                                                        0,
-                                                                        0,
-                                                                        0,
-                                                                        1,
-                                                                        0,
-                                                                        0,
-                                                                        0,
-                                                                        1};
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1};
     @Nonnull
     private       Point                      position     = new Point();
     //additional server side states
@@ -166,14 +166,14 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Override
     public ShellSurfaceConfigurable removeTransform() {
         this.pendingTransform = new float[]{1,
-                                            0,
-                                            0,
-                                            0,
-                                            1,
-                                            0,
-                                            0,
-                                            0,
-                                            1};
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1};
         return this;
     }
 

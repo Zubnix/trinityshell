@@ -39,14 +39,7 @@ import java.nio.ByteOrder;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.ByteBuffer.allocateDirect;
 import static java.nio.ByteOrder.nativeOrder;
-import static org.freedesktop.xcb.LibXcb.xcb_change_window_attributes;
-import static org.freedesktop.xcb.LibXcb.xcb_connect;
-import static org.freedesktop.xcb.LibXcb.xcb_connection_has_error;
-import static org.freedesktop.xcb.LibXcb.xcb_disconnect;
-import static org.freedesktop.xcb.LibXcb.xcb_get_setup;
-import static org.freedesktop.xcb.LibXcb.xcb_screen_next;
-import static org.freedesktop.xcb.LibXcb.xcb_setup_roots_iterator;
-import static org.freedesktop.xcb.LibXcb.xcb_wait_for_event;
+import static org.freedesktop.xcb.LibXcb.*;
 import static org.freedesktop.xcb.xcb_cw_t.XCB_CW_EVENT_MASK;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_PROPERTY_CHANGE;
 import static org.freedesktop.xcb.xcb_event_mask_t.XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
@@ -76,7 +69,7 @@ public class XEventLoop extends EventBus implements Listenable {
         screenBuf.putInt(screen);
         this.xcb_connection = xcb_connect(displayName,
                                           screenBuf);
-        if(xcb_connection_has_error(getXcbConnection()) != 0) {
+        if (xcb_connection_has_error(getXcbConnection()) != 0) {
             throw new Error("Cannot open display\n");
         }
         // FIXME from config?
@@ -84,8 +77,8 @@ public class XEventLoop extends EventBus implements Listenable {
 
         final xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(getXcbConnection()));
         int screenNr;
-        for(; iter.getRem() != 0; --screenNr, xcb_screen_next(iter)) {
-            if(targetScreen == 0) {
+        for (; iter.getRem() != 0; --screenNr, xcb_screen_next(iter)) {
+            if (targetScreen == 0) {
                 this.xcb_screen = iter.getData();
                 configureRootEvents(getXcbScreen());
                 break;
@@ -115,7 +108,7 @@ public class XEventLoop extends EventBus implements Listenable {
     }
 
     public XEventLoop waitForEvent() {
-        if(xcb_connection_has_error(getXcbConnection()) != 0) {
+        if (xcb_connection_has_error(getXcbConnection()) != 0) {
             final String errorMsg = "X11 connection was closed unexpectedly - maybe your X server terminated / crashed?";
             LOG.error(errorMsg);
             throw new Error(errorMsg);

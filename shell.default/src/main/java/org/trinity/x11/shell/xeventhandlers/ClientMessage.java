@@ -4,8 +4,8 @@ import org.freedesktop.xcb.xcb_client_message_event_t;
 import org.freedesktop.xcb.xcb_generic_event_t;
 import org.trinity.x11.XEventHandler;
 
-import javax.annotation.concurrent.Immutable;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 
 import static org.freedesktop.xcb.LibXcbConstants.XCB_CLIENT_MESSAGE;

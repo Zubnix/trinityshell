@@ -27,7 +27,8 @@ public class Scene {
     public PointImmutable relativeCoordinate(final WlSurface wlSurface,
                                              final int absX,
                                              final int absY) {
-        final PointImmutable position = wlSurface.getShellSurface().getPosition();
+        final PointImmutable position = wlSurface.getShellSurface()
+                                                 .getPosition();
         final int offsetX = position.getX();
         final int offsetY = position.getY();
         return new Point(absX - offsetX,
@@ -35,7 +36,7 @@ public class Scene {
     }
 
     public Optional<WlSurface> findSurfaceAtCoordinate(final int absX,
-                                                          final int absY) {
+                                                       final int absY) {
         final Iterator<WlSurface> shellSurfaceIterator = getShellSurfacesStack().descendingIterator();
 
         while (shellSurfaceIterator.hasNext()) {

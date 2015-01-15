@@ -4,7 +4,7 @@ import com.sun.jna.LastErrorException;
 import com.sun.jna.Library;
 
 public interface CLibrary extends Library {
-    String        JNA_LIBRARY_NAME = "c";
+    String JNA_LIBRARY_NAME = "c";
 
     /* command values */
     int F_DUPFD = 0;	/* duplicate file descriptor */

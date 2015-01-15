@@ -32,9 +32,9 @@ public class XSeat {
         LOG.debug("[winId={}] set input focus.",
                   winId);
         xcb_set_input_focus(this.xEventLoop.getXcbConnection(),
-							(short) XCB_INPUT_FOCUS_NONE,
-							winId,
-							time);
-		xcb_flush(this.xEventLoop.getXcbConnection());
-	}
+                            (short) XCB_INPUT_FOCUS_NONE,
+                            winId,
+                            time);
+        xcb_flush(this.xEventLoop.getXcbConnection());
+    }
 }

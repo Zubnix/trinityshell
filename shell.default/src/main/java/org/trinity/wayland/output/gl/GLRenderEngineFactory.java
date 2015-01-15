@@ -20,7 +20,8 @@ public class GLRenderEngineFactory {
 
     public GLRenderEngine create(final GLAutoDrawable drawable) {
 
-        final ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
+        final ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor(r -> new Thread(r,
+                                                                                                                                            "GL Render Engine")));
         try {
             return executorService.submit(() -> {
                 makeCurrent(drawable);

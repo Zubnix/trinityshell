@@ -11,17 +11,17 @@ import javax.inject.Singleton;
         includes = {
                 XEventHandlersModule.class
         },
-		injects = {
-				SimpleShellSurfaceFactory.class
-		},
-		complete = true,
-		library = true
+        injects = {
+                SimpleShellSurfaceFactory.class
+        },
+        complete = true,
+        library = true
 )
 public class SimpleShellSceneModule {
 
-	@Provides
-	@Singleton
+    @Provides
+    @Singleton
     XScene provideSimpleShell() {
-		return new XScene();
-	}
+        return new XScene();
+    }
 }

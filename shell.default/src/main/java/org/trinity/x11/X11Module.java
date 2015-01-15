@@ -32,9 +32,9 @@ import static dagger.Provides.Type.SET;
 
 @Module(
         includes = {
-				//internal
-				XEventHandlersModule.class,
-				XRenderModule.class,
+                //internal
+                XEventHandlersModule.class,
+                XRenderModule.class,
                 SimpleShellSceneModule.class
         },
         injects = {
@@ -50,16 +50,16 @@ import static dagger.Provides.Type.SET;
 )
 public class X11Module {
 
-	@Provides
-	@Singleton
-	XSeat provideXSeat(final XTime xTime,
-					   final XEventLoop xEventLoop) {
-		return new XSeat(xTime,
+    @Provides
+    @Singleton
+    XSeat provideXSeat(final XTime xTime,
+                       final XEventLoop xEventLoop) {
+        return new XSeat(xTime,
                          xEventLoop);
-	}
+    }
 
     @Provides(type = SET)
-    Service provideService(final XShellService xShellService){
+    Service provideService(final XShellService xShellService) {
         return xShellService;
     }
 }

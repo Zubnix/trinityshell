@@ -51,7 +51,7 @@ public class XSurfacePool {
     @Nonnull
     public ShellSurface get(@Nonnull final Integer surfaceHandle) {
         ShellSurface surface = this.surfaces.get(surfaceHandle);
-        if(surface == null) {
+        if (surface == null) {
             surface = registerNewSurface(surfaceHandle);
         }
         return surface;
