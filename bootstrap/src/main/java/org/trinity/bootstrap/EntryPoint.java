@@ -99,7 +99,7 @@ public class EntryPoint {
     }
 
     public static void main(final String[] args) {
-        LibXcbLoader.load();
+        //LibXcbLoader.load();
 
         final TrinityShellModule trinityShellModule = new TrinityShellModule();
         final ObjectGraph objectGraph = ObjectGraph.create(trinityShellModule);
