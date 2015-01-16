@@ -25,8 +25,7 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
         @Override
         public void handle() {
             detachBuffer();
-            WlSurface.this.shellSurface.accept(ShellSurfaceConfigurable::detachBuffer);
-            remove();
+            commit();
         }
     };
 
@@ -135,8 +134,12 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
                                                                           .add(resource.getClient(),
                                                                                resource.getVersion(),
                                                                                callbackId);
-        getShellSurface().accept(shellSurfaceConfigurable ->
-                                         shellSurfaceConfigurable.addCallback(callbackResource::done));
+        getShellSurface().accept(shellSurfaceConfigurable -> {
+          shellSurfaceConfigurable.addCallback((time) -> {
+            callbackResource.done(time);
+            callbackResource.destroy();
+          });
+        });
     }
 
     @Override
@@ -167,9 +170,13 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
 
     @Override
     public void commit(final WlSurfaceResource requester) {
-        this.pendingBuffer = Optional.empty();
-        this.destroyListener.remove();
-        getShellSurface().accept(ShellSurfaceConfigurable::commit);
+      commit();
+    }
+
+    private void commit(){
+      this.pendingBuffer = Optional.empty();
+      this.destroyListener.remove();
+      getShellSurface().accept(ShellSurfaceConfigurable::commit);
     }
 
     private void detachBuffer() {
