@@ -27,9 +27,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- *
  * Groups all {@link PropertySlot}s installed on a view.
- *
  */
 @Retention(RUNTIME)
 @Target({TYPE,
@@ -37,11 +35,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface PropertySlots {
 
     /**
-     *
      * The installed {@link PropertySlot}s on the view.
      *
      * @return {@link PropertySlot}s
-     *
      */
     PropertySlot[] value();
 }

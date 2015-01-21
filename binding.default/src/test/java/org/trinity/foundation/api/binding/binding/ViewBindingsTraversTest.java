@@ -58,9 +58,19 @@ public class ViewBindingsTraversTest {
 
         //then
         //a collection of view binding metas is returned
-        assertEquals(3, viewBindingMetas.size());
-        assertEquals(ViewModel.class, viewBindingMetasList.get(0).getViewModel().getClass());
-        assertEquals(NestedViewModel.class, viewBindingMetasList.get(1).getViewModel().getClass());
-        assertEquals(DeepNestedViewModel.class, viewBindingMetasList.get(2).getViewModel().getClass());
+        assertEquals(3,
+                     viewBindingMetas.size());
+        assertEquals(ViewModel.class,
+                     viewBindingMetasList.get(0)
+                                         .getViewModel()
+                                         .getClass());
+        assertEquals(NestedViewModel.class,
+                     viewBindingMetasList.get(1)
+                                         .getViewModel()
+                                         .getClass());
+        assertEquals(DeepNestedViewModel.class,
+                     viewBindingMetasList.get(2)
+                                         .getViewModel()
+                                         .getClass());
     }
 }

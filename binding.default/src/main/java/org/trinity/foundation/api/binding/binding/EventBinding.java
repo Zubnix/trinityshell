@@ -16,10 +16,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @AutoFactory
 public class EventBinding implements ViewBinding {
-    private final ObjectGraph injector;
-    private final SignalFactory signalFactory;
+    private final ObjectGraph     injector;
+    private final SignalFactory   signalFactory;
     private final ViewBindingMeta viewBindingMeta;
-    private final EventSignal eventSignal;
+    private final EventSignal     eventSignal;
 
     private Optional<Signal> optionalSignal = Optional.absent();
 
@@ -55,13 +55,14 @@ public class EventBinding implements ViewBinding {
 
         final String collectionDataModelContext = this.eventSignal.dataModelContext();
         final boolean dataModelContextResolved = this.viewBindingMeta.appendDataModelPropertyChain(properties,
-                collectionDataModelContext);
+                                                                                                   collectionDataModelContext);
 
         if (!dataModelContextResolved) {
             return properties;
         }
 
-        final Optional<Object> lastPropertyValue = properties.getLast().getPropertyValue();
+        final Optional<Object> lastPropertyValue = properties.getLast()
+                                                             .getPropertyValue();
 
         if (lastPropertyValue.isPresent()) {
             bindEventSignal(lastPropertyValue.get());
@@ -72,10 +73,11 @@ public class EventBinding implements ViewBinding {
 
     private void bindEventSignal(final Object eventReceiver) {
         final EventSignalFilter eventSignalFilter = this.injector.get(this.eventSignal.filter());
-        final Signal signal = this.signalFactory.create(eventReceiver, this.eventSignal.name());
+        final Signal signal = this.signalFactory.create(eventReceiver,
+                                                        this.eventSignal.name());
         this.optionalSignal = Optional.of(signal);
         eventSignalFilter.installFilter(this.viewBindingMeta.getViewModel(),
-                signal);
+                                        signal);
     }
 
     @Override
@@ -83,7 +85,7 @@ public class EventBinding implements ViewBinding {
         if (this.optionalSignal.isPresent()) {
             final EventSignalFilter eventSignalFilter = this.injector.get(this.eventSignal.filter());
             eventSignalFilter.uninstallFilter(this.viewBindingMeta.getViewModel(),
-                    this.optionalSignal.get());
+                                              this.optionalSignal.get());
         }
     }
 }

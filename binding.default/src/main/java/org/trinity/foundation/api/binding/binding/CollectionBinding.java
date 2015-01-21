@@ -25,234 +25,238 @@ import static java.lang.String.format;
 @AutoFactory
 public class CollectionBinding implements ViewBinding {
 
-	//Table<DataModel,Index,ChildViewModel>
-	private final Table<Object, Integer, Object> dataModelElementToViewModelElement = HashBasedTable.create();
+    //Table<DataModel,Index,ChildViewModel>
+    private final Table<Object, Integer, Object> dataModelElementToViewModelElement = HashBasedTable.create();
 
-	private final ViewBinder           viewBinder;
-	private final SubViewModelDelegate subViewModelDelegate;
+    private final ViewBinder           viewBinder;
+    private final SubViewModelDelegate subViewModelDelegate;
 
     @Nonnull
     private final ViewBindingMeta      viewBindingMeta;
     @Nonnull
     private final ObservableCollection observableCollection;
 
-	CollectionBinding(@Provided final ViewBinder viewBinder,
-					  @Provided final SubViewModelDelegate subViewModelDelegate,
-					  @Nonnull final ViewBindingMeta viewBindingMeta,
-					  @Nonnull final ObservableCollection observableCollection) {
-		checkNotNull(viewBindingMeta);
-		checkNotNull(observableCollection);
+    CollectionBinding(@Provided final ViewBinder viewBinder,
+                      @Provided final SubViewModelDelegate subViewModelDelegate,
+                      @Nonnull final ViewBindingMeta viewBindingMeta,
+                      @Nonnull final ObservableCollection observableCollection) {
+        checkNotNull(viewBindingMeta);
+        checkNotNull(observableCollection);
 
-		this.viewBindingMeta = viewBindingMeta;
-		this.viewBinder = viewBinder;
-		this.subViewModelDelegate = subViewModelDelegate;
-		this.observableCollection = observableCollection;
-	}
+        this.viewBindingMeta = viewBindingMeta;
+        this.viewBinder = viewBinder;
+        this.subViewModelDelegate = subViewModelDelegate;
+        this.observableCollection = observableCollection;
+    }
 
     @Nonnull
-	@Override
-	public ViewBindingMeta getViewBindingMeta() {
-		return this.viewBindingMeta;
-	}
-
-	@Nonnull
     @Override
-	public Collection<DataModelProperty> bind() {
+    public ViewBindingMeta getViewBindingMeta() {
+        return this.viewBindingMeta;
+    }
 
-		final LinkedList<DataModelProperty> properties = new LinkedList<>();
-		final boolean commonDataModelContextResolved = this.viewBindingMeta.resolveDataModelChain(properties);
+    @Nonnull
+    @Override
+    public Collection<DataModelProperty> bind() {
 
-		if(!commonDataModelContextResolved) {
-			return properties;
-		}
+        final LinkedList<DataModelProperty> properties = new LinkedList<>();
+        final boolean commonDataModelContextResolved = this.viewBindingMeta.resolveDataModelChain(properties);
 
-		final String collectionDataModelContext = this.observableCollection.dataModelContext();
-		final boolean dataModelContextResolved = this.viewBindingMeta.appendDataModelPropertyChain(properties,
-																								   collectionDataModelContext);
+        if (!commonDataModelContextResolved) {
+            return properties;
+        }
 
-		if(!dataModelContextResolved) {
-			return properties;
-		}
+        final String collectionDataModelContext = this.observableCollection.dataModelContext();
+        final boolean dataModelContextResolved = this.viewBindingMeta.appendDataModelPropertyChain(properties,
+                                                                                                   collectionDataModelContext);
 
-		final String collectionPropertyName = this.observableCollection.value();
-		final Optional<Object> lastPropertyValue = properties.getLast().getPropertyValue();
+        if (!dataModelContextResolved) {
+            return properties;
+        }
 
-		if(!lastPropertyValue.isPresent()) {
-			return properties;
-		}
+        final String collectionPropertyName = this.observableCollection.value();
+        final Optional<Object> lastPropertyValue = properties.getLast()
+                                                             .getPropertyValue();
 
-		final DataModelProperty collectionProperty = RelativeDataModelProperty.create(lastPropertyValue.get(),
-																					  collectionPropertyName);
-		properties.add(collectionProperty);
-		final Optional<Object> collectionPropertyValue = collectionProperty.getPropertyValue();
+        if (!lastPropertyValue.isPresent()) {
+            return properties;
+        }
 
-		if(!collectionPropertyValue.isPresent()) {
-			return properties;
-		}
+        final DataModelProperty collectionProperty = RelativeDataModelProperty.create(lastPropertyValue.get(),
+                                                                                      collectionPropertyName);
+        properties.add(collectionProperty);
+        final Optional<Object> collectionPropertyValue = collectionProperty.getPropertyValue();
 
-		final Object collection = collectionPropertyValue.get();
-		bindObservableCollection(collection);
+        if (!collectionPropertyValue.isPresent()) {
+            return properties;
+        }
 
-		return properties;
-	}
+        final Object collection = collectionPropertyValue.get();
+        bindObservableCollection(collection);
 
-	@Override
-	public void unbind() {
+        return properties;
+    }
 
-	}
+    @Override
+    public void unbind() {
 
-	private void bindObservableCollection(final Object collection) {
+    }
 
-		final Object viewModel = this.viewBindingMeta.getViewModel();
+    private void bindObservableCollection(final Object collection) {
 
-		checkArgument(collection instanceof EventList,
-					  format("Observable collection must be bound to a property of type %s @ viewModel: %s, observable collection: %s",
-							 EventList.class.getName(),
-							 viewModel,
-							 this.observableCollection));
+        final Object viewModel = this.viewBindingMeta.getViewModel();
 
-		final EventList<?> collectionModel = (EventList<?>) collection;
+        checkArgument(collection instanceof EventList,
+                      format("Observable collection must be bound to a property of type %s @ viewModel: %s, observable collection: %s",
+                             EventList.class.getName(),
+                             viewModel,
+                             this.observableCollection));
 
-		//listen for collection changes
-		registerEventListener(collectionModel);
+        final EventList<?> collectionModel = (EventList<?>) collection;
 
-		//for each element, build a new child view & bind it to the element
-		for(int i = 0; i < collectionModel.size(); i++) {
-			final Object childDataModel = collectionModel.get(i);
-			createCollectionElementView(childDataModel,
-										i);
-		}
-	}
+        //listen for collection changes
+        registerEventListener(collectionModel);
 
-	private void registerEventListener(final EventList<?> collectionModel) {
-		collectionModel.addListEventListener(new ListEventListener<Object>() {
-			// We use a shadow list because glazedlists does not
-			// give us the deleted object...
-			private final List<Object> shadowChildDataModelList = new ArrayList<>(collectionModel);
+        //for each element, build a new child view & bind it to the element
+        for (int i = 0; i < collectionModel.size(); i++) {
+            final Object childDataModel = collectionModel.get(i);
+            createCollectionElementView(childDataModel,
+                                        i);
+        }
+    }
 
-			@Override
-			public void listChanged(final ListEvent<Object> listChanges) {
-				handleListChanged(this.shadowChildDataModelList,
-								  listChanges);
-			}
-		});
-	}
+    private void registerEventListener(final EventList<?> collectionModel) {
+        collectionModel.addListEventListener(new ListEventListener<Object>() {
+            // We use a shadow list because glazedlists does not
+            // give us the deleted object...
+            private final List<Object> shadowChildDataModelList = new ArrayList<>(collectionModel);
 
-	private void handleListChanged(final List<Object> shadowChildDataModelList,
-									 final ListEvent<Object> listChanges) {
-		while(listChanges.next()) {
-			final int sourceIndex = listChanges.getIndex();
-			final int changeType = listChanges.getType();
-			final List<Object> changeList = listChanges.getSourceList();
+            @Override
+            public void listChanged(final ListEvent<Object> listChanges) {
+                handleListChanged(this.shadowChildDataModelList,
+                                  listChanges);
+            }
+        });
+    }
 
-			switch(changeType) {
-				case ListEvent.DELETE: {
-					handleListEventDelete(sourceIndex,
-										  shadowChildDataModelList);
-					break;
-				}
-				case ListEvent.INSERT: {
-					handleListEventInsert(changeList,
-										  sourceIndex,
-										  shadowChildDataModelList);
-					break;
-				}
-				case ListEvent.UPDATE: {
-					handleListEventUpdate(shadowChildDataModelList,
-										  sourceIndex,
-										  changeList,
-										  listChanges);
-					break;
-				}
-			}
-		}
-	}
+    private void handleListChanged(final List<Object> shadowChildDataModelList,
+                                   final ListEvent<Object> listChanges) {
+        while (listChanges.next()) {
+            final int sourceIndex = listChanges.getIndex();
+            final int changeType = listChanges.getType();
+            final List<Object> changeList = listChanges.getSourceList();
 
-	private void handleListEventDelete(final int sourceIndex,
-									   final List<Object> shadowChildDataModelList) {
-		final Object removedChildDataModel = shadowChildDataModelList.remove(sourceIndex);
-		checkNotNull(removedChildDataModel);
+            switch (changeType) {
+                case ListEvent.DELETE: {
+                    handleListEventDelete(sourceIndex,
+                                          shadowChildDataModelList);
+                    break;
+                }
+                case ListEvent.INSERT: {
+                    handleListEventInsert(changeList,
+                                          sourceIndex,
+                                          shadowChildDataModelList);
+                    break;
+                }
+                case ListEvent.UPDATE: {
+                    handleListEventUpdate(shadowChildDataModelList,
+                                          sourceIndex,
+                                          changeList,
+                                          listChanges);
+                    break;
+                }
+            }
+        }
+    }
 
-		final Object removedChildViewModel = this.dataModelElementToViewModelElement.remove(removedChildDataModel,
-																							sourceIndex);
+    private void handleListEventDelete(final int sourceIndex,
+                                       final List<Object> shadowChildDataModelList) {
+        final Object removedChildDataModel = shadowChildDataModelList.remove(sourceIndex);
+        checkNotNull(removedChildDataModel);
 
-		this.viewBinder.unbind(
-				removedChildDataModel,
-				removedChildViewModel);
+        final Object removedChildViewModel = this.dataModelElementToViewModelElement.remove(removedChildDataModel,
+                                                                                            sourceIndex);
 
-		CollectionBinding.this.subViewModelDelegate.destroyView(CollectionBinding.this.getViewBindingMeta().getViewModel(),
-																removedChildViewModel,
-																sourceIndex);
+        this.viewBinder.unbind(
+                removedChildDataModel,
+                removedChildViewModel);
 
-	}
+        CollectionBinding.this.subViewModelDelegate.destroyView(CollectionBinding.this.getViewBindingMeta()
+                                                                                      .getViewModel(),
+                                                                removedChildViewModel,
+                                                                sourceIndex);
 
-	private void handleListEventInsert(final List<Object> changeList,
-									   final int sourceIndex,
-									   final List<Object> shadowChildDataModelList) {
-		final Object childDataModel = changeList.get(sourceIndex);
-		checkNotNull(childDataModel);
+    }
 
-		shadowChildDataModelList.add(sourceIndex,
-									 childDataModel);
+    private void handleListEventInsert(final List<Object> changeList,
+                                       final int sourceIndex,
+                                       final List<Object> shadowChildDataModelList) {
+        final Object childDataModel = changeList.get(sourceIndex);
+        checkNotNull(childDataModel);
 
-		createCollectionElementView(childDataModel,
-									sourceIndex);
-	}
+        shadowChildDataModelList.add(sourceIndex,
+                                     childDataModel);
 
-	private void createCollectionElementView(final Object elementDataModel,
-											 final int elementIndex) {
-		final Object childViewModel = this.subViewModelDelegate.newView(this.getViewBindingMeta().getViewModel(),
-																		this.observableCollection.view(),
-																		elementIndex);
+        createCollectionElementView(childDataModel,
+                                    sourceIndex);
+    }
 
-		CollectionBinding.this.viewBinder.bind(
-				elementDataModel,
-				childViewModel);
-	}
+    private void createCollectionElementView(final Object elementDataModel,
+                                             final int elementIndex) {
+        final Object childViewModel = this.subViewModelDelegate.newView(this.getViewBindingMeta()
+                                                                            .getViewModel(),
+                                                                        this.observableCollection.view(),
+                                                                        elementIndex);
 
-	private void handleListEventUpdate(final List<Object> shadowChildDataModelList,
-									   final int sourceIndex,
-									   final List<Object> changeList,
-									   final ListEvent<Object> listChanges) {
-		if(listChanges.isReordering()) {
-			final int[] reorderings = listChanges.getReorderMap();
-			for(int i = 0; i < reorderings.length; i++) {
-				final int newPosition = reorderings[i];
-				final Object childDataModel = changeList.get(sourceIndex);
+        CollectionBinding.this.viewBinder.bind(
+                elementDataModel,
+                childViewModel);
+    }
 
-				shadowChildDataModelList.clear();
-				shadowChildDataModelList.add(newPosition,
-											 childDataModel);
+    private void handleListEventUpdate(final List<Object> shadowChildDataModelList,
+                                       final int sourceIndex,
+                                       final List<Object> changeList,
+                                       final ListEvent<Object> listChanges) {
+        if (listChanges.isReordering()) {
+            final int[] reorderings = listChanges.getReorderMap();
+            for (int i = 0; i < reorderings.length; i++) {
+                final int newPosition = reorderings[i];
+                final Object childDataModel = changeList.get(sourceIndex);
 
-				final Object changedChildViewModel = this.dataModelElementToViewModelElement.get(childDataModel,
-																								 sourceIndex);
+                shadowChildDataModelList.clear();
+                shadowChildDataModelList.add(newPosition,
+                                             childDataModel);
 
-				this.subViewModelDelegate.updateChildViewPosition(this.getViewBindingMeta().getViewModel(),
-																  changedChildViewModel,
-																  i,
-																  newPosition);
-			}
-		}
-		else {
+                final Object changedChildViewModel = this.dataModelElementToViewModelElement.get(childDataModel,
+                                                                                                 sourceIndex);
 
-			final Object newChildDataModel = changeList.get(sourceIndex);
-			final Object oldChildDataModel = shadowChildDataModelList.set(sourceIndex,
-																		  newChildDataModel);
-			checkNotNull(oldChildDataModel);
-			checkNotNull(newChildDataModel);
+                this.subViewModelDelegate.updateChildViewPosition(this.getViewBindingMeta()
+                                                                      .getViewModel(),
+                                                                  changedChildViewModel,
+                                                                  i,
+                                                                  newPosition);
+            }
+        }
+        else {
 
-			final Object changedChildViewModel = this.dataModelElementToViewModelElement.remove(oldChildDataModel,
-																								sourceIndex);
-			this.dataModelElementToViewModelElement.put(newChildDataModel,
-														sourceIndex,
-														changedChildViewModel);
+            final Object newChildDataModel = changeList.get(sourceIndex);
+            final Object oldChildDataModel = shadowChildDataModelList.set(sourceIndex,
+                                                                          newChildDataModel);
+            checkNotNull(oldChildDataModel);
+            checkNotNull(newChildDataModel);
 
-			this.viewBinder.unbind(
-					oldChildDataModel,
-					changedChildViewModel);
-			this.viewBinder.bind(
-					newChildDataModel,
-					changedChildViewModel);
-		}
-	}
+            final Object changedChildViewModel = this.dataModelElementToViewModelElement.remove(oldChildDataModel,
+                                                                                                sourceIndex);
+            this.dataModelElementToViewModelElement.put(newChildDataModel,
+                                                        sourceIndex,
+                                                        changedChildViewModel);
+
+            this.viewBinder.unbind(
+                    oldChildDataModel,
+                    changedChildViewModel);
+            this.viewBinder.bind(
+                    newChildDataModel,
+                    changedChildViewModel);
+        }
+    }
 }

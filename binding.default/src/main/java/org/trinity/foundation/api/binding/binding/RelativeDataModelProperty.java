@@ -23,13 +23,14 @@ public abstract class RelativeDataModelProperty implements DataModelProperty {
 
     private static final Logger LOG = LoggerFactory.getLogger(RelativeDataModelProperty.class);
 
-    private static final Table<Class<?>, String, Optional<Method>> GETTER_CACHE = HashBasedTable.create();
-    private static final String GET_BOOLEAN_PREFIX = "is";
-    private static final String GET_PREFIX         = "get";
+    private static final Table<Class<?>, String, Optional<Method>> GETTER_CACHE       = HashBasedTable.create();
+    private static final String                                    GET_BOOLEAN_PREFIX = "is";
+    private static final String                                    GET_PREFIX         = "get";
 
-    public static DataModelProperty create( @Nonnull final Object dataModel,
-                                            @Nonnull final String propertyName){
-        return new AutoValue_RelativeDataModelProperty(dataModel, propertyName);
+    public static DataModelProperty create(@Nonnull final Object dataModel,
+                                           @Nonnull final String propertyName) {
+        return new AutoValue_RelativeDataModelProperty(dataModel,
+                                                       propertyName);
     }
 
     @Nonnull
@@ -41,18 +42,20 @@ public abstract class RelativeDataModelProperty implements DataModelProperty {
     @Nonnull
     @Override
     public Optional<Object> getPropertyValue() {
-		final Optional<Method> getterMethod = getGetterMethod(getDataModel().getClass(),
-																			   getPropertyName());
-		Optional<Object> propertyValue = Optional.absent();
-        if(getterMethod.isPresent()) {
+        final Optional<Method> getterMethod = getGetterMethod(getDataModel().getClass(),
+                                                              getPropertyName());
+        Optional<Object> propertyValue = Optional.absent();
+        if (getterMethod.isPresent()) {
             try {
-                final Object property = getterMethod.get().invoke(getDataModel());
+                final Object property = getterMethod.get()
+                                                    .invoke(getDataModel());
                 propertyValue = Optional.fromNullable(property);
-            } catch(IllegalAccessException | InvocationTargetException e) {
+            }
+            catch (IllegalAccessException | InvocationTargetException e) {
                 LOG.error(MessageFormat.format("Unable to retrieve property {0} from {1}",
                                                getPropertyName(),
-                        getDataModel()),
-                                                e);
+                                               getDataModel()),
+                          e);
             }
         }
 
@@ -66,9 +69,9 @@ public abstract class RelativeDataModelProperty implements DataModelProperty {
         checkNotNull(propertyName);
 
         Optional<Method> methodOptional = GETTER_CACHE.get(dataModelClass,
-                propertyName);
+                                                           propertyName);
 
-        if(methodOptional == null) {
+        if (methodOptional == null) {
             //initialized methodOptional and store it in cache
 
             Method foundMethod = null;
@@ -76,35 +79,39 @@ public abstract class RelativeDataModelProperty implements DataModelProperty {
 
             try {
                 foundMethod = dataModelClass.getMethod(getterMethodName);
-            } catch(final NoSuchMethodException e) {
+            }
+            catch (final NoSuchMethodException e) {
                 // no getter with get found,
                 // try with is.
                 getterMethodName = toBooleanGetterMethodName(propertyName);
                 try {
                     foundMethod = dataModelClass.getMethod(getterMethodName);
-                } catch(final NoSuchMethodException e1) {
+                }
+                catch (final NoSuchMethodException e1) {
                     // TODO explanation
                     LOG.error("",
-                            e1);
+                              e1);
 
-                } catch(final SecurityException e1) {
-                    LOG.error(format("Property %s is not accessible on %s. Did you declare it as public?",
-                            propertyName,
-                            dataModelClass.getName()),
-                            e);
                 }
-            } catch(final SecurityException e1) {
+                catch (final SecurityException e1) {
+                    LOG.error(format("Property %s is not accessible on %s. Did you declare it as public?",
+                                     propertyName,
+                                     dataModelClass.getName()),
+                              e);
+                }
+            }
+            catch (final SecurityException e1) {
                 // TODO explanation
                 LOG.error(format("Property %s is not accessible on %s. Did you declare it as public?",
-                        propertyName,
-                        dataModelClass.getName()),
-                        e1);
+                                 propertyName,
+                                 dataModelClass.getName()),
+                          e1);
             }
             methodOptional = Optional.fromNullable(foundMethod);
 
             GETTER_CACHE.put(dataModelClass,
-                    propertyName,
-                    methodOptional);
+                             propertyName,
+                             methodOptional);
         }
 
         return methodOptional;
@@ -112,20 +119,20 @@ public abstract class RelativeDataModelProperty implements DataModelProperty {
 
     private String toGetterMethodName(final String propertyName) {
         return toGetterMethodName(GET_PREFIX,
-                propertyName);
+                                  propertyName);
     }
 
     private String toGetterMethodName(final String prefix,
-                                             final String propertyName) {
+                                      final String propertyName) {
         checkNotNull(prefix);
         checkNotNull(propertyName);
 
         return prefix + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL,
-                propertyName);
+                                                  propertyName);
     }
 
     private String toBooleanGetterMethodName(final String propertyName) {
         return toGetterMethodName(GET_BOOLEAN_PREFIX,
-                propertyName);
+                                  propertyName);
     }
 }

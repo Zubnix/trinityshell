@@ -26,16 +26,14 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * Informs that the {@link org.trinity.shell.scene.api.ShellSurface} that emitted this event was destroyed.
- *
-
  */
 @Immutable
 public class Destroyed extends ShellSurfaceEvent {
 
-	/**
+    /**
 
-	 */
-	public Destroyed(@Nonnull final ShellSurface shellSurface) {
-		super(shellSurface);
-	}
+     */
+    public Destroyed(@Nonnull final ShellSurface shellSurface) {
+        super(shellSurface);
+    }
 }

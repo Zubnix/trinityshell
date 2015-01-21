@@ -41,10 +41,10 @@ import javax.inject.Singleton;
 )
 public final class BindingDefaultModule {
 
-	@Provides
-	@Singleton
-	ViewBinder provideViewBinder(final ViewBinderDefault viewBinderDefault) {
-		return viewBinderDefault;
-	}
+    @Provides
+    @Singleton
+    ViewBinder provideViewBinder(final ViewBinderDefault viewBinderDefault) {
+        return viewBinderDefault;
+    }
 
 }

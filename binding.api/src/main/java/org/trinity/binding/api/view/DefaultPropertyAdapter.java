@@ -22,11 +22,9 @@ package org.trinity.binding.api.view;
 import javax.annotation.Nullable;
 
 /**
- *
  * A default implementation of a {@link PropertyAdapter}. It simply returns the
  * property value without modification. Used as the default value in
  * {@link PropertySlot#adapter()}.
- *
  */
 public class DefaultPropertyAdapter implements PropertyAdapter<Object> {
 

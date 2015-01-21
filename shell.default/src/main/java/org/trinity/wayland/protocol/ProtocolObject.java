@@ -60,7 +60,8 @@ public interface ProtocolObject<T extends Resource<?>> extends Listenable {
             @Override
             public void handle() {
                 remove();
-                ProtocolObject.this.getResources().remove(resource);
+                ProtocolObject.this.getResources()
+                                   .remove(resource);
                 ProtocolObject.this.post(new ResourceDestroyed(resource));
             }
         });

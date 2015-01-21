@@ -27,31 +27,27 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- *
  * Makes the annotated view element retrieve its model data relative to the
  * given data context. The data path is constructed by 1 or more getters,
  * separated by a dot eg. "foo.bar.baz", which would translate to
  * getFoo().getBar().getBaz(). The data context is resolved relative to the
  * 'parent' data context, that is, the data context of the enclosing view
  * element.
- * <p>
+ * <p/>
  * When this annotation is placed on class level, then all instances of that
  * class are considered as having this annotation. When this
  * annotation is placed on both class and field level, the field level
  * annotation will have precedence.
- *
  */
 @Target({FIELD,
         TYPE})
 @Retention(RUNTIME)
 public @interface DataModelContext {
     /**
-     *
      * A path of getters consisting of 1 or more getter names seperated by a dot
      * eg. "foo.bar.baz".
      *
      * @return A getters path
-     *
      */
     String value();
 }

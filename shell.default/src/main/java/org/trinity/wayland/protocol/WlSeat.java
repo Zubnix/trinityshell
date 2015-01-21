@@ -11,7 +11,6 @@ import org.freedesktop.wayland.shared.WlSeatCapability;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 
 @AutoFactory(className = "WlSeatFactory")
 public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV4, ProtocolObject<WlSeatResource> {

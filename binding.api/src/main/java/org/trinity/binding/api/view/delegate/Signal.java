@@ -20,10 +20,8 @@
 package org.trinity.binding.api.view.delegate;
 
 /**
- *
  * A convenience service to call a method used as an event signal slot based on
  * widget toolkit specific events.
- *
  */
 public interface Signal {
 

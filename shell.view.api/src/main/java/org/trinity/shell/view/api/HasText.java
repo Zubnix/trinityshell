@@ -21,5 +21,5 @@
 package org.trinity.shell.view.api;
 
 public interface HasText {
-	String getText();
+    String getText();
 }

@@ -24,36 +24,32 @@ import org.trinity.shell.scene.api.ShellSurface;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-/***************************************
+/**
+ * ************************************
  * General event for all {@link org.trinity.shell.scene.api.ShellSurface} operations.
- *
- ***************************************
+ * <p/>
+ * **************************************
  */
 @Immutable
 public class ShellSurfaceEvent {
 
-	private final ShellSurface shellSurface;
+    private final ShellSurface shellSurface;
 
-	/**
-	 * Create a new {@code ChildAdded} with the given
-	 * {@code ShellNode} as the node that emitted the event, and the given
-	 * {@code ShellNodeTransformation} as the details coming from the given node
-	 * e.g. {@link org.trinity.shell.scene.api.ShellSurface#toGeoTransformation()}
-	 *
-	 * @param shellSurface
-	 *            the emitting {@link org.trinity.shell.scene.api.ShellSurface}
-	 */
-	public ShellSurfaceEvent(@Nonnull final ShellSurface shellSurface) {
-		this.shellSurface = shellSurface;
-	}
+    /**
+     * @param shellSurface the emitting {@link org.trinity.shell.scene.api.ShellSurface}
+     */
+    public ShellSurfaceEvent(@Nonnull final ShellSurface shellSurface) {
+        this.shellSurface = shellSurface;
+    }
 
-	/***************************************
-	 * The source that emitted this event.
-	 *
-	 * @return a {@link org.trinity.shell.scene.api.ShellSurface}.
-	 ***************************************
-	 */
-	public ShellSurface getSource() {
-		return this.shellSurface;
-	}
+    /**
+     * ************************************
+     * The source that emitted this event.
+     *
+     * @return a {@link org.trinity.shell.scene.api.ShellSurface}.
+     * **************************************
+     */
+    public ShellSurface getSource() {
+        return this.shellSurface;
+    }
 }

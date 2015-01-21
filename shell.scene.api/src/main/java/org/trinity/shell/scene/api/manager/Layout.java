@@ -26,14 +26,14 @@ import java.util.List;
 
 public interface Layout {
 
-	void setChildLayoutConfiguration(final ShellSurface child,
-									 final ShellLayoutProperty layoutProperty);
+    void setChildLayoutConfiguration(final ShellSurface child,
+                                     final ShellLayoutProperty layoutProperty);
 
-	ShellLayoutProperty getChildLayoutConfiguration(final ShellSurface child);
+    ShellLayoutProperty getChildLayoutConfiguration(final ShellSurface child);
 
-	void removeChildLayoutConfiguration(final ShellSurface child);
+    void removeChildLayoutConfiguration(final ShellSurface child);
 
 
-	void layout(RectangleImmutable layoutRegion,
-				List<ShellSurface> childNodes);
+    void layout(RectangleImmutable layoutRegion,
+                List<ShellSurface> childNodes);
 }

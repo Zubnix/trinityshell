@@ -15,22 +15,23 @@ import java.util.LinkedList;
 @AutoValue
 public abstract class RootViewBindingMeta extends ViewBindingMeta {
 
-    private DataModelProperty rootDataModelProperty;
-	private String            dataContextPath;
+    private DataModelProperty              rootDataModelProperty;
+    private String                         dataContextPath;
     private Optional<ObservableCollection> observableCollection;
-    private Optional<DataModelContext> dataModelContext;
-    private Optional<EventSignals> eventSignals;
-    private Optional<PropertySlots> propertySlots;
+    private Optional<DataModelContext>     dataModelContext;
+    private Optional<EventSignals>         eventSignals;
+    private Optional<PropertySlots>        propertySlots;
 
     public static ViewBindingMeta create(@Nonnull final Object dataModel,
                                          @Nonnull final Object viewModel) {
 
-        return new AutoValue_RootViewBindingMeta(viewModel, dataModel).scan();
+        return new AutoValue_RootViewBindingMeta(viewModel,
+                                                 dataModel).scan();
     }
 
     public abstract Object getDataModel();
 
-    ViewBindingMeta scan(){
+    ViewBindingMeta scan() {
         final Class<?> subviewClass = getViewModel().getClass();
 
         this.observableCollection = ViewBindingMetaUtil.scanClassObservableCollection(subviewClass);
@@ -39,7 +40,8 @@ public abstract class RootViewBindingMeta extends ViewBindingMeta {
         this.propertySlots = ViewBindingMetaUtil.scanClassPropertySlots(subviewClass);
 
         this.rootDataModelProperty = ConstantDataModelProperty.create(getDataModel());
-        this.dataContextPath = dataModelContext.isPresent() ? dataModelContext.get().value() : "";
+        this.dataContextPath = this.dataModelContext.isPresent() ? this.dataModelContext.get()
+                                                                                        .value() : "";
 
         return this;
     }
@@ -69,8 +71,9 @@ public abstract class RootViewBindingMeta extends ViewBindingMeta {
     }
 
     @Override
-	public boolean resolveDataModelChain(@Nonnull final LinkedList<DataModelProperty> dataModelChain) {
-		dataModelChain.add(this.rootDataModelProperty);
-		return appendDataModelPropertyChain(dataModelChain,this.dataContextPath);
-	}
+    public boolean resolveDataModelChain(@Nonnull final LinkedList<DataModelProperty> dataModelChain) {
+        dataModelChain.add(this.rootDataModelProperty);
+        return appendDataModelPropertyChain(dataModelChain,
+                                            this.dataContextPath);
+    }
 }

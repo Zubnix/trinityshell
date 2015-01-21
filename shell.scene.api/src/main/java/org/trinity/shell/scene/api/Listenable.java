@@ -25,40 +25,36 @@ import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.MoreExecutors;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.ExecutorService;
 
 /**
  * Expose guava's {@link EventBus} mechanism as an interface.
  */
 public interface Listenable {
-	/**
-	 * Immediately register a listener who's {@link Subscribe}d methods will be
-	 * invoked by the {@link MoreExecutors#sameThreadExecutor()}, ie the thread
-	 * that calls {@link #post(Object)} on this object.
-	 * <p>
-	 * This method should be used if the calling executor service is the same as
-	 * than the one that owns this object.
-     * @see EventBus#register(Object)
-	 * @param listener
-	 *            An object with a public, single argument, {@link Subscribe}
-	 *            method.
+    /**
+     * Immediately register a listener who's {@link Subscribe}d methods will be
+     * invoked by the {@link MoreExecutors#sameThreadExecutor()}, ie the thread
+     * that calls {@link #post(Object)} on this object.
+     * <p/>
+     * This method should be used if the calling executor service is the same as
+     * than the one that owns this object.
      *
+     * @param listener An object with a public, single argument, {@link Subscribe}
+     *                 method.
+     * @see EventBus#register(Object)
      */
-	void register(@Nonnull Object listener);
+    void register(@Nonnull Object listener);
 
-	/**
-	 * @see EventBus#unregister(Object)
-	 * @param listener
-	 *            An previously registered listener.
-	 */
-	void unregister(@Nonnull Object listener);
+    /**
+     * @param listener An previously registered listener.
+     * @see EventBus#unregister(Object)
+     */
+    void unregister(@Nonnull Object listener);
 
-	/**
-	 * Asynchronously post an event.
-	 *
-	 * @see EventBus#post(Object)
-	 * @param event
-	 *            The even to post.
-	 */
-	void post(@Nonnull Object event);
+    /**
+     * Asynchronously post an event.
+     *
+     * @param event The even to post.
+     * @see EventBus#post(Object)
+     */
+    void post(@Nonnull Object event);
 }

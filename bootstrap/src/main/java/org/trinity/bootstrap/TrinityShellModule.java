@@ -10,31 +10,31 @@ import org.trinity.wayland.protocol.ProtocolModule;
 import javax.inject.Singleton;
 
 @Module(
-		injects = {
-				EntryPoint.class,
-				ObjectGraph.class
-		},
-		includes = {
-				//X11Module.class,
-				OutputGLModule.class,
-				ProtocolModule.class,
-				PlatformNewtModule.class,
-				//BindingDefaultModule.class
-		},
-		complete = true,
-		library = false
+        injects = {
+                EntryPoint.class,
+                ObjectGraph.class
+        },
+        includes = {
+                //X11Module.class,
+                OutputGLModule.class,
+                ProtocolModule.class,
+                PlatformNewtModule.class,
+                //BindingDefaultModule.class
+        },
+        complete = true,
+        library = false
 )
 public class TrinityShellModule {
 
-	private ObjectGraph objectGraph;
+    private ObjectGraph objectGraph;
 
-	void setObjectGraph(final ObjectGraph objectGraph) {
-		this.objectGraph = objectGraph;
-	}
+    void setObjectGraph(final ObjectGraph objectGraph) {
+        this.objectGraph = objectGraph;
+    }
 
-	@Provides
-	@Singleton
-	ObjectGraph provideObjectGraph() {
-		return this.objectGraph;
-	}
+    @Provides
+    @Singleton
+    ObjectGraph provideObjectGraph() {
+        return this.objectGraph;
+    }
 }

@@ -24,8 +24,10 @@ import org.trinity.wayland.output.gl.GLRenderEngine;
 import org.trinity.wayland.output.gl.GLRenderEngineFactory;
 import org.trinity.wayland.platform.newt.GLWindowFactory;
 import org.trinity.wayland.platform.newt.GLWindowSeatFactory;
-import org.trinity.wayland.protocol.*;
-import xcb4j.LibXcbLoader;
+import org.trinity.wayland.protocol.WlCompositorFactory;
+import org.trinity.wayland.protocol.WlSeat;
+import org.trinity.wayland.protocol.WlSeatFactory;
+import org.trinity.wayland.protocol.WlShellFactory;
 
 import javax.inject.Inject;
 import java.util.Set;

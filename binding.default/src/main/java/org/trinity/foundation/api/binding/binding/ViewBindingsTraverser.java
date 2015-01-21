@@ -23,29 +23,29 @@ public class ViewBindingsTraverser extends TreeTraverser<ViewBindingMeta> {
     public Iterable<ViewBindingMeta> children(@Nonnull final ViewBindingMeta root) {
         final Object viewModel = root.getViewModel();
         final Class<?> viewModelClass = viewModel.getClass();
-		final Field[] declaredFields = getFields(viewModelClass);
+        final Field[] declaredFields = getFields(viewModelClass);
 
-		final List<ViewBindingMeta> viewBindingMetas = new LinkedList<>();
-		for(final Field declaredField : declaredFields) {
+        final List<ViewBindingMeta> viewBindingMetas = new LinkedList<>();
+        for (final Field declaredField : declaredFields) {
 
-			try {
-				final Object subViewValue = declaredField.get(viewModel);
-				if(subViewValue == null) {
-					continue;
-				}
+            try {
+                final Object subViewValue = declaredField.get(viewModel);
+                if (subViewValue == null) {
+                    continue;
+                }
 
-				final SubView subView = declaredField.getAnnotation(SubView.class);
-				if(subView == null) {
-					continue;
-				}
+                final SubView subView = declaredField.getAnnotation(SubView.class);
+                if (subView == null) {
+                    continue;
+                }
 
-				final ViewBindingMeta viewBindingMeta = SubViewBindingMeta.create(root,
-																			   declaredField,
-																			   subViewValue);
-				viewBindingMetas.add(viewBindingMeta);
-			}
-			catch(final IllegalAccessException e) {
-				e.printStackTrace();
+                final ViewBindingMeta viewBindingMeta = SubViewBindingMeta.create(root,
+                                                                                  declaredField,
+                                                                                  subViewValue);
+                viewBindingMetas.add(viewBindingMeta);
+            }
+            catch (final IllegalAccessException e) {
+                e.printStackTrace();
             }
         }
 
@@ -54,13 +54,13 @@ public class ViewBindingsTraverser extends TreeTraverser<ViewBindingMeta> {
 
     private Field[] getFields(final Class<?> viewModelClass) {
         Field[] fields = FIELDS_CACHE.get(viewModelClass);
-        if(fields == null) {
+        if (fields == null) {
             fields = viewModelClass.getDeclaredFields();
-            for(final Field field : fields) {
+            for (final Field field : fields) {
                 field.setAccessible(true);
             }
             FIELDS_CACHE.put(viewModelClass,
-                    fields);
+                             fields);
         }
 
         return fields;

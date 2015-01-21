@@ -29,12 +29,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Marks a view method as the handler method for a changed model property. A
  * model property is linked to a view slot by matching the model property name
  * to the {@link #propertyName()}.
- * <p>
+ * <p/>
  * A {@code PropertySlot} is used as an argument of {@link PropertySlots}.
- * <p>
+ * <p/>
  * A property slot is invoked when a view is bound to its data context for the
  * first time, or when the property value changes.
- * <p>
+ * <p/>
  * **************************************
  */
 @Retention(RUNTIME)
@@ -52,39 +52,31 @@ public @interface PropertySlot {
     String dataModelContext() default "";
 
     /**
-     *
      * The model property name.
      *
      * @return a model property name.
-     *
      */
     String propertyName();
 
     /**
-     *
      * The name of the view method that should be invoked.
      *
      * @return a view method name.
-     *
      */
     String methodName();
 
     /**
-     *
      * The argument types of the view method that should be invoked.
      *
      * @return the argument types, in order.
-     *
      */
     Class<?>[] argumentTypes() default {};
 
     /**
-     *
      * An optional {@link PropertyAdapter} that will be used to transform the
      * model property value to match the arguments of the method view.
      *
      * @return a {@link PropertyAdapter}.
-     *
      */
     Class<? extends PropertyAdapter<?>> adapter() default DefaultPropertyAdapter.class;
 }

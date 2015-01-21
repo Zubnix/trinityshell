@@ -21,5 +21,5 @@
 package org.trinity.shell.view.api;
 
 public interface HasImageDefinition {
-	ImageDefinition getImageDefinition();
+    ImageDefinition getImageDefinition();
 }

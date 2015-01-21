@@ -12,30 +12,42 @@ public interface ShellSurfaceConfigurable {
 
     @Nonnull
     ShellSurfaceConfigurable addCallback(IntConsumer callback);
+
     @Nonnull
     ShellSurfaceConfigurable removeOpaqueRegion();
+
     @Nonnull
     ShellSurfaceConfigurable setOpaqueRegion(@Nonnull Region opaqueRegion);
+
     @Nonnull
     ShellSurfaceConfigurable removeInputRegion();
+
     @Nonnull
     ShellSurfaceConfigurable setInputRegion(@Nonnull Region inputRegion);
+
     @Nonnull
     ShellSurfaceConfigurable setPosition(@Nonnull PointImmutable position);
+
     @Nonnull
     ShellSurfaceConfigurable markDestroyed();
+
     @Nonnull
     ShellSurfaceConfigurable markDamaged(@Nonnull RectangleImmutable damage);
+
     @Nonnull
     ShellSurfaceConfigurable attachBuffer(@Nonnull Object buffer,
                                           @Nonnull Integer relX,
                                           @Nonnull Integer relY);
+
     @Nonnull
     ShellSurfaceConfigurable setTransform(float[] transform);
+
     @Nonnull
     ShellSurfaceConfigurable removeTransform();
+
     @Nonnull
     ShellSurfaceConfigurable detachBuffer();
+
     @Nonnull
     ShellSurfaceConfigurable commit();
 }

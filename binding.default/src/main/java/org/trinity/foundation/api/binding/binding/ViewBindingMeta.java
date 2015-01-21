@@ -16,54 +16,61 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class ViewBindingMeta {
 
     @Nonnull
-	public abstract Optional<ObservableCollection> getObservableCollection();
-    @Nonnull
-	public abstract Optional<EventSignals> getEventSignals();
-    @Nonnull
-	public abstract Optional<PropertySlots> getPropertySlots();
-    @Nonnull
-	public abstract Optional<DataModelContext> getDataModelContext();
-    @Nonnull
-	public abstract Object getViewModel();
+    public abstract Optional<ObservableCollection> getObservableCollection();
 
-	protected boolean appendDataModelPropertyChain(@Nonnull final LinkedList<DataModelProperty> dataModelPropertyChain,
+    @Nonnull
+    public abstract Optional<EventSignals> getEventSignals();
+
+    @Nonnull
+    public abstract Optional<PropertySlots> getPropertySlots();
+
+    @Nonnull
+    public abstract Optional<DataModelContext> getDataModelContext();
+
+    @Nonnull
+    public abstract Object getViewModel();
+
+    protected boolean appendDataModelPropertyChain(@Nonnull final LinkedList<DataModelProperty> dataModelPropertyChain,
                                                    @Nonnull final String propertyChain) {
-		checkNotNull(dataModelPropertyChain);
-		checkNotNull(propertyChain);
-		checkArgument(!dataModelPropertyChain.isEmpty());
+        checkNotNull(dataModelPropertyChain);
+        checkNotNull(propertyChain);
+        checkArgument(!dataModelPropertyChain.isEmpty());
 
-		final Iterable<String> propertyNames = toPropertyNames(propertyChain);
-		final LinkedList<DataModelProperty> appendedDataModelChain = new LinkedList<>();
+        final Iterable<String> propertyNames = toPropertyNames(propertyChain);
+        final LinkedList<DataModelProperty> appendedDataModelChain = new LinkedList<>();
 
-		boolean aborted = false;
-		DataModelProperty dataModelProperty = dataModelPropertyChain.getLast();
+        boolean aborted = false;
+        DataModelProperty dataModelProperty = dataModelPropertyChain.getLast();
 
-		for(final String propertyName : propertyNames) {
+        for (final String propertyName : propertyNames) {
 
-			final Optional<Object> propertyValue = dataModelProperty.getPropertyValue();
+            final Optional<Object> propertyValue = dataModelProperty.getPropertyValue();
 
-			if(propertyValue.isPresent()) {
-				final Object nextDataModel = propertyValue.get();
-				dataModelProperty = RelativeDataModelProperty.create(nextDataModel,
-																  propertyName);
-				appendedDataModelChain.add(dataModelProperty);
-			}
-			else {
-				aborted = true;
-				break;
-			}
-		}
+            if (propertyValue.isPresent()) {
+                final Object nextDataModel = propertyValue.get();
+                dataModelProperty = RelativeDataModelProperty.create(nextDataModel,
+                                                                     propertyName);
+                appendedDataModelChain.add(dataModelProperty);
+            }
+            else {
+                aborted = true;
+                break;
+            }
+        }
 
-		dataModelPropertyChain.addAll(appendedDataModelChain);
-		return !aborted;
-	}
+        dataModelPropertyChain.addAll(appendedDataModelChain);
+        return !aborted;
+    }
 
     @Nonnull
-	protected static Iterable<String> toPropertyNames(@Nonnull final String subModelPath) {
-		checkNotNull(subModelPath);
+    protected static Iterable<String> toPropertyNames(@Nonnull final String subModelPath) {
+        checkNotNull(subModelPath);
 
-		return Splitter.on('.').trimResults().omitEmptyStrings().split(subModelPath);
-	}
+        return Splitter.on('.')
+                       .trimResults()
+                       .omitEmptyStrings()
+                       .split(subModelPath);
+    }
 
-	public abstract boolean resolveDataModelChain(@Nonnull final LinkedList<DataModelProperty> dataModelChain);
+    public abstract boolean resolveDataModelChain(@Nonnull final LinkedList<DataModelProperty> dataModelChain);
 }

@@ -21,7 +21,7 @@ final class ViewBindingMetaUtil {
 
         final PropertySlots fieldLevelPropertySlots = subviewField.getAnnotation(PropertySlots.class);
         final Optional<PropertySlots> fieldLevelOptionalPropertySlots;
-        if(fieldLevelPropertySlots == null) {
+        if (fieldLevelPropertySlots == null) {
             fieldLevelOptionalPropertySlots = Optional.absent();
         }
         else {
@@ -36,7 +36,7 @@ final class ViewBindingMetaUtil {
 
         final PropertySlots classLevelPropertySlots = subviewClass.getAnnotation(PropertySlots.class);
         final Optional<PropertySlots> classLevelOptionalPropertySlots;
-        if(classLevelPropertySlots == null) {
+        if (classLevelPropertySlots == null) {
             classLevelOptionalPropertySlots = Optional.absent();
         }
         else {
@@ -50,7 +50,7 @@ final class ViewBindingMetaUtil {
     static Optional<EventSignals> scanClassEventSignals(@Nonnull final Class<?> subviewClass) {
         final EventSignals classLevelEventSignals = subviewClass.getAnnotation(EventSignals.class);
         final Optional<EventSignals> classLevelOptionalEventSignals;
-        if(classLevelEventSignals == null) {
+        if (classLevelEventSignals == null) {
             classLevelOptionalEventSignals = Optional.absent();
         }
         else {
@@ -64,7 +64,7 @@ final class ViewBindingMetaUtil {
     static Optional<EventSignals> scanFieldEventSignals(@Nonnull final Field subviewField) {
         final EventSignals fieldLevelEventSignals = subviewField.getAnnotation(EventSignals.class);
         final Optional<EventSignals> fieldLevelOptionalEventSignals;
-        if(fieldLevelEventSignals == null) {
+        if (fieldLevelEventSignals == null) {
             fieldLevelOptionalEventSignals = Optional.absent();
         }
         else {

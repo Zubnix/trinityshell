@@ -20,8 +20,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 @AutoFactory(className = "WlSurfaceFactory")
 public class WlSurface extends EventBus implements WlSurfaceRequestsV3, ProtocolObject<WlSurfaceResource> {
 
-    private final Set<WlSurfaceResource> resources       = Sets.newHashSet();
-    private Listener               destroyListener;
+    private final Set<WlSurfaceResource> resources = Sets.newHashSet();
+    private Listener destroyListener;
 
     private final WlCallbackFactory wlCallbackFactory;
     private final ShellSurface      shellSurface;
@@ -53,15 +53,11 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
 
     private float[] getMatrix(final int transform) {
         if (transform == WlOutputTransform.FLIPPED_270.getValue()) {
-            return new float[]{1,
-                    0,
-                    0,
-                    0,
-                    1,
-                    0,
-                    0,
-                    0,
-                    1};
+            return new float[]{
+                    1, 0, 0,
+                    0, 1, 0,
+                    0, 0, 1
+            };
         }
         throw new IllegalArgumentException("Invalid transform");
     }
@@ -107,10 +103,8 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
     public void damage(final WlSurfaceResource resource,
                        final int x,
                        final int y,
-                       @Nonnegative
-                       final int width,
-                       @Nonnegative
-                       final int height) {
+                       @Nonnegative final int width,
+                       @Nonnegative final int height) {
         checkArgument(width > 0);
         checkArgument(height > 0);
 
@@ -159,13 +153,13 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
 
     @Override
     public void commit(final WlSurfaceResource requester) {
-      commit();
+        commit();
     }
 
-    private void commit(){
-      this.pendingBuffer = Optional.empty();
-      this.destroyListener.remove();
-      getShellSurface().accept(ShellSurfaceConfigurable::commit);
+    private void commit() {
+        this.pendingBuffer = Optional.empty();
+        this.destroyListener.remove();
+        getShellSurface().accept(ShellSurfaceConfigurable::commit);
     }
 
     private void detachBuffer() {

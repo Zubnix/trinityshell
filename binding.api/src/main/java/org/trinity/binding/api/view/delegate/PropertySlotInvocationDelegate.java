@@ -20,22 +20,18 @@
 package org.trinity.binding.api.view.delegate;
 
 
-
 import java.lang.reflect.Method;
 
 /**
- *
  * Delegate to invoke a view method when the bound model property changes. This
  * delegate should be implemented for a specific widget toolkit.
  *
  * @see org.trinity.binding.api.view.PropertySlots
  * @see org.trinity.binding.api.view.PropertySlot
- *
  */
 public interface PropertySlotInvocationDelegate {
 
     /**
-     *
      * Invoke a view method with the given argument.
      *
      * @param view       The view who's method should be invoked.
@@ -43,7 +39,6 @@ public interface PropertySlotInvocationDelegate {
      * @param argument   The argument to use when invoking the method. This can be an
      *                   array of objects, as defined in the var args of
      *                   {@link Method#invoke(Object, Object...)}.
-     *
      */
     void invoke(Object view,
                 Method viewMethod,
