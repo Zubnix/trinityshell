@@ -63,6 +63,9 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
         wlSurfaceResource.addDestroyListener(new Listener() {
             @Override
             public void handle() {
+                WlCompositor.this.compositor.getScene()
+                                            .getShellSurfacesStack()
+                                            .remove(wlSurface);
                 shellSurface.accept(ShellSurfaceConfigurable::markDestroyed);
                 remove();
             }
