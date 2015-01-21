@@ -69,7 +69,11 @@ public class Scene {
     }
 
     public boolean needsRender(final ShellSurface shellSurface) {
-        //for now, always redraw
-        return true;
+        if(shellSurface.isDestroyed()){
+            return true;
+        }else {
+            //for now, always redraw
+            return true;
+        }
     }
 }
