@@ -49,10 +49,7 @@ public class Compositor {
 
     @Subscribe
     public void handle(final Destroyed event) {
-        if (this.scene.getShellSurfacesStack()
-                      .remove(event.getSource())) {
-            renderScene();
-        }
+        requestRender(event.getSource());
     }
 
     public void requestRender(final ShellSurface shellSurface) {
