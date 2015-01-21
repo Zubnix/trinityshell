@@ -56,7 +56,6 @@ public class ShmRenderer {
             e.printStackTrace();
         }
         this.current.firePaintCallbacks((int) TimeUnit.NANOSECONDS.toMillis(System.nanoTime()));
-        bufferResource.release();
     }
 
     public void beginRender() throws ExecutionException, InterruptedException {
