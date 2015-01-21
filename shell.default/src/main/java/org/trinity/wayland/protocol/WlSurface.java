@@ -21,13 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class WlSurface extends EventBus implements WlSurfaceRequestsV3, ProtocolObject<WlSurfaceResource> {
 
     private final Set<WlSurfaceResource> resources       = Sets.newHashSet();
-    private final Listener               destroyListener = new Listener() {
-        @Override
-        public void handle() {
-            detachBuffer();
-            commit();
-        }
-    };
+    private Listener               destroyListener;
 
     private final WlCallbackFactory wlCallbackFactory;
     private final ShellSurface      shellSurface;
@@ -134,12 +128,7 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
                                                                           .add(resource.getClient(),
                                                                                resource.getVersion(),
                                                                                callbackId);
-        getShellSurface().accept(shellSurfaceConfigurable -> {
-          shellSurfaceConfigurable.addCallback((time) -> {
-            callbackResource.done(time);
-            callbackResource.destroy();
-          });
-        });
+        getShellSurface().accept(shellSurfaceConfigurable -> shellSurfaceConfigurable.addCallback(callbackResource::done));
     }
 
     @Override
@@ -186,9 +175,15 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
     private void attachBuffer(final WlBufferResource buffer,
                               final int x,
                               final int y) {
-        this.pendingBuffer.ifPresent(wlShmBuffer ->
-                                             this.destroyListener.remove());
+        this.pendingBuffer.ifPresent(wlShmBuffer -> this.destroyListener.remove());
         this.pendingBuffer = Optional.of(buffer);
+        this.destroyListener = new Listener() {
+            @Override
+            public void handle() {
+                remove();
+                WlSurface.this.detachBuffer();
+            }
+        };
         buffer.addDestroyListener(this.destroyListener);
 
         getShellSurface().accept(config -> config.attachBuffer(buffer,
