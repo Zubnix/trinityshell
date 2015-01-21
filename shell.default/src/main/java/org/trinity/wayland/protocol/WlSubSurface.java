@@ -37,7 +37,7 @@ public class WlSubSurface extends EventBus implements WlSubsurfaceRequests, Prot
 
     @Override
     public void destroy(final WlSubsurfaceResource resource) {
-        ProtocolObject.super.destroy(resource);
+        resource.destroy();
     }
 
     @Override

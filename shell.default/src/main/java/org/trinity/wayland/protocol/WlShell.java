@@ -40,7 +40,7 @@ public class WlShell extends Global<WlShellResource> implements WlShellRequests,
             @Subscribe
             public void handle(final ResourceDestroyed event) {
                 wlSurface.unregister(this);
-                wlShellSurface.destroy(shellSurfaceResource);
+                shellSurfaceResource.destroy();
             }
         });
     }

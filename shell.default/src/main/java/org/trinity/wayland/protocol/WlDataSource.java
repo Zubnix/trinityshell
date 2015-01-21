@@ -44,6 +44,6 @@ public class WlDataSource extends EventBus implements WlDataSourceRequests, Prot
 
     @Override
     public void destroy(final WlDataSourceResource resource) {
-        ProtocolObject.super.destroy(resource);
+        resource.destroy();
     }
 }

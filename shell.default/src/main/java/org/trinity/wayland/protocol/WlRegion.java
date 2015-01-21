@@ -42,7 +42,7 @@ public class WlRegion extends EventBus implements WlRegionRequests, ProtocolObje
 
     @Override
     public void destroy(final WlRegionResource resource) {
-        ProtocolObject.super.destroy(resource);
+        resource.destroy();
     }
 
     @Override

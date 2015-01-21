@@ -2,6 +2,7 @@ package org.trinity.wayland.protocol;
 
 import com.google.common.base.Preconditions;
 import org.freedesktop.wayland.server.Client;
+import org.freedesktop.wayland.server.Listener;
 import org.freedesktop.wayland.server.Resource;
 import org.trinity.shell.scene.api.Listenable;
 import org.trinity.wayland.protocol.events.ResourceDestroyed;
@@ -55,6 +56,14 @@ public interface ProtocolObject<T extends Resource<?>> extends Listenable {
         final T resource = create(client,
                                   version,
                                   id);
+        resource.addDestroyListener(new Listener() {
+            @Override
+            public void handle() {
+                remove();
+                ProtocolObject.this.getResources().remove(resource);
+                ProtocolObject.this.post(new ResourceDestroyed(resource));
+            }
+        });
         getResources().add(resource);
         return resource;
     }
@@ -70,23 +79,4 @@ public interface ProtocolObject<T extends Resource<?>> extends Listenable {
     T create(final Client client,
              final int version,
              final int id);
-
-    /**
-     * Destroy a resource associated with this protocol object.
-     * Destroying a resource will emit a {@link ResourceDestroyed} event on this protocol object.
-     *
-     * @param resource The associated resource that will be destroyed.
-     */
-    default void destroy(final T resource) {
-        if (getResources().remove(resource)) {
-            post(new ResourceDestroyed(resource));
-            resource.destroy();
-        }
-        else {
-            throw new IllegalArgumentException(String.format("The resource %s is not associated with protocol object %s. " +
-                                                                     "Therefore it can not be destroyed.",
-                                                             resource,
-                                                             this));
-        }
-    }
 }

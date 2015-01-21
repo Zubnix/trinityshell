@@ -49,6 +49,6 @@ public class WlDataOffer extends EventBus implements WlDataOfferRequests, Protoc
 
     @Override
     public void destroy(final WlDataOfferResource resource) {
-        ProtocolObject.super.destroy(resource);
+        resource.destroy();
     }
 }

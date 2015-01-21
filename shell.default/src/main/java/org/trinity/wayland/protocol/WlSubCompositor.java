@@ -28,7 +28,7 @@ public class WlSubCompositor extends Global<WlSubcompositorResource> implements 
 
     @Override
     public void destroy(final WlSubcompositorResource resource) {
-        ProtocolObject.super.destroy(resource);
+        resource.destroy();
     }
 
     @Override

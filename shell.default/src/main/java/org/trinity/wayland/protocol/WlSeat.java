@@ -11,6 +11,7 @@ import org.freedesktop.wayland.shared.WlSeatCapability;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 @AutoFactory(className = "WlSeatFactory")
 public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV4, ProtocolObject<WlSeatResource> {
@@ -130,7 +131,7 @@ public class WlSeat extends Global<WlSeatResource> implements WlSeatRequestsV4, 
     public void setWlPointer(@Nonnull final WlPointer newWlPointer) {
         //destroy the previous pointer
         this.optionalWlPointer.ifPresent(wlPointer -> wlPointer.getResources()
-                                                               .forEach(wlPointer::destroy));
+                                                               .forEach(Resource::destroy));
         this.optionalWlPointer = Optional.of(newWlPointer);
         getResources().forEach(this::emiteCapabilities);
     }

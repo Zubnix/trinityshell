@@ -84,7 +84,7 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
 
     @Override
     public void destroy(final WlSurfaceResource resource) {
-        ProtocolObject.super.destroy(resource);
+        resource.destroy();
         getShellSurface().accept(ShellSurfaceConfigurable::markDestroyed);
     }
 
