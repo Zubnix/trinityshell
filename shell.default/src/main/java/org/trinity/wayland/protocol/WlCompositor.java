@@ -50,26 +50,30 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
     }
 
     @Override
-    public void createSurface(final WlCompositorResource resource,
+    public void createSurface(final WlCompositorResource compositorResource,
                               final int id) {
         final ShellSurface shellSurface = this.compositor.create();
-        final WlSurface wlSurface = this.wlSurfaceFactory.create(shellSurface);
-        this.compositor.getScene()
-                       .getShellSurfacesStack()
-                       .push(wlSurface);
-        final WlSurfaceResource wlSurfaceResource = wlSurface.add(resource.getClient(),
-                                                                  resource.getVersion(),
-                                                                  id);
-        wlSurfaceResource.addDestroyListener(new Listener() {
+        final WlSurface wlSurface = this.wlSurfaceFactory.create(compositorResource,
+                                                                 shellSurface);
+
+        final WlSurfaceResource surfaceResource = wlSurface.add(compositorResource.getClient(),
+                                                                compositorResource.getVersion(),
+                                                                id);
+        surfaceResource.addDestroyListener(new Listener() {
             @Override
             public void handle() {
+                remove();
                 WlCompositor.this.compositor.getScene()
                                             .getShellSurfacesStack()
-                                            .remove(wlSurface);
+                                            .remove(surfaceResource);
                 shellSurface.accept(ShellSurfaceConfigurable::markDestroyed);
-                remove();
+                WlCompositor.this.compositor.requestRender(surfaceResource);
             }
         });
+
+        this.compositor.getScene()
+                       .getShellSurfacesStack()
+                       .push(surfaceResource);
     }
 
     @Override
@@ -97,23 +101,21 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
     }
 
     @Override
-    public void register(
-            @Nonnull
-            final Object listener) {
+    public void register( @Nonnull final Object listener) {
         this.eventBus.register(listener);
     }
 
     @Override
-    public void unregister(
-            @Nonnull
-            final Object listener) {
+    public void unregister( @Nonnull final Object listener) {
         this.eventBus.unregister(listener);
     }
 
     @Override
-    public void post(
-            @Nonnull
-            final Object event) {
+    public void post( @Nonnull final Object event) {
         this.eventBus.post(event);
+    }
+
+    public Compositor getCompositor() {
+        return this.compositor;
     }
 }

@@ -7,7 +7,7 @@ import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.WlPointerRequestsV3;
 import org.freedesktop.wayland.server.WlPointerResource;
 import org.freedesktop.wayland.server.WlSurfaceResource;
-import org.trinity.wayland.output.Pointer;
+import org.trinity.wayland.output.PointerDevice;
 
 import java.util.Set;
 
@@ -16,10 +16,10 @@ public class WlPointer extends EventBus implements WlPointerRequestsV3, Protocol
 
     private final Set<WlPointerResource> resources = Sets.newHashSet();
 
-    private final Pointer pointer;
+    private final PointerDevice pointerDevice;
 
-    WlPointer(final Pointer pointer) {
-        this.pointer = pointer;
+    WlPointer(final PointerDevice pointerDevice) {
+        this.pointerDevice = pointerDevice;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class WlPointer extends EventBus implements WlPointerRequestsV3, Protocol
                                      this);
     }
 
-    public Pointer getPointer() {
-        return this.pointer;
+    public PointerDevice getPointerDevice() {
+        return this.pointerDevice;
     }
 }

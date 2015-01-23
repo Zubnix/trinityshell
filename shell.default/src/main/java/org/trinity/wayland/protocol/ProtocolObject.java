@@ -5,7 +5,6 @@ import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Listener;
 import org.freedesktop.wayland.server.Resource;
 import org.trinity.shell.scene.api.Listenable;
-import org.trinity.wayland.protocol.events.ResourceDestroyed;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -62,7 +61,6 @@ public interface ProtocolObject<T extends Resource<?>> extends Listenable {
                 remove();
                 ProtocolObject.this.getResources()
                                    .remove(resource);
-                ProtocolObject.this.post(new ResourceDestroyed(resource));
             }
         });
         getResources().add(resource);

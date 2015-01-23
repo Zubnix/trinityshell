@@ -41,8 +41,8 @@ public class GLWindowSeat implements MouseListener, KeyListener {
         final short button = e.getButton();
 
         this.wlSeat.getOptionalWlPointer()
-                   .ifPresent(wlPointer -> this.jobExecutor.submit(() -> wlPointer.getPointer()
-                                                                                  .button(wlPointer,
+                   .ifPresent(wlPointer -> this.jobExecutor.submit(() -> wlPointer.getPointerDevice()
+                                                                                  .button(wlPointer.getResources(),
                                                                                           (int) time,
                                                                                           button,
                                                                                           WlPointerButtonState.PRESSED)));
@@ -54,8 +54,8 @@ public class GLWindowSeat implements MouseListener, KeyListener {
         final short button = e.getButton();
 
         this.wlSeat.getOptionalWlPointer()
-                   .ifPresent(wlPointer -> this.jobExecutor.submit(() -> wlPointer.getPointer()
-                                                                                  .button(wlPointer,
+                   .ifPresent(wlPointer -> this.jobExecutor.submit(() -> wlPointer.getPointerDevice()
+                                                                                  .button(wlPointer.getResources(),
                                                                                           (int) time,
                                                                                           button,
                                                                                           WlPointerButtonState.RELEASED)));
@@ -69,8 +69,8 @@ public class GLWindowSeat implements MouseListener, KeyListener {
         final int y = e.getY();
 
         this.wlSeat.getOptionalWlPointer()
-                   .ifPresent(wlPointer -> this.jobExecutor.submit(() -> wlPointer.getPointer()
-                                                                                  .motion(wlPointer,
+                   .ifPresent(wlPointer -> this.jobExecutor.submit(() -> wlPointer.getPointerDevice()
+                                                                                  .motion(wlPointer.getResources(),
                                                                                           (int) time,
                                                                                           x,
                                                                                           y)));

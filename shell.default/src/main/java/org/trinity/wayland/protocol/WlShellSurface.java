@@ -31,7 +31,7 @@ public class WlShellSurface extends EventBus implements WlShellSurfaceRequests, 
                      final int serial) {
         final WlSeat wlSeat = (WlSeat) seat.getImplementation();
         wlSeat.getOptionalWlPointer()
-              .ifPresent(wlPointer -> wlPointer.getPointer()
+              .ifPresent(wlPointer -> wlPointer.getPointerDevice()
                                                .move(WlShellSurface.this.wlSurface.getResource()
                                                                                   .get(),
                                                      serial));

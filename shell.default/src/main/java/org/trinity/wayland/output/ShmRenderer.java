@@ -6,6 +6,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.server.ShmBuffer;
 import org.freedesktop.wayland.server.WlBufferResource;
+import org.freedesktop.wayland.server.WlSurfaceRequests;
+import org.freedesktop.wayland.server.WlSurfaceResource;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.wayland.protocol.WlSurface;
 
@@ -26,8 +28,10 @@ public class ShmRenderer {
         this.dispatcher.register(this);
     }
 
-    public void render(final WlSurface wlSurface) {
-        this.current = wlSurface.getShellSurface();
+    public void render(final WlSurfaceResource surfaceResource) {
+        final WlSurfaceRequests implementation = surfaceResource.getImplementation();
+
+        this.current = ((WlSurface) implementation).getShellSurface();
         this.dispatcher.post(this.current.getBuffer()
                                          .get());
     }

@@ -4,9 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.server.*;
-import org.trinity.wayland.protocol.events.ResourceDestroyed;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -36,10 +34,10 @@ public class WlShell extends Global<WlShellResource> implements WlShellRequests,
         final WlShellSurfaceResource shellSurfaceResource = wlShellSurface.add(requester.getClient(),
                                                                                requester.getVersion(),
                                                                                id);
-        wlSurface.register(new Object() {
-            @Subscribe
-            public void handle(final ResourceDestroyed event) {
-                wlSurface.unregister(this);
+        surface.addDestroyListener(new Listener() {
+            @Override
+            public void handle() {
+                remove();
                 shellSurfaceResource.destroy();
             }
         });

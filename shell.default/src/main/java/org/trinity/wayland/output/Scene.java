@@ -1,6 +1,9 @@
 package org.trinity.wayland.output;
 
 import com.google.common.collect.Lists;
+
+import org.freedesktop.wayland.server.WlSurfaceRequests;
+import org.freedesktop.wayland.server.WlSurfaceResource;
 import org.trinity.shell.scene.api.Region;
 import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.wayland.protocol.WlSurface;
@@ -16,32 +19,35 @@ import java.util.Optional;
 
 @Singleton
 public class Scene {
-    private final LinkedList<WlSurface> shellSurfacesStack = Lists.newLinkedList();
+    private final LinkedList<WlSurfaceResource> shellSurfacesStack = Lists.newLinkedList();
 
     @Inject
     Scene() {
     }
 
-    public LinkedList<WlSurface> getShellSurfacesStack() { return this.shellSurfacesStack; }
+    public LinkedList<WlSurfaceResource> getShellSurfacesStack() { return this.shellSurfacesStack; }
 
-    public PointImmutable relativeCoordinate(final WlSurface wlSurface,
+    public PointImmutable relativeCoordinate(final WlSurfaceResource surfaceResource,
                                              final int absX,
                                              final int absY) {
-        final PointImmutable position = wlSurface.getShellSurface()
-                                                 .getPosition();
+        final WlSurfaceRequests implementation = surfaceResource.getImplementation();
+        final ShellSurface shellSurface = ((WlSurface) implementation).getShellSurface();
+
+        final PointImmutable position = shellSurface.getPosition();
         final int offsetX = position.getX();
         final int offsetY = position.getY();
         return new Point(absX - offsetX,
                          absY - offsetY);
     }
 
-    public Optional<WlSurface> findSurfaceAtCoordinate(final int absX,
-                                                       final int absY) {
-        final Iterator<WlSurface> shellSurfaceIterator = getShellSurfacesStack().descendingIterator();
+    public Optional<WlSurfaceResource> findSurfaceAtCoordinate(final int absX,
+                                                               final int absY) {
+        final Iterator<WlSurfaceResource> shellSurfaceIterator = getShellSurfacesStack().descendingIterator();
 
         while (shellSurfaceIterator.hasNext()) {
-            final WlSurface wlSurface = shellSurfaceIterator.next();
-            final ShellSurface shellSurface = wlSurface.getShellSurface();
+            final WlSurfaceResource surfaceResource = shellSurfaceIterator.next();
+            final WlSurfaceRequests implementation = surfaceResource.getImplementation();
+            final ShellSurface shellSurface = ((WlSurface) implementation).getShellSurface();
 
             final Optional<Region> inputRegion = shellSurface.getInputRegion();
             if (inputRegion.isPresent()) {
@@ -59,7 +65,7 @@ public class Scene {
                     final int y2 = y1 + rectangle.getHeight();
 
                     if (x1 <= absX && x1 <= x2 && y1 <= absY && absY <= y2) {
-                        return Optional.of(wlSurface);
+                        return Optional.of(surfaceResource);
                     }
                 }
             }
@@ -68,7 +74,9 @@ public class Scene {
         return Optional.empty();
     }
 
-    public boolean needsRender(final ShellSurface shellSurface) {
+    public boolean needsRender(final WlSurfaceResource surfaceResource) {
+        final WlSurfaceRequests implementation = surfaceResource.getImplementation();
+        final ShellSurface shellSurface = ((WlSurface) implementation).getShellSurface();
         if (shellSurface.isDestroyed()) {
             return true;
         }

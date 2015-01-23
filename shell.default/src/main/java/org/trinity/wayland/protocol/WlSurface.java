@@ -24,13 +24,16 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
     private Listener destroyListener;
 
     private final WlCallbackFactory wlCallbackFactory;
+    private final WlCompositorResource compositorResource;
     private final ShellSurface      shellSurface;
 
     private Optional<WlBufferResource> pendingBuffer = Optional.empty();
 
     WlSurface(@Provided final WlCallbackFactory wlCallbackFactory,
+              final WlCompositorResource compositorResource,
               final ShellSurface shellSurface) {
         this.wlCallbackFactory = wlCallbackFactory;
+        this.compositorResource = compositorResource;
         this.shellSurface = shellSurface;
     }
 
@@ -153,13 +156,11 @@ public class WlSurface extends EventBus implements WlSurfaceRequestsV3, Protocol
 
     @Override
     public void commit(final WlSurfaceResource requester) {
-        commit();
-    }
-
-    private void commit() {
         this.pendingBuffer = Optional.empty();
         this.destroyListener.remove();
         getShellSurface().accept(ShellSurfaceConfigurable::commit);
+        final WlCompositor implementation = (WlCompositor) this.compositorResource.getImplementation();
+        implementation.getCompositor().requestRender(requester);
     }
 
     private void detachBuffer() {

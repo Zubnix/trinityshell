@@ -4,7 +4,7 @@ import com.jogamp.newt.opengl.GLWindow;
 import org.trinity.wayland.output.Compositor;
 import org.trinity.wayland.output.JobExecutor;
 import org.trinity.wayland.output.KeyboardFactory;
-import org.trinity.wayland.output.PointerFactory;
+import org.trinity.wayland.output.PointerDeviceFactory;
 import org.trinity.wayland.protocol.WlKeyboardFactory;
 import org.trinity.wayland.protocol.WlPointerFactory;
 import org.trinity.wayland.protocol.WlSeat;
@@ -15,19 +15,19 @@ public class GLWindowSeatFactory {
     private final JobExecutor       jobExecutor;
     private final WlPointerFactory  wlPointerFactory;
     private final WlKeyboardFactory wlKeyboardFactory;
-    private final PointerFactory    pointerFactory;
+    private final PointerDeviceFactory pointerDeviceFactory;
     private final KeyboardFactory   keyboardFactory;
 
     @Inject
     GLWindowSeatFactory(final JobExecutor jobExecutor,
                         final WlPointerFactory wlPointerFactory,
                         final WlKeyboardFactory wlKeyboardFactory,
-                        final PointerFactory pointerFactory,
+                        final PointerDeviceFactory pointerDeviceFactory,
                         final KeyboardFactory keyboardFactory) {
         this.jobExecutor = jobExecutor;
         this.wlPointerFactory = wlPointerFactory;
         this.wlKeyboardFactory = wlKeyboardFactory;
-        this.pointerFactory = pointerFactory;
+        this.pointerDeviceFactory = pointerDeviceFactory;
         this.keyboardFactory = keyboardFactory;
     }
 
@@ -41,7 +41,7 @@ public class GLWindowSeatFactory {
         //added or removed
 
         //enable pointer and keyboard for wlseat
-        wlSeat.setWlPointer(this.wlPointerFactory.create(this.pointerFactory.create(compositor)));
+        wlSeat.setWlPointer(this.wlPointerFactory.create(this.pointerDeviceFactory.create(compositor)));
         wlSeat.setWlKeyboard(this.wlKeyboardFactory.create(this.keyboardFactory.create()));
 
         glWindow.addMouseListener(glWindowSeat);

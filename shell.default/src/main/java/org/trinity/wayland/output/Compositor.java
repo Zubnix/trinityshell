@@ -2,11 +2,9 @@ package org.trinity.wayland.output;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.common.eventbus.Subscribe;
 import org.freedesktop.wayland.server.Display;
+import org.freedesktop.wayland.server.WlSurfaceResource;
 import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.shell.scene.api.event.Committed;
-import org.trinity.shell.scene.api.event.Destroyed;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -38,24 +36,10 @@ public class Compositor {
         return shellSurface;
     }
 
-    @Subscribe
-    public void handle(final Committed event) {
-        final ShellSurface shellSurface = event.getSource();
-        if (shellSurface.getDamage()
-                        .isPresent()) {
-            requestRender(shellSurface);
-        }
-    }
-
-    @Subscribe
-    public void handle(final Destroyed event) {
-        requestRender(event.getSource());
-    }
-
-    public void requestRender(final ShellSurface shellSurface) {
+    public void requestRender(final WlSurfaceResource surfaceResource) {
         if (this.renderScheduled.compareAndSet(false,
                                                true)) {
-            if (this.scene.needsRender(shellSurface)) {
+            if (this.scene.needsRender(surfaceResource)) {
                 renderScene();
             }
         }
