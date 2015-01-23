@@ -14,7 +14,9 @@ import static dagger.Provides.Type.SET;
         injects = {
                 ShmRendererFactory.class,
                 CompositorFactory.class,
-                Display.class
+                Display.class,
+                RegionFactory.class,
+                SurfaceFactory.class
         },
         library = true,
         //needs render engine implementation, defined at startup.

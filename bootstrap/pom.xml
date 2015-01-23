@@ -20,30 +20,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- bindings -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>binding.api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>binding.default</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- shell api -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>shell.scene.api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>shell.view.api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- logging implementation -->
         <dependency>
             <groupId>ch.qos.logback</groupId>

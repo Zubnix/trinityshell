@@ -10,7 +10,6 @@ import org.freedesktop.wayland.server.WlPointerResource;
 import org.freedesktop.wayland.server.WlSurfaceResource;
 import org.freedesktop.wayland.shared.WlPointerButtonState;
 import org.freedesktop.wayland.util.Fixed;
-import org.trinity.shell.scene.api.ShellSurface;
 import org.trinity.wayland.output.events.Motion;
 import org.trinity.wayland.protocol.WlSurface;
 
@@ -93,7 +92,7 @@ public class PointerDevice {
         final WlSurface wlSurface = (WlSurface) surfaceResource.getImplementation();
         //keep reference to surface position position, relative to the pointer position
         final PointImmutable pointerStartPosition = getPosition();
-        final PointImmutable surfaceStartPosition = wlSurface.getShellSurface()
+        final PointImmutable surfaceStartPosition = wlSurface.getSurface()
                                                              .getPosition();
         final PointImmutable pointerSurfaceDelta = new Point(pointerStartPosition.getX() - surfaceStartPosition.getX(),
                                                              pointerStartPosition.getY() - surfaceStartPosition.getY());
@@ -136,9 +135,9 @@ public class PointerDevice {
                       final PointImmutable pointerSurfaceDelta,
                       final Motion motion) {
         WlSurface wlSurface = (WlSurface) surfaceResource.getImplementation();
-        final ShellSurface shellSurface = wlSurface.getShellSurface();
+        final Surface Surface = wlSurface.getSurface();
 
-        shellSurface.accept(config ->
+        Surface.accept(config ->
                                     config.setPosition(new Point(motion.getX() - pointerSurfaceDelta.getX(),
                                                                  motion.getY() - pointerSurfaceDelta.getY())));
         this.compositor.requestRender(surfaceResource);

@@ -64,13 +64,7 @@
     </properties>
 
     <modules>
-        <module>binding.api</module>
-        <module>binding.default</module>
-        <module>shell.view.api</module>
-        <module>shell.scene.api</module>
-
         <module>shell.default</module>
-
         <module>bootstrap</module>
     </modules>
 

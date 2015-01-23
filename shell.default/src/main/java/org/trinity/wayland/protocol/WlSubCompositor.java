@@ -1,7 +1,6 @@
 package org.trinity.wayland.protocol;
 
 import com.google.common.collect.Sets;
-import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.*;
 
 import javax.annotation.Nonnull;
@@ -13,7 +12,6 @@ import java.util.Set;
 public class WlSubCompositor extends Global<WlSubcompositorResource> implements WlSubcompositorRequests, ProtocolObject<WlSubcompositorResource> {
 
     private final Set<WlSubcompositorResource> resources = Sets.newHashSet();
-    private final EventBus                     eventBus  = new EventBus();
 
     private final WlSubSurfaceFactory wlSubSurfaceFactory;
 
@@ -56,21 +54,6 @@ public class WlSubCompositor extends Global<WlSubcompositorResource> implements 
                                            version,
                                            id,
                                            this);
-    }
-
-    @Override
-    public void register(@Nonnull final Object listener) {
-        this.eventBus.register(listener);
-    }
-
-    @Override
-    public void unregister(@Nonnull final Object listener) {
-        this.eventBus.unregister(listener);
-    }
-
-    @Override
-    public void post(@Nonnull final Object event) {
-        this.eventBus.post(event);
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.WlRegionRequests;
 import org.freedesktop.wayland.server.WlRegionResource;
-import org.trinity.shell.scene.api.Region;
+import org.trinity.wayland.output.Region;
 
 import javax.annotation.Nonnegative;
 import javax.media.nativewindow.util.Rectangle;

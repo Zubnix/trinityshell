@@ -5,11 +5,10 @@ import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.*;
-import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
+import org.trinity.wayland.output.Surface;
+import org.trinity.wayland.output.SurfaceConfigurable;
 import org.trinity.wayland.output.Compositor;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Set;
 
@@ -18,18 +17,17 @@ import java.util.Set;
 public class WlCompositor extends Global<WlCompositorResource> implements WlCompositorRequestsV3, ProtocolObject<WlCompositorResource> {
 
     private final Set<WlCompositorResource> resources = Sets.newHashSet();
-    private final EventBus                  eventBus  = new EventBus();
 
     private final WlSurfaceFactory                wlSurfaceFactory;
     private final WlRegionFactory                 wlRegionFactory;
-    private final org.trinity.PixmanRegionFactory pixmanRegionFactory;
+    private final org.trinity.wayland.output.RegionFactory pixmanRegionFactory;
     private final Compositor                      compositor;
 
     @Inject
     WlCompositor(@Provided final Display display,
                  @Provided final WlSurfaceFactory wlSurfaceFactory,
                  @Provided final WlRegionFactory wlRegionFactory,
-                 @Provided final org.trinity.PixmanRegionFactory pixmanRegionFactory,
+                 @Provided final org.trinity.wayland.output.RegionFactory pixmanRegionFactory,
                  final Compositor compositor) {
         super(display,
               WlCompositorResource.class,
@@ -52,9 +50,9 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
     @Override
     public void createSurface(final WlCompositorResource compositorResource,
                               final int id) {
-        final ShellSurface shellSurface = this.compositor.create();
+        final Surface surface = this.compositor.create();
         final WlSurface wlSurface = this.wlSurfaceFactory.create(compositorResource,
-                                                                 shellSurface);
+                                                                 surface);
 
         final WlSurfaceResource surfaceResource = wlSurface.add(compositorResource.getClient(),
                                                                 compositorResource.getVersion(),
@@ -64,15 +62,15 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
             public void handle() {
                 remove();
                 WlCompositor.this.compositor.getScene()
-                                            .getShellSurfacesStack()
+                                            .getSurfacesStack()
                                             .remove(surfaceResource);
-                shellSurface.accept(ShellSurfaceConfigurable::markDestroyed);
+                surface.accept(SurfaceConfigurable::markDestroyed);
                 WlCompositor.this.compositor.requestRender(surfaceResource);
             }
         });
 
         this.compositor.getScene()
-                       .getShellSurfacesStack()
+                       .getSurfacesStack()
                        .push(surfaceResource);
     }
 
@@ -98,21 +96,6 @@ public class WlCompositor extends Global<WlCompositorResource> implements WlComp
                                         version,
                                         id,
                                         this);
-    }
-
-    @Override
-    public void register( @Nonnull final Object listener) {
-        this.eventBus.register(listener);
-    }
-
-    @Override
-    public void unregister( @Nonnull final Object listener) {
-        this.eventBus.unregister(listener);
-    }
-
-    @Override
-    public void post( @Nonnull final Object event) {
-        this.eventBus.post(event);
     }
 
     public Compositor getCompositor() {

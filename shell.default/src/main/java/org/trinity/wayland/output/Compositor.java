@@ -4,7 +4,6 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import org.freedesktop.wayland.server.Display;
 import org.freedesktop.wayland.server.WlSurfaceResource;
-import org.trinity.shell.scene.api.ShellSurface;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -16,22 +15,22 @@ public class Compositor {
     private final Display                               display;
     private final Scene                                 scene;
     private final ShmRenderer                           shmRenderer;
-    private final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory;
+    private final SurfaceFactory simpleShellSurfaceFactory;
 
     private AtomicBoolean renderScheduled = new AtomicBoolean(false);
 
     Compositor(@Provided final Display display,
                @Provided final Scene scene,
                final ShmRenderer shmRenderer,
-               @Provided final org.trinity.SimpleShellSurfaceFactory simpleShellSurfaceFactory) {
+               @Provided final SurfaceFactory simpleShellSurfaceFactory) {
         this.display = display;
         this.scene = scene;
         this.shmRenderer = shmRenderer;
         this.simpleShellSurfaceFactory = simpleShellSurfaceFactory;
     }
 
-    public ShellSurface create() {
-        final ShellSurface shellSurface = this.simpleShellSurfaceFactory.create(Optional.empty());
+    public Surface create() {
+        final Surface shellSurface = this.simpleShellSurfaceFactory.create(Optional.empty());
         shellSurface.register(this);
         return shellSurface;
     }
@@ -52,7 +51,7 @@ public class Compositor {
                                                                false)) {
                             try {
                                 this.shmRenderer.beginRender();
-                                this.scene.getShellSurfacesStack()
+                                this.scene.getSurfacesStack()
                                           .forEach(this.shmRenderer::render);
                                 this.shmRenderer.endRender();
                                 this.display.flushClients();

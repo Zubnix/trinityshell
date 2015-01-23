@@ -1,11 +1,10 @@
-package org.trinity;
+package org.trinity.wayland.output;
 
 import com.google.auto.factory.AutoFactory;
 import com.sun.jna.ptr.IntByReference;
 import org.freedesktop.pixman1.Pixman1Library;
 import org.freedesktop.pixman1.pixman_box32;
 import org.freedesktop.pixman1.pixman_region32;
-import org.trinity.shell.scene.api.Region;
 
 import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.Rectangle;
@@ -13,15 +12,14 @@ import javax.media.nativewindow.util.RectangleImmutable;
 import java.util.ArrayList;
 import java.util.List;
 
-@AutoFactory(className = "PixmanRegionFactory")
-public class PixmanRegion implements Region {
+@AutoFactory(className = "RegionFactory")
+public class Region {
 
     private pixman_region32 pixman_region32 = new pixman_region32();
 
-    PixmanRegion() {
+    Region() {
     }
 
-    @Override
     public List<RectangleImmutable> asList() {
         //int pointer
         final IntByReference n_rects = new IntByReference();
@@ -45,7 +43,6 @@ public class PixmanRegion implements Region {
         return boxes;
     }
 
-    @Override
     public Region add(@Nonnull final RectangleImmutable rectangle) {
         final pixman_region32 new_pixman_region32 = new pixman_region32();
         //FIXME check result.
@@ -61,7 +58,6 @@ public class PixmanRegion implements Region {
         return this;
     }
 
-    @Override
     public Region subtract(@Nonnull final RectangleImmutable rectangle) {
         final pixman_region32 delta_pixman_region32 = new pixman_region32();
         Pixman1Library.INSTANCE.pixman_region32_init_rect(delta_pixman_region32,

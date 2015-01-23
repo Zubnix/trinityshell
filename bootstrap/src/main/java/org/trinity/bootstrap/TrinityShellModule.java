@@ -1,40 +1,22 @@
 package org.trinity.bootstrap;
 
 import dagger.Module;
-import dagger.ObjectGraph;
-import dagger.Provides;
 import org.trinity.wayland.output.gl.OutputGLModule;
 import org.trinity.wayland.platform.newt.PlatformNewtModule;
 import org.trinity.wayland.protocol.ProtocolModule;
 
-import javax.inject.Singleton;
-
 @Module(
         injects = {
-                EntryPoint.class,
-                ObjectGraph.class
+                EntryPoint.class
         },
         includes = {
-                //X11Module.class,
                 OutputGLModule.class,
                 ProtocolModule.class,
                 PlatformNewtModule.class,
-                //BindingDefaultModule.class
         },
         complete = true,
         library = false
 )
 public class TrinityShellModule {
 
-    private ObjectGraph objectGraph;
-
-    void setObjectGraph(final ObjectGraph objectGraph) {
-        this.objectGraph = objectGraph;
-    }
-
-    @Provides
-    @Singleton
-    ObjectGraph provideObjectGraph() {
-        return this.objectGraph;
-    }
 }

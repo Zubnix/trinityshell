@@ -1,9 +1,0 @@
-dependencies {
-    compile(
-        project(":binding.api"),
-        project(":binding.default"),
-        project(":shell.scene.api"),
-        project(":shell.view.api"),
-        project(":shell.default"),
-    )
-}

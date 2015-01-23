@@ -1,8 +1,0 @@
-include ":common",
-        ":binding.api",
-        ":binding.default",
-        ":shell.scene.api",
-        ":shell.view.api",
-        ":shell.default",
-
-        ":bootstrap"

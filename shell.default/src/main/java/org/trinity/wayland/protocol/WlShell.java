@@ -3,7 +3,6 @@ package org.trinity.wayland.protocol;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
-import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.*;
 
 import javax.annotation.Nonnull;
@@ -13,7 +12,6 @@ import java.util.Set;
 public class WlShell extends Global<WlShellResource> implements WlShellRequests, ProtocolObject<WlShellResource> {
 
     private final Set<WlShellResource> resources = Sets.newHashSet();
-    private final EventBus             eventBus  = new EventBus();
 
     private final WlShellSurfaceFactory wlShellSurfaceFactory;
 
@@ -66,20 +64,5 @@ public class WlShell extends Global<WlShellResource> implements WlShellRequests,
                                    version,
                                    id,
                                    this);
-    }
-
-    @Override
-    public void register(@Nonnull final Object listener) {
-        this.eventBus.register(listener);
-    }
-
-    @Override
-    public void unregister(@Nonnull final Object listener) {
-        this.eventBus.unregister(listener);
-    }
-
-    @Override
-    public void post(@Nonnull final Object event) {
-        this.eventBus.post(event);
     }
 }

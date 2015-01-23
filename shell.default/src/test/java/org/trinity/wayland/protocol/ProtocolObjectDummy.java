@@ -3,7 +3,6 @@ package org.trinity.wayland.protocol;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Resource;
 
-import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,20 +22,5 @@ public class ProtocolObjectDummy implements ProtocolObject<Resource<?>> {
                               final int version,
                               final int id) {
         return mock(Resource.class);
-    }
-
-    @Override
-    public void register(@Nonnull final Object listener) {
-
-    }
-
-    @Override
-    public void unregister(@Nonnull final Object listener) {
-
-    }
-
-    @Override
-    public void post(@Nonnull final Object event) {
-
     }
 }

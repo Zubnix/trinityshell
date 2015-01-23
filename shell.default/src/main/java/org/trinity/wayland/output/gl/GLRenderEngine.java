@@ -6,9 +6,11 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.hackoeur.jglm.Mat4;
 import com.jogamp.common.nio.Buffers;
 import org.freedesktop.wayland.server.ShmBuffer;
+import org.freedesktop.wayland.server.WlSurfaceResource;
 import org.freedesktop.wayland.shared.WlShmFormat;
-import org.trinity.shell.scene.api.ShellSurface;
+import org.trinity.wayland.output.Surface;
 import org.trinity.wayland.output.ShmRenderEngine;
+import org.trinity.wayland.protocol.WlSurface;
 
 import javax.media.nativewindow.util.PointImmutable;
 import javax.media.opengl.GL;
@@ -51,7 +53,7 @@ public class GLRenderEngine implements ShmRenderEngine {
                     "    gl_FragColor.a = 1f;\n" +
                     "}";
 
-    private final Map<ShellSurface, GLSurfaceData> cachedSurfaceData = Maps.newHashMap();
+    private final Map<WlSurfaceResource, GLSurfaceData> cachedSurfaceData = Maps.newHashMap();
     private final Map<GLBufferFormat, Integer>     shaderPrograms    = Maps.newHashMap();
 
     private final ListeningExecutorService renderThread;
@@ -121,40 +123,27 @@ public class GLRenderEngine implements ShmRenderEngine {
     }
 
     @Override
-    public ListenableFuture<?> draw(final ShellSurface shellSurface,
+    public ListenableFuture<?> draw(final WlSurfaceResource surfaceResource,
                                     final ShmBuffer buffer) {
-        return this.renderThread.submit(() -> doDraw(shellSurface,
+        return this.renderThread.submit(() -> doDraw(surfaceResource,
                                                      buffer));
     }
 
-    private void doDraw(final ShellSurface shellSurface,
+    private void doDraw(final WlSurfaceResource surfaceResource,
                         final ShmBuffer buffer) {
 
         buffer.beginAccess();
-        final PointImmutable position = shellSurface.getPosition();
+        WlSurface implementation = (WlSurface) surfaceResource.getImplementation();
+        final Surface surface = implementation.getSurface();
+        final PointImmutable position = surface.getPosition();
         final float[] vertices = {
-                position.getX(),
-                position.getY(),
-                0f,
-                0f,
-
-                position.getX() + buffer.getWidth(),
-                position.getY(),
-                1f,
-                0f,
-
-                position.getX() + buffer.getWidth(),
-                position.getY() + buffer.getHeight(),
-                1f,
-                1f,
-
-                position.getX(),
-                position.getY() + buffer.getHeight(),
-                0f,
-                1f
+                position.getX(), position.getY(), 0f, 0f,
+                position.getX() + buffer.getWidth(), position.getY(), 1f, 0f,
+                position.getX() + buffer.getWidth(), position.getY() + buffer.getHeight(), 1f, 1f,
+                position.getX(), position.getY() + buffer.getHeight(), 0f, 1f
         };
 
-        querySurfaceData(shellSurface,
+        querySurfaceData(surfaceResource,
                          buffer).makeActive(this.gl,
                                             buffer);
 
@@ -311,14 +300,14 @@ public class GLRenderEngine implements ShmRenderEngine {
         return format;
     }
 
-    private GLSurfaceData querySurfaceData(final ShellSurface shellSurface,
+    private GLSurfaceData querySurfaceData(final WlSurfaceResource surfaceResource,
                                            final ShmBuffer buffer) {
-        GLSurfaceData surfaceData = this.cachedSurfaceData.get(shellSurface);
+        GLSurfaceData surfaceData = this.cachedSurfaceData.get(surfaceResource);
         if (surfaceData == null) {
             surfaceData = GLSurfaceData.create(this.gl);
             surfaceData.init(this.gl,
                              buffer);
-            this.cachedSurfaceData.put(shellSurface,
+            this.cachedSurfaceData.put(surfaceResource,
                                        surfaceData);
         }
         return surfaceData;

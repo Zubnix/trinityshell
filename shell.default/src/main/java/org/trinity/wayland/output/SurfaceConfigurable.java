@@ -1,0 +1,51 @@
+package org.trinity.wayland.output;
+
+
+import java.util.function.IntConsumer;
+
+import javax.annotation.Nonnull;
+import javax.media.nativewindow.util.PointImmutable;
+import javax.media.nativewindow.util.RectangleImmutable;
+
+public interface SurfaceConfigurable {
+    @Nonnull
+    SurfaceConfigurable addCallback(IntConsumer callback);
+
+    @Nonnull
+    SurfaceConfigurable removeOpaqueRegion();
+
+    @Nonnull
+    SurfaceConfigurable setOpaqueRegion(@Nonnull Region opaqueRegion);
+
+    @Nonnull
+    SurfaceConfigurable removeInputRegion();
+
+    @Nonnull
+    SurfaceConfigurable setInputRegion(@Nonnull Region inputRegion);
+
+    @Nonnull
+    SurfaceConfigurable setPosition(@Nonnull PointImmutable position);
+
+    @Nonnull
+    SurfaceConfigurable markDestroyed();
+
+    @Nonnull
+    SurfaceConfigurable markDamaged(@Nonnull RectangleImmutable damage);
+
+    @Nonnull
+    SurfaceConfigurable attachBuffer(@Nonnull Object buffer,
+                                          @Nonnull Integer relX,
+                                          @Nonnull Integer relY);
+
+    @Nonnull
+    SurfaceConfigurable setTransform(float[] transform);
+
+    @Nonnull
+    SurfaceConfigurable removeTransform();
+
+    @Nonnull
+    SurfaceConfigurable detachBuffer();
+
+    @Nonnull
+    SurfaceConfigurable commit();
+}

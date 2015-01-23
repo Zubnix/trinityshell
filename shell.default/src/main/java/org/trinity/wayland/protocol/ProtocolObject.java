@@ -4,13 +4,12 @@ import com.google.common.base.Preconditions;
 import org.freedesktop.wayland.server.Client;
 import org.freedesktop.wayland.server.Listener;
 import org.freedesktop.wayland.server.Resource;
-import org.trinity.shell.scene.api.Listenable;
 
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
-public interface ProtocolObject<T extends Resource<?>> extends Listenable {
+public interface ProtocolObject<T extends Resource<?>> {
     /**
      * Get all resources currently associated with this protocol object.
      *

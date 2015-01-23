@@ -9,8 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.trinity.PixmanRegionFactory;
 import org.trinity.wayland.output.Compositor;
+import org.trinity.wayland.output.RegionFactory;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 @PrepareForTest({
         WlSurfaceFactory.class,
         WlRegionFactory.class,
-        PixmanRegionFactory.class,
+        RegionFactory.class,
 })
 public class WlCompositorTest {
 
@@ -30,7 +30,7 @@ public class WlCompositorTest {
     @Mock
     private WlRegionFactory                 wlRegionFactory;
     @Mock
-    private org.trinity.PixmanRegionFactory pixmanRegionFactory;
+    private RegionFactory pixmanRegionFactory;
     @Mock
     private Compositor                      compositor;
 

@@ -17,7 +17,7 @@
  * this program; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  ******************************************************************************/
-package org.trinity;
+package org.trinity.wayland.output;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
@@ -25,28 +25,23 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.WlBufferResource;
-import org.trinity.shell.scene.api.Region;
-import org.trinity.shell.scene.api.ShellSurface;
-import org.trinity.shell.scene.api.ShellSurfaceConfigurable;
-import org.trinity.shell.scene.api.ShellSurfaceConfiguration;
-import org.trinity.shell.scene.api.event.Committed;
-import org.trinity.shell.scene.api.event.Destroyed;
-import org.trinity.shell.scene.api.event.Moved;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.media.nativewindow.util.Point;
 import javax.media.nativewindow.util.PointImmutable;
 import javax.media.nativewindow.util.RectangleImmutable;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.IntConsumer;
 
 @NotThreadSafe
-@AutoFactory(className = "SimpleShellSurfaceFactory")
-public class SimpleShellSurface extends EventBus implements ShellSurface, ShellSurfaceConfigurable {
+@AutoFactory(className = "SurfaceFactory")
+public class Surface extends EventBus implements SurfaceConfigurable {
 
-    private final PixmanRegionFactory pixmanRegionFactory;
+    private final RegionFactory pixmanRegionFactory;
 
     //pending states
     @Nonnull
@@ -58,15 +53,11 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     private Optional<WlBufferResource> pendingBuffer       = Optional.empty();
     @Nonnull
-    private float[]                    pendingTransform    = new float[]{1,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            1};
+    private float[]                    pendingTransform    = new float[]{
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1
+    };
     @Nonnull
     private Point                      pendingBufferOffset = new Point();
 
@@ -82,61 +73,52 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     @Nonnull
     private       Optional<WlBufferResource> buffer       = Optional.empty();
     @Nonnull
-    private       float[]                    transform    = new float[]{1,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            1};
+    private       float[]                    transform    = new float[]{
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1
+    };
     @Nonnull
     private       Point                      position     = new Point();
     //additional server side states
     @Nonnull
     private       Boolean                    destroyed    = Boolean.FALSE;
 
-    SimpleShellSurface(@Provided final PixmanRegionFactory pixmanRegionFactory,
-                       @Nonnull final Optional<?> optionalBuffer) {
+    Surface(@Provided final RegionFactory pixmanRegionFactory,
+            @Nonnull final Optional<WlBufferResource> optionalBuffer) {
         this.pixmanRegionFactory = pixmanRegionFactory;
-        this.buffer = (Optional<WlBufferResource>) optionalBuffer;
+        this.buffer = optionalBuffer;
     }
 
-    @Override
-    public void accept(@Nonnull final ShellSurfaceConfiguration config) {
+    public void accept(@Nonnull final SurfaceConfiguration config) {
         config.visit(this);
     }
 
     @Nonnull
-    @Override
     public List<IntConsumer> getPaintCallbacks() {
         return this.callbacks;
     }
 
     @Nonnull
-    @Override
     public Boolean isDestroyed() {
         return this.destroyed;
     }
 
     @Nonnull
-    @Override
     public float[] getTransform() {
         return this.transform;
     }
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable markDestroyed() {
+    public SurfaceConfigurable markDestroyed() {
         this.destroyed = true;
-        post(new Destroyed(this));
         return this;
     }
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable markDamaged(@Nonnull final RectangleImmutable damage) {
+    public SurfaceConfigurable markDamaged(@Nonnull final RectangleImmutable damage) {
         this.pendingDamage = Optional.of(this.pendingDamage.orElse(this.pixmanRegionFactory.create())
                                                            .add(damage));
         return this;
@@ -144,7 +126,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable attachBuffer(@Nonnull final Object buffer,
+    public SurfaceConfigurable attachBuffer(@Nonnull final Object buffer,
                                                  @Nonnull final Integer relX,
                                                  @Nonnull final Integer relY) {
         Preconditions.checkArgument(buffer instanceof WlBufferResource);
@@ -157,14 +139,14 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable setTransform(final float[] transform) {
+    public SurfaceConfigurable setTransform(final float[] transform) {
         this.pendingTransform = transform;
         return this;
     }
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable removeTransform() {
+    public SurfaceConfigurable removeTransform() {
         this.pendingTransform = new float[]{1,
                 0,
                 0,
@@ -179,7 +161,7 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable detachBuffer() {
+    public SurfaceConfigurable detachBuffer() {
         this.pendingBuffer = Optional.empty();
         this.pendingDamage = Optional.empty();
         this.pendingBufferOffset = new Point();
@@ -187,38 +169,33 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
     }
 
     @Nonnull
-    @Override
     public PointImmutable getPosition() {
         return this.position;
     }
 
     @Nonnull
-    @Override
     public Optional<Region> getInputRegion() {
         return this.inputRegion;
     }
 
     @Nonnull
-    @Override
     public Optional<Region> getDamage() {
         return this.damage;
     }
 
     @Nonnull
-    @Override
     public Optional<Region> getOpaqueRegion() {
         return this.opaqueRegion;
     }
 
     @Nonnull
-    @Override
     public Optional<WlBufferResource> getBuffer() {
         return this.buffer;
     }
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable commit() {
+    public SurfaceConfigurable commit() {
         //flush
         this.transform = this.pendingTransform;
         if (this.buffer.isPresent()) {
@@ -234,53 +211,56 @@ public class SimpleShellSurface extends EventBus implements ShellSurface, ShellS
         this.opaqueRegion = this.pendingOpaqueRegion;
         //reset
         detachBuffer();
-        //notify
-        post(new Committed(this));
         return this;
     }
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable addCallback(final IntConsumer callback) {
+    public SurfaceConfigurable addCallback(final IntConsumer callback) {
         this.callbacks.add(callback);
         return this;
     }
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable removeOpaqueRegion() {
+    public SurfaceConfigurable removeOpaqueRegion() {
         this.pendingOpaqueRegion = Optional.empty();
         return this;
     }
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable setOpaqueRegion(@Nonnull final Region opaqueRegion) {
+    public SurfaceConfigurable setOpaqueRegion(@Nonnull final Region opaqueRegion) {
         this.pendingOpaqueRegion = Optional.of(opaqueRegion);
         return this;
     }
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable removeInputRegion() {
+    public SurfaceConfigurable removeInputRegion() {
         this.pendingInputRegion = Optional.empty();
         return this;
     }
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable setInputRegion(@Nonnull final Region inputRegion) {
+    public SurfaceConfigurable setInputRegion(@Nonnull final Region inputRegion) {
         this.pendingInputRegion = Optional.of(inputRegion);
         return this;
     }
 
     @Nonnull
     @Override
-    public ShellSurfaceConfigurable setPosition(@Nonnull final PointImmutable position) {
+    public SurfaceConfigurable setPosition(@Nonnull final PointImmutable position) {
         this.position = new Point(position.getX(),
                                   position.getY());
-        post(new Moved(this,
-                       this.position));
+        return this;
+    }
+
+    public Surface firePaintCallbacks(final int serial) {
+        final List<IntConsumer> callbacks = new ArrayList<>(getPaintCallbacks());
+        getPaintCallbacks().clear();
+        callbacks.forEach(paintCallback -> paintCallback.accept(serial));
         return this;
     }
 }
