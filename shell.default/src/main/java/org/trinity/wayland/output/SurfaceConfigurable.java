@@ -1,6 +1,8 @@
 package org.trinity.wayland.output;
 
 
+import org.freedesktop.wayland.server.WlBufferResource;
+
 import java.util.function.IntConsumer;
 
 import javax.annotation.Nonnull;
@@ -33,7 +35,7 @@ public interface SurfaceConfigurable {
     SurfaceConfigurable markDamaged(@Nonnull RectangleImmutable damage);
 
     @Nonnull
-    SurfaceConfigurable attachBuffer(@Nonnull Object buffer,
+    SurfaceConfigurable attachBuffer(@Nonnull WlBufferResource buffer,
                                           @Nonnull Integer relX,
                                           @Nonnull Integer relY);
 

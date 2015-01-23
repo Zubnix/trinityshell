@@ -126,12 +126,11 @@ public class Surface extends EventBus implements SurfaceConfigurable {
 
     @Nonnull
     @Override
-    public SurfaceConfigurable attachBuffer(@Nonnull final Object buffer,
+    public SurfaceConfigurable attachBuffer(@Nonnull final WlBufferResource buffer,
                                                  @Nonnull final Integer relX,
                                                  @Nonnull final Integer relY) {
-        Preconditions.checkArgument(buffer instanceof WlBufferResource);
 
-        this.pendingBuffer = Optional.of((WlBufferResource) buffer);
+        this.pendingBuffer = Optional.of(buffer);
         this.pendingBufferOffset = new Point(relX,
                                              relY);
         return this;

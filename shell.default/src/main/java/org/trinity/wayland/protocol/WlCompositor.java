@@ -3,7 +3,6 @@ package org.trinity.wayland.protocol;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
-import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.*;
 import org.trinity.wayland.output.Surface;
 import org.trinity.wayland.output.SurfaceConfigurable;
