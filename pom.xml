@@ -64,7 +64,7 @@
     </properties>
 
     <modules>
-        <module>shell.default</module>
+        <module>shell</module>
         <module>bootstrap</module>
     </modules>
 
