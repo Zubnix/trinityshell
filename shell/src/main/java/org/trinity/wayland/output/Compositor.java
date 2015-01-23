@@ -12,12 +12,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AutoFactory(className = "CompositorFactory")
 public class Compositor {
 
-    private final Display                               display;
-    private final Scene                                 scene;
-    private final ShmRenderer                           shmRenderer;
+    private final Display        display;
+    private final Scene          scene;
+    private final ShmRenderer    shmRenderer;
     private final SurfaceFactory simpleShellSurfaceFactory;
 
-    private AtomicBoolean renderScheduled = new AtomicBoolean(false);
+    private final AtomicBoolean renderScheduled = new AtomicBoolean(false);
 
     Compositor(@Provided final Display display,
                @Provided final Scene scene,

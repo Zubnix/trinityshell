@@ -17,22 +17,22 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
-        WlSurfaceFactory.class,
-        WlRegionFactory.class,
-        RegionFactory.class,
-})
+                        WlSurfaceFactory.class,
+                        WlRegionFactory.class,
+                        RegionFactory.class,
+                })
 public class WlCompositorTest {
 
     @Mock
-    private Display                         display;
+    private Display          display;
     @Mock
-    private WlSurfaceFactory                wlSurfaceFactory;
+    private WlSurfaceFactory wlSurfaceFactory;
     @Mock
-    private WlRegionFactory                 wlRegionFactory;
+    private WlRegionFactory  wlRegionFactory;
     @Mock
-    private RegionFactory pixmanRegionFactory;
+    private RegionFactory    pixmanRegionFactory;
     @Mock
-    private Compositor                      compositor;
+    private Compositor       compositor;
 
     @InjectMocks
     private WlCompositor wlCompositor;

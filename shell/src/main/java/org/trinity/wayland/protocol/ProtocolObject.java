@@ -44,6 +44,7 @@ public interface ProtocolObject<T extends Resource<?>> {
      * @param client  The client owning the newly created resource.
      * @param version The version desired by the client for the new resource.
      * @param id      The id for the new resource, as provided by the client
+     *
      * @return the newly created resource.
      */
     default T add(final Client client,
@@ -72,6 +73,7 @@ public interface ProtocolObject<T extends Resource<?>> {
      * @param client  The client owning the newly created resource.
      * @param version The version desired by the client for the new resource.
      * @param id      The id for the new resource, as provided by the client
+     *
      * @return the newly created resource.
      */
     T create(final Client client,

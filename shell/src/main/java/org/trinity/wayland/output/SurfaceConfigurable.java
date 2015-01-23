@@ -3,11 +3,10 @@ package org.trinity.wayland.output;
 
 import org.freedesktop.wayland.server.WlBufferResource;
 
-import java.util.function.IntConsumer;
-
 import javax.annotation.Nonnull;
 import javax.media.nativewindow.util.PointImmutable;
 import javax.media.nativewindow.util.RectangleImmutable;
+import java.util.function.IntConsumer;
 
 public interface SurfaceConfigurable {
     @Nonnull
@@ -36,8 +35,8 @@ public interface SurfaceConfigurable {
 
     @Nonnull
     SurfaceConfigurable attachBuffer(@Nonnull WlBufferResource buffer,
-                                          @Nonnull Integer relX,
-                                          @Nonnull Integer relY);
+                                     @Nonnull Integer relX,
+                                     @Nonnull Integer relY);
 
     @Nonnull
     SurfaceConfigurable setTransform(float[] transform);

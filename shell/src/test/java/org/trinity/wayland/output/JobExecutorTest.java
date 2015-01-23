@@ -85,10 +85,10 @@ public class JobExecutorTest {
                      buffer[0] = 0;
                      return null;
                  }
-        ).when(this.libc)
-         .read(eq(this.pipeR),
-               any(),
-               anyInt());
+                ).when(this.libc)
+                 .read(eq(this.pipeR),
+                       any(),
+                       anyInt());
 
         this.jobExecutor.start();
         this.jobExecutor.fireFinishedEvent();
@@ -125,10 +125,10 @@ public class JobExecutorTest {
                      buffer[0] = 1;
                      return null;
                  }
-        ).when(this.libc)
-         .read(eq(this.pipeR),
-               any(),
-               anyInt());
+                ).when(this.libc)
+                 .read(eq(this.pipeR),
+                       any(),
+                       anyInt());
 
         final Runnable job = mock(Runnable.class);
         this.jobExecutor.start();
@@ -163,10 +163,10 @@ public class JobExecutorTest {
                      buffer[0] = 1;
                      return null;
                  }
-        ).when(this.libc)
-         .read(eq(this.pipeR),
-               any(),
-               anyInt());
+                ).when(this.libc)
+                 .read(eq(this.pipeR),
+                       any(),
+                       anyInt());
 
         final Runnable job = mock(Runnable.class);
         this.jobExecutor.start();
@@ -201,10 +201,10 @@ public class JobExecutorTest {
                          buffer[0] = 1;
                          return null;
                      }
-            ).when(this.libc)
-             .read(eq(this.pipeR),
-                   any(),
-                   anyInt());
+                    ).when(this.libc)
+                     .read(eq(this.pipeR),
+                           any(),
+                           anyInt());
             this.jobExecutor.handle(this.pipeR,
                                     1234);
             return null;
@@ -220,10 +220,10 @@ public class JobExecutorTest {
                          buffer[0] = 0;
                          return null;
                      }
-            ).when(this.libc)
-             .read(eq(this.pipeR),
-                   any(),
-                   anyInt());
+                    ).when(this.libc)
+                     .read(eq(this.pipeR),
+                           any(),
+                           anyInt());
             this.jobExecutor.handle(this.pipeR,
                                     1234);
             return null;

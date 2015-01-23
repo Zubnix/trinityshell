@@ -20,7 +20,9 @@ public class ShmRenderer {
 
     public void render(final WlSurfaceResource surfaceResource) {
         final WlSurface implementation = (WlSurface) surfaceResource.getImplementation();
-        final WlBufferResource wlBufferResource = implementation.getSurface().getBuffer().get();
+        final WlBufferResource wlBufferResource = implementation.getSurface()
+                                                                .getBuffer()
+                                                                .get();
         render(surfaceResource,
                wlBufferResource);
     }
@@ -30,7 +32,7 @@ public class ShmRenderer {
 
         final ShmBuffer shmBuffer = ShmBuffer.get(bufferResource);
         if (shmBuffer == null) {
-            throw new IllegalArgumentException("Buffer is not an ShmBuffer.");
+            throw new IllegalArgumentException("Buffer resource is not an ShmBuffer.");
         }
         try {
             this.shmRenderEngine.draw(surfaceResource,
@@ -41,7 +43,8 @@ public class ShmRenderer {
             e.printStackTrace();
         }
         final WlSurface implementation = (WlSurface) surfaceResource.getImplementation();
-        implementation.getSurface().firePaintCallbacks((int) TimeUnit.NANOSECONDS.toMillis(System.nanoTime()));
+        implementation.getSurface()
+                      .firePaintCallbacks((int) TimeUnit.NANOSECONDS.toMillis(System.nanoTime()));
     }
 
     public void beginRender() throws ExecutionException, InterruptedException {

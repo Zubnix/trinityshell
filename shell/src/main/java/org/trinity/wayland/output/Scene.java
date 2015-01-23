@@ -1,7 +1,6 @@
 package org.trinity.wayland.output;
 
 import com.google.common.collect.Lists;
-
 import org.freedesktop.wayland.server.WlSurfaceRequests;
 import org.freedesktop.wayland.server.WlSurfaceResource;
 import org.trinity.wayland.protocol.WlSurface;

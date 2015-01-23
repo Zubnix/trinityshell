@@ -101,8 +101,8 @@ public class PointerDevice {
             @Subscribe
             public void handle(final Motion motion) {
                 if (getGrabSerial().isPresent()
-                        && getGrabSerial().get()
-                                          .equals(grabSerial)) {
+                    && getGrabSerial().get()
+                                      .equals(grabSerial)) {
                     //there is pointer motion, move surface
                     move(surfaceResource,
                          pointerSurfaceDelta,
@@ -134,12 +134,11 @@ public class PointerDevice {
     private void move(final WlSurfaceResource surfaceResource,
                       final PointImmutable pointerSurfaceDelta,
                       final Motion motion) {
-        WlSurface wlSurface = (WlSurface) surfaceResource.getImplementation();
+        final WlSurface wlSurface = (WlSurface) surfaceResource.getImplementation();
         final Surface Surface = wlSurface.getSurface();
-
         Surface.accept(config ->
-                                    config.setPosition(new Point(motion.getX() - pointerSurfaceDelta.getX(),
-                                                                 motion.getY() - pointerSurfaceDelta.getY())));
+                               config.setPosition(new Point(motion.getX() - pointerSurfaceDelta.getX(),
+                                                            motion.getY() - pointerSurfaceDelta.getY())));
         this.compositor.requestRender(surfaceResource);
     }
 
@@ -190,15 +189,15 @@ public class PointerDevice {
                               final int button,
                               final WlPointerButtonState buttonState) {
         final WlSurfaceResource wlSurfaceResource = this.grab.get();
-            final Optional<WlPointerResource> pointerResource = findPointerResource(pointerResources,
-                                                                                    wlSurfaceResource);
-            if (pointerResource.isPresent()) {
-                pointerResource.get()
-                               .button(serial,
-                                       time,
-                                       button,
-                                       buttonState.getValue());
-            }
+        final Optional<WlPointerResource> pointerResource = findPointerResource(pointerResources,
+                                                                                wlSurfaceResource);
+        if (pointerResource.isPresent()) {
+            pointerResource.get()
+                           .button(serial,
+                                   time,
+                                   button,
+                                   buttonState.getValue());
+        }
     }
 
     public void doMotion(final Set<WlPointerResource> pointerResources,
@@ -222,7 +221,7 @@ public class PointerDevice {
         this.focus = newFocus;
 
         if (this.grab.isPresent()
-                && this.focus.equals(this.grab)) {
+            && this.focus.equals(this.grab)) {
             reportMotion(pointerResources,
                          time,
                          x,
@@ -285,12 +284,12 @@ public class PointerDevice {
         //the new focus does not match the 'old' focus.
 
         if (this.focus.isPresent()
-                && this.grab.equals(this.focus)) {
+            && this.grab.equals(this.focus)) {
             //a previous focus surface has the grab, report that the pointer left the surface
             reportLeave(pointerResources);
         }
         else if (newFocus.isPresent()
-                && this.grab.equals(newFocus)) {
+                 && this.grab.equals(newFocus)) {
             //pointer is now over a surface that has the grab, report that it entered the surface
             reportEnter(pointerResources,
                         x,

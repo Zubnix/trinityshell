@@ -4,23 +4,22 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.Sets;
 import org.freedesktop.wayland.server.*;
+import org.trinity.wayland.output.Compositor;
 import org.trinity.wayland.output.Surface;
 import org.trinity.wayland.output.SurfaceConfigurable;
-import org.trinity.wayland.output.Compositor;
 
 import javax.inject.Inject;
 import java.util.Set;
-
 
 @AutoFactory(className = "WlCompositorFactory")
 public class WlCompositor extends Global<WlCompositorResource> implements WlCompositorRequestsV3, ProtocolObject<WlCompositorResource> {
 
     private final Set<WlCompositorResource> resources = Sets.newHashSet();
 
-    private final WlSurfaceFactory                wlSurfaceFactory;
-    private final WlRegionFactory                 wlRegionFactory;
+    private final WlSurfaceFactory                         wlSurfaceFactory;
+    private final WlRegionFactory                          wlRegionFactory;
     private final org.trinity.wayland.output.RegionFactory pixmanRegionFactory;
-    private final Compositor                      compositor;
+    private final Compositor                               compositor;
 
     @Inject
     WlCompositor(@Provided final Display display,

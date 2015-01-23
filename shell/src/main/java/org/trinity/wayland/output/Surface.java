@@ -1,43 +1,20 @@
-/*******************************************************************************
- * Trinity Shell Copyright (C) 2011 Erik De Rijcke
- *
- * This file is part of Trinity Shell.
- *
- * Trinity Shell is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the Free
- * Software Foundation; either version 3 of the License, or (at your option) any
- * later version.
- *
- * Trinity Shell is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 51
- * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- ******************************************************************************/
 package org.trinity.wayland.output;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import org.freedesktop.wayland.server.WlBufferResource;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
 import javax.media.nativewindow.util.Point;
 import javax.media.nativewindow.util.PointImmutable;
 import javax.media.nativewindow.util.RectangleImmutable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.IntConsumer;
 
-@NotThreadSafe
 @AutoFactory(className = "SurfaceFactory")
 public class Surface extends EventBus implements SurfaceConfigurable {
 
@@ -127,8 +104,8 @@ public class Surface extends EventBus implements SurfaceConfigurable {
     @Nonnull
     @Override
     public SurfaceConfigurable attachBuffer(@Nonnull final WlBufferResource buffer,
-                                                 @Nonnull final Integer relX,
-                                                 @Nonnull final Integer relY) {
+                                            @Nonnull final Integer relX,
+                                            @Nonnull final Integer relY) {
 
         this.pendingBuffer = Optional.of(buffer);
         this.pendingBufferOffset = new Point(relX,
@@ -147,14 +124,14 @@ public class Surface extends EventBus implements SurfaceConfigurable {
     @Override
     public SurfaceConfigurable removeTransform() {
         this.pendingTransform = new float[]{1,
-                0,
-                0,
-                0,
-                1,
-                0,
-                0,
-                0,
-                1};
+                                            0,
+                                            0,
+                                            0,
+                                            1,
+                                            0,
+                                            0,
+                                            0,
+                                            1};
         return this;
     }
 

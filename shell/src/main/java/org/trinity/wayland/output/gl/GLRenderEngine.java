@@ -8,8 +8,8 @@ import com.jogamp.common.nio.Buffers;
 import org.freedesktop.wayland.server.ShmBuffer;
 import org.freedesktop.wayland.server.WlSurfaceResource;
 import org.freedesktop.wayland.shared.WlShmFormat;
-import org.trinity.wayland.output.Surface;
 import org.trinity.wayland.output.ShmRenderEngine;
+import org.trinity.wayland.output.Surface;
 import org.trinity.wayland.protocol.WlSurface;
 
 import javax.media.nativewindow.util.PointImmutable;
@@ -27,34 +27,34 @@ public class GLRenderEngine implements ShmRenderEngine {
 
     private static final String SURFACE_V          =
             "uniform mat4 mu_projection;\n" +
-                    "\n" +
-                    "attribute vec2 va_position;\n" +
-                    "attribute vec2 va_texcoord;\n" +
-                    "\n" +
-                    "varying vec2 vv_texcoord;\n" +
-                    "\n" +
-                    "void main(){\n" +
-                    "    vv_texcoord = va_texcoord;\n" +
-                    "    gl_Position = vec4(va_position, 0.0, 1.0) * mu_projection;\n" +
-                    "}";
+            "\n" +
+            "attribute vec2 va_position;\n" +
+            "attribute vec2 va_texcoord;\n" +
+            "\n" +
+            "varying vec2 vv_texcoord;\n" +
+            "\n" +
+            "void main(){\n" +
+            "    vv_texcoord = va_texcoord;\n" +
+            "    gl_Position = vec4(va_position, 0.0, 1.0) * mu_projection;\n" +
+            "}";
     private static final String SURFACE_ARGB8888_F =
             "varying vec2 vv_texcoord;\n" +
-                    "uniform sampler2D tex;\n" +
-                    "\n" +
-                    "void main(){\n" +
-                    "    gl_FragColor = texture2D(tex, vv_texcoord);\n" +
-                    "}";
+            "uniform sampler2D tex;\n" +
+            "\n" +
+            "void main(){\n" +
+            "    gl_FragColor = texture2D(tex, vv_texcoord);\n" +
+            "}";
     private static final String SURFACE_XRGB8888_F =
             "varying vec2 vv_texcoord;\n" +
-                    "uniform sampler2D tex;\n" +
-                    "\n" +
-                    "void main() {\n" +
-                    "    gl_FragColor.rgb = texture2D(tex, vv_texcoord).rgb;\n" +
-                    "    gl_FragColor.a = 1f;\n" +
-                    "}";
+            "uniform sampler2D tex;\n" +
+            "\n" +
+            "void main() {\n" +
+            "    gl_FragColor.rgb = texture2D(tex, vv_texcoord).rgb;\n" +
+            "    gl_FragColor.a = 1f;\n" +
+            "}";
 
     private final Map<WlSurfaceResource, GLSurfaceData> cachedSurfaceData = Maps.newHashMap();
-    private final Map<GLBufferFormat, Integer>     shaderPrograms    = Maps.newHashMap();
+    private final Map<GLBufferFormat, Integer>          shaderPrograms    = Maps.newHashMap();
 
     private final ListeningExecutorService renderThread;
     private final GLAutoDrawable           drawable;
@@ -133,7 +133,7 @@ public class GLRenderEngine implements ShmRenderEngine {
                         final ShmBuffer buffer) {
 
         buffer.beginAccess();
-        WlSurface implementation = (WlSurface) surfaceResource.getImplementation();
+        final WlSurface implementation = (WlSurface) surfaceResource.getImplementation();
         final Surface surface = implementation.getSurface();
         final PointImmutable position = surface.getPosition();
         final float[] vertices = {
