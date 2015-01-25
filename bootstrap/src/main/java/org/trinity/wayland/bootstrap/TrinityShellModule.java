@@ -11,24 +11,25 @@
 //WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,either express or implied.
 //See the License for the specific language governing permissions and
 //limitations under the License.
-package org.trinity.wayland.output;
+package org.trinity.wayland.bootstrap;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.common.eventbus.EventBus;
+import dagger.Module;
+import org.trinity.wayland.output.gl.OutputGLModule;
+import org.trinity.wayland.platform.newt.PlatformNewtModule;
+import org.trinity.wayland.protocol.ProtocolModule;
 
-@AutoFactory(className = "KeyboardFactory")
-public class Keyboard {
+@Module(
+        injects = {
+                EntryPoint.class
+        },
+        includes = {
+                OutputGLModule.class,
+                ProtocolModule.class,
+                PlatformNewtModule.class,
+        },
+        complete = true,
+        library = false
+)
+public class TrinityShellModule {
 
-    private final EventBus inputBus = new EventBus();
-
-    Keyboard() {
-    }
-
-    public void register(final Object listener) {
-        this.inputBus.register(listener);
-    }
-
-    public void unregister(final Object listener) {
-        this.inputBus.unregister(listener);
-    }
 }

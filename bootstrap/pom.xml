@@ -35,7 +35,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.trinity.bootstrap.EntryPoint</mainClass>
+                            <mainClass>org.trinity.wayland.bootstrap.EntryPoint</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
