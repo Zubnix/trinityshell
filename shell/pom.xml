@@ -14,7 +14,6 @@
     <packaging>bundle</packaging>
 
     <properties>
-        <xcb4j.version>0.0.1</xcb4j.version>
         <pixman-java-bindings.version>1.0.0-SNAPSHOT</pixman-java-bindings.version>
         <libinput-java-bindings.version>1.0.0-SNAPSHOT</libinput-java-bindings.version>
         <wayland-java-bindings.version>1.1.0-SNAPSHOT</wayland-java-bindings.version>
@@ -31,11 +30,6 @@
             <groupId>org.freedesktop</groupId>
             <artifactId>wayland</artifactId>
             <version>${wayland-java-bindings.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.freedesktop</groupId>
-            <artifactId>libinput-java-bindings</artifactId>
-            <version>${libinput-java-bindings.version}</version>
         </dependency>
         <dependency>
             <groupId>com.hackoeur</groupId>
