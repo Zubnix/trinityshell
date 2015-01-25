@@ -2,7 +2,7 @@ Trinity Shell
 =====================
 
 A Wayland OpenGL compositor written in pure Java.
-This is a work in progress and not yet ready for day to day use, however
+This is a work in progress and not ready for day to day use, however
 certain features like client movement and render output on X are considered ready.
 
 Javadoc
