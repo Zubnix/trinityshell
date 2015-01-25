@@ -1,3 +1,5 @@
+Development on this repository has halted. Instead have a look [here](https://github.com/Zubnix/trinity)!
+
 
 [![Build Status](https://travis-ci.org/Zubnix/trinityshell.png?branch=0.0.3-SNAPSHOT)](https://travis-ci.org/Zubnix/trinityshell)
 
