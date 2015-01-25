@@ -46,6 +46,4 @@ public class WlCallback extends EventBus implements WlCallbackRequests, Protocol
                                       id,
                                       this);
     }
-
-
 }

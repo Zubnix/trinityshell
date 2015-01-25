@@ -5,17 +5,16 @@
 
     <parent>
         <groupId>org.trinity</groupId>
-        <artifactId>trinity</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <artifactId>shell</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>shell.default</artifactId>
-    <name>shell Default Implementation</name>
+    <artifactId>wayland</artifactId>
+    <name>Shell Wayland Implementation</name>
     <packaging>bundle</packaging>
 
     <properties>
         <pixman-java-bindings.version>1.0.0-SNAPSHOT</pixman-java-bindings.version>
-        <libinput-java-bindings.version>1.0.0-SNAPSHOT</libinput-java-bindings.version>
         <wayland-java-bindings.version>1.1.0-SNAPSHOT</wayland-java-bindings.version>
         <jgml.version>0.1-SNAPSHOT</jgml.version>
     </properties>

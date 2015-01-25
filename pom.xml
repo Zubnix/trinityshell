@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.trinity</groupId>
-    <artifactId>trinity</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <artifactId>shell</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Trinity</name>
-    <description>A Java desktop shell.</description>
+    <name>Trinity Shell</name>
+    <description>A Java Wayland shell.</description>
     <url>https://github.com/Zubnix/trinityshell</url>
     <inceptionYear>2009-11-06</inceptionYear>
     <developers>
@@ -64,7 +64,7 @@
     </properties>
 
     <modules>
-        <module>shell</module>
+        <module>wayland</module>
         <module>bootstrap</module>
     </modules>
 
@@ -171,8 +171,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.trinity.*.api</Export-Package>
-                        <Private-Package>org.trinity.*</Private-Package>
+                        <Export-Package>org.trinity.*</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -228,19 +227,14 @@
                         <verbose>false</verbose>
                         <groups>
                             <group>
-                                <title>Foundation API</title>
-                                <packages>org.trinity.foundation.api*</packages>
+                                <title>Bootstrap</title>
+                                <packages>org.trinity.wayland.bootstrap*</packages>
                             </group>
                             <group>
-                                <title>Shell API</title>
-                                <packages>org.trinity.shell.api*</packages>
-                            </group>
-                            <group>
-                                <title>Shell Plugins Widget API</title>
-                                <packages>org.trinity.shellplugin.widget.api*</packages>
+                                <title>Wayland</title>
+                                <packages>org.trinity.wayland*</packages>
                             </group>
                         </groups>
-                        <excludePackageNames>*impl*:org.trinity.bootstrap</excludePackageNames>
                         <linksource>true</linksource>
                         <minmemory>16m</minmemory>
                         <maxmemory>128m</maxmemory>

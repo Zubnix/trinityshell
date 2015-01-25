@@ -4,19 +4,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>trinity</artifactId>
+        <artifactId>shell</artifactId>
         <groupId>org.trinity</groupId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>bootstrap</artifactId>
-    <name>Trinitry Bootstrap</name>
+    <name>Trinitry Shell Bootstrap</name>
 
     <dependencies>
         <!-- X11 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>shell.default</artifactId>
+            <artifactId>wayland</artifactId>
             <version>${project.version}</version>
         </dependency>
 

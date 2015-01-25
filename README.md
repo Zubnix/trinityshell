@@ -24,7 +24,6 @@ Dependencies
  - Google Guava. Available on maven central.
  - Findbugs. Available on maven central.
  - SLF4J. Available on maven central.
- - Logback-classic. Available on maven central.
  - Wayland-Java-Bindings. Available [here](https://github.com/Zubnix/wayland-java-bindings).
  - Pixman-Java-Bindings. Available [here](https://github.com/Zubnix/pixman-java-bindings).
  - Jglm. Available [here](https://github.com/jroyalty/jglm).
