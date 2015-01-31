@@ -26,6 +26,7 @@ import static com.google.common.util.concurrent.Futures.transform;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.Nonnull;
@@ -76,50 +77,36 @@ public abstract class AbstractCachedProtocol<P> {
 		return this.protocolAtomId;
 	}
 
-	public ListenableFuture<Void> addProtocolListener(	@Nonnull final DisplaySurface xWindow,
+	public CompletableFuture<Void> addProtocolListener(	@Nonnull final DisplaySurface xWindow,
 														@Nonnull final ProtocolListener<P> listener,
 														@Nonnull final ExecutorService executor) {
-		return this.displayExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				AsyncListenable listeners = AbstractCachedProtocol.this.listenersByWindow.get(xWindow);
-				if (listeners == null) {
-					listeners = new AsyncListenableEventBus(MoreExecutors.sameThreadExecutor());
-					listenersByWindow.put(	xWindow,
-											listeners);
-				}
-				listeners.register(	listener,
-									executor);
-				return null;
+		return CompletableFuture.supplyAsync(() -> {
+			AsyncListenable listeners = AbstractCachedProtocol.this.listenersByWindow.get(xWindow);
+			if (listeners == null) {
+				listeners = new AsyncListenableEventBus(MoreExecutors.sameThreadExecutor());
+				listenersByWindow.put(	xWindow,
+										listeners);
 			}
-		});
+			listeners.register(	listener,
+								executor);
+			return null;
+		}, displayExecutor);
 	}
 
-	public ListenableFuture<Optional<P>> get(@Nonnull final DisplaySurface xWindow) {
+	public CompletableFuture<Optional<P>> get(@Nonnull final DisplaySurface xWindow) {
 
-		final ListenableFuture<Optional<P>> protocolFuture = this.displayExecutor.submit(new Callable<Optional<P>>() {
-			@Override
-			public Optional<P> call() throws Exception {
-				return AbstractCachedProtocol.this.protocolCache.get(xWindow);
+		final CompletableFuture<Optional<P>> protocolFuture = CompletableFuture.supplyAsync(() -> {
+			return AbstractCachedProtocol.this.protocolCache.get(xWindow);
+		}, displayExecutor);
+		return protocolFuture.thenComposeAsync(protocol -> {
+			if (protocol == null) {
+				trackProtocol(xWindow);
+				return queryProtocol(xWindow);
 			}
+			return CompletableFuture.supplyAsync(() -> {
+				return protocol;
+			}, MoreExecutors.sameThreadExecutor());
 		});
-
-		return transform(	protocolFuture,
-							new AsyncFunction<Optional<P>, Optional<P>>() {
-								@Override
-								public ListenableFuture<Optional<P>> apply(final Optional<P> protocol) {
-									if (protocol == null) {
-										trackProtocol(xWindow);
-										return queryProtocol(xWindow);
-									}
-									return MoreExecutors.sameThreadExecutor().submit(new Callable<Optional<P>>() {
-										@Override
-										public Optional<P> call() {
-											return protocol;
-										}
-									});
-								}
-							});
 	}
 
 	protected void trackProtocol(final DisplaySurface xWindow) {
@@ -134,38 +121,30 @@ public abstract class AbstractCachedProtocol<P> {
 	}
 
 	protected void updateProtocolCache(final DisplaySurface xWindow) {
-		final ListenableFuture<Optional<P>> protocolFuture = queryProtocol(xWindow);
-		addCallback(protocolFuture,
-					new FutureCallback<Optional<P>>() {
-						@Override
-						public void onSuccess(final Optional<P> protocol) {
-							AbstractCachedProtocol.this.protocolCache.put(	xWindow,
-																			protocol);
-							notifyProtocolListeners(xWindow,
-													protocol);
-						}
-
-						@Override
-						public void onFailure(final Throwable t) {
-							LOG.error(	"Failed to update protocol.",
-										t);
-						}
-					});
-	}
-
-	protected abstract ListenableFuture<Optional<P>> queryProtocol(final DisplaySurface xWindow);
-
-	public ListenableFuture<Void> removeProtocolListener(	@Nonnull final DisplaySurface xWindow,
-															@Nonnull final ProtocolListener<P> listener) {
-
-		return this.displayExecutor.submit(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				final AsyncListenable listeners = AbstractCachedProtocol.this.listenersByWindow.get(xWindow);
-				listeners.unregister(listener);
-				return null;
+		final CompletableFuture<Optional<P>> protocolFuture = queryProtocol(xWindow);
+		protocolFuture.whenComplete((protocol, t) -> {
+			if(t == null) {
+				LOG.error(	"Failed to update protocol.",
+						t);
+			} else {
+				AbstractCachedProtocol.this.protocolCache.put(	xWindow,
+						protocol);
+				notifyProtocolListeners(xWindow,
+										protocol);
 			}
 		});
+	}
+
+	protected abstract CompletableFuture<Optional<P>> queryProtocol(final DisplaySurface xWindow);
+
+	public CompletableFuture<Void> removeProtocolListener(	@Nonnull final DisplaySurface xWindow,
+															@Nonnull final ProtocolListener<P> listener) {
+
+		return CompletableFuture.supplyAsync(() -> {
+			final AsyncListenable listeners = AbstractCachedProtocol.this.listenersByWindow.get(xWindow);
+			listeners.unregister(listener);
+			return null;
+		}, displayExecutor);
 	}
 
 	protected void notifyProtocolListeners(	final DisplaySurface xWindow,

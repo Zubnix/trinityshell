@@ -25,6 +25,7 @@ import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name;
 import static org.freedesktop.xcb.LibXcb.xcb_icccm_get_wm_name_reply;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
@@ -71,7 +72,7 @@ public class WmName extends AbstractCachedProtocol<xcb_icccm_get_text_property_r
 	}
 
 	@Override
-	protected ListenableFuture<Optional<xcb_icccm_get_text_property_reply_t>> queryProtocol(final DisplaySurface xWindow) {
+	protected CompletableFuture<Optional<xcb_icccm_get_text_property_reply_t>> queryProtocol(final DisplaySurface xWindow) {
 		final int window = (Integer) xWindow.getDisplaySurfaceHandle().getNativeHandle();
 		final xcb_get_property_cookie_t get_property_cookie = xcb_icccm_get_wm_name(this.xConnection
 																							.getConnectionReference()
@@ -80,22 +81,18 @@ public class WmName extends AbstractCachedProtocol<xcb_icccm_get_text_property_r
 		final xcb_generic_error_t e = new xcb_generic_error_t();
 		final xcb_icccm_get_text_property_reply_t prop = new xcb_icccm_get_text_property_reply_t();
 
-		return this.displayExecutor.submit(new Callable<Optional<xcb_icccm_get_text_property_reply_t>>() {
-			@Override
-			public Optional<xcb_icccm_get_text_property_reply_t> call() throws Exception {
-
-				final short stat = xcb_icccm_get_wm_name_reply(	WmName.this.xConnection.getConnectionReference().get(),
-																get_property_cookie,
-																prop,
-																e);
-				if (stat == 0) {
-					LOG.error(	"Error retrieving wm_name reply from client={}",
-								window);
-					return Optional.absent();
-				}
-
-				return Optional.of(prop);
+		return CompletableFuture.supplyAsync(() -> {
+			final short stat = xcb_icccm_get_wm_name_reply(	WmName.this.xConnection.getConnectionReference().get(),
+					get_property_cookie,
+					prop,
+					e);
+			if (stat == 0) {
+				LOG.error(	"Error retrieving wm_name reply from client={}",
+						window);
+				return Optional.absent();
 			}
-		});
+
+			return Optional.of(prop);
+		}, displayExecutor);
 	}
 }
